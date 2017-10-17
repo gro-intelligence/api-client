@@ -35,8 +35,8 @@ def get_data(url, headers, params=None, logger=None):
             break
         elif data.status_code != 200 and retry_count == (MAX_RETRIES - 1):
             log_record['tag'] = 'failed_gro_api_request'
-            log_record['message'] = data.json()['message']
+            log_record['message'] = data.text
         if logger:
             logger(log_record)
-        retry_count = retry_count + 1
+        retry_count += 1
     return data
