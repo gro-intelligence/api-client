@@ -40,3 +40,46 @@ def get_data(url, headers, params=None, logger=None):
             logger(log_record)
         retry_count = retry_count + 1
     return data
+
+
+def get_available(access_token, api_host, entity_type):
+    """Given an entity_type, which is one of 'items', 'metrics',
+    'regions', returns a JSON dict with the list of available entities
+    of the given type.
+    """
+    url = '/'.join(['https:', '', api_host, 'v2/available', entity_type])
+    headers = {'authorization': 'Bearer ' + access_token}
+    resp = get_data(url, headers)
+    return resp.json()
+
+
+def list_available(access_token, api_host, selected_entities):
+    """List available entities given some selected entities. Given a dict
+    of selected entity ids of the form { <entity_type>: <entity_id>,
+    ...}, returns a list of dictionaries representing available {
+    item_id: ..., metric_id: ... , region_id: ... ,} for which data
+    series are available which satisfy the input selection.
+    """
+    url = '/'.join(['https:', '', api_host, 'v2/entities/list'])
+    headers = {'authorization': 'Bearer ' + access_token}
+    resp = get_data(url, headers, selected_entities)
+    return resp.json()['data']
+
+
+def get_data_series(access_token, api_host, item_id, metric_id, region_id):
+    """Get data series records for the given selected entities."""
+    url = '/'.join(['https:', '', api_host, 'v2/data_series/list'])
+    headers = {'authorization': 'Bearer ' + access_token}
+    params = { 'regionId': region_id, 'itemId': item_id, 'metricId': metric_id}
+    resp = get_data(url, headers, params, lambda x: sys.stderr.write(str(x)))
+    return resp.json()['data']
+
+
+def get_data_points(access_token, api_host,
+                    item_id, metric_id, region_id, frequency_id, source_id):
+    url = '/'.join(['https:', '', api_host, 'v2/data'])
+    headers = {'authorization': 'Bearer ' + access_token }
+    params = {'regionId': region_id, 'itemId': item_id, 'metricId': metric_id,
+              'frequencyId': frequency_id, 'sourceId': source_id}
+    resp = get_data(url, headers, params, lambda x: sys.stderr.write(str(x)))
+    return resp.json()['data']
