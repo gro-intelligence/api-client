@@ -2,7 +2,7 @@ import argparse
 import sys
 from api.client.lib import get_data, get_access_token
 
-API_HOST = 'clewsapi.gro-intelligence.com'
+API_HOST = 'apidev11201.gro-intelligence.com'
 
 
 def get_available(access_token, entity_type):
@@ -34,7 +34,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     access_token = get_access_token(API_HOST, args.user_email, args.user_password)
-    
+
     # Find all items that have some data series
     print get_available(access_token, 'items')
     # Find all metrics that have some data series
@@ -43,5 +43,3 @@ if __name__ == "__main__":
 
     # Random data series examples
     print get_data_series(access_token, 63, 860032, 1001, 'annual', 2)
-
-
