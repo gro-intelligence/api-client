@@ -13,8 +13,7 @@ def get_available(access_token, entity_type):
     url = '/'.join(['https:', '', API_HOST, 'v2', 'available', entity_type])
     headers = {'authorization': 'Bearer ' + access_token}
     resp = get_data(url, headers)
-    if resp.status_code != 200:
-        raise Exception('Request failed: {}'.format(resp.json()))
+    assert resp.status_code == 200, 'Request failed: {}'.format(resp)
     return resp.json()
 
 
@@ -24,8 +23,7 @@ def get_data_series(access_token, item_id, metric_id, region_id, frequency, sour
     params = { 'regionId': region_id, 'itemId': item_id, 'metricId': metric_id,
                'frequency': frequency, 'sourceId': source_id}
     resp = get_data(url, headers, params, lambda x: sys.stderr.write(str(x)))
-    if resp.status_code != 200:
-        raise Exception('Request failed: {}'.format(resp.json()))
+    assert resp.status_code == 200, 'Request failed: {}'.format(resp)
     return resp.json()
 
 
@@ -37,9 +35,13 @@ if __name__ == "__main__":
 
     access_token = get_access_token(API_HOST, args.user_email, args.user_password)
     
+    # Find all items that have some data series
+    print get_available(access_token, 'items')
+    # Find all metrics that have some data series
+    print get_available(access_token, 'metrics')
+
+
     # Random data series examples
     print get_data_series(access_token, 63, 860032, 1001, 'annual', 2)
-    # This is currentlt broken in prod
-    print get_available(access_token, 'items')
 
 
