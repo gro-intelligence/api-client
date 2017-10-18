@@ -18,16 +18,15 @@ def get_available(access_token, entity_type):
     return resp.json()
 
 
-def main(access_token):
+def get_data_series(access_token, item_id, metric_id, region_id, frequency, source_id):
     url = '/'.join(['https:', '', API_HOST, 'v2', 'data'])
     headers = {'authorization': 'Bearer ' + access_token}
-    params = { 'regionId': 1001, 'itemId': 63, 'metricId': 860032,
-               'frequency': 'annual', 'sourceId': 2}
+    params = { 'regionId': region_id, 'itemId': item_id, 'metricId': metric_id,
+               'frequency': frequency, 'sourceId': source_id}
     resp = get_data(url, headers, params, lambda x: sys.stderr.write(str(x)))
     if resp.status_code != 200:
         raise Exception('Request failed: {}'.format(resp.json()))
-    print resp.json()
-    print get_available(access_token, 'items')
+    return resp.json()
 
 
 if __name__ == "__main__":
@@ -37,5 +36,10 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     access_token = get_access_token(API_HOST, args.user_email, args.user_password)
-    main(access_token)
+    
+    # Random data series examples
+    print get_data_series(access_token, 63, 860032, 1001, 'annual', 2)
+    # This is currentlt broken in prod
+    print get_available(access_token, 'items')
+
 
