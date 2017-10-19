@@ -28,17 +28,17 @@ if __name__ == "__main__":
     selected_entities.update(entities)
 
     # Random data series examples
-    for data_series in get_data_series(access_token, API_HOST,
+    data_series_list = get_data_series(access_token, API_HOST,
                                        selected_entities['item_id'],
                                        selected_entities['metric_id'],
-                                       selected_entities['region_id']):
-        print "Using data series: {}".format(data_series['series_id'])
-        for point in get_data_points(access_token, API_HOST,
-                              data_series['item_id'],
-                              data_series['metric_id'],
-                              data_series['region_id'],
-                              data_series['frequency_id'],
-                              data_series['source_id']):
-            print ','.join(map(lambda x: str(x),
-                               [point['start_date'], point['end_date'], point['value']]))
-        break
+                                       selected_entities['region_id'])
+    data_series = data_series_list[int(len(data_series_list)*random())]
+    print "Using data series: {}".format(data_series['series_id'])
+    for point in get_data_points(access_token, API_HOST,
+                                 data_series['item_id'],
+                                 data_series['metric_id'],
+                                 data_series['region_id'],
+                                 data_series['frequency_id'],
+                                 data_series['source_id']):
+        print ','.join(map(lambda x: str(x),
+                           [point['start_date'], point['end_date'], point['value']]))
