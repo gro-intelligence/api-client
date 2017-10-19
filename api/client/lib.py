@@ -21,65 +21,83 @@ def get_access_token(api_host, user_email, user_password):
 
 
 def get_data(url, headers, params=None, logger=None):
-    log_record = dict(route=url, params=params)
-    retry_count = 0
-    while retry_count < MAX_RETRIES:
-        start_time = time.time()
-        data = requests.get(url, params=params, headers=headers, timeout=None)
-        elapsed_time = time.time() - start_time
-        log_record['date'] = str(datetime.utcnow().date())
-        log_record['elapsed_time_in_ms'] = 1000 * elapsed_time
-        log_record['retry_count'] = retry_count
-        log_record['status_code'] = data.status_code
-        if data.status_code == 200: # Checks and retries on the same url if time out occurs
-            break
-        elif data.status_code != 200 and retry_count == (MAX_RETRIES - 1):
-            log_record['tag'] = 'failed_gro_api_request'
-            log_record['message'] = data.text
-        if logger:
-            logger(log_record)
-        retry_count += 1
-    return data
+  log_record = dict(route=url, params=params)
+  retry_count = 0
+  while retry_count < MAX_RETRIES:
+    start_time = time.time()
+    data = requests.get(url, params=params, headers=headers, timeout=None)
+    elapsed_time = time.time() - start_time
+    log_record['date'] = str(datetime.utcnow().date())
+    log_record['elapsed_time_in_ms'] = 1000 * elapsed_time
+    log_record['retry_count'] = retry_count
+    log_record['status_code'] = data.status_code
+    if data.status_code == 200:
+      break
+    elif retry_count >= (MAX_RETRIES - 1):
+      log_record['tag'] = 'failed_gro_api_request'
+      log_record['message'] = data.text
+    if logger:
+      logger(log_record)
+    retry_count += 1
+  return data
 
 
 def get_available(access_token, api_host, entity_type):
-    """Given an entity_type, which is one of 'items', 'metrics',
+  """Given an entity_type, which is one of 'items', 'metrics',
     'regions', returns a JSON dict with the list of available entities
     of the given type.
     """
-    url = '/'.join(['https:', '', api_host, 'v2/available', entity_type])
-    headers = {'authorization': 'Bearer ' + access_token}
-    resp = get_data(url, headers)
-    return resp.json()
+  url = '/'.join(['https:', '', api_host, 'v2/available', entity_type])
+  headers = {'authorization': 'Bearer ' + access_token}
+  resp = get_data(url, headers)
+  return resp.json()
 
 
 def list_available(access_token, api_host, selected_entities):
-    """List available entities given some selected entities. Given a dict
+  """List available entities given some selected entities. Given a dict
     of selected entity ids of the form { <entity_type>: <entity_id>,
     ...}, returns a list of dictionaries representing available {
     item_id: ..., metric_id: ... , region_id: ... ,} for which data
     series are available which satisfy the input selection.
     """
-    url = '/'.join(['https:', '', api_host, 'v2/entities/list'])
-    headers = {'authorization': 'Bearer ' + access_token}
-    resp = get_data(url, headers, selected_entities)
-    return resp.json()['data']
+  url = '/'.join(['https:', '', api_host, 'v2/entities/list'])
+  headers = {'authorization': 'Bearer ' + access_token}
+  resp = get_data(url, headers, selected_entities)
+  return resp.json()['data']
 
 
 def get_data_series(access_token, api_host, item_id, metric_id, region_id):
-    """Get data series records for the given selected entities."""
-    url = '/'.join(['https:', '', api_host, 'v2/data_series/list'])
-    headers = {'authorization': 'Bearer ' + access_token}
-    params = { 'regionId': region_id, 'itemId': item_id, 'metricId': metric_id}
-    resp = get_data(url, headers, params, lambda x: sys.stderr.write(str(x)))
-    return resp.json()['data']
+  """Get data series records for the given selected entities."""
+  url = '/'.join(['https:', '', api_host, 'v2/data_series/list'])
+  headers = {'authorization': 'Bearer ' + access_token}
+  params = { }
+  if region_id:
+    params['regionId'] = region_id
+  if item_id:
+    params['itemId'] = item_id
+  if metric_id:
+    params['metricId'] =  metric_id
+  resp = get_data(url, headers, params, lambda x: sys.stderr.write(str(x) + "\n"))
+  return resp.json()['data']
 
 
 def get_data_points(access_token, api_host,
                     item_id, metric_id, region_id, frequency_id, source_id):
-    url = '/'.join(['https:', '', api_host, 'v2/data'])
-    headers = {'authorization': 'Bearer ' + access_token }
-    params = {'regionId': region_id, 'itemId': item_id, 'metricId': metric_id,
-              'frequencyId': frequency_id, 'sourceId': source_id}
-    resp = get_data(url, headers, params, lambda x: sys.stderr.write(str(x)))
-    return resp.json()['data']
+  url = '/'.join(['https:', '', api_host, 'v2/data'])
+  headers = {'authorization': 'Bearer ' + access_token }
+  params = {'regionId': region_id, 'itemId': item_id, 'metricId': metric_id,
+            'frequencyId': frequency_id, 'sourceId': source_id}
+  resp = get_data(url, headers, params, lambda x: sys.stderr.write(str(x) + "\n"))
+  return resp.json()['data']
+
+
+def search(access_token, api_host,
+           entity_type, search_terms):
+  """Given an entity_type, which is one of 'items', 'metrics',
+  'regions', performs a search for the given terms.
+  """
+  url = '/'.join(['https:', '', api_host, 'v2/search', entity_type])
+  headers = {'authorization': 'Bearer ' + access_token }
+  resp = get_data(url, headers, {'q': search_terms},
+                  lambda x: sys.stderr.write(str(x) + "\n"))
+  return resp.json()
