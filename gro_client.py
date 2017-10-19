@@ -1,3 +1,12 @@
+# Basic gro api client.
+#
+# Usage example:
+#
+#   export PYTHONPATH=~/src/gro
+#   python ~/src/gro/api/client/gro_client.py --user_email=nemo@gro-intelligence.com --user_password=<s3krit> --item=sesame --region=ethiopia
+#   python ~/src/gro/api/client/gro_client.py --user_email=nemo@gro-intelligence.com --user_password=<s3krit>
+#   python ~/src/gro/api/client/gro_client.py --user_email=nemo@gro-intelligence.com --user_password=<s3krit> --metric=export
+
 import argparse
 import sys
 from random import random
@@ -8,7 +17,9 @@ API_HOST = 'apidev11201.gro-intelligence.com'
 
 
 def print_random_data_series(access_token, selected_entities):
-    """Example which prints out a CSV of a random data series"""
+    """Example which prints out a CSV of a random data series that
+    satisfies the (optional) given selection.
+    """
     # Pick a random data series for this selection
     data_series_list = get_data_series(access_token, API_HOST,
                                        selected_entities.get('item_id'),
@@ -29,6 +40,9 @@ def print_random_data_series(access_token, selected_entities):
 
 
 def search_for_entity(access_token, entity_type, keywords):
+    """Returns the first result of entity_type (which is items, metrics or
+    regions) that matches the given keywords.
+    """
     results = search(access_token, API_HOST, entity_type, keywords)
     num_results = len(results[entity_type])
     for result in results[entity_type]:
@@ -39,13 +53,16 @@ def search_for_entity(access_token, entity_type, keywords):
 
 
 def pick_random_entities(access_token):
-    # Pick a random item that has some data associated with it.
+    """Pick a random item that has some data associated with it, and a
+    random metric and region pair for that item with data
+    available.
+    """
     item_list = get_available(access_token, API_HOST, 'items')
     item = item_list[int(len(item_list)*random())]
     print "Randomly selected item: {}".format(item['name'])
     selected_entities['item_id'] = item['id']
 
-    # Pick a random metric and region for this item with data available
+
     entity_list = list_available(access_token, API_HOST, selected_entities)
     entities = entity_list[int(len(entity_list)*random())]
     print "Using entities: {}".format(str(entities))
