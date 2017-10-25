@@ -77,9 +77,20 @@ if __name__ == "__main__":
     parser.add_argument("--item")
     parser.add_argument("--metric")
     parser.add_argument("--region")
+    parser.add_argument("--print_token", action='store_true')
+    parser.add_argument("--token")
     args = parser.parse_args()
 
-    access_token = get_access_token(API_HOST, args.user_email, args.user_password)
+    access_token = None
+    if args.token:
+        access_token = args.token
+    else:
+        access_token = get_access_token(API_HOST, args.user_email, args.user_password)
+
+    if args.print_token:
+        print access_token
+        sys.exit(0)
+
     selected_entities = {}
     if args.item:
         selected_entities['item_id'] = search_for_entity(access_token,
