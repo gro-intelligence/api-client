@@ -7,6 +7,10 @@ from datetime import datetime
 MAX_RETRIES = 4
 
 
+def stderr_logger(record):
+  sys.stderr.write(str(record))
+
+
 def get_access_token(api_host, user_email, user_password):
   retry_count = 0
   while retry_count < MAX_RETRIES:
@@ -23,6 +27,8 @@ def get_access_token(api_host, user_email, user_password):
 def get_data(url, headers, params=None, logger=None):
   log_record = dict(route=url, params=params)
   retry_count = 0
+  if not logger:
+    logger = stderr_logger
   while retry_count < MAX_RETRIES:
     start_time = time.time()
     data = requests.get(url, params=params, headers=headers, timeout=None)
@@ -36,8 +42,7 @@ def get_data(url, headers, params=None, logger=None):
     elif retry_count >= (MAX_RETRIES - 1):
       log_record['tag'] = 'failed_gro_api_request'
       log_record['message'] = data.text
-    if logger:
-      logger(log_record)
+    logger(log_record)
     retry_count += 1
   return data
 
