@@ -68,7 +68,10 @@ def list_available(access_token, api_host, selected_entities):
   url = '/'.join(['https:', '', api_host, 'v2/entities/list'])
   headers = {'authorization': 'Bearer ' + access_token}
   resp = get_data(url, headers, selected_entities)
-  return resp.json()['data']
+  try:
+    return resp.json()['data']
+  except KeyError as e:
+    raise Exception(resp.text)
 
 
 def get_data_series(access_token, api_host, item_id, metric_id, region_id):
@@ -83,7 +86,10 @@ def get_data_series(access_token, api_host, item_id, metric_id, region_id):
   if metric_id:
     params['metricId'] =  metric_id
   resp = get_data(url, headers, params, lambda x: sys.stderr.write(str(x) + "\n"))
-  return resp.json()['data']
+  try:
+    return resp.json()['data']
+  except KeyError as e:
+    raise Exception(resp.text)
 
 
 def get_data_points(access_token, api_host,
@@ -93,7 +99,10 @@ def get_data_points(access_token, api_host,
   params = {'regionId': region_id, 'itemId': item_id, 'metricId': metric_id,
             'frequencyId': frequency_id, 'sourceId': source_id}
   resp = get_data(url, headers, params, lambda x: sys.stderr.write(str(x) + "\n"))
-  return resp.json()['data']
+  try:
+    return resp.json()['data']
+  except KeyError as e:
+    raise Exception(resp.text)
 
 
 def search(access_token, api_host,
