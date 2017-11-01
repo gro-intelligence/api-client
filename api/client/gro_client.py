@@ -13,7 +13,7 @@ from random import random
 from api.client.lib import get_access_token, get_available, list_available, get_data_series, get_data_points, search
 
 
-API_HOST = 'apidev11201.gro-intelligence.com'
+API_HOST = 'apistage11201.gro-intelligence.com'
 
 
 def print_random_data_series(access_token, selected_entities):
