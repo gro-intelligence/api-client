@@ -26,6 +26,9 @@ def print_random_data_series(access_token, selected_entities):
                                        selected_entities.get('item_id'),
                                        selected_entities.get('metric_id'),
                                        selected_entities.get('region_id'))
+    if not data_series_list:
+        raise Exception("No data series available for {}".format(
+            selected_entities))
     data_series = data_series_list[int(len(data_series_list)*random())]
     print "Using data series: {}".format(str(data_series))
     print "Outputing to file: {}".format(OUTPUT_FILENAME)
@@ -103,4 +106,9 @@ if __name__ == "__main__":
                                                            'regions', args.region)
     if not selected_entities:
         selected_entities = pick_random_entities(access_token)
+
+    print "Data series example:"
     print_random_data_series(access_token, selected_entities)
+    print "Misc examples, lookup an item and a unit by id"
+    print lookup(access_token, API_HOST, 'items', 12)
+    print lookup(access_token, API_HOST, 'units', 6)

@@ -74,6 +74,20 @@ def list_available(access_token, api_host, selected_entities):
     raise Exception(resp.text)
 
 
+def lookup(access_token, api_host, entity_type, entity_id):
+  """Given an entity_type, which is one of 'items', 'metrics',
+    'regions', 'units', or 'sources', returns a JSON dict with the
+    list of available entities of the given type.
+  """
+  url = '/'.join(['https:', '', api_host, 'v2', entity_type, str(entity_id)])
+  headers = {'authorization': 'Bearer ' + access_token}
+  resp = get_data(url, headers)
+  try:
+    return resp.json()['data']
+  except KeyError as e:
+    raise Exception(resp.text)
+
+
 def get_data_series(access_token, api_host, item_id, metric_id, region_id):
   """Get data series records for the given selected entities."""
   url = '/'.join(['https:', '', api_host, 'v2/data_series/list'])
