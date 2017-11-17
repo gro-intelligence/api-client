@@ -16,6 +16,16 @@ from api.client.lib import get_access_token, get_available, list_available, get_
 
 API_HOST = 'apistage11201.gro-intelligence.com'
 OUTPUT_FILENAME = 'gro_client_output.csv'
+unit_names = {}
+
+
+def lookup_unit_name(access_token, unit_id):
+    """Wrapper to lookup unit names, with local cache to avoid repeated lookups."""
+    if unit_id not in unit_names:
+        unit_names[unit_id] = lookup(
+            access_token, API_HOST, 'units', unit_id)['abbreviation']
+    return unit_names[unit_id]
+
 
 def print_random_data_series(access_token, selected_entities):
     """Example which prints out a CSV of a random data series that
@@ -39,10 +49,9 @@ def print_random_data_series(access_token, selected_entities):
                                  data_series['region_id'],
                                  data_series['frequency_id'],
                                  data_series['source_id']):
-        # Print out a CSV of time series: time period, value (there
-        # are plenty of other columns like units)
-        writer.writerow([point['start_date'], point['end_date'], point['value']])
-
+        writer.writerow([point['start_date'], point['end_date'],
+                         point['value'] * point['input_unit_scale'],
+                         lookup_unit_name(access_token, point['input_unit_id'])])
 
 def search_for_entity(access_token, entity_type, keywords):
     """Returns the first result of entity_type (which is items, metrics or
@@ -109,6 +118,3 @@ if __name__ == "__main__":
 
     print "Data series example:"
     print_random_data_series(access_token, selected_entities)
-    print "Misc examples, lookup an item and a unit by id"
-    print lookup(access_token, API_HOST, 'items', 12)
-    print lookup(access_token, API_HOST, 'units', 6)
