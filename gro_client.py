@@ -3,18 +3,19 @@
 # Usage example:
 #
 #   export PYTHONPATH=~/src/gro
-#   python ~/src/gro/api/client/gro_client.py --user_email=nemo@gro-intelligence.com --user_password=<s3krit> --item=sesame --region=ethiopia
-#   python ~/src/gro/api/client/gro_client.py --user_email=nemo@gro-intelligence.com --user_password=<s3krit>
-#   python ~/src/gro/api/client/gro_client.py --user_email=nemo@gro-intelligence.com --user_password=<s3krit> --metric=export
+#   python ~/src/gro/api/client/gro_client.py  --user_email=foo@example.com --user_password=s3krit --item=sesame --region=ethiopia
+#   python ~/src/gro/api/client/gro_client.py --user_email=foo@example.com --user_password=s3krit
+#   python ~/src/gro/api/client/gro_client.py --user_email=foo@example.com --user_password=s3krit --metric=export
 
 import argparse
 import sys
+import unicodecsv
 from random import random
-from api.client.lib import get_access_token, get_available, list_available, get_data_series, get_data_points, search
+from api.client.lib import get_access_token, get_available, list_available, get_data_series, get_data_points, search, lookup
 
 
 API_HOST = 'apistage11201.gro-intelligence.com'
-
+OUTPUT_FILENAME = 'gro_client_output.csv'
 
 def print_random_data_series(access_token, selected_entities):
     """Example which prints out a CSV of a random data series that
@@ -25,8 +26,13 @@ def print_random_data_series(access_token, selected_entities):
                                        selected_entities.get('item_id'),
                                        selected_entities.get('metric_id'),
                                        selected_entities.get('region_id'))
+    if not data_series_list:
+        raise Exception("No data series available for {}".format(
+            selected_entities))
     data_series = data_series_list[int(len(data_series_list)*random())]
     print "Using data series: {}".format(str(data_series))
+    print "Outputing to file: {}".format(OUTPUT_FILENAME)
+    writer = unicodecsv.writer(open(OUTPUT_FILENAME, 'wb'))
     for point in get_data_points(access_token, API_HOST,
                                  data_series['item_id'],
                                  data_series['metric_id'],
@@ -35,8 +41,7 @@ def print_random_data_series(access_token, selected_entities):
                                  data_series['source_id']):
         # Print out a CSV of time series: time period, value (there
         # are plenty of other columns like units)
-        print ','.join(map(lambda x: str(x),
-                           [point['start_date'], point['end_date'], point['value']]))
+        writer.writerow([point['start_date'], point['end_date'], point['value']])
 
 
 def search_for_entity(access_token, entity_type, keywords):
@@ -101,4 +106,9 @@ if __name__ == "__main__":
                                                            'regions', args.region)
     if not selected_entities:
         selected_entities = pick_random_entities(access_token)
+
+    print "Data series example:"
     print_random_data_series(access_token, selected_entities)
+    print "Misc examples, lookup an item and a unit by id"
+    print lookup(access_token, API_HOST, 'items', 12)
+    print lookup(access_token, API_HOST, 'units', 6)
