@@ -8,7 +8,7 @@ MAX_RETRIES = 4
 
 
 def stderr_logger(record):
-  sys.stderr.write(str(record))
+  sys.stderr.write(str(record) + '\n')
 
 
 def get_access_token(api_host, user_email, user_password):
