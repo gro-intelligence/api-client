@@ -1,3 +1,4 @@
+import logging
 import requests
 import sys
 import time
@@ -5,12 +6,15 @@ from datetime import datetime
 
 
 MAX_RETRIES = 4
+DEFAULT_LOG_LEVEL=logging.INFO
 
 
-def stderr_logger(record):
-  sys.stderr.write(str(record) + '\n')
-
-
+def get_default_logger():
+  logging.basicConfig(level=DEFAULT_LOG_LEVEL)
+  logger = logging.getLogger(__name__)
+  logger.addHandler(logging.StreamHandler(sys.stdout))
+  return logger
+  
 def get_access_token(api_host, user_email, user_password):
   retry_count = 0
   while retry_count < MAX_RETRIES:
@@ -28,7 +32,7 @@ def get_data(url, headers, params=None, logger=None):
   log_record = dict(route=url, params=params)
   retry_count = 0
   if not logger:
-    logger = stderr_logger
+    logger = get_default_logger()
   while retry_count < MAX_RETRIES:
     start_time = time.time()
     data = requests.get(url, params=params, headers=headers, timeout=None)
@@ -38,13 +42,16 @@ def get_data(url, headers, params=None, logger=None):
     log_record['retry_count'] = retry_count
     log_record['status_code'] = data.status_code
     if data.status_code == 200:
-      break
-    elif retry_count >= (MAX_RETRIES - 1):
-      log_record['tag'] = 'failed_gro_api_request'
-      log_record['message'] = data.text
-    logger(log_record)
+      logger.debug(log_record)
+      return data
     retry_count += 1
-  return data
+    log_record['tag'] = 'failed_gro_api_request'
+    log_record['message'] = data.text  
+    if retry_count < MAX_RETRIES:
+      logger.warning(log_record)
+    else:
+      logger.error(log_record)
+  raise Exception(data.text)
 
 
 def get_available(access_token, api_host, entity_type):
@@ -99,7 +106,7 @@ def get_data_series(access_token, api_host, item_id, metric_id, region_id):
     params['itemId'] = item_id
   if metric_id:
     params['metricId'] =  metric_id
-  resp = get_data(url, headers, params, lambda x: sys.stderr.write(str(x) + "\n"))
+  resp = get_data(url, headers, params)
   try:
     return resp.json()['data']
   except KeyError as e:
@@ -112,7 +119,7 @@ def get_data_points(access_token, api_host,
   headers = {'authorization': 'Bearer ' + access_token }
   params = {'regionId': region_id, 'itemId': item_id, 'metricId': metric_id,
             'frequencyId': frequency_id, 'sourceId': source_id}
-  resp = get_data(url, headers, params, lambda x: sys.stderr.write(str(x) + "\n"))
+  resp = get_data(url, headers, params)
   try:
     return resp.json()['data']
   except KeyError as e:
@@ -126,6 +133,5 @@ def search(access_token, api_host,
   """
   url = '/'.join(['https:', '', api_host, 'v2/search', entity_type])
   headers = {'authorization': 'Bearer ' + access_token }
-  resp = get_data(url, headers, {'q': search_terms},
-                  lambda x: sys.stderr.write(str(x) + "\n"))
+  resp = get_data(url, headers, {'q': search_terms})
   return resp.json()
