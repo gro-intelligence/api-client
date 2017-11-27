@@ -15,7 +15,8 @@ def get_default_logger():
   stderr_handler = logging.StreamHandler()
   logger.addHandler(stderr_handler)
   return logger
-  
+
+
 def get_access_token(api_host, user_email, user_password):
   retry_count = 0
   while retry_count < MAX_RETRIES:
