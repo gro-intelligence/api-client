@@ -6,13 +6,14 @@ from datetime import datetime
 
 
 MAX_RETRIES = 4
-DEFAULT_LOG_LEVEL=logging.INFO
+DEFAULT_LOG_LEVEL=logging.WARNING  # change WARNING to DEBUG for more detail
 
 
 def get_default_logger():
   logging.basicConfig(level=DEFAULT_LOG_LEVEL)
   logger = logging.getLogger(__name__)
-  logger.addHandler(logging.StreamHandler(sys.stdout))
+  stderr_handler = logging.StreamHandler()
+  logger.addHandler(stderr_handler)
   return logger
   
 def get_access_token(api_host, user_email, user_password):
