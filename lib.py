@@ -19,15 +19,16 @@ def get_default_logger():
 
 def get_access_token(api_host, user_email, user_password):
   retry_count = 0
+  logger = get_default_logger()
   while retry_count < MAX_RETRIES:
-    try:
-      login = requests.post('https://' + api_host + '/login',
-                            data = {"email": user_email, "password": user_password})
+    login = requests.post('https://' + api_host + '/login',
+                          data = {"email": user_email, "password": user_password})
+    if login.status_code == 200:
       return login.json()['data']['accessToken']
-    except (ValueError, KeyError) as err:
-      sys.stderr.write("Failed to get access token: {0}\n".format(err))
+    else:
+      logger.warning("Error in get_access_token: {}\n".format(login))
     retry_count += 1
-  raise ValueError("Can't get access token, giving up after {0} tries.".format(retry_count))
+  raise Exception("Giving up on get_access_token after {0} tries.".format(retry_count))
 
 
 def get_data(url, headers, params=None, logger=None):
