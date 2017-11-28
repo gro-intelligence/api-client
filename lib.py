@@ -25,9 +25,10 @@ def get_access_token(api_host, user_email, user_password, logger=None):
     login = requests.post('https://' + api_host + '/login',
                           data = {"email": user_email, "password": user_password})
     if login.status_code == 200:
+      logger.debug("Authentication succeeded in get_access_token")
       return login.json()['data']['accessToken']
     else:
-      logger.warning("Error in get_access_token: {}\n".format(login))
+      logger.warning("Error in get_access_token: {}".format(login))
     retry_count += 1
   raise Exception("Giving up on get_access_token after {0} tries.".format(retry_count))
 
