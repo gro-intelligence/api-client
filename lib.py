@@ -17,9 +17,10 @@ def get_default_logger():
   return logger
 
 
-def get_access_token(api_host, user_email, user_password):
+def get_access_token(api_host, user_email, user_password, logger=None):
   retry_count = 0
-  logger = get_default_logger()
+  if not logger:
+    logger = get_default_logger()
   while retry_count < MAX_RETRIES:
     login = requests.post('https://' + api_host + '/login',
                           data = {"email": user_email, "password": user_password})
