@@ -31,7 +31,7 @@ def get_access_token(api_host, user_email, user_password):
 
 
 def get_data(url, headers, params=None, logger=None):
-  log_record = dict(route=url, params=params)
+  base_log_record = dict(route=url, params=params)
   retry_count = 0
   if not logger:
     logger = get_default_logger()
@@ -39,7 +39,7 @@ def get_data(url, headers, params=None, logger=None):
     start_time = time.time()
     data = requests.get(url, params=params, headers=headers, timeout=None)
     elapsed_time = time.time() - start_time
-    log_record['date'] = str(datetime.utcnow().date())
+    log_record = dict(base_log_record)
     log_record['elapsed_time_in_ms'] = 1000 * elapsed_time
     log_record['retry_count'] = retry_count
     log_record['status_code'] = data.status_code
