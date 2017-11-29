@@ -12,8 +12,9 @@ DEFAULT_LOG_LEVEL=logging.WARNING  # change to DEBUG for more detail
 def get_default_logger():
   logging.basicConfig(level=DEFAULT_LOG_LEVEL)
   logger = logging.getLogger(__name__)
-  stderr_handler = logging.StreamHandler()
-  logger.addHandler(stderr_handler)
+  if not logger.handlers:
+    stderr_handler = logging.StreamHandler()
+    logger.addHandler(stderr_handler)
   return logger
 
 
