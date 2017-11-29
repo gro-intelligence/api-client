@@ -74,7 +74,7 @@ def pick_random_entities(access_token):
     item_list = get_available(access_token, API_HOST, 'items')
     item = item_list[int(len(item_list)*random())]
     print "Randomly selected item: {}".format(item['name'])
-    selected_entities['itemId'] = item['id']
+    selected_entities = {'itemId':  item['id']}
     entity_list = list_available(access_token, API_HOST, selected_entities)
     entities = entity_list[int(len(entity_list)*random())]
     print "Using entities: {}".format(str(entities))
@@ -82,7 +82,7 @@ def pick_random_entities(access_token):
     return selected_entities
 
 
-if __name__ == "__main__":
+def main():
     parser = argparse.ArgumentParser(description="Gro api client")
     parser.add_argument("--user_email")
     parser.add_argument("--user_password")
@@ -118,3 +118,7 @@ if __name__ == "__main__":
 
     print "Data series example:"
     print_random_data_series(access_token, selected_entities)
+
+
+if __name__ == "__main__":
+    main()

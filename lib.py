@@ -61,10 +61,10 @@ def get_available(access_token, api_host, entity_type):
     'regions', returns a JSON dict with the list of available entities
     of the given type.
     """
-  url = '/'.join(['https:', '', api_host, 'v2/available', entity_type])
+  url = '/'.join(['https:', '', api_host, 'v2', entity_type])
   headers = {'authorization': 'Bearer ' + access_token}
   resp = get_data(url, headers)
-  return resp.json()
+  return resp.json()['data']
 
 
 def list_available(access_token, api_host, selected_entities):
