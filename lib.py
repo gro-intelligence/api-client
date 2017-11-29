@@ -12,26 +12,30 @@ DEFAULT_LOG_LEVEL=logging.WARNING  # change to DEBUG for more detail
 def get_default_logger():
   logging.basicConfig(level=DEFAULT_LOG_LEVEL)
   logger = logging.getLogger(__name__)
-  stderr_handler = logging.StreamHandler()
-  logger.addHandler(stderr_handler)
+  if not logger.handlers:
+    stderr_handler = logging.StreamHandler()
+    logger.addHandler(stderr_handler)
   return logger
 
 
-def get_access_token(api_host, user_email, user_password):
+def get_access_token(api_host, user_email, user_password, logger=None):
   retry_count = 0
+  if not logger:
+    logger = get_default_logger()
   while retry_count < MAX_RETRIES:
-    try:
-      login = requests.post('https://' + api_host + '/login',
-                            data = {"email": user_email, "password": user_password})
+    login = requests.post('https://' + api_host + '/login',
+                          data = {"email": user_email, "password": user_password})
+    if login.status_code == 200:
+      logger.debug("Authentication succeeded in get_access_token")
       return login.json()['data']['accessToken']
-    except (ValueError, KeyError) as err:
-      sys.stderr.write("Failed to get access token: {0}\n".format(err))
+    else:
+      logger.warning("Error in get_access_token: {}".format(login))
     retry_count += 1
-  raise ValueError("Can't get access token, giving up after {0} tries.".format(retry_count))
+  raise Exception("Giving up on get_access_token after {0} tries.".format(retry_count))
 
 
 def get_data(url, headers, params=None, logger=None):
-  log_record = dict(route=url, params=params)
+  base_log_record = dict(route=url, params=params)
   retry_count = 0
   if not logger:
     logger = get_default_logger()
@@ -39,7 +43,7 @@ def get_data(url, headers, params=None, logger=None):
     start_time = time.time()
     data = requests.get(url, params=params, headers=headers, timeout=None)
     elapsed_time = time.time() - start_time
-    log_record['date'] = str(datetime.utcnow().date())
+    log_record = dict(base_log_record)
     log_record['elapsed_time_in_ms'] = 1000 * elapsed_time
     log_record['retry_count'] = retry_count
     log_record['status_code'] = data.status_code
