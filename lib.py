@@ -126,7 +126,7 @@ def get_data_points(access_token, api_host,
             'frequencyId': frequency_id, 'sourceId': source_id}
   resp = get_data(url, headers, params)
   try:
-    return resp.json()['data']
+    return resp.json()
   except KeyError as e:
     raise Exception(resp.text)
 
