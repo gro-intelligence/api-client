@@ -57,7 +57,7 @@ def get_data(url, headers, params=None, logger=None):
       logger.warning(log_record)
     else:
       logger.error(log_record)
-  raise Exception(data.text)
+  raise Exception('Giving up on {} after {} tries.'.format(url, retry_count))
 
 
 def get_available(access_token, api_host, entity_type):
