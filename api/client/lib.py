@@ -113,6 +113,12 @@ def get_data_series(access_token, api_host, item_id, metric_id, region_id,
     params['itemId'] = item_id
   if metric_id:
     params['metricId'] =  metric_id
+  if frequency_id:
+    params['frequencyId'] = frequency_id
+  if source_id:
+    params['sourceId'] = source_id
+  if partner_region_id:
+    params['partnerRegionId'] = partner_region_id
   resp = get_data(url, headers, params)
   try:
     return resp.json()['data']
