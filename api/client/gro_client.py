@@ -72,11 +72,14 @@ def pick_random_entities(access_token):
     available.
     """
     item_list = get_available(access_token, API_HOST, 'items')
-    item = item_list[int(len(item_list)*random())]
-    print "Randomly selected item: {}".format(item['name'])
-    selected_entities = {'itemId':  item['id']}
-    entity_list = list_available(access_token, API_HOST, selected_entities)
-    entities = entity_list[int(len(entity_list)*random())]
+    num = 0
+    while not num:
+        item = item_list[int(len(item_list)*random())]
+        print "Randomly selected item: {}".format(item['name'])
+        selected_entities = {'itemId':  item['id']}
+        entity_list = list_available(access_token, API_HOST, selected_entities)
+        num = len(entity_list)
+    entities = entity_list[int(num*random())]
     print "Using entities: {}".format(str(entities))
     selected_entities.update(entities)
     return selected_entities
@@ -93,6 +96,9 @@ def main():
     parser.add_argument("--token")
     args = parser.parse_args()
 
+    assert (args.user_email and args.user_password) or args.token, \
+        "Need --token, or --user_email and --user_password"
+
     access_token = None
     if args.token:
         access_token = args.token
@@ -103,6 +109,7 @@ def main():
         print access_token
         sys.exit(0)
 
+    
     selected_entities = {}
     if args.item:
         selected_entities['item_id'] = search_for_entity(access_token,
