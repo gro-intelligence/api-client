@@ -14,7 +14,7 @@ from random import random
 from api.client.lib import get_access_token, get_available, list_available, get_data_series, get_data_points, search, lookup
 
 
-API_HOST = 'apistage11201.gro-intelligence.com'
+API_HOST = 'clewsapi.gro-intelligence.com'
 OUTPUT_FILENAME = 'gro_client_output.csv'
 unit_names = {}
 
@@ -92,6 +92,7 @@ def main():
     parser.add_argument("--item")
     parser.add_argument("--metric")
     parser.add_argument("--region")
+    parser.add_argument("--partner_region")
     parser.add_argument("--print_token", action='store_true')
     parser.add_argument("--token")
     args = parser.parse_args()
@@ -120,6 +121,10 @@ def main():
     if args.region:
         selected_entities['region_id'] = search_for_entity(access_token,
                                                            'regions', args.region)
+    if args.partner_region:
+        selected_entities['partner_region_id'] = search_for_entity(
+            access_token, 'regions', args.partner_region)
+
     if not selected_entities:
         selected_entities = pick_random_entities(access_token)
 
