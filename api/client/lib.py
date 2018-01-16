@@ -100,7 +100,8 @@ def lookup(access_token, api_host, entity_type, entity_id):
     raise Exception(resp.text)
 
 
-def get_data_series(access_token, api_host, item_id, metric_id, region_id):
+def get_data_series(access_token, api_host, item_id, metric_id, region_id,
+                    frequency_id=None, source_id=None, partner_region_id=None):
   """Get data series records for the given selected entities."""
   url = '/'.join(['https:', '', api_host, 'v2/data_series/list'])
   headers = {'authorization': 'Bearer ' + access_token}
@@ -111,6 +112,12 @@ def get_data_series(access_token, api_host, item_id, metric_id, region_id):
     params['itemId'] = item_id
   if metric_id:
     params['metricId'] =  metric_id
+  if frequency_id:
+    params['frequencyId'] = frequency_id
+  if source_id:
+    params['sourceId'] = source_id
+  if partner_region_id:
+    params['partnerRegionId'] = partner_region_id
   resp = get_data(url, headers, params)
   try:
     return resp.json()['data']
@@ -119,14 +126,17 @@ def get_data_series(access_token, api_host, item_id, metric_id, region_id):
 
 
 def get_data_points(access_token, api_host,
-                    item_id, metric_id, region_id, frequency_id, source_id):
+                    item_id, metric_id, region_id, 
+                    frequency_id, source_id, partner_region_id=None):
   url = '/'.join(['https:', '', api_host, 'v2/data'])
   headers = {'authorization': 'Bearer ' + access_token }
   params = {'regionId': region_id, 'itemId': item_id, 'metricId': metric_id,
             'frequencyId': frequency_id, 'sourceId': source_id}
+  if partner_region_id:
+    params['partner_region_id'] = partner_region_id
   resp = get_data(url, headers, params)
   try:
-    return resp.json()['data']
+    return resp.json()
   except KeyError as e:
     raise Exception(resp.text)
 
