@@ -108,6 +108,8 @@ def get_data_series(access_token, api_host, item_id, metric_id, region_id,
   params = { }
   if region_id:
     params['regionId'] = region_id
+  if partner_region_id:
+    params['partnerRegionId'] = partner_region_id
   if item_id:
     params['itemId'] = item_id
   if metric_id:
@@ -133,7 +135,7 @@ def get_data_points(access_token, api_host,
   params = {'regionId': region_id, 'itemId': item_id, 'metricId': metric_id,
             'frequencyId': frequency_id, 'sourceId': source_id}
   if partner_region_id:
-    params['partner_region_id'] = partner_region_id
+    params['partnerRegionId'] = partner_region_id
   resp = get_data(url, headers, params)
   try:
     return resp.json()
