@@ -48,16 +48,15 @@ def get_data(url, headers, params=None, logger=None):
     log_record['retry_count'] = retry_count
     log_record['status_code'] = data.status_code
     if data.status_code == 200:
-      logger.debug(log_record)
+      logger.info('OK', extra=log_record)
       return data
     retry_count += 1
     log_record['tag'] = 'failed_gro_api_request'
-    log_record['message'] = data.text  
     if retry_count < MAX_RETRIES:
-      logger.warning(log_record)
+      logger.warning(data.text, extra=log_record)
     else:
-      logger.error(log_record)
-  raise Exception(data.text)
+      logger.error(data.text, extra=log_record)
+  raise Exception('Giving up on {} after {} tries.'.format(url, retry_count))
 
 
 def get_available(access_token, api_host, entity_type):
