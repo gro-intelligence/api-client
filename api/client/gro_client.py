@@ -33,9 +33,7 @@ def print_random_data_series(access_token, selected_entities):
     """
     # Pick a random data series for this selection
     data_series_list = get_data_series(access_token, API_HOST,
-                                       selected_entities.get('item_id'),
-                                       selected_entities.get('metric_id'),
-                                       selected_entities.get('region_id'))
+                                       **selected_entities)
     if not data_series_list:
         raise Exception("No data series available for {}".format(
             selected_entities))
@@ -43,15 +41,11 @@ def print_random_data_series(access_token, selected_entities):
     print "Using data series: {}".format(str(data_series))
     print "Outputing to file: {}".format(OUTPUT_FILENAME)
     writer = unicodecsv.writer(open(OUTPUT_FILENAME, 'wb'))
-    for point in get_data_points(access_token, API_HOST,
-                                 data_series['item_id'],
-                                 data_series['metric_id'],
-                                 data_series['region_id'],
-                                 data_series['frequency_id'],
-                                 data_series['source_id']):
+    for point in get_data_points(access_token, API_HOST, **data_series):
         writer.writerow([point['start_date'], point['end_date'],
                          point['value'] * point['input_unit_scale'],
                          lookup_unit_name(access_token, point['input_unit_id'])])
+
 
 def search_for_entity(access_token, entity_type, keywords):
     """Returns the first result of entity_type (which is items, metrics or

@@ -39,6 +39,7 @@ def get_data(url, headers, params=None, logger=None):
   retry_count = 0
   if not logger:
     logger = get_default_logger()
+  logger.debug(url)
   while retry_count < MAX_RETRIES:
     start_time = time.time()
     data = requests.get(url, params=params, headers=headers, timeout=None)
@@ -121,20 +122,17 @@ def get_data_series(access_token, api_host, item_id, metric_id, region_id,
     raise Exception(resp.text)
 
 
-def get_data_points(access_token, api_host,
-                    item_id, metric_id, region_id, 
-                    frequency_id, source_id, partner_region_id=None):
+def get_data_points(access_token, api_host, **data_series_selection):
   url = '/'.join(['https:', '', api_host, 'v2/data'])
   headers = {'authorization': 'Bearer ' + access_token }
-  params = {'regionId': region_id, 'itemId': item_id, 'metricId': metric_id,
-            'frequencyId': frequency_id, 'sourceId': source_id}
-  if partner_region_id:
-    params['partnerRegionId'] = partner_region_id
+  params = {'regionId': data_series_selection['region_id'],
+            'itemId': data_series_selection['item_id'],
+            'metricId': data_series_selection['metric_id'],
+            'frequencyId': data_series_selection['frequency_id'],
+            'sourceId': data_series_selection['source_id'],
+            'partnerRegionId': data_series_selection['partner_region_id']}
   resp = get_data(url, headers, params)
-  try:
-    return resp.json()
-  except KeyError as e:
-    raise Exception(resp.text)
+  return resp.json()
 
 
 def search(access_token, api_host,
