@@ -101,21 +101,19 @@ def lookup(access_token, api_host, entity_type, entity_id):
     raise Exception(resp.text)
 
 
+def snake_to_camel(term):
+  """Converts hello_world to helloWorld."""
+  camel = ''.join(term.title().split('_'))
+  return camel[0].lower() + camel[1:]
+
+
 def get_params_from_selection(**selection):
+  """Construct http request params from dict of entity selections."""
   params = { }
   for key, value in selection.items():
-    if key == 'region_id':
-      params['regionId'] = value
-    if key == 'partner_region_id':
-      params['partnerRegionId'] = value
-    if key == 'item_id':
-      params['itemId'] = value
-    if key == 'metric_id':
-      params['metricId'] = value
-    if key == 'source_id':
-      params['sourceId'] = value
-    if key == 'frequency_id':
-      params['frequencyId'] = value
+    if key in ('region_id', 'partner_region_id', 'item_id',
+               'metric_id', 'source_id', 'frequency_id'):
+      params[snake_to_camel(key)] = value
   return params
 
 
