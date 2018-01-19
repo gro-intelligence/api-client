@@ -101,20 +101,29 @@ def lookup(access_token, api_host, entity_type, entity_id):
     raise Exception(resp.text)
 
 
-def get_data_series(access_token, api_host, item_id, metric_id, region_id,
-                    frequency_id=None, source_id=None, partner_region_id=None):
-  """Get data series records for the given selected entities."""
+def get_params_from_selection(**selection):
+  params = { }
+  for key, value in selection.items():
+    if key == 'region_id':
+      params['regionId'] = value
+    if key == 'partner_region_id':
+      params['partnerRegionId'] = value
+    if key == 'item_id':
+      params['itemId'] = value
+    if key == 'metric_id':
+      params['metricId'] = value
+    if key == 'source_id':
+      params['sourceId'] = value
+    if key == 'frequency_id':
+      params['frequencyId'] = value
+  return params
+
+
+def get_data_series(access_token, api_host, **selection):
+  """Get data series records for the given selection of entities."""
   url = '/'.join(['https:', '', api_host, 'v2/data_series/list'])
   headers = {'authorization': 'Bearer ' + access_token}
-  params = { }
-  if region_id:
-    params['regionId'] = region_id
-  if partner_region_id:
-    params['partnerRegionId'] = partner_region_id
-  if item_id:
-    params['itemId'] = item_id
-  if metric_id:
-    params['metricId'] =  metric_id
+  params = get_params_from_selection(**selection)
   resp = get_data(url, headers, params)
   try:
     return resp.json()['data']
@@ -122,15 +131,14 @@ def get_data_series(access_token, api_host, item_id, metric_id, region_id,
     raise Exception(resp.text)
 
 
-def get_data_points(access_token, api_host, **data_series_selection):
+def get_data_points(access_token, api_host, **selection):
+  """Get all the data points for a given selection, which is some or all
+  of: item_id, metric_id, region_id, frequency_id, source_id,
+  partner_region_id. Additional arguments are allowed and ignored.
+  """
   url = '/'.join(['https:', '', api_host, 'v2/data'])
   headers = {'authorization': 'Bearer ' + access_token }
-  params = {'regionId': data_series_selection['region_id'],
-            'itemId': data_series_selection['item_id'],
-            'metricId': data_series_selection['metric_id'],
-            'frequencyId': data_series_selection['frequency_id'],
-            'sourceId': data_series_selection['source_id'],
-            'partnerRegionId': data_series_selection['partner_region_id']}
+  params = get_params_from_selection(**selection)
   resp = get_data(url, headers, params)
   return resp.json()
 
