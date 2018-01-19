@@ -118,7 +118,11 @@ def get_params_from_selection(**selection):
 
 
 def get_data_series(access_token, api_host, **selection):
-  """Get data series records for the given selection of entities."""
+  """Get data series records for the given selection of entities.  which
+  is some or all of: item_id, metric_id, region_id, frequency_id,
+  source_id, partner_region_id. Additional arguments are allowed and
+  ignored.
+  """
   url = '/'.join(['https:', '', api_host, 'v2/data_series/list'])
   headers = {'authorization': 'Bearer ' + access_token}
   params = get_params_from_selection(**selection)

@@ -14,7 +14,7 @@ from random import random
 from api.client.lib import get_access_token, get_available, list_available, get_data_series, get_data_points, search, lookup
 
 
-API_HOST = 'clewsapi.gro-intelligence.com'
+API_HOST = 'exp-api.gro-intelligence.com'
 OUTPUT_FILENAME = 'gro_client_output.csv'
 unit_names = {}
 
