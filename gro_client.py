@@ -2,10 +2,9 @@
 #
 # Usage example:
 #
-#   export PYTHONPATH=~/src/gro
-#   python ~/src/gro/api/client/gro_client.py  --user_email=foo@example.com --user_password=s3krit --item=sesame --region=ethiopia
-#   python ~/src/gro/api/client/gro_client.py --user_email=foo@example.com --user_password=s3krit
-#   python ~/src/gro/api/client/gro_client.py --user_email=foo@example.com --user_password=s3krit --metric=export
+#   export PYTHONPATH=./gro
+#   python gro/api/client/gro_client.py --item soybeans  --region brazil --partner_region china --metric export --user_email ... --user_password ...
+#   python gro/api/client/gro_client.py --item=sesame --region=ethiopia --user_email=... --user_password=...
 
 import argparse
 import sys
