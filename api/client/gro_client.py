@@ -18,11 +18,10 @@ OUTPUT_FILENAME = 'gro_client_output.csv'
 unit_names = {}
 
 
-def lookup_unit_name(unit_id):
+def lookup_unit_name(client, unit_id):
     """Wrapper to lookup unit names, with local cache to avoid repeated lookups."""
     if unit_id not in unit_names:
-        unit_names[unit_id] = lookup(
-            access_token, API_HOST, 'units', unit_id)['abbreviation']
+        unit_names[unit_id] = client.lookup('units', unit_id)['abbreviation']
     return unit_names[unit_id]
 
 
