@@ -15,14 +15,6 @@ import api.client.lib
 
 API_HOST = 'exp-api.gro-intelligence.com'
 OUTPUT_FILENAME = 'gro_client_output.csv'
-unit_names = {}
-
-
-def lookup_unit_name(client, unit_id):
-    """Wrapper to lookup unit names, with local cache to avoid repeated lookups."""
-    if unit_id not in unit_names:
-        unit_names[unit_id] = client.lookup('units', unit_id)['abbreviation']
-    return unit_names[unit_id]
 
 
 def print_random_data_series(client, selected_entities):
@@ -41,7 +33,7 @@ def print_random_data_series(client, selected_entities):
     for point in client.get_data_points(**data_series):
         writer.writerow([point['start_date'], point['end_date'],
                          point['value'] * point['input_unit_scale'],
-                         lookup_unit_name(client, point['input_unit_id'])])
+                         client.lookup_unit_abbreviation(point['input_unit_id'])])
 
 
 def search_for_entity(client, entity_type, keywords):
@@ -49,10 +41,9 @@ def search_for_entity(client, entity_type, keywords):
     regions) that matches the given keywords.
     """
     results = client.search(entity_type, keywords)
-    num_results = len(results[entity_type])
     for result in results[entity_type]:
         print "Picking first result out of {} {}: {}, {}".format(
-            num_results, entity_type, result['id'], result['name'])
+            len(results[entity_type]), entity_type, result['id'], result['name'])
         return result['id']
     return None
 
