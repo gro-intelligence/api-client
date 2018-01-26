@@ -14,14 +14,14 @@ import pandas
 import api.client.lib
 
 
-API_HOST = 'exp-api.gro-intelligence.com'
+API_HOST = 'api.gro-intelligence.com'
 OUTPUT_FILENAME = 'gro_client_output.csv'
 
 
 def get_df(client, **selected_entities):
     """Get the content of data series in a pandas frame.
     selected_entities should be some or all of: item_id, metric_id,
-    region_id, frequency_id, source_id, partner_region_id.
+    region_id, frequency_id, source_id, partner_region_id
     """
     return pandas.DataFrame(client.get_data_points(**selected_entities))
 
