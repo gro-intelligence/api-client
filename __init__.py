@@ -26,21 +26,6 @@ class Client(object):
             self.__unit_names[unit_id] = self.lookup('units', unit_id)['abbreviation']
         return self.__unit_names[unit_id]
 
-    def lookup_any_entity(id_or_name):
-        entities = ['items', 'metrics', 'regions', 'sources', 'units', 'frequencies', 'sources' ]
-        return_list = list()
-        if type( unknown_value ) == str:
-            for entity_type in entities:
-                return_list.append( [entity_type] )
-                return_list.append(self.search(entity_type, unknown_value))
-        elif type( unknown_value ) == int:
-            for entity_type in entities:
-                return_list.append( [entity_type] )
-                return_list.append( lookup( tok, api_host, entity_type, unknown_value ) )
-        else:
-            raise Exception('Need to use string or integer input')
-        return return_list
-        
     def get_data_series(self, **selection):
         return lib.get_data_series(self.access_token, self.api_host, **selection)
 
