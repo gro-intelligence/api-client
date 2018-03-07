@@ -2,40 +2,36 @@
 #
 # Usage example:
 #
-#   export PYTHONPATH=~/src/gro
-#   python ~/src/gro/api/client/gro_client.py  --user_email=foo@example.com --user_password=s3krit --item=sesame --region=ethiopia
-#   python ~/src/gro/api/client/gro_client.py --user_email=foo@example.com --user_password=s3krit
-#   python ~/src/gro/api/client/gro_client.py --user_email=foo@example.com --user_password=s3krit --metric=export
+#   export PYTHONPATH=./gro
+#   python gro/api/client/gro_client.py --item soybeans  --region brazil --partner_region china --metric export --user_email ... --user_password ...
+#   python gro/api/client/gro_client.py --item=sesame --region=ethiopia --user_email=... --user_password=...
 
 import argparse
 import sys
 import unicodecsv
 from random import random
-from api.client.lib import get_access_token, get_available, list_available, get_data_series, get_data_points, search, lookup
+import pandas
+import api.client.lib
 
 
-API_HOST = 'apistage11201.gro-intelligence.com'
+API_HOST = 'api.gro-intelligence.com'
 OUTPUT_FILENAME = 'gro_client_output.csv'
-unit_names = {}
 
 
-def lookup_unit_name(access_token, unit_id):
-    """Wrapper to lookup unit names, with local cache to avoid repeated lookups."""
-    if unit_id not in unit_names:
-        unit_names[unit_id] = lookup(
-            access_token, API_HOST, 'units', unit_id)['abbreviation']
-    return unit_names[unit_id]
+def get_df(client, **selected_entities):
+    """Get the content of data series in a pandas frame.
+    selected_entities should be some or all of: item_id, metric_id,
+    region_id, frequency_id, source_id, partner_region_id
+    """
+    return pandas.DataFrame(client.get_data_points(**selected_entities))
 
 
-def print_random_data_series(access_token, selected_entities):
+def print_random_data_series(client, selected_entities):
     """Example which prints out a CSV of a random data series that
     satisfies the (optional) given selection.
     """
     # Pick a random data series for this selection
-    data_series_list = get_data_series(access_token, API_HOST,
-                                       selected_entities.get('item_id'),
-                                       selected_entities.get('metric_id'),
-                                       selected_entities.get('region_id'))
+    data_series_list = client.get_data_series(**selected_entities)
     if not data_series_list:
         raise Exception("No data series available for {}".format(
             selected_entities))
@@ -43,40 +39,38 @@ def print_random_data_series(access_token, selected_entities):
     print "Using data series: {}".format(str(data_series))
     print "Outputing to file: {}".format(OUTPUT_FILENAME)
     writer = unicodecsv.writer(open(OUTPUT_FILENAME, 'wb'))
-    for point in get_data_points(access_token, API_HOST,
-                                 data_series['item_id'],
-                                 data_series['metric_id'],
-                                 data_series['region_id'],
-                                 data_series['frequency_id'],
-                                 data_series['source_id']):
+    for point in client.get_data_points(**data_series):
         writer.writerow([point['start_date'], point['end_date'],
                          point['value'] * point['input_unit_scale'],
-                         lookup_unit_name(access_token, point['input_unit_id'])])
+                         client.lookup_unit_abbreviation(point['input_unit_id'])])
 
-def search_for_entity(access_token, entity_type, keywords):
+
+def search_for_entity(client, entity_type, keywords):
     """Returns the first result of entity_type (which is items, metrics or
     regions) that matches the given keywords.
     """
-    results = search(access_token, API_HOST, entity_type, keywords)
-    num_results = len(results[entity_type])
+    results = client.search(entity_type, keywords)
     for result in results[entity_type]:
         print "Picking first result out of {} {}: {}, {}".format(
-            num_results, entity_type, result['id'], result['name'])
+            len(results[entity_type]), entity_type, result['id'], result['name'])
         return result['id']
     return None
 
 
-def pick_random_entities(access_token):
+def pick_random_entities(client):
     """Pick a random item that has some data associated with it, and a
     random metric and region pair for that item with data
     available.
     """
-    item_list = get_available(access_token, API_HOST, 'items')
-    item = item_list[int(len(item_list)*random())]
-    print "Randomly selected item: {}".format(item['name'])
-    selected_entities = {'itemId':  item['id']}
-    entity_list = list_available(access_token, API_HOST, selected_entities)
-    entities = entity_list[int(len(entity_list)*random())]
+    item_list = client.get_available('items')
+    num = 0
+    while not num:
+        item = item_list[int(len(item_list)*random())]
+        print "Randomly selected item: {}".format(item['name'])
+        selected_entities = {'itemId':  item['id']}
+        entity_list = client.list_available(selected_entities)
+        num = len(entity_list)
+    entities = entity_list[int(num*random())]
     print "Using entities: {}".format(str(entities))
     selected_entities.update(entities)
     return selected_entities
@@ -89,35 +83,38 @@ def main():
     parser.add_argument("--item")
     parser.add_argument("--metric")
     parser.add_argument("--region")
+    parser.add_argument("--partner_region")
     parser.add_argument("--print_token", action='store_true')
     parser.add_argument("--token")
     args = parser.parse_args()
 
+    assert (args.user_email and args.user_password) or args.token, \
+        "Need --token, or --user_email and --user_password"
     access_token = None
     if args.token:
         access_token = args.token
     else:
-        access_token = get_access_token(API_HOST, args.user_email, args.user_password)
-
+        access_token = api.client.lib.get_access_token(API_HOST, args.user_email, args.user_password)
     if args.print_token:
         print access_token
         sys.exit(0)
+    client = api.client.Client(API_HOST, access_token)
 
     selected_entities = {}
     if args.item:
-        selected_entities['item_id'] = search_for_entity(access_token,
-                                                         'items', args.item)
+        selected_entities['item_id'] = search_for_entity(client, 'items', args.item)
     if args.metric:
-        selected_entities['metric_id'] = search_for_entity(access_token,
-                                                           'metrics', args.metric)
+        selected_entities['metric_id'] = search_for_entity(client, 'metrics', args.metric)
     if args.region:
-        selected_entities['region_id'] = search_for_entity(access_token,
-                                                           'regions', args.region)
+        selected_entities['region_id'] = search_for_entity(client, 'regions', args.region)
+    if args.partner_region:
+        selected_entities['partner_region_id'] = search_for_entity(client, 'regions', args.partner_region)
+
     if not selected_entities:
-        selected_entities = pick_random_entities(access_token)
+        selected_entities = pick_random_entities(client)
 
     print "Data series example:"
-    print_random_data_series(access_token, selected_entities)
+    print_random_data_series(client, selected_entities)
 
 
 if __name__ == "__main__":

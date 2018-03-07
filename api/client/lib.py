@@ -39,6 +39,7 @@ def get_data(url, headers, params=None, logger=None):
   retry_count = 0
   if not logger:
     logger = get_default_logger()
+  logger.debug(url)
   while retry_count < MAX_RETRIES:
     start_time = time.time()
     data = requests.get(url, params=params, headers=headers, timeout=None)
@@ -48,7 +49,7 @@ def get_data(url, headers, params=None, logger=None):
     log_record['retry_count'] = retry_count
     log_record['status_code'] = data.status_code
     if data.status_code == 200:
-      logger.debug('OK', extra=log_record)
+      logger.info('OK', extra=log_record)
       return data
     retry_count += 1
     log_record['tag'] = 'failed_gro_api_request'
@@ -100,17 +101,31 @@ def lookup(access_token, api_host, entity_type, entity_id):
     raise Exception(resp.text)
 
 
-def get_data_series(access_token, api_host, item_id, metric_id, region_id):
-  """Get data series records for the given selected entities."""
+def snake_to_camel(term):
+  """Converts hello_world to helloWorld."""
+  camel = ''.join(term.title().split('_'))
+  return camel[0].lower() + camel[1:]
+
+
+def get_params_from_selection(**selection):
+  """Construct http request params from dict of entity selections."""
+  params = { }
+  for key, value in selection.items():
+    if key in ('region_id', 'partner_region_id', 'item_id',
+               'metric_id', 'source_id', 'frequency_id'):
+      params[snake_to_camel(key)] = value
+  return params
+
+
+def get_data_series(access_token, api_host, **selection):
+  """Get data series records for the given selection of entities.  which
+  is some or all of: item_id, metric_id, region_id, frequency_id,
+  source_id, partner_region_id. Additional arguments are allowed and
+  ignored.
+  """
   url = '/'.join(['https:', '', api_host, 'v2/data_series/list'])
   headers = {'authorization': 'Bearer ' + access_token}
-  params = { }
-  if region_id:
-    params['regionId'] = region_id
-  if item_id:
-    params['itemId'] = item_id
-  if metric_id:
-    params['metricId'] =  metric_id
+  params = get_params_from_selection(**selection)
   resp = get_data(url, headers, params)
   try:
     return resp.json()['data']
@@ -118,17 +133,16 @@ def get_data_series(access_token, api_host, item_id, metric_id, region_id):
     raise Exception(resp.text)
 
 
-def get_data_points(access_token, api_host,
-                    item_id, metric_id, region_id, frequency_id, source_id):
+def get_data_points(access_token, api_host, **selection):
+  """Get all the data points for a given selection, which is some or all
+  of: item_id, metric_id, region_id, frequency_id, source_id,
+  partner_region_id. Additional arguments are allowed and ignored.
+  """
   url = '/'.join(['https:', '', api_host, 'v2/data'])
   headers = {'authorization': 'Bearer ' + access_token }
-  params = {'regionId': region_id, 'itemId': item_id, 'metricId': metric_id,
-            'frequencyId': frequency_id, 'sourceId': source_id}
+  params = get_params_from_selection(**selection)
   resp = get_data(url, headers, params)
-  try:
-    return resp.json()
-  except KeyError as e:
-    raise Exception(resp.text)
+  return resp.json()
 
 
 def search(access_token, api_host,
