@@ -33,4 +33,9 @@ class Client(object):
         return lib.get_data_points(self.access_token, self.api_host, **selection)
 
     def search(self, entity_type, search_terms):
-        return lib.search(self.access_token, self.api_host, entity_type, search_terms)
+        return lib.search(self.access_token, self.api_host,
+                          entity_type, search_terms)
+
+    def search_and_lookup(self, entity_type, search_terms):
+        yield lib.search_and_lookup(self.access_token, self.api_host,
+                                    entity_type, search_terms)

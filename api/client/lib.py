@@ -154,3 +154,18 @@ def search(access_token, api_host,
   headers = {'authorization': 'Bearer ' + access_token }
   resp = get_data(url, headers, {'q': search_terms})
   return resp.json()
+
+
+def search_and_lookup(access_token, api_host,
+                      entity_type, search_terms):
+  """Does a search for the given search terms, and for each result
+  yields a dict of the entity and it's properties:
+     { 'id': <integer id of entity, unique within this entity type>, 
+       'name':  <string canonical name> 
+       'contains': <array of ids of entities that are contained in this one>,
+       ....
+       <other properties> }
+  """
+  search_results = search(access_token, api_host, entity_type, search_terms)
+  for result in search_results[entity_type]:
+    yield lookup(access_token, api_host, entity_type, result['id'])
