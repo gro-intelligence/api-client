@@ -38,4 +38,4 @@ class Client(object):
 
     def search_and_lookup(self, entity_type, search_terms):
         return lib.search_and_lookup(self.access_token, self.api_host,
-                                    entity_type, search_terms)
+                                     entity_type, search_terms)
