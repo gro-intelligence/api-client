@@ -160,8 +160,8 @@ def search_and_lookup(access_token, api_host,
                       entity_type, search_terms):
   """Does a search for the given search terms, and for each result
   yields a dict of the entity and it's properties:
-     { 'id': <integer id of entity, unique within this entity type>, 
-       'name':  <string canonical name> 
+     { 'id': <integer id of entity, unique within this entity type>,
+       'name':  <string canonical name>
        'contains': <array of ids of entities that are contained in this one>,
        ....
        <other properties> }
@@ -169,3 +169,16 @@ def search_and_lookup(access_token, api_host,
   search_results = search(access_token, api_host, entity_type, search_terms)
   for result in search_results[entity_type]:
     yield lookup(access_token, api_host, entity_type, result['id'])
+
+
+def lookup_belongs(access_token, api_host, entity_type, entity_id):
+  """Given an entity_type, which is one of 'items', 'metrics',
+    'regions', returns a JSON dict with the list of available entities
+    of the given type.
+  """
+  url = '/'.join(['https:', '', api_host, 'v2', entity_type, 'belongs'])
+  params = { 'ids': str(entity_id) }
+  headers = {'authorization': 'Bearer ' + access_token}
+  resp = get_data(url, headers, params)
+  for parent_entity_id in resp.json()['data']:
+    yield lookup(access_token, api_host, entity_type, parent_entity_id)
