@@ -139,19 +139,14 @@ def rank_series_by_source(access_token, api_host, series_list):
   prefered soruce comes first. Differences other than source_id are
   not affected.
   """
-  selections = set()
-  for single_series in series_list:
-    selection = tuple(filter(lambda (k, v): k != 'source_id',
-                             single_series.iteritems()))
-    # sources.setdefault(selection, set()).add(single_series['source_id'])
-    selections.add(selection)
-  for s in selections:
-    series = dict(s)
+  selections = set(tuple(filter(lambda (k, v): k != 'source_id',
+                                single_series.iteritems()))
+                   for single_series in series_list)
+  for series in map(dict, selections):
     url = '/'.join(['https:', '', api_host, 'v2/available/sources'])
     headers = {'authorization': 'Bearer ' + access_token}
-    params = {}
-    for k, v in get_params_from_selection(**series).iteritems():
-      params[k + 's'] = v
+    params = dict((k + 's', v)
+                  for k, v in get_params_from_selection(**series).iteritems())
     source_ids = get_data(url, headers, params).json()
     for source_id in source_ids:
       series['source_id'] = source_id
