@@ -26,16 +26,7 @@ def get_df(client, **selected_entities):
     return pandas.DataFrame(client.get_data_points(**selected_entities))
 
 
-def print_random_data_series(client, selected_entities):
-    """Example which prints out a CSV of a random data series that
-    satisfies the (optional) given selection.
-    """
-    # Pick a random data series for this selection
-    data_series_list = client.get_data_series(**selected_entities)
-    if not data_series_list:
-        raise Exception("No data series available for {}".format(
-            selected_entities))
-    data_series = data_series_list[int(len(data_series_list)*random())]
+def print_one_data_series(client, data_series):
     print "Using data series: {}".format(str(data_series))
     print "Outputing to file: {}".format(OUTPUT_FILENAME)
     writer = unicodecsv.writer(open(OUTPUT_FILENAME, 'wb'))
@@ -43,6 +34,20 @@ def print_random_data_series(client, selected_entities):
         writer.writerow([point['start_date'], point['end_date'],
                          point['value'] * point['input_unit_scale'],
                          client.lookup_unit_abbreviation(point['input_unit_id'])])
+
+
+def print_random_data_series(client, data_series_list):
+    """Example which prints out a CSV of a random data series that
+    satisfies the (optional) given selection.
+    """
+    print_one_data_series(
+        client, data_series_list[int(len(data_series_list)*random())])
+
+
+def pick_source_and_print_data_series(client, data_series_list):
+    for data_series in client.rank_series_by_source(data_series_list):
+        print_one_data_series(client, data_series)
+        break
 
 
 def search_for_entity(client, entity_type, keywords):
@@ -112,9 +117,14 @@ def main():
 
     if not selected_entities:
         selected_entities = pick_random_entities(client)
-
-    print "Data series example:"
-    print_random_data_series(client, selected_entities)
+    data_series_list = client.get_data_series(**selected_entities)
+    if not data_series_list:
+        raise Exception("No data series available for {}".format(selected_entities))
+    else:
+        print "Found {} distinct data series".format(len(data_series_list))
+    # Use  print_random_data_series or pick_source_and_print_data_series
+    pick_source_and_print_data_series(client, data_series_list)
+    # print_random_data_series(client, data_series_list)
 
 
 if __name__ == "__main__":
