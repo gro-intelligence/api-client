@@ -193,12 +193,12 @@ def search_and_lookup(access_token, api_host,
 
 def lookup_belongs(access_token, api_host, entity_type, entity_id):
   """Given an entity_type, which is one of 'items', 'metrics',
-    'regions', returns a JSON dict with the list of available entities
-    of the given type.
+    'regions', and id, generates a list of JSON dicts of entities it
+    belongs to.
   """
   url = '/'.join(['https:', '', api_host, 'v2', entity_type, 'belongs-to'])
   params = { 'ids': str(entity_id) }
   headers = {'authorization': 'Bearer ' + access_token}
   resp = get_data(url, headers, params)
-  for parent_entity_id in resp.json()['data']:
+  for parent_entity_id in resp.json().get('data').get(str(entity_id)):
     yield lookup(access_token, api_host, entity_type, parent_entity_id)
