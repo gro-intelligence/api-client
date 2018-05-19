@@ -196,7 +196,7 @@ def lookup_belongs(access_token, api_host, entity_type, entity_id):
     'regions', returns a JSON dict with the list of available entities
     of the given type.
   """
-  url = '/'.join(['https:', '', api_host, 'v2', entity_type, 'belongs'])
+  url = '/'.join(['https:', '', api_host, 'v2', entity_type, 'belongs-to'])
   params = { 'ids': str(entity_id) }
   headers = {'authorization': 'Bearer ' + access_token}
   resp = get_data(url, headers, params)
