@@ -57,7 +57,7 @@ def get_data(url, headers, params=None, logger=None):
       logger.warning(data.text, extra=log_record)
     else:
       logger.error(data.text, extra=log_record)
-  raise Exception('Giving up on {} after {} tries. Error is: {}.'.format(url, retry_count, data.text))
+  raise Exception('Giving up on {} after {} tries.'.format(url, retry_count))
 
 
 def get_available(access_token, api_host, entity_type):
@@ -170,9 +170,12 @@ def search(access_token, api_host,
   """Given an entity_type, which is one of 'items', 'metrics',
   'regions', performs a search for the given terms.
   """
-  url = '/'.join(['https:', '', api_host, 'v2/search', entity_type])
+  url = '/'.join(['https:', '', api_host, 'v2/search'])
   headers = {'authorization': 'Bearer ' + access_token }
-  resp = get_data(url, headers, {'q': search_terms})
+  params = {'q': search_terms}
+  if entity_type:
+    params['entityType'] = entity_type
+  resp = get_data(url, headers, params)
   return resp.json()
 
 
