@@ -202,3 +202,20 @@ def lookup_belongs(access_token, api_host, entity_type, entity_id):
   resp = get_data(url, headers, params)
   for parent_entity_id in resp.json().get('data').get(str(entity_id)):
     yield lookup(access_token, api_host, entity_type, parent_entity_id)
+
+
+def reshare(url, headers, params, logger=None):
+  retry_count = 0
+  if not logger:
+    logger = get_default_logger()
+
+  while retry_count < MAX_RETRIES:
+    result = requests.post(url, headers=headers,
+                          data = {"displayIds": params['displayIds']})
+    if result.status_code == 200:
+      return result
+    else:
+      logger.warning("Error in resharing displays {0}: {1}".format(params['displayIds'], result))
+    retry_count += 1
+  raise Exception("Giving up on reshare_display after {0} tries.".format(retry_count))
+
