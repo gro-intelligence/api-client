@@ -214,8 +214,7 @@ def reshare(url, headers, params, logger=None):
                           data = {"displayIds": params['displayIds']})
     if result.status_code == 200:
       return result
-    else:
-      logger.warning("Error in resharing displays {0}: {1}".format(params['displayIds'], result))
+    logger.warning("Error in resharing displays {0}: {1}".format(params['displayIds'], result))
     retry_count += 1
   raise Exception("Giving up on reshare_display after {0} tries.".format(retry_count))
 
