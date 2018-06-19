@@ -10,6 +10,9 @@
 #
 #   python gro/api/client/gro_client.py  --user_email ... --user_password ... --print_token
 #   python gro/api/client/gro_client.py --token=$GROAPI_TOKEN
+#
+# Ref: https://app.gro-intelligence.com/#/displays/23713
+#
 
 import argparse
 import sys
