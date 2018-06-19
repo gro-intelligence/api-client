@@ -20,31 +20,32 @@ class CropModel(api.client.Client):
                 self._data_frame.add(df)
         return _data_frame
     
-    def print_one_data_series(self, data_series):
+    def print_one_data_series(self, data_series, filename):
         self._logger.info("Using data series: {}".format(str(data_series)))
-        self._logger.info("Outputing to file: {}".format(OUTPUT_FILENAME))
-        writer = unicodecsv.writer(open(OUTPUT_FILENAME, 'wb'))
+        self._logger.info("Outputing to file: {}".format(filename))
+        writer = unicodecsv.writer(open(filename, 'wb'))
         for point in self.get_data_points(**data_series):
             writer.writerow([point['start_date'], point['end_date'],
                              point['value'] * point['input_unit_scale'],
                              self.lookup_unit_abbreviation(point['input_unit_id'])])
 
-    def add_data_series(self, item, metric, region, partner_region=None):
+    def add_data_series(self, **kwargs):
         """Search for entities matching the given names, find data series for
         the given combination, and add them to this objects list of
         series."""
         entities = {}
-        if item:
-            entities['item_id'] = self.search_for_entity('items', item)
-        if metric:
-            entities['metric_id'] = self.search_for_entity('metrics', metric)
-        if region:
-            entities['region_id'] = self.search_for_entity('regions', region)
-        if partner_region:
+        if kwargs.get('item'):
+            entities['item_id'] = self.search_for_entity('items', kwargs['item'])
+        if kwargs.get('metric'):
+            entities['metric_id'] = self.search_for_entity('metrics', kwargs['metric'])
+        if kwargs.get('region'):
+            entities['region_id'] = self.search_for_entity('regions', kwargs['region'])
+        if kwargs.get('partner_region'):
             entities['partner_region_id'] = self.search_for_entity(
-                'regions', partner_region)
+                kwargs['partner_region'], partner_region)
+        # TODO: add support for source and frequency and don't rank by source if specified
         data_series_list = self.get_data_series(**entities)
-        self._logger.info("Found {} distinct data series".format(len(data_series_list)))
+        self._logger.debug("Found {} distinct data series".format(len(data_series_list)))
         for data_series in self.rank_series_by_source(data_series_list):
             self._data_series_list.append(data_series)
             self._logger.info("Added {}".format(data_series))
@@ -55,6 +56,6 @@ class CropModel(api.client.Client):
         """
         results = self.search(entity_type, keywords)
         for result in results[entity_type]:
-            self._logger.info("First result, out of {} {}: {}, {}".format(
+            self._logger.debug("First result, out of {} {}: {}, {}".format(
                 len(results[entity_type]), entity_type, result['id'], result['name']))
             return result['id']
