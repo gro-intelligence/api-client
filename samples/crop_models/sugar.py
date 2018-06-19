@@ -1,10 +1,15 @@
-# Basic gro api client.
+# Sample Gro API client for sugar model crop model
 #
 # Usage example:
 #
 #   export PYTHONPATH=/your/path/to/gro
-#   python gro/api/client/gro_client.py --item soybeans  --region brazil --partner_region china --metric export --user_email ... --user_password ...
-#   python gro/api/client/gro_client.py --item=sesame --region=ethiopia --user_email=... --user_password=...
+#
+#   python gro/api/client/sample/sugar.py --user_email ... --user_password ...
+#
+#   OR
+#
+#   python gro/api/client/gro_client.py  --user_email ... --user_password ... --print_token
+#   python gro/api/client/gro_client.py --token=$GROAPI_TOKEN
 
 import argparse
 import sys
@@ -15,7 +20,6 @@ def main():
     parser = argparse.ArgumentParser(description="Gro api client")
     parser.add_argument("--user_email")
     parser.add_argument("--user_password")
-    parser.add_argument("--region")
     parser.add_argument("--print_token", action='store_true')
     parser.add_argument("--token")
     args = parser.parse_args()
