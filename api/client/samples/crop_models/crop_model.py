@@ -49,6 +49,7 @@ class CropModel(api.client.Client):
         for data_series in self.rank_series_by_source(data_series_list):
             self._data_series_list.append(data_series)
             self._logger.info("Added {}".format(data_series))
+            return
             
     def search_for_entity(self, entity_type, keywords):
         """Returns the first result of entity_type (which is items, metrics or
