@@ -39,9 +39,12 @@ def main():
 
     model = CropModel('api.gro-intelligence.com', access_token)
     model.add_data_series(item="sugarcane", metric="production quantity", region="Brazil")
-    # TODO: the following should be district level, instead of the whole country
+    # TODO: the following can/should be district level, instead of the whole country
     model.add_data_series(item="sugarcane", metric="yield", region="Brazil")
     model.add_data_series(item="land temperature", metric="temperature", region="Brazil")
+    model.add_data_series(item="rainfall", metric="precipitation", region="Brazil")
+    model.add_data_series(item="ETa percent of median", metric="Evapotranspiration anomalies", region="Brazil")
+    model.add_data_series(item="Moisture", metric="soil moisture", region="Brazil")
     # TODO: maybe add prices
     # model.add_data_series(item="sugar", metric="price", region="World")
 
