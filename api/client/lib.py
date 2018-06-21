@@ -6,7 +6,7 @@ from datetime import datetime
 
 
 MAX_RETRIES = 4
-DEFAULT_LOG_LEVEL=logging.WARNING  # change to DEBUG for more detail
+DEFAULT_LOG_LEVEL=logging.INFO  # change to DEBUG for more detail
 
 
 def get_default_logger():
