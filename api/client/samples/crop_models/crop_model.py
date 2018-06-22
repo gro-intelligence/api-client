@@ -18,7 +18,7 @@ class CropModel(api.client.Client):
                 self._data_frame = df
             else:
                 self._data_frame.add(df)
-        return _data_frame
+        return self._data_frame
     
     def print_one_data_series(self, data_series, filename):
         self._logger.info("Using data series: {}".format(str(data_series)))
