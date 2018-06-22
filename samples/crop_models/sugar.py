@@ -3,20 +3,24 @@
 # Usage example:
 #
 #   export PYTHONPATH=/your/path/to/gro
+#   python sugar.py --user_email ... --user_password ...
 #
-#   python gro/api/client/sample/sugar.py --user_email ... --user_password ...
+# If you don't want to enter the password each time, print a token,
+# save it and use as follows:
 #
-#   OR
+#   export GROAPI_TOKEN=`python sugar.py --user_email ... --user_password ... --print_token`
+#   python sugar.py
 #
-#   python gro/api/client/gro_client.py  --user_email ... --user_password ... --print_token
-#   python gro/api/client/gro_client.py --token=$GROAPI_TOKEN
+# Or if you don't save the token, you can pass it via cmd line
+#
+#   python sugar.py --token ...
 #
 # Ref: https://app.gro-intelligence.com/#/displays/23713
-#
 
 import argparse
 import sys
 import api.client.lib
+import os
 from api.client.samples.crop_models.crop_model import CropModel
 
 def main():
@@ -24,7 +28,7 @@ def main():
     parser.add_argument("--user_email")
     parser.add_argument("--user_password")
     parser.add_argument("--print_token", action='store_true')
-    parser.add_argument("--token")
+    parser.add_argument("--token", default=os.environ['GROAPI_TOKEN'])
     args = parser.parse_args()
     assert (args.user_email and args.user_password) or args.token, \
         "Need --token, or --user_email and --user_password"
@@ -47,6 +51,8 @@ def main():
     model.add_data_series(item="Moisture", metric="soil moisture", region="Brazil")
     # TODO: maybe add prices
     # model.add_data_series(item="sugar", metric="price", region="World")
+    data_frame = model.get_df()
+    print "Loaded data frame of shape {}, columns: {}".format(data_frame.shape, data_frame.columns)
 
 
 if __name__ == "__main__":
