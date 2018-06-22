@@ -12,12 +12,10 @@ class CropModel(api.client.Client):
 
     def get_df(self):
         """Get the content of all data series in a Pandas frame."""
-        for series in self._data_series_list:
-            df = pandas.DataFrame(self.get_data_points(**series))
-            if not self._data_frame:
-                self._data_frame = df
-            else:
-                self._data_frame.add(df)
+        if self._data_frame is None:
+            self._data_frame = pandas.concat(
+                pandas.DataFrame(data=self.get_data_points(**series))
+                for series in self._data_series_list)
         return self._data_frame
     
     def print_one_data_series(self, data_series, filename):
@@ -49,6 +47,7 @@ class CropModel(api.client.Client):
         for data_series in self.rank_series_by_source(data_series_list):
             self._data_series_list.append(data_series)
             self._logger.info("Added {}".format(data_series))
+            self._data_frame = None
             return
             
     def search_for_entity(self, entity_type, keywords):
