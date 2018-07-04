@@ -55,7 +55,7 @@ class CropModel(api.client.Client):
         regions) that matches the given keywords.
         """
         results = self.search(entity_type, keywords)
-        for result in results[entity_type]:
+        for result in results:
             self._logger.debug("First result, out of {} {}: {}, {}".format(
-                len(results[entity_type]), entity_type, result['id'], result['name']))
+                len(results), entity_type, result['id']))
             return result['id']
