@@ -16,8 +16,10 @@ python gro_client.py --user_email=... --user_password=.... --print_token
 ```
 
 To save it in a bash environment variable:
-                                                                                                                                                                                 
-```export GROAPI_TOKEN=`python gro_client.py --user_email=... --user_password=... --print_token````
+                                                                                                                                                                               
+```
+export GROAPI_TOKEN=`python gro_client.py --user_email=... --user_password=... --print_token`
+```
 
 Run an example
 
