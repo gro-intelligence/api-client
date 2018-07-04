@@ -56,6 +56,6 @@ class CropModel(api.client.Client):
         """
         results = self.search(entity_type, keywords)
         for result in results:
-            self._logger.debug("First result, out of {} {}: {}, {}".format(
+            self._logger.debug("First result, out of {} {}: {}".format(
                 len(results), entity_type, result['id']))
             return result['id']
