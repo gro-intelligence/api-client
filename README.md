@@ -17,8 +17,12 @@ To save it in a bash environment variable:
 ```
 export GROAPI_TOKEN=`python gro_client.py --user_email=... --user_password=... --print_token`
 ```
-
-Run [sugar.py](api/client/samples/crop_models/sugar.py) example, 
+Try the [quick_start.py](api/client/samples/quick_start.py) example:
+```
+cd ~/gro/api/client/samples/
+python quick_start.py
+```
+A more advanced example is [sugar.py](api/client/samples/crop_models/sugar.py):
 ```
 cd ~/gro/api/client/samples/crop_models/
 python sugar.py
