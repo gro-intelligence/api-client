@@ -1,6 +1,6 @@
 # Gro API Client
   
-## Set up the environment:
+## Set up the environment
 ```
 cd ~/gro
 git clone https://github.com/gro-intelligence/api-client.git
@@ -27,4 +27,4 @@ A more advanced example is [sugar.py](api/client/samples/crop_models/sugar.py):
 cd ~/gro/api/client/samples/crop_models/
 python sugar.py
 ```
-Further documentation can be found in [api/client/](api/client) directory.
+Further documentation can be found in the [api/client/](api/client) directory.
