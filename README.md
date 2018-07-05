@@ -5,7 +5,7 @@ Set up the environment:
 ```
 cd ~/gro
 git clone https://github.com/gro-intelligence/api-client.git
-export PYTHONPATH=~/gro:$PYTHONPATH
+export PYTHONPATH=~/gro/api-client:$PYTHONPATH
 ```
 
 To avoid typing your password on the command line, you can get an API access token as follows:
