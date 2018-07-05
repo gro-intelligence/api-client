@@ -6,7 +6,7 @@ from datetime import datetime
 
 
 MAX_RETRIES = 4
-DEFAULT_LOG_LEVEL=logging.WARNING  # change to DEBUG for more detail
+DEFAULT_LOG_LEVEL=logging.INFO  # change to DEBUG for more detail
 
 
 def get_default_logger():
@@ -57,7 +57,7 @@ def get_data(url, headers, params=None, logger=None):
       logger.warning(data.text, extra=log_record)
     else:
       logger.error(data.text, extra=log_record)
-  raise Exception('Giving up on {} after {} tries.'.format(url, retry_count))
+  raise Exception('Giving up on {} after {} tries. Error is: {}.'.format(url, retry_count, data.text))
 
 
 def get_available(access_token, api_host, entity_type):
@@ -133,6 +133,26 @@ def get_data_series(access_token, api_host, **selection):
     raise Exception(resp.text)
 
 
+def rank_series_by_source(access_token, api_host, series_list):
+  """Given a list of series, return them in source-ranked order: such
+  that if there are multiple sources for the same selection, the
+  prefered soruce comes first. Differences other than source_id are
+  not affected.
+  """
+  selections = set(tuple(filter(lambda (k, v): k != 'source_id',
+                                single_series.iteritems()))
+                   for single_series in series_list)
+  for series in map(dict, selections):
+    url = '/'.join(['https:', '', api_host, 'v2/available/sources'])
+    headers = {'authorization': 'Bearer ' + access_token}
+    params = dict((k + 's', v)
+                  for k, v in get_params_from_selection(**series).iteritems())
+    source_ids = get_data(url, headers, params).json()
+    for source_id in source_ids:
+      series['source_id'] = source_id
+      yield series
+
+
 def get_data_points(access_token, api_host, **selection):
   """Get all the data points for a given selection, which is some or all
   of: item_id, metric_id, region_id, frequency_id, source_id,
@@ -154,3 +174,31 @@ def search(access_token, api_host,
   headers = {'authorization': 'Bearer ' + access_token }
   resp = get_data(url, headers, {'q': search_terms})
   return resp.json()
+
+
+def search_and_lookup(access_token, api_host,
+                      entity_type, search_terms):
+  """Does a search for the given search terms, and for each result
+  yields a dict of the entity and it's properties:
+     { 'id': <integer id of entity, unique within this entity type>,
+       'name':  <string canonical name>
+       'contains': <array of ids of entities that are contained in this one>,
+       ....
+       <other properties> }
+  """
+  search_results = search(access_token, api_host, entity_type, search_terms)
+  for result in search_results[entity_type]:
+    yield lookup(access_token, api_host, entity_type, result['id'])
+
+
+def lookup_belongs(access_token, api_host, entity_type, entity_id):
+  """Given an entity_type, which is one of 'items', 'metrics',
+    'regions', and id, generates a list of JSON dicts of entities it
+    belongs to.
+  """
+  url = '/'.join(['https:', '', api_host, 'v2', entity_type, 'belongs-to'])
+  params = { 'ids': str(entity_id) }
+  headers = {'authorization': 'Bearer ' + access_token}
+  resp = get_data(url, headers, params)
+  for parent_entity_id in resp.json().get('data').get(str(entity_id)):
+    yield lookup(access_token, api_host, entity_type, parent_entity_id)
