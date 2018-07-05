@@ -27,3 +27,4 @@ A more advanced example is [sugar.py](api/client/samples/crop_models/sugar.py):
 cd ~/gro/api/client/samples/crop_models/
 python sugar.py
 ```
+Further documentation can be found in [api/client/](api/client) directory.
