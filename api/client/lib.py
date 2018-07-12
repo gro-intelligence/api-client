@@ -112,7 +112,7 @@ def get_params_from_selection(**selection):
   params = { }
   for key, value in selection.items():
     if key in ('region_id', 'partner_region_id', 'item_id',
-               'metric_id', 'source_id', 'frequency_id'):
+               'metric_id', 'source_id', 'frequency_id', 'start_date', 'end_date'):
       params[snake_to_camel(key)] = value
   return params
 
