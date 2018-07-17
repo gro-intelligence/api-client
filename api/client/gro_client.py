@@ -14,7 +14,6 @@ import pandas
 import api.client.lib
 
 
-API_HOST = 'api.gro-intelligence.com'
 OUTPUT_FILENAME = 'gro_client_output.csv'
 
 
@@ -83,6 +82,7 @@ def pick_random_entities(client):
 
 def main():
     parser = argparse.ArgumentParser(description="Gro api client")
+    parser.add_argument("--api_host", default="api.gro-intelligence.com")
     parser.add_argument("--user_email")
     parser.add_argument("--user_password")
     parser.add_argument("--item")
@@ -99,11 +99,11 @@ def main():
     if args.token:
         access_token = args.token
     else:
-        access_token = api.client.lib.get_access_token(API_HOST, args.user_email, args.user_password)
+        access_token = api.client.lib.get_access_token(args.api_host, args.user_email, args.user_password)
     if args.print_token:
         print access_token
         sys.exit(0)
-    client = api.client.Client(API_HOST, access_token)
+    client = api.client.Client(args.api_host, access_token)
 
     selected_entities = {}
     if args.item:
