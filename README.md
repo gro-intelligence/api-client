@@ -9,7 +9,7 @@ git clone https://github.com/gro-intelligence/api-client.git
 export PYTHONPATH=~/gro/api-client:$PYTHONPATH
 ```
 
-Install dependencies (note we're using Python 2.7)
+Install dependencies (note we're using Python 2.7). Note these requirements are for the sample code. You may need more or fewer for your specific application.
 
 ```sh
 cd ~/gro/api-client/api/client
