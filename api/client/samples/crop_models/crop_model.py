@@ -54,7 +54,7 @@ class CropModel(api.client.Client):
         """Returns the first result of entity_type (which is items, metrics or
         regions) that matches the given keywords.
         """
-        results = self.search(entity_type, keywords)
+        results = self.search(keywords, entity_type)
         for result in results:
             self._logger.debug("First result, out of {} {}: {}".format(
                 len(results), entity_type, result['id']))

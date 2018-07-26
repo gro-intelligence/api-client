@@ -92,6 +92,9 @@ def lookup(access_token, api_host, entity_type, entity_id):
     'regions', 'units', or 'sources', returns a JSON dict with the
     list of available entities of the given type.
   """
+  # Make sure type is "plural" as used by the API routes
+  if(entity_type in ['metric', 'item', 'region', 'partnerRegion', 'frequency', 'source', 'unit']):
+    entity_type = singular_type_to_plural(entity_type)
   url = '/'.join(['https:', '', api_host, 'v2', entity_type, str(entity_id)])
   headers = {'authorization': 'Bearer ' + access_token}
   resp = get_data(url, headers)
@@ -106,13 +109,20 @@ def snake_to_camel(term):
   camel = ''.join(term.title().split('_'))
   return camel[0].lower() + camel[1:]
 
+def singular_type_to_plural(entity_type_singular):
+  if entity_type_singular == 'frequency':
+    return 'frequencies'
+  elif entity_type_singular in ['metric', 'item', 'region', 'partnerRegion', 'source', 'unit']:
+    return entity_type_singular + 's'
+  else:
+    raise Exception('Unrecognized entity_type_singular: ' + entity_type_singular)
 
 def get_params_from_selection(**selection):
   """Construct http request params from dict of entity selections."""
   params = { }
   for key, value in selection.items():
     if key in ('region_id', 'partner_region_id', 'item_id', 'metric_id', 'source_id',
-               'frequency_id', 'start_date', 'end_date'):
+               'frequency_id'):
       params[snake_to_camel(key)] = value
   return params
 
@@ -161,23 +171,32 @@ def get_data_points(access_token, api_host, **selection):
   url = '/'.join(['https:', '', api_host, 'v2/data'])
   headers = {'authorization': 'Bearer ' + access_token }
   params = get_params_from_selection(**selection)
+  if 'start_date' in selection:
+    params['startDate'] = selection['start_date']
+  if 'end_date' in selection:
+    params['endDate'] = selection['end_date']
   resp = get_data(url, headers, params)
   return resp.json()
 
 
-def search(access_token, api_host,
-           entity_type, search_terms):
+def search(access_token, api_host, search_terms, entity_type=None):
   """Given an entity_type, which is one of 'items', 'metrics',
   'regions', performs a search for the given terms.
   """
-  url = '/'.join(['https:', '', api_host, 'v2/search', entity_type])
-  headers = {'authorization': 'Bearer ' + access_token }
+  if entity_type is None:
+    url = '/'.join(['https:', '', api_host, 'v2/search'])
+  else:
+    url = '/'.join(['https:', '', api_host, 'v2/search', entity_type])
+    
+  headers = {'authorization': 'Bearer ' + access_token}
   resp = get_data(url, headers, {'q': search_terms})
-  return resp.json()
+  if entity_type is None:
+    return resp.json()
+  else:
+    return (entity['id'] for entity in resp.json())
 
 
-def search_and_lookup(access_token, api_host,
-                      entity_type, search_terms):
+def search_and_lookup(access_token, api_host, search_terms, entity_type=None):
   """Does a search for the given search terms, and for each result
   yields a dict of the entity and it's properties:
      { 'id': <integer id of entity, unique within this entity type>,
@@ -186,9 +205,15 @@ def search_and_lookup(access_token, api_host,
        ....
        <other properties> }
   """
-  search_results = search(access_token, api_host, entity_type, search_terms)
-  for result in search_results[entity_type]:
-    yield lookup(access_token, api_host, entity_type, result['id'])
+  search_results = search(access_token, api_host, search_terms, entity_type)
+  for result in search_results:
+    if entity_type is None:
+      result_type = singular_type_to_plural(result[1])
+      result_id = result[0]
+    else:
+      result_type = entity_type
+      result_id = result
+    yield lookup(access_token, api_host, result_type, result_id)
 
 
 def lookup_belongs(access_token, api_host, entity_type, entity_id):

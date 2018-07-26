@@ -32,18 +32,14 @@ class Client(object):
     def get_data_points(self, **selection):
         return lib.get_data_points(self.access_token, self.api_host, **selection)
 
-    def search(self, entity_type, search_terms):
-        return lib.search(self.access_token, self.api_host,
-                          entity_type, search_terms)
+    def search(self, search_terms, entity_type=None):
+        return lib.search(self.access_token, self.api_host, search_terms, entity_type)
 
-    def search_and_lookup(self, entity_type, search_terms):
-        return lib.search_and_lookup(self.access_token, self.api_host,
-                                     entity_type, search_terms)
+    def search_and_lookup(self, search_terms, entity_type=None):
+        return lib.search_and_lookup(self.access_token, self.api_host, search_terms, entity_type)
 
     def lookup_belongs(self, entity_type, entity_id):
-        return lib.lookup_belongs(self.access_token, self.api_host,
-                                  entity_type, entity_id)
+        return lib.lookup_belongs(self.access_token, self.api_host, entity_type, entity_id)
 
     def rank_series_by_source(self, series_list):
-        return lib.rank_series_by_source(self.access_token, self.api_host,
-                                         series_list)
+        return lib.rank_series_by_source(self.access_token, self.api_host, series_list)
