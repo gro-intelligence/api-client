@@ -49,7 +49,7 @@ def get_data(url, headers, params=None, logger=None):
     log_record['retry_count'] = retry_count
     log_record['status_code'] = data.status_code
     if data.status_code == 200:
-      logger.info('OK', extra=log_record)
+      logger.debug('OK', extra=log_record)
       return data
     retry_count += 1
     log_record['tag'] = 'failed_gro_api_request'
