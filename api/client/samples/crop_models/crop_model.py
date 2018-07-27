@@ -27,6 +27,12 @@ class CropModel(api.client.Client):
                              point['value'] * point['input_unit_scale'],
                              self.lookup_unit_abbreviation(point['input_unit_id'])])
 
+    def add_single_data_series(self, data_series):
+        self._data_series_list.append(data_series)
+        self._logger.info("Added {}".format(data_series))
+        self._data_frame = None
+        return
+
     def add_data_series(self, **kwargs):
         """Search for entities matching the given names, find data series for
         the given combination, and add them to this objects list of
