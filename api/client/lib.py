@@ -112,7 +112,7 @@ def get_params_from_selection(**selection):
   params = { }
   for key, value in selection.items():
     if key in ('region_id', 'partner_region_id', 'item_id', 'metric_id', 'source_id',
-               'frequency_id', 'start_date', 'end_date'):
+               'frequency_id'):
       params[snake_to_camel(key)] = value
   return params
 
@@ -161,6 +161,8 @@ def get_data_points(access_token, api_host, **selection):
   url = '/'.join(['https:', '', api_host, 'v2/data'])
   headers = {'authorization': 'Bearer ' + access_token }
   params = get_params_from_selection(**selection)
+  for key in filter(lambda k: k in selection, ['start_date', 'end_date']):
+    params[snake_to_camel(key)] = selection.get(key)
   resp = get_data(url, headers, params)
   return resp.json()
 
