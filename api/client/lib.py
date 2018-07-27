@@ -189,7 +189,7 @@ def search_and_lookup(access_token, api_host,
        <other properties> }
   """
   search_results = search(access_token, api_host, entity_type, search_terms)
-  for result in search_results[entity_type]:
+  for result in search_results:
     yield lookup(access_token, api_host, entity_type, result['id'])
 
 
