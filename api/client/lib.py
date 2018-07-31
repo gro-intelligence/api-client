@@ -49,7 +49,7 @@ def get_data(url, headers, params=None, logger=None):
     log_record['retry_count'] = retry_count
     log_record['status_code'] = data.status_code
     if data.status_code == 200:
-      logger.info('OK', extra=log_record)
+      logger.debug('OK', extra=log_record)
       return data
     retry_count += 1
     log_record['tag'] = 'failed_gro_api_request'
@@ -111,8 +111,8 @@ def get_params_from_selection(**selection):
   """Construct http request params from dict of entity selections."""
   params = { }
   for key, value in selection.items():
-    if key in ('region_id', 'partner_region_id', 'item_id',
-               'metric_id', 'source_id', 'frequency_id'):
+    if key in ('region_id', 'partner_region_id', 'item_id', 'metric_id', 'source_id',
+               'frequency_id'):
       params[snake_to_camel(key)] = value
   return params
 
@@ -161,6 +161,8 @@ def get_data_points(access_token, api_host, **selection):
   url = '/'.join(['https:', '', api_host, 'v2/data'])
   headers = {'authorization': 'Bearer ' + access_token }
   params = get_params_from_selection(**selection)
+  for key in filter(lambda k: k in selection, ['start_date', 'end_date']):
+    params[snake_to_camel(key)] = selection.get(key)
   resp = get_data(url, headers, params)
   return resp.json()
 
@@ -187,7 +189,7 @@ def search_and_lookup(access_token, api_host,
        <other properties> }
   """
   search_results = search(access_token, api_host, entity_type, search_terms)
-  for result in search_results[entity_type]:
+  for result in search_results:
     yield lookup(access_token, api_host, entity_type, result['id'])
 
 

@@ -1,4 +1,4 @@
-# Sample Gro API client for sugar model crop model
+# Sample Gro API client for sugar crop model
 #
 # Usage example:
 #
