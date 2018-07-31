@@ -1,10 +1,10 @@
 # Public Gro api client library and examples
 
-* **api.client.lib** is library of functions for clients to access the Gro api library more easily.
+* lib.py is library for clients to access the Gro API library more easily.
 
-* **api.client.Client** is the object-oriented version (see `__init__.py` )
+* the Client class in the package base module (see ```__init__.py```) provides those library functions with stateful authentication.
 
-* **api.client.gro_client** is an example which shows various ways of finding and outputing data series.
+* gro_client.py is an example client, which shows various ways of finding and outputing data series.
 
-* Do not put any Gro internal code, or anything that depends on Gro internal Gro code in this directory. Everything in here will be mirrored in the external repo: https://github.com/gro-intelligence/api-client
+* README.pdf has some info on getting started.
 

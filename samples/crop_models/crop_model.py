@@ -27,6 +27,12 @@ class CropModel(api.client.Client):
                              point['value'] * point['input_unit_scale'],
                              self.lookup_unit_abbreviation(point['input_unit_id'])])
 
+    def add_single_data_series(self, data_series):
+        self._data_series_list.append(data_series)
+        self._logger.info("Added {}".format(data_series))
+        self._data_frame = None
+        return
+
     def add_data_series(self, **kwargs):
         """Search for entities matching the given names, find data series for
         the given combination, and add them to this objects list of
@@ -55,7 +61,7 @@ class CropModel(api.client.Client):
         regions) that matches the given keywords.
         """
         results = self.search(entity_type, keywords)
-        for result in results[entity_type]:
-            self._logger.debug("First result, out of {} {}: {}, {}".format(
-                len(results[entity_type]), entity_type, result['id'], result['name']))
+        for result in results:
+            self._logger.debug("First result, out of {} {}: {}".format(
+                len(results), entity_type, result['id']))
             return result['id']

@@ -14,6 +14,7 @@ import pandas
 import api.client.lib
 
 
+API_HOST = 'api.gro-intelligence.com'
 OUTPUT_FILENAME = 'gro_client_output.csv'
 
 
@@ -25,7 +26,16 @@ def get_df(client, **selected_entities):
     return pandas.DataFrame(client.get_data_points(**selected_entities))
 
 
-def print_one_data_series(client, data_series):
+def print_random_data_series(client, selected_entities):
+    """Example which prints out a CSV of a random data series that
+    satisfies the (optional) given selection.
+    """
+    # Pick a random data series for this selection
+    data_series_list = client.get_data_series(**selected_entities)
+    if not data_series_list:
+        raise Exception("No data series available for {}".format(
+            selected_entities))
+    data_series = data_series_list[int(len(data_series_list)*random())]
     print "Using data series: {}".format(str(data_series))
     print "Outputing to file: {}".format(OUTPUT_FILENAME)
     writer = unicodecsv.writer(open(OUTPUT_FILENAME, 'wb'))
@@ -35,27 +45,13 @@ def print_one_data_series(client, data_series):
                          client.lookup_unit_abbreviation(point['input_unit_id'])])
 
 
-def print_random_data_series(client, data_series_list):
-    """Example which prints out a CSV of a random data series that
-    satisfies the (optional) given selection.
-    """
-    print_one_data_series(
-        client, data_series_list[int(len(data_series_list)*random())])
-
-
-def pick_source_and_print_data_series(client, data_series_list):
-    for data_series in client.rank_series_by_source(data_series_list):
-        print_one_data_series(client, data_series)
-        break
-
-
 def search_for_entity(client, entity_type, keywords):
     """Returns the first result of entity_type (which is items, metrics or
     regions) that matches the given keywords.
     """
     results = client.search(entity_type, keywords)
     for result in results[entity_type]:
-        print u"Picking first result out of {} {}: {}, {}".format(
+        print "Picking first result out of {} {}: {}, {}".format(
             len(results[entity_type]), entity_type, result['id'], result['name'])
         return result['id']
     return None
@@ -82,7 +78,6 @@ def pick_random_entities(client):
 
 def main():
     parser = argparse.ArgumentParser(description="Gro api client")
-    parser.add_argument("--api_host", default="api.gro-intelligence.com")
     parser.add_argument("--user_email")
     parser.add_argument("--user_password")
     parser.add_argument("--item")
@@ -99,11 +94,11 @@ def main():
     if args.token:
         access_token = args.token
     else:
-        access_token = api.client.lib.get_access_token(args.api_host, args.user_email, args.user_password)
+        access_token = api.client.lib.get_access_token(API_HOST, args.user_email, args.user_password)
     if args.print_token:
         print access_token
         sys.exit(0)
-    client = api.client.Client(args.api_host, access_token)
+    client = api.client.Client(API_HOST, access_token)
 
     selected_entities = {}
     if args.item:
@@ -117,14 +112,9 @@ def main():
 
     if not selected_entities:
         selected_entities = pick_random_entities(client)
-    data_series_list = client.get_data_series(**selected_entities)
-    if not data_series_list:
-        raise Exception("No data series available for {}".format(selected_entities))
-    else:
-        print "Found {} distinct data series".format(len(data_series_list))
-    # Use  print_random_data_series or pick_source_and_print_data_series
-    pick_source_and_print_data_series(client, data_series_list)
-    # print_random_data_series(client, data_series_list)
+
+    print "Data series example:"
+    print_random_data_series(client, selected_entities)
 
 
 if __name__ == "__main__":
