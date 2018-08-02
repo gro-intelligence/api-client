@@ -161,7 +161,7 @@ def get_data_points(access_token, api_host, **selection):
   url = '/'.join(['https:', '', api_host, 'v2/data'])
   headers = {'authorization': 'Bearer ' + access_token }
   params = get_params_from_selection(**selection)
-  for key in filter(lambda k: k in selection, ['start_date', 'end_date']):
+  for key in filter(lambda k: k in selection, ['start_date', 'end_date', 'show_revisions']):
     params[snake_to_camel(key)] = selection.get(key)
   resp = get_data(url, headers, params)
   return resp.json()
