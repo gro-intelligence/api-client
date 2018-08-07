@@ -133,10 +133,9 @@ def get_crop_calendar_params(**selection):
 def get_data_call_params(**selection):
   """Construct http request params from dict of entity selections. For use with get_data_points().
   """
-  params = { }
+  params = get_params_from_selection(**selection)
   for key, value in selection.items():
-    if key in ('region_id', 'partner_region_id', 'item_id', 'metric_id', 'source_id',
-               'frequency_id', 'start_date', 'end_date', 'show_revisions'):
+    if key in ('source_id', 'frequency_id', 'start_date', 'end_date', 'show_revisions'):
       params[snake_to_camel(key)] = value
   return params
 
