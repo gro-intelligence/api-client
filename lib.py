@@ -186,33 +186,36 @@ def format_crop_calendar_response(resp):
     for dataEntry in point['data']:
       # Some start/end dates can be undefined (ex: {regionId: 12314, itemId: 95} - Wheat in Alta,
       # Russia). Those are returned as empty strings, so here I am checking for that and replacing
-      # those cases with Nones.
-      points.append({
-        u'input_unit_scale': None,
-        u'region_id': point['regionId'],
-        u'end_date': (dataEntry['plantingEndDate'] if dataEntry['plantingEndDate'] != '' else None),
-        u'input_unit_id': None,
-        u'value': 'planting',
-        u'frequency_id': point['frequencyId'],
-        u'available_date': None,
-        u'item_id': point['itemId'],
-        u'reporting_date': None,
-        u'start_date': (dataEntry['plantingStartDate'] if dataEntry['plantingStartDate'] != '' else None),
-        u'metric_id': point['metricId']
-      })
-      points.append({
-        u'input_unit_scale': None,
-        u'region_id': point['regionId'],
-        u'end_date': (dataEntry['harvestingEndDate'] if dataEntry['harvestingEndDate'] != '' else None),
-        u'input_unit_id': None,
-        u'value': 'harvesting',
-        u'frequency_id': point['frequencyId'],
-        u'available_date': None,
-        u'item_id': point['itemId'],
-        u'reporting_date': None,
-        u'start_date': (dataEntry['harvestingStartDate'] if dataEntry['harvestingStartDate'] != '' else None),
-        u'metric_id': point['metricId']
-      })
+      # those cases with Nones. Also, in some cases both start AND end are undefined, in which
+      # case I am excluding the data point entirely.
+      if(dataEntry['plantingStartDate'] != '' or dataEntry['plantingEndDate'] != ''):
+        points.append({
+          u'input_unit_scale': None,
+          u'region_id': point['regionId'],
+          u'end_date': (dataEntry['plantingEndDate'] if dataEntry['plantingEndDate'] != '' else None),
+          u'input_unit_id': None,
+          u'value': 'planting',
+          u'frequency_id': point['frequencyId'],
+          u'available_date': None,
+          u'item_id': point['itemId'],
+          u'reporting_date': None,
+          u'start_date': (dataEntry['plantingStartDate'] if dataEntry['plantingStartDate'] != '' else None),
+          u'metric_id': point['metricId']
+        })
+      if(dataEntry['harvestingStartDate'] != '' or dataEntry['harvestingEndDate'] != ''):
+        points.append({
+          u'input_unit_scale': None,
+          u'region_id': point['regionId'],
+          u'end_date': (dataEntry['harvestingEndDate'] if dataEntry['harvestingEndDate'] != '' else None),
+          u'input_unit_id': None,
+          u'value': 'harvesting',
+          u'frequency_id': point['frequencyId'],
+          u'available_date': None,
+          u'item_id': point['itemId'],
+          u'reporting_date': None,
+          u'start_date': (dataEntry['harvestingStartDate'] if dataEntry['harvestingStartDate'] != '' else None),
+          u'metric_id': point['metricId']
+        })
   return points
 
 def get_crop_calendar_data_points(access_token, api_host, **selection):
