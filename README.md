@@ -13,7 +13,7 @@ Install dependencies (note we're using Python 2.7). Note these requirements are 
 
 ```sh
 cd ~/gro/api-client/api/client
-pip -r requirements.txt
+pip install -r requirements.txt
 ```
 
 To avoid typing your password on the command line, you can get an API access token as follows:
@@ -39,6 +39,12 @@ Try [quick_start.py](api/client/samples/quick_start.py)
 ```sh
 cd ~/gro/api-client/api/client/samples/
 python quick_start.py
+```
+
+Now should be able to find a sample output csv file at:
+
+```sh
+~/gro/api-client/api/client/samples/gro_client_output.csv
 ```
 
 A more advanced example is [sugar.py](api/client/samples/crop_models/sugar.py)
