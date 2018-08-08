@@ -45,7 +45,8 @@ def main():
     model = CropModel('api.gro-intelligence.com', access_token)
     model.add_data_series(item="sugarcane", metric="production quantity", region="Brazil")
     model.add_data_series(item="sugarcane", metric="yield", region="Brazil")
-    for data_series in model.get_data_series_list():
+    series_results = model.get_data_series_list()
+    for data_series in series_results:
         filename = 'gro_{}_{}_{}.csv'.format(
             model.lookup('items', data_series['item_id']).get('name'),
             model.lookup('metrics', data_series['metric_id']).get('name'),
@@ -60,8 +61,9 @@ def main():
             count += 1
         print "Output {} rows to {}".format(count, filename)
 
-    data_frame = model.get_df()
-    print "Loaded data frame of shape {}, columns: {}".format(data_frame.shape, data_frame.columns)
+    if series_results:
+        data_frame = model.get_df()
+        print "Loaded data frame of shape {}, columns: {}".format(data_frame.shape, data_frame.columns)
 
 
 if __name__ == "__main__":
