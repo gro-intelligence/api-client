@@ -48,8 +48,8 @@ class CropModel(api.client.Client):
         if kwargs.get('region'):
             entities['region_id'] = self.search_for_entity('regions', kwargs['region'])
         if kwargs.get('partner_region'):
-            entities['partner_region_id'] = self.search_for_entity(
-                kwargs['partner_region'], partner_region)
+            entities['partner_region_id'] = self.search_for_entity('regions',
+                kwargs['partner_region'])
         # TODO: add support for source and frequency and don't rank by source if specified
         data_series_list = self.get_data_series(**entities)
         self._logger.debug("Found {} distinct data series".format(len(data_series_list)))
