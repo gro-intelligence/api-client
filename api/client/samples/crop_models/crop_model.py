@@ -27,6 +27,9 @@ class CropModel(api.client.Client):
                              point['value'] * point['input_unit_scale'],
                              self.lookup_unit_abbreviation(point['input_unit_id'])])
 
+    def get_data_series_list(self):
+        return self._data_series_list
+
     def add_single_data_series(self, data_series):
         self._data_series_list.append(data_series)
         self._logger.info("Added {}".format(data_series))
