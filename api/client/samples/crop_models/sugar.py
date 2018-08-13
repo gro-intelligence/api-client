@@ -44,7 +44,7 @@ def main():
         print access_token
         sys.exit(0)
 
-    model = CropModel('api.gro-intelligence.com', access_token)
+    model = CropModel(API_HOST, access_token)
     model.add_data_series(item="sugarcane", metric="production quantity", region="Brazil")
     model.add_data_series(item="sugarcane", metric="yield", region="Brazil")
     series_results = model.get_data_series_list()
