@@ -68,3 +68,25 @@ class CropModel(api.client.Client):
             self._logger.debug("First result, out of {} {}: {}".format(
                 len(results), entity_type, result['id']))
             return result['id']
+
+    def get_provinces(self, country_name):
+        provinces = []
+        for region in self.search_and_lookup('regions', country_name):
+            if region['level'] == 3: # country
+                for member_id in region['contains']:
+                    member = self.lookup('regions', member_id)
+                    if member['level'] == 4: # province
+                        provinces.append(member)
+                break
+        return provinces
+
+    def add_production_by_province(self, crop_name, country_name):
+        entities = {
+            'item_id': self.search_for_entity('items', crop_name),
+            'metric_id': self.search_for_entity(
+                'metrics', "Production Quantity (mass)")}
+        for province in self.get_provinces(country_name):
+            entities['region_id'] = province['id']
+            for data_series in self.get_data_series(**entities):
+                self.add_single_data_series(data_series)
+                break
