@@ -6,13 +6,14 @@ from datetime import datetime
 
 
 MAX_RETRIES = 4
-DEFAULT_LOG_LEVEL=logging.WARNING  # change to DEBUG for more detail
+DEFAULT_LOG_LEVEL=logging.INFO  # change to DEBUG for more detail
 
 CROP_CALENDAR_METRIC_ID = 2260063
 
+
 def get_default_logger():
-  logging.basicConfig(level=DEFAULT_LOG_LEVEL)
   logger = logging.getLogger(__name__)
+  logger.setLevel(DEFAULT_LOG_LEVEL)
   if not logger.handlers:
     stderr_handler = logging.StreamHandler()
     logger.addHandler(stderr_handler)
