@@ -1,3 +1,4 @@
+import itertools
 import pandas
 import unicodecsv
 
@@ -40,25 +41,34 @@ class CropModel(api.client.Client):
         """Search for entities matching the given names, find data series for
         the given combination, and add them to this objects list of
         series."""
-        entities = {}
+        MAX_RESULTS=3
+        search_results = []
+        keys = []
         if kwargs.get('item'):
-            entities['item_id'] = self.search_for_entity('items', kwargs['item'])
+            search_results.append(
+                self.search('items', kwargs['item'])[:MAX_RESULTS])
+            keys.append('item_id')
         if kwargs.get('metric'):
-            entities['metric_id'] = self.search_for_entity('metrics', kwargs['metric'])
+            search_results.append(
+                self.search('metrics', kwargs['metric'])[:MAX_RESULTS])
+            keys.append('metric_id')
         if kwargs.get('region'):
-            entities['region_id'] = self.search_for_entity('regions', kwargs['region'])
+            search_results.append(
+                self.search('regions', kwargs['region'])[:MAX_RESULTS])
+            keys.append('region_id')
         if kwargs.get('partner_region'):
-            entities['partner_region_id'] = self.search_for_entity('regions',
-                kwargs['partner_region'])
-        # TODO: add support for source and frequency and don't rank by source if specified
-        data_series_list = self.get_data_series(**entities)
-        self._logger.debug("Found {} distinct data series".format(len(data_series_list)))
-        for data_series in self.rank_series_by_source(data_series_list):
-            self._data_series_list.append(data_series)
-            self._logger.info("Added {}".format(data_series))
-            self._data_frame = None
-            return
-            
+            search_results.append(
+                self.search('regions', kwargs['partner_region'])[:MAX_RESULTS])
+            keys.append('partner_region_id')
+        for comb in itertools.product(*search_results):
+            entities = dict(zip(keys, [entity['id'] for entity in comb]))
+            data_series_list = self.get_data_series(**entities)
+            self._logger.debug("Found {} distinct data series for {}".format(
+                len(data_series_list), entities))
+            for data_series in self.rank_series_by_source(data_series_list):
+                self.add_single_data_series(data_series)
+                return
+
     def search_for_entity(self, entity_type, keywords):
         """Returns the first result of entity_type (which is items, metrics or
         regions) that matches the given keywords.
