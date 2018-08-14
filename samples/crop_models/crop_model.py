@@ -1,11 +1,17 @@
 import itertools
 import pandas
+import math
 import unicodecsv
 
 import api.client.lib
 
 
 class CropModel(api.client.Client):
+    """A Client with methods to find and add data series related to a crop
+    and country. When added, data series are stored for future
+    reference, and can be retrieved as a list of series, or a Pandas
+    data frame containing all the points.
+    """
 
     _logger = api.client.lib.get_default_logger()
     _data_series_list = []
@@ -18,7 +24,7 @@ class CropModel(api.client.Client):
                 pandas.DataFrame(data=self.get_data_points(**series))
                 for series in self._data_series_list)
         return self._data_frame
-    
+
     def print_one_data_series(self, data_series, filename):
         self._logger.info("Using data series: {}".format(str(data_series)))
         self._logger.info("Outputing to file: {}".format(filename))
@@ -90,13 +96,61 @@ class CropModel(api.client.Client):
                 break
         return provinces
 
-    def add_production_by_province(self, crop_name, country_name):
+    def compute_weights(self, crop_name, metric_name, regions):
+        """Add the weighting data series to this model. Compute the weights,
+        which is the mean value for each region in regions, normalized
+        to add up to 1.0 across regions. Returns a list of weights
+        corresponding to the regions.
+        """
+        # Get the weighting series
         entities = {
             'item_id': self.search_for_entity('items', crop_name),
-            'metric_id': self.search_for_entity(
-                'metrics', "Production Quantity (mass)")}
-        for province in self.get_provinces(country_name):
-            entities['region_id'] = province['id']
+            'metric_id': self.search_for_entity('metrics', metric_name)
+        }
+        for region in regions:
+            entities['region_id'] = region['id']
             for data_series in self.get_data_series(**entities):
                 self.add_single_data_series(data_series)
                 break
+        # Compute the average over time for reach region
+        df = self.get_df()
+        def mapper(region):
+            return df[(df['metric_id'] == entities['metric_id']) & \
+                      (df['region_id'] == region['id'])]['value'].mean(skipna=True)
+        means = map(mapper, regions)
+        self._logger.debug('Means = {}'.format(
+            zip([region['name'] for region in regions], means)))
+        # Normalize into weights
+        total = math.fsum(filter(lambda x: not math.isnan(x), means))
+        return [mean/total for mean in means]
+
+    def compute_crop_weighted_series(self,
+                                     weighting_crop_name, weighting_metric_name,
+                                     item_name, metric_name, regions):
+        """Add the data series for the given item_name and metric_name to this
+        model. Compute the weighted version of the series for each
+        region in regions. The weight of a region is the fraction of
+        the value of the weighting series represented by that region.
+        """
+        weights = self.compute_weights(weighting_crop_name, weighting_metric_name,
+                                       regions)
+        entities = {
+            'item_id': self.search_for_entity('items', item_name),
+            'metric_id': self.search_for_entity('metrics', metric_name)
+        }
+        for region in regions:
+            entities['region_id'] = region['id']
+            for data_series in self.get_data_series(**entities):
+                self.add_single_data_series(data_series)
+                break
+        df = self.get_df()
+        series_list = []
+        for (region, weight) in zip(regions, weights):
+            self._logger.info(u'Computing {}_{}_{} x {}'.format(
+                item_name, metric_name,  region['name'], weight))
+            series = df[(df['item_id'] == entities['item_id']) & \
+                        (df['metric_id'] == entities['metric_id']) & \
+                        (df['region_id'] == region['id'])].copy()
+            series.loc[:, 'value'] = series['value']*weight
+            series_list.append(series)
+        return pandas.concat(series_list)
