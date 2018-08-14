@@ -14,15 +14,18 @@ class CropModel(api.client.Client):
     """
 
     _logger = api.client.lib.get_default_logger()
-    _data_series_list = []
+    _data_series_list = []  # all that have been added
+    _data_series_queue = []  # added but not loaded in data frame
     _data_frame = None
 
     def get_df(self):
         """Get the content of all data series in a Pandas frame."""
-        if self._data_frame is None:
-            self._data_frame = pandas.concat(
-                pandas.DataFrame(data=self.get_data_points(**series))
-                for series in self._data_series_list)
+        frames = [self._data_frame]
+        while self._data_series_queue:
+            frames.append(pandas.DataFrame(data=self.get_data_points(
+                **self._data_series_queue.pop())))
+        if len(frames) > 1:
+            self._data_frame = pandas.concat(frames)
         return self._data_frame
 
     def print_one_data_series(self, data_series, filename):
@@ -35,12 +38,12 @@ class CropModel(api.client.Client):
                              self.lookup_unit_abbreviation(point['input_unit_id'])])
 
     def get_data_series_list(self):
-        return self._data_series_list
+        return list(self._data_series_list)
 
     def add_single_data_series(self, data_series):
         self._data_series_list.append(data_series)
+        self._data_series_queue.append(data_series)
         self._logger.info("Added {}".format(data_series))
-        self._data_frame = None
         return
 
     def add_data_series(self, **kwargs):
