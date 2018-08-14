@@ -155,5 +155,6 @@ class CropModel(api.client.Client):
                         (df['metric_id'] == entities['metric_id']) & \
                         (df['region_id'] == region['id'])].copy()
             series.loc[:, 'value'] = series['value']*weight
+            # TODO: change metric to reflect it is weighted in this copy
             series_list.append(series)
         return pandas.concat(series_list)
