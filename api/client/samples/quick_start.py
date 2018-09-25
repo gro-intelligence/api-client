@@ -9,6 +9,8 @@ ACCESS_TOKEN=os.environ['GROAPI_TOKEN']
 def main():
     client = api.client.Client(API_HOST, ACCESS_TOKEN)
 
+    # Step 1: Select Entities
+    # Metric / Item / Region / Source / Frequency
     selected_entities = { u'region_id': 1038, # Cape Verde
                           u'item_id': 5187, # Management of donkey manure
                           u'metric_id': 5590032 } # Total Emissions Quantity (mass)
@@ -17,6 +19,8 @@ def main():
 
     # Get what possible series there are for that combination of selections
     for data_series in client.get_data_series(**selected_entities):
+        # start_date / end_date / data_count
+        print(data_series)
         
         # Add a time range restriction to your data request (Optional - otherwise get all points)
         data_series['start_date'] = '2000-01-01'
