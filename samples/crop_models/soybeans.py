@@ -19,19 +19,15 @@ import api.client.lib
 from api.client.samples.crop_models.crop_model import CropModel
 
 
-def main():
-    parser = argparse.ArgumentParser(description="Gro api client")
-    parser.add_argument("--token", default=os.environ['GROAPI_TOKEN'])
-    args = parser.parse_args()
-
-    model = CropModel('api.gro-intelligence.com', args.token)
+def add_brazil_soybeans_yield(model):
+    """Adds data series for national level soybeans yield for
+    Brazil. There are multiple series from different sources, we add them all."""
     entities = {}
     # Search for item and metric by name, and use the top result
     entities['item_id'] =  model.search_for_entity('items', "soybeans")
     entities['metric_id'] = model.search_for_entity('metrics', "yield")
-    # Search for region by name, but we don't use the top result,
-    # instead we use the one of level 3 (the country -- there are many
-    # regions with "brazil" in the name, level = 3 is the country
+    # There are many regions with "brazil" in the name, level = 3 is
+    # the country
     for region in model.search_and_lookup('regions', "brazil"):
         if region['level'] == 3:
             entities['region_id'] = region['id']
@@ -43,9 +39,31 @@ def main():
         print "{}: {} to {}".format(source_name,
                                     data_series['start_date'], data_series['end_date'])
         model.add_single_data_series(data_series)
+    return
 
-    data_frame = model.get_df()
-    print "Loaded data frame of shape {}, columns: {}".format(data_frame.shape, data_frame.columns)
+
+def get_brazil_soybeans_weighted_ndvi(model):
+    provinces = model.get_provinces('brazil')
+    df = model.compute_crop_weighted_series(
+        'soybeans', 'Production Quantity (mass)',
+        'Vegetation (NDVI)', 'Vegetation Indices (index)',
+        provinces)
+    return df
+
+
+def main():
+    parser = argparse.ArgumentParser(description="Gro api client")
+    parser.add_argument("--token", default=os.environ['GROAPI_TOKEN'])
+    args = parser.parse_args()
+
+    model = CropModel('api.gro-intelligence.com', os.environ['GROAPI_TOKEN'])
+    add_brazil_soybeans_yield(model)
+    cwdf = get_brazil_soybeans_weighted_ndvi(model)
+    df = model.get_df()
+    print "{} data frame with all data series as fetched".format(df.shape)
+    print "Columns: {}".format(df.columns)
+    print "{} data frame with crop weighted data series".format(cwdf.shape)
+    print "Columns: {}".format(cwdf.columns)
 
 
 if __name__ == "__main__":
