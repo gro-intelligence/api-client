@@ -424,7 +424,7 @@ def batch_get_data_points(access_token, api_host, selections, results, map_retur
 
     queries = []
 
-    if type(selections) == list:
+    if len(selections) > 0 and type(selections[0]) != tuple:
         selections = enumerate(selections)
 
     for idx, selection in selections:
@@ -451,7 +451,7 @@ def batch_lookup(access_token, api_host, entities, results, map_returned=None):
 
     queries = []
 
-    if type(entities) == list:
+    if len(entities) > 0 and type(entities[0]) != tuple:
         entities = enumerate(entities)
 
     for idx, entity in entities:
