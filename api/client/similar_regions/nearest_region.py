@@ -37,11 +37,18 @@ class SimilarRegionState(object):
         # Boolean array. True if data for that (metric, region) has been fetched into the data array.
         self.not_fetched_yet = np.full((0,0), False, dtype=bool)
 
+        # Standardized versions of this
+        self.data_standardized = np.zeros((0,0), dtype=float)
+        self.recompute = True
+
         # Mapping to and from our internal numpy idxs
         self.district_to_row_idx = {}
         self.row_idx_to_district = []
         self.metric_to_col_idx = {}
         self.metric_data = {}
+
+        # Weights of each metric
+        self.metric_weights = {}
 
         # Some logging... of course.
         self._logger = api.client.lib.get_default_logger()
@@ -55,7 +62,7 @@ class SimilarRegionState(object):
 
             # Let's not delete anything, but rather move it.
             mod_time = os.path.getmtime(SAVED_STATE_PATH + "state.pickle")
-            os.rename(SAVED_STATE_PATH + "state.pickle", "state_%i.pickle" % mod_time)
+            os.rename(SAVED_STATE_PATH + "state.pickle", SAVED_STATE_PATH + "state_%i.pickle" % mod_time)
 
         self._logger.info("Saving state to pickle.")
 
@@ -69,22 +76,22 @@ class SimilarRegionState(object):
 
         return True
 
-    def load(self, path_to_pickle="state.pickle"):
+    def load(self, path_to_pickle=SAVED_STATE_PATH + "state.pickle"):
         """
         Load state from disk.
         :return: True if succeeded.
         """
-        if not os.path.isfile(SAVED_STATE_PATH + path_to_pickle):
+        if not os.path.isfile(path_to_pickle):
             raise Exception("Can't find saved state.")
 
         self._logger.info("Loading state from pickle.")
 
-        with open(SAVED_STATE_PATH + path_to_pickle, 'rb') as f:
+        with open(path_to_pickle, 'rb') as f:
             tmp_dict = pickle.load(f)
 
         self.__dict__.update(tmp_dict)
 
-        self._logger.info("Done loading state from %s" % SAVED_STATE_PATH + path_to_pickle)
+        self._logger.info("Done loading state from %s" % path_to_pickle)
 
         return True
 
@@ -189,26 +196,43 @@ class SimilarRegion(api.client.Client):
         # if set(search_regions) not in self.state.known_regions:
         #     raise Exception("Requested region(s) are not downloaded. Please call cache_regions()")
 
-        possible_region = next(self.search_and_lookup("regions", name), None)
+        possible_region = next(self.search_and_lookup("regions", name), False)
+
+        while possible_region and possible_region["level"] != 5:
+            possible_region = next(self.search_and_lookup("regions", name), False)
 
         if not possible_region:
             print("NearestRegionsApp: Region '%s' not found in Gro database." % name)
+            return
 
         print(possible_region)
 
-        if type(possible_region)!= dict or possible_region["level"] != 5:
-            print("NearestRegionsApp: Region '%s' is not a district. Please supply a district" % name)
-
-        neighbours = self._similar_to(possible_region["id"], number_of_regions)
+        neighbours, dists = self._similar_to(possible_region["id"], number_of_regions)
 
         print("NearestRegionsApp: Nearest regions to '%s' are:" % name)
 
         for ranking, neighbour_id in enumerate(neighbours):
-            district_id = self.state.row_idx_to_district[neighbour_id]
-            district_name = self.lookup("regions", district_id)["name"]
-            province = next(self.lookup_belongs("regions", district_id))
-            country = next(self.lookup_belongs("regions", province["id"]))
-            print("NearestRegionsApp: %i: %s, %s, %s" % (ranking, district_name, province["name"], country["name"]))
+            try:
+                district_id = self.state.row_idx_to_district[neighbour_id]
+
+                if np.ma.is_masked(self.state.data[neighbour_id]):
+                    self._logger.info("possible neighbour was masked")
+
+                neighbour_region = self.lookup("regions", district_id)
+
+                district_name = self.lookup("regions", district_id)["name"]
+
+                if neighbour_region["level"] != 5:
+                    self._logger.info("not level 5 %s" % district_name)
+                    continue
+
+                district_name = self.lookup("regions", district_id)["name"]
+                province = next(self.lookup_belongs("regions", district_id))
+                country = next(self.lookup_belongs("regions", province["id"]))
+                print("NearestRegionsApp: %i: %s, %s, %s at distance %f" %
+                      (ranking, district_name, province["name"], country["name"], dists[ranking]))
+            except Exception as e:
+                print("something broke ?")
 
     def _similar_to(self, region_id, number_of_regions):
         """
@@ -220,45 +244,83 @@ class SimilarRegion(api.client.Client):
 
         if region_id not in self.state.known_regions:
             raise Exception("Not trained on this region. Please add it.")
+            return
 
         # list as an index to preserve dimensionality of returned data
-        x = self.state.data[[self.state.district_to_row_idx[region_id]], :]
+        x = self.state.data_standardized[self.state.district_to_row_idx[region_id], :]
+        x = x.reshape(1, -1)
+        print(x)
+        print(self.state.district_to_row_idx[region_id])
         neighbour_dists, neighbour_idxs = self.state.ball.query(x, k=number_of_regions)
         #
         # # see that these are actually districts. get their names.
         # for neighbour_idxs:
 
-        return neighbour_idxs[0]
+        return neighbour_idxs[0], neighbour_dists[0]
 
     def _compute_similarity_matrix(self):
         """
         Cache and compute the similarity matrix from the cached region metrics
         :return: None. Modifies property "sim_matrix"
         """
+
+        # Ensure we are standardized
+        self._standardize()
+
+        # Compute a ball tree (this is quick)
         self._logger.info("BallTree: computing")
-        self.state.ball = BallTree(self.state.data, leaf_size=2)
+        self.state.ball = BallTree(self.state.data_standardized, leaf_size=2)
         self._logger.info("BallTree: done")
-        return self.state.ball
+        return
 
-    def add_regions(self, regions):
-        pass
-        # new_regions = set(regions) - self.state.known_regions
-        #
-        # if self.state.data.shape[0] < len(self.state.known_regions)+len(new_regions):
-        #     self.state.data.resize(len(self.state.known_regions)+len(new_regions), self.state.data.shape[1])
-        #     for metric_name in self.state.metrics_to_use:
-        #         self.state.metric_data[metric_name] = self.state.data[:, self.]
-        #
-        #         a = np.ndarray.view()
-        #
-        #
-        # for region in new_regions:
-        #     self.state.row_idx_to_district.append(region)
-        #     self.state.district_to_row_idx[region] = len(self.state.row_idx_to_district) - 1
-        #
-        # self.state.known_regions |= new_regions
+    def _standardize(self):
 
-    def add_metric(self, metric_name):
+        if self.state.recompute:
+            self._logger.info("Standardizing data matrix")
+
+            self.state.data_standardized = np.ma.array(self.state.data, copy=True)
+
+            mean = np.ma.average(self.state.data_standardized, axis=0)
+            std = np.ma.std(self.state.data_standardized, axis=0)
+            self.state.data_standardized = (self.state.data_standardized - mean) / std
+
+            for metric_name in self.state.metrics_to_use:
+                starting_col = self.state.metric_to_col_idx[metric_name]
+                ending_col = starting_col + self.available_metrics[metric_name]["properties"]["num_features"]
+                self.state.data_standardized[:, starting_col:ending_col] *= self.state.metric_weights[metric_name]
+
+            # As it turns out we should place all our masked values at the mean points for that column !!!
+            # this ensures they are treated fairly despite missing a portion of the data.
+
+            # # from https://stackoverflow.com/questions/5564098/repeat-numpy-array-without-replicating-data
+            # view_of_data_means = np.lib.stride_tricks.as_strided(self.state.data_mean,
+            #                                                      (1000, self.state.data_mean.size),
+            #                                                      (0, self.state.data_mean.itemsize))
+            #
+            # += view_of_data_means[self.state.data.mask]
+
+            # Center all of these I suppose is the most straightforward solution...
+            self.state.data_standardized[self.state.data.mask] = 1000000000.0
+
+            self._logger.info("Standardized data matrix")
+        else:
+            self._logger.info("Already standardized. Not doing it again.")
+
+        return
+
+    def _add_regions(self, regions_to_add):
+
+        self.state.recompute = True
+
+        new_regions = regions_to_add - self.state.known_regions
+
+        for region in new_regions:
+            self.state.row_idx_to_district.append(region)
+            self.state.district_to_row_idx[region] = len(self.state.row_idx_to_district) - 1
+
+        self.state.known_regions |= new_regions
+
+    def add_metric(self, metric_name, weight=1.0):
         """
         Public interface for internal function.
         :param metric_name:
@@ -266,7 +328,7 @@ class SimilarRegion(api.client.Client):
         """
         self._add_metric(metric_name)
 
-    def _add_metric(self, metric_name):
+    def _add_metric(self, metric_name, weight=1.0):
         """
         Add a metric! This is inherently expensive because we to in-memory-copy the array.
         :param metric_name:
@@ -275,17 +337,28 @@ class SimilarRegion(api.client.Client):
 
         self._logger.info("Adding metric %s" % metric_name)
 
+        self.state.recompute = True
+
         if type(metric_name) != list:
             metrics = [metric_name]
         else:
             metrics = metric_name
 
-        for metric_name in metrics:
+        if type(weight) != list:
+            weights = [weight] * len(metrics)
+        else:
+            assert(len(weight) == len(metrics))
+            weights = weight
+
+        for idx, metric_name in enumerate(metrics):
             if metric_name not in self.available_metrics:
                 raise Exception("Metric %s not found. Please provide a valid metric." % metric_name)
+                continue
 
             if metric_name in self.state.metrics_to_use:
-                self._logger.info("Metric %s already added. Not adding again." % metric_name)
+                self._logger.info("Metric %s already added. Not adding again. Call _cache_regions() "
+                                  "to finish downloading data." % metric_name)
+                continue
 
 
             num_features = self.available_metrics[metric_name]["properties"]["num_features"]
@@ -317,9 +390,16 @@ class SimilarRegion(api.client.Client):
             # add the metric data
             self.state.metric_data[metric_name] = self.state.data[:, start_idx:end_idx]
 
-        self._logger.info("Added metric %s" % metric_name)
+            self._set_metric_weight(metric_name, weights[idx])
+
+            self._logger.info("Added metric %s" % metric_name)
 
         return True
+
+    def _set_metric_weight(self, metric_name, weight):
+
+        assert 0.0 <= weight <= 1.0
+        self.state.metric_weights[metric_name] = weight
 
     def _cache_regions(self):
         """
@@ -338,20 +418,11 @@ class SimilarRegion(api.client.Client):
             available_regions_for_metric = set([row["region_id"] for row in available_series_and_regions])
 
             if self.state.all_regions:
-                new_regions = available_regions_for_metric - self.state.known_regions
-                for region in new_regions:
-                    self.state.row_idx_to_district.append(region)
-                    self.state.district_to_row_idx[region] = len(self.state.row_idx_to_district) - 1
-                self.state.known_regions |= new_regions
+                self._add_regions(available_regions_for_metric)
 
-                idxs_to_download = np.argwhere(self.state.not_fetched_yet[:, metric_idx] == True)[:, 0]
-                to_download_regions = set(self.state.row_idx_to_district[idx] for idx in idxs_to_download if
-                                          idx < len(self.state.row_idx_to_district))
-
-            # print(len(available_regions_for_metric))
-            # print(idxs_to_download)
-            # print(self.state.metric_data["soil_moisture"][19475:20000])
-            # print(len(to_download_regions))
+            idxs_to_download = np.argwhere(self.state.not_fetched_yet[:, metric_idx] == True)[:, 0]
+            to_download_regions = set(self.state.row_idx_to_district[idx] for idx in idxs_to_download if
+                                      idx < len(self.state.row_idx_to_district))
 
             search_regions = self.state.known_regions & available_regions_for_metric & to_download_regions
 
@@ -390,6 +461,7 @@ class SimilarRegion(api.client.Client):
                     # flag this as invalid.
                     data[idx, :] = np.ma.masked
                 else:
+                    # TODO remove out_scope start_datetime here once we have "addNulls" on the server
                     processed_result = transform._post_process_timeseries(no_of_points, start_datetime, response)
                     data[idx] = processed_result
 
@@ -403,6 +475,7 @@ class SimilarRegion(api.client.Client):
                     save_func()
 
             when_to_save_counter = [0]
+
             results = (self.state.metric_data[metric_name], self.state.not_fetched_yet, metric_idx,
                        when_to_save_counter, self.state.save)
 
@@ -462,21 +535,13 @@ class SimilarRegion(api.client.Client):
 if __name__ == "__main__":
 
     # hardcoded for testing
-    testCase = SimilarRegion(["soil_moisture", "land_surface_temperature"])
-    testCase.state.load()
-    #testCase.state.not_fetched_yet[:,1] = False
-   # testCase.state.save()
-    #print(testCase.state.not_fetched_yet)
-    testCase.add_metric("rainfall")
-    #testCase.state.load()
-    #testCase.state.not_fetched_yet[:, 0] = False
-    testCase._cache_regions()
-    testCase.state.save()
-    # testCase.state.load()
-    # testCase._compute_similarity_matrix()
-    # testCase.state.save()
-    #testCase.similar_to("East Harerge", number_of_regions=50)
-    # france_districts = testCase._get_districts("France")
-    # us_districts = testCase._get_districts("California")
-    # print(france_districts + us_districts)
+    testCase = SimilarRegion([])
+    testCase.state.load('/Volumes/RAM/state.pickle')
     #testCase._cache_regions()
+    testCase.state.metric_weights = {
+        "soil_moisture": 1.0,
+        "rainfall": 0.1,
+        "land_surface_temperature": 1.0
+    }
+    testCase._compute_similarity_matrix()
+    testCase.similar_to("napa", number_of_regions=50)
