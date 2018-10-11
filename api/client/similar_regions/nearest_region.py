@@ -50,6 +50,9 @@ class SimilarRegionState(object):
         # Weights of each metric
         self.metric_weights = {}
 
+        # The ball tree
+        self.ball = None
+
         # Some logging... of course.
         self._logger = api.client.lib.get_default_logger()
 
@@ -58,15 +61,38 @@ class SimilarRegionState(object):
         Save state to disk.
         :return: True if succeeded.
         """
+        mod_time = 0
+
         if os.path.isfile(SAVED_STATE_PATH + "state.pickle"):
 
             # Let's not delete anything, but rather move it.
             mod_time = os.path.getmtime(SAVED_STATE_PATH + "state.pickle")
             os.rename(SAVED_STATE_PATH + "state.pickle", SAVED_STATE_PATH + "state_%i.pickle" % mod_time)
 
-        self._logger.info("Saving state to pickle.")
+        if os.path.isfile(SAVED_STATE_PATH + "state_data.npy"):
+            mod_time = mod_time if mod_time != 0 else os.path.getmtime(SAVED_STATE_PATH + "state_data.npy")
+            os.rename(SAVED_STATE_PATH + "state_data.npy", SAVED_STATE_PATH + "state_data_%i.npy" % mod_time)
+
+        if os.path.isfile(SAVED_STATE_PATH + "state_data_mask.npy"):
+            mod_time = mod_time if mod_time != 0 else os.path.getmtime(SAVED_STATE_PATH + "state_data_mask.npy")
+            os.rename(SAVED_STATE_PATH + "state_data_mask.npy", SAVED_STATE_PATH + "state_data_mask_%i.npy" % mod_time)
+
+        self._logger.info("Saving state to pickle and npy.")
 
         del self._logger
+        
+        # put the data folder into an npy
+        with open(SAVED_STATE_PATH + "state_data.npy", 'wb') as f:
+            np.save(f, self.data.data)
+
+        with open(SAVED_STATE_PATH + "state_data_mask.npy", 'wb') as f:
+            np.save(f, self.data.mask)
+
+        del self.data_standardized
+        del self.data
+        del self.ball
+        del self.metric_data
+        self.recompute = True
 
         with open(SAVED_STATE_PATH + "state.pickle", 'wb') as f:
             pickle.dump(self.__dict__, f)
@@ -91,9 +117,30 @@ class SimilarRegionState(object):
 
         self.__dict__.update(tmp_dict)
 
+        with open(SAVED_STATE_PATH + "state_data.npy", 'rb') as f:
+            data_temp = np.load(f)
+
+        with open(SAVED_STATE_PATH + "state_data_mask.npy", 'rb') as f:
+            data_mask_temp = np.load(f)
+
+        self.data = np.ma.array(data_temp)
+        self.data[data_mask_temp] = np.ma.masked
+
+        self._construct_metric_data_views()
+
         self._logger.info("Done loading state from %s" % path_to_pickle)
 
         return True
+
+    def _construct_metric_data_views(self):
+
+        for idx, metric_name in enumerate(self.metrics_to_use):
+            start_idx = self.metric_to_col_idx[metric_name]
+            if idx + 1 < len(self.metrics_to_use):
+                end_idx = self.metric_to_col_idx[self.metrics_to_use[idx + 1]]
+                self.metric_data[metric_name] = self.data[:, start_idx:end_idx]
+            else:
+                self.metric_data[metric_name] = self.data[:, start_idx:]
 
 
 class SimilarRegion(api.client.Client):
@@ -103,7 +150,7 @@ class SimilarRegion(api.client.Client):
         Metr
         :param metrics_to_use: A dictionary of {"metric_name": {"query": ...}, ...}
         :param weights: A ndictionary of the weights to associate with each metric/itemID pair. For instance, if soil
-        weight is extremely important. NOTE: weights will be normalized with a softmax! TODO
+        weight is extremely important. NOTE: weights will be normalized with a softmax! TODO:done
         :param time_frame: How long to average these values over. For instance weather conditions. TODO
         """
 
@@ -188,8 +235,12 @@ class SimilarRegion(api.client.Client):
         # if not self.state.downloaded:
         #     raise Exception("Region data not available. Please call cache_regions()")
 
+        if self.state.recompute:
+            self._logger.info("Similarities not computed (or reloaded from disk and not saved), computing.")
+            self._compute_similarity_matrix()
+
         # if search_regions:
-        #     # TODO: fix search regins
+        #     # TODO: fix search regions
         #     search_regions = []
         #
         # # Check if search region is contained in available regions
@@ -271,6 +322,9 @@ class SimilarRegion(api.client.Client):
         self._logger.info("BallTree: computing")
         self.state.ball = BallTree(self.state.data_standardized, leaf_size=2)
         self._logger.info("BallTree: done")
+
+        self.state.recompute = False
+
         return
 
     def _standardize(self):
@@ -300,7 +354,7 @@ class SimilarRegion(api.client.Client):
             # += view_of_data_means[self.state.data.mask]
 
             # Center all of these I suppose is the most straightforward solution...
-            self.state.data_standardized[self.state.data.mask] = 1000000000.0
+            self.state.data_standardized[self.state.data.mask] = 0.0
 
             self._logger.info("Standardized data matrix")
         else:
@@ -360,7 +414,6 @@ class SimilarRegion(api.client.Client):
                                   "to finish downloading data." % metric_name)
                 continue
 
-
             num_features = self.available_metrics[metric_name]["properties"]["num_features"]
             start_idx = self.state.data.shape[1]
             self.state.metric_to_col_idx[metric_name] = start_idx
@@ -372,12 +425,6 @@ class SimilarRegion(api.client.Client):
             self.state.data[:, 0:old_data_array.shape[1]] = old_data_array
             self.state.data[:, start_idx:end_idx] = np.ma.masked
 
-            # re-add those metrics
-            for idx in range(len(self.state.metrics_to_use)):
-                re_add_start_idx = self.state.metric_to_col_idx[metric_name]
-                re_add_end_idx = re_add_start_idx + self.state.metric_data[self.state.metrics_to_use[idx]].shape[1]
-                self.state.metric_data[idx] = self.state.data[:, re_add_start_idx:re_add_end_idx]
-
             #add it to metrics to use
             self.state.metrics_to_use.append(metric_name)
 
@@ -387,12 +434,12 @@ class SimilarRegion(api.client.Client):
             self.state.not_fetched_yet[:, 0:old_state_array.shape[1]] = old_state_array
             self.state.not_fetched_yet[:, -1:] = True
 
-            # add the metric data
-            self.state.metric_data[metric_name] = self.state.data[:, start_idx:end_idx]
-
             self._set_metric_weight(metric_name, weights[idx])
 
             self._logger.info("Added metric %s" % metric_name)
+
+        # re-add those metrics
+        self.state._construct_metric_data_views()
 
         return True
 
@@ -446,6 +493,8 @@ class SimilarRegion(api.client.Client):
                 copy_of_metric = dict(metric)
                 copy_of_metric["region_id"] = region
                 queries.append((self.state.district_to_row_idx[region], copy_of_metric))
+
+            queries = queries[0:100]
 
             def map_response(query, results, response):
                 idx = query[0]
@@ -534,14 +583,19 @@ class SimilarRegion(api.client.Client):
 
 if __name__ == "__main__":
 
-    # hardcoded for testing
-    testCase = SimilarRegion([])
-    testCase.state.load('/Volumes/RAM/state.pickle')
-    #testCase._cache_regions()
-    testCase.state.metric_weights = {
-        "soil_moisture": 1.0,
-        "rainfall": 0.1,
-        "land_surface_temperature": 1.0
-    }
-    testCase._compute_similarity_matrix()
-    testCase.similar_to("napa", number_of_regions=50)
+    # If you're running the first time, run these three lines. Alternatively download the pre-computed version from
+    # here:
+    testCase = SimilarRegion(["soil_moisture", "rainfall", "land_surface_temperature"])
+    testCase._cache_regions()
+
+    # Otherwise, comment the three lines above and uncomment this line
+    # testCase.state.load()
+
+    # If you want to modify weights, uncomment below
+    # testCase.state.metric_weights = {
+    #     "soil_moisture": 1.0,
+    #     "rainfall": 1.0,
+    #     "land_surface_temperature": 1.0
+    # }
+
+    testCase.similar_to("Napa", number_of_regions=150)
