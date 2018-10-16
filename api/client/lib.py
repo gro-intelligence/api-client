@@ -60,15 +60,17 @@ def get_data(url, headers, params=None, logger=None):
     log_record['tag'] = 'failed_gro_api_request'
     if retry_count < MAX_RETRIES:
       print "~~~~ A4~~~~"
-      print data.status_code
-      print data.json()
-      print data.text
+      print "^0^", data.status_code
+      print "^1^", data.json()
+      print "^2^", data.text, type(data.text), bool(data.text)
+      print "^3^", log_record, type(log_record), bool(log_record)
       logger.warning(data.text, extra=log_record)
     else:
       print "~~~~ A5~~~~"
-      print data.status_code
-      print data.json()
-      print data.text
+      print "^0^", data.status_code
+      print "^1^", data.json()
+      print "^2^", data.text, type(data.text), bool(data.text)
+      print "^3^", log_record, type(log_record), bool(log_record)
       logger.error(data.text, extra=log_record)
   raise Exception('Giving up on {} after {} tries. Error is: {}.'.format(url, retry_count, data.text))
 
