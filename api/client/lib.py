@@ -76,6 +76,7 @@ def get_available(access_token, api_host, entity_type):
     """
   url = '/'.join(['https:', '', api_host, 'v2', entity_type])
   headers = {'authorization': 'Bearer ' + access_token}
+  print "+++++++++++++ B0 ++++++++++++\nARGS: ",  url, headers
   resp = get_data(url, headers)
   return resp.json()['data']
 
@@ -89,6 +90,7 @@ def list_available(access_token, api_host, selected_entities):
   """
   url = '/'.join(['https:', '', api_host, 'v2/entities/list'])
   headers = {'authorization': 'Bearer ' + access_token}
+  print "+++++++++++++ B1 ++++++++++++\nARGS: ",  url, headers, selected_entities
   resp = get_data(url, headers, selected_entities)
   try:
     return resp.json()['data']
@@ -103,6 +105,7 @@ def lookup(access_token, api_host, entity_type, entity_id):
   """
   url = '/'.join(['https:', '', api_host, 'v2', entity_type, str(entity_id)])
   headers = {'authorization': 'Bearer ' + access_token}
+  print "+++++++++++++ B2 ++++++++++++\nARGS: ",  url, headers
   resp = get_data(url, headers)
   try:
     return resp.json()['data']
@@ -156,6 +159,7 @@ def get_data_series(access_token, api_host, **selection):
   url = '/'.join(['https:', '', api_host, 'v2/data_series/list'])
   headers = {'authorization': 'Bearer ' + access_token}
   params = get_params_from_selection(**selection)
+  print "+++++++++++++ B3 ++++++++++++\nARGS: ",  url, headers, params
   resp = get_data(url, headers, params)
   try:
     return resp.json()['data']
@@ -177,6 +181,7 @@ def rank_series_by_source(access_token, api_host, series_list):
     headers = {'authorization': 'Bearer ' + access_token}
     params = dict((k + 's', v)
                   for k, v in get_params_from_selection(**series).iteritems())
+    print "+++++++++++++ B4 ++++++++++++\nARGS: ",  url, headers, params
     source_ids = get_data(url, headers, params).json()
     for source_id in source_ids:
       series['source_id'] = source_id
@@ -233,6 +238,7 @@ def get_crop_calendar_data_points(access_token, api_host, **selection):
   headers = {'authorization': 'Bearer ' + access_token }
   url = '/'.join(['https:', '', api_host, 'v2/cropcalendar/data'])
   params = get_crop_calendar_params(**selection)
+  print "+++++++++++++ B5 ++++++++++++\nARGS: ",  url, headers, params
   resp = get_data(url, headers, params)
   return format_crop_calendar_response(resp.json())
 
@@ -247,6 +253,7 @@ def get_data_points(access_token, api_host, **selection):
   headers = {'authorization': 'Bearer ' + access_token }
   url = '/'.join(['https:', '', api_host, 'v2/data'])
   params = get_data_call_params(**selection)
+  print "+++++++++++++ B6 ++++++++++++\nARGS: ",  url, headers, params
   resp = get_data(url, headers, params)
 
   return resp.json()
@@ -258,6 +265,7 @@ def search(access_token, api_host, entity_type, search_terms):
   """
   url = '/'.join(['https:', '', api_host, 'v2/search', entity_type])
   headers = {'authorization': 'Bearer ' + access_token }
+  print "+++++++++++++ B7 ++++++++++++\nARGS: ",  url, headers, {'q': search_terms}
   resp = get_data(url, headers, {'q': search_terms})
   return resp.json()
 
@@ -284,6 +292,7 @@ def lookup_belongs(access_token, api_host, entity_type, entity_id):
   url = '/'.join(['https:', '', api_host, 'v2', entity_type, 'belongs-to'])
   params = { 'ids': str(entity_id) }
   headers = {'authorization': 'Bearer ' + access_token}
+  print "+++++++++++++ B8 ++++++++++++\nARGS: ",  url, headers, params
   resp = get_data(url, headers, params)
   for parent_entity_id in resp.json().get('data').get(str(entity_id)):
     yield lookup(access_token, api_host, entity_type, parent_entity_id)
