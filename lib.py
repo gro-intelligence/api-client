@@ -28,11 +28,9 @@ def get_access_token(api_host, user_email, user_password, logger=None):
     login = requests.post('https://' + api_host + '/login',
                           data = {"email": user_email, "password": user_password})
     if login.status_code == 200:
-      print "~~~~ A0~~~~"
       logger.debug("Authentication succeeded in get_access_token")
       return login.json()['data']['accessToken']
     else:
-      print "~~~~ A1~~~~"
       logger.warning("Error in get_access_token: {}".format(login))
     retry_count += 1
   raise Exception("Giving up on get_access_token after {0} tries.".format(retry_count))
@@ -56,17 +54,20 @@ def get_data(url, headers, params=None, logger=None):
     log_record['retry_count'] = retry_count
     log_record['status_code'] = data.status_code
     if data.status_code == 200:
-      print "~~~~ A3~~~~"
       logger.debug('OK', extra=log_record)
       return data
     retry_count += 1
     log_record['tag'] = 'failed_gro_api_request'
     if retry_count < MAX_RETRIES:
       print "~~~~ A4~~~~"
+      print data.status_code
+      print data.json()
       print data.text
       logger.warning(data.text, extra=log_record)
     else:
       print "~~~~ A5~~~~"
+      print data.status_code
+      print data.json()
       print data.text
       logger.error(data.text, extra=log_record)
   raise Exception('Giving up on {} after {} tries. Error is: {}.'.format(url, retry_count, data.text))
