@@ -6,7 +6,7 @@ from datetime import datetime
 
 
 MAX_RETRIES = 4
-DEFAULT_LOG_LEVEL=logging.INFO  # change to DEBUG for more detail
+DEFAULT_LOG_LEVEL=logging.DEBUG  # change to DEBUG for more detail
 
 CROP_CALENDAR_METRIC_ID = 2260063
 
@@ -45,6 +45,7 @@ def get_data(url, headers, params=None, logger=None):
   if not logger:
     logger = get_default_logger()
   print "~~~~ A2~~~~"
+  print "IN LIB...URL: ", url
   logger.debug(url)
   while retry_count < MAX_RETRIES:
     start_time = time.time()
