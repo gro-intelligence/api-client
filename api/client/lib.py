@@ -59,8 +59,8 @@ def get_data(url, headers, params=None, logger=None):
 
     error_report = """
     *** ERROR: GET request failed with error code {} ***
-    Full output: {}\nlog_record: """.format(
-        log_record['status_code'], data,log_record)
+    Full output: {}\nlog_record: {}""".format(
+        log_record['status_code'], data, log_record)
     
     if retry_count < MAX_RETRIES:
       logger.warning(error_report)
