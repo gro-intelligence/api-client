@@ -354,7 +354,7 @@ class SimilarRegion(api.client.Client):
             # += view_of_data_means[self.state.data.mask]
 
             # Center all of these I suppose is the most straightforward solution...
-            self.state.data_standardized[self.state.data.mask] = 0.0
+            self.state.data_standardized[self.state.data.mask] = 100000.0
 
             self._logger.info("Standardized data matrix")
         else:
@@ -586,16 +586,16 @@ if __name__ == "__main__":
     # If you're running the first time, run these three lines. Alternatively download the pre-computed version from
     # here:
     testCase = SimilarRegion(["soil_moisture", "rainfall", "land_surface_temperature"])
-    testCase._cache_regions()
+    #testCase._cache_regions()
 
     # Otherwise, comment the three lines above and uncomment this line
-    # testCase.state.load()
+    testCase.state.load()
 
     # If you want to modify weights, uncomment below
-    # testCase.state.metric_weights = {
-    #     "soil_moisture": 1.0,
-    #     "rainfall": 1.0,
-    #     "land_surface_temperature": 1.0
-    # }
+    testCase.state.metric_weights = {
+        "soil_moisture": 1.0,
+        "rainfall": 1.0,
+        "land_surface_temperature": 1.0
+    }
 
-    testCase.similar_to("Napa", number_of_regions=150)
+    testCase.similar_to("Mendocino", number_of_regions=150)
