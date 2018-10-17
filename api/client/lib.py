@@ -28,7 +28,7 @@ def get_access_token(api_host, user_email, user_password, logger=None):
     login = requests.post('https://' + api_host + '/login',
                           data = {"email": user_email, "password": user_password})
     if login.status_code == 200:
-      logger.info("Authentication succeeded in get_access_token")
+      logger.debug("Authentication succeeded in get_access_token")
       return login.json()['data']['accessToken']
     else:
       logger.warning("Error in get_access_token: {}".format(login))
@@ -42,7 +42,7 @@ def get_data(url, headers, params=None, logger=None):
   retry_count = 0
   if not logger:
     logger = get_default_logger()
-  logger.info(url)
+  logger.debug(url)
   while retry_count < MAX_RETRIES:
     start_time = time.time()
     data = requests.get(url, params=params, headers=headers, timeout=None)
@@ -52,15 +52,15 @@ def get_data(url, headers, params=None, logger=None):
     log_record['retry_count'] = retry_count
     log_record['status_code'] = data.status_code
     if data.status_code == 200:
-      logger.info('OK', extra=log_record)
+      logger.debug('OK', extra=log_record)
       return data
     retry_count += 1
     log_record['tag'] = 'failed_gro_api_request'
 
     error_report = """
     *** ERROR: GET request failed with error code {} ***
-    Full output: {}\nlog_record: {}""".format(
-        log_record['status_code'], data, log_record)
+    \nURL: {}\nFull output: {}\nLog record: {}""".format(
+      log_record['status_code'], url, data, log_record)
     
     if retry_count < MAX_RETRIES:
       logger.warning(error_report)
