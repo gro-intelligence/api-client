@@ -56,17 +56,11 @@ def get_data(url, headers, params=None, logger=None):
       return data
     retry_count += 1
     log_record['tag'] = 'failed_gro_api_request'
-
-    error_report = """
-    *** ERROR: GET request failed with error code {} ***
-    \nURL: {}\nFull output: {}\nLog record: {}""".format(
-      log_record['status_code'], url, data, log_record)
-    
     if retry_count < MAX_RETRIES:
-      logger.warning(error_report)
+      logger.warning(data.text, extra=log_record)
     else:
-      logger.error(error_report)
-  raise Exception('Giving up on {} after {} tries. Error is: {}.'.format(url, retry_count, error_report))
+      logger.error(data.text, extra=log_record)
+  raise Exception('Giving up on {} after {} tries. Error is: {}.'.format(url, retry_count, data.text))
 
 
 def get_available(access_token, api_host, entity_type):
