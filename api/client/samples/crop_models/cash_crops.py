@@ -95,8 +95,8 @@ POINT_IN_TIME         = 15
 
 #Set up gro API
 def groToken( api_host = API_HOST ):
-    gro_user_email    = "steve@gro-intelligence.com"
-    gro_user_password = "Golfro525"
+    gro_user_email    = "user@email.com"
+    gro_user_password = "password"
     return( api.client.lib.get_access_token( api_host, gro_user_email, gro_user_password ) )
 
 def groClient( api_host = API_HOST, tok = groToken() ):
