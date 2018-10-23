@@ -83,7 +83,21 @@ def list_available(access_token, api_host, selected_entities):
   """
   url = '/'.join(['https:', '', api_host, 'v2/entities/list'])
   headers = {'authorization': 'Bearer ' + access_token}
-  resp = get_data(url, headers, selected_entities)
+
+  params = {}
+
+  for key, value in selected_entities.items():
+    if key in ('regionId', 'partnerRegionId', 'itemId',
+               'metricId', 'sourceId', 'frequencyId'):
+      params[key] = value
+
+  for key, value in selected_entities.items():
+    if key in ('region_id', 'partnerRegion_id', 'item_id',
+               'metric_id', 'source_id', 'frequency_id'):
+      params[snake_to_camel(key)] = value
+
+  resp = get_data(url, headers, params)
+
   try:
     return resp.json()['data']
   except KeyError as e:
@@ -105,7 +119,7 @@ def lookup(access_token, api_host, entity_type, entity_id):
 
 
 def snake_to_camel(term):
-  """Converts hello_world to helloWorld."""
+  """Converts hello_world to helloWorld. Identity if term is already in camelCase."""
   camel = ''.join(term.title().split('_'))
   return camel[0].lower() + camel[1:]
 
