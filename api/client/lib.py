@@ -91,7 +91,7 @@ def list_available(access_token, api_host, selected_entities):
       params[key] = value
 
   for key, value in selected_entities.items():
-    if key in ('region_id', 'partnerRegion_id', 'item_id',
+    if key in ('region_id', 'partner_region_id', 'item_id',
                'metric_id'):
       params[snake_to_camel(key)] = value
 
