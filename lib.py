@@ -82,15 +82,17 @@ def list_available(access_token, api_host, selected_entities):
   headers = {'authorization': 'Bearer ' + access_token}
 
   params = {}
-
+  
+  # source_id and frequency_id are not yet implemented in backend.
+  
   for key, value in selected_entities.items():
     if key in ('regionId', 'partnerRegionId', 'itemId',
-               'metricId', 'sourceId', 'frequencyId'):
+               'metricId'):
       params[key] = value
 
   for key, value in selected_entities.items():
     if key in ('region_id', 'partnerRegion_id', 'item_id',
-               'metric_id', 'source_id', 'frequency_id'):
+               'metric_id'):
       params[snake_to_camel(key)] = value
 
   resp = get_data(url, headers, params)
@@ -116,7 +118,7 @@ def lookup(access_token, api_host, entity_type, entity_id):
 
 
 def snake_to_camel(term):
-  """Converts hello_world to helloWorld. Identity if term is already in camelCase."""
+  """Converts hello_world to helloWorld. Assumes input is in snake."""
   camel = ''.join(term.title().split('_'))
   return camel[0].lower() + camel[1:]
 
