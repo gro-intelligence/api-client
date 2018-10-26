@@ -51,8 +51,8 @@ def search_for_entity(client, entity_type, keywords):
     """
     results = client.search(entity_type, keywords)
     for result in results[entity_type]:
-        print "Picking first result out of {} {}: {}, {}".format(
-            len(results[entity_type]), entity_type, result['id'], result['name'])
+        print "Picking first result out of {} {}: {}".format(
+            len(results[entity_type]), entity_type, result['id'])
         return result['id']
     return None
 
