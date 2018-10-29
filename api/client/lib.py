@@ -250,10 +250,16 @@ def search(access_token, api_host, entity_type, search_terms):
   """Given an entity_type, which is one of 'items', 'metrics',
   'regions', performs a search for the given terms.
   """
-  url = '/'.join(['https:', '', api_host, 'v2/search', entity_type])
+  url_pieces = ['https:', '', api_host, 'v2/search']
+  if entity_type:
+    url_pieces.append(entity_type)
+  url = '/'.join(url_pieces)
   headers = {'authorization': 'Bearer ' + access_token }
   resp = get_data(url, headers, {'q': search_terms})
-  return resp.json()
+  if entity_type:
+    return { entity_type: resp.json() }
+  else:
+    return resp.json()
 
 
 def search_and_lookup(access_token, api_host, entity_type, search_terms):
