@@ -120,6 +120,7 @@ def get_params_from_selection(**selection):
       params[snake_to_camel(key)] = value
   return params
 
+
 def get_crop_calendar_params(**selection):
   """Construct http request params from dict of entity selections. Only region and item are required
   since metric/item/source/frequency all have default values and start/end date are not allowed
@@ -130,6 +131,7 @@ def get_crop_calendar_params(**selection):
     if key in ('region_id', 'item_id'):
       params[snake_to_camel(key)] = value
   return params
+
 
 def get_data_call_params(**selection):
   """Construct http request params from dict of entity selections. For use with get_data_points().
@@ -230,6 +232,7 @@ def get_crop_calendar_data_points(access_token, api_host, **selection):
   resp = get_data(url, headers, params)
   return format_crop_calendar_response(resp.json())
 
+
 def get_data_points(access_token, api_host, **selection):
   """Get all the data points for a given selection, which is some or all
   of: item_id, metric_id, region_id, frequency_id, source_id,
@@ -242,24 +245,31 @@ def get_data_points(access_token, api_host, **selection):
   url = '/'.join(['https:', '', api_host, 'v2/data'])
   params = get_data_call_params(**selection)
   resp = get_data(url, headers, params)
+  return resp.json()
 
+
+def universal_search(access_token, api_host, search_terms):
+  """Search across all entity types for the given terms.  Returns an a
+  list of [id, entity_type] pairs, e.g.: [[5604, u'item'], [10204,
+  u'item'], [410032, u'metric'], ....]
+  """
+  url_pieces = ['https:', '', api_host, 'v2/search']
+  url = '/'.join(url_pieces)
+  headers = {'authorization': 'Bearer ' + access_token }
+  resp = get_data(url, headers, {'q': search_terms})
   return resp.json()
 
 
 def search(access_token, api_host, entity_type, search_terms):
   """Given an entity_type, which is one of 'items', 'metrics',
-  'regions', performs a search for the given terms.
+  'regions', performs a search for the given terms. Returns a list of
+  dictionaries with individual entities, e.g.: [{u'id': 5604}, {u'id':
+  10204}, {u'id': 10210}, ....]
   """
-  url_pieces = ['https:', '', api_host, 'v2/search']
-  if entity_type:
-    url_pieces.append(entity_type)
-  url = '/'.join(url_pieces)
+  url = '/'.join(['https:', '', api_host, 'v2/search', entity_type])
   headers = {'authorization': 'Bearer ' + access_token }
   resp = get_data(url, headers, {'q': search_terms})
-  if entity_type:
-    return { entity_type: resp.json() }
-  else:
-    return resp.json()
+  return resp.json()
 
 
 def search_and_lookup(access_token, api_host, entity_type, search_terms):
