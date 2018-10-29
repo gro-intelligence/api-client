@@ -62,7 +62,6 @@ def get_data(url, headers, params=None, logger=None):
         log_record['status_code'] = data.status_code
         if data.status_code == 200:
             logger.debug('OK', extra=log_record)
-            data = data.json()
             return data
         retry_count += 1
         log_record['tag'] = 'failed_gro_api_request'
@@ -80,7 +79,7 @@ def get_available(access_token, api_host, entity_type):
     """
     url = '/'.join(['https:', '', api_host, 'v2', entity_type])
     headers = {'authorization': 'Bearer ' + access_token}
-    resp = get_data(url, headers)
+    resp = get_data(url, headers).json()
     return resp['data']
 
 
@@ -93,7 +92,7 @@ def list_available(access_token, api_host, selected_entities):
   """
     url = '/'.join(['https:', '', api_host, 'v2/entities/list'])
     headers = {'authorization': 'Bearer ' + access_token}
-    resp = get_data(url, headers, selected_entities)
+    resp = get_data(url, headers, selected_entities).json()
     try:
         return resp['data']
     except KeyError as e:
@@ -107,7 +106,7 @@ def lookup(access_token, api_host, entity_type, entity_id):
   """
     url = '/'.join(['https:', '', api_host, 'v2', entity_type, str(entity_id)])
     headers = {'authorization': 'Bearer ' + access_token}
-    resp = get_data(url, headers)
+    resp = get_data(url, headers).json()
     try:
         return resp['data']
     except KeyError as e:
@@ -162,7 +161,7 @@ def get_data_series(access_token, api_host, **selection):
     url = '/'.join(['https:', '', api_host, 'v2/data_series/list'])
     headers = {'authorization': 'Bearer ' + access_token}
     params = get_params_from_selection(**selection)
-    resp = get_data(url, headers, params)
+    resp = get_data(url, headers, params).json()
     try:
         return resp['data']
     except KeyError as e:
@@ -183,7 +182,7 @@ def rank_series_by_source(access_token, api_host, series_list):
         headers = {'authorization': 'Bearer ' + access_token}
         params = dict((k + 's', v)
                       for k, v in get_params_from_selection(**series).iteritems())
-        source_ids = get_data(url, headers, params)
+        source_ids = get_data(url, headers, params).json()
         for source_id in source_ids:
             series['source_id'] = source_id
             yield series
@@ -242,7 +241,7 @@ def get_crop_calendar_data_points(access_token, api_host, **selection):
     headers = {'authorization': 'Bearer ' + access_token}
     url = '/'.join(['https:', '', api_host, 'v2/cropcalendar/data'])
     params = get_crop_calendar_params(**selection)
-    resp = get_data(url, headers, params)
+    resp = get_data(url, headers, params).json()
     return format_crop_calendar_response(resp)
 
 
@@ -257,7 +256,7 @@ def get_data_points(access_token, api_host, **selection):
     headers = {'authorization': 'Bearer ' + access_token}
     url = '/'.join(['https:', '', api_host, 'v2/data'])
     params = get_data_call_params(**selection)
-    resp = get_data(url, headers, params)
+    resp = get_data(url, headers, params).json()
 
     return resp
 
@@ -268,7 +267,7 @@ def search(access_token, api_host, entity_type, search_terms):
   """
     url = '/'.join(['https:', '', api_host, 'v2/search', entity_type])
     headers = {'authorization': 'Bearer ' + access_token}
-    resp = get_data(url, headers, {'q': search_terms})
+    resp = get_data(url, headers, {'q': search_terms}).json()
     return resp
 
 
