@@ -256,10 +256,7 @@ def search(access_token, api_host, entity_type, search_terms):
   url = '/'.join(url_pieces)
   headers = {'authorization': 'Bearer ' + access_token }
   resp = get_data(url, headers, {'q': search_terms})
-  if entity_type:
-    return { entity_type: resp.json() }
-  else:
-    return resp.json()
+  return resp.json()
 
 
 def search_and_lookup(access_token, api_host, entity_type, search_terms):

@@ -50,9 +50,9 @@ def search_for_entity(client, entity_type, keywords):
     regions) that matches the given keywords.
     """
     results = client.search(entity_type, keywords)
-    for result in results[entity_type]:
+    for result in results:
         print "Picking first result out of {} {}: {}".format(
-            len(results[entity_type]), entity_type, result['id'])
+            len(results), entity_type, result['id'])
         return result['id']
     return None
 
