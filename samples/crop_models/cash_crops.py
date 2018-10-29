@@ -20,10 +20,8 @@ import getpass
 import random
 import logging
 
-sys.path.append( 'c:\\Users\\'+getpass.getuser()+'\\gro\\api\\client' )
-sys.path.append( 'c:\\Users\\'+getpass.getuser()+'\\gro' )
 import api.client.lib
-from gro_client import get_df
+from api.client.lib.gro_client import get_df
 from api.client.lib import search
 
 #GRO GLOBAL VARIABLES
