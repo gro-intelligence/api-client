@@ -199,6 +199,7 @@ def rank_series_by_source(access_token, api_host, series_list):
                   for k, v in get_params_from_selection(**series).iteritems())
     source_ids = get_data(url, headers, params).json()
     for source_id in source_ids:
+      series = dict(series)
       series['source_id'] = source_id
       yield series
 
