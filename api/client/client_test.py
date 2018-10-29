@@ -2,7 +2,6 @@ import unittest
 import mock
 
 from api.client import Client
-from api.client import lib
 
 # TODO: Test individual functions in lib.py.
 # TODO: Handle cases like the crop-calendar logic.
@@ -190,7 +189,8 @@ class ClientTestCase(unittest.TestCase):
     @mock.patch('requests.get')
     def test_rank_series_by_source(self, mock_requests_get):
 
-        mock_requests_get.return_value.json.return_value = {"data": {"test_entity": [1,2,3]}}
+        mock_return = ["data1", "data2", "data3"]
+        mock_requests_get.return_value.json.return_value = mock_return
         mock_requests_get.return_value.status_code = 200
 
         # Ordering of the dict should not matter
@@ -203,10 +203,9 @@ class ClientTestCase(unittest.TestCase):
         b = {"item_id": 3457, "region_id": 13474, "metric_id": 2540047, "source_id": 26}
 
         c = list(self.client.rank_series_by_source([a,b]))
+        assert(len(c) == 3)
 
-        assert(len(c) == 1)
-
-
+        self.assertEqual(mock_return, [x["source_id"] for x in c])
 
 if __name__ == '__main__':
     unittest.main()
