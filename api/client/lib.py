@@ -281,3 +281,12 @@ def lookup_belongs(access_token, api_host, entity_type, entity_id):
   resp = get_data(url, headers, params)
   for parent_entity_id in resp.json().get('data').get(str(entity_id)):
     yield lookup(access_token, api_host, entity_type, parent_entity_id)
+
+def get_geo_centre(access_token, api_host, region_id):
+  """Given a region ID, returns the geographic centre in degrees lat/lon."""
+  url = '/'.join(['https:', '', api_host, 'v2/geocentres?regionIds=', region_id])
+  headers = {'authorization': 'Bearer ' + access_token}
+  resp = get_data(url, headers)
+  return resp
+
+    #https://clewsapi.gro-intelligence.com/v2/geocentres?regionIds=15
