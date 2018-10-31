@@ -467,3 +467,10 @@ def batch_lookup(access_token, api_host, entities, results, map_returned=None):
     batch_async_get_data(queries, results, map_returned)
 
     return results
+
+def get_geo_centre(access_token, api_host, region_id):
+  """Given a region ID, returns the geographic centre in degrees lat/lon."""
+  url = '/'.join(['https:', '', api_host, 'v2/geocentres?regionIds=' + str(region_id)])
+  headers = {'authorization': 'Bearer ' + access_token}
+  resp = get_data(url, headers)
+  return resp.json()["data"]

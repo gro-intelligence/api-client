@@ -95,3 +95,6 @@ class Client(object):
     #     # TODO
     #     # return lib.rank_series_by_source(self.access_token, self.api_host,
     #     #                                  series_list)
+
+    def get_geo_centre(self, region_id):
+        return lib.get_geo_centre(self.access_token, self.api_host, region_id)
