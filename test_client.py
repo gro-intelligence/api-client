@@ -8,11 +8,10 @@ class MyTestCase(unittest.TestCase):
     api_client = None  # type: client
 
     def setUp(self):
-        self.api_client = api.client.Client("api.gro-intelligence.com",
-                                            "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InN0ZXZlQGdyb"
-                                            "y1pbnRlbGxpZ2VuY2UuY29tIiwidXNlcklkIjo4OTIsInR5cGUiOiJsb2dpbiI"
-                                            "sImlhdCI6MTUzNjY3NDkyN30.BM9eqKIc_6MyNjuqnfGF1Qs7i7OLit2W-o-_b"
-                                            "k6HjCI")
+        self.api_client = api.client.BatchClient("api.gro-intelligence.com",
+                                            "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImV5dmluZC5uaWtsYXNzb25A"
+                                            "Z3JvLWludGVsbGlnZW5jZS5jb20iLCJ1c2VySWQiOjQxMDUsInR5cGUiOiJsb2dpbiIsImlhd"
+                                            "CI6MTUzODY2MDM0NX0.M4L22oukM_Ghb8c8CpHqXDGNEBMMcRqqa7HKXF_lweE")
 
     def test_connection_and_lookup(self):
 

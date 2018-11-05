@@ -1,6 +1,5 @@
 from api.client import lib
 
-
 class Client(object):
 
     """API client with stateful authentication for lib functions. """
@@ -48,6 +47,16 @@ class Client(object):
         return lib.rank_series_by_source(self.access_token, self.api_host,
                                          series_list)
 
+    def get_geo_centre(self, region_id):
+        return lib.get_geo_centre(self.access_token, self.api_host, region_id)
+
+
+class BatchClient(Client):
+
+    def __init__(self, api_host, access_token):
+        from api.client import batch_lib
+        super(BatchClient, self).__init__(api_host, access_token)
+
     # Same things below as above but batched and async.
 
     # def batch_get_available(self, entity_type):
@@ -61,7 +70,7 @@ class Client(object):
     #     # return lib.list_available(self.access_token, self.api_host, selected_entities)
 
     def batch_lookup(self, entities, results, map_response=None):
-        return lib.batch_lookup(self.access_token, self.api_host, entities, results, map_response)
+        return batch_lib.batch_lookup(self.access_token, self.api_host, entities, results, map_response)
 
     #
     # def batch_get_data_series(self, **selection):
@@ -70,7 +79,7 @@ class Client(object):
     #     # return lib.get_data_series(self.access_token, self.api_host, **selection)
 
     def batch_get_data_points(self, selections, results, map_returned=None):
-        return lib.batch_get_data_points(self.access_token, self.api_host, selections, results, map_returned)
+        return batch_lib.batch_get_data_points(self.access_token, self.api_host, selections, results, map_returned)
     #
     # def batch_search(self, entity_type, search_terms):
     #     pass
@@ -96,5 +105,3 @@ class Client(object):
     #     # return lib.rank_series_by_source(self.access_token, self.api_host,
     #     #                                  series_list)
 
-    def get_geo_centre(self, region_id):
-        return lib.get_geo_centre(self.access_token, self.api_host, region_id)
