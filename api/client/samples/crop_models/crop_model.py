@@ -117,11 +117,11 @@ class CropModel(api.client.Client):
                 break
         # Compute the average over time for reach region
         df = self.get_df()
-
+        
         def mapper(region):
             return df[(df['metric_id'] == entities['metric_id']) & \
                       (df['region_id'] == region['id'])]['value'].mean(skipna=True)
-
+        
         means = map(mapper, regions)
         self._logger.debug('Means = {}'.format(
             zip([region['name'] for region in regions], means)))
