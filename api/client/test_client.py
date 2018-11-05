@@ -3,12 +3,14 @@ import sys
 import api.client.lib
 import unittest
 
+from api.client.batch_client import BatchClient
+
 
 class MyTestCase(unittest.TestCase):
     api_client = None  # type: client
 
     def setUp(self):
-        self.api_client = api.client.BatchClient("api.gro-intelligence.com",
+        self.api_client = BatchClient("api.gro-intelligence.com",
                                             "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImV5dmluZC5uaWtsYXNzb25A"
                                             "Z3JvLWludGVsbGlnZW5jZS5jb20iLCJ1c2VySWQiOjQxMDUsInR5cGUiOiJsb2dpbiIsImlhd"
                                             "CI6MTUzODY2MDM0NX0.M4L22oukM_Ghb8c8CpHqXDGNEBMMcRqqa7HKXF_lweE")
