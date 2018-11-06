@@ -121,9 +121,9 @@ def lookup(access_token, api_host, entity_type, entity_id):
 
 
 def snake_to_camel(term):
-  """Converts hello_world to helloWorld. Assumes input is in snake."""
-  camel = ''.join(term.title().split('_'))
-  return camel[0].lower() + camel[1:]
+  """Converts hello_world to helloWorld."""
+  camel = term.split('_')
+  return ''.join(camel[:1]+ map(lambda x: x[0].upper()+x[1:], camel[1:]))
 
 
 def get_params_from_selection(**selection):
