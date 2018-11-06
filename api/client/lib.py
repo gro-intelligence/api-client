@@ -1,16 +1,8 @@
 import Queue
 import logging
-import numpy as np
-import random
 
 import requests
-import sys
 import time
-from datetime import datetime
-
-from tornado import ioloop, httpclient, gen
-from tornado.escape import json_decode
-from tornado.httputil import url_concat
 
 MAX_RETRIES = 4
 MAX_QUERIES_PER_SECOND = 10
@@ -62,7 +54,6 @@ def get_data(url, headers, params=None, logger=None):
         log_record['status_code'] = data.status_code
         if data.status_code == 200:
             logger.debug('OK', extra=log_record)
-            data = data.json()
             return data
         retry_count += 1
         log_record['tag'] = 'failed_gro_api_request'
@@ -81,7 +72,7 @@ def get_available(access_token, api_host, entity_type):
     url = '/'.join(['https:', '', api_host, 'v2', entity_type])
     headers = {'authorization': 'Bearer ' + access_token}
     resp = get_data(url, headers)
-    return resp['data']
+    return resp.json()['data']
 
 
 def list_available(access_token, api_host, selected_entities):
@@ -95,7 +86,7 @@ def list_available(access_token, api_host, selected_entities):
     headers = {'authorization': 'Bearer ' + access_token}
     resp = get_data(url, headers, selected_entities)
     try:
-        return resp['data']
+        return resp.json()['data']
     except KeyError as e:
         raise Exception(resp.text)
 
@@ -109,7 +100,7 @@ def lookup(access_token, api_host, entity_type, entity_id):
     headers = {'authorization': 'Bearer ' + access_token}
     resp = get_data(url, headers)
     try:
-        return resp['data']
+        return resp.json()['data']
     except KeyError as e:
         raise Exception(resp.text)
 
@@ -166,7 +157,7 @@ def get_data_series(access_token, api_host, **selection):
     params = get_params_from_selection(**selection)
     resp = get_data(url, headers, params)
     try:
-        return resp['data']
+        return resp.json()['data']
     except KeyError as e:
         raise Exception(resp.text)
 
@@ -185,7 +176,7 @@ def rank_series_by_source(access_token, api_host, series_list):
         headers = {'authorization': 'Bearer ' + access_token}
         params = dict((k + 's', v)
                       for k, v in get_params_from_selection(**series).iteritems())
-        source_ids = get_data(url, headers, params)
+        source_ids = get_data(url, headers, params).json()
         for source_id in source_ids:
             series['source_id'] = source_id
             yield series
@@ -245,7 +236,7 @@ def get_crop_calendar_data_points(access_token, api_host, **selection):
     url = '/'.join(['https:', '', api_host, 'v2/cropcalendar/data'])
     params = get_crop_calendar_params(**selection)
     resp = get_data(url, headers, params)
-    return format_crop_calendar_response(resp)
+    return format_crop_calendar_response(resp.json())
 
 
 
@@ -256,12 +247,22 @@ def get_data_points(access_token, api_host, **selection):
   """
     if (selection['metric_id'] == CROP_CALENDAR_METRIC_ID):
         return get_crop_calendar_data_points(access_token, api_host, **selection)
-  headers = {'authorization': 'Bearer ' + access_token }
-  url = '/'.join(['https:', '', api_host, 'v2/data'])
-  params = get_data_call_params(**selection)
-  resp = get_data(url, headers, params)
-  return resp.json()
+    headers = {'authorization': 'Bearer ' + access_token}
+    url = '/'.join(['https:', '', api_host, 'v2/data'])
+    params = get_data_call_params(**selection)
+    resp = get_data(url, headers, params)
 
+    return resp.json()
+
+def search(access_token, api_host, entity_type, search_terms):
+    """Given an entity_type, which is one of 'items', 'metrics',
+  'regions', performs a search for the given terms. Returns a list of
+  dictionaries with individual entities, e.g.: [{u'id': 5604}, {u'id':
+  10204}, {u'id': 10210}, ....]"""
+    url = '/'.join(['https:', '', api_host, 'v2/search', entity_type])
+    headers = {'authorization': 'Bearer ' + access_token}
+    resp = get_data(url, headers, {'q': search_terms})
+    return resp.json()
 
 def universal_search(access_token, api_host, search_terms):
   """Search across all entity types for the given terms.  Returns an a
@@ -273,19 +274,6 @@ def universal_search(access_token, api_host, search_terms):
   headers = {'authorization': 'Bearer ' + access_token }
   resp = get_data(url, headers, {'q': search_terms})
   return resp.json()
-
-
-def search(access_token, api_host, entity_type, search_terms):
-  """Given an entity_type, which is one of 'items', 'metrics',
-  'regions', performs a search for the given terms. Returns a list of
-  dictionaries with individual entities, e.g.: [{u'id': 5604}, {u'id':
-  10204}, {u'id': 10210}, ....]
-  """
-    url = '/'.join(['https:', '', api_host, 'v2/search', entity_type])
-    headers = {'authorization': 'Bearer ' + access_token}
-    resp = get_data(url, headers, {'q': search_terms})
-    return resp
-
 
 def search_and_lookup(access_token, api_host, entity_type, search_terms):
     """Does a search for the given search terms, and for each result
@@ -300,18 +288,17 @@ def search_and_lookup(access_token, api_host, entity_type, search_terms):
     for result in search_results:
         yield lookup(access_token, api_host, entity_type, result['id'])
 
-
 def lookup_belongs(access_token, api_host, entity_type, entity_id):
     """Given an entity_type, which is one of 'items', 'metrics',
   'regions', and id, generates a list of JSON dicts of entities it
   belongs to.
   """
-  url = '/'.join(['https:', '', api_host, 'v2', entity_type, 'belongs-to'])
-  params = { 'ids': str(entity_id) }
-  headers = {'authorization': 'Bearer ' + access_token}
-  resp = get_data(url, headers, params)
-  for parent_entity_id in resp.json().get('data').get(str(entity_id)):
-    yield lookup(access_token, api_host, entity_type, parent_entity_id)
+    url = '/'.join(['https:', '', api_host, 'v2', entity_type, 'belongs-to'])
+    params = {'ids': str(entity_id)}
+    headers = {'authorization': 'Bearer ' + access_token}
+    resp = get_data(url, headers, params)
+    for parent_entity_id in resp.json().get('data').get(str(entity_id)):
+        yield lookup(access_token, api_host, entity_type, parent_entity_id)
 
 def get_geo_centre(access_token, api_host, region_id):
   """Given a region ID, returns the geographic centre in degrees lat/lon."""
