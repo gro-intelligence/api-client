@@ -30,21 +30,38 @@ def test_get_available(mock_requests_get):
 
 @mock.patch('requests.get')
 def test_list_available(mock_requests_get):
+    # Tests the base functionality
     mock_data = initialize_requests_mocker_and_get_mock_data(mock_requests_get)
 
-    entity_types_names = ["metricId", "item_id", "region_id"]
-    entity_types_names_camel = ["metricId", "itemId", "regionId"]
+    entities = {'metricId': '123', 'itemId': '456', 'regionId': '789'}
 
-    for ent_type_name, ent_type_name_camel in zip(entity_types_names, entity_types_names_camel):
-        assert lib.list_available(MOCK_TOKEN, MOCK_HOST, {ent_type_name: "123"}) == mock_data["data"]
+    assert lib.list_available(MOCK_TOKEN, MOCK_HOST, entities) == mock_data["data"]
 
-        # Make sure that call now exists in the mock call stack
-        mock_requests_get.assert_has_calls(
-            [mock.call('https://pytest.groclient.url/v2/entities/list',
-                headers={'authorization': 'Bearer pytest.groclient.token'},
-                params={ent_type_name_camel: '123'},
-                timeout=None)]
-        )
+    # Make sure that call now exists in the mock call stack
+    mock_requests_get.assert_has_calls(
+        [mock.call('https://pytest.groclient.url/v2/entities/list',
+            headers={'authorization': 'Bearer pytest.groclient.token'},
+            params=entities,
+            timeout=None)]
+    )
+
+@mock.patch('requests.get')
+def test_list_available_snake_to_camel(mock_requests_get):
+    #Tests that the camel-ing fix is working properly.
+    mock_data = initialize_requests_mocker_and_get_mock_data(mock_requests_get)
+
+    entities = {'metric_id': '123', 'item_id': '456', 'regionId': '789'}
+    entities_camel = {'metricId': '123', 'itemId': '456', 'regionId': '789'}
+
+    assert lib.list_available(MOCK_TOKEN, MOCK_HOST, entities) == mock_data["data"]
+
+    # Make sure that call now exists in the mock call stack
+    mock_requests_get.assert_has_calls(
+        [mock.call('https://pytest.groclient.url/v2/entities/list',
+                   headers={'authorization': 'Bearer pytest.groclient.token'},
+                   params=entities_camel,
+                   timeout=None)]
+    )
 
 @mock.patch('requests.get')
 def test_lookup(mock_requests_get):
