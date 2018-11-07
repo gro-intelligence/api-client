@@ -171,16 +171,14 @@ def rank_series_by_source(access_token, api_host, series_list):
   # We sort the internal tuple representations of the dictionaries because otherwise when we call set()
   # we end up with duplicates if iteritems() returns a different order for the same dictionary. See
   # test case...
-  selections_sorted = list(
-      set(
-          tuple(
-              sorted(
-                filter(lambda (k, v): k != 'source_id', single_series.iteritems()),
-                key=lambda x: x[0]
-              )
-          ) for single_series in series_list
-      )
-  )
+  selections_sorted = set(
+                          tuple(
+                              sorted(
+                                filter(lambda (k, v): k != 'source_id', single_series.iteritems()),
+                                key=lambda x: x[0]
+                              )
+                          ) for single_series in series_list
+                        )
 
   for series in map(dict, selections_sorted):
     url = '/'.join(['https:', '', api_host, 'v2/available/sources'])
