@@ -1,3 +1,4 @@
+import csv
 from Queue import Queue
 import numpy as np
 import os
@@ -222,7 +223,7 @@ class SimilarRegion(api.client.Client):
 
         return
 
-    def similar_to(self, name, number_of_regions=10, search_regions=None):
+    def similar_to(self, name, number_of_regions=10, requested_level=None, csv_output=False, search_regions=None):
         """
         Attempt to look up the given name and find similar regions.
         :param name: name of a region.
@@ -246,44 +247,67 @@ class SimilarRegion(api.client.Client):
         # # Check if search region is contained in available regions
         # if set(search_regions) not in self.state.known_regions:
         #     raise Exception("Requested region(s) are not downloaded. Please call cache_regions()")
-
-        possible_region = next(self.search_and_lookup("regions", name), False)
-
-        while possible_region and possible_region["level"] != 5:
+        if type(name) == int:
+            possible_region = {}
+            possible_region["id"] = name
+        else:
             possible_region = next(self.search_and_lookup("regions", name), False)
 
-        if not possible_region:
-            print("NearestRegionsApp: Region '%s' not found in Gro database." % name)
-            return
+            while possible_region and possible_region["level"] != 5:
+                possible_region = next(self.search_and_lookup("regions", name), False)
 
-        print(possible_region)
+            if not possible_region:
+                print("NearestRegionsApp: Region '%s' not found in Gro database." % name)
+                return
+
+            print(possible_region)
+
+        if csv_output:
+            level_suffix = "" if not requested_level else "_level_" + str(requested_level)
+            f = open("output/" + str(possible_region["id"]) + level_suffix + ".csv", 'wb')
+            csv_writer = csv.writer(f, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
 
         neighbours, dists = self._similar_to(possible_region["id"], number_of_regions)
 
         print("NearestRegionsApp: Nearest regions to '%s' are:" % name)
 
         for ranking, neighbour_id in enumerate(neighbours):
-            try:
-                district_id = self.state.row_idx_to_district[neighbour_id]
+            print(neighbour_id)
+            # try:
+            district_id = self.state.row_idx_to_district[neighbour_id]
 
-                if np.ma.is_masked(self.state.data[neighbour_id]):
-                    self._logger.info("possible neighbour was masked")
+            if np.ma.is_masked(self.state.data[neighbour_id]):
+                self._logger.info("possible neighbour was masked")
 
-                neighbour_region = self.lookup("regions", district_id)
+            neighbour_region = self.lookup("regions", district_id)
+            print(1)
 
-                district_name = self.lookup("regions", district_id)["name"]
+            district_name = self.lookup("regions", district_id)["name"]
 
-                if neighbour_region["level"] != 5:
-                    self._logger.info("not level 5 %s" % district_name)
-                    continue
+            if neighbour_region["level"] != requested_level:
+               self._logger.info("not level %s %s" % (requested_level, district_name))
+               continue
+            print(2)
+            district_name = self.lookup("regions", district_id)["name"]
+            print(3)
+            province = next(self.lookup_belongs("regions", district_id), {"name": ""})
+            print(4)
+            if "id" in province and province["id"] != 0:
+                country = next(self.lookup_belongs("regions", province["id"]), {"name": ""})
+            else:
+                country = {"name": ""}
 
-                district_name = self.lookup("regions", district_id)["name"]
-                province = next(self.lookup_belongs("regions", district_id))
-                country = next(self.lookup_belongs("regions", province["id"]))
-                print("NearestRegionsApp: %i: %s, %s, %s at distance %f" %
-                      (ranking, district_name, province["name"], country["name"], dists[ranking]))
-            except Exception as e:
-                print("something broke ?")
+            output = [district_name, province["name"], country["name"]]
+            output = [unicode(s).encode("utf-8") for s in output]
+
+            print("%s, %s, %s" % (district_name, province["name"], country["name"]))
+
+            if csv_output:
+                csv_writer.writerow(output)
+
+            # except Exception as e:
+            #     print(e)
+            #     print("something broke ?")
 
     def _similar_to(self, region_id, number_of_regions):
         """
@@ -494,7 +518,7 @@ class SimilarRegion(api.client.Client):
                 copy_of_metric["region_id"] = region
                 queries.append((self.state.district_to_row_idx[region], copy_of_metric))
 
-            queries = queries[0:100]
+            #queries = queries[0:100]
 
             def map_response(query, results, response):
                 idx = query[0]
@@ -598,4 +622,4 @@ if __name__ == "__main__":
         "land_surface_temperature": 1.0
     }
 
-    testCase.similar_to("Mendocino", number_of_regions=150)
+    testCase.similar_to(11193, number_of_regions=150, requested_level=5, csv_output=True)
