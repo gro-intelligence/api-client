@@ -8,18 +8,20 @@ MOCK_TOKEN = "pytest.groclient.token"
 
 # TODO: Handle cases like the crop-calendar logic.
 
+def initialize_requests_mocker_and_get_mock_data(mock_requests_get, mock_data={"data": ["obj1", "obj2", "obj3"]}):
+    mock_requests_get.return_value.json.return_value = mock_data
+    mock_requests_get.return_value.status_code = 200
+    return mock_data
+
 @mock.patch('requests.get')
 def test_get_available(mock_requests_get):
-    # Set up mock return values
-    mock_data = ["obj1", "obj2", "obj3"]
-    mock_requests_get.return_value.json.return_value = {"data": mock_data}
-    mock_requests_get.return_value.status_code = 200
+    mock_data = initialize_requests_mocker_and_get_mock_data(mock_requests_get)
 
     # Test data
     entity_types = ["items", "metrics", "regions"]
 
     for ent_type in entity_types:
-        assert lib.get_available(MOCK_TOKEN, MOCK_HOST, ent_type) == mock_data
+        assert lib.get_available(MOCK_TOKEN, MOCK_HOST, ent_type) == mock_data["data"]
         # Make sure that call now exists in the mock call stack
         mock_requests_get.assert_has_calls([mock.call('https://pytest.groclient.url/v2/' + ent_type,
                   headers={'authorization': 'Bearer pytest.groclient.token'},
@@ -28,16 +30,13 @@ def test_get_available(mock_requests_get):
 
 @mock.patch('requests.get')
 def test_list_available(mock_requests_get):
-    # Set up mock return values
-    mock_data = ["obj1", "obj2", "obj3"]
-    mock_requests_get.return_value.json.return_value = {"data": mock_data}
-    mock_requests_get.return_value.status_code = 200
+    mock_data = initialize_requests_mocker_and_get_mock_data(mock_requests_get)
 
     entity_types_names = ["metricId", "item_id", "region_id"]
     entity_types_names_camel = ["metricId", "itemId", "regionId"]
 
     for ent_type_name, ent_type_name_camel in zip(entity_types_names, entity_types_names_camel):
-        assert lib.list_available(MOCK_TOKEN, MOCK_HOST, {ent_type_name: "123"}) == mock_data
+        assert lib.list_available(MOCK_TOKEN, MOCK_HOST, {ent_type_name: "123"}) == mock_data["data"]
 
         # Make sure that call now exists in the mock call stack
         mock_requests_get.assert_has_calls(
@@ -49,16 +48,13 @@ def test_list_available(mock_requests_get):
 
 @mock.patch('requests.get')
 def test_lookup(mock_requests_get):
-    # Set up mock return values
-    mock_data = ["obj1", "obj2", "obj3"]
-    mock_requests_get.return_value.json.return_value = {"data": mock_data}
-    mock_requests_get.return_value.status_code = 200
+    mock_data = initialize_requests_mocker_and_get_mock_data(mock_requests_get)
 
     # test data
     entity_types = ["items", "metrics", "regions", "units", "sources"]
 
     for ent_type in entity_types:
-        assert lib.lookup(MOCK_TOKEN, MOCK_HOST, ent_type, 12345) == mock_data
+        assert lib.lookup(MOCK_TOKEN, MOCK_HOST, ent_type, 12345) == mock_data["data"]
 
         # Make sure that call now exists in the mock call stack
         mock_requests_get.assert_has_calls(
@@ -83,10 +79,7 @@ def test_lookup(mock_requests_get):
 
 @mock.patch('requests.get')
 def test_get_data_series(mock_requests_get):
-    # Set up mock return values
-    mock_data = ["obj1", "obj2", "obj3"]
-    mock_requests_get.return_value.json.return_value = {"data": mock_data}
-    mock_requests_get.return_value.status_code = 200
+    mock_data = initialize_requests_mocker_and_get_mock_data(mock_requests_get)
 
     # Test data
     # TODO: Currently source and freq id are not supported, so they should not show up in the request. UPDATE
@@ -94,7 +87,7 @@ def test_get_data_series(mock_requests_get):
     selection_dict = {"item_id": 123, "metric_id": 456, "region_id": 789,
                       "frequency_id": 101112, "source_id": 131415, "partner_region_id": 161718}
 
-    assert lib.get_data_series(MOCK_TOKEN, MOCK_HOST, **selection_dict) ==  mock_data
+    assert lib.get_data_series(MOCK_TOKEN, MOCK_HOST, **selection_dict) == mock_data["data"]
 
     # Make sure that call now exists in the mock call stack
     assert [mock.call('https://pytest.groclient.url/v2/data_series/list',
@@ -104,11 +97,8 @@ def test_get_data_series(mock_requests_get):
 
 @mock.patch('requests.get')
 def test_get_data_points(mock_requests_get):
-    # Set up
-    # mock return values
     mock_data = ["obj1", "obj2", "obj3"]
-    mock_requests_get.return_value.json.return_value = mock_data
-    mock_requests_get.return_value.status_code = 200
+    mock_data = initialize_requests_mocker_and_get_mock_data(mock_requests_get, mock_data=mock_data)
 
     # Test data
     selection_dict = {"item_id": 123, "metric_id": 456, "region_id": 789,
@@ -125,11 +115,8 @@ def test_get_data_points(mock_requests_get):
 
 @mock.patch('requests.get')
 def test_search(mock_requests_get):
-    # Set up
-    # mock return values
     mock_data = ["obj1", "obj2", "obj3"]
-    mock_requests_get.return_value.json.return_value = mock_data
-    mock_requests_get.return_value.status_code = 200
+    mock_data = initialize_requests_mocker_and_get_mock_data(mock_requests_get, mock_data=mock_data)
 
     assert lib.search(MOCK_TOKEN, MOCK_HOST, "items", "test123") == mock_data
 
@@ -180,7 +167,6 @@ def test_lookup_belongs(mock_requests_get, lookup_mocked):
 
 @mock.patch('requests.get')
 def test_rank_series_by_source(mock_requests_get):
-
     mock_return = ["data1", "data2", "data3"]
     mock_requests_get.return_value.json.return_value = mock_return
     mock_requests_get.return_value.status_code = 200
