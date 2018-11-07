@@ -83,9 +83,8 @@ def list_available(access_token, api_host, selected_entities):
   """
   url = '/'.join(['https:', '', api_host, 'v2/entities/list'])
   headers = {'authorization': 'Bearer ' + access_token}
-  params = {}  
-  for key, value in selected_entities.items():
-      params[snake_to_camel(key)] = value
+  params = dict(map(lambda (key, value): (snake_to_camel(key), value),
+                    selected_entities.items())
   resp = get_data(url, headers, params)
   try:
     return resp.json()['data']
