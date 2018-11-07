@@ -83,23 +83,9 @@ def list_available(access_token, api_host, selected_entities):
   """
   url = '/'.join(['https:', '', api_host, 'v2/entities/list'])
   headers = {'authorization': 'Bearer ' + access_token}
-
-  params = {}
-  
-  # source_id and frequency_id are not yet implemented in backend.
-  
-  for key, value in selected_entities.items():
-    if key in ('regionId', 'partnerRegionId', 'itemId',
-               'metricId'):
-      params[key] = value
-
-  for key, value in selected_entities.items():
-    if key in ('region_id', 'partner_region_id', 'item_id',
-               'metric_id'):
-      params[snake_to_camel(key)] = value
-
+  params = dict(map(lambda (key, value): (snake_to_camel(key), value),
+                    selected_entities.items()))
   resp = get_data(url, headers, params)
-
   try:
     return resp.json()['data']
   except KeyError as e:
@@ -121,9 +107,9 @@ def lookup(access_token, api_host, entity_type, entity_id):
 
 
 def snake_to_camel(term):
-  """Converts hello_world to helloWorld. Assumes input is in snake."""
-  camel = ''.join(term.title().split('_'))
-  return camel[0].lower() + camel[1:]
+  """Converts hello_world to helloWorld."""
+  camel = term.split('_')
+  return ''.join(camel[:1]+ map(lambda x: x[0].upper()+x[1:], camel[1:]))
 
 
 def get_params_from_selection(**selection):
