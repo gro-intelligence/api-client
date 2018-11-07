@@ -6,7 +6,6 @@ from api.client import lib
 MOCK_HOST = "pytest.groclient.url"
 MOCK_TOKEN = "pytest.groclient.token"
 
-# TODO: Test individual functions in lib.py.
 # TODO: Handle cases like the crop-calendar logic.
 
 @mock.patch('requests.get')
