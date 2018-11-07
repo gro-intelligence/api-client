@@ -292,6 +292,8 @@ def lookup_belongs(access_token, api_host, entity_type, entity_id):
     """Given an entity_type, which is one of 'items', 'metrics',
   'regions', and id, generates a list of JSON dicts of entities it
   belongs to.
+  #TODO: Doesn't fail properly
+  #TODO: Super slow on occasion - expensive query?
   """
     url = '/'.join(['https:', '', api_host, 'v2', entity_type, 'belongs-to'])
     params = {'ids': str(entity_id)}
