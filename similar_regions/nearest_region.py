@@ -1,4 +1,5 @@
 import csv
+import math
 from Queue import Queue
 import numpy as np
 import os
@@ -7,144 +8,17 @@ import dateparser
 import cPickle as pickle
 from sklearn.neighbors import BallTree
 import transform
-
-import api.client.lib
-
+from api.client.batch_client import BatchClient
+from api.client.lib import get_default_logger
+from similar_region_state import SimilarRegionState
 
 """ API Config """
 API_HOST = 'api.gro-intelligence.com'
 OUTPUT_FILENAME = 'gro_client_output.csv'
 ACCESS_TOKEN = os.environ['GROAPI_TOKEN']
-SAVED_STATE_PATH = "saved_states/"
 
 
-class SimilarRegionState(object):
-    """
-    An object containing all the pickle-able parameters for the state of this SimilarRegion search.
-    """
-    def __init__(self):
-
-        # List of names of metrics we are using in this comparison. *Must exist in known_metrics*
-        self.metrics_to_use = []
-
-        # List of integers of region ids we are fetching or have data for.
-        self.known_regions = set()
-        # If we don't care, just download everything we can for the given metrics.
-        self.all_regions = False
-
-        # Data stores::
-        # Float array of all processed data for each (metric, region).
-        self.data = np.zeros((0,0), dtype=float)
-        # Boolean array. True if data for that (metric, region) has been fetched into the data array.
-        self.not_fetched_yet = np.full((0,0), False, dtype=bool)
-
-        # Standardized versions of this
-        self.data_standardized = np.zeros((0,0), dtype=float)
-        self.recompute = True
-
-        # Mapping to and from our internal numpy idxs
-        self.district_to_row_idx = {}
-        self.row_idx_to_district = []
-        self.metric_to_col_idx = {}
-        self.metric_data = {}
-
-        # Weights of each metric
-        self.metric_weights = {}
-
-        # The ball tree
-        self.ball = None
-
-        # Some logging... of course.
-        self._logger = api.client.lib.get_default_logger()
-
-    def save(self):
-        """
-        Save state to disk.
-        :return: True if succeeded.
-        """
-        mod_time = 0
-
-        if os.path.isfile(SAVED_STATE_PATH + "state.pickle"):
-
-            # Let's not delete anything, but rather move it.
-            mod_time = os.path.getmtime(SAVED_STATE_PATH + "state.pickle")
-            os.rename(SAVED_STATE_PATH + "state.pickle", SAVED_STATE_PATH + "state_%i.pickle" % mod_time)
-
-        if os.path.isfile(SAVED_STATE_PATH + "state_data.npy"):
-            mod_time = mod_time if mod_time != 0 else os.path.getmtime(SAVED_STATE_PATH + "state_data.npy")
-            os.rename(SAVED_STATE_PATH + "state_data.npy", SAVED_STATE_PATH + "state_data_%i.npy" % mod_time)
-
-        if os.path.isfile(SAVED_STATE_PATH + "state_data_mask.npy"):
-            mod_time = mod_time if mod_time != 0 else os.path.getmtime(SAVED_STATE_PATH + "state_data_mask.npy")
-            os.rename(SAVED_STATE_PATH + "state_data_mask.npy", SAVED_STATE_PATH + "state_data_mask_%i.npy" % mod_time)
-
-        self._logger.info("Saving state to pickle and npy.")
-
-        del self._logger
-        
-        # put the data folder into an npy
-        with open(SAVED_STATE_PATH + "state_data.npy", 'wb') as f:
-            np.save(f, self.data.data)
-
-        with open(SAVED_STATE_PATH + "state_data_mask.npy", 'wb') as f:
-            np.save(f, self.data.mask)
-
-        del self.data_standardized
-        del self.data
-        del self.ball
-        del self.metric_data
-        self.recompute = True
-
-        with open(SAVED_STATE_PATH + "state.pickle", 'wb') as f:
-            pickle.dump(self.__dict__, f)
-
-        self._logger = api.client.lib.get_default_logger()
-        self._logger.info("Saved state to state.pickle.")
-
-        return True
-
-    def load(self, path_to_pickle=SAVED_STATE_PATH + "state.pickle"):
-        """
-        Load state from disk.
-        :return: True if succeeded.
-        """
-        if not os.path.isfile(path_to_pickle):
-            raise Exception("Can't find saved state.")
-
-        self._logger.info("Loading state from pickle.")
-
-        with open(path_to_pickle, 'rb') as f:
-            tmp_dict = pickle.load(f)
-
-        self.__dict__.update(tmp_dict)
-
-        with open(SAVED_STATE_PATH + "state_data.npy", 'rb') as f:
-            data_temp = np.load(f)
-
-        with open(SAVED_STATE_PATH + "state_data_mask.npy", 'rb') as f:
-            data_mask_temp = np.load(f)
-
-        self.data = np.ma.array(data_temp)
-        self.data[data_mask_temp] = np.ma.masked
-
-        self._construct_metric_data_views()
-
-        self._logger.info("Done loading state from %s" % path_to_pickle)
-
-        return True
-
-    def _construct_metric_data_views(self):
-
-        for idx, metric_name in enumerate(self.metrics_to_use):
-            start_idx = self.metric_to_col_idx[metric_name]
-            if idx + 1 < len(self.metrics_to_use):
-                end_idx = self.metric_to_col_idx[self.metrics_to_use[idx + 1]]
-                self.metric_data[metric_name] = self.data[:, start_idx:end_idx]
-            else:
-                self.metric_data[metric_name] = self.data[:, start_idx:]
-
-
-class SimilarRegion(api.client.Client):
+class SimilarRegion(BatchClient):
 
     def __init__(self, metrics_to_use, precache_regions="ALL", weights=None, time_frame=None):
         """
@@ -156,8 +30,7 @@ class SimilarRegion(api.client.Client):
         """
 
         super(SimilarRegion, self).__init__(API_HOST, ACCESS_TOKEN)
-        self.client = api.client.Client(API_HOST, ACCESS_TOKEN)
-        self._logger = api.client.lib.get_default_logger()
+        self._logger = get_default_logger()
         self.state = SimilarRegionState()
 
         # Metrics we have implemented
@@ -172,7 +45,8 @@ class SimilarRegion(api.client.Client):
                     'frequency_id': 1
                 },
                 "properties": {
-                    "num_features": 100
+                    "num_features": 150,
+                    "longest_period_feature_period": 365
                 }
             },
             "land_surface_temperature": {
@@ -184,7 +58,8 @@ class SimilarRegion(api.client.Client):
                     'frequency_id': 1
                 },
                 "properties": {
-                    "num_features": 100
+                    "num_features": 150,
+                    "longest_period_feature_period": 365
                 }
             },
             "rainfall": {
@@ -196,7 +71,8 @@ class SimilarRegion(api.client.Client):
                     'frequency_id': 1
                 },
                 "properties": {
-                    "num_features": 100
+                    "num_features": 150,
+                    "longest_period_feature_period": 365
                 }
             }
         }
@@ -229,7 +105,8 @@ class SimilarRegion(api.client.Client):
         :param name: name of a region.
         :param number_of_regions: number of similar regions to return in the ranked list.
         :param search_regions: the regions to look for neighbours in. specified as a plaintext name
-        :return: the closest neighbours
+        :return: the closest neighbours as a list in the form
+        [{id: 123, name: "abc", distance: 1.23, parent_regions: [{"abc"456, 789]
         """
 
         # Check if we are ready
@@ -305,6 +182,7 @@ class SimilarRegion(api.client.Client):
             if csv_output:
                 csv_writer.writerow(output)
 
+            return
             # except Exception as e:
             #     print(e)
             #     print("something broke ?")
@@ -510,6 +388,11 @@ class SimilarRegion(api.client.Client):
             start_datetime = datetime.combine(start_date, time())
             end_date = dateparser.parse(data_series["end_date"])
             no_of_points = (end_date - start_date).days
+            self._logger.info("Length of data series is %i days" % no_of_points)
+            longest_period_feature_period = self.available_metrics[metric_name]["properties"]["longest_period_feature_period"]
+            start_idx = math.floor(no_of_points / float(longest_period_feature_period))
+            self._logger.info("First coef index will be %i" % start_idx)
+            num_features = self.available_metrics[metric_name]["properties"]["num_features"]
 
             # deep copy the metric for each query.
             queries = []
@@ -518,6 +401,7 @@ class SimilarRegion(api.client.Client):
                 copy_of_metric["region_id"] = region
                 queries.append((self.state.district_to_row_idx[region], copy_of_metric))
 
+            #TO DO: REMOVE THIS
             #queries = queries[0:100]
 
             def map_response(query, results, response):
@@ -535,7 +419,8 @@ class SimilarRegion(api.client.Client):
                     data[idx, :] = np.ma.masked
                 else:
                     # TODO remove out_scope start_datetime here once we have "addNulls" on the server
-                    processed_result = transform._post_process_timeseries(no_of_points, start_datetime, response)
+                    processed_result = transform._post_process_timeseries(no_of_points, start_datetime, response,
+                                                                          start_idx, num_features)
                     data[idx] = processed_result
 
                 # Mark this as downloaded.
@@ -610,10 +495,10 @@ if __name__ == "__main__":
     # If you're running the first time, run these three lines. Alternatively download the pre-computed version from
     # here:
     testCase = SimilarRegion(["soil_moisture", "rainfall", "land_surface_temperature"])
-    #testCase._cache_regions()
+    testCase._cache_regions()
 
     # Otherwise, comment the three lines above and uncomment this line
-    testCase.state.load()
+    #testCase.state.load()
 
     # If you want to modify weights, uncomment below
     testCase.state.metric_weights = {
@@ -622,4 +507,5 @@ if __name__ == "__main__":
         "land_surface_temperature": 1.0
     }
 
-    testCase.similar_to(11193, number_of_regions=150, requested_level=5, csv_output=True)
+    #print(testCase.state.data[0])
+    #testCase.similar_to(11193, number_of_regions=150, requested_level=5, csv_output=True)
