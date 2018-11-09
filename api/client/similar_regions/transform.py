@@ -34,29 +34,41 @@ class Transformer(TransformerMixin):
         """
         pass
 
+    def get_no_features(self):
+        """
+        Return the number of features this transformer will give for a given input size.
+        :return: number of features in the returned data point.
+        """
+        pass
+
 
 class FourierCoef(Transformer):
 
-    def __init__(self, features=100):
+    def __init__(self, start_idx, no_features):
 
         """
         Initialize the fourier transform.
         :param features: Number of coefficients to output. Gives the n lowest frequency coefficients.
         pass -1 for all coefficients.
         """
-        self.features = features
-        pass
+
+        self.no_features = no_features
+        self.start_idx = start_idx
+
+    def get_no_features(self):
+        return self.no_features
 
     def transform(self, time_series):
         """
         Return the coefficients of the data.
         :param timeseries:
-        :param phase_dependant: should the output transformation be dependant of the phase of that signal.
         :return: The coefficients after the linear shift.
         """
 
         # FFT by default computes over the last axis.
-        fft_time_series = fft(time_series)[0:self.features] if self.features != -1 else fft(time_series)
+        ranges = np.r_[0,self.start_idx:self.start_idx + self.no_features - 1].astype(int)
+        assert(len(ranges) == self.no_features)
+        fft_time_series = fft(time_series)[ranges]
 
         #Only interested in magnitude! not in phase in this case
         return np.abs(fft_time_series)
@@ -72,12 +84,13 @@ class FourierCoef(Transformer):
         Please note: a and b must of the same number of samples.
         """
 
-        # This supposedly computes the argmax_bphase(correlation(a,b))
+        # This supposedly computes the argmax_b phase(correlation(a,b))
 
         correlation_max_index = np.argmax(ifft(np.conj(fft(timeseries_a)) * fft(timeseries_b))[0:period_in_samples])
         return correlation_max_index
 
-
+    def get_no_features(self):
+        return self.no_features
 
 
 class Imputation(Transformer):
@@ -121,7 +134,7 @@ class Imputation(Transformer):
 
 # Other transformers
 
-def _post_process_timeseries(no_of_points, start_datetime, time_series):
+def _post_process_timeseries(no_of_points, start_datetime, time_series, start_idx, no_features):
 
     pulled_dataset = time_series
 
@@ -136,7 +149,7 @@ def _post_process_timeseries(no_of_points, start_datetime, time_series):
         print(no_of_points)
         print(e)
 
-    fourier = FourierCoef()
+    fourier = FourierCoef(start_idx, no_features)
     coefs = fourier.transform(dataset_imputed)
 
     return coefs
