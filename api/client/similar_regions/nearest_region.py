@@ -147,6 +147,9 @@ class SimilarRegion(BatchClient):
         neighbours, dists = self._similar_to(possible_region["id"], number_of_regions)
 
         print("NearestRegionsApp: Nearest regions to '%s' are:" % name)
+        print(neighbours)
+
+        similar_to_return = []
 
         for ranking, neighbour_id in enumerate(neighbours):
             print(neighbour_id)
@@ -172,20 +175,24 @@ class SimilarRegion(BatchClient):
             if "id" in province and province["id"] != 0:
                 country = next(self.lookup_belongs("regions", province["id"]), {"name": ""})
             else:
-                country = {"name": ""}
+                country = {"name": "", "id" : ""}
 
             output = [district_name, province["name"], country["name"]]
             output = [unicode(s).encode("utf-8") for s in output]
 
             print("%s, %s, %s" % (district_name, province["name"], country["name"]))
+            data_point = {"id": district_id, "name": district_name, "dist": dists[ranking],
+                          "parent": (province["id"], province["name"], country["id"], country["name"])}
+
+            similar_to_return.append(data_point)
 
             if csv_output:
                 csv_writer.writerow(output)
 
-            return
-            # except Exception as e:
-            #     print(e)
-            #     print("something broke ?")
+        return similar_to_return
+        # except Exception as e:
+        #     print(e)
+        #     print("something broke ?")
 
     def _similar_to(self, region_id, number_of_regions):
         """
@@ -427,7 +434,7 @@ class SimilarRegion(BatchClient):
                 needs_to_be_downloaded_state[idx, metric_idx] = False
                 save_counter[0] += 1
 
-                # Save this every 20,000 items downloaded.
+                # Save this every 10,000 items downloaded.
                 if save_counter[0] % 10000 == 0:
                     self._logger.info("Saving data downloaded so far.")
                     save_func()
@@ -495,17 +502,22 @@ if __name__ == "__main__":
     # If you're running the first time, run these three lines. Alternatively download the pre-computed version from
     # here:
     testCase = SimilarRegion(["soil_moisture", "rainfall", "land_surface_temperature"])
-    testCase._cache_regions()
 
-    # Otherwise, comment the three lines above and uncomment this line
-    #testCase.state.load()
+    testCase.state.load()
+    #
+    # print(testCase.state.data.data[9000:9100, 100])
+    #print(np.count_nonzero(testCase.state.not_fetched_yet[:,0]))
 
-    # If you want to modify weights, uncomment below
+    #testCase._cache_regions()
+    #
+    # # Otherwise, comment the three lines above and uncomment this line
+    #
+    # # If you want to modify weights, uncomment below
     testCase.state.metric_weights = {
         "soil_moisture": 1.0,
         "rainfall": 1.0,
         "land_surface_temperature": 1.0
     }
-
-    #print(testCase.state.data[0])
-    #testCase.similar_to(11193, number_of_regions=150, requested_level=5, csv_output=True)
+    #
+    # #print(testCase.state.data[0])
+    testCase.similar_to(13172, number_of_regions=150, requested_level=5, csv_output=True)
