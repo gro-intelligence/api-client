@@ -67,7 +67,7 @@ class SimilarRegionState(object):
 
         self._logger.info("Saving state to pickle and npy.")
 
-
+        logger_temp = self._logger
         del self._logger
 
         # put the data folder into an npy
@@ -77,31 +77,40 @@ class SimilarRegionState(object):
         with open(SAVED_STATE_PATH + "state_data_mask.npy", 'wb') as f:
             np.save(f, self.data.mask)
 
+        # we save these in temporary variables in the local scope to allow deletion of them
+        # from the class variables during saving, as we want to save the state in different places.
+        data_standardized_temp = self.data_standardized
+        data_temp = self.data
+        ball_temp = self.ball
+        metric_data_temp = self.metric_data
+
         del self.data_standardized
         del self.data
         del self.ball
         del self.metric_data
-        self.recompute = True
 
         with open(SAVED_STATE_PATH + "state.pickle", 'wb') as f:
             pickle.dump(self.__dict__, f)
 
-        self._logger = api.client.lib.get_default_logger()
-
-        self.data_standardized = np.zeros((0, 0), dtype=float)
-        self.ball = None
-
-        self.load()
+        # put everything back!
+        self._logger = logger_temp
+        self.data_standardized = data_standardized_temp
+        self.data = data_temp
+        self.ball = ball_temp
+        self.metric_data = metric_data_temp
 
         self._logger.info("Saved state to state.pickle.")
 
         return True
 
-    def load(self, path_to_pickle=SAVED_STATE_PATH + "state.pickle"):
+    def load(self, path = SAVED_STATE_PATH):
         """
         Load state from disk.
         :return: True if succeeded.
         """
+
+        path_to_pickle = path + "state.pickle"
+
         if not os.path.isfile(path_to_pickle):
             raise Exception("Can't find saved state.")
 
@@ -112,10 +121,10 @@ class SimilarRegionState(object):
 
         self.__dict__.update(tmp_dict)
 
-        with open(SAVED_STATE_PATH + "state_data.npy", 'rb') as f:
+        with open(path + "state_data.npy", 'rb') as f:
             data_temp = np.load(f)
 
-        with open(SAVED_STATE_PATH + "state_data_mask.npy", 'rb') as f:
+        with open(path + "state_data_mask.npy", 'rb') as f:
             data_mask_temp = np.load(f)
 
         self.data = np.ma.array(data_temp)
