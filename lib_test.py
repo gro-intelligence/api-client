@@ -98,31 +98,15 @@ def test_lookup(mock_requests_get):
 def test_get_data_series(mock_requests_get):
     # Test general case
     mock_data = initialize_requests_mocker_and_get_mock_data(mock_requests_get)
-    selection_dict = {"item_id": 123, "metric_id": 456, "region_id": 789, "partner_region_id": 161718, "frequency_id": 101112}
+    selection_dict = {"item_id": 123, "metric_id": 456, "region_id": 789, "partner_region_id": 161718, "frequency_id": 101112, "source_id": 12}
 
     assert lib.get_data_series(MOCK_TOKEN, MOCK_HOST, **selection_dict) == mock_data["data"]
 
     # Make sure that call now exists in the mock call stack
     assert [mock.call('https://pytest.groclient.url/v2/data_series/list',
                                 headers={'authorization': 'Bearer pytest.groclient.token'},
-                                params={'itemId': 123, 'metricId': 456, 'regionId': 789, 'partnerRegionId': 161718, 'frequencyId': 101112},
+                                params={'itemId': 123, 'metricId': 456, 'regionId': 789, 'partnerRegionId': 161718, 'frequencyId': 101112, 'sourceId': 12},
                                 timeout=None)] == mock_requests_get.call_args_list
-
-@mock.patch('requests.get')
-def test_get_data_series_source_freq(mock_requests_get):
-    # Test removal of freq and source. This is in place until
-    mock_data = initialize_requests_mocker_and_get_mock_data(mock_requests_get)
-    selection_dict = {"item_id": 123, "metric_id": 456, "region_id": 789,
-                      "frequency_id": 101112, "source_id": 131415, "partner_region_id": 161718}
-
-    assert lib.get_data_series(MOCK_TOKEN, MOCK_HOST, **selection_dict) == mock_data["data"]
-
-    # Make sure that call now exists in the mock call stack
-    assert [mock.call('https://pytest.groclient.url/v2/data_series/list',
-                                headers={'authorization': 'Bearer pytest.groclient.token'},
-                                params={'itemId': 123, 'metricId': 456, 'regionId': 789, 'partnerRegionId': 161718, 'frequencyId': 101112},
-                                timeout=None)] == mock_requests_get.call_args_list
-
 
 @mock.patch('requests.get')
 def test_get_data_points(mock_requests_get):
