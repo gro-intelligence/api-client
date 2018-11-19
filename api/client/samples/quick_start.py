@@ -9,19 +9,27 @@ ACCESS_TOKEN=os.environ['GROAPI_TOKEN']
 def main():
     client = api.client.Client(API_HOST, ACCESS_TOKEN)
 
-    # Requested data is not available at level (country) but is available at province-level
-    selected_entities = { u'region_id': 1215,
-                          u'item_id': 2636,
-                          u'metric_id': 3040042,
-                          u'source_id': 25,
-                          u'frequency_id': 2 }
+    selected_entities = { u'region_id': 1038, # Cape Verde
+                          u'item_id': 5187, # Management of donkey manure
+                          u'metric_id': 5590032 } # Total Emissions Quantity (mass)
+
+    writer = unicodecsv.writer(open(OUTPUT_FILENAME, 'wb'))
 
     # Get what possible series there are for that combination of selections
-    data_series_list = list(client.get_data_series(**selected_entities))
-    print(data_series_list)
-    ranked_series = list(client.rank_series_by_source(data_series_list))
-    print(ranked_series)
-    print(list(client.get_data_points(**ranked_series[0])))
+    for data_series in client.get_data_series(**selected_entities):
+        
+        # Add a time range restriction to your data request (Optional - otherwise get all points)
+        data_series['start_date'] = '2000-01-01'
+        data_series['end_date'] = '2012-12-31'
+
+        for point in client.get_data_points(**data_series):
+            writer.writerow([
+                point['start_date'],
+                point['end_date'],
+                point['value'],
+                client.lookup_unit_abbreviation(point['input_unit_id'])
+            ])
+
 
 if __name__ == "__main__":
     main()
