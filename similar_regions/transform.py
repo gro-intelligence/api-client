@@ -10,14 +10,12 @@ if the transformed dataframe has different columns as the original one.
 
 Eventually these could be incorporated into the API to reduce client side complexity for customers.
 """
-from itertools import groupby
-import heapq
 
 import dateparser
 import numpy as np
 from sklearn.base import TransformerMixin
 from scipy.fftpack import fft, ifft
-from datetime import date, time, datetime, timedelta
+from datetime import datetime, timedelta
 
 class Transformer(TransformerMixin):
     """
@@ -95,7 +93,7 @@ class FourierCoef(Transformer):
 
 class Imputation(Transformer):
     """
-    Fill in missing time using interpolation and backfill
+    Fill in missing time using interpolation and backfill using np.interp :)
     self.features should be in temporal order
     """
 
@@ -134,26 +132,16 @@ class Imputation(Transformer):
 
 # Other transformers
 
-def _post_process_timeseries(no_of_points, start_datetime, time_series, start_idx, no_features):
+def _post_process_timeseries(no_of_points, start_datetime, time_series, start_idx, no_features, period_length_days=1):
 
-    pulled_dataset = time_series
-
-    dataset = _fill_in_blank_days(no_of_points, start_datetime, pulled_dataset)
-
-    try:
-        imputer = Imputation()
-        dataset_imputed = imputer.transform(dataset)
-    except Exception as e:
-        print(len(pulled_dataset))
-        print(start_datetime)
-        print(no_of_points)
-        print(e)
+    dataset_imputed, coverage = _impute(no_of_points, period_length_days, start_datetime, time_series)
 
     fourier = FourierCoef(start_idx, no_features)
     coefs = fourier.transform(dataset_imputed)
 
-    return coefs
+    return coefs, coverage
 
+# temporary until filling nulls is enabled in prod api
 def _fill_in_blank_days(no_of_points, start_datetime, pulled_dataset):
     dataset = np.zeros(no_of_points)
 
@@ -180,3 +168,69 @@ def _fill_in_blank_days(no_of_points, start_datetime, pulled_dataset):
             ptr_idx_incomplete_list += 1
 
     return dataset
+#
+# This was an attempt to make impute() faster. It failed to produce faster results. :( Feel free to improve.
+#
+# def _impute2(num_of_points, period_length_days, start_datetime, pulled_dataset):
+#
+#     start = time.time()
+#
+#     x_output = np.arange(0, period_length_days * num_of_points, period_length_days)
+#
+#     x_input = np.zeros(len(pulled_dataset))
+#     y_input = np.zeros(len(pulled_dataset))
+#
+#     for idx, datapoint in enumerate(pulled_dataset):
+#         delta = (datetime.strptime(datapoint["start_date"][0:10], "%Y-%m-%d").date() -
+#                  start_datetime.date()).days
+#         x_input[idx] = delta
+#         y_input[idx] = datapoint["value"]
+#
+#     idxs = ~np.isnan(y_input)
+#     x_input = x_input[idxs]
+#     y_input = y_input[idxs]
+#
+#     num_valid_points = len(y_input)
+#
+#     y_output = np.interp(x_output, x_input, y_input)
+#     coverage = float(num_valid_points) / num_of_points
+#
+#     end = time.time()
+#     print("new", end - start)
+#
+#     return y_output, coverage
+
+
+def _impute(no_of_points, period_length_days, start_datetime, pulled_dataset):
+    x_output = np.arange(0, period_length_days * no_of_points, period_length_days)
+
+    x_input = []
+    y_input = []
+
+    no_valid_points_pulled_dataset = 0
+
+    for datapoint in pulled_dataset:
+        if datapoint["value"] is not None:
+            delta = (datetime.strptime(datapoint["start_date"][0:10], "%Y-%m-%d").date() - start_datetime.date()).days
+            x_input.append(delta)
+            y_input.append(datapoint["value"])
+            no_valid_points_pulled_dataset += 1
+
+    y_output = np.interp(x_output, x_input, y_input)
+    coverage = float(no_valid_points_pulled_dataset) / no_of_points
+
+    return y_output, coverage
+
+# TEST CASE
+#
+# no_of_points = 5
+# period_length_days = 1
+# start_datetime = datetime(2000, 3, 6)
+# pulled_dataset = [{u'input_unit_scale': 1, u'region_id': 136969, u'end_date': u'2000-03-12T00:00:00.000Z', u'input_unit_id': 2, u'frequency_name': u'weekly', u'value': 5.35641369409496, u'frequency_id': 2, u'available_date': u'2018-09-17T00:00:00.000Z', u'item_id': 2039, u'start_date': u'2000-03-06T00:00:00.000Z', u'metric_id': 2100031},
+#                   {u'input_unit_scale': 1, u'region_id': 136969, u'end_date': u'2000-03-19T00:00:00.000Z', u'input_unit_id': 2, u'frequency_name': u'weekly', u'value': 0.483880685965375, u'frequency_id': 2, u'available_date': u'2018-09-17T00:00:00.000Z', u'item_id': 2039, u'start_date': u'2000-03-07T00:00:00.000Z', u'metric_id': 2100031},
+#                   {u'input_unit_scale': 1, u'region_id': 136969, u'end_date': u'2000-03-26T00:00:00.000Z', u'input_unit_id': 2, u'frequency_name': u'weekly', u'value': 0.697971197718248, u'frequency_id': 2, u'available_date': u'2018-09-17T00:00:00.000Z', u'item_id': 2039, u'start_date': u'2000-03-08T00:00:00.000Z', u'metric_id': 2100031},
+#                   {u'input_unit_scale': 1, u'region_id': 136969, u'end_date': u'2000-04-02T00:00:00.000Z', u'input_unit_id': 2, u'frequency_name': u'weekly', u'value': 0.667947696387476, u'frequency_id': 2, u'available_date': u'2018-09-17T00:00:00.000Z', u'item_id': 2039, u'start_date': u'2000-03-09T00:00:00.000Z', u'metric_id': 2100031},
+#                   {u'input_unit_scale': 1, u'region_id': 136969, u'end_date': u'2000-04-09T00:00:00.000Z', u'input_unit_id': 2, u'frequency_name': u'weekly', u'value': 0.748982814649028, u'frequency_id': 2, u'available_date': u'2018-09-17T00:00:00.000Z', u'item_id': 2039, u'start_date': u'2000-04-12T00:00:00.000Z', u'metric_id': 2100031}
+#                   ]
+
+# print _impute(no_of_points, period_length_days, start_datetime, pulled_dataset)
