@@ -17,6 +17,15 @@ API_HOST = 'api.gro-intelligence.com'
 OUTPUT_FILENAME = 'gro_client_output.csv'
 ACCESS_TOKEN = os.environ['GROAPI_TOKEN']
 
+# How much to weight the lowest weight feature.
+# The features (coefficients for FFT) per metric will be weighted from 1.0 to LOWEST_PERCENTAGE_WEIGHT_FEATURE
+LOWEST_PERCENTAGE_WEIGHT_FEATURE = 0.6
+
+# Frequencies are hardcoded for the time being as a function days.
+frequencies = {
+    1: 1,
+    2: 7
+}
 
 class SimilarRegion(BatchClient):
 
@@ -40,6 +49,7 @@ class SimilarRegion(BatchClient):
                 "query": {
                     'metric_id': 15531082,
                     'item_id': 7382,
+                    #remove these.
                     'region_id': 1178,
                     'source_id': 43,
                     'frequency_id': 1
@@ -251,6 +261,12 @@ class SimilarRegion(BatchClient):
                 starting_col = self.state.metric_to_col_idx[metric_name]
                 ending_col = starting_col + self.available_metrics[metric_name]["properties"]["num_features"]
                 self.state.data_standardized[:, starting_col:ending_col] *= self.state.metric_weights[metric_name]
+                # weight higher frequency information less!
+                num_features = self.available_metrics[metric_name]["properties"]["num_features"]
+                weight_vector = np.arange(1.0,
+                                          LOWEST_PERCENTAGE_WEIGHT_FEATURE,
+                                          -(1.0-LOWEST_PERCENTAGE_WEIGHT_FEATURE)/float(num_features))
+                self.state.data_standardized[:, starting_col:ending_col] *= weight_vector
 
             # As it turns out we should place all our masked values at the mean points for that column !!!
             # this ensures they are treated fairly despite missing a portion of the data.
@@ -393,8 +409,9 @@ class SimilarRegion(BatchClient):
             data_series = self.get_data_series(**metric)[0]
             start_date = dateparser.parse(data_series["start_date"])
             start_datetime = datetime.combine(start_date, time())
+            period_length_days = frequencies[metric["frequency_id"]]
             end_date = dateparser.parse(data_series["end_date"])
-            no_of_points = (end_date - start_date).days
+            no_of_points = (end_date - start_date).days / period_length_days
             self._logger.info("Length of data series is %i days" % no_of_points)
             longest_period_feature_period = self.available_metrics[metric_name]["properties"]["longest_period_feature_period"]
             start_idx = math.floor(no_of_points / float(longest_period_feature_period))
@@ -426,9 +443,16 @@ class SimilarRegion(BatchClient):
                     data[idx, :] = np.ma.masked
                 else:
                     # TODO remove out_scope start_datetime here once we have "addNulls" on the server
-                    processed_result = transform._post_process_timeseries(no_of_points, start_datetime, response,
-                                                                          start_idx, num_features)
-                    data[idx] = processed_result
+                    result, coverage = transform._post_process_timeseries(no_of_points, start_datetime, response,
+                                                                          start_idx, num_features,
+                                                                          period_length_days=period_length_days)
+                    # if there are less points than there are in our lowest period event, let's discard this...
+                    if coverage < 1/float(start_idx):
+                        data[idx] = [0] * data.shape[1]
+                        # flag this as invalid.
+                        data[idx, :] = np.ma.masked
+                    else:
+                        data[idx] = result
 
                 # Mark this as downloaded.
                 needs_to_be_downloaded_state[idx, metric_idx] = False
@@ -501,13 +525,9 @@ if __name__ == "__main__":
 
     # If you're running the first time, run these three lines. Alternatively download the pre-computed version from
     # here:
-    testCase = SimilarRegion(["soil_moisture", "rainfall", "land_surface_temperature"])
+    testCase = SimilarRegion(["rainfall", "soil_moisture", "land_surface_temperature"])
 
-    testCase.state.load()
-    #
-    # print(testCase.state.data.data[9000:9100, 100])
-    #print(np.count_nonzero(testCase.state.not_fetched_yet[:,0]))
-
+    testCase.state.load("saved_states/150_coefs_full/")
     #testCase._cache_regions()
     #
     # # Otherwise, comment the three lines above and uncomment this line
@@ -518,6 +538,6 @@ if __name__ == "__main__":
         "rainfall": 1.0,
         "land_surface_temperature": 1.0
     }
-    #
-    # #print(testCase.state.data[0])
+    # #
+    # # #print(testCase.state.data[0])
     testCase.similar_to(13172, number_of_regions=150, requested_level=5, csv_output=True)
