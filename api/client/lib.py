@@ -10,7 +10,6 @@ DEFAULT_LOG_LEVEL = logging.INFO  # change to DEBUG for more detail
 
 CROP_CALENDAR_METRIC_ID = 2260063
 
-
 def get_default_logger():
     logger = logging.getLogger(__name__)
     logger.setLevel(DEFAULT_LOG_LEVEL)
