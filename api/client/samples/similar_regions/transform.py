@@ -136,6 +136,10 @@ def _post_process_timeseries(no_of_points, start_datetime, time_series, start_id
 
     dataset_imputed, coverage = _impute(no_of_points, period_length_days, start_datetime, time_series)
 
+    # if imputing fails, we can't do fft either
+    if dataset_imputed == None:
+        return None, 0.0
+
     fourier = FourierCoef(start_idx, no_features)
     coefs = fourier.transform(dataset_imputed)
 
