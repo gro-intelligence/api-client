@@ -216,6 +216,10 @@ def _impute(no_of_points, period_length_days, start_datetime, pulled_dataset):
             y_input.append(datapoint["value"])
             no_valid_points_pulled_dataset += 1
 
+    # no data points to interpolate
+    if len(x_input) == 0:
+        return None, 0.0
+
     y_output = np.interp(x_output, x_input, y_input)
     coverage = float(no_valid_points_pulled_dataset) / no_of_points
 
