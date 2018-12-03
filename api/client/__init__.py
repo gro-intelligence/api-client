@@ -1,5 +1,6 @@
 from api.client import lib
 
+
 class Client(object):
 
     """API client with stateful authentication for lib functions. """
