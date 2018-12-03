@@ -1,7 +1,5 @@
 import Queue
 from api.client.lib import *
-
-
 from tornado import ioloop, httpclient
 from tornado.escape import json_decode
 from tornado.httputil import url_concat
