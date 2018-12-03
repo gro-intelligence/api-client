@@ -7,8 +7,8 @@ from tornado.httputil import url_concat
 MAX_RETRIES = 4
 MAX_QUERIES_PER_SECOND = 10
 
-# Batch/Async functions equivalent to those in lib.
 
+# Batch/Async functions equivalent to those in lib.
 def batch_async_get_data(queries, results, map_returned):
     """Same as get_data_points, but operates over batches of requests and does this in async for faster retrieval."""
 
@@ -119,11 +119,14 @@ def batch_async_get_data(queries, results, map_returned):
     return invalid_idx
 
 
-def batch_get_data_points(access_token, api_host, selections, results, map_returned=None):
+def batch_get_data_points(access_token, api_host, selections, results=None, map_returned=None):
     """Get all the data points for a given selection, which is some or all
       of: item_id, metric_id, region_id, frequency_id, source_id,
       partner_region_id. Additional arguments are allowed and ignored.
     """
+
+    if results is None:
+        results = [0]*len(selections)
 
     # TODO support crop calendar
     # if (selection['metric_id'] == CROP_CALENDAR_METRIC_ID):
@@ -150,11 +153,14 @@ def batch_get_data_points(access_token, api_host, selections, results, map_retur
     return results
 
 
-def batch_lookup(access_token, api_host, entities, results, map_returned=None):
+def batch_lookup(access_token, api_host, entities, results=None, map_returned=None):
     """Given an entity_type, which is one of 'items', 'metrics',
   'regions', 'units', or 'sources', returns a JSON dict with the
   list of available entities of the given type.
   """
+
+    if results is None:
+        results = [0]*len(entities)
 
     queries = []
 

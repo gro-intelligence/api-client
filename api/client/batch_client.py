@@ -18,7 +18,7 @@ class BatchClient(Client):
     #     # TODO
     #     # return lib.list_available(self.access_token, self.api_host, selected_entities)
 
-    def batch_lookup(self, entities, results, map_response=None):
+    def batch_lookup(self, entities, results=None, map_response=None):
         return batch_lib.batch_lookup(self.access_token, self.api_host, entities, results, map_response)
 
     #
@@ -27,7 +27,7 @@ class BatchClient(Client):
     #     # TODO
     #     # return lib.get_data_series(self.access_token, self.api_host, **selection)
 
-    def batch_get_data_points(self, selections, results, map_returned=None):
+    def batch_get_data_points(self, selections, results=None, map_returned=None):
         return batch_lib.batch_get_data_points(self.access_token, self.api_host, selections, results, map_returned)
     #
     # def batch_search(self, entity_type, search_terms):
