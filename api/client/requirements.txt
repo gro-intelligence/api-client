@@ -7,5 +7,3 @@ certifi
 chardet
 requests
 urllib3
-dateparser
-tornado==5.1.1
