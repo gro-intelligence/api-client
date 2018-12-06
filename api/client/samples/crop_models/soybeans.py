@@ -1,3 +1,4 @@
+from __future__ import print_function
 # Sample Gro API client that retrieves data series for Brazil soybeans
 # yield from multiple sources.
 #
@@ -32,12 +33,12 @@ def add_brazil_soybeans_yield(model):
         if region['level'] == 3:
             entities['region_id'] = region['id']
     data_series_list = model.get_data_series(**entities)
-    print "There are {} data series for {}.".format(len(data_series_list), entities)
+    print("There are {} data series for {}.".format(len(data_series_list), entities))
     for data_series in data_series_list:
         # Look up the name of the source based on the source_id
         source_name = model.lookup('sources', data_series['source_id']).get('longName')
-        print "{}: {} to {}".format(source_name,
-                                    data_series['start_date'], data_series['end_date'])
+        print("{}: {} to {}".format(source_name,
+                                    data_series['start_date'], data_series['end_date']))
         model.add_single_data_series(data_series)
     return
 
@@ -60,10 +61,10 @@ def main():
     add_brazil_soybeans_yield(model)
     cwdf = get_brazil_soybeans_weighted_ndvi(model)
     df = model.get_df()
-    print "{} data frame with all data series as fetched".format(df.shape)
-    print "Columns: {}".format(df.columns)
-    print "{} data frame with crop weighted data series".format(cwdf.shape)
-    print "Columns: {}".format(cwdf.columns)
+    print("{} data frame with all data series as fetched".format(df.shape))
+    print("Columns: {}".format(df.columns))
+    print("{} data frame with crop weighted data series".format(cwdf.shape))
+    print("Columns: {}".format(cwdf.columns))
 
 
 if __name__ == "__main__":
