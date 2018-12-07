@@ -21,7 +21,7 @@ import random
 import logging
 
 import api.client.lib
-from api.client.lib.gro_client import get_df
+from api.client.gro_client import get_df
 from api.client.lib import search
 
 #GRO GLOBAL VARIABLES
