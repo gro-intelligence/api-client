@@ -1,3 +1,5 @@
+from builtins import map
+from builtins import str
 import logging
 import requests
 import sys
@@ -115,7 +117,7 @@ def get_params_from_selection(**selection):
   and rank_series_by_source().
   """
   params = { }
-  for key, value in selection.items():
+  for key, value in list(selection.items()):
     if key in ('region_id', 'partner_region_id', 'item_id', 'metric_id'):
       params[snake_to_camel(key)] = value
   return params
@@ -127,7 +129,7 @@ def get_crop_calendar_params(**selection):
   inputs since crop calendars are static.
   """
   params = { }
-  for key, value in selection.items():
+  for key, value in list(selection.items()):
     if key in ('region_id', 'item_id'):
       params[snake_to_camel(key)] = value
   return params
@@ -137,7 +139,7 @@ def get_data_call_params(**selection):
   """Construct http request params from dict of entity selections. For use with get_data_points().
   """
   params = get_params_from_selection(**selection)
-  for key, value in selection.items():
+  for key, value in list(selection.items()):
     if key in ('source_id', 'frequency_id', 'start_date', 'end_date', 'show_revisions'):
       params[snake_to_camel(key)] = value
   return params
@@ -165,14 +167,13 @@ def rank_series_by_source(access_token, api_host, series_list):
   prefered soruce comes first. Differences other than source_id are
   not affected.
   """
-  selections = set(tuple(filter(lambda (k, v): k != 'source_id',
-                                single_series.iteritems()))
+  selections = set(tuple([k_v for k_v in iter(single_series.items()) if k_v[0] != 'source_id'])
                    for single_series in series_list)
   for series in map(dict, selections):
     url = '/'.join(['https:', '', api_host, 'v2/available/sources'])
     headers = {'authorization': 'Bearer ' + access_token}
     params = dict((k + 's', v)
-                  for k, v in get_params_from_selection(**series).iteritems())
+                  for k, v in iter(get_params_from_selection(**series).items()))
     source_ids = get_data(url, headers, params).json()
     for source_id in source_ids:
       series['source_id'] = source_id
