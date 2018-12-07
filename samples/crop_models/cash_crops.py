@@ -19,6 +19,7 @@ import sys
 import getpass
 import random
 import logging
+import os
 
 import api.client.lib
 from api.client.gro_client import get_df
@@ -93,9 +94,7 @@ POINT_IN_TIME         = 15
 
 #Set up gro API
 def groToken( api_host = API_HOST ):
-    gro_user_email    = "user@email.com"
-    gro_user_password = "password"
-    return( api.client.lib.get_access_token( api_host, gro_user_email, gro_user_password ) )
+    return os.environ['GROAPI_TOKEN']
 
 def groClient( api_host = API_HOST, tok = groToken() ):
     return( api.client.Client(API_HOST, tok ) )
