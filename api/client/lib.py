@@ -45,6 +45,7 @@ def get_data(url, headers, params=None, logger=None):
   if not logger:
     logger = get_default_logger()
   logger.debug(url)
+  logger.debug(params)
   while retry_count < MAX_RETRIES:
     start_time = time.time()
     data = requests.get(url, params=params, headers=headers, timeout=None)
@@ -118,7 +119,7 @@ def get_params_from_selection(**selection):
   """
   params = { }
   for key, value in list(selection.items()):
-    if key in ('region_id', 'partner_region_id', 'item_id', 'metric_id'):
+    if key in ('region_id', 'partner_region_id', 'item_id', 'metric_id', 'source_id', 'frequency_id'):
       params[snake_to_camel(key)] = value
   return params
 
