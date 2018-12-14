@@ -49,9 +49,6 @@ class SimilarRegion(BatchClient):
                 "query": {
                     'metric_id': 15531082,
                     'item_id': 7382,
-                    #remove these.
-                    'region_id': 1178,
-                    'source_id': 43,
                     'frequency_id': 1
                 },
                 "properties": {
@@ -63,8 +60,6 @@ class SimilarRegion(BatchClient):
                 "query": {
                     'metric_id': 2540047,
                     'item_id': 3457,
-                    'region_id': 136969,
-                    'source_id': 26,
                     'frequency_id': 1
                 },
                 "properties": {
@@ -76,8 +71,6 @@ class SimilarRegion(BatchClient):
                 "query": {
                     'metric_id': 2100031,
                     'item_id': 2039,
-                    'region_id': 136969,
-                    'source_id': 35,
                     'frequency_id': 1
                 },
                 "properties": {
