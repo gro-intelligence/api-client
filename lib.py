@@ -318,7 +318,6 @@ def search(access_token, api_host, entity_type, search_terms):
   raise gen.Return(json_decode(resp))
 
 
-@maybe_async
 def search_and_lookup(access_token, api_host, entity_type, search_terms):
   """Does a search for the given search terms, and for each result
   yields a dict of the entity and it's properties:
@@ -333,7 +332,6 @@ def search_and_lookup(access_token, api_host, entity_type, search_terms):
     yield lookup(access_token, api_host, entity_type, result['id'])
 
 
-@maybe_async
 def lookup_belongs(access_token, api_host, entity_type, entity_id):
   """Given an entity_type, which is one of 'items', 'metrics',
   'regions', and id, generates a list of JSON dicts of entities it
