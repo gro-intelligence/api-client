@@ -8,7 +8,7 @@ import dateparser
 import cPickle as pickle
 from sklearn.neighbors import BallTree
 import transform
-from api.client.batch_client import BatchClient
+from api.client import BatchClient
 from api.client.lib import get_default_logger
 from similar_region_state import SimilarRegionState
 
@@ -413,27 +413,28 @@ class SimilarRegion(BatchClient):
 
             # deep copy the metric for each query.
             queries = []
+            map_query_to_data_table = []
             for region in search_regions:
                 copy_of_metric = dict(metric)
                 copy_of_metric["region_id"] = region
-                queries.append((self.state.district_to_row_idx[region], copy_of_metric))
+                queries.append(copy_of_metric)
+                map_query_to_data_table.append(self.state.district_to_row_idx[region])
 
             #TO DO: REMOVE THIS
-            #queries = queries[0:100]
+            queries = queries[0:100]
 
-            def map_response(query, results, response):
-                idx = query[0]
-                data = results[0]
-                needs_to_be_downloaded_state = results[1]
-                metric_idx = results[2]
-                save_counter = results[3]
-                save_func = results[4]
+            def map_response(idx, query, response):
+                data_table_idx = map_query_to_data_table[idx]
+                data = self.state.metric_data[metric_name]
+                needs_to_be_downloaded_state = self.state.not_fetched_yet
+                save_counter = when_to_save_counter
+                save_func = self.state.save
 
                 if len(response) == 0 or (len(response) == 1 and response[0] == {}):
                     # no data on this region. let's fill it with zeros for the odd cases and mark it for masking.
-                    data[idx] = [0] * data.shape[1]
+                    data[data_table_idx] = [0] * data.shape[1]
                     # flag this as invalid.
-                    data[idx, :] = np.ma.masked
+                    data[data_table_idx, :] = np.ma.masked
                 else:
                     # TODO remove out_scope start_datetime here once we have "addNulls" on the server
                     result, coverage = transform._post_process_timeseries(no_of_points, start_datetime, response,
@@ -441,14 +442,14 @@ class SimilarRegion(BatchClient):
                                                                           period_length_days=period_length_days)
                     # if there are less points than there are in our lowest period event, let's discard this...
                     if coverage < 1/float(start_idx):
-                        data[idx] = [0] * data.shape[1]
+                        data[data_table_idx] = [0] * data.shape[1]
                         # flag this as invalid.
-                        data[idx, :] = np.ma.masked
+                        data[data_table_idx, :] = np.ma.masked
                     else:
-                        data[idx] = result
+                        data[data_table_idx] = result
 
                 # Mark this as downloaded.
-                needs_to_be_downloaded_state[idx, metric_idx] = False
+                needs_to_be_downloaded_state[data_table_idx, metric_idx] = False
                 save_counter[0] += 1
 
                 # Save this every 10,000 items downloaded.
@@ -458,10 +459,7 @@ class SimilarRegion(BatchClient):
 
             when_to_save_counter = [0]
 
-            results = (self.state.metric_data[metric_name], self.state.not_fetched_yet, metric_idx,
-                       when_to_save_counter, self.state.save)
-
-            self.batch_get_data_points(queries, results, map_returned=map_response)
+            self.batch_async_get_data_points(queries, map_result=map_response)
 
         self.state.downloaded = True
 
@@ -499,7 +497,7 @@ class SimilarRegion(BatchClient):
                 results = [0]*len(queue)
                 entities = [(idx, ("regions", entity_id)) for (idx, entity_id) in enumerate(queue)]
 
-                self.batch_lookup(entities, results)
+                self.batch_async_lookup(entities, output_list=results)
 
                 queue = []
 
@@ -520,8 +518,8 @@ if __name__ == "__main__":
     # here:
     testCase = SimilarRegion(["rainfall", "soil_moisture", "land_surface_temperature"])
 
-    testCase.state.load("saved_states/150_coefs_full/")
-    #testCase._cache_regions()
+    #testCase.state.load("saved_states/150_coefs_full/")
+    testCase._cache_regions()
     #
     # # Otherwise, comment the three lines above and uncomment this line
     #
