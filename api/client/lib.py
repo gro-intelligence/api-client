@@ -24,7 +24,10 @@ def maybe_async(func):
         if cfg.ASYNC:
             return gen.coroutine(func)(*args, **kwargs)
         else:
-            return IOLoop.current().run_sync(functools.partial(gen.coroutine(func), *args, **kwargs))
+            cfg.ASYNC = True
+            result = IOLoop.current().run_sync(functools.partial(gen.coroutine(func), *args, **kwargs))
+            cfg.ASYNC = False
+            return result
     return wrapper
 
 
@@ -56,7 +59,7 @@ def get_access_token(api_host, user_email, user_password, logger=None):
     retry_count += 1
   raise Exception("Giving up on get_access_token after {0} tries.".format(retry_count))
 
-@gen.coroutine
+@maybe_async
 def get_data(url, headers, params=None, logger=None):
   """General 'make api request' function. Assigns headers and builds in retries and logging."""
   base_log_record = dict(route=url, params=params)
@@ -187,7 +190,6 @@ def get_data_series(access_token, api_host, **selection):
     raise Exception(resp.text)
 
 
-@maybe_async
 def rank_series_by_source(access_token, api_host, series_list):
   """Given a list of series, return them in source-ranked order: such
   that if there are multiple sources for the same selection, the
