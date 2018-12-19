@@ -3,7 +3,7 @@ import sys
 import api.client.lib
 import unittest
 
-from api.client import Client
+from api.client import Client, BatchClient
 
 
 class MyTestCase(unittest.TestCase):
@@ -14,6 +14,11 @@ class MyTestCase(unittest.TestCase):
                                             "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImV5dmluZC5uaWtsYXNzb25A"
                                             "Z3JvLWludGVsbGlnZW5jZS5jb20iLCJ1c2VySWQiOjQxMDUsInR5cGUiOiJsb2dpbiIsImlhd"
                                             "CI6MTUzODY2MDM0NX0.M4L22oukM_Ghb8c8CpHqXDGNEBMMcRqqa7HKXF_lweE")
+        self.batch_api_client = BatchClient("api.gro-intelligence.com",
+                                            "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImV5dmluZC5uaWtsYXNzb25A"
+                                            "Z3JvLWludGVsbGlnZW5jZS5jb20iLCJ1c2VySWQiOjQxMDUsInR5cGUiOiJsb2dpbiIsImlhd"
+                                            "CI6MTUzODY2MDM0NX0.M4L22oukM_Ghb8c8CpHqXDGNEBMMcRqqa7HKXF_lweE")
+
 
     def test_connection_and_lookup(self):
 
@@ -44,7 +49,8 @@ class MyTestCase(unittest.TestCase):
 
     def test_lookup(self):
 
-        result = self.api_client.batch_async_lookup([("regions", 131072)])
+        result = self.batch_api_client.batch_async_lookup([["regions", 131072]])
+        print(result)
         self.assertItemsEqual(result, [{u'name': u'Verkhneketskiy rayon', u'level': 5, u'contains':
             [1000115937, 1000114964, 1000111695, 1000039835], u'longitude': None,
                                        u'rankingScore': 0.7639320225, u'latitude': None, u'id': 131072}])
@@ -72,7 +78,7 @@ class MyTestCase(unittest.TestCase):
 
         result_async = [0] * 3
 
-        self.api_client.batch_async_get_data_points(queries, output_list=result_async)
+        self.batch_api_client.batch_async_get_data_points(queries, output_list=result_async)
 
 
         self.assertItemsEqual(results_classic, result_async)
@@ -92,7 +98,7 @@ class MyTestCase(unittest.TestCase):
 
         result_async = [0] * 3
 
-        self.api_client.batch_async_lookup(regions, result_async)
+        self.batch_api_client.batch_async_lookup(regions, result_async)
 
         self.assertItemsEqual(results_classic, result_async)
 

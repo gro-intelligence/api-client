@@ -119,11 +119,14 @@ class BatchClient(Client):
                 idx, item = yield q.get()
                 try:
                     logger.debug('Doing work on %s',str(idx))
-                    result = yield func(self.access_token, self.api_host, **item)
+                    if type(item) is dict:
+                        result = yield func(self.access_token, self.api_host, **item)
+                    else:
+                        result = yield func(self.access_token, self.api_host, *item)
                     map_result(idx, item, result)
                 except Exception as e:
                     # if it fails this many times... let it go.
-                    print(e)
+                    print("ENCOUNTERED ERROR", e)
                     yield map_result(idx, item, None)
                 finally:
                     q.task_done()
