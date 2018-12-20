@@ -88,6 +88,7 @@ def get_data(url, headers, params=None, logger=None):
       logger.warning(data.text, extra=log_record)
     else:
       logger.error(data.text, extra=log_record)
+  print "GIVING UP"
   raise Exception('Giving up on {} after {} tries. Error is: {}.'.format(url, retry_count, data.text))
 
 @maybe_async
@@ -337,12 +338,17 @@ def search_and_lookup(access_token, api_host, entity_type, search_terms):
 def lookup_belongs(access_token, api_host, entity_type, entity_id):
   """Given an entity_type, which is one of 'items', 'metrics',
   'regions', and id, generates a list of JSON dicts of entities it
-  belongs to.
+  belongs to. Else generator just returns.
   """
   url = '/'.join(['https:', '', api_host, 'v2', entity_type, 'belongs-to'])
-  params = { 'ids': str(entity_id) }
+  params = {'ids': str(entity_id)}
   headers = {'authorization': 'Bearer ' + access_token}
   resp = get_data(url, headers, params)
+  parent_entities = json_decode(resp).get('data').get(str(entity_id))
+
+  if parent_entities is None:
+      return
+
   for parent_entity_id in json_decode(resp).get('data').get(str(entity_id)):
     yield lookup(access_token, api_host, entity_type, parent_entity_id)
 
