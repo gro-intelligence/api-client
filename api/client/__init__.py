@@ -102,11 +102,12 @@ class BatchClient(Client):
             "Only argument to a batch async decorated function should be a list of a list of the individual " \
             "non-keyword arguments being passed to the original function." \
 
-        if output_list is None:
-            output_list = [0] * len(batched_args)
-
         # Default is identity mapping into results list.
         if not map_result:
+            
+            if output_list is None:
+                output_list = [0] * len(batched_args)
+
             def map_result(idx, query, response):
                 output_list[idx] = response
 
