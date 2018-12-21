@@ -176,7 +176,7 @@ class SimilarRegion(BatchClient):
             province = next(self.lookup_belongs("regions", district_id), {"name": ""})
             print(4)
             if "id" in province and province["id"] != 0:
-                country = next(self.lookup_belongs("regions", province["id"]), {"name": ""})
+                country = next(self.lookup_belongs("regions", province["id"]), {"name": "", "id": ""})
             else:
                 country = {"name": "", "id" : ""}
 
@@ -421,7 +421,7 @@ class SimilarRegion(BatchClient):
                 map_query_to_data_table.append(self.state.district_to_row_idx[region])
 
             #TO DO: REMOVE THIS
-            queries = queries[0:100]
+            #queries = queries[0:100]
 
             def map_response(idx, query, response):
                 data_table_idx = map_query_to_data_table[idx]
