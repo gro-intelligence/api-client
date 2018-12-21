@@ -430,7 +430,7 @@ class SimilarRegion(BatchClient):
                 save_counter = when_to_save_counter
                 save_func = self.state.save
 
-                if len(response) == 0 or (len(response) == 1 and response[0] == {}):
+                if response is None or len(response) == 0 or (len(response) == 1 and response[0] == {}):
                     # no data on this region. let's fill it with zeros for the odd cases and mark it for masking.
                     data[data_table_idx] = [0] * data.shape[1]
                     # flag this as invalid.
