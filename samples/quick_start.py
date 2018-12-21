@@ -2,9 +2,12 @@ import os
 import unicodecsv
 import api.client.lib
 
-API_HOST = 'api.gro-intelligence.com'
+#API_HOST = 'api.gro-intelligence.com'
+
+API_HOST = '127.0.0.1:5000'
 OUTPUT_FILENAME = 'gro_client_output.csv'
 ACCESS_TOKEN=os.environ['GROAPI_TOKEN']
+client = api.client.Client(API_HOST, ACCESS_TOKEN)
 
 def main():
     client = api.client.Client(API_HOST, ACCESS_TOKEN)
