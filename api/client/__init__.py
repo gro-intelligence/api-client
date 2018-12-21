@@ -1,3 +1,5 @@
+import time
+
 from tornado import gen
 from tornado.ioloop import IOLoop
 from tornado.queues import Queue
@@ -137,6 +139,8 @@ class BatchClient(Client):
             """ Uses the interleaving pattern from https://www.tornadoweb.org/en/stable/guide/coroutines.html
             to place items in the queue at a fixed rate.
             """
+            lasttime = time.time()
+
             for idx, item in enumerate(batched_args):
                 timer = gen.sleep(1.0 / float(cfg.MAX_QUERIES_PER_SECOND))  # Start the clock.
                 yield q.put((idx, item))
@@ -144,6 +148,13 @@ class BatchClient(Client):
                 logger.debug("length of queue: %i " % q.qsize())
                 yield timer
                 logger.debug('Ready to put next')
+
+                if idx % (len(batched_args)//20) == 0 and idx > 0:
+                    elapsed = time.time() - lasttime
+                    qps = (len(batched_args) // 20) / elapsed
+                    logger.info("Downloaded {} of {} items. "
+                                "QPS since last log is {}".format(idx, len(batched_args), qps))
+                    lasttime = time.time()
 
         @gen.coroutine
         def main():
