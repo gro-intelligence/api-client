@@ -1,6 +1,6 @@
 # Gro API Client
 
-## Prequisites for Windows)
+## Prequisites for Windows
 
 Install Python version >= 2.7.13 from https://www.python.org/downloads/release/python-2713/.
 
