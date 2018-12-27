@@ -49,7 +49,8 @@ class SimilarRegion(BatchClient):
                 "query": {
                     'metric_id': 15531082,
                     'item_id': 7382,
-                    'frequency_id': 1
+                    'frequency_id': 1,
+                    'source_id': 43
                 },
                 "properties": {
                     "num_features": 150,
@@ -60,7 +61,8 @@ class SimilarRegion(BatchClient):
                 "query": {
                     'metric_id': 2540047,
                     'item_id': 3457,
-                    'frequency_id': 1
+                    'frequency_id': 1,
+                    'source_id': 26
                 },
                 "properties": {
                     "num_features": 150,
@@ -71,7 +73,8 @@ class SimilarRegion(BatchClient):
                 "query": {
                     'metric_id': 2100031,
                     'item_id': 2039,
-                    'frequency_id': 1
+                    'frequency_id': 1,
+                    'source_id': 35
                 },
                 "properties": {
                     "num_features": 150,
@@ -518,7 +521,7 @@ if __name__ == "__main__":
     # here:
     testCase = SimilarRegion(["rainfall", "soil_moisture", "land_surface_temperature"])
 
-    #testCase.state.load("saved_states/150_coefs_full/")
+    #testCase.state.load()
     testCase._cache_regions()
     #
     # # Otherwise, comment the three lines above and uncomment this line
@@ -530,5 +533,5 @@ if __name__ == "__main__":
         "land_surface_temperature": 1.0
     }
     # #
-    # # #print(testCase.state.data[0])
-    testCase.similar_to(13172, number_of_regions=150, requested_level=5, csv_output=True)
+    print(testCase.state.data[0:100])
+    #testCase.similar_to(13172, number_of_regions=150, requested_level=5, csv_output=True)
