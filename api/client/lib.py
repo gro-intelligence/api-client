@@ -86,8 +86,7 @@ def list_available(access_token, api_host, selected_entities):
   """
   url = '/'.join(['https:', '', api_host, 'v2/entities/list'])
   headers = {'authorization': 'Bearer ' + access_token}
-  params = dict(map(lambda (key, value): (snake_to_camel(key), value),
-                    selected_entities.items()))
+  params = dict([(snake_to_camel(key_value[0]), key_value[1]) for key_value in list(selected_entities.items())])
   resp = get_data(url, headers, params)
   try:
     return resp.json()['data']
@@ -112,7 +111,7 @@ def lookup(access_token, api_host, entity_type, entity_id):
 def snake_to_camel(term):
   """Converts hello_world to helloWorld."""
   camel = term.split('_')
-  return ''.join(camel[:1] + list(map(lambda x: x[0].upper()+x[1:], camel[1:])))
+  return ''.join(camel[:1] + list([x[0].upper()+x[1:] for x in camel[1:]]))
 
 
 def get_params_from_selection(**selection):
@@ -177,7 +176,7 @@ def rank_series_by_source(access_token, api_host, series_list):
   selections_sorted = set(
                           tuple(
                               sorted(
-                                filter(lambda (k, v): k != 'source_id', single_series.iteritems()),
+                                [k_v for k_v in iter(list(single_series.items())) if k_v[0] != 'source_id'],
                                 key=lambda x: x[0]
                               )
                           ) for single_series in series_list
@@ -187,7 +186,7 @@ def rank_series_by_source(access_token, api_host, series_list):
     url = '/'.join(['https:', '', api_host, 'v2/available/sources'])
     headers = {'authorization': 'Bearer ' + access_token}
     params = dict((k + 's', v)
-                  for k, v in iter(get_params_from_selection(**series).items()))
+                  for k, v in iter(list(get_params_from_selection(**series).items())))
     source_ids = get_data(url, headers, params).json()
     for source_id in source_ids:
       # Make a copy to avoid passing the same reference each time.
