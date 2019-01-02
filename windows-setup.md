@@ -1,4 +1,4 @@
-# Powershell Setup Instructions
+# Windows Powershell Setup Instructions
 
 ## Prequisites
 
