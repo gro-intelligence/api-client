@@ -48,3 +48,6 @@ class Client(object):
     def rank_series_by_source(self, series_list):
         return lib.rank_series_by_source(self.access_token, self.api_host,
                                          series_list)
+
+    def get_geo_centre(self, region_id):
+        return lib.get_geo_centre(self.access_token, self.api_host, region_id)
