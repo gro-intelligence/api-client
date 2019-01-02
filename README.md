@@ -10,23 +10,23 @@
 Try [quick_start.py](api/client/samples/quick_start.py)
 
 ```sh
-$ cd ~/gro/api-client/api/client/samples/
+cd ~/gro/api-client/api/client/samples/
 
-$ python quick_start.py
+python quick_start.py
 ```
 
 Now should be able to find a sample output csv file at:
 
 ```sh
-$ ~/gro/api-client/api/client/samples/gro_client_output.csv
+~/gro/api-client/api/client/samples/gro_client_output.csv
 ```
 
 A more advanced example is [sugar.py](api/client/samples/crop_models/sugar.py)
 
 ```sh
-$ cd ~/gro/api-client/api/client/samples/crop_models/
+cd ~/gro/api-client/api/client/samples/crop_models/
 
-$ python sugar.py
+python sugar.py
 ```
 
 Further documentation can be found in the [api/client/](api/client) directory.
