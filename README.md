@@ -27,7 +27,7 @@ export PYTHONPATH=~/gro/api-client:$PYTHONPATH
 ```
 __Powershell on Windows__
 ```sh
-$env:PYTHONPATH = "$env:USERPROFILE\gro2\api-client;$env:PYTHONPATH"
+$env:PYTHONPATH = "$env:USERPROFILE\gro\api-client;$env:PYTHONPATH"
 ```
 
 Install dependencies (note we're using Python 2.7). Note these requirements are for the sample code. You may need more or fewer for your specific application.
