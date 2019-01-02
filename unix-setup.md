@@ -6,7 +6,7 @@
 2. python (2.7.x or 3.x) ([2 Installation instructions](https://docs.python.org/2/using/index.html) / [3 Installation instructions](https://docs.python.org/3/using/index.html))
 3. pip ([Installation instructions](https://pip.pypa.io/en/stable/installing/). Note "pip is already installed if you are using Python 2 >=2.7.9 or Python 3 >=3.4")
 
-## Clone the repo
+## Clone the library
 
 ```sh
 mkdir ~/gro
@@ -16,7 +16,7 @@ cd ~/gro
 git clone https://github.com/gro-intelligence/api-client.git
 ```
 
-## Add the library to your PYTHONPATH
+## Add the library to PYTHONPATH
 
 ```sh
 export PYTHONPATH=~/gro/api-client:$PYTHONPATH
@@ -32,7 +32,7 @@ cd ~/gro/api-client/api/client
 pip install -r requirements.txt
 ```
 
-## Get an authentication token
+## Get an authorization token
 
 To save an API access token into a bash environment variable
 

@@ -1,6 +1,6 @@
 # Windows Powershell Setup Instructions
 
-## Prequisites
+## Prerequisites
 
 1. Download Python version >= 2.7.13 from [python.org](https://www.python.org/downloads/windows/).
 2. Install both Python and pip to PATH either in installer (enable component during the installation) or manually. The easiest way to do this is to make sure the below is checked during installation: ![readme_add_python_to_path_installer](readme_add_python_to_path_installer.png)
