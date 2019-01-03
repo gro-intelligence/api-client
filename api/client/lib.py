@@ -169,30 +169,25 @@ def rank_series_by_source(access_token, api_host, series_list):
   prefered soruce comes first. Differences other than source_id are
   not affected.
   """
-
   # We sort the internal tuple representations of the dictionaries because otherwise when we call set()
   # we end up with duplicates if iteritems() returns a different order for the same dictionary. See
   # test case...
-  selections_sorted = set(
-                          tuple(
-                              sorted(
-                                [k_v for k_v in iter(list(single_series.items())) if k_v[0] != 'source_id'],
-                                key=lambda x: x[0]
-                              )
-                          ) for single_series in series_list
-                        )
+  selections_sorted = set(tuple(sorted(
+    [k_v for k_v in iter(list(single_series.items())) if k_v[0] != 'source_id'],
+    key=lambda x: x[0])) for single_series in series_list)
 
   for series in map(dict, selections_sorted):
     url = '/'.join(['https:', '', api_host, 'v2/available/sources'])
     headers = {'authorization': 'Bearer ' + access_token}
-    params = dict((k + 's', v)
-                  for k, v in iter(list(get_params_from_selection(**series).items())))
+    params = dict((k + 's', v) for k, v in iter(list(
+      get_params_from_selection(**series).items())))
     source_ids = get_data(url, headers, params).json()
     for source_id in source_ids:
       # Make a copy to avoid passing the same reference each time.
       series_with_source = dict(series)
       series_with_source['source_id'] = source_id
       yield series_with_source
+
 
 def format_crop_calendar_response(resp):
   """Makes the v2/cropcalendar/data output a similar format to the normal /v2/data output. Splits
