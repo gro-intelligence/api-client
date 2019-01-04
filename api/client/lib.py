@@ -27,13 +27,13 @@ def get_access_token(api_host, user_email, user_password, logger=None):
   if not logger:
     logger = get_default_logger()
   while retry_count < MAX_RETRIES:
-    login = requests.post('https://' + api_host + '/login',
+    get_api_token = requests.post('https://' + api_host + '/api-token',
                           data = {"email": user_email, "password": user_password})
-    if login.status_code == 200:
+    if get_api_token.status_code == 200:
       logger.debug("Authentication succeeded in get_access_token")
-      return login.json()['data']['accessToken']
+      return get_api_token.json()['data']['accessToken']
     else:
-      logger.warning("Error in get_access_token: {}".format(login))
+      logger.warning("Error in get_access_token: {}".format(get_api_token))
     retry_count += 1
   raise Exception("Giving up on get_access_token after {0} tries.".format(retry_count))
 
@@ -86,7 +86,9 @@ def list_available(access_token, api_host, selected_entities):
   """
   url = '/'.join(['https:', '', api_host, 'v2/entities/list'])
   headers = {'authorization': 'Bearer ' + access_token}
-  resp = get_data(url, headers, selected_entities)
+  params = dict([(snake_to_camel(key), value)
+                 for (key, value) in list(selected_entities.items())])
+  resp = get_data(url, headers, params)
   try:
     return resp.json()['data']
   except KeyError as e:
@@ -109,8 +111,8 @@ def lookup(access_token, api_host, entity_type, entity_id):
 
 def snake_to_camel(term):
   """Converts hello_world to helloWorld."""
-  camel = ''.join(term.title().split('_'))
-  return camel[0].lower() + camel[1:]
+  camel = term.split('_')
+  return ''.join(camel[:1] + list([x[0].upper()+x[1:] for x in camel[1:]]))
 
 
 def get_params_from_selection(**selection):
@@ -168,17 +170,25 @@ def rank_series_by_source(access_token, api_host, series_list):
   prefered soruce comes first. Differences other than source_id are
   not affected.
   """
-  selections = set(tuple([k_v for k_v in iter(single_series.items()) if k_v[0] != 'source_id'])
-                   for single_series in series_list)
-  for series in map(dict, selections):
+  # We sort the internal tuple representations of the dictionaries because otherwise when we call set()
+  # we end up with duplicates if iteritems() returns a different order for the same dictionary. See
+  # test case...
+  selections_sorted = set(tuple(sorted(
+    [k_v for k_v in iter(list(single_series.items())) if k_v[0] != 'source_id'],
+    key=lambda x: x[0])) for single_series in series_list)
+
+  for series in map(dict, selections_sorted):
     url = '/'.join(['https:', '', api_host, 'v2/available/sources'])
     headers = {'authorization': 'Bearer ' + access_token}
-    params = dict((k + 's', v)
-                  for k, v in iter(get_params_from_selection(**series).items()))
+    params = dict((k + 's', v) for k, v in iter(list(
+      get_params_from_selection(**series).items())))
     source_ids = get_data(url, headers, params).json()
     for source_id in source_ids:
-      series['source_id'] = source_id
-      yield series
+      # Make a copy to avoid passing the same reference each time.
+      series_with_source = dict(series)
+      series_with_source['source_id'] = source_id
+      yield series_with_source
+
 
 def format_crop_calendar_response(resp):
   """Makes the v2/cropcalendar/data output a similar format to the normal /v2/data output. Splits
@@ -299,3 +309,10 @@ def lookup_belongs(access_token, api_host, entity_type, entity_id):
   resp = get_data(url, headers, params)
   for parent_entity_id in resp.json().get('data').get(str(entity_id)):
     yield lookup(access_token, api_host, entity_type, parent_entity_id)
+
+def get_geo_centre(access_token, api_host, region_id):
+  """Given a region ID, returns the geographic centre in degrees lat/lon."""
+  url = '/'.join(['https:', '', api_host, 'v2/geocentres?regionIds=' + str(region_id)])
+  headers = {'authorization': 'Bearer ' + access_token}
+  resp = get_data(url, headers)
+  return resp.json()["data"]
