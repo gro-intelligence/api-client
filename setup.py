@@ -12,7 +12,8 @@ setuptools.setup(
     long_description = long_description,
     long_description_content_type = "text/markdown",
     url = "https://github.com/gro-intelligence/api-client",
-    packages = [ 'api.client' ],
+    packages = [ 'api', 'api.client' ],
+    py_modules = [ 'api.client.lib' ],
     python_requires = ">=2.7.6",
     install_requires = [
       'unicodecsv',
