@@ -6,40 +6,25 @@
 2. python (2.7.x or 3.x) ([2 Installation instructions](https://docs.python.org/2/using/index.html) / [3 Installation instructions](https://docs.python.org/3/using/index.html))
 3. pip ([Installation instructions](https://pip.pypa.io/en/stable/installing/). Note "pip is already installed if you are using Python 2 >=2.7.9 or Python 3 >=3.4")
 
-## Clone the library
+## Download the package and CLI
 
 ```sh
-mkdir ~/gro
-
-cd ~/gro
-
-git clone https://github.com/gro-intelligence/api-client.git
-```
-
-## Add the library to PYTHONPATH
-
-```sh
-export PYTHONPATH=~/gro/api-client:$PYTHONPATH
-```
-
-## Install dependencies
-
-Note these requirements are for the sample code. You may need more or fewer for your specific application.
-
-```sh
-cd ~/gro/api-client/api/client
-
-pip install -r requirements.txt
+pip install git+https://github.com/gro-intelligence/api-client.git
 ```
 
 ## Get an authorization token
 
-To save an API access token into a bash environment variable
+```sh
+gro --user_email='email@example.com' --user_password='securePassword' --print_token
+```
+
+In the example code, it is assumed that you have the token saved to your environment variables as GROAPI_TOKEN. To do that in one line:
 
 ```sh
-cd ~/gro/api-client/api/client
-
 export GROAPI_TOKEN=`python gro_client.py --user_email='email@example.com' --user_password='securePassword' --print_token`
 ```
 
-Note that these environment variables *do not persist* when opening new shell sessions. For repeated use, you likely want to save PYTHONPATH and GROAPI_TOKEN as permanent environment variables in your bash_profile (or equivalent).
+Two notes on authentication tokens:
+
+1. Note that bash environment variables *do not persist* when opening new shell sessions. For repeated use, you likely want to save your GROAPI_TOKEN as permanent environment variable in your bash_profile (or equivalent).
+2. Authentication tokens *are subject to expire* though not very often. So if you do save yours elsewhere, you can add robustness to your application by falling back to api.client.lib.get_access_token() to get a new one if your previous one has expired.
