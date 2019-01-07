@@ -6,7 +6,7 @@ from __future__ import print_function
 #   export PYTHONPATH=./gro
 #   python gro/api/client/gro_client.py --item soybeans  --region brazil --partner_region china --metric export --user_email ... --user_password ...
 #   python gro/api/client/gro_client.py --item=sesame --region=ethiopia --user_email=... --user_password=...
-
+import getpass
 from builtins import str
 import argparse
 import sys
@@ -90,12 +90,14 @@ def main():
     parser.add_argument("--token")
     args = parser.parse_args()
 
-    assert (args.user_email and args.user_password) or args.token, \
-        "Need --token, or --user_email and --user_password"
+    assert args.user_email or args.token, \
+        "Need --token, or --user_email"
     access_token = None
     if args.token:
         access_token = args.token
     else:
+        if not args.user_password:
+            args.user_password = getpass.getpass()
         access_token = api.client.lib.get_access_token(API_HOST, args.user_email, args.user_password)
     if args.print_token:
         print(access_token)
