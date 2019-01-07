@@ -112,7 +112,7 @@ def list_available(access_token, api_host, selected_entities):
   """
   url = '/'.join(['https:', '', api_host, 'v2/entities/list'])
   headers = {'authorization': 'Bearer ' + access_token}
-  params = dict(map(lambda (key, value): (snake_to_camel(key), value),
+  params = dict(map(lambda kv: (snake_to_camel(kv[0]), kv[1]),
                     selected_entities.items()))
   resp = yield get_data(url, headers, params)
   try:
@@ -204,7 +204,7 @@ def rank_series_by_source(access_token, api_host, series_list):
   selections_sorted = set(
                           tuple(
                               sorted(
-                                filter(lambda (k, v): k != 'source_id', single_series.iteritems()),
+                                filter(lambda kv: kv[0] != 'source_id', single_series.iteritems()),
                                 key=lambda x: x[0]
                               )
                           ) for single_series in series_list
