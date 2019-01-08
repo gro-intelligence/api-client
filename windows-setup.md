@@ -16,8 +16,10 @@ pip install git+https://github.com/gro-intelligence/api-client.git
 
 ## Get an authorization token
 
+You can use the gro command line tool to request an authentication token, as in the below example. Note that you will be prompted to enter a password.
+
 ```sh
-gro --user_email='email@example.com' --user_password='securePassword' --print_token
+gro --user_email='email@example.com' --print_token
 ```
 
 In the example code, it is assumed that you have the token saved to your environment variables as GROAPI_TOKEN. You can do that like so:
