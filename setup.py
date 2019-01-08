@@ -1,33 +1,23 @@
-# python setup.py sdist bdist_wheel
-
 import setuptools
 
-with open("README.md", "r") as fh:
-    long_description = fh.read()
+with open("README.md", "r") as readme_file:
+    long_description = readme_file.read()
+
+with open("requirements.txt", "r") as requirements_file:
+    requirements = requirements_file.read()
 
 setuptools.setup(
     name = "gro",
-    version = "1.12.0",
-    description = "A client library for accessing Gro Intelligence's agriculture data platform",
+    version = "1.0.0",
+    description = "Python client library for accessing Gro Intelligence's agriculture data platform",
     long_description = long_description,
     long_description_content_type = "text/markdown",
     url = "https://github.com/gro-intelligence/api-client",
-    packages = [ 'api', 'api.client' ],
-    py_modules = [ 'api.client.lib' ],
+    packages = [ 'api' ],
+    py_modules = [ 'api.client', 'api.client.lib' ],
     python_requires = ">=2.7.6",
-    install_requires = [
-      'unicodecsv',
-      'numpy',
-      'pandas',
-      'python-dateutil',
-      'pytz',
-      'certifi',
-      'chardet',
-      'requests',
-      'urllib3',
-      'future',
-    ],
-    entry_points={
+    install_requires = requirements,
+    entry_points = {
       'console_scripts': ['gro=api.client.gro_client:main']
     }
 )

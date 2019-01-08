@@ -8,7 +8,7 @@
 
 Now, proceed below using Powershell.
 
-## Download the package and CLI
+## Install the package and CLI
 
 ```sh
 pip install git+https://github.com/gro-intelligence/api-client.git
