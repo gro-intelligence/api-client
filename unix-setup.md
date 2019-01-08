@@ -34,12 +34,12 @@ pip install -r requirements.txt
 
 ## Get an authorization token
 
-To save an API access token into a bash environment variable
+To save an API access token into a bash environment variable. Unless you specify your password using --user_password, you will be prompted for your password in the command line.
 
 ```sh
 cd ~/gro/api-client/api/client
 
-export GROAPI_TOKEN=`python gro_client.py --user_email='email@example.com' --user_password='securePassword' --print_token`
+export GROAPI_TOKEN=`python gro_client.py --user_email='email@example.com' --print_token`
 ```
 
 Note that these environment variables *do not persist* when opening new shell sessions. For repeated use, you likely want to save PYTHONPATH and GROAPI_TOKEN as permanent environment variables in your bash_profile (or equivalent).

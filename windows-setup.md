@@ -39,7 +39,7 @@ pip install -r requirements.txt
 ```sh
 cd ~/gro/api-client/api/client
 
-python gro_client.py --user_email='email@example.com' --user_password='securePassword'  --print_token
+python gro_client.py --user_email='email@example.com'  --print_token
 ```
 
 Copy and paste this token into this command
