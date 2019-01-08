@@ -35,10 +35,15 @@ cd your-install-path/api-client/api/client/samples/crop_models/
 python sugar.py
 ```
 
-You can also use the Gro CLI as a quick and easy way to request a single data series right on the command line. The following example assumes you have your api token saved as GROAPI_TOKEN in your environment variables, but you could also provide it directly, or provide --user_email instead of --token and type your password when prompted:
+You can also use the Gro CLI as a quick and easy way to request a single data series right on the command line. You can either provide your email and enter a password when prompted, or you can provide your --token to avoid typing a password every time:
 
 ```sh
-gro --metric='Production Quantity' --item='Corn' --region='United States' --token=$GROAPI_TOKEN
+gro --metric='Production Quantity' --item='Corn' --region='United States' --user_email='email@expample.com'
+Password: <enter password when prompted>
+
+or
+
+gro --metric='Production Quantity' --item='Corn' --region='United States' --token='token-generated-in-setup-steps'
 ```
 
 This will choose the first matching data series and output the results to a gro_client_output.csv file in your current directory.
