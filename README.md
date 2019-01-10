@@ -16,7 +16,7 @@ Download or clone this repository, and then you can navigate to our [api/client/
 Try [quick_start.py](api/client/samples/quick_start.py)
 
 ```sh
-cd your-install-path/api-client/api/client/samples/
+cd your-clone-path/api-client/api/client/samples/
 
 python quick_start.py
 ```
@@ -24,13 +24,13 @@ python quick_start.py
 Now should be able to find a sample output csv file at:
 
 ```sh
-your-install-path/api-client/api/client/samples/gro_client_output.csv
+your-clone-path/api-client/api/client/samples/gro_client_output.csv
 ```
 
 A more advanced example is [sugar.py](api/client/samples/crop_models/sugar.py)
 
 ```sh
-cd your-install-path/api-client/api/client/samples/crop_models/
+cd your-clone-path/api-client/api/client/samples/crop_models/
 
 python sugar.py
 ```
