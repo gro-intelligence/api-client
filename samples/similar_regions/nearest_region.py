@@ -59,10 +59,10 @@ class SimilarRegion(BatchClient):
 
         return
 
-    def similar_to(self, name, number_of_regions=10, requested_level=None, csv_output=False, search_regions=None):
+    def similar_to(self, region_id, number_of_regions=10, requested_level=None, csv_output=False, search_regions=None):
         """
         Attempt to look up the given name and find similar regions.
-        :param name: name of a region.
+        :param region_id: name of a region.
         :param number_of_regions: number of similar regions to return in the ranked list.
         :param search_regions: the regions to look for neighbours in. specified as a plaintext name
         :return: the closest neighbours as a list in the form
@@ -84,30 +84,24 @@ class SimilarRegion(BatchClient):
         # # Check if search region is contained in available regions
         # if set(search_regions) not in self.state.known_regions:
         #     raise Exception("Requested region(s) are not downloaded. Please call cache_regions()")
-        if type(name) == int:
-            possible_region = {}
-            possible_region["id"] = name
-        else:
-            possible_region = next(self.search_and_lookup("regions", name), False)
 
-            while possible_region and possible_region["level"] != 5:
-                possible_region = next(self.search_and_lookup("regions", name), False)
+        possible_region = {}
+        possible_region["id"] = region_id
 
-            if not possible_region:
-                print("NearestRegionsApp: Region '%s' not found in Gro database." % name)
-                return
+        neighbours, dists = self._similar_to(possible_region["id"], number_of_regions)
 
-            print(possible_region)
+        print("NearestRegionsApp: Nearest regions to '%s' are:" % region_id)
+        print(neighbours)
+
+        return self.format_results(neighbours, requested_level, csv_output, dists)
+
+
+    def format_results(self, neighbours, requested_level, csv_output, dists):
 
         if csv_output:
             level_suffix = "" if not requested_level else "_level_" + str(requested_level)
             f = open("output/" + str(possible_region["id"]) + level_suffix + ".csv", 'wb')
             csv_writer = csv.writer(f, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
-
-        neighbours, dists = self._similar_to(possible_region["id"], number_of_regions)
-
-        print("NearestRegionsApp: Nearest regions to '%s' are:" % name)
-        print(neighbours)
 
         similar_to_return = []
 
@@ -125,8 +119,8 @@ class SimilarRegion(BatchClient):
             district_name = self.lookup("regions", district_id)["name"]
 
             if neighbour_region["level"] != requested_level:
-               self._logger.info("not level %s %s" % (requested_level, district_name))
-               continue
+                self._logger.info("not level %s %s" % (requested_level, district_name))
+                continue
             print(2)
             district_name = self.lookup("regions", district_id)["name"]
             print(3)
@@ -135,7 +129,7 @@ class SimilarRegion(BatchClient):
             if "id" in province and province["id"] != 0:
                 country = next(self.lookup_belongs("regions", province["id"]), {"name": "", "id": ""})
             else:
-                country = {"name": "", "id" : ""}
+                country = {"name": "", "id": ""}
 
             output = [district_name, province["name"], country["name"]]
             output = [unicode(s).encode("utf-8") for s in output]
@@ -150,9 +144,6 @@ class SimilarRegion(BatchClient):
                 csv_writer.writerow(output)
 
         return similar_to_return
-        # except Exception as e:
-        #     print(e)
-        #     print("something broke ?")
 
     def _similar_to(self, region_id, number_of_regions):
         """
@@ -162,9 +153,7 @@ class SimilarRegion(BatchClient):
         :return: regions that are most similar to the given region id(s)
         """
 
-        if region_id not in self.state.known_regions:
-            raise Exception("Not trained on this region. Please add it.")
-            return
+        assert region_id in self.state.known_regions, "Not trained on this region"
 
         # list as an index to preserve dimensionality of returned data
         x = self.state.data_standardized[self.state.district_to_row_idx[region_id], :]
