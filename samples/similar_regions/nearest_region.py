@@ -11,6 +11,7 @@ import transform
 from api.client import BatchClient
 from api.client.lib import get_default_logger
 from similar_region_state import SimilarRegionState
+from region_properties import available_properties
 
 """ API Config """
 API_HOST = 'api.gro-intelligence.com'
@@ -20,12 +21,6 @@ ACCESS_TOKEN = os.environ['GROAPI_TOKEN']
 # How much to weight the lowest weight feature.
 # The features (coefficients for FFT) per metric will be weighted from 1.0 to LOWEST_PERCENTAGE_WEIGHT_FEATURE
 LOWEST_PERCENTAGE_WEIGHT_FEATURE = 0.6
-
-# Frequencies are hardcoded for the time being as a function days.
-frequencies = {
-    1: 1,
-    2: 7
-}
 
 class SimilarRegion(BatchClient):
 
@@ -41,47 +36,6 @@ class SimilarRegion(BatchClient):
         super(SimilarRegion, self).__init__(API_HOST, ACCESS_TOKEN)
         self._logger = get_default_logger()
         self.state = SimilarRegionState()
-
-        # Metrics we have implemented
-        # item metric pair
-        self.available_metrics = {
-            "soil_moisture": {
-                "query": {
-                    'metric_id': 15531082,
-                    'item_id': 7382,
-                    'frequency_id': 1,
-                    'source_id': 43
-                },
-                "properties": {
-                    "num_features": 150,
-                    "longest_period_feature_period": 365
-                }
-            },
-            "land_surface_temperature": {
-                "query": {
-                    'metric_id': 2540047,
-                    'item_id': 3457,
-                    'frequency_id': 1,
-                    'source_id': 26
-                },
-                "properties": {
-                    "num_features": 150,
-                    "longest_period_feature_period": 365
-                }
-            },
-            "rainfall": {
-                "query": {
-                    'metric_id': 2100031,
-                    'item_id': 2039,
-                    'frequency_id': 1,
-                    'source_id': 35
-                },
-                "properties": {
-                    "num_features": 150,
-                    "longest_period_feature_period": 365
-                }
-            }
-        }
 
         # See which regions we wan't to compute over.
         if precache_regions == "ALL":
@@ -255,10 +209,10 @@ class SimilarRegion(BatchClient):
 
             for metric_name in self.state.metrics_to_use:
                 starting_col = self.state.metric_to_col_idx[metric_name]
-                ending_col = starting_col + self.available_metrics[metric_name]["properties"]["num_features"]
+                ending_col = starting_col + available_properties[metric_name]["properties"]["num_features"]
                 self.state.data_standardized[:, starting_col:ending_col] *= self.state.metric_weights[metric_name]
                 # weight higher frequency information less!
-                num_features = self.available_metrics[metric_name]["properties"]["num_features"]
+                num_features = available_properties[metric_name]["properties"]["num_features"]
                 weight_vector = np.arange(1.0,
                                           LOWEST_PERCENTAGE_WEIGHT_FEATURE,
                                           -(1.0-LOWEST_PERCENTAGE_WEIGHT_FEATURE)/float(num_features))
@@ -326,7 +280,7 @@ class SimilarRegion(BatchClient):
             weights = weight
 
         for idx, metric_name in enumerate(metrics):
-            if metric_name not in self.available_metrics:
+            if metric_name not in available_properties:
                 raise Exception("Metric %s not found. Please provide a valid metric." % metric_name)
                 continue
 
@@ -335,7 +289,7 @@ class SimilarRegion(BatchClient):
                                   "to finish downloading data." % metric_name)
                 continue
 
-            num_features = self.available_metrics[metric_name]["properties"]["num_features"]
+            num_features = available_properties[metric_name]["properties"]["num_features"]
             start_idx = self.state.data.shape[1]
             self.state.metric_to_col_idx[metric_name] = start_idx
             end_idx = start_idx + num_features
@@ -378,7 +332,7 @@ class SimilarRegion(BatchClient):
 
         for metric_idx, metric_name in enumerate(self.state.metrics_to_use):
 
-            metric = self.available_metrics[metric_name]["query"]
+            metric = available_properties[metric_name]["query"]
 
             # let's see which data series are available with region being the free variable
             available_series_and_regions = self.list_available({"itemId": metric["item_id"], "metricId": metric["metric_id"]})
@@ -405,14 +359,14 @@ class SimilarRegion(BatchClient):
             data_series = self.get_data_series(**metric)[0]
             start_date = dateparser.parse(data_series["start_date"])
             start_datetime = datetime.combine(start_date, time())
-            period_length_days = frequencies[metric["frequency_id"]]
+            period_length_days = self.lookup('frequencies', metric["frequency_id"])['periodLength']['days']
             end_date = dateparser.parse(data_series["end_date"])
             no_of_points = (end_date - start_date).days / period_length_days
             self._logger.info("Length of data series is %i days" % no_of_points)
-            longest_period_feature_period = self.available_metrics[metric_name]["properties"]["longest_period_feature_period"]
+            longest_period_feature_period = available_properties[metric_name]["properties"]["longest_period_feature_period"]
             start_idx = math.floor(no_of_points / float(longest_period_feature_period))
             self._logger.info("First coef index will be %i" % start_idx)
-            num_features = self.available_metrics[metric_name]["properties"]["num_features"]
+            num_features = available_properties[metric_name]["properties"]["num_features"]
 
             # deep copy the metric for each query.
             queries = []
