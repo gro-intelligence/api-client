@@ -266,6 +266,7 @@ def universal_search(access_token, api_host, search_terms):
   """Search across all entity types for the given terms.  Returns an a
   list of [id, entity_type] pairs, e.g.: [[5604, u'item'], [10204,
   u'item'], [410032, u'metric'], ....]
+  Returned types could include: 'item', 'metric', 'region', 'source'
   """
   url_pieces = ['https:', '', api_host, 'v2/search']
   url = '/'.join(url_pieces)
@@ -279,6 +280,7 @@ def search(access_token, api_host, entity_type, search_terms):
   'regions', performs a search for the given terms. Returns a list of
   dictionaries with individual entities, e.g.: [{u'id': 5604}, {u'id':
   10204}, {u'id': 10210}, ....]
+  Searchable types include: 'item', 'metric', 'region', 'source'
   """
   url = '/'.join(['https:', '', api_host, 'v2/search', entity_type])
   headers = {'authorization': 'Bearer ' + access_token }
@@ -294,6 +296,7 @@ def search_and_lookup(access_token, api_host, entity_type, search_terms):
        'contains': <array of ids of entities that are contained in this one>,
        ....
        <other properties> }
+  Searchable types include: 'item', 'metric', 'region', 'source'
   """
   search_results = search(access_token, api_host, entity_type, search_terms)
   for result in search_results:
