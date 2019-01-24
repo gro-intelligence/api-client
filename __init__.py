@@ -149,7 +149,7 @@ class BatchClient(Client):
                 yield timer
                 logger.debug('Ready to put next')
 
-                if idx % (len(batched_args)//20) == 0 and idx > 0:
+                if len(batched_args) >= 20 and idx % (len(batched_args)//20) == 0 and idx > 0:
                     elapsed = time.time() - lasttime
                     qps = (len(batched_args) // 20) / elapsed
                     logger.info("Downloaded {} of {} items. "
