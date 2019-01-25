@@ -72,7 +72,7 @@ def get_data(url, headers, params=None, logger=None):
     if params is not None:
         params_encode = urlencode(params)
         url = '{url}?{params}'.format(url=url, params=params_encode)
-    http_request = HTTPRequest(url, method="GET", headers=headers, request_timeout=None)
+    http_request = HTTPRequest(url, method="GET", headers=headers, request_timeout=6000, connect_timeout=6000)
     data = yield http_client.fetch(http_request)
     elapsed_time = time.time() - start_time
     log_record = dict(base_log_record)

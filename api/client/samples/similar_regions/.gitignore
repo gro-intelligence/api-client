@@ -2,3 +2,5 @@ saved_states/*
 !saved_states/.gitkeep
 output/*
 !output/.gitkeep
+.cache/*
+!.cache/.gitkeep
