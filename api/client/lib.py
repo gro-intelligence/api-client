@@ -32,12 +32,9 @@ def maybe_async(func):
 
 
 def get_default_logger(name=__name__):
+  logging.basicConfig()
   logger = logging.getLogger(name)
   logger.setLevel(cfg.DEFAULT_LOG_LEVEL)
-  # make sure only root logger has handler
-  if not logger.handlers and name == "":
-    stderr_handler = logging.StreamHandler()
-    logger.addHandler(stderr_handler)
   return logger
 
 
