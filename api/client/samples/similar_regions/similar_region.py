@@ -191,8 +191,6 @@ class SimilarRegion(BatchClient):
 
             query = props["query"]
 
-            self._logger.info("about to download dataseries for metric {}".format(name))
-
             # Let's ask the server what times we have available and use those in post-processing.
             data_series = self.get_data_series(**query)[0]
             start_date = dateparser.parse(data_series["start_date"])
@@ -215,6 +213,8 @@ class SimilarRegion(BatchClient):
                 copy_of_metric["region_id"] = region
                 queries.append(copy_of_metric)
                 map_query_to_data_table.append(self.state.mapping[region])
+
+            self._logger.info("about to download dataseries for {} regions for property {}".format(len(queries), name))
 
             def map_response(idx, _, response):
                 data_table_idx = map_query_to_data_table[idx]
