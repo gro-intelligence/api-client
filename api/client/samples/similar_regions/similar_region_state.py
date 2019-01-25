@@ -76,7 +76,6 @@ class SimilarRegionState(object):
                          data=self.data[name].data,
                          mask=self.data[name].mask,
                          missing=self.missing[name],
-                         mapping=self.mapping,
                          inverse_mapping=self.inverse_mapping)
 
         self._logger.info("done caching of downloaded data.")
@@ -97,14 +96,15 @@ class SimilarRegionState(object):
                 with open(path, 'rb') as f:
                     variables = np.load(f)
                     mutual_regions = set(variables["inverse_mapping"]) & set(self.inverse_mapping)
-                    mutual_regions_mapping = [self.mapping[idx] for idx in mutual_regions]
-                    mutual_regions_old_mapping = [variables["mapping"].item()[idx] for idx in mutual_regions]
+                    mutual_regions_mapping = np.array([self.mapping[idx] for idx in mutual_regions])
+                    old_mapping = {region_idx:idx for (idx,region_idx) in enumerate(variables["inverse_mapping"])}
+                    mutual_regions_old_mapping = [old_mapping[idx] for idx in mutual_regions]
                     self.data[name][mutual_regions_mapping] = variables["data"][mutual_regions_old_mapping]
                     mutual_regions_masked = variables["mask"][mutual_regions_old_mapping]
                     self.data[name][mutual_regions_mapping][mutual_regions_masked] = np.ma.masked
                     mutual_regions_missing = variables["missing"][mutual_regions_old_mapping]
                     self.missing[name][mutual_regions_mapping] = False
-                    self.missing[name][mutual_regions_mapping][mutual_regions_missing] = True
+                    self.missing[name][mutual_regions_mapping[mutual_regions_missing]] = True
                 self._logger.info("loaded {} cached regions for property {}".format(len(mutual_regions), name))
 
         self._logger.info("done checking for cached data")
