@@ -1,11 +1,9 @@
 import csv
 import math
-from Queue import Queue
 import numpy as np
 import os
 from datetime import time, datetime
 import dateparser
-import cPickle as pickle
 from sklearn.neighbors import BallTree
 import transform
 from api.client import BatchClient
@@ -32,7 +30,7 @@ class SimilarRegion(BatchClient):
         """
 
         super(SimilarRegion, self).__init__(API_HOST, ACCESS_TOKEN)
-        self._logger = get_default_logger()
+        self._logger = get_default_logger("SimilarRegion")
 
         if regions_to_compare is None:
             regions_to_compare = self._regions_avail_for_selection(region_properties)
@@ -63,36 +61,34 @@ class SimilarRegion(BatchClient):
             self.state.weight_vector[progress_idx:progress_idx+num_features] = slope_vector
             progress_idx += num_features
 
-    def _format_results(self, neighbours, requested_level, csv_output, dists):
+    def _format_results(self, region_id, neighbours, requested_level, csv_output, dists):
 
         if csv_output:
-            level_suffix = "" if not requested_level else "_level_" + str(requested_level)
-            f = open("output/" + str(possible_region["id"]) + level_suffix + ".csv", 'wb')
+            level_suffix = "" if requested_level is None else "_level_" + str(requested_level)
+            f = open("output/" + str(region_id) + level_suffix + ".csv", 'wb')
             csv_writer = csv.writer(f, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
 
         similar_to_return = []
 
         for ranking, neighbour_id in enumerate(neighbours):
-            print(neighbour_id)
-            # try:
+
             district_id = self.state.inverse_mapping[neighbour_id]
 
-            if np.ma.is_masked(self.state.data[neighbour_id]):
+            if np.ma.is_masked(self.state.data_nonstruc[neighbour_id]):
                 self._logger.info("possible neighbour was masked")
 
             neighbour_region = self.lookup("regions", district_id)
-            print(1)
 
             district_name = self.lookup("regions", district_id)["name"]
 
-            if neighbour_region["level"] != requested_level:
+            if requested_level is not None and neighbour_region["level"] != requested_level:
                 self._logger.info("not level %s %s" % (requested_level, district_name))
                 continue
-            print(2)
+
             district_name = self.lookup("regions", district_id)["name"]
-            print(3)
+
             province = next(self.lookup_belongs("regions", district_id), {"name": ""})
-            print(4)
+
             if "id" in province and province["id"] != 0:
                 country = next(self.lookup_belongs("regions", province["id"]), {"name": "", "id": ""})
             else:
@@ -101,7 +97,7 @@ class SimilarRegion(BatchClient):
             output = [district_name, province["name"], country["name"]]
             output = [unicode(s).encode("utf-8") for s in output]
 
-            print("%s, %s, %s" % (district_name, province["name"], country["name"]))
+            self._logger.info("{}, {}, {}".format(district_name, province["name"], country["name"]))
             data_point = {"id": district_id, "name": district_name, "dist": dists[ranking],
                           "parent": (province["id"], province["name"], country["id"], country["name"])}
 
@@ -152,15 +148,12 @@ class SimilarRegion(BatchClient):
         self._logger.info("standardizing data matrix")
 
         # make a view, then copy from that view...
-        data_view = self.state.data.view(
-            dtype=[('data', 'd', (self.state.num_regions, self.state.tot_num_features))], type=np.ndarray
-        )[0][0]
-        np.copyto(self.state.data_standardized, data_view)
+        np.copyto(self.state.data_standardized, self.state.data_nonstruc)
 
         mean = np.ma.average(self.state.data_standardized, axis=0)
         std = np.ma.std(self.state.data_standardized, axis=0)
 
-        self._logger.info("(mean, std) of data across regions axis are ({}, {})".format(mean, std))
+        self._logger.debug("(mean, std) of data across regions axis are ({}, {})".format(mean, std))
 
         self.state.data_standardized -= mean
         self.state.data_standardized /= std
@@ -178,8 +171,10 @@ class SimilarRegion(BatchClient):
         # += view_of_data_means[self.state.data.mask]
 
         # Center all of these I suppose is the most straightforward solution for now.
-        # TODO: handle missing data properly. above might work.
-        self.state.data_standardized[self.state.data.mask] = 100000.0
+        # TODO: handle missing data properly.
+        #https://math.stackexchange.com/questions/195245/average-distance-between-random-points-on-a-line-segment
+
+        self.state.data_standardized[self.state.data_mask_nonstruc] = 100000.0
 
         self._logger.info("done standardizing data matrix")
 
@@ -279,7 +274,7 @@ class SimilarRegion(BatchClient):
         assert not np.any(self.state.missing_nonstruc)
 
         if self.state.recompute:
-            self._logger.info("Similarities not computed (or reloaded from disk and not saved), computing.")
+            self._logger.info("similarities not computed (or reloaded from disk and not saved), computing.")
             self._compute_similarity_matrix()
 
         # if search_regions:
@@ -292,7 +287,6 @@ class SimilarRegion(BatchClient):
 
         neighbours, dists = self._similar_to(region_id, number_of_regions)
 
-        print("NearestRegionsApp: Nearest regions to '%s' are:" % region_id)
-        print(neighbours)
+        self._logger.info("nearest regions to '{}' are: {}".format(region_id, neighbours))
 
-        return self._format_results(neighbours, requested_level, csv_output, dists)
+        return self._format_results(region_id, neighbours, requested_level, csv_output, dists)
