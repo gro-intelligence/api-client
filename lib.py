@@ -52,7 +52,7 @@ def get_access_token(api_host, user_email, user_password, logger=None):
       logger.debug("Authentication succeeded in get_access_token")
       return json_decode(login.body)['data']['accessToken']
     else:
-      logger.warning("Error in get_access_token: {}".format(get_api_token))
+      logger.warning("Error in get_access_token: {}".format(login.body))
     retry_count += 1
   raise Exception("Giving up on get_access_token after {0} tries.".format(retry_count))
 
