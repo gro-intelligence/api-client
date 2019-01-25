@@ -13,7 +13,7 @@ class SimilarRegionState(object):
     def __init__(self, region_properties, regions_to_compare):
 
         # Some logging... of course.
-        self._logger = api.client.lib.get_default_logger()
+        self._logger = api.client.lib.get_default_logger("SimilarRegionState")
 
         # Some useful metadata
         self.region_properties = region_properties
@@ -27,13 +27,17 @@ class SimilarRegionState(object):
         self.mapping = {region_idx:idx for (idx,region_idx) in enumerate(regions_to_compare)}
         self.inverse_mapping = np.array(regions_to_compare)
 
-        # Data stores
+        # Data stores and views of this data
         structure = [(name, 'd', p["properties"]["num_features"]) for name, p in
                      region_properties.items()]
         structure_bool = [(name, bool) for name, p in
                      region_properties.items()]
         self.data = np.ma.zeros(self.num_regions, dtype=structure)
         self.data[:] = np.ma.masked
+        self.data_nonstruc = self.data.view(
+            dtype=[('data', 'd', (self.num_regions, self.tot_num_features))], type=np.ndarray
+        )[0][0]
+        self.data_mask_nonstruc = self.data.mask.view(dtype=(bool, (self.tot_num_features)))
 
         self._logger.debug("structure of data array entries is {}".format(structure))
         self._logger.debug("structure of missing array entries is {}".format(structure_bool))
@@ -54,6 +58,8 @@ class SimilarRegionState(object):
 
         # The ball tree
         self.ball = None
+
+        self.load()
 
     def save(self):
         """
@@ -83,22 +89,23 @@ class SimilarRegionState(object):
         """
 
         self._logger.info("checking if cached data available.")
-
         # Loop through the metric views...
-        for name in self.data.names:
+        for name in self.region_properties:
             path = os.path.join(CACHE_PATH, "{}.nbz".format(name))
             if os.path.isfile(path):
                 self._logger.info("found cached data for {}, loading...".format(name))
                 with open(path, 'rb') as f:
                     variables = np.load(f)
                     mutual_regions = set(variables["inverse_mapping"]) & set(self.inverse_mapping)
-                    mutual_regions_mapping = self.mapping[mutual_regions]
-                    mutual_regions_old_mapping = variables["mapping"][mutual_regions]
+                    mutual_regions_mapping = [self.mapping[idx] for idx in mutual_regions]
+                    mutual_regions_old_mapping = [variables["mapping"].item()[idx] for idx in mutual_regions]
                     self.data[name][mutual_regions_mapping] = variables["data"][mutual_regions_old_mapping]
                     mutual_regions_masked = variables["mask"][mutual_regions_old_mapping]
                     self.data[name][mutual_regions_mapping][mutual_regions_masked] = np.ma.masked
                     mutual_regions_missing = variables["missing"][mutual_regions_old_mapping]
+                    self.missing[name][mutual_regions_mapping] = False
                     self.missing[name][mutual_regions_mapping][mutual_regions_missing] = True
+                self._logger.info("loaded {} cached regions for property {}".format(len(mutual_regions), name))
 
         self._logger.info("done checking for cached data")
 
