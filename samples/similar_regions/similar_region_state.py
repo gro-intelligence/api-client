@@ -1,149 +1,106 @@
 import numpy as np
 import os
-import cPickle as pickle
 import api.client.lib
+from functools import reduce
 
-SAVED_STATE_PATH = "saved_states/"
+CACHE_PATH = ".cache/"
 
 class SimilarRegionState(object):
     """
-    An object containing all the pickle-able parameters for the state of this SimilarRegion search.
+    Holds and initializes parameters and provide ssaving/loading logic for a similar_region search.
     """
 
-    def __init__(self):
-
-        # List of names of metrics we are using in this comparison. *Must exist in known_metrics*
-        self.metrics_to_use = []
-
-        # List of integers of region ids we are fetching or have data for.
-        self.known_regions = set()
-        # If we don't care, just download everything we can for the given metrics.
-        self.all_regions = False
-
-        # Data stores::
-        # Float array of all processed data for each (metric, region).
-        self.data = np.zeros((0, 0), dtype=float)
-        # Boolean array. True if data for that (metric, region) has been fetched into the data array.
-        self.not_fetched_yet = np.full((0, 0), False, dtype=bool)
-
-        # Standardized versions of this
-        self.data_standardized = np.zeros((0, 0), dtype=float)
-        self.recompute = True
-
-        # Mapping to and from our internal numpy idxs
-        self.district_to_row_idx = {}
-        self.row_idx_to_district = []
-        self.metric_to_col_idx = {}
-        self.metric_data = {}
-
-        # Weights of each metric
-        self.metric_weights = {}
-
-        # The ball tree
-        self.ball = None
+    def __init__(self, region_properties, regions_to_compare):
 
         # Some logging... of course.
         self._logger = api.client.lib.get_default_logger()
 
+        # Some useful metadata
+        self.region_properties = region_properties
+        self.num_regions = len(regions_to_compare)
+        self.num_properties = len(region_properties)
+        self.tot_num_features = reduce(lambda acc, prop: acc + prop["properties"]["num_features"],
+                                       region_properties.values(),
+                                       0)
+
+        # Mapping to and from our internal numpy idxs
+        self.mapping = {region_idx:idx for (idx,region_idx) in enumerate(regions_to_compare)}
+        self.inverse_mapping = np.array(regions_to_compare)
+
+        # Data stores
+        structure = [(name, 'd', p["properties"]["num_features"]) for name, p in
+                     region_properties.items()]
+        structure_bool = [(name, bool) for name, p in
+                     region_properties.items()]
+        self.data = np.ma.zeros(self.num_regions, dtype=structure)
+        self.data[:] = np.ma.masked
+
+        self._logger.debug("structure of data array entries is {}".format(structure))
+        self._logger.debug("structure of missing array entries is {}".format(structure_bool))
+
+        # Boolean array representing any data we haven't yet downloaded.
+        # True if data for that (metric, region) has been fetched into the data array.
+        self.missing = np.full(self.num_regions, True, dtype=structure_bool)
+        self.missing_nonstruc = self.missing.view(
+            dtype=[('missing', bool, (self.num_regions, self.num_properties))], type=np.ndarray
+        )[0][0]
+
+        # Standardized (0-mean,1-std) version of data in a 2d array (without structure/masking nonsense)
+        self.data_standardized = np.zeros((self.num_regions, self.tot_num_features), dtype='d')
+        self.recompute = True
+
+        # Weights of each metric
+        self.weight_vector = np.ones(self.tot_num_features, dtype='d')
+
+        # The ball tree
+        self.ball = None
+
     def save(self):
         """
-        Save state to disk.
-        :return: True if succeeded.
-        """
-        mod_time = 0
-
-        if os.path.isfile(SAVED_STATE_PATH + "state.pickle"):
-            # Let's not delete anything, but rather move it.
-            mod_time = os.path.getmtime(SAVED_STATE_PATH + "state.pickle")
-            os.rename(SAVED_STATE_PATH + "state.pickle", SAVED_STATE_PATH + "state_%i.pickle" % mod_time)
-
-        if os.path.isfile(SAVED_STATE_PATH + "state_data.npy"):
-            mod_time = mod_time if mod_time != 0 else os.path.getmtime(SAVED_STATE_PATH + "state_data.npy")
-            os.rename(SAVED_STATE_PATH + "state_data.npy", SAVED_STATE_PATH + "state_data_%i.npy" % mod_time)
-
-        if os.path.isfile(SAVED_STATE_PATH + "state_data_mask.npy"):
-            mod_time = mod_time if mod_time != 0 else os.path.getmtime(SAVED_STATE_PATH + "state_data_mask.npy")
-            os.rename(SAVED_STATE_PATH + "state_data_mask.npy", SAVED_STATE_PATH + "state_data_mask_%i.npy" % mod_time)
-
-        self._logger.info("Saving state to pickle and npy.")
-
-        logger_temp = self._logger
-        del self._logger
-
-        # put the data folder into an npy
-        with open(SAVED_STATE_PATH + "state_data.npy", 'wb') as f:
-            np.save(f, self.data.data)
-
-        with open(SAVED_STATE_PATH + "state_data_mask.npy", 'wb') as f:
-            np.save(f, self.data.mask)
-
-        # we save these in temporary variables in the local scope to allow deletion of them
-        # from the class variables during saving, as we want to save the state in different places.
-        data_standardized_temp = self.data_standardized
-        data_temp = self.data
-        ball_temp = self.ball
-        metric_data_temp = self.metric_data
-
-        del self.data_standardized
-        del self.data
-        del self.ball
-        del self.metric_data
-
-        with open(SAVED_STATE_PATH + "state.pickle", 'wb') as f:
-            pickle.dump(self.__dict__, f)
-
-        # put everything back!
-        self._logger = logger_temp
-        self.data_standardized = data_standardized_temp
-        self.data = data_temp
-        self.ball = ball_temp
-        self.metric_data = metric_data_temp
-
-        self._logger.info("Saved state to state.pickle.")
-
-        return True
-
-    def load(self, path = SAVED_STATE_PATH):
-        """
-        Load state from disk.
+        Cache the current state to disk.
         :return: True if succeeded.
         """
 
-        path_to_pickle = path + "state.pickle"
+        self._logger.info("starting caching of downloaded data.")
 
-        if not os.path.isfile(path_to_pickle):
-            raise Exception("Can't find saved state.")
+        # Loop through the metric views...
+        for name in self.region_properties:
+            with open(os.path.join(CACHE_PATH, "{}.nbz".format(name)), 'wb') as f:
+                np.savez(f,
+                         data=self.data[name].data,
+                         mask=self.data[name].mask,
+                         missing=self.missing[name],
+                         mapping=self.mapping,
+                         inverse_mapping=self.inverse_mapping)
 
-        self._logger.info("Loading state from pickle.")
+        self._logger.info("done caching of downloaded data.")
 
-        with open(path_to_pickle, 'rb') as f:
-            tmp_dict = pickle.load(f)
+        return
 
-        self.__dict__.update(tmp_dict)
+    def load(self):
+        """
+        Attempt to load any cached information and merge it into our current data situation.
+        """
 
-        with open(path + "state_data.npy", 'rb') as f:
-            data_temp = np.load(f)
+        self._logger.info("checking if cached data available.")
 
-        with open(path + "state_data_mask.npy", 'rb') as f:
-            data_mask_temp = np.load(f)
+        # Loop through the metric views...
+        for name in self.data.names:
+            path = os.path.join(CACHE_PATH, "{}.nbz".format(name))
+            if os.path.isfile(path):
+                self._logger.info("found cached data for {}, loading...".format(name))
+                with open(path, 'rb') as f:
+                    variables = np.load(f)
+                    mutual_regions = set(variables["inverse_mapping"]) & set(self.inverse_mapping)
+                    mutual_regions_mapping = self.mapping[mutual_regions]
+                    mutual_regions_old_mapping = variables["mapping"][mutual_regions]
+                    self.data[name][mutual_regions_mapping] = variables["data"][mutual_regions_old_mapping]
+                    mutual_regions_masked = variables["mask"][mutual_regions_old_mapping]
+                    self.data[name][mutual_regions_mapping][mutual_regions_masked] = np.ma.masked
+                    mutual_regions_missing = variables["missing"][mutual_regions_old_mapping]
+                    self.missing[name][mutual_regions_mapping][mutual_regions_missing] = True
 
-        self.data = np.ma.array(data_temp)
-        self.data[data_mask_temp] = np.ma.masked
+        self._logger.info("done checking for cached data")
 
-        self._construct_metric_data_views()
+        return
 
-        self._logger.info("Done loading state from %s" % path_to_pickle)
-
-        return True
-
-    def _construct_metric_data_views(self):
-
-        self.metric_data = {}
-
-        for idx, metric_name in enumerate(self.metrics_to_use):
-            start_idx = self.metric_to_col_idx[metric_name]
-            if idx + 1 < len(self.metrics_to_use):
-                end_idx = self.metric_to_col_idx[self.metrics_to_use[idx + 1]]
-                self.metric_data[metric_name] = self.data[:, start_idx:end_idx]
-            else:
-                self.metric_data[metric_name] = self.data[:, start_idx:]

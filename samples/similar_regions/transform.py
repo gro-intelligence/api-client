@@ -132,7 +132,7 @@ class Imputation(Transformer):
 
 # Other transformers
 
-def _post_process_timeseries(no_of_points, start_datetime, time_series, start_idx, no_features, period_length_days=1):
+def post_process_timeseries(no_of_points, start_datetime, time_series, start_idx, no_features, period_length_days=1):
 
     dataset_imputed, coverage = _impute(no_of_points, period_length_days, start_datetime, time_series)
 

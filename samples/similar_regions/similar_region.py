@@ -32,13 +32,13 @@ class SimilarRegion(BatchClient):
         """
 
         super(SimilarRegion, self).__init__(API_HOST, ACCESS_TOKEN)
+        self._logger = get_default_logger()
 
         if regions_to_compare is None:
             regions_to_compare = self._regions_avail_for_selection(region_properties)
 
-        self._logger = get_default_logger()
         self.state = SimilarRegionState(region_properties, regions_to_compare)
-        self._generate_weight_vector()
+        self._generate_weight_vector(region_properties)
 
         return
 
@@ -46,7 +46,8 @@ class SimilarRegion(BatchClient):
         regions = set()
         for props in region_properties.values():
             regions |= set([item["region_id"] for item in self.list_available(props["query"])])
-        return regions
+        self._logger.info("{} regions are available for comparison.".format(len(regions)))
+        return list(regions)
 
     def _generate_weight_vector(self, region_properties):
         # generate weight vector (with decreasing weights if enabled)
@@ -153,13 +154,13 @@ class SimilarRegion(BatchClient):
         # make a view, then copy from that view...
         data_view = self.state.data.view(
             dtype=[('data', 'd', (self.state.num_regions, self.state.tot_num_features))], type=np.ndarray
-        )[0]
+        )[0][0]
         np.copyto(self.state.data_standardized, data_view)
 
         mean = np.ma.average(self.state.data_standardized, axis=0)
         std = np.ma.std(self.state.data_standardized, axis=0)
 
-        self.logger.info("(mean, std) of data across regions axis are ({}, {})".format(mean, std))
+        self._logger.info("(mean, std) of data across regions axis are ({}, {})".format(mean, std))
 
         self.state.data_standardized -= mean
         self.state.data_standardized /= std
@@ -195,7 +196,7 @@ class SimilarRegion(BatchClient):
 
             query = props["query"]
 
-            self._logger.info("about to download dataseries for metric %s".format(name))
+            self._logger.info("about to download dataseries for metric {}".format(name))
 
             # Let's ask the server what times we have available and use those in post-processing.
             data_series = self.get_data_series(**query)[0]
@@ -204,25 +205,23 @@ class SimilarRegion(BatchClient):
             period_length_days = self.lookup('frequencies', query["frequency_id"])['periodLength']['days']
             end_date = dateparser.parse(data_series["end_date"])
             no_of_points = (end_date - start_date).days / period_length_days
-            self._logger.info("Length of data series is %i days" % no_of_points)
+            self._logger.info("length of data series is {} days".format(no_of_points))
             longest_period_feature_period = props["properties"]["longest_period_feature_period"]
             start_idx = math.floor(no_of_points / float(longest_period_feature_period))
-            self._logger.info("First coef index will be %i" % start_idx)
+            self._logger.info("first coef index will be {}".format(start_idx))
             num_features = props["properties"]["num_features"]
 
             # deep copy the metric for each query.
             queries = []
             map_query_to_data_table = []
-            for region in self.state.mapping:
+
+            for region in self.state.inverse_mapping[self.state.missing[name]]:
                 copy_of_metric = dict(query)
                 copy_of_metric["region_id"] = region
                 queries.append(copy_of_metric)
                 map_query_to_data_table.append(self.state.mapping[region])
 
-            #TO DO: REMOVE THIS for small queries
-            #queries = queries[0:100]
-
-            def map_response(idx, query, response):
+            def map_response(idx, _, response):
                 data_table_idx = map_query_to_data_table[idx]
                 save_counter = when_to_save_counter
 
@@ -232,20 +231,21 @@ class SimilarRegion(BatchClient):
                     # flag this as invalid.
                     self.state.data[name][data_table_idx] = np.ma.masked
                 else:
-                    # TODO remove out_scope start_datetime here once we have "addNulls" on the server
-                    result, coverage = transform._post_process_timeseries(no_of_points, start_datetime, response,
+                    # TODO: remove start_datetime stuff here once we have "addNulls" on the server
+                    result, coverage = transform.post_process_timeseries(no_of_points, start_datetime, response,
                                                                           start_idx, num_features,
                                                                           period_length_days=period_length_days)
+
                     # if there are less points than there are in our lowest period event, let's discard this...
                     if coverage < 1/float(start_idx):
                         self.state.data[name][data_table_idx] = 0.0
                         # flag this as invalid.
                         self.state.data[name][data_table_idx] = np.ma.masked
                     else:
-                        self.state.data[name][name][data_table_idx] = result
+                        self.state.data[name][data_table_idx] = result
 
                 # Mark this as downloaded.
-                self.state.missing[name][name][data_table_idx] = False
+                self.state.missing[name][data_table_idx] = False
                 save_counter[0] += 1
 
                 # Save this every 10,000 items downloaded.
@@ -273,10 +273,10 @@ class SimilarRegion(BatchClient):
         [{id: 123, name: "abc", distance: 1.23, parent_regions: [{"abc"456, 789]
         """
 
-        if np.any(self.state.missing):
+        if np.any(self.state.missing_nonstruc):
             self._cache_regions()
 
-        assert not np.any(self.state.missing)
+        assert not np.any(self.state.missing_nonstruc)
 
         if self.state.recompute:
             self._logger.info("Similarities not computed (or reloaded from disk and not saved), computing.")
