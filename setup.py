@@ -8,7 +8,7 @@ with open("requirements.txt", "r") as requirements_file:
 
 setuptools.setup(
     name = "gro",
-    version = "1.0.0",
+    version = "1.15.1",
     description = "Python client library for accessing Gro Intelligence's agriculture data platform",
     long_description = long_description,
     long_description_content_type = "text/markdown",
