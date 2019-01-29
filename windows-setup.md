@@ -8,44 +8,27 @@
 
 Now, proceed below using Powershell.
 
-## Clone the library
+## Install the package and CLI
 
 ```sh
-mkdir ~/gro
-
-cd ~/gro
-
-git clone https://github.com/gro-intelligence/api-client.git
-```
-
-## Add the library to PYTHONPATH
-
-```sh
-$env:PYTHONPATH = "$env:USERPROFILE\gro\api-client;$env:PYTHONPATH"
-```
-
-## Install dependencies
-
-Note these requirements are for the sample code. You may need more or fewer for your specific application.
-
-```sh
-cd ~/gro/api-client/api/client
-
-pip install -r requirements.txt
+pip install git+https://github.com/gro-intelligence/api-client.git
 ```
 
 ## Get an authorization token
 
-```sh
-cd ~/gro/api-client/api/client
+You can use the gro command line tool to request an authentication token, as in the below example. Note that you will be prompted to enter a password.
 
-python gro_client.py --user_email='email@example.com'  --print_token
+```sh
+gro --user_email='email@example.com' --print_token
 ```
 
-Copy and paste this token into this command
+In the example code, it is assumed that you have the token saved to your environment variables as GROAPI_TOKEN. You can do that like so:
 
 ```sh
 $env:GROAPI_TOKEN = "TOKEN_FROM_PREVIOUS_COMMAND"
 ```
 
-Note that these environment variables *do not persist* when opening new Powershell sessions. For repeated use, you likely want to save PYTHONPATH and GROAPI_TOKEN as permanent environment variables.
+Two notes on authentication tokens:
+
+1. Note that these environment variables *do not persist* when opening new Powershell sessions. For repeated use, you likely want to save GROAPI_TOKEN as a permanent environment variable.
+2. Authentication tokens *are subject to expire* though not very often. So if you do save yours elsewhere, you can add robustness to your application by falling back to api.client.lib.get_access_token() to get a new one if your previous one has expired.
