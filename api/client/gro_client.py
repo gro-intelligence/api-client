@@ -14,7 +14,7 @@ import pandas
 import api.client.lib
 
 
-API_HOST = 'api.gro-intelligence.com'
+API_HOST = 'apidev11201.gro-intelligence.com'
 OUTPUT_FILENAME = 'gro_client_output.csv'
 
 
