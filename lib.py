@@ -25,7 +25,7 @@ def get_access_token(api_host, user_email, user_password, logger=None):
   if not logger:
     logger = get_default_logger()
   while retry_count < MAX_RETRIES:
-    get_api_token = requests.post('https://' + api_host + '/api-token',
+    get_api_token = requests.post('http://' + api_host + '/api-token',
                           data = {"email": user_email, "password": user_password})
     if get_api_token.status_code == 200:
       logger.debug("Authentication succeeded in get_access_token")
@@ -68,7 +68,7 @@ def get_available(access_token, api_host, entity_type):
     'regions', returns a JSON dict with the list of available entities
     of the given type.
     """
-  url = '/'.join(['https:', '', api_host, 'v2', entity_type])
+  url = '/'.join(['http:', '', api_host, 'v2', entity_type])
   headers = {'authorization': 'Bearer ' + access_token}
   resp = get_data(url, headers)
   return resp.json()['data']
@@ -81,7 +81,7 @@ def list_available(access_token, api_host, selected_entities):
   item_id: ..., metric_id: ... , region_id: ... ,} for which data
   series are available which satisfy the input selection.
   """
-  url = '/'.join(['https:', '', api_host, 'v2/entities/list'])
+  url = '/'.join(['http:', '', api_host, 'v2/entities/list'])
   headers = {'authorization': 'Bearer ' + access_token}
   params = dict(map(lambda (key, value): (snake_to_camel(key), value),
                     selected_entities.items()))
@@ -97,7 +97,7 @@ def lookup(access_token, api_host, entity_type, entity_id):
   'regions', 'units', or 'sources', returns a JSON dict with the
   list of available entities of the given type.
   """
-  url = '/'.join(['https:', '', api_host, 'v2', entity_type, str(entity_id)])
+  url = '/'.join(['http:', '', api_host, 'v2', entity_type, str(entity_id)])
   headers = {'authorization': 'Bearer ' + access_token}
   resp = get_data(url, headers)
   try:
@@ -151,7 +151,7 @@ def get_data_series(access_token, api_host, **selection):
   source_id, partner_region_id. Additional arguments are allowed and
   ignored.
   """
-  url = '/'.join(['https:', '', api_host, 'v2/data_series/list'])
+  url = '/'.join(['http:', '', api_host, 'v2/data_series/list'])
   headers = {'authorization': 'Bearer ' + access_token}
   params = get_params_from_selection(**selection)
   resp = get_data(url, headers, params)
@@ -181,7 +181,7 @@ def rank_series_by_source(access_token, api_host, series_list):
                         )
 
   for series in map(dict, selections_sorted):
-    url = '/'.join(['https:', '', api_host, 'v2/available/sources'])
+    url = '/'.join(['http:', '', api_host, 'v2/available/sources'])
     headers = {'authorization': 'Bearer ' + access_token}
     params = dict((k + 's', v)
                   for k, v in get_params_from_selection(**series).iteritems())
@@ -241,7 +241,7 @@ def get_crop_calendar_data_points(access_token, api_host, **selection):
   get_data_points().
   """
   headers = {'authorization': 'Bearer ' + access_token }
-  url = '/'.join(['https:', '', api_host, 'v2/cropcalendar/data'])
+  url = '/'.join(['http:', '', api_host, 'v2/cropcalendar/data'])
   params = get_crop_calendar_params(**selection)
   resp = get_data(url, headers, params)
   return format_crop_calendar_response(resp.json())
@@ -256,7 +256,7 @@ def get_data_points(access_token, api_host, **selection):
     return get_crop_calendar_data_points(access_token, api_host, **selection)
 
   headers = {'authorization': 'Bearer ' + access_token }
-  url = '/'.join(['https:', '', api_host, 'v2/data'])
+  url = '/'.join(['http:', '', api_host, 'v2/data'])
   params = get_data_call_params(**selection)
   resp = get_data(url, headers, params)
   return resp.json()
@@ -267,7 +267,7 @@ def universal_search(access_token, api_host, search_terms):
   list of [id, entity_type] pairs, e.g.: [[5604, u'item'], [10204,
   u'item'], [410032, u'metric'], ....]
   """
-  url_pieces = ['https:', '', api_host, 'v2/search']
+  url_pieces = ['http:', '', api_host, 'v2/search']
   url = '/'.join(url_pieces)
   headers = {'authorization': 'Bearer ' + access_token }
   resp = get_data(url, headers, {'q': search_terms})
@@ -280,7 +280,7 @@ def search(access_token, api_host, entity_type, search_terms):
   dictionaries with individual entities, e.g.: [{u'id': 5604}, {u'id':
   10204}, {u'id': 10210}, ....]
   """
-  url = '/'.join(['https:', '', api_host, 'v2/search', entity_type])
+  url = '/'.join(['http:', '', api_host, 'v2/search', entity_type])
   headers = {'authorization': 'Bearer ' + access_token }
   resp = get_data(url, headers, {'q': search_terms})
   return resp.json()
@@ -305,7 +305,7 @@ def lookup_belongs(access_token, api_host, entity_type, entity_id):
   'regions', and id, generates a list of JSON dicts of entities it
   belongs to.
   """
-  url = '/'.join(['https:', '', api_host, 'v2', entity_type, 'belongs-to'])
+  url = '/'.join(['http:', '', api_host, 'v2', entity_type, 'belongs-to'])
   params = { 'ids': str(entity_id) }
   headers = {'authorization': 'Bearer ' + access_token}
   resp = get_data(url, headers, params)
@@ -314,7 +314,7 @@ def lookup_belongs(access_token, api_host, entity_type, entity_id):
 
 def get_geo_centre(access_token, api_host, region_id):
   """Given a region ID, returns the geographic centre in degrees lat/lon."""
-  url = '/'.join(['https:', '', api_host, 'v2/geocentres?regionIds=' + str(region_id)])
+  url = '/'.join(['http:', '', api_host, 'v2/geocentres?regionIds=' + str(region_id)])
   headers = {'authorization': 'Bearer ' + access_token}
   resp = get_data(url, headers)
   return resp.json()["data"]
