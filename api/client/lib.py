@@ -45,17 +45,14 @@ def get_access_token(api_host, user_email, user_password, logger=None):
   retry_count = 0
   if not logger:
     logger = get_default_logger()
-  while retry_count < cfg.MAX_RETRIES:
-    body = "email=%s&password=%s" % (user_email, user_password)
-    login_request = HTTPRequest('https://' + api_host + '/login',
-                                method="POST",
-                                body=body)
-    login = IOLoop.current().run_sync(functools.partial(http_client.fetch, login_request))
-    if login.code == 200:
+  while retry_count < MAX_RETRIES:
+    get_api_token = requests.post('https://' + api_host + '/api-token',
+                          data = {"email": user_email, "password": user_password})
+    if get_api_token.status_code == 200:
       logger.debug("Authentication succeeded in get_access_token")
-      return json_decode(login.body)['data']['accessToken']
+      return get_api_token.json()['data']['accessToken']
     else:
-      logger.warning("Error in get_access_token: {}".format(login))
+      logger.warning("Error in get_access_token: {}".format(get_api_token))
     retry_count += 1
   raise Exception("Giving up on get_access_token after {0} tries.".format(retry_count))
 
