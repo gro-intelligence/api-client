@@ -1,9 +1,7 @@
-import sys
-# sys.path.append('../../')
-import api.client.lib
 import unittest
 
-from api.client import Client, BatchClient
+from api.client import Client
+from api.client.batch_client import BatchClient
 
 
 class MyTestCase(unittest.TestCase):

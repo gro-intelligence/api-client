@@ -1,40 +1,22 @@
-import functools
 import logging
+import requests
+import sys
 import time
-
-from tornado import gen
-from tornado.httpclient import AsyncHTTPClient, HTTPRequest
-from tornado.ioloop import IOLoop
-from tornado.escape import json_decode
-
-# API Client config options have moved to cfg.py
-import cfg
-
-#Python3 support
-try:
-    # Python3
-    from urllib.parse import urlencode
-except ImportError:
-    # Python2
-    from urllib import urlencode
-http_client = AsyncHTTPClient()
-
-def maybe_async(func):
-    def wrapper(*args, **kwargs):
-        if cfg.ASYNC:
-            return gen.coroutine(func)(*args, **kwargs)
-        else:
-            cfg.ASYNC = True
-            result = IOLoop.current().run_sync(functools.partial(gen.coroutine(func), *args, **kwargs))
-            cfg.ASYNC = False
-            return result
-    return wrapper
+from datetime import datetime
 
 
-def get_default_logger(name=__name__):
-  logging.basicConfig()
-  logger = logging.getLogger(name)
-  logger.setLevel(cfg.DEFAULT_LOG_LEVEL)
+MAX_RETRIES = 4
+DEFAULT_LOG_LEVEL=logging.INFO  # change to DEBUG for more detail
+
+CROP_CALENDAR_METRIC_ID = 2260063
+
+
+def get_default_logger():
+  logger = logging.getLogger(__name__)
+  logger.setLevel(DEFAULT_LOG_LEVEL)
+  if not logger.handlers:
+    stderr_handler = logging.StreamHandler()
+    logger.addHandler(stderr_handler)
   return logger
 
 
@@ -42,21 +24,18 @@ def get_access_token(api_host, user_email, user_password, logger=None):
   retry_count = 0
   if not logger:
     logger = get_default_logger()
-  while retry_count < cfg.MAX_RETRIES:
-    body = "email=%s&password=%s" % (user_email, user_password)
-    login_request = HTTPRequest('https://' + api_host + '/login',
-                                method="POST",
-                                body=body)
-    login = IOLoop.current().run_sync(functools.partial(http_client.fetch, login_request))
-    if login.code == 200:
+  while retry_count < MAX_RETRIES:
+    get_api_token = requests.post('https://' + api_host + '/api-token',
+                          data = {"email": user_email, "password": user_password})
+    if get_api_token.status_code == 200:
       logger.debug("Authentication succeeded in get_access_token")
-      return json_decode(login.body)['data']['accessToken']
+      return get_api_token.json()['data']['accessToken']
     else:
       logger.warning("Error in get_access_token: {}".format(login.body))
     retry_count += 1
   raise Exception("Giving up on get_access_token after {0} tries.".format(retry_count))
 
-@maybe_async
+
 def get_data(url, headers, params=None, logger=None):
   """General 'make api request' function. Assigns headers and builds in retries and logging."""
   base_log_record = dict(route=url, params=params)
@@ -64,30 +43,26 @@ def get_data(url, headers, params=None, logger=None):
   if not logger:
     logger = get_default_logger()
   logger.debug(url)
-  while retry_count < cfg.MAX_RETRIES:
+  while retry_count < MAX_RETRIES:
     start_time = time.time()
-    if params is not None:
-        params_encode = urlencode(params)
-        url = '{url}?{params}'.format(url=url, params=params_encode)
-    http_request = HTTPRequest(url, method="GET", headers=headers, request_timeout=6000, connect_timeout=6000)
-    data = yield http_client.fetch(http_request)
+    data = requests.get(url, params=params, headers=headers, timeout=None)
     elapsed_time = time.time() - start_time
     log_record = dict(base_log_record)
     log_record['elapsed_time_in_ms'] = 1000 * elapsed_time
     log_record['retry_count'] = retry_count
-    log_record['status_code'] = data.code
-    if data.code == 200:
+    log_record['status_code'] = data.status_code
+    if data.status_code == 200:
       logger.debug('OK', extra=log_record)
-      raise gen.Return(data.body)
+      return data
     retry_count += 1
     log_record['tag'] = 'failed_gro_api_request'
-    if retry_count < cfg.MAX_RETRIES:
+    if retry_count < MAX_RETRIES:
       logger.warning(data.text, extra=log_record)
     else:
       logger.error(data.text, extra=log_record)
   raise Exception('Giving up on {} after {} tries. Error is: {}.'.format(url, retry_count, data.text))
 
-@maybe_async
+
 def get_available(access_token, api_host, entity_type):
   """Given an entity_type, which is one of 'items', 'metrics',
     'regions', returns a JSON dict with the list of available entities
@@ -95,10 +70,10 @@ def get_available(access_token, api_host, entity_type):
     """
   url = '/'.join(['https:', '', api_host, 'v2', entity_type])
   headers = {'authorization': 'Bearer ' + access_token}
-  resp = yield get_data(url, headers)
-  raise gen.Return(json_decode(resp)['data'])
+  resp = get_data(url, headers)
+  return resp.json()['data']
 
-@maybe_async
+
 def list_available(access_token, api_host, selected_entities):
   """List available entities given some selected entities. Given a dict
   of selected entity ids of the form { <entity_type>: <entity_id>,
@@ -108,15 +83,15 @@ def list_available(access_token, api_host, selected_entities):
   """
   url = '/'.join(['https:', '', api_host, 'v2/entities/list'])
   headers = {'authorization': 'Bearer ' + access_token}
-  params = dict(map(lambda kv: (snake_to_camel(kv[0]), kv[1]),
+  params = dict(map(lambda (key, value): (snake_to_camel(key), value),
                     selected_entities.items()))
-  resp = yield get_data(url, headers, params)
+  resp = get_data(url, headers, params)
   try:
-    raise gen.Return(json_decode(resp)['data'])
+    return resp.json()['data']
   except KeyError as e:
     raise Exception(resp.text)
 
-@maybe_async
+
 def lookup(access_token, api_host, entity_type, entity_id):
   """Given an entity_type, which is one of 'items', 'metrics',
   'regions', 'units', or 'sources', returns a JSON dict with the
@@ -124,9 +99,9 @@ def lookup(access_token, api_host, entity_type, entity_id):
   """
   url = '/'.join(['https:', '', api_host, 'v2', entity_type, str(entity_id)])
   headers = {'authorization': 'Bearer ' + access_token}
-  resp = yield get_data(url, headers)
+  resp = get_data(url, headers)
   try:
-    raise gen.Return(json_decode(resp)['data'])
+    return resp.json()['data']
   except KeyError as e:
     raise Exception(resp.text)
 
@@ -170,7 +145,6 @@ def get_data_call_params(**selection):
   return params
 
 
-@maybe_async
 def get_data_series(access_token, api_host, **selection):
   """Get data series records for the given selection of entities.  which
   is some or all of: item_id, metric_id, region_id, frequency_id,
@@ -180,9 +154,9 @@ def get_data_series(access_token, api_host, **selection):
   url = '/'.join(['https:', '', api_host, 'v2/data_series/list'])
   headers = {'authorization': 'Bearer ' + access_token}
   params = get_params_from_selection(**selection)
-  resp = yield get_data(url, headers, params)
+  resp = get_data(url, headers, params)
   try:
-    raise gen.Return(json_decode(resp)['data'])
+    return resp.json()['data']
   except KeyError as e:
     raise Exception(resp.text)
 
@@ -200,7 +174,7 @@ def rank_series_by_source(access_token, api_host, series_list):
   selections_sorted = set(
                           tuple(
                               sorted(
-                                filter(lambda kv: kv[0] != 'source_id', single_series.iteritems()),
+                                filter(lambda (k, v): k != 'source_id', single_series.iteritems()),
                                 key=lambda x: x[0]
                               )
                           ) for single_series in series_list
@@ -211,7 +185,7 @@ def rank_series_by_source(access_token, api_host, series_list):
     headers = {'authorization': 'Bearer ' + access_token}
     params = dict((k + 's', v)
                   for k, v in get_params_from_selection(**series).iteritems())
-    source_ids = json_decode(get_data(url, headers, params))
+    source_ids = get_data(url, headers, params).json()
     for source_id in source_ids:
       # Make a copy to avoid passing the same reference each time.
       series_with_source = dict(series)
@@ -261,7 +235,6 @@ def format_crop_calendar_response(resp):
         })
   return points
 
-@maybe_async
 def get_crop_calendar_data_points(access_token, api_host, **selection):
   """Helper function for getting crop calendar data. Has different input/output from the regular
   /v2/data call, so this normalizes the interface and output format to make compatible
@@ -270,28 +243,25 @@ def get_crop_calendar_data_points(access_token, api_host, **selection):
   headers = {'authorization': 'Bearer ' + access_token }
   url = '/'.join(['https:', '', api_host, 'v2/cropcalendar/data'])
   params = get_crop_calendar_params(**selection)
-  resp = yield get_data(url, headers, params)
-  raise gen.Return(format_crop_calendar_response(json_decode(resp)))
+  resp = get_data(url, headers, params)
+  return format_crop_calendar_response(resp.json())
 
 
-@maybe_async
 def get_data_points(access_token, api_host, **selection):
   """Get all the data points for a given selection, which is some or all
   of: item_id, metric_id, region_id, frequency_id, source_id,
   partner_region_id. Additional arguments are allowed and ignored.
   """
-  if selection['metric_id'] == cfg.CROP_CALENDAR_METRIC_ID:
-    crop_calendar_values = yield get_crop_calendar_data_points(access_token, api_host, **selection)
-    raise gen.Return(crop_calendar_values)
+  if(selection['metric_id'] == CROP_CALENDAR_METRIC_ID):
+    return get_crop_calendar_data_points(access_token, api_host, **selection)
 
   headers = {'authorization': 'Bearer ' + access_token }
   url = '/'.join(['https:', '', api_host, 'v2/data'])
   params = get_data_call_params(**selection)
-  resp = yield get_data(url, headers, params)
-  raise gen.Return(json_decode(resp))
+  resp = get_data(url, headers, params)
+  return resp.json()
 
 
-@maybe_async
 def universal_search(access_token, api_host, search_terms):
   """Search across all entity types for the given terms.  Returns an a
   list of [id, entity_type] pairs, e.g.: [[5604, u'item'], [10204,
@@ -300,11 +270,10 @@ def universal_search(access_token, api_host, search_terms):
   url_pieces = ['https:', '', api_host, 'v2/search']
   url = '/'.join(url_pieces)
   headers = {'authorization': 'Bearer ' + access_token }
-  resp = yield get_data(url, headers, {'q': search_terms})
-  raise gen.Return(json_decode(resp))
+  resp = get_data(url, headers, {'q': search_terms})
+  return resp.json()
 
 
-@maybe_async
 def search(access_token, api_host, entity_type, search_terms):
   """Given an entity_type, which is one of 'items', 'metrics',
   'regions', performs a search for the given terms. Returns a list of
@@ -313,8 +282,8 @@ def search(access_token, api_host, entity_type, search_terms):
   """
   url = '/'.join(['https:', '', api_host, 'v2/search', entity_type])
   headers = {'authorization': 'Bearer ' + access_token }
-  resp = yield get_data(url, headers, {'q': search_terms})
-  raise gen.Return(json_decode(resp))
+  resp = get_data(url, headers, {'q': search_terms})
+  return resp.json()
 
 
 def search_and_lookup(access_token, api_host, entity_type, search_terms):
@@ -334,25 +303,18 @@ def search_and_lookup(access_token, api_host, entity_type, search_terms):
 def lookup_belongs(access_token, api_host, entity_type, entity_id):
   """Given an entity_type, which is one of 'items', 'metrics',
   'regions', and id, generates a list of JSON dicts of entities it
-  belongs to. Else generator just returns.
+  belongs to.
   """
   url = '/'.join(['https:', '', api_host, 'v2', entity_type, 'belongs-to'])
-  params = {'ids': str(entity_id)}
+  params = { 'ids': str(entity_id) }
   headers = {'authorization': 'Bearer ' + access_token}
   resp = get_data(url, headers, params)
-  parent_entities = json_decode(resp).get('data').get(str(entity_id))
-
-  if parent_entities is None:
-      return
-
-  for parent_entity_id in json_decode(resp).get('data').get(str(entity_id)):
+  for parent_entity_id in resp.json().get('data').get(str(entity_id)):
     yield lookup(access_token, api_host, entity_type, parent_entity_id)
 
-
-@maybe_async
 def get_geo_centre(access_token, api_host, region_id):
   """Given a region ID, returns the geographic centre in degrees lat/lon."""
   url = '/'.join(['https:', '', api_host, 'v2/geocentres?regionIds=' + str(region_id)])
   headers = {'authorization': 'Bearer ' + access_token}
-  resp = yield get_data(url, headers)
-  raise gen.Return(json_decode(resp)["data"])
+  resp = get_data(url, headers)
+  return resp.json()["data"]
