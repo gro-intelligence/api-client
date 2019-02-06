@@ -1,8 +1,6 @@
 import argparse
 import os
-import unicodecsv
 import api.client as gro_client
-
 
 ENV = 'dev'
 
@@ -24,7 +22,9 @@ API_HOST = API_HOSTS[ENV]
 ACCESS_TOKEN = ACCESS_TOKENS[ENV]
 
 MAX_NUM_RESULTS = 20
-def run_universal_test():
+
+
+def run_universal_search_test():
     print "RUNNING 'universal' SEARCH"
     while True:
         print '\n\n-------------------------'
@@ -36,7 +36,6 @@ def run_universal_test():
                 result[1],
                 gro_client.lib.lookup(ACCESS_TOKEN, API_HOST, result[1]+'s',
                                       result[0])['name'].encode('utf-8'))
-
 
 def run_search_by_type_test(entity_type):
     type_formatted = entity_type if entity_type[-1] == 's' else entity_type+'s'
@@ -53,12 +52,11 @@ def run_search_by_type_test(entity_type):
             if count >= MAX_NUM_RESULTS:
                 break
 
-
 def main(entity_type):
     if entity_type:
         run_search_by_type_test(entity_type)
     else:
-        run_universal_test()
+        run_universal_search_test()
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
