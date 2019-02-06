@@ -5,7 +5,6 @@ from api.client.batch_client import BatchClient
 
 
 class MyTestCase(unittest.TestCase):
-    api_client = None  # type: client
 
     def setUp(self):
         self.api_client = Client("api.gro-intelligence.com",
