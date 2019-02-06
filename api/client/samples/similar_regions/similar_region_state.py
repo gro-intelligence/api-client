@@ -13,7 +13,7 @@ class SimilarRegionState(object):
     def __init__(self, region_properties, regions_to_compare):
 
         # Some logging... of course.
-        self._logger = api.client.lib.get_default_logger("SimilarRegionState")
+        self._logger = api.client.lib.get_default_logger()#"SimilarRegionState"
 
         # Some useful metadata
         self.region_properties = region_properties

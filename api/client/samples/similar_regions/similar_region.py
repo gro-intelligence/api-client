@@ -6,7 +6,7 @@ from datetime import time, datetime
 import dateparser
 from sklearn.neighbors import BallTree
 import transform
-from api.client import BatchClient
+from api.client.batch_client import BatchClient
 from api.client.lib import get_default_logger
 from similar_region_state import SimilarRegionState
 
@@ -30,7 +30,7 @@ class SimilarRegion(BatchClient):
         """
 
         super(SimilarRegion, self).__init__(API_HOST, ACCESS_TOKEN)
-        self._logger = get_default_logger("SimilarRegion")
+        self._logger = get_default_logger()#"SimilarRegion"
 
         if regions_to_compare is None:
             regions_to_compare = self._regions_avail_for_selection(region_properties)
