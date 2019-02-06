@@ -75,9 +75,9 @@ class BatchClient(Client):
 
     def batch_async_queue(self, func, batched_args, output_list, map_result):
         """
-        Asynchronous version of get_data operating on multiple queries simultaneously.
-        :param func:
-        :param batched_args:
+        Asynchronously call func
+        :param func: function to be called on each member of batched_args
+        :param batched_args: list of keyword arguments dictionaries, one for each call to func
         :param output_list:
         :param map_result:
         :return:
@@ -98,6 +98,7 @@ class BatchClient(Client):
 
         @gen.coroutine
         def consumer():
+            """Consume the queue by executing func on all items in queue asynchronously."""
             while q.qsize():
                 idx, item = q.get().result()
                 self._logger.debug('Doing work on {}'.format(idx))
@@ -110,9 +111,7 @@ class BatchClient(Client):
                 q.task_done()
 
         def producer():
-            """ Uses the interleaving pattern from https://www.tornadoweb.org/en/stable/guide/coroutines.html
-            to place items in the queue at a fixed rate.
-            """
+            """Immediately enqueue the whole batch of requests."""
             lasttime = time.time()
             for idx, item in enumerate(batched_args):
                 q.put((idx, item))
