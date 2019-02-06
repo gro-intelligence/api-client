@@ -312,9 +312,31 @@ def lookup_belongs(access_token, api_host, entity_type, entity_id):
   for parent_entity_id in resp.json().get('data').get(str(entity_id)):
     yield lookup(access_token, api_host, entity_type, parent_entity_id)
 
+
 def get_geo_centre(access_token, api_host, region_id):
   """Given a region ID, returns the geographic centre in degrees lat/lon."""
   url = '/'.join(['https:', '', api_host, 'v2/geocentres?regionIds=' + str(region_id)])
   headers = {'authorization': 'Bearer ' + access_token}
   resp = get_data(url, headers)
   return resp.json()["data"]
+
+
+def get_descendant_regions(access_token, api_host, region_id, descendant_level):
+  """Given any region by id, recursively gets all the descendant regions
+  that are of the specified level. 
+
+  This takes advantage of the assumption that region graph is
+  acyclic. This will only traverse ordered region levels (strictly
+  increasing region level id) and thus skips non-administrative region
+  levels.
+  """
+  descendants = []
+  region = lookup(access_token, api_host, 'regions', region_id)
+  for member_id in region['contains']:
+    member = lookup(access_token, api_host, 'regions', member_id)
+    if descendant_level == member['level']:
+      descendants.append(member)
+    elif member['level'] < descendant_level:
+      descendants += get_descendant_regions(
+        access_token, api_host, member_id, descendant_level)
+  return descendants
