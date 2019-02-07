@@ -58,7 +58,12 @@ class SimilarRegion(BatchClient):
                                      LOWEST_PERCENTAGE_WEIGHT_FEATURE,
                                      -(1.0 - LOWEST_PERCENTAGE_WEIGHT_FEATURE) / float(num_features))
             slope_vector *= properties["properties"]["weight"]
-            self.state.weight_vector[progress_idx:progress_idx+num_features] = slope_vector
+
+            if properties["properties"]["weight_slope"]:
+                self.state.weight_vector[progress_idx:progress_idx+num_features] = slope_vector
+            else:
+                self.state.weight_vector[progress_idx:progress_idx + num_features] *= properties["properties"]["weight"]
+
             progress_idx += num_features
 
     def _format_results(self, region_id, neighbours, requested_level, csv_output, dists):
