@@ -2,7 +2,7 @@
 
 region_properties = {
     "soil_moisture": {
-        "query": {
+        "selected_entities": {
             'metric_id': 15531082,
             'item_id': 7382,
             'frequency_id': 1,
@@ -16,7 +16,7 @@ region_properties = {
         }
     },
     "land_surface_temperature": {
-        "query": {
+        "selected_entities": {
             'metric_id': 2540047,
             'item_id': 3457,
             'frequency_id': 1,
@@ -30,7 +30,7 @@ region_properties = {
         }
     },
     "rainfall": {
-        "query": {
+        "selected_entities": {
             'metric_id': 2100031,
             'item_id': 2039,
             'frequency_id': 1,

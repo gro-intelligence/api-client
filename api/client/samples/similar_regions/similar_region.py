@@ -43,7 +43,7 @@ class SimilarRegion(BatchClient):
     def _regions_avail_for_selection(self, region_properties):
         regions = set()
         for props in region_properties.values():
-            regions |= set([item["region_id"] for item in self.list_available(props["query"])])
+            regions |= set([item["region_id"] for item in self.list_available(props["selected_entities"])])
         self._logger.info("{} regions are available for comparison.".format(len(regions)))
         return list(regions)
 
@@ -189,7 +189,7 @@ class SimilarRegion(BatchClient):
 
         for name, props in self.state.region_properties.items():
 
-            query = props["query"]
+            query = props["selected_entities"]
 
             # Let's ask the server what times we have available and use those in post-processing.
             data_series = self.get_data_series(**query)[0]
