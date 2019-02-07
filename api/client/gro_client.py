@@ -10,10 +10,9 @@ import argparse
 import sys
 import unicodecsv
 from random import random
-import os
 import pandas
 import api.client.lib
-from api.client.batch_client import BatchClient
+
 
 API_HOST = 'api.gro-intelligence.com'
 OUTPUT_FILENAME = 'gro_client_output.csv'
@@ -40,11 +39,10 @@ def print_random_data_series(client, selected_entities):
     print "Using data series: {}".format(str(data_series))
     print "Outputing to file: {}".format(OUTPUT_FILENAME)
     writer = unicodecsv.writer(open(OUTPUT_FILENAME, 'wb'))
-    for points in client.batch_async_get_data_points(data_series_list):
-        for point in points:
-            writer.writerow([point['start_date'], point['end_date'],
-                             point['value'] * point['input_unit_scale'],
-                             client.lookup_unit_abbreviation(point['input_unit_id'])])
+    for point in client.get_data_points(**data_series):
+        writer.writerow([point['start_date'], point['end_date'],
+                         point['value'] * point['input_unit_scale'],
+                         client.lookup_unit_abbreviation(point['input_unit_id'])])
 
 
 def search_for_entity(client, entity_type, keywords):
@@ -87,7 +85,7 @@ def main():
     parser.add_argument("--region")
     parser.add_argument("--partner_region")
     parser.add_argument("--print_token", action='store_true')
-    parser.add_argument("--token", default=os.environ['GROAPI_TOKEN'])
+    parser.add_argument("--token")
     args = parser.parse_args()
 
     assert (args.user_email and args.user_password) or args.token, \
@@ -100,7 +98,7 @@ def main():
     if args.print_token:
         print access_token
         sys.exit(0)
-    client = BatchClient(API_HOST, access_token)
+    client = api.client.Client(API_HOST, access_token)
 
     selected_entities = {}
     if args.item:
