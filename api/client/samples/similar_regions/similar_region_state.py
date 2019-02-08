@@ -1,14 +1,13 @@
 import math
 from datetime import datetime
-
+from functools import reduce
 import dateparser
 import numpy as np
 import os
 
+import api.client.lib
 from api.client.samples.similar_regions import transform
 
-import api.client.lib
-from functools import reduce
 
 CACHE_PATH = ".cache/"
 # How much to weight the lowest weight feature.
@@ -172,7 +171,7 @@ class SimilarRegionState(object):
         data_series = self.client.get_data_series(**query)[0]
         start_date = dateparser.parse(data_series["start_date"])
         start_datetime = datetime.combine(start_date, time())
-        period_length_days = self.lookup('frequencies', query["frequency_id"])['periodLength']['days']
+        period_length_days = self.client.lookup('frequencies', query["frequency_id"])['periodLength']['days']
         end_date = dateparser.parse(data_series["end_date"])
         no_of_points = (end_date - start_date).days / period_length_days
         self._logger.info("length of data series is {} days".format(no_of_points))
