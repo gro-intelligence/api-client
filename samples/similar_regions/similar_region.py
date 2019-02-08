@@ -34,24 +34,24 @@ class SimilarRegion(object):
         return list(regions)
 
     def _format_results(self, neighbours, region_level_id, dists):
-        for ranking, neighbour_id in enumerate(neighbours):
-            district_id = self.state.inverse_mapping[neighbour_id]
-            if np.ma.is_masked(self.state.data_nonstruc[neighbour_id]):
+        for ranking, idx in enumerate(neighbours):
+            neighbour_region_id = self.state.inverse_mapping[idx]
+            if np.ma.is_masked(self.state.data_nonstruc[idx]):
                 self._logger.info("possible neighbour was masked")
-            neighbour_region = self.client.lookup("regions", district_id)
-            district_name = self.client.lookup("regions", district_id)["name"]
+            neighbour_region = self.client.lookup("regions", neighbour_region_id)
+            neighbour_name = self.client.lookup("regions", neighbour_region_id)["name"]
             if region_level_id is not None and neighbour_region["level"] != region_level_id:
-                self._logger.info("not level %s %s" % (region_level_id, district_name))
+                self._logger.info("not level %s %s" % (region_level_id, neighbour_name))
                 continue
-            district_name = self.client.lookup("regions", district_id)["name"]
-            province = next(self.client.lookup_belongs("regions", district_id), {"name": ""})
+            neighbour_name = self.client.lookup("regions", neighbour_region_id)["name"]
+            province = next(self.client.lookup_belongs("regions", neighbour_region_id), {"name": ""})
 
-            if "id" in province and province["id"] != 0:
+            if province.get('id', None):
                 country = next(self.client.lookup_belongs("regions", province["id"]), {"name": "", "id": ""})
             else:
                 country = {"name": "", "id": ""}
-            self._logger.info("{}, {}, {}".format(district_name, province["name"], country["name"]))
-            data_point = {"id": district_id, "name": district_name, "dist": dists[ranking],
+            self._logger.info("{}, {}, {}".format(neighbour_name, province["name"], country["name"]))
+            data_point = {"id": neighbour_region_id, "name": neighbour_name, "dist": dists[ranking],
                           "parent": (province["id"], province["name"], country["id"], country["name"])}
             yield data_point
 
@@ -91,5 +91,5 @@ class SimilarRegion(object):
         self._compute_similarity_matrix()
         neighbours, dists = self._similar_to(region_id, number_of_regions)
         self._logger.info("nearest regions to '{}' are: {}".format(region_id, neighbours))
-        for output in self._format_results(region_id, neighbours, requested_level, dists):
+        for output in self._format_results(neighbours, requested_level, dists):
             yield output
