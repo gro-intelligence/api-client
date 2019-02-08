@@ -37,7 +37,7 @@ class SimilarRegion(BatchClient):
         self._logger.info("{} regions are available for comparison.".format(len(regions)))
         return list(regions)
 
-    def _format_results(self, neighbours, requested_level, dists):
+    def _format_results(self, neighbours, region_level_id, dists):
 
         for ranking, neighbour_id in enumerate(neighbours):
 
@@ -50,8 +50,8 @@ class SimilarRegion(BatchClient):
 
             district_name = self.lookup("regions", district_id)["name"]
 
-            if requested_level is not None and neighbour_region["level"] != requested_level:
-                self._logger.info("not level %s %s" % (requested_level, district_name))
+            if region_level_id is not None and neighbour_region["level"] != region_level_id:
+                self._logger.info("not level %s %s" % (region_level_id, district_name))
                 continue
 
             district_name = self.lookup("regions", district_id)["name"]
