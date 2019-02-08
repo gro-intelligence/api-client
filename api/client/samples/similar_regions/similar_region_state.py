@@ -217,8 +217,7 @@ class SimilarRegionState(object):
             # Mark this as downloaded.
             self.missing[property_name][data_table_idx] = False
 
-        self._logger.info("Getting data series for {} regions for property {}".format(
-            len(queries), property_name))
+        self._logger.info("Getting data series for {} regions for property {}".format(len(queries), property_name))
         self.batch_async_get_data_points(queries, map_result=map_response)
         self.save()
         return
