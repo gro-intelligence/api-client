@@ -34,7 +34,8 @@ class SimilarRegion(BatchClient):
     def _regions_avail_for_selection(self, region_properties):
         regions = set()
         for props in region_properties.values():
-            regions |= set([item["region_id"] for item in self.list_available(props["selected_entities"])])
+            for available_series in self.list_available(props["selected_entities"]):
+                regions.add(available_series["region_id"])
         self._logger.info("{} regions are available for comparison.".format(len(regions)))
         return list(regions)
 
