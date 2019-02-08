@@ -114,11 +114,6 @@ class SimilarRegion(BatchClient):
         [{id: 123, name: "abc", distance: 1.23, parent_regions: [{"abc"456, 789]
         """
 
-        if np.any(self.state.missing_nonstruc):
-            self._cache_regions()
-
-        assert not np.any(self.state.missing_nonstruc)
-
         if self.state.recompute:
             self._logger.info("similarities not computed (or reloaded from disk and not saved), computing.")
             self._compute_similarity_matrix()

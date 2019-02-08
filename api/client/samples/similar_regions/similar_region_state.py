@@ -1,5 +1,6 @@
 import math
 from datetime import datetime
+from time import time
 
 import dateparser
 import numpy as np
@@ -41,10 +42,6 @@ class SimilarRegionState(object):
                      region_properties.items()]
         self.data = np.ma.zeros(self.num_regions, dtype=structure)
         self.data[:] = np.ma.masked
-        self.data_nonstruc = self.data.view(
-            dtype=[('data', 'd', (self.num_regions, self.tot_num_features))], type=np.ndarray
-        )[0][0]
-        self.data_mask_nonstruc = self.data.mask.view(dtype=(bool, (self.tot_num_features)))
 
         self._logger.debug("structure of data array entries is {}".format(structure))
         self._logger.debug("structure of missing array entries is {}".format(structure_bool))
@@ -52,9 +49,8 @@ class SimilarRegionState(object):
         # Boolean array representing any data we haven't yet downloaded.
         # True if data for that (metric, region) has been fetched into the data array.
         self.missing = np.full(self.num_regions, True, dtype=structure_bool)
-        self.missing_nonstruc = self.missing.view(
-            dtype=[('missing', bool, (self.num_regions, self.num_properties))], type=np.ndarray
-        )[0][0]
+
+        self._create_views()
 
         # Standardized (0-mean,1-std) version of data in a 2d array (without structure/masking nonsense)
         self.data_standardized = np.zeros((self.num_regions, self.tot_num_features), dtype='d')
@@ -66,6 +62,11 @@ class SimilarRegionState(object):
         self.ball = None
 
         self.load()
+
+    def _create_views(self):
+        self.data_nonstruc = self.data.view(
+            dtype=[('data', 'd', (self.num_regions, self.tot_num_features))], type=np.ndarray
+        )[0][0]
 
     def save(self):
         """
@@ -133,10 +134,23 @@ class SimilarRegionState(object):
         self._logger.info("Standardizing data matrix...")
         self._generate_weight_vector()
 
+        rows_to_keep = ~np.any(self.data.mask, axis=1)
+        # Remove any rows that are missing....
+        self.data = self.data[rows_to_keep]
+        self.missing = self.missing[rows_to_keep]
+        self.data_standardized = self.data_standardized[rows_to_keep]
+        # Remove this from the region mapping
+        distric_idxs_to_remove = self.inverse_mapping[~rows_to_keep]
+        self.inverse_mapping = self.inverse_mapping[rows_to_keep]
+        for idx in distric_idxs_to_remove:
+            del self.mapping[idx]
+        #Update the number of regions
+        self.num_regions = len(self.inverse_mapping)
+
         # copy in from the nonstruc view
         np.copyto(self.data_standardized, self.data_nonstruc)
-        mean = np.ma.average(self.data_standardized, axis=0)
-        std = np.ma.std(self.data_standardized, axis=0)
+        mean = np.ma.average(self.data_nonstruc, axis=0)
+        std = np.ma.std(self.data_nonstruc, axis=0)
 
         self._logger.debug("(mean, std) of data across regions axis are ({}, {})".format(mean, std))
 
@@ -158,7 +172,7 @@ class SimilarRegionState(object):
         # TODO: handle missing data properly.
         #https://math.stackexchange.com/questions/195245/average-distance-between-random-points-on-a-line-segment
 
-        self.data_standardized[self.data_mask_nonstruc] = 100000.0
+
         self._logger.info("Done standardizing data matrix.")
         return
 
@@ -171,7 +185,6 @@ class SimilarRegionState(object):
         # Let's ask the server what times we have available and use those in post-processing.
         data_series = self.get_data_series(**query)[0]
         start_date = dateparser.parse(data_series["start_date"])
-        start_datetime = datetime.combine(start_date, time())
         period_length_days = self.lookup('frequencies', query["frequency_id"])['periodLength']['days']
         end_date = dateparser.parse(data_series["end_date"])
         no_of_points = (end_date - start_date).days / period_length_days
@@ -199,7 +212,7 @@ class SimilarRegionState(object):
                 self.data[property_name][data_table_idx] = np.ma.masked
             else:
                 # TODO: remove start_datetime stuff here once we have "addNulls" on the server
-                result, coverage = transform.post_process_timeseries(no_of_points, start_datetime, response,
+                result, coverage = transform.post_process_timeseries(no_of_points, start_date, response,
                                                                      start_idx, num_features,
                                                                      period_length_days=period_length_days)
                 # if there are less points than there are in our lowest period event, let's discard this...
