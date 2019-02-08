@@ -188,43 +188,42 @@ class SimilarRegionState(object):
         start_idx = math.floor(no_of_points / float(longest_period_feature_period))
         self._logger.info("first coef index will be {}".format(start_idx))
         num_features = props["properties"]["num_features"]
-
         # deep copy the metric for each query.
         queries = []
         map_query_to_data_table = []
 
-        for region in self.inverse_mapping[self.missing[name]]:
+        for region in self.inverse_mapping[self.missing[property_name]]:
             copy_of_metric = dict(query)
             copy_of_metric["region_id"] = region
             queries.append(copy_of_metric)
             map_query_to_data_table.append(self.mapping[region])
 
-            def map_response(idx, _, response):
-                data_table_idx = map_query_to_data_table[idx]
-
-                if response is None or len(response) == 0 or (len(response) == 1 and response[0] == {}):
-                    # no data on this region. let's fill it with zeros for the odd cases and mark it for masking.
-                    self.data[name][data_table_idx] = 0.0
+        def map_response(idx, _, response):
+            data_table_idx = map_query_to_data_table[idx]
+            if response is None or len(response) == 0 or (len(response) == 1 and response[0] == {}):
+                # no data on this region. let's fill it with zeros for the odd cases and mark it for masking.
+                self.data[property_name][data_table_idx] = 0.0
+                # flag this as invalid.
+                self.data[property_name][data_table_idx] = np.ma.masked
+            else:
+                # TODO: remove start_datetime stuff here once we have "addNulls" on the server
+                result, coverage = transform.post_process_timeseries(no_of_points, start_datetime, response,
+                                                                     start_idx, num_features,
+                                                                     period_length_days=period_length_days)
+                # if there are less points than there are in our lowest period event, let's discard this...
+                if coverage < 1/float(start_idx):
+                    self.data[property_name][data_table_idx] = 0.0
                     # flag this as invalid.
-                    self.data[name][data_table_idx] = np.ma.masked
+                    self.data[property_name][data_table_idx] = np.ma.masked
                 else:
-                    # TODO: remove start_datetime stuff here once we have "addNulls" on the server
-                    result, coverage = transform.post_process_timeseries(no_of_points, start_datetime, response,
-                                                                         start_idx, num_features,
-                                                                         period_length_days=period_length_days)
-                    # if there are less points than there are in our lowest period event, let's discard this...
-                    if coverage < 1/float(start_idx):
-                        self.data[name][data_table_idx] = 0.0
-                        # flag this as invalid.
-                        self.data[name][data_table_idx] = np.ma.masked
-                    else:
-                        self.data[name][data_table_idx] = result
+                    self.data[property_name][data_table_idx] = result
+            # Mark this as downloaded.
+            self.missing[property_name][data_table_idx] = False
 
-                # Mark this as downloaded.
-                self.missing[name][data_table_idx] = False
-
-        self._logger.info("Getting data series for {} regions for property {}".format(len(queries), name))
+        self._logger.info("Getting data series for {} regions for property {}".format(
+            len(queries), property_name))
         self.batch_async_get_data_points(queries, map_result=map_response)
         self.save()
         return
+
 
