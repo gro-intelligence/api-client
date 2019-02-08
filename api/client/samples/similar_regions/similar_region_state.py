@@ -114,7 +114,7 @@ class SimilarRegionState(object):
 
         return
 
-    def _normalize(self):
+    def _standardize(self):
 
         self._logger.info("standardizing data matrix")
 
