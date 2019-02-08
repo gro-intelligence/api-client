@@ -119,26 +119,21 @@ class SimilarRegionState(object):
         # generate weight vector (with decreasing weights if enabled)
         # iterating over the dictionary is fine as we don't allow it to be modified during runtime.
         progress_idx = 0
-
         for properties in self.region_properties.values():
             num_features = properties["properties"]["num_features"]
-            slope_vector = np.arange(1.0,
-                                     LOWEST_PERCENTAGE_WEIGHT_FEATURE,
-                                     -(1.0 - LOWEST_PERCENTAGE_WEIGHT_FEATURE) / float(num_features))
-            slope_vector *= properties["properties"]["weight"]
-
             if properties["properties"]["weight_slope"]:
+                slope_vector = np.arange(1.0, LOWEST_PERCENTAGE_WEIGHT_FEATURE,
+                                         -(1.0 - LOWEST_PERCENTAGE_WEIGHT_FEATURE) / float(num_features))
+                slope_vector *= properties["properties"]["weight"]
                 self.weight_vector[progress_idx:progress_idx+num_features] = slope_vector
             else:
                 self.weight_vector[progress_idx:progress_idx + num_features] *= properties["properties"]["weight"]
-
             progress_idx += num_features
 
     def _standardize(self):
 
         self._logger.info("standardizing data matrix")
         self._generate_weight_vector()
-
 
         # copy in from the nonstruc view
         np.copyto(self.data_standardized, self.data_nonstruc)
