@@ -172,7 +172,7 @@ class SimilarRegionState(object):
 
         return
 
-    def _get_data(property_name):
+    def _get_data(self, property_name):
         """Gets data for all regions for the given property and saves it to
         memory (and local cache on disk).
         """
