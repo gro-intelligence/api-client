@@ -20,8 +20,8 @@ class SimilarRegionState(object):
     Holds and initializes parameters and provide ssaving/loading logic for a similar_region search.
     """
 
-    def __init__(self, region_properties, regions_to_compare):
-
+    def __init__(self, region_properties, regions_to_compare, client):
+        self.client = client
         self._logger = api.client.lib.get_default_logger()
         self.region_properties = region_properties
         self.num_regions = len(regions_to_compare)
@@ -169,7 +169,7 @@ class SimilarRegionState(object):
         props = self.region_properties[property_name]
         query = props["selected_entities"]
         # Let's ask the server what times we have available and use those in post-processing.
-        data_series = self.get_data_series(**query)[0]
+        data_series = self.client.get_data_series(**query)[0]
         start_date = dateparser.parse(data_series["start_date"])
         start_datetime = datetime.combine(start_date, time())
         period_length_days = self.lookup('frequencies', query["frequency_id"])['periodLength']['days']
@@ -214,7 +214,7 @@ class SimilarRegionState(object):
 
         self._logger.info("Getting data series for {} regions for property {}".format(
             len(queries), property_name))
-        self.batch_async_get_data_points(queries, map_result=map_response)
+        self.client.batch_async_get_data_points(queries, map_result=map_response)
         self._standardize()
         self.save()
         return
