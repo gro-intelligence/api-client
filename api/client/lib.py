@@ -309,7 +309,7 @@ def lookup_belongs(access_token, api_host, entity_type, entity_id):
   params = { 'ids': str(entity_id) }
   headers = {'authorization': 'Bearer ' + access_token}
   resp = get_data(url, headers, params)
-  for parent_entity_id in resp.json().get('data').get(str(entity_id)):
+  for parent_entity_id in resp.json().get('data').get(str(entity_id), []):
     yield lookup(access_token, api_host, entity_type, parent_entity_id)
 
 
