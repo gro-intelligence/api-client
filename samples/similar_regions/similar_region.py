@@ -1,11 +1,6 @@
-import csv
-import math
 import numpy as np
 import os
-from datetime import time, datetime
-import dateparser
 from sklearn.neighbors import BallTree
-import transform
 from api.client.batch_client import BatchClient
 from api.client.lib import get_default_logger
 from similar_region_state import SimilarRegionState
@@ -14,10 +9,6 @@ from similar_region_state import SimilarRegionState
 API_HOST = 'api.gro-intelligence.com'
 OUTPUT_FILENAME = 'gro_client_output.csv'
 ACCESS_TOKEN = os.environ['GROAPI_TOKEN']
-
-# How much to weight the lowest weight feature.
-# The features (coefficients for FFT) per metric will be weighted from 1.0 to LOWEST_PERCENTAGE_WEIGHT_FEATURE
-LOWEST_PERCENTAGE_WEIGHT_FEATURE = 0.6
 
 class SimilarRegion(BatchClient):
 
@@ -32,7 +23,7 @@ class SimilarRegion(BatchClient):
         super(SimilarRegion, self).__init__(API_HOST, ACCESS_TOKEN)
         self._logger = get_default_logger()#"SimilarRegion"
 
-        if regions_to_compare is None:
+        if not regions_to_compare:
             regions_to_compare = self._regions_avail_for_selection(region_properties)
 
         self.state = SimilarRegionState(region_properties, regions_to_compare)
@@ -47,33 +38,7 @@ class SimilarRegion(BatchClient):
         self._logger.info("{} regions are available for comparison.".format(len(regions)))
         return list(regions)
 
-    def _generate_weight_vector(self, region_properties):
-        # generate weight vector (with decreasing weights if enabled)
-        # iterating over the dictionary is fine as we don't allow it to be modified during runtime.
-        progress_idx = 0
-
-        for properties in region_properties.values():
-            num_features = properties["properties"]["num_features"]
-            slope_vector = np.arange(1.0,
-                                     LOWEST_PERCENTAGE_WEIGHT_FEATURE,
-                                     -(1.0 - LOWEST_PERCENTAGE_WEIGHT_FEATURE) / float(num_features))
-            slope_vector *= properties["properties"]["weight"]
-
-            if properties["properties"]["weight_slope"]:
-                self.state.weight_vector[progress_idx:progress_idx+num_features] = slope_vector
-            else:
-                self.state.weight_vector[progress_idx:progress_idx + num_features] *= properties["properties"]["weight"]
-
-            progress_idx += num_features
-
-    def _format_results(self, region_id, neighbours, requested_level, csv_output, dists):
-
-        if csv_output:
-            level_suffix = "" if requested_level is None else "_level_" + str(requested_level)
-            f = open("output/" + str(region_id) + level_suffix + ".csv", 'wb')
-            csv_writer = csv.writer(f, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
-
-        similar_to_return = []
+    def _format_results(self, neighbours, requested_level, dists):
 
         for ranking, neighbour_id in enumerate(neighbours):
 
@@ -99,19 +64,11 @@ class SimilarRegion(BatchClient):
             else:
                 country = {"name": "", "id": ""}
 
-            output = [district_name, province["name"], country["name"]]
-            output = [unicode(s).encode("utf-8") for s in output]
-
             self._logger.info("{}, {}, {}".format(district_name, province["name"], country["name"]))
             data_point = {"id": district_id, "name": district_name, "dist": dists[ranking],
                           "parent": (province["id"], province["name"], country["id"], country["name"])}
 
-            similar_to_return.append(data_point)
-
-            if csv_output:
-                csv_writer.writerow(output)
-
-        return similar_to_return
+            yield data_point
 
     def _similar_to(self, region_id, number_of_regions):
         """
@@ -179,4 +136,5 @@ class SimilarRegion(BatchClient):
 
         self._logger.info("nearest regions to '{}' are: {}".format(region_id, neighbours))
 
-        return self._format_results(region_id, neighbours, requested_level, csv_output, dists)
+        for output in self._format_results(region_id, neighbours, requested_level, csv_output, dists):
+            yield output

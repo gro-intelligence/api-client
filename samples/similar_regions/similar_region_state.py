@@ -1,3 +1,7 @@
+import math
+from datetime import datetime
+
+import dateparser
 import numpy as np
 import os
 
@@ -7,6 +11,9 @@ import api.client.lib
 from functools import reduce
 
 CACHE_PATH = ".cache/"
+# How much to weight the lowest weight feature.
+# The features (coefficients for FFT) per metric will be weighted from 1.0 to LOWEST_PERCENTAGE_WEIGHT_FEATURE
+LOWEST_PERCENTAGE_WEIGHT_FEATURE = 0.6
 
 class SimilarRegionState(object):
     """
@@ -113,6 +120,25 @@ class SimilarRegionState(object):
         self._logger.info("done checking for cached data")
 
         return
+    
+    def _generate_weight_vector(self, region_properties):
+        # generate weight vector (with decreasing weights if enabled)
+        # iterating over the dictionary is fine as we don't allow it to be modified during runtime.
+        progress_idx = 0
+
+        for properties in region_properties.values():
+            num_features = properties["properties"]["num_features"]
+            slope_vector = np.arange(1.0,
+                                     LOWEST_PERCENTAGE_WEIGHT_FEATURE,
+                                     -(1.0 - LOWEST_PERCENTAGE_WEIGHT_FEATURE) / float(num_features))
+            slope_vector *= properties["properties"]["weight"]
+
+            if properties["properties"]["weight_slope"]:
+                self.weight_vector[progress_idx:progress_idx+num_features] = slope_vector
+            else:
+                self.weight_vector[progress_idx:progress_idx + num_features] *= properties["properties"]["weight"]
+
+            progress_idx += num_features
 
     def _standardize(self):
 
