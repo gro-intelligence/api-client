@@ -22,10 +22,7 @@ class SimilarRegionState(object):
 
     def __init__(self, region_properties, regions_to_compare):
 
-        # Some logging... of course.
-        self._logger = api.client.lib.get_default_logger()#"SimilarRegionState"
-
-        # Some useful metadata
+        self._logger = api.client.lib.get_default_logger()
         self.region_properties = region_properties
         self.num_regions = len(regions_to_compare)
         self.num_properties = len(region_properties)
@@ -76,10 +73,7 @@ class SimilarRegionState(object):
         Cache the current state to disk.
         :return: True if succeeded.
         """
-
-        self._logger.info("starting caching of downloaded data.")
-
-        # Loop through the metric views...
+        self._logger.info("Starting caching of downloaded data.")
         for name in self.region_properties:
             with open(os.path.join(CACHE_PATH, "{}.nbz".format(name)), 'wb') as f:
                 np.savez(f,
@@ -87,27 +81,25 @@ class SimilarRegionState(object):
                          mask=self.data[name].mask,
                          missing=self.missing[name],
                          inverse_mapping=self.inverse_mapping)
-
-        self._logger.info("done caching of downloaded data.")
-
+        self._logger.info("Done caching of downloaded data.")
         return
 
     def load(self):
         """
         Attempt to load any cached information and merge it into our current data situation.
         """
-
-        self._logger.info("checking if cached data available.")
+        self._logger.info("Loading data")
         # Loop through the metric views...
         for name in self.region_properties:
             path = os.path.join(CACHE_PATH, "{}.nbz".format(name))
             if os.path.isfile(path):
-                self._logger.info("found cached data for {}, loading...".format(name))
+                self._logger.info("Found cached data for {}, loading...".format(name))
                 with open(path, 'rb') as f:
                     variables = np.load(f)
                     mutual_regions = set(variables["inverse_mapping"]) & set(self.inverse_mapping)
                     mutual_regions_mapping = np.array([self.mapping[idx] for idx in mutual_regions])
-                    old_mapping = {region_idx:idx for (idx,region_idx) in enumerate(variables["inverse_mapping"])}
+                    old_mapping = {region_idx:idx
+                                   for (idx,region_idx) in enumerate(variables["inverse_mapping"])}
                     mutual_regions_old_mapping = [old_mapping[idx] for idx in mutual_regions]
                     self.data[name][mutual_regions_mapping] = variables["data"][mutual_regions_old_mapping]
                     mutual_regions_masked = variables["mask"][mutual_regions_old_mapping]
@@ -116,11 +108,13 @@ class SimilarRegionState(object):
                     self.missing[name][mutual_regions_mapping] = False
                     self.missing[name][mutual_regions_mapping[mutual_regions_missing]] = True
                 self._logger.info("loaded {} cached regions for property {}".format(len(mutual_regions), name))
+            else:
+                self._logger.info("No cached data for {}, loading...".format(name))
+                self._get_data(name)
 
-        self._logger.info("done checking for cached data")
-
+        self._logger.info("Done loading.")
         return
-    
+
     def _generate_weight_vector(self, region_properties):
         # generate weight vector (with decreasing weights if enabled)
         # iterating over the dictionary is fine as we don't allow it to be modified during runtime.
@@ -176,39 +170,37 @@ class SimilarRegionState(object):
 
         return
 
-    def _cache_regions(self):
+    def _get_data(property_name):
+        """Gets data for all regions for the given property and saves it to
+        memory (and local cache on disk)
+
         """
-        Saves the request metrics for all regions to memory (and possibly to disk). I can't see a better way to
-        achieve this than downloading the required data on all the 5000 regions ...
-        :return:
-        """
 
-        for name, props in self.region_properties.items():
+        props = self.region_properties[property_name]
+        query = props["selected_entities"]
 
-            query = props["selected_entities"]
+        # Let's ask the server what times we have available and use those in post-processing.
+        data_series = self.get_data_series(**query)[0]
+        start_date = dateparser.parse(data_series["start_date"])
+        start_datetime = datetime.combine(start_date, time())
+        period_length_days = self.lookup('frequencies', query["frequency_id"])['periodLength']['days']
+        end_date = dateparser.parse(data_series["end_date"])
+        no_of_points = (end_date - start_date).days / period_length_days
+        self._logger.info("length of data series is {} days".format(no_of_points))
+        longest_period_feature_period = props["properties"]["longest_period_feature_period"]
+        start_idx = math.floor(no_of_points / float(longest_period_feature_period))
+        self._logger.info("first coef index will be {}".format(start_idx))
+        num_features = props["properties"]["num_features"]
 
-            # Let's ask the server what times we have available and use those in post-processing.
-            data_series = self.get_data_series(**query)[0]
-            start_date = dateparser.parse(data_series["start_date"])
-            start_datetime = datetime.combine(start_date, time())
-            period_length_days = self.lookup('frequencies', query["frequency_id"])['periodLength']['days']
-            end_date = dateparser.parse(data_series["end_date"])
-            no_of_points = (end_date - start_date).days / period_length_days
-            self._logger.info("length of data series is {} days".format(no_of_points))
-            longest_period_feature_period = props["properties"]["longest_period_feature_period"]
-            start_idx = math.floor(no_of_points / float(longest_period_feature_period))
-            self._logger.info("first coef index will be {}".format(start_idx))
-            num_features = props["properties"]["num_features"]
+        # deep copy the metric for each query.
+        queries = []
+        map_query_to_data_table = []
 
-            # deep copy the metric for each query.
-            queries = []
-            map_query_to_data_table = []
-
-            for region in self.inverse_mapping[self.missing[name]]:
-                copy_of_metric = dict(query)
-                copy_of_metric["region_id"] = region
-                queries.append(copy_of_metric)
-                map_query_to_data_table.append(self.mapping[region])
+        for region in self.inverse_mapping[self.missing[name]]:
+            copy_of_metric = dict(query)
+            copy_of_metric["region_id"] = region
+            queries.append(copy_of_metric)
+            map_query_to_data_table.append(self.mapping[region])
 
             self._logger.info("about to download dataseries for {} regions for property {}".format(len(queries), name))
 
@@ -224,8 +216,8 @@ class SimilarRegionState(object):
                 else:
                     # TODO: remove start_datetime stuff here once we have "addNulls" on the server
                     result, coverage = transform.post_process_timeseries(no_of_points, start_datetime, response,
-                                                                          start_idx, num_features,
-                                                                          period_length_days=period_length_days)
+                                                                         start_idx, num_features,
+                                                                         period_length_days=period_length_days)
 
                     # if there are less points than there are in our lowest period event, let's discard this...
                     if coverage < 1/float(start_idx):
@@ -244,9 +236,9 @@ class SimilarRegionState(object):
                     self._logger.info("Saving data downloaded so far.")
                     self.save()
 
-            when_to_save_counter = [0]
+        when_to_save_counter = [0]
 
-            self.batch_async_get_data_points(queries, map_result=map_response)
+        self.batch_async_get_data_points(queries, map_result=map_response)
 
         self.downloaded = True
 
