@@ -9,7 +9,7 @@ from similar_region_state import SimilarRegionState
 API_HOST = 'api.gro-intelligence.com'
 ACCESS_TOKEN = os.environ['GROAPI_TOKEN']
 
-class SimilarRegion(BatchClient):
+class SimilarRegion(object):
 
     def __init__(self, region_properties, regions_to_compare=None):
         """
@@ -18,11 +18,11 @@ class SimilarRegion(BatchClient):
         :param regions_to_compare: Default is None. This is a list of region IDs against which we want to do the
         similarity computation. If none specified, do this for all regions where we have _any_ data.
         """
-        super(SimilarRegion, self).__init__(API_HOST, ACCESS_TOKEN)
+        self.client = BatchClient(API_HOST, ACCESS_TOKEN)
         self._logger = get_default_logger()
         if not regions_to_compare:
             regions_to_compare = self._regions_avail_for_selection(region_properties)
-        self.state = SimilarRegionState(region_properties, regions_to_compare, self)
+        self.state = SimilarRegionState(region_properties, regions_to_compare, self.client)
         return
 
     def _regions_avail_for_selection(self, region_properties):
@@ -38,16 +38,16 @@ class SimilarRegion(BatchClient):
             district_id = self.state.inverse_mapping[neighbour_id]
             if np.ma.is_masked(self.state.data_nonstruc[neighbour_id]):
                 self._logger.info("possible neighbour was masked")
-            neighbour_region = self.lookup("regions", district_id)
-            district_name = self.lookup("regions", district_id)["name"]
+            neighbour_region = self.client.lookup("regions", district_id)
+            district_name = self.client.lookup("regions", district_id)["name"]
             if region_level_id is not None and neighbour_region["level"] != region_level_id:
                 self._logger.info("not level %s %s" % (region_level_id, district_name))
                 continue
-            district_name = self.lookup("regions", district_id)["name"]
-            province = next(self.lookup_belongs("regions", district_id), {"name": ""})
+            district_name = self.client.lookup("regions", district_id)["name"]
+            province = next(self.client.lookup_belongs("regions", district_id), {"name": ""})
 
             if "id" in province and province["id"] != 0:
-                country = next(self.lookup_belongs("regions", province["id"]), {"name": "", "id": ""})
+                country = next(self.client.lookup_belongs("regions", province["id"]), {"name": "", "id": ""})
             else:
                 country = {"name": "", "id": ""}
             self._logger.info("{}, {}, {}".format(district_name, province["name"], country["name"]))
