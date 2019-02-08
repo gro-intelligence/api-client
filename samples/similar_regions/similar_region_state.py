@@ -58,7 +58,6 @@ class SimilarRegionState(object):
 
         # Standardized (0-mean,1-std) version of data in a 2d array (without structure/masking nonsense)
         self.data_standardized = np.zeros((self.num_regions, self.tot_num_features), dtype='d')
-        self.recompute = True
 
         # Weights of each metric
         self.weight_vector = np.ones(self.tot_num_features, dtype='d')
@@ -107,10 +106,10 @@ class SimilarRegionState(object):
                     mutual_regions_missing = variables["missing"][mutual_regions_old_mapping]
                     self.missing[name][mutual_regions_mapping] = False
                     self.missing[name][mutual_regions_mapping[mutual_regions_missing]] = True
-                self._logger.info("loaded {} cached regions for property {}".format(len(mutual_regions), name))
-            else:
-                self._logger.info("No cached data for {}, loading...".format(name))
-                self._get_data(name)
+                self._logger.info("Loaded {} cached regions for property {}".format(len(mutual_regions), name))
+            # Fill in the missing data if any e.g. in case the cache
+            # wwas created with a subset of current regions_to_compare 
+            self._get_data(name)
 
         self._logger.info("Done loading.")
         return
@@ -131,13 +130,11 @@ class SimilarRegionState(object):
             progress_idx += num_features
 
     def _standardize(self):
-
-        self._logger.info("standardizing data matrix")
+        self._logger.info("Standardizing data matrix...")
         self._generate_weight_vector()
 
         # copy in from the nonstruc view
         np.copyto(self.data_standardized, self.data_nonstruc)
-
         mean = np.ma.average(self.data_standardized, axis=0)
         std = np.ma.std(self.data_standardized, axis=0)
 
@@ -162,9 +159,7 @@ class SimilarRegionState(object):
         #https://math.stackexchange.com/questions/195245/average-distance-between-random-points-on-a-line-segment
 
         self.data_standardized[self.data_mask_nonstruc] = 100000.0
-
-        self._logger.info("done standardizing data matrix")
-
+        self._logger.info("Done standardizing data matrix.")
         return
 
     def _get_data(self, property_name):
@@ -219,6 +214,7 @@ class SimilarRegionState(object):
 
         self._logger.info("Getting data series for {} regions for property {}".format(len(queries), property_name))
         self.batch_async_get_data_points(queries, map_result=map_response)
+        self._standardize()
         self.save()
         return
 
