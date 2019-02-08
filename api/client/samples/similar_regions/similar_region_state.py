@@ -1,15 +1,13 @@
 import math
 from datetime import datetime
-from time import time
-
+from functools import reduce
 import dateparser
 import numpy as np
 import os
 
+import api.client.lib
 from api.client.samples.similar_regions import transform
 
-import api.client.lib
-from functools import reduce
 
 CACHE_PATH = ".cache/"
 # How much to weight the lowest weight feature.
@@ -21,8 +19,8 @@ class SimilarRegionState(object):
     Holds and initializes parameters and provide ssaving/loading logic for a similar_region search.
     """
 
-    def __init__(self, region_properties, regions_to_compare):
-
+    def __init__(self, region_properties, regions_to_compare, client):
+        self.client = client
         self._logger = api.client.lib.get_default_logger()
         self.region_properties = region_properties
         self.num_regions = len(regions_to_compare)
@@ -62,11 +60,13 @@ class SimilarRegionState(object):
         self.ball = None
 
         self.load()
+        self.save()
 
     def _create_views(self):
         self.data_nonstruc = self.data.view(
             dtype=[('data', 'd', (self.num_regions, self.tot_num_features))], type=np.ndarray
         )[0][0]
+        self.data_mask_nonstruc = self.data.mask.view(dtype=(bool, self.tot_num_features))
 
     def save(self):
         """
@@ -111,7 +111,8 @@ class SimilarRegionState(object):
             # Fill in the missing data if any e.g. in case the cache
             # wwas created with a subset of current regions_to_compare 
             self._get_data(name)
-
+        self._standardize()
+        self.save()
         self._logger.info("Done loading.")
         return
 
@@ -134,7 +135,7 @@ class SimilarRegionState(object):
         self._logger.info("Standardizing data matrix...")
         self._generate_weight_vector()
 
-        rows_to_keep = ~np.any(self.data.mask, axis=1)
+        rows_to_keep = ~np.any(self.data_mask_nonstruc, axis=1)
         # Remove any rows that are missing....
         self.data = self.data[rows_to_keep]
         self.missing = self.missing[rows_to_keep]
@@ -183,10 +184,10 @@ class SimilarRegionState(object):
         props = self.region_properties[property_name]
         query = props["selected_entities"]
         # Let's ask the server what times we have available and use those in post-processing.
-        data_series = self.get_data_series(**query)[0]
-        start_date = dateparser.parse(data_series["start_date"])
-        period_length_days = self.lookup('frequencies', query["frequency_id"])['periodLength']['days']
-        end_date = dateparser.parse(data_series["end_date"])
+        data_series = self.client.get_data_series(**query)[0]
+        start_date = datetime.strptime(data_series["start_date"], '%Y-%m-%dT%H:%M:%S.%fZ')
+        period_length_days = self.client.lookup('frequencies', query["frequency_id"])['periodLength']['days']
+        end_date = datetime.strptime(data_series["end_date"], '%Y-%m-%dT%H:%M:%S.%fZ')
         no_of_points = (end_date - start_date).days / period_length_days
         self._logger.info("length of data series is {} days".format(no_of_points))
         longest_period_feature_period = props["properties"]["longest_period_feature_period"]
@@ -196,7 +197,6 @@ class SimilarRegionState(object):
         # deep copy the metric for each query.
         queries = []
         map_query_to_data_table = []
-
         for region in self.inverse_mapping[self.missing[property_name]]:
             copy_of_metric = dict(query)
             copy_of_metric["region_id"] = region
@@ -226,9 +226,7 @@ class SimilarRegionState(object):
             self.missing[property_name][data_table_idx] = False
 
         self._logger.info("Getting data series for {} regions for property {}".format(len(queries), property_name))
-        self.batch_async_get_data_points(queries, map_result=map_response)
-        self._standardize()
-        self.save()
+        self.client.batch_async_get_data_points(queries, map_result=map_response)
         return
 
 
