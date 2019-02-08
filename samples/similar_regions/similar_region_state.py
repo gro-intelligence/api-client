@@ -1,5 +1,8 @@
 import numpy as np
 import os
+
+from api.client.samples.similar_regions import transform
+
 import api.client.lib
 from functools import reduce
 
@@ -108,6 +111,120 @@ class SimilarRegionState(object):
                 self._logger.info("loaded {} cached regions for property {}".format(len(mutual_regions), name))
 
         self._logger.info("done checking for cached data")
+
+        return
+
+    def _normalize(self):
+
+        self._logger.info("standardizing data matrix")
+
+        # copy in from the nonstruc view
+        np.copyto(self.data_standardized, self.data_nonstruc)
+
+        mean = np.ma.average(self.data_standardized, axis=0)
+        std = np.ma.std(self.data_standardized, axis=0)
+
+        self._logger.debug("(mean, std) of data across regions axis are ({}, {})".format(mean, std))
+
+        self.data_standardized -= mean
+        self.data_standardized /= std
+        self.data_standardized *= self.weight_vector
+
+        # As it turns out we should place all our masked values at the mean points for that column !!!
+        # this ensures they are treated fairly despite missing a portion of the data.
+
+        # # from https://stackoverflow.com/questions/5564098/repeat-numpy-array-without-replicating-data
+        # view_of_data_means = np.lib.stride_tricks.as_strided(self.data_mean,
+        #                                                      (1000, self.data_mean.size),
+        #                                                      (0, self.data_mean.itemsize))
+        #
+        # += view_of_data_means[self.data.mask]
+
+        # Center all of these I suppose is the most straightforward solution for now.
+        # TODO: handle missing data properly.
+        #https://math.stackexchange.com/questions/195245/average-distance-between-random-points-on-a-line-segment
+
+        self.data_standardized[self.data_mask_nonstruc] = 100000.0
+
+        self._logger.info("done standardizing data matrix")
+
+        return
+
+    def _cache_regions(self):
+        """
+        Saves the request metrics for all regions to memory (and possibly to disk). I can't see a better way to
+        achieve this than downloading the required data on all the 5000 regions ...
+        :return:
+        """
+
+        for name, props in self.region_properties.items():
+
+            query = props["selected_entities"]
+
+            # Let's ask the server what times we have available and use those in post-processing.
+            data_series = self.get_data_series(**query)[0]
+            start_date = dateparser.parse(data_series["start_date"])
+            start_datetime = datetime.combine(start_date, time())
+            period_length_days = self.lookup('frequencies', query["frequency_id"])['periodLength']['days']
+            end_date = dateparser.parse(data_series["end_date"])
+            no_of_points = (end_date - start_date).days / period_length_days
+            self._logger.info("length of data series is {} days".format(no_of_points))
+            longest_period_feature_period = props["properties"]["longest_period_feature_period"]
+            start_idx = math.floor(no_of_points / float(longest_period_feature_period))
+            self._logger.info("first coef index will be {}".format(start_idx))
+            num_features = props["properties"]["num_features"]
+
+            # deep copy the metric for each query.
+            queries = []
+            map_query_to_data_table = []
+
+            for region in self.inverse_mapping[self.missing[name]]:
+                copy_of_metric = dict(query)
+                copy_of_metric["region_id"] = region
+                queries.append(copy_of_metric)
+                map_query_to_data_table.append(self.mapping[region])
+
+            self._logger.info("about to download dataseries for {} regions for property {}".format(len(queries), name))
+
+            def map_response(idx, _, response):
+                data_table_idx = map_query_to_data_table[idx]
+                save_counter = when_to_save_counter
+
+                if response is None or len(response) == 0 or (len(response) == 1 and response[0] == {}):
+                    # no data on this region. let's fill it with zeros for the odd cases and mark it for masking.
+                    self.data[name][data_table_idx] = 0.0
+                    # flag this as invalid.
+                    self.data[name][data_table_idx] = np.ma.masked
+                else:
+                    # TODO: remove start_datetime stuff here once we have "addNulls" on the server
+                    result, coverage = transform.post_process_timeseries(no_of_points, start_datetime, response,
+                                                                          start_idx, num_features,
+                                                                          period_length_days=period_length_days)
+
+                    # if there are less points than there are in our lowest period event, let's discard this...
+                    if coverage < 1/float(start_idx):
+                        self.data[name][data_table_idx] = 0.0
+                        # flag this as invalid.
+                        self.data[name][data_table_idx] = np.ma.masked
+                    else:
+                        self.data[name][data_table_idx] = result
+
+                # Mark this as downloaded.
+                self.missing[name][data_table_idx] = False
+                save_counter[0] += 1
+
+                # Save this every 10,000 items downloaded.
+                if save_counter[0] % 10000 == 0:
+                    self._logger.info("Saving data downloaded so far.")
+                    self.save()
+
+            when_to_save_counter = [0]
+
+            self.batch_async_get_data_points(queries, map_result=map_response)
+
+        self.downloaded = True
+
+        self.save()
 
         return
 
