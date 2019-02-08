@@ -121,11 +121,10 @@ class SimilarRegionState(object):
         progress_idx = 0
         for properties in self.region_properties.values():
             num_features = properties["properties"]["num_features"]
-            slope_vector = np.arange(1.0,
-                                     LOWEST_PERCENTAGE_WEIGHT_FEATURE,
-                                     -(1.0 - LOWEST_PERCENTAGE_WEIGHT_FEATURE) / float(num_features))
-            slope_vector *= properties["properties"]["weight"]
             if properties["properties"]["weight_slope"]:
+                slope_vector = np.arange(1.0, LOWEST_PERCENTAGE_WEIGHT_FEATURE,
+                                         -(1.0 - LOWEST_PERCENTAGE_WEIGHT_FEATURE) / float(num_features))
+                slope_vector *= properties["properties"]["weight"]
                 self.weight_vector[progress_idx:progress_idx+num_features] = slope_vector
             else:
                 self.weight_vector[progress_idx:progress_idx + num_features] *= properties["properties"]["weight"]
@@ -164,7 +163,7 @@ class SimilarRegionState(object):
         self._logger.info("Done standardizing data matrix.")
         return
 
-    def _get_data(property_name):
+    def _get_data(self, property_name):
         """Gets data for all regions for the given property and saves it to
         memory (and local cache on disk).
         """
