@@ -14,14 +14,18 @@ def main():
     parser.add_argument("--num_regions", default=10)
     args = parser.parse_args()
 
-    sim = SimilarRegion(region_properties, regions_to_compare=USA_STATES)
     if args.csv_output:
         level_suffix = "" if not args.region_level else "_level_" + str(args.region_level)
         f = open(str(args.region_id) + level_suffix + ".csv", 'wb')
-        csv_writer = csv.writer(f, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+        csv_writer = None
 
+    sim = SimilarRegion(region_properties, regions_to_compare=USA_STATES)
     for output in sim.similar_to(args.region_id, args.num_regions, args.region_level):
         if args.csv_output:
+            if not csv_writer:
+                csv_writer = csv.DictWriter(f, fieldnames= output.keys(),
+                                            delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+                csv_writer.writeheader()
             csv_writer.writerow(output)
         else:
             print(output)
