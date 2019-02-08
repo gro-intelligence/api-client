@@ -27,8 +27,6 @@ class SimilarRegion(BatchClient):
             regions_to_compare = self._regions_avail_for_selection(region_properties)
 
         self.state = SimilarRegionState(region_properties, regions_to_compare)
-        self._generate_weight_vector(region_properties)
-
         return
 
     def _regions_avail_for_selection(self, region_properties):
