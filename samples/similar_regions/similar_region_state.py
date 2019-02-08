@@ -58,7 +58,6 @@ class SimilarRegionState(object):
 
         # Standardized (0-mean,1-std) version of data in a 2d array (without structure/masking nonsense)
         self.data_standardized = np.zeros((self.num_regions, self.tot_num_features), dtype='d')
-        self.recompute = True
 
         # Weights of each metric
         self.weight_vector = np.ones(self.tot_num_features, dtype='d')
@@ -216,6 +215,7 @@ class SimilarRegionState(object):
         self._logger.info("Getting data series for {} regions for property {}".format(
             len(queries), property_name))
         self.batch_async_get_data_points(queries, map_result=map_response)
+        self._standardize()
         self.save()
         return
 
