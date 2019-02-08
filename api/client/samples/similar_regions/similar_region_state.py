@@ -172,13 +172,10 @@ class SimilarRegionState(object):
 
     def _get_data(property_name):
         """Gets data for all regions for the given property and saves it to
-        memory (and local cache on disk)
-
+        memory (and local cache on disk).
         """
-
         props = self.region_properties[property_name]
         query = props["selected_entities"]
-
         # Let's ask the server what times we have available and use those in post-processing.
         data_series = self.get_data_series(**query)[0]
         start_date = dateparser.parse(data_series["start_date"])
@@ -202,11 +199,8 @@ class SimilarRegionState(object):
             queries.append(copy_of_metric)
             map_query_to_data_table.append(self.mapping[region])
 
-            self._logger.info("about to download dataseries for {} regions for property {}".format(len(queries), name))
-
             def map_response(idx, _, response):
                 data_table_idx = map_query_to_data_table[idx]
-                save_counter = when_to_save_counter
 
                 if response is None or len(response) == 0 or (len(response) == 1 and response[0] == {}):
                     # no data on this region. let's fill it with zeros for the odd cases and mark it for masking.
@@ -218,7 +212,6 @@ class SimilarRegionState(object):
                     result, coverage = transform.post_process_timeseries(no_of_points, start_datetime, response,
                                                                          start_idx, num_features,
                                                                          period_length_days=period_length_days)
-
                     # if there are less points than there are in our lowest period event, let's discard this...
                     if coverage < 1/float(start_idx):
                         self.data[name][data_table_idx] = 0.0
@@ -229,20 +222,9 @@ class SimilarRegionState(object):
 
                 # Mark this as downloaded.
                 self.missing[name][data_table_idx] = False
-                save_counter[0] += 1
 
-                # Save this every 10,000 items downloaded.
-                if save_counter[0] % 10000 == 0:
-                    self._logger.info("Saving data downloaded so far.")
-                    self.save()
-
-        when_to_save_counter = [0]
-
+        self._logger.info("Getting data series for {} regions for property {}".format(len(queries), name))
         self.batch_async_get_data_points(queries, map_result=map_response)
-
-        self.downloaded = True
-
         self.save()
-
         return
 
