@@ -1,12 +1,11 @@
 import numpy as np
 import unittest
 from datetime import datetime
-
-from api.client.similar_regions.transform import _fill_in_blank_days, Imputation, FourierCoef
+from api.client.samples.similar_regions.transform import _fill_in_blank_days
 
 class TransformTests(unittest.TestCase):
+
     def setUp(self):
-        self.imputer = Imputation()
         self.fourier = FourierCoef()
         pass
 
@@ -27,13 +26,6 @@ class TransformTests(unittest.TestCase):
 
         return
 
-    def test_impute(self):
-
-        fake_pulled_dataset = np.array([1,2,3,float('NaN'),5,float('NaN'),float('NaN'),8])
-        np.testing.assert_equal(self.imputer.transform(fake_pulled_dataset), np.array([1, 2, 3, 4, 5, 6, 7, 8]))
-
-        return
-
     def test_fourier(self):
 
         # we want to make sure we test phase independance here as well
@@ -41,7 +33,6 @@ class TransformTests(unittest.TestCase):
         x = np.linspace(-np.pi, np.pi, 201)
         y = np.sin(5*x)
         coef = self.fourier.transform(y)
-
 
         y_with_phase = np.sin(5*x+0.2345)
         coef_with_phase = self.fourier.transform(y_with_phase)
