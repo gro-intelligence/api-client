@@ -1,12 +1,12 @@
 import numpy as np
 import unittest
 from datetime import datetime
-from api.client.samples.similar_regions.transform import _fill_in_blank_days
+from api.client.samples.similar_regions.transform import _fill_in_blank_days, FourierCoef
 
 class TransformTests(unittest.TestCase):
 
     def setUp(self):
-        self.fourier = FourierCoef()
+        self.fourier = FourierCoef(0, 10)
         pass
 
     def test_fill_in_days(self):
