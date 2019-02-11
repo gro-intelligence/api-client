@@ -109,7 +109,7 @@ class SimilarRegionState(object):
                     self.missing[name][mutual_regions_mapping[mutual_regions_missing]] = True
                 self._logger.info("Loaded {} cached regions for property {}".format(len(mutual_regions), name))
             # Fill in the missing data if any e.g. in case the cache
-            # wwas created with a subset of current regions_to_compare 
+            # was created with a subset of current regions_to_compare
             self._get_data(name)
         self._standardize()
         self.save()
@@ -145,7 +145,7 @@ class SimilarRegionState(object):
         self.inverse_mapping = self.inverse_mapping[rows_to_keep]
         for idx in distric_idxs_to_remove:
             del self.mapping[idx]
-        #Update the number of regions
+        # update the number of regions
         self.num_regions = len(self.inverse_mapping)
 
         # copy in from the nonstruc view
@@ -159,20 +159,8 @@ class SimilarRegionState(object):
         self.data_standardized /= std
         self.data_standardized *= self.weight_vector
 
-        # As it turns out we should place all our masked values at the mean points for that column !!!
-        # this ensures they are treated fairly despite missing a portion of the data.
-
-        # # from https://stackoverflow.com/questions/5564098/repeat-numpy-array-without-replicating-data
-        # view_of_data_means = np.lib.stride_tricks.as_strided(self.data_mean,
-        #                                                      (1000, self.data_mean.size),
-        #                                                      (0, self.data_mean.itemsize))
-        #
-        # += view_of_data_means[self.data.mask]
-
-        # Center all of these I suppose is the most straightforward solution for now.
         # TODO: handle missing data properly.
         #https://math.stackexchange.com/questions/195245/average-distance-between-random-points-on-a-line-segment
-
 
         self._logger.info("Done standardizing data matrix.")
         return
@@ -188,10 +176,10 @@ class SimilarRegionState(object):
         start_date = datetime.strptime(data_series["start_date"], '%Y-%m-%dT%H:%M:%S.%fZ')
         period_length_days = self.client.lookup('frequencies', query["frequency_id"])['periodLength']['days']
         end_date = datetime.strptime(data_series["end_date"], '%Y-%m-%dT%H:%M:%S.%fZ')
-        no_of_points = (end_date - start_date).days / period_length_days
-        self._logger.info("length of data series is {} days".format(no_of_points))
+        num_of_points = (end_date - start_date).days / period_length_days
+        self._logger.info("length of data series is {} days".format(num_of_points))
         longest_period_feature_period = props["properties"]["longest_period_feature_period"]
-        start_idx = math.floor(no_of_points / float(longest_period_feature_period))
+        start_idx = math.floor(num_of_points / float(longest_period_feature_period))
         self._logger.info("first coef index will be {}".format(start_idx))
         num_features = props["properties"]["num_features"]
         # deep copy the metric for each query.
@@ -211,8 +199,8 @@ class SimilarRegionState(object):
                 # flag this as invalid.
                 self.data[property_name][data_table_idx] = np.ma.masked
             else:
-                # TODO: remove start_datetime stuff here once we have "addNulls" on the server
-                result, coverage = transform.post_process_timeseries(no_of_points, start_date, response,
+                # TODO: remove start_datetime stuff here once we have "addNulls" available in api
+                result, coverage = transform.post_process_timeseries(num_of_points, start_date, response,
                                                                      start_idx, num_features,
                                                                      period_length_days=period_length_days)
                 # if there are less points than there are in our lowest period event, let's discard this...
