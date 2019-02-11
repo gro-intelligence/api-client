@@ -112,7 +112,6 @@ class SimilarRegionState(object):
             # was created with a subset of current regions_to_compare
             self._get_data(name)
         self._standardize()
-        self.save()
         self._logger.info("Done loading.")
         return
 
