@@ -173,6 +173,9 @@ class SimilarRegionState(object):
         query = props["selected_entities"]
         # Let's ask the server what times we have available and use those in post-processing.
         data_series = self.client.get_data_series(**query)[0]
+
+        assert data_series, "No data series found for selection {}".format(query)
+
         start_date = datetime.strptime(data_series["start_date"], '%Y-%m-%dT%H:%M:%S.%fZ')
         period_length_days = self.client.lookup('frequencies', query["frequency_id"])['periodLength']['days']
         end_date = datetime.strptime(data_series["end_date"], '%Y-%m-%dT%H:%M:%S.%fZ')
