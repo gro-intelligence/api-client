@@ -9,7 +9,7 @@ import api.client.lib
 from api.client.samples.similar_regions import transform
 
 
-CACHE_PATH = ".cache/"
+CACHE_PATH = "similar_region_state_cache"
 # How much to weight the lowest weight feature.
 # The features (coefficients for FFT) per metric will be weighted from 1.0 to LOWEST_PERCENTAGE_WEIGHT_FEATURE
 LOWEST_PERCENTAGE_WEIGHT_FEATURE = 0.6
