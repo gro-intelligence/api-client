@@ -22,7 +22,12 @@ class SimilarRegion(object):
         self._logger = get_default_logger()
         if not regions_to_compare:
             regions_to_compare = self._regions_avail_for_selection(region_properties)
+        self._logger.info("SimilarRegionState: loading...")
         self.state = SimilarRegionState(region_properties, regions_to_compare, self.client)
+        self._logger.info("SimilarRegionState: done.")
+        self._logger.info("BallTree: computing...")
+        self.ball = BallTree(self.state.data_standardized, leaf_size=2)
+        self._logger.info("BallTree: done.")
         return
 
     def _regions_avail_for_selection(self, region_properties):
@@ -66,19 +71,8 @@ class SimilarRegion(object):
         # list as an index to preserve dimensionality of returned data
         x = self.state.data_standardized[self.state.mapping[region_id], :]
         x = x.reshape(1, -1)
-        neighbour_dists, neighbour_idxs = self.state.ball.query(x, k=number_of_regions)
+        neighbour_dists, neighbour_idxs = self.ball.query(x, k=number_of_regions)
         return neighbour_idxs[0], neighbour_dists[0]
-
-    def _compute_similarity_matrix(self):
-        """
-        Compute and cache the similarity matrix/ball tree from the standardized data.
-        :return: None. Modifies property "sim_matrix"
-        """
-        # Compute a ball tree (this is quicker than expected)
-        self._logger.info("BallTree: computing")
-        self.state.ball = BallTree(self.state.data_standardized, leaf_size=2)
-        self._logger.info("BallTree: done")
-        return
 
     def similar_to(self, region_id, number_of_regions=10, requested_level=None):
         """
@@ -88,8 +82,6 @@ class SimilarRegion(object):
         :return: a generator of the most similar regions as a list in the form
         [{id: 123, name: "abc", distance: 1.23, parent_regions: [{"abc"456, 789]
         """
-
-        self._compute_similarity_matrix()
         sim_regions, dists = self._similar_to(region_id, number_of_regions)
         self._logger.info("Found {} regions most similar to '{}'.".format(len(sim_regions), region_id))
         for output in self._format_results(sim_regions, requested_level, dists):

@@ -56,9 +56,6 @@ class SimilarRegionState(object):
         # Weights of each metric
         self.weight_vector = np.ones(self.tot_num_features, dtype='d')
 
-        # The ball tree
-        self.ball = None
-
         self.load()
         self.save()
 
