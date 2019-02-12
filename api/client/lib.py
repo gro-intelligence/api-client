@@ -31,7 +31,7 @@ def get_access_token(api_host, user_email, user_password, logger=None):
       logger.debug("Authentication succeeded in get_access_token")
       return get_api_token.json()['data']['accessToken']
     else:
-      logger.warning("Error in get_access_token: {}".format(get_api_token))
+      logger.warning("Error in get_access_token: {}".format(get_api_token.body))
     retry_count += 1
   raise Exception("Giving up on get_access_token after {0} tries.".format(retry_count))
 
@@ -309,7 +309,7 @@ def lookup_belongs(access_token, api_host, entity_type, entity_id):
   params = { 'ids': str(entity_id) }
   headers = {'authorization': 'Bearer ' + access_token}
   resp = get_data(url, headers, params)
-  for parent_entity_id in resp.json().get('data').get(str(entity_id)):
+  for parent_entity_id in resp.json().get('data').get(str(entity_id), []):
     yield lookup(access_token, api_host, entity_type, parent_entity_id)
 
 
