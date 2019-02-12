@@ -1,4 +1,2 @@
-output/*
-!output/.gitkeep
-.cache/*
-!.cache/.gitkeep
+similar_region_state_cache/*
+!similar_region_state_cache/.gitkeep
