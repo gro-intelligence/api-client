@@ -26,7 +26,7 @@ def add_brazil_soybeans_yield(model):
     entities = {}
     # Search for item and metric by name, and use the top result
     entities['item_id'] =  model.search_for_entity('items', "soybeans")
-    entities['metric_id'] = model.search_for_entity('metrics', "yield")
+    entities['metric_id'] = model.search_for_entity('metrics', "yield mass/area")
     # There are many regions with "brazil" in the name, level = 3 is
     # the country
     for region in model.search_and_lookup('regions', "brazil"):
