@@ -109,7 +109,6 @@ class SimilarRegionState(object):
             # was created with a subset of current regions_to_compare
             self._get_data(name)
         self._standardize()
-        self.save()
         self._logger.info("Done loading.")
         return
 
@@ -169,7 +168,9 @@ class SimilarRegionState(object):
         props = self.region_properties[property_name]
         query = props["selected_entities"]
         # Let's ask the server what times we have available and use those in post-processing.
-        data_series = self.client.get_data_series(**query)[0]
+        series_list = self.client.get_data_series(**query)
+        assert len(series_list) > 0, "No data series found for selection {}".format(query)
+        data_series = series_list[0]
         start_date = datetime.strptime(data_series["start_date"], '%Y-%m-%dT%H:%M:%S.%fZ')
         period_length_days = self.client.lookup('frequencies', query["frequency_id"])['periodLength']['days']
         end_date = datetime.strptime(data_series["end_date"], '%Y-%m-%dT%H:%M:%S.%fZ')
