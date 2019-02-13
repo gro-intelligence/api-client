@@ -1,3 +1,5 @@
+from builtins import map
+from builtins import str
 import logging
 import requests
 import sys
@@ -43,6 +45,7 @@ def get_data(url, headers, params=None, logger=None):
   if not logger:
     logger = get_default_logger()
   logger.debug(url)
+  logger.debug(params)
   while retry_count < MAX_RETRIES:
     start_time = time.time()
     data = requests.get(url, params=params, headers=headers, timeout=None)
@@ -83,8 +86,8 @@ def list_available(access_token, api_host, selected_entities):
   """
   url = '/'.join(['https:', '', api_host, 'v2/entities/list'])
   headers = {'authorization': 'Bearer ' + access_token}
-  params = dict(map(lambda (key, value): (snake_to_camel(key), value),
-                    selected_entities.items()))
+  params = dict([(snake_to_camel(key), value)
+                 for (key, value) in list(selected_entities.items())])
   resp = get_data(url, headers, params)
   try:
     return resp.json()['data']
@@ -109,7 +112,7 @@ def lookup(access_token, api_host, entity_type, entity_id):
 def snake_to_camel(term):
   """Converts hello_world to helloWorld."""
   camel = term.split('_')
-  return ''.join(camel[:1]+ map(lambda x: x[0].upper()+x[1:], camel[1:]))
+  return ''.join(camel[:1] + list([x[0].upper()+x[1:] for x in camel[1:]]))
 
 
 def get_params_from_selection(**selection):
@@ -117,8 +120,8 @@ def get_params_from_selection(**selection):
   and rank_series_by_source().
   """
   params = { }
-  for key, value in selection.items():
-    if key in ('region_id', 'partner_region_id', 'item_id', 'metric_id', 'frequency_id', 'source_id'):
+  for key, value in list(selection.items()):
+    if key in ('region_id', 'partner_region_id', 'item_id', 'metric_id', 'source_id', 'frequency_id'):
       params[snake_to_camel(key)] = value
   return params
 
@@ -129,7 +132,7 @@ def get_crop_calendar_params(**selection):
   inputs since crop calendars are static.
   """
   params = { }
-  for key, value in selection.items():
+  for key, value in list(selection.items()):
     if key in ('region_id', 'item_id'):
       params[snake_to_camel(key)] = value
   return params
@@ -139,8 +142,8 @@ def get_data_call_params(**selection):
   """Construct http request params from dict of entity selections. For use with get_data_points().
   """
   params = get_params_from_selection(**selection)
-  for key, value in selection.items():
-    if key in ('start_date', 'end_date', 'show_revisions'):
+  for key, value in list(selection.items()):
+    if key in ('source_id', 'frequency_id', 'start_date', 'end_date', 'show_revisions'):
       params[snake_to_camel(key)] = value
   return params
 
@@ -167,30 +170,25 @@ def rank_series_by_source(access_token, api_host, series_list):
   prefered soruce comes first. Differences other than source_id are
   not affected.
   """
-
   # We sort the internal tuple representations of the dictionaries because otherwise when we call set()
   # we end up with duplicates if iteritems() returns a different order for the same dictionary. See
   # test case...
-  selections_sorted = set(
-                          tuple(
-                              sorted(
-                                filter(lambda (k, v): k != 'source_id', single_series.iteritems()),
-                                key=lambda x: x[0]
-                              )
-                          ) for single_series in series_list
-                        )
+  selections_sorted = set(tuple(sorted(
+    [k_v for k_v in iter(list(single_series.items())) if k_v[0] != 'source_id'],
+    key=lambda x: x[0])) for single_series in series_list)
 
   for series in map(dict, selections_sorted):
     url = '/'.join(['https:', '', api_host, 'v2/available/sources'])
     headers = {'authorization': 'Bearer ' + access_token}
-    params = dict((k + 's', v)
-                  for k, v in get_params_from_selection(**series).iteritems())
+    params = dict((k + 's', v) for k, v in iter(list(
+      get_params_from_selection(**series).items())))
     source_ids = get_data(url, headers, params).json()
     for source_id in source_ids:
       # Make a copy to avoid passing the same reference each time.
       series_with_source = dict(series)
       series_with_source['source_id'] = source_id
       yield series_with_source
+
 
 def format_crop_calendar_response(resp):
   """Makes the v2/cropcalendar/data output a similar format to the normal /v2/data output. Splits

@@ -1,3 +1,4 @@
+from builtins import object
 from api.client import lib
 
 
@@ -54,4 +55,3 @@ class Client(object):
     def get_descendant_regions(self, region_id, descendant_level=None):
         return lib.get_descendant_regions(self.access_token, self.api_host,
                                           region_id, descendant_level)
-
