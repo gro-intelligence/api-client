@@ -1,9 +1,0 @@
-unicodecsv
-numpy
-pandas
-python-dateutil
-pytz
-certifi
-chardet
-requests
-urllib3

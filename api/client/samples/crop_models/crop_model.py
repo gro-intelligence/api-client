@@ -1,3 +1,8 @@
+from __future__ import division
+from builtins import map
+from builtins import str
+from builtins import zip
+from past.utils import old_div
 import itertools
 import pandas
 import math
@@ -70,7 +75,7 @@ class CropModel(api.client.Client):
                 self.search('regions', kwargs['partner_region'])[:MAX_RESULTS])
             keys.append('partner_region_id')
         for comb in itertools.product(*search_results):
-            entities = dict(zip(keys, [entity['id'] for entity in comb]))
+            entities = dict(list(zip(keys, [entity['id'] for entity in comb])))
             data_series_list = self.get_data_series(**entities)
             self._logger.debug("Found {} distinct data series for {}".format(
                 len(data_series_list), entities))
@@ -114,16 +119,16 @@ class CropModel(api.client.Client):
                 break
         # Compute the average over time for reach region
         df = self.get_df()
-
+        
         def mapper(region):
             return df[(df['metric_id'] == entities['metric_id']) & \
                       (df['region_id'] == region['id'])]['value'].mean(skipna=True)
-        means = map(mapper, regions)
+        means = list(map(mapper, regions))
         self._logger.debug('Means = {}'.format(
-            zip([region['name'] for region in regions], means)))
+            list(zip([region['name'] for region in regions], means))))
         # Normalize into weights
-        total = math.fsum(filter(lambda x: not math.isnan(x), means))
-        return [mean/total for mean in means]
+        total = math.fsum([x for x in means if not math.isnan(x)])
+        return [old_div(mean,total) for mean in means]
 
     def compute_crop_weighted_series(self,
                                      weighting_crop_name, weighting_metric_name,

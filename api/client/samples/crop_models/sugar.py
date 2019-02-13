@@ -1,14 +1,15 @@
+from __future__ import print_function
 # Sample Gro API client for sugar crop model
 #
 # Usage example:
 #
 #   export PYTHONPATH=/your/path/to/gro
-#   python sugar.py --user_email ... --user_password ...
+#   python sugar.py --user_email ...
 #
 # If you don't want to enter the password each time, print a token,
 # save it and use as follows:
 #
-#   export GROAPI_TOKEN=`python sugar.py --user_email ... --user_password ... --print_token`
+#   export GROAPI_TOKEN=`python sugar.py --user_email ... --print_token`
 #   python sugar.py
 #
 # Or if you don't save the token, you can pass it via cmd line
@@ -18,6 +19,7 @@
 # Ref: https://app.gro-intelligence.com/#/displays/23713
 
 import argparse
+import getpass
 import sys
 import unicodecsv
 import api.client.lib
@@ -31,17 +33,19 @@ def main():
     parser.add_argument("--user_email")
     parser.add_argument("--user_password")
     parser.add_argument("--print_token", action='store_true')
-    parser.add_argument("--token", default=os.environ['GROAPI_TOKEN'])
+    parser.add_argument("--token", default=os.environ.get('GROAPI_TOKEN', None))
     args = parser.parse_args()
-    assert (args.user_email and args.user_password) or args.token, \
-        "Need --token, or --user_email and --user_password"
+    assert args.user_email or args.token, \
+        "Need --token or --user_email"
     access_token = None
     if args.token:
         access_token = args.token
     else:
+        if not args.user_password:
+            args.user_password = getpass.getpass()
         access_token = api.client.lib.get_access_token(API_HOST, args.user_email, args.user_password)
     if args.print_token:
-        print access_token
+        print(access_token)
         sys.exit(0)
 
     model = CropModel(API_HOST, access_token)
@@ -61,11 +65,11 @@ def main():
                              point['value'] * point['input_unit_scale'],
                              model.lookup_unit_abbreviation(point['input_unit_id'])])
             count += 1
-        print "Output {} rows to {}".format(count, filename)
+        print("Output {} rows to {}".format(count, filename))
 
     if series_results:
         data_frame = model.get_df()
-        print "Loaded data frame of shape {}, columns: {}".format(data_frame.shape, data_frame.columns)
+        print("Loaded data frame of shape {}, columns: {}".format(data_frame.shape, data_frame.columns))
 
 
 if __name__ == "__main__":
