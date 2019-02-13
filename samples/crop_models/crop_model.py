@@ -94,15 +94,12 @@ class CropModel(api.client.Client):
             return result['id']
 
     def get_provinces(self, country_name):
-        provinces = []
         for region in self.search_and_lookup('regions', country_name):
             if region['level'] == 3: # country
-                for member_id in region['contains']:
-                    member = self.lookup('regions', member_id)
-                    if member['level'] == 4: # province
-                        provinces.append(member)
-                break
-        return provinces
+                provinces =  self.get_descendant_regions(region['id'], 4) # provinces
+                self._logger.debug("Provinces of {}: {}".format(country_name, provinces))
+                return provinces
+        return None
 
     def compute_weights(self, crop_name, metric_name, regions):
         """Add the weighting data series to this model. Compute the weights,
@@ -122,7 +119,7 @@ class CropModel(api.client.Client):
                 break
         # Compute the average over time for reach region
         df = self.get_df()
-        
+
         def mapper(region):
             return df[(df['metric_id'] == entities['metric_id']) & \
                       (df['region_id'] == region['id'])]['value'].mean(skipna=True)
