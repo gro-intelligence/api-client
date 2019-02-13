@@ -46,8 +46,8 @@ def add_brazil_soybeans_yield(model):
 def get_brazil_soybeans_weighted_ndvi(model):
     provinces = model.get_provinces('brazil')
     df = model.compute_crop_weighted_series(
-        'soybeans', 'Production Quantity (mass)',
-        'Vegetation (NDVI)', 'Vegetation Indices (index)',
+        'soybeans', 'Production Quantity mass',
+        'Vegetation NDVI', 'Vegetation Indices index',
         provinces)
     return df
 
