@@ -14,6 +14,7 @@ import unicodecsv
 from random import random
 import pandas
 import api.client.lib
+import os
 
 
 API_HOST = 'api.gro-intelligence.com'
@@ -90,11 +91,14 @@ def main():
     parser.add_argument("--token")
     args = parser.parse_args()
 
-    assert args.user_email or args.token, \
+    assert args.user_email or args.token or os.environ['GROAPI_TOKEN'], \
         "Need --token, or --user_email"
     access_token = None
+
     if args.token:
         access_token = args.token
+    elif os.environ['GROAPI_TOKEN']:
+      access_token = os.environ['GROAPI_TOKEN']
     else:
         if not args.user_password:
             args.user_password = getpass.getpass()
