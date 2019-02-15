@@ -91,8 +91,7 @@ def main():
     parser.add_argument("--token", default=os.environ.get('GROAPI_TOKEN'))
     args = parser.parse_args()
 
-    assert args.user_email or args.token or os.environ['GROAPI_TOKEN'], \
-        "Need --token, or --user_email"
+    assert args.user_email or args.token, "Need --token, or --user_email, or $GROAPI_TOKEN"
     access_token = None
 
     if args.token:
