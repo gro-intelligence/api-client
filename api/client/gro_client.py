@@ -14,6 +14,7 @@ import unicodecsv
 from random import random
 import pandas
 import api.client.lib
+import os
 
 
 API_HOST = 'api.gro-intelligence.com'
@@ -87,12 +88,12 @@ def main():
     parser.add_argument("--region")
     parser.add_argument("--partner_region")
     parser.add_argument("--print_token", action='store_true')
-    parser.add_argument("--token")
+    parser.add_argument("--token", default=os.environ.get('GROAPI_TOKEN'))
     args = parser.parse_args()
 
-    assert args.user_email or args.token, \
-        "Need --token, or --user_email"
+    assert args.user_email or args.token, "Need --token, or --user_email, or $GROAPI_TOKEN"
     access_token = None
+
     if args.token:
         access_token = args.token
     else:
