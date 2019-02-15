@@ -88,7 +88,7 @@ def main():
     parser.add_argument("--region")
     parser.add_argument("--partner_region")
     parser.add_argument("--print_token", action='store_true')
-    parser.add_argument("--token")
+    parser.add_argument("--token", default=os.environ.get('GROAPI_TOKEN'))
     args = parser.parse_args()
 
     assert args.user_email or args.token or os.environ['GROAPI_TOKEN'], \
@@ -97,8 +97,6 @@ def main():
 
     if args.token:
         access_token = args.token
-    elif os.environ['GROAPI_TOKEN']:
-      access_token = os.environ['GROAPI_TOKEN']
     else:
         if not args.user_password:
             args.user_password = getpass.getpass()
