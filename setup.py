@@ -13,7 +13,7 @@ setuptools.setup(
     long_description = long_description,
     long_description_content_type = "text/markdown",
     url = "https://github.com/gro-intelligence/api-client",
-    packages = [ 'api', 'api.client', 'api.client.samples.crop_models'],
+    packages = setuptools.find_packages(),
     python_requires = ">=2.7.6",
     install_requires = requirements,
     entry_points = {
