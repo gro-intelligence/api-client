@@ -14,7 +14,7 @@ setuptools.setup(
     long_description_content_type = "text/markdown",
     url = "https://github.com/gro-intelligence/api-client",
     packages = [ 'api', 'api.client' ],
-    py_modules = [ 'api.client.lib', 'api.client.gro_client' ],
+    py_modules = [ 'api.client.lib', 'api.client.gro_client', 'api.client.samples.crop_models' ],
     python_requires = ">=2.7.6",
     install_requires = requirements,
     entry_points = {
