@@ -6,15 +6,12 @@ from __future__ import print_function
 #   export PYTHONPATH=./gro
 #   python gro/api/client/gro_client.py --item soybeans  --region brazil --partner_region china --metric export --user_email ...
 #   python gro/api/client/gro_client.py --item=sesame --region=ethiopia --user_email=...
-from builtins import str
-from past.utils import old_div
-from random import random
-import argparse
 import getpass
-import itertools
-import math
+from builtins import str
+import argparse
 import sys
 import unicodecsv
+from random import random
 import pandas
 import api.client.lib
 import os
@@ -24,136 +21,62 @@ API_HOST = 'api.gro-intelligence.com'
 OUTPUT_FILENAME = 'gro_client_output.csv'
 
 
-class GroClient(api.client.Client):
-    """A Client with methods to find, and manipulate data series related
-    to a crop and/or region.
-
-    This class offers convenience methods for some common scenarios
-
-    - keeping an index of data series for repeated use and retrieving
-    them as a Pandas data frame containing all the points.
-
-    It also includes convenience methods for doing a crop weighted
-
+def get_df(client, **selected_entities):
+    """Get the content of data series in a pandas frame.
+    selected_entities should be some or all of: item_id, metric_id,
+    region_id, frequency_id, source_id, partner_region_id
     """
-
-    _logger = api.client.lib.get_default_logger()
-    _data_series_list = []  # all that have been added
-    _data_series_queue = []  # added but not loaded in data frame
-    _data_frame = None
-
-    ###
-    # Finding, indexing and loading multiple data series into a data frame
-    ###
-    def get_df(self):
-        """Get the content of all data series in a Pandas frame."""
-        frames = [self._data_frame]
-        while self._data_series_queue:
-            frames.append(pandas.DataFrame(data=self.get_data_points(
-                **self._data_series_queue.pop())))
-        if len(frames) > 1:
-            self._data_frame = pandas.concat(frames)
-        return self._data_frame
-
-    def get_data_series_list(self):
-        return list(self._data_series_list)
-
-    def add_single_data_series(self, data_series):
-        self._data_series_list.append(data_series)
-        self._data_series_queue.append(data_series)
-        self._logger.info("Added {}".format(data_series))
-        return
-
-    def add_data_series(self, **kwargs):
-        """Search for entities matching the given names, find data series for
-        the given combination, and add them to this objects list of
-        series."""
-        MAX_RESULTS=3
-        search_results = []
-        keys = []
-        if kwargs.get('item'):
-            search_results.append(
-                self.search('items', kwargs['item'])[:MAX_RESULTS])
-            keys.append('item_id')
-        if kwargs.get('metric'):
-            search_results.append(
-                self.search('metrics', kwargs['metric'])[:MAX_RESULTS])
-            keys.append('metric_id')
-        if kwargs.get('region'):
-            search_results.append(
-                self.search('regions', kwargs['region'])[:MAX_RESULTS])
-            keys.append('region_id')
-        if kwargs.get('partner_region'):
-            search_results.append(
-                self.search('regions', kwargs['partner_region'])[:MAX_RESULTS])
-            keys.append('partner_region_id')
-        for comb in itertools.product(*search_results):
-            entities = dict(list(zip(keys, [entity['id'] for entity in comb])))
-            data_series_list = self.get_data_series(**entities)
-            self._logger.debug("Found {} distinct data series for {}".format(
-                len(data_series_list), entities))
-            for data_series in self.rank_series_by_source(data_series_list):
-                self.add_single_data_series(data_series)
-                return
-    ###
-    # Search and navigation shortcuts
-    ###
-    def search_for_entity(self, entity_type, keywords):
-        """Returns the first result of entity_type (which is items, metrics or
-        regions) that matches the given keywords.
-        """
-        results = self.search(entity_type, keywords)
-        for result in results:
-            self._logger.debug("First result, out of {} {}: {}".format(
-                len(results), entity_type, result['id']))
-            return result['id']
-
-    def get_provinces(self, country_name):
-        for region in self.search_and_lookup('regions', country_name):
-            if region['level'] == 3: # country
-                provinces =  self.get_descendant_regions(region['id'], 4) # provinces
-                self._logger.debug("Provinces of {}: {}".format(country_name, provinces))
-                return provinces
-        return None
+    return pandas.DataFrame(client.get_data_points(**selected_entities))
 
 
-    ### Convenience methods that automatically fill in partial selections with random entities
-    def pick_random_entities(self):
-        """Pick a random item that has some data associated with it, and a
-        random metric and region pair for that item with data
-        available.
-        """
-        item_list = self.get_available('items')
-        num = 0
-        while not num:
-            item = item_list[int(len(item_list)*random())]
-            selected_entities = {'itemId':  item['id']}
-            entity_list = self.list_available(selected_entities)
-            num = len(entity_list)
-        entities = entity_list[int(num*random())]
-        self._logger.info("Using randomly selected entities: {}".format(str(entities)))
-        selected_entities.update(entities)
-        return selected_entities
+def print_random_data_series(client, selected_entities):
+    """Example which prints out a CSV of a random data series that
+    satisfies the (optional) given selection.
+    """
+    # Pick a random data series for this selection
+    data_series_list = client.get_data_series(**selected_entities)
+    if not data_series_list:
+        raise Exception("No data series available for {}".format(
+            selected_entities))
+    data_series = data_series_list[int(len(data_series_list)*random())]
+    print("Using data series: {}".format(str(data_series)))
+    print("Outputing to file: {}".format(OUTPUT_FILENAME))
+    writer = unicodecsv.writer(open(OUTPUT_FILENAME, 'wb'))
+    for point in client.get_data_points(**data_series):
+        writer.writerow([point['start_date'], point['end_date'],
+                         point['value'] * point['input_unit_scale'],
+                         client.lookup_unit_abbreviation(point['input_unit_id'])])
 
-    def pick_random_data_series(self, selected_entities):
-        """Given a selection of tentities, pick a random available data series
-        the given selection of entities.
-        """
-        data_series_list = self.get_data_series(**selected_entities)
-        if not data_series_list:
-            raise Exception("No data series available for {}".format(
-                selected_entities))
-        selected_data_series = data_series_list[int(len(data_series_list)*random())]
-        return selected_data_series
 
-    def print_one_data_series(self, data_series, filename):
-        self._logger.info("Using data series: {}".format(str(data_series)))
-        self._logger.info("Outputing to file: {}".format(filename))
-        writer = unicodecsv.writer(open(filename, 'wb'))
-        for point in self.get_data_points(**data_series):
-            writer.writerow([point['start_date'], point['end_date'],
-                             point['value'] * point['input_unit_scale'],
-                             self.lookup_unit_abbreviation(point['input_unit_id'])])
+def search_for_entity(client, entity_type, keywords):
+    """Returns the first result of entity_type (which is items, metrics or
+    regions) that matches the given keywords.
+    """
+    results = client.search(entity_type, keywords)
+    for result in results:
+        print("Picking first result out of {} {}: {}".format(
+            len(results), entity_type, result['id']))
+        return result['id']
+    return None
+
+
+def pick_random_entities(client):
+    """Pick a random item that has some data associated with it, and a
+    random metric and region pair for that item with data
+    available.
+    """
+    item_list = client.get_available('items')
+    num = 0
+    while not num:
+        item = item_list[int(len(item_list)*random())]
+        print("Randomly selected item: {}".format(item['name']))
+        selected_entities = {'itemId':  item['id']}
+        entity_list = client.list_available(selected_entities)
+        num = len(entity_list)
+    entities = entity_list[int(num*random())]
+    print("Using entities: {}".format(str(entities)))
+    selected_entities.update(entities)
+    return selected_entities
 
 
 def main():
@@ -180,23 +103,23 @@ def main():
     if args.print_token:
         print(access_token)
         sys.exit(0)
-    client = GroClient(API_HOST, access_token)
+    client = api.client.Client(API_HOST, access_token)
 
     selected_entities = {}
     if args.item:
-        selected_entities['item_id'] = client.search_for_entity('items', args.item)
+        selected_entities['item_id'] = search_for_entity(client, 'items', args.item)
     if args.metric:
-        selected_entities['metric_id'] = client.search_for_entity('metrics', args.metric)
+        selected_entities['metric_id'] = search_for_entity(client, 'metrics', args.metric)
     if args.region:
-        selected_entities['region_id'] = client.search_for_entity('regions', args.region)
+        selected_entities['region_id'] = search_for_entity(client, 'regions', args.region)
     if args.partner_region:
-        selected_entities['partner_region_id'] = client.search_for_entity('regions', args.partner_region)
-    if not selected_entities:
-        selected_entities = client.pick_random_entities()
+        selected_entities['partner_region_id'] = search_for_entity(client, 'regions', args.partner_region)
 
-    data_series = client.pick_random_data_series(selected_entities)
+    if not selected_entities:
+        selected_entities = pick_random_entities(client)
+
     print("Data series example:")
-    client.print_one_data_series(data_series, OUTPUT_FILENAME)
+    print_random_data_series(client, selected_entities)
 
 
 if __name__ == "__main__":
