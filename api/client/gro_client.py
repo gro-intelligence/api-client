@@ -1,11 +1,17 @@
+"""
+Basic gro api client. 
+
+Usage examples:
+
+python gro_client.py --item=soybeans  --region=brazil --partner_region china --metric export
+python gro_client.py --item=sesame --region=ethiopia
+
+python gro_client.py --user_email=john.doe@example.com  --print_token
+
+For more information use --help
+"""
+
 from __future__ import print_function
-# Basic gro api client.
-#
-# Usage example:
-#
-#   export PYTHONPATH=./gro
-#   python gro/api/client/gro_client.py --item soybeans  --region brazil --partner_region china --metric export --user_email ...
-#   python gro/api/client/gro_client.py --item=sesame --region=ethiopia --user_email=...
 from builtins import str
 from random import random
 import argparse
@@ -161,8 +167,11 @@ def main():
     parser.add_argument("--metric")
     parser.add_argument("--region")
     parser.add_argument("--partner_region")
-    parser.add_argument("--print_token", action='store_true')
-    parser.add_argument("--token", default=os.environ.get('GROAPI_TOKEN'))
+    parser.add_argument("--print_token", action='store_true',
+                        help="Ouput API access token for the given user email and password. "
+                        "Save it in GROAPI_TOKEN environment variable.")
+    parser.add_argument("--token", default=os.environ.get('GROAPI_TOKEN'),
+                        help="Defaults to GROAPI_TOKEN environment variable.")
     args = parser.parse_args()
 
     assert args.user_email or args.token, "Need --token, or --user_email, or $GROAPI_TOKEN"
