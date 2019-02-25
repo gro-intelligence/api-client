@@ -1,10 +1,10 @@
 ## Similar Regions
 
-Gro has extensive data series on regions across the entire world. This allows for useful comparisons and contrasts between individual districts or even entire countries. To showcase one such approach, suppose you were interested in finding all the “similar” regions to a given region  you’ve chosen. 
+Gro's expansive data covers regions across the entire world. This depth of data enables powerful comparisons and contrasts between individual districts or even entire countries. This Similar Regions application offers a simple approach for quickly computing similarities between selected regions.
 
-Calling two regions “similar”, is, of course, a very fuzzy term and presupposes a lot of assumptions about what we really consider to be similar. If we are working in the context of agriculture, one could suppose that the key factors affecting similarity between two regions might be temperature, rainfall, soil moisture or any number of other metrics. 
+Calling two regions “similar” is, of course, a fuzzy term and presupposes a lot of assumptions about what can be considered similar. Working in the context of agriculture, key factors affecting similarity between two regions can commonly be recognized as temperature, rainfall, and soil moisture, among many others.
 
-The similar regions application makes use of the Gro API to compute similarities between individual regions and will compare a given region `a` to a given set of regions `B`, evaluating how similar `a` is to each region in `B` and returning an ordered list of `B`. The properties used to compare them are by default temperature, soil moisture and rainfall but these can be changed to any of the available metrics in Gro. 
+To showcase one such approach, suppose you were interested in finding all the “similar” regions to a given region `a`. This Similar Regions application will evaluate how similar `a` is to each region in a given set of regions `B`. The application will then return an ordered list of `B`. The properties used to compare `a` with `B` are by default temperature, soil moisture, and rainfall but these can be changed to any of the available metrics in Gro.
 
 ### Implementation/Technical Details:
 
