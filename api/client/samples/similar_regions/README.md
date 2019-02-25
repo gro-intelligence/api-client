@@ -56,10 +56,10 @@ The format of a new property is as follows:
 }
 ```
 
-num_features defines the number of features to extract from the timeseries. Currently, a fourier transform extracts these features, so num_features defines the number of fourier coefficients to use in the comparison.
+**num_features** defines the number of features to extract from the timeseries. Currently, a fourier transform extracts these features, so num_features defines the number of fourier coefficients to use in the comparison.
 
-longest_period_feature_period defines what we think the longest period features we might see are. For most properties we expect these to have yearly trends at the lowest frequency. So if this is a daily property, this number should be set to 365 (the longest periodicity we expect in the data is 365 days).
+**longest_period_feature_period** defines what we think the longest period features we might see are. For most properties we expect these to have yearly trends at the lowest frequency. So if this is a daily property, this number should be set to 365 (the longest periodicity we expect in the data is 365 days).
 
-weight defines the weight to assign this property in the similarity computation. If this value is 0, the property is ignored. If it’s 1, it’s at the maximum weighting. Changing this value will not invalidate the cache. 
+**weight** defines the weight to assign this property in the similarity computation. If this value is 0, the property is ignored. If it’s 1, it’s at the maximum weighting. Changing this value will not invalidate the cache. 
 
-weight_slope defines whether or not to weight later coefficients lower than earlier coefficients. The intuition behind this is that lower frequency signals (seasonal trends, for instance) will be more important in a similarity comparison than very high frequency signals (e.g. daily small temperature fluctuations). 
+**weight_slope** defines whether or not to weight later coefficients lower than earlier coefficients. The intuition behind this is that lower frequency signals (seasonal trends, for instance) will be more important in a similarity comparison than very high frequency signals (e.g. daily small temperature fluctuations). 
