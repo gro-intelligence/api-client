@@ -1,12 +1,9 @@
 from __future__ import division
 from builtins import map
-from builtins import str
 from builtins import zip
 from past.utils import old_div
-import itertools
 import pandas
 import math
-import unicodecsv
 
 from api.client.gro_client import GroClient
 
