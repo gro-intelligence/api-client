@@ -30,10 +30,9 @@ class GroClient(api.client.Client):
 
     This class offers convenience methods for some common scenarios
 
-    - keeping an index of data series for repeated use and retrieving
-    them as a Pandas data frame containing all the points.
-
-    It also includes convenience methods for doing a crop weighted
+    - finding entities by name rather than ids
+    - exploration shortcuts filling in partial selections
+    - finding and saving data series for repeated use, including in a data frame
 
     """
 
@@ -96,7 +95,7 @@ class GroClient(api.client.Client):
                 self.add_single_data_series(data_series)
                 return
     ###
-    # Search and navigation shortcuts
+    # Discovery shortcuts
     ###
     def search_for_entity(self, entity_type, keywords):
         """Returns the first result of entity_type (which is items, metrics or
@@ -116,8 +115,7 @@ class GroClient(api.client.Client):
                 return provinces
         return None
 
-
-    ### Convenience methods that automatically fill in partial selections with random entities
+    # Convenience methods that automatically fill in partial selections with random entities
     def pick_random_entities(self):
         """Pick a random item that has some data associated with it, and a
         random metric and region pair for that item with data
