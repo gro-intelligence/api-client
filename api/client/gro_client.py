@@ -7,7 +7,6 @@ from __future__ import print_function
 #   python gro/api/client/gro_client.py --item soybeans  --region brazil --partner_region china --metric export --user_email ...
 #   python gro/api/client/gro_client.py --item=sesame --region=ethiopia --user_email=...
 from builtins import str
-from past.utils import old_div
 from random import random
 import argparse
 import getpass
