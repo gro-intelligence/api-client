@@ -1,10 +1,10 @@
 ## Similar Regions
 
-Gro has extensive data series on regions and counties across the entire world. This allows for useful comparisons and contrasts between individual districts or even entire countries. To showcase one such approach, suppose you were interested in finding all the “similar” regions to a given region  you’ve chosen. 
+Gro has extensive data series on regions across the entire world. This allows for useful comparisons and contrasts between individual districts or even entire countries. To showcase one such approach, suppose you were interested in finding all the “similar” regions to a given region  you’ve chosen. 
 
 Calling two regions “similar”, is, of course, a very fuzzy term and presupposes a lot of assumptions about what we really consider to be similar. If we are working in the context of agriculture, one could suppose that the key factors affecting similarity between two regions might be temperature, rainfall, soil moisture or any number of other metrics. 
 
-The similar regions application makes use of the Gro API to compute such similarities for any two regions you specify. The properties used to compare them are by default temperature, soil moisture and rainfall but these can be changed to any of the available metrics in Gro. 
+The similar regions application makes use of the Gro API to compute similarities between individual regions and will compare a given region `a` to a given set of regions `B`, evaluating how similar `a` is to each region in `B` and returning an ordered list of `B`. The properties used to compare them are by default temperature, soil moisture and rainfall but these can be changed to any of the available metrics in Gro. 
 
 ### Implementation/Technical Details:
 
