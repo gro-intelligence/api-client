@@ -44,7 +44,7 @@ You can use the gro_client command line tool to request an authentication token.
 gro_client --user_email='email@example.com' --print_token
 ```
 
-This token is used throughout wherever authentication is required.
+This token is used throughout the Gro API client code, wherever authentication is required.
 
 ### Saving your token as an environment variable
 
@@ -53,11 +53,9 @@ the token as an environment variable. In the sample code, it is
 assumed that you have the token saved to your environment variables as
 GROAPI_TOKEN.
 
-Note that Gro authentication tokens *are subject to expire* though not
-very often. So if you do save yours elsewhere, you can add robustness
-to your application by falling back to
-`api.client.lib.get_access_token()` to get a new one if your previous
-one has expired.
+Gro authentication tokens *may* expire or be reset by the administrator,
+depending on your account status. You can re-run the above command to get a new one 
+if your previous one has expired.
 
 ## Examples
 
