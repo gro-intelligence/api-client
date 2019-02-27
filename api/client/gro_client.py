@@ -18,18 +18,19 @@ import argparse
 import getpass
 import itertools
 import math
+import os
+import pandas
 import sys
 import unicodecsv
-import pandas
-import api.client.lib
-import os
+from api.client import cfg, lib, Client
+
 
 
 API_HOST = 'api.gro-intelligence.com'
 OUTPUT_FILENAME = 'gro_client_output.csv'
 
 
-class GroClient(api.client.Client):
+class GroClient(Client):
     """A Client with methods to find, and manipulate data series related
     to a crop and/or region.
 
@@ -41,7 +42,7 @@ class GroClient(api.client.Client):
 
     """
 
-    _logger = api.client.lib.get_default_logger()
+    _logger = lib.get_default_logger()
     _data_series_list = []  # all that have been added
     _data_series_queue = []  # added but not loaded in data frame
     _data_frame = None
@@ -72,24 +73,23 @@ class GroClient(api.client.Client):
         """Search for entities matching the given names, find data series for
         the given combination, and add them to this objects list of
         series."""
-        MAX_RESULTS=3
         search_results = []
         keys = []
         if kwargs.get('item'):
             search_results.append(
-                self.search('items', kwargs['item'])[:MAX_RESULTS])
+                self.search('items', kwargs['item'])[:cfg.MAX_RESULT_COMBINATION_DEPTH])
             keys.append('item_id')
         if kwargs.get('metric'):
             search_results.append(
-                self.search('metrics', kwargs['metric'])[:MAX_RESULTS])
+                self.search('metrics', kwargs['metric'])[:cfg.MAX_RESULT_COMBINATION_DEPTH])
             keys.append('metric_id')
         if kwargs.get('region'):
             search_results.append(
-                self.search('regions', kwargs['region'])[:MAX_RESULTS])
+                self.search('regions', kwargs['region'])[:cfg.MAX_RESULT_COMBINATION_DEPTH])
             keys.append('region_id')
         if kwargs.get('partner_region'):
             search_results.append(
-                self.search('regions', kwargs['partner_region'])[:MAX_RESULTS])
+                self.search('regions', kwargs['partner_region'])[:cfg.MAX_RESULT_COMBINATION_DEPTH])
             keys.append('partner_region_id')
         for comb in itertools.product(*search_results):
             entities = dict(list(zip(keys, [entity['id'] for entity in comb])))
@@ -182,7 +182,7 @@ def main():
     else:
         if not args.user_password:
             args.user_password = getpass.getpass()
-        access_token = api.client.lib.get_access_token(API_HOST, args.user_email, args.user_password)
+        access_token = lib.get_access_token(API_HOST, args.user_email, args.user_password)
     if args.print_token:
         print(access_token)
         sys.exit(0)
