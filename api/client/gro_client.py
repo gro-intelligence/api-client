@@ -1,5 +1,5 @@
 """
-Basic gro api client. 
+Basic gro api client.
 
 Usage examples:
 
@@ -25,7 +25,6 @@ import unicodecsv
 from api.client import cfg, lib, Client
 
 
-
 API_HOST = 'api.gro-intelligence.com'
 OUTPUT_FILENAME = 'gro_client_output.csv'
 
@@ -42,10 +41,12 @@ class GroClient(Client):
 
     """
 
-    _logger = lib.get_default_logger()
-    _data_series_list = []  # all that have been added
-    _data_series_queue = []  # added but not loaded in data frame
-    _data_frame = None
+    def __init__(self, api_host, access_token):
+        super(GroClient, self).__init__(api_host, access_token)
+        self._logger = lib.get_default_logger()
+        self._data_series_list = []  # all that have been added
+        self._data_series_queue = []  # added but not loaded in data frame
+        self._data_frame = None
 
     ###
     # Finding, indexing and loading multiple data series into a data frame
@@ -120,7 +121,9 @@ class GroClient(Client):
                 return provinces
         return None
 
+    ###
     # Convenience methods that automatically fill in partial selections with random entities
+    ###
     def pick_random_entities(self):
         """Pick a random item that has some data associated with it, and a
         random metric and region pair for that item with data
