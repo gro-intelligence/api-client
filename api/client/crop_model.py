@@ -29,7 +29,8 @@ class CropModel(GroClient):
         df = self.get_df()
         
         def mapper(region):
-            return df[(df['metric_id'] == entities['metric_id']) & \
+            return df[(df['item_id'] == entities['item_id']) & \
+                      (df['metric_id'] == entities['metric_id']) & \
                       (df['region_id'] == region['id'])]['value'].mean(skipna=True)
         means = list(map(mapper, regions))
         self._logger.debug('Means = {}'.format(
