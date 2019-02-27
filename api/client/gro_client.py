@@ -149,7 +149,9 @@ class GroClient(Client):
         selected_data_series = data_series_list[int(len(data_series_list)*random())]
         return selected_data_series
 
+    # TODO: rename function to "write_..." rather than "print_..."
     def print_one_data_series(self, data_series, filename):
+        """Output a data series to a CSV file."""
         self._logger.info("Using data series: {}".format(str(data_series)))
         self._logger.info("Outputing to file: {}".format(filename))
         writer = unicodecsv.writer(open(filename, 'wb'))
