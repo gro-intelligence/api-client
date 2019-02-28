@@ -29,7 +29,7 @@ git clone https://github.com/gro-intelligence/api-client.git  [<your-gro-path>]
 If you don't specify your gro installation path, it will be the current directory.
 In addition, optionally you can:
 
-1. [Set `PYTHONPATH=<your-gro-path>` as an environment variable] (https://www.techwalla.com/articles/how-to-set-your-python-path)
+1. [Set `PYTHONPATH=<your-gro-path>` as an environment variable](https://www.techwalla.com/articles/how-to-set-your-python-path)
 
 2. Make `gro_client` an alias for `python <your-gro-path>/gro_client.py`
 
