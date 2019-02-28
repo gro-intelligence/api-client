@@ -1,7 +1,6 @@
 from __future__ import division
 from builtins import map
 from builtins import zip
-from past.utils import old_div
 import pandas
 import math
 
@@ -37,7 +36,7 @@ class CropModel(GroClient):
             list(zip([region['name'] for region in regions], means))))
         # Normalize into weights
         total = math.fsum([x for x in means if not math.isnan(x)])
-        return [old_div(mean,total) for mean in means]
+        return [float(mean)/total for mean in means]
 
     def compute_crop_weighted_series(self,
                                      weighting_crop_name, weighting_metric_name,
