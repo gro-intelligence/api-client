@@ -46,16 +46,14 @@ gro_client --user_email='email@example.com' --print_token
 
 This token is used throughout the Gro API client code, wherever authentication is required.
 
-### Saving your token as an environment variable
-
-If you don't want to enter a password or token each time, you can save
-the token as an environment variable. In the sample code, it is
-assumed that you have the token saved to your environment variables as
-GROAPI_TOKEN.
-
 Gro authentication tokens *may* expire or be reset by the administrator,
 depending on your account status. You can re-run the above command to get a new one 
 if your previous one has expired.
+
+### Saving your token as an environment variable
+
+If you don't want to enter a password or token each time, you can save
+the token as an environment variable. Please consult your OS or IDE documentation for information on how to set environment variables, e.g. [setting environment variables in Windows Powershell](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_environment_variables?view=powershell-6) and [Mac OS X/Linux](https://apple.stackexchange.com/questions/106778/how-do-i-set-environment-variables-on-os-x).  In some of the sample code, it is assumed that you have the token saved to your environment variables as GROAPI_TOKEN. 
 
 ## Examples
 
