@@ -210,14 +210,28 @@ def main():
     client.print_one_data_series(data_series, OUTPUT_FILENAME)
 
 
-# Deprecated: use client.get_df()
 def get_df(client, **selected_entities):
-    """Get the content of data series in a pandas frame.
-    selected_entities should be some or all of: item_id,
-    metric_id, to a crop and/or region.  region_id, frequency_id,
-    source_id, partner_region_id
-    """
+    """Deprecated: use the corresponding method in GroClient instead."""
     return pandas.DataFrame(client.get_data_points(**selected_entities))
+
+
+def search_for_entity(client, entity_type, keywords):
+    """Deprecated: use the corresponding method in GroClient instead."""
+    return client.search_for_entity(entity_type, keywords)
+
+
+def pick_random_entities(client):
+    """Deprecated: use the corresponding method in GroClient instead."""
+    return client.pick_random_entities()
+
+
+def print_random_data_series(client, selected_entities):
+    """Example which prints out a CSV of a random data series that
+    satisfies the (optional) given selection.
+    """
+    return client.print_one_data_series(
+        client.pick_random_data_series(selected_entities),
+        OUTPUT_FILENAME)
 
 
 if __name__ == "__main__":
