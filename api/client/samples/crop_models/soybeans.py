@@ -17,7 +17,7 @@ import os
 import sys
 
 import api.client.lib
-from api.client.samples.crop_models.crop_model import CropModel
+from api.client.crop_model import CropModel
 
 
 def add_brazil_soybeans_yield(model):
