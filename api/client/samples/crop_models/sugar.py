@@ -24,7 +24,7 @@ import sys
 import unicodecsv
 import api.client.lib
 import os
-from api.client.samples.crop_models.crop_model import CropModel
+from api.client.crop_model import CropModel
 
 API_HOST = 'api.gro-intelligence.com'
 
