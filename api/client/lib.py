@@ -1,5 +1,6 @@
 from builtins import map
 from builtins import str
+import cfg
 import logging
 import requests
 import sys
@@ -7,15 +8,12 @@ import time
 from datetime import datetime
 
 
-MAX_RETRIES = 4
-DEFAULT_LOG_LEVEL=logging.INFO  # change to DEBUG for more detail
-
 CROP_CALENDAR_METRIC_ID = 2260063
 
 
 def get_default_logger():
   logger = logging.getLogger(__name__)
-  logger.setLevel(DEFAULT_LOG_LEVEL)
+  logger.setLevel(cfg.DEFAULT_LOG_LEVEL)
   if not logger.handlers:
     stderr_handler = logging.StreamHandler()
     logger.addHandler(stderr_handler)
@@ -26,7 +24,7 @@ def get_access_token(api_host, user_email, user_password, logger=None):
   retry_count = 0
   if not logger:
     logger = get_default_logger()
-  while retry_count < MAX_RETRIES:
+  while retry_count < cfg.MAX_RETRIES:
     get_api_token = requests.post('https://' + api_host + '/api-token',
                           data = {"email": user_email, "password": user_password})
     if get_api_token.status_code == 200:
@@ -46,7 +44,7 @@ def get_data(url, headers, params=None, logger=None):
     logger = get_default_logger()
   logger.debug(url)
   logger.debug(params)
-  while retry_count < MAX_RETRIES:
+  while retry_count < cfg.MAX_RETRIES:
     start_time = time.time()
     data = requests.get(url, params=params, headers=headers, timeout=None)
     elapsed_time = time.time() - start_time
@@ -59,7 +57,7 @@ def get_data(url, headers, params=None, logger=None):
       return data
     retry_count += 1
     log_record['tag'] = 'failed_gro_api_request'
-    if retry_count < MAX_RETRIES:
+    if retry_count < cfg.MAX_RETRIES:
       logger.warning(data.text, extra=log_record)
     else:
       logger.error(data.text, extra=log_record)
