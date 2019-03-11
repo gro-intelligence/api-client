@@ -1,6 +1,6 @@
 from builtins import map
 from builtins import str
-import cfg
+from api.client import cfg
 import logging
 import requests
 import sys
