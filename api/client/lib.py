@@ -36,6 +36,13 @@ def get_access_token(api_host, user_email, user_password, logger=None):
   raise Exception("Giving up on get_access_token after {0} tries.".format(retry_count))
 
 
+def redirect(params, migration):
+  for key in migration:
+    split_key = key.split('_')
+    if split_key[0] == 'new' and migration[key] > -1:
+      params[snake_to_camel('_'.join([split_key[1], 'id']))] = migration[key]
+  return params
+
 def get_data(url, headers, params=None, logger=None):
   """General 'make api request' function. Assigns headers and builds in retries and logging."""
   base_log_record = dict(route=url, params=params)
@@ -44,7 +51,8 @@ def get_data(url, headers, params=None, logger=None):
     logger = get_default_logger()
   logger.debug(url)
   logger.debug(params)
-  while retry_count < cfg.MAX_RETRIES:
+  last_response_code = None
+  while retry_count < cfg.MAX_RETRIES and last_response_code < 400:
     start_time = time.time()
     data = requests.get(url, params=params, headers=headers, timeout=None)
     elapsed_time = time.time() - start_time
@@ -52,9 +60,12 @@ def get_data(url, headers, params=None, logger=None):
     log_record['elapsed_time_in_ms'] = 1000 * elapsed_time
     log_record['retry_count'] = retry_count
     log_record['status_code'] = data.status_code
+    last_response_code = data.status_code
     if data.status_code == 200:
       logger.debug('OK', extra=log_record)
       return data
+    if data.status_code == 301:
+      params = redirect(params, data.json()['data'][0])
     retry_count += 1
     log_record['tag'] = 'failed_gro_api_request'
     if retry_count < cfg.MAX_RETRIES:
