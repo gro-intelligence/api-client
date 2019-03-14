@@ -71,8 +71,7 @@ def get_data(url, headers, params=None, logger=None):
     logger = get_default_logger()
   logger.debug(url)
   logger.debug(params)
-  data = None
-  while retry_count < cfg.MAX_RETRIES and (data is None or data.status_code < 400):
+  while retry_count < cfg.MAX_RETRIES:
     start_time = time.time()
     data = requests.get(url, params=params, headers=headers, timeout=None)
     elapsed_time = time.time() - start_time
