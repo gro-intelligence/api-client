@@ -7,9 +7,7 @@ import sys
 import time
 from datetime import datetime
 
-
 CROP_CALENDAR_METRIC_ID = 2260063
-
 
 def get_default_logger():
   logger = logging.getLogger(__name__)
@@ -18,7 +16,6 @@ def get_default_logger():
     stderr_handler = logging.StreamHandler()
     logger.addHandler(stderr_handler)
   return logger
-
 
 def get_access_token(api_host, user_email, user_password, logger=None):
   retry_count = 0
@@ -35,8 +32,31 @@ def get_access_token(api_host, user_email, user_password, logger=None):
     retry_count += 1
   raise Exception("Giving up on get_access_token after {0} tries.".format(retry_count))
 
-
 def redirect(params, migration):
+  """
+  Update query parameters to follow a redirection response from the API before
+  trying again.
+
+  >>> redirect( {'metricId': 14, 'sourceId': 2, 'itemId': 145},
+  ...           {'old_metric_id': 14, 'new_metric_id': 15,
+  ...            'old_item_id': -1, 'new_item_id': -1, 'source_id': 2})
+  {'sourceId': 2, 'itemId': 145, 'metricId': 15}
+
+  Parameters
+  ----------
+  params : dict
+    The original parameters provided to the API request
+  migration : dict
+    The body of the 301 response indicating which of the inputs have been
+    migrated and what values they have been migrated to
+
+  Returns
+  -------
+  params : dict
+    The mutated params object with values replaced according to the redirection
+    instructions provided by the API
+  """
+
   for key in migration:
     split_key = key.split('_')
     if split_key[0] == 'new' and migration[key] > -1:
@@ -74,7 +94,6 @@ def get_data(url, headers, params=None, logger=None):
       logger.error(data.text, extra=log_record)
   raise Exception('Giving up on {} after {} tries. Error is: {}.'.format(url, retry_count, data.text))
 
-
 def get_available(access_token, api_host, entity_type):
   """Given an entity_type, which is one of 'items', 'metrics',
     'regions', returns a JSON dict with the list of available entities
@@ -84,7 +103,6 @@ def get_available(access_token, api_host, entity_type):
   headers = {'authorization': 'Bearer ' + access_token}
   resp = get_data(url, headers)
   return resp.json()['data']
-
 
 def list_available(access_token, api_host, selected_entities):
   """List available entities given some selected entities. Given a dict
@@ -103,7 +121,6 @@ def list_available(access_token, api_host, selected_entities):
   except KeyError as e:
     raise Exception(resp.text)
 
-
 def lookup(access_token, api_host, entity_type, entity_id):
   """Given an entity_type, which is one of 'items', 'metrics',
   'regions', 'units', or 'sources', returns a JSON dict with the
@@ -117,12 +134,10 @@ def lookup(access_token, api_host, entity_type, entity_id):
   except KeyError as e:
     raise Exception(resp.text)
 
-
 def snake_to_camel(term):
   """Converts hello_world to helloWorld."""
   camel = term.split('_')
   return ''.join(camel[:1] + list([x[0].upper()+x[1:] for x in camel[1:]]))
-
 
 def get_params_from_selection(**selection):
   """Construct http request params from dict of entity selections. For use with get_data_series()
@@ -133,7 +148,6 @@ def get_params_from_selection(**selection):
     if key in ('region_id', 'partner_region_id', 'item_id', 'metric_id', 'source_id', 'frequency_id'):
       params[snake_to_camel(key)] = value
   return params
-
 
 def get_crop_calendar_params(**selection):
   """Construct http request params from dict of entity selections. Only region and item are required
@@ -146,7 +160,6 @@ def get_crop_calendar_params(**selection):
       params[snake_to_camel(key)] = value
   return params
 
-
 def get_data_call_params(**selection):
   """Construct http request params from dict of entity selections. For use with get_data_points().
   """
@@ -155,7 +168,6 @@ def get_data_call_params(**selection):
     if key in ('source_id', 'frequency_id', 'start_date', 'end_date', 'show_revisions'):
       params[snake_to_camel(key)] = value
   return params
-
 
 def get_data_series(access_token, api_host, **selection):
   """Get data series records for the given selection of entities.  which
@@ -171,7 +183,6 @@ def get_data_series(access_token, api_host, **selection):
     return resp.json()['data']
   except KeyError as e:
     raise Exception(resp.text)
-
 
 def rank_series_by_source(access_token, api_host, series_list):
   """Given a list of series, return them in source-ranked order: such
@@ -197,7 +208,6 @@ def rank_series_by_source(access_token, api_host, series_list):
       series_with_source = dict(series)
       series_with_source['source_id'] = source_id
       yield series_with_source
-
 
 def format_crop_calendar_response(resp):
   """Makes the v2/cropcalendar/data output a similar format to the normal /v2/data output. Splits
@@ -253,7 +263,6 @@ def get_crop_calendar_data_points(access_token, api_host, **selection):
   resp = get_data(url, headers, params)
   return format_crop_calendar_response(resp.json())
 
-
 def get_data_points(access_token, api_host, **selection):
   """Get all the data points for a given selection, which is some or all
   of: item_id, metric_id, region_id, frequency_id, source_id,
@@ -268,7 +277,6 @@ def get_data_points(access_token, api_host, **selection):
   resp = get_data(url, headers, params)
   return resp.json()
 
-
 def universal_search(access_token, api_host, search_terms):
   """Search across all entity types for the given terms.  Returns an a
   list of [id, entity_type] pairs, e.g.: [[5604, u'item'], [10204,
@@ -280,7 +288,6 @@ def universal_search(access_token, api_host, search_terms):
   resp = get_data(url, headers, {'q': search_terms})
   return resp.json()
 
-
 def search(access_token, api_host, entity_type, search_terms):
   """Given an entity_type, which is one of 'items', 'metrics',
   'regions', performs a search for the given terms. Returns a list of
@@ -291,7 +298,6 @@ def search(access_token, api_host, entity_type, search_terms):
   headers = {'authorization': 'Bearer ' + access_token }
   resp = get_data(url, headers, {'q': search_terms})
   return resp.json()
-
 
 def search_and_lookup(access_token, api_host, entity_type, search_terms):
   """Does a search for the given search terms, and for each result
@@ -306,7 +312,6 @@ def search_and_lookup(access_token, api_host, entity_type, search_terms):
   for result in search_results:
     yield lookup(access_token, api_host, entity_type, result['id'])
 
-
 def lookup_belongs(access_token, api_host, entity_type, entity_id):
   """Given an entity_type, which is one of 'items', 'metrics',
   'regions', and id, generates a list of JSON dicts of entities it
@@ -319,14 +324,12 @@ def lookup_belongs(access_token, api_host, entity_type, entity_id):
   for parent_entity_id in resp.json().get('data').get(str(entity_id), []):
     yield lookup(access_token, api_host, entity_type, parent_entity_id)
 
-
 def get_geo_centre(access_token, api_host, region_id):
   """Given a region ID, returns the geographic centre in degrees lat/lon."""
   url = '/'.join(['https:', '', api_host, 'v2/geocentres?regionIds=' + str(region_id)])
   headers = {'authorization': 'Bearer ' + access_token}
   resp = get_data(url, headers)
   return resp.json()["data"]
-
 
 def get_descendant_regions(access_token, api_host, region_id, descendant_level):
   """Given any region by id, recursively gets all the descendant regions
@@ -348,3 +351,6 @@ def get_descendant_regions(access_token, api_host, region_id, descendant_level):
         access_token, api_host, member_id, descendant_level)
   return descendants
 
+if __name__ == "__main__":
+  import doctest
+  doctest.testmod()
