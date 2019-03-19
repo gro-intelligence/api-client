@@ -9,9 +9,9 @@ ACCESS_TOKEN=os.environ['GROAPI_TOKEN']
 def main():
     client = api.client.Client(API_HOST, ACCESS_TOKEN)
 
-    selected_entities = { u'region_id': 1029, # Brazil
-                          u'item_id': 270, # Soybeans
-                          u'metric_id': 860032 } # Production Quantity (mass)
+    selected_entities = { u'region_id': 1210, # Ukraine
+                          u'item_id': 95, # Wheat
+                          u'metric_id': 570001 } # Area Harvested (area)
 
     writer = unicodecsv.writer(open(OUTPUT_FILENAME, 'wb'))
 
