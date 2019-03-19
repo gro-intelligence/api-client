@@ -7,7 +7,6 @@ import sys
 import time
 from datetime import datetime
 
-
 CROP_CALENDAR_METRIC_ID = 2260063
 
 
@@ -36,6 +35,36 @@ def get_access_token(api_host, user_email, user_password, logger=None):
   raise Exception("Giving up on get_access_token after {0} tries.".format(retry_count))
 
 
+def redirect(params, migration):
+    """Update query parameters to follow a redirection response from the API.
+
+    >>> redirect( {'metricId': 14, 'sourceId': 2, 'itemId': 145},
+    ...           {'old_metric_id': 14, 'new_metric_id': 15, 'source_id': 2})
+    {'sourceId': 2, 'itemId': 145, 'metricId': 15}
+
+    Parameters
+    ----------
+    params : dict
+        The original parameters provided to the API request
+    migration : dict
+        The body of the 301 response indicating which of the inputs have been
+        migrated and what values they have been migrated to
+
+    Returns
+    -------
+    params : dict
+        The mutated params object with values replaced according to the
+        redirection instructions provided by the API
+
+    """
+    for migration_key in migration:
+        split_mig_key = migration_key.split('_')
+        if split_mig_key[0] == 'new':
+            param_key = snake_to_camel('_'.join([split_mig_key[1], 'id']))
+            params[param_key] = migration[migration_key]
+    return params
+
+
 def get_data(url, headers, params=None, logger=None):
   """General 'make api request' function. Assigns headers and builds in retries and logging."""
   base_log_record = dict(route=url, params=params)
@@ -61,6 +90,8 @@ def get_data(url, headers, params=None, logger=None):
       logger.warning(data.text, extra=log_record)
     else:
       logger.error(data.text, extra=log_record)
+    if data.status_code == 301:
+      params = redirect(params, data.json()['data'][0])
   raise Exception('Giving up on {} after {} tries. Error is: {}.'.format(url, retry_count, data.text))
 
 
@@ -231,6 +262,7 @@ def format_crop_calendar_response(resp):
         })
   return points
 
+
 def get_crop_calendar_data_points(access_token, api_host, **selection):
   """Helper function for getting crop calendar data. Has different input/output from the regular
   /v2/data call, so this normalizes the interface and output format to make compatible
@@ -319,7 +351,7 @@ def get_geo_centre(access_token, api_host, region_id):
 
 def get_descendant_regions(access_token, api_host, region_id, descendant_level):
   """Given any region by id, recursively gets all the descendant regions
-  that are of the specified level. 
+  that are of the specified level.
 
   This takes advantage of the assumption that region graph is
   acyclic. This will only traverse ordered region levels (strictly
@@ -337,3 +369,6 @@ def get_descendant_regions(access_token, api_host, region_id, descendant_level):
         access_token, api_host, member_id, descendant_level)
   return descendants
 
+if __name__ == "__main__":
+  import doctest
+  doctest.testmod()
