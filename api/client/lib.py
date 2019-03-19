@@ -84,6 +84,8 @@ def get_data(url, headers, params=None, logger=None):
     if data.status_code == 200:
       logger.debug('OK', extra=log_record)
       return data
+    if data.status_code == 429:
+      time.sleep(2 ** retry_count)  # Exponential backoff before retrying
     retry_count += 1
     log_record['tag'] = 'failed_gro_api_request'
     if retry_count < cfg.MAX_RETRIES:
