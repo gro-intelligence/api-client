@@ -10,7 +10,7 @@ except ImportError:
 
 from tornado import gen
 from tornado.escape import json_decode
-from tornado.httpclient import AsyncHTTPClient, HTTPRequest
+from tornado.httpclient import AsyncHTTPClient, HTTPRequest, HTTPError
 from tornado.ioloop import IOLoop
 from tornado.queues import Queue
 from tornado.locks import Event
@@ -47,26 +47,34 @@ class BatchClient(Client):
             http_request = HTTPRequest(url, method="GET", headers=headers,
                                        request_timeout=cfg.TIMEOUT,
                                        connect_timeout=cfg.TIMEOUT)
-            data = yield self._http_client.fetch(http_request)
-            elapsed_time = time.time() - start_time
-            log_record = dict(base_log_record)
-            log_record['elapsed_time_in_ms'] = 1000 * elapsed_time
-            log_record['retry_count'] = retry_count
-            log_record['status_code'] = data.code
-            if data.code == 200:
+            try:
+                data = yield self._http_client.fetch(http_request)
+            except HTTPError as e:
+                elapsed_time = time.time() - start_time
+                log_record = dict(base_log_record)
+                log_record['elapsed_time_in_ms'] = 1000 * elapsed_time
+                log_record['retry_count'] = retry_count
+                log_record['status_code'] = e.code
+                if retry_count < cfg.MAX_RETRIES:
+                    self._logger.warning(e.response.error, extra=log_record)
+                    retry_count += 1
+                    if e.code == 429:
+                        rate_limit_lock.clear()
+                        time.sleep(2 ** retry_count)  # Exponential backoff
+                        rate_limit_lock.set()
+                else:
+                    self._logger.error(e.response.error, extra=log_record)
+                    raise Exception('Giving up on {} after {} tries. \
+                        Error is: {}.'.format(
+                        url, retry_count, e.response.error))
+            else:
+                elapsed_time = time.time() - start_time
+                log_record = dict(base_log_record)
+                log_record['elapsed_time_in_ms'] = 1000 * elapsed_time
+                log_record['retry_count'] = retry_count
+                log_record['status_code'] = data.code
                 self._logger.debug('OK', extra=log_record)
                 raise gen.Return(data.body)
-            retry_count += 1
-            if retry_count < cfg.MAX_RETRIES:
-                self._logger.warning(data.text, extra=log_record)
-                if data.status_code == 429:
-                    rate_limit_lock.clear()
-                    time.sleep(2 ** retry_count)  # Exponential backoff
-                    rate_limit_lock.set()
-            else:
-                self._logger.error(data.text, extra=log_record)
-                raise Exception('Giving up on {} after {} tries. Error is: {}.'.format(
-                    url, retry_count, data.text))
 
     @gen.coroutine
     def get_data_points(self, **selection):
