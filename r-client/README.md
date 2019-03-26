@@ -6,22 +6,22 @@ What this Vagrantfile does is it creates an Ubunutu 16.04 virtual machine, insta
 
 This is implemented as a Vagrantfile to demonstrate exactly what dependencies are required in this specific test environment. This example is in no way saying you must or should use Vagrant if intending to use the Gro API in R yourself. It is also important to note that because R is not an officially supported language for using the Gro API, it may take extra configuration on the user's part, and not all features are tested.
 
-##Pre-requisites for running this example
+## Pre-requisites for running this example
 
 * vagrant
 * virtualbox
 
-##Preparation
+## Preparation
 
 In [src/testscript.R](src/testscript.R) replace the token string with your own token. See the README in the main repo here https://github.com/gro-intelligence/api-client for details on how to retrieve a token.
 
-##Run
+## Run
 
 ```sh
 $ vagrant up
 ```
 
-##To use this VM for testing your own R scripts
+## To use this VM for testing your own R scripts
 
 Modify [src/testscript.R](src/testscript.R) or create a copy of it, and replace the add_single_data_series and get_df lines with your own logic. Then,
 
@@ -33,13 +33,13 @@ $ Rscript /vagrant/<your-script>
 
 to run your own version of the script. Note it will create a new virtual environment and reinstall the Gro API client each time, so it does take a little while to run.
 
-##Destroy
+## Destroy
 
 ```sh
 $ vagrant destroy default -f
 ```
 
-##Documentation
+## Documentation
 
 * https://github.com/gro-intelligence/api-client/wiki
 * https://github.com/rstudio/reticulate
