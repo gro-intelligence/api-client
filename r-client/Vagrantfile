@@ -1,0 +1,8 @@
+Vagrant.configure("2") do |config|
+  # 18.04 apt version of python is 2.7.15rc1 instead of 2.7.15
+  # reticulate does not recognize that python version and fails
+  # 16.04 uses 2.7.12 by default, so use that instead.
+  config.vm.box = "bento/ubuntu-16.04"
+  config.vm.synced_folder "./src", "/vagrant", owner: "vagrant"
+  config.vm.provision "shell", path: "./provision.sh"
+end
