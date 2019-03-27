@@ -49,6 +49,13 @@ class BatchClient(Client):
                                        connect_timeout=cfg.TIMEOUT)
             try:
                 data = yield self._http_client.fetch(http_request)
+                elapsed_time = time.time() - start_time
+                log_record = dict(base_log_record)
+                log_record['elapsed_time_in_ms'] = 1000 * elapsed_time
+                log_record['retry_count'] = retry_count
+                log_record['status_code'] = data.code
+                self._logger.debug('OK', extra=log_record)
+                raise gen.Return(data.body)
             except HTTPError as e:
                 elapsed_time = time.time() - start_time
                 log_record = dict(base_log_record)
@@ -67,14 +74,6 @@ class BatchClient(Client):
                     raise Exception('Giving up on {} after {} tries. \
                         Error is: {}.'.format(
                         url, retry_count, e.response.error))
-            else:
-                elapsed_time = time.time() - start_time
-                log_record = dict(base_log_record)
-                log_record['elapsed_time_in_ms'] = 1000 * elapsed_time
-                log_record['retry_count'] = retry_count
-                log_record['status_code'] = data.code
-                self._logger.debug('OK', extra=log_record)
-                raise gen.Return(data.body)
 
     @gen.coroutine
     def get_data_points(self, **selection):
