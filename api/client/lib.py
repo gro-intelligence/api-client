@@ -1,4 +1,4 @@
-"""This module is for making API calls."""
+"""This module is the base for making API calls."""
 
 from builtins import map
 from builtins import str
@@ -8,6 +8,18 @@ import requests
 import time
 
 CROP_CALENDAR_METRIC_ID = 2260063
+
+REGION_LEVELS = {
+    'world': 1,
+    'continent': 2,
+    'country': 3,
+    'province': 4,  # Equivalent to state in the United States
+    'district': 5,  # Equivalent to county in the United States
+    'city': 6,
+    'market': 7,
+    'group': 8,  # arbitrary grouping of regions of any level
+    'coordinate': 9
+}
 
 
 def get_default_logger():
@@ -388,7 +400,7 @@ def get_data_series(access_token, api_host, **selection):
     resp = get_data(url, headers, params)
     try:
         return resp.json()['data']
-    except KeyError as e:
+    except KeyError:
         raise Exception(resp.text)
 
 
