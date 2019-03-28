@@ -103,109 +103,87 @@ POINT_IN_TIME = 15
 client = GroClient(API_HOST, ACCESS_TOKEN)
 
 # BRAZIL COCOA GRINDINGS FROM ICCO (1)
-print('BRAZIL COCOA GRINDINGS FROM ICCO')
-x01 = get_df(client, metric_id=GRINDINGS,
-             item_id=COCOA,
-             region_id=BRAZIL,
-             frequency_id=ANNUAL,
-             source_id=ICCO)
-print(x01.head())
+client.add_single_data_series({'metric_id': GRINDINGS,
+                               'item_id': COCOA,
+                               'region_id': BRAZIL,
+                               'frequency_id': ANNUAL,
+                               'source_id': ICCO})
 
 # BRAZIL ARABICA COMPOSITE PRICES (2)
-print('BRAZIL ARABICA COMPOSITE PRICES')
-x02 = get_df(client, metric_id=COMPOSITE_PRICES,
-             item_id=BRAZ_ARABICA,
-             region_id=WORLD,
-             frequency_id=DAILY,
-             source_id=ICO)
-print(x01.head())
+client.add_single_data_series({'metric_id': COMPOSITE_PRICES,
+                               'item_id': BRAZ_ARABICA,
+                               'region_id': WORLD,
+                               'frequency_id': DAILY,
+                               'source_id': ICO})
 
 # SAO PAULO SUGAR AREA FROM UNICA (3)
-print('SAO PAULO SUGAR AREA FROM UNICA')
-x03 = get_df(client, metric_id=HARV_AREA,
-             item_id=SUGARCANE,
-             region_id=SAO_PAULO,
-             frequency_id=ANNUAL,
-             source_id=UNICA)
-print(x01.head())
+client.add_single_data_series({'metric_id': HARV_AREA,
+                               'item_id': SUGARCANE,
+                               'region_id': SAO_PAULO,
+                               'frequency_id': ANNUAL,
+                               'source_id': UNICA})
 
 # SAO PAULO CASSAVA PRICES FROM CEPEA (4)
-print('SAO PAULO CASSAVA PRICES FROM CEPEA')
-x04 = get_df(client, metric_id=PRODUCER_PRICE,
-             item_id=CASSAVA,
-             region_id=SAO_PAULO,
-             frequency_id=WEEKLY,
-             source_id=CEPEA)
-print(x01.head())
+client.add_single_data_series({'metric_id': PRODUCER_PRICE,
+                               'item_id': CASSAVA,
+                               'region_id': SAO_PAULO,
+                               'frequency_id': WEEKLY,
+                               'source_id': CEPEA})
 
 # NDVI ANOMALY SAO_PAULO (5)
-print('NDVI ANOMALY SAO_PAULO')
-x05 = get_df(client, metric_id=VEG_ANOMALIES,
-             item_id=NDVI_DIFF_10YR_MEAN,
-             region_id=SAO_PAULO,
-             frequency_id=SIXTEENDAY,
-             source_id=GIMMS_MODIS)
-print(x01.head())
+client.add_single_data_series({'metric_id': VEG_ANOMALIES,
+                               'item_id': NDVI_DIFF_10YR_MEAN,
+                               'region_id': SAO_PAULO,
+                               'frequency_id': SIXTEENDAY,
+                               'source_id': GIMMS_MODIS})
 
 # LAND SURFACE TEMPERATURE SAO PAULO (6)
-print('LAND SURFACE TEMPERATURE SAO PAULO')
-x06 = get_df(client, metric_id=TEMPERATURE,
-             item_id=LST,
-             region_id=SAO_PAULO,
-             frequency_id=DAILY,
-             source_id=LST_SRC)
-print(x01.head())
+client.add_single_data_series({'metric_id': TEMPERATURE,
+                               'item_id': LST,
+                               'region_id': SAO_PAULO,
+                               'frequency_id': DAILY,
+                               'source_id': LST_SRC})
 
 # DAILY EVAPOTRANSPIRATION SAO PAULO (7)
-print('DAILY EVAPOTRANSPIRATION SAO PAULO')
-x07 = get_df(client, metric_id=ET_VALUE,
-             item_id=POTENT_ETA,
-             region_id=SAO_PAULO,
-             frequency_id=DAILY,
-             source_id=FEWSNET1D)
-print(x01.head())
+client.add_single_data_series({'metric_id': ET_VALUE,
+                               'item_id': POTENT_ETA,
+                               'region_id': SAO_PAULO,
+                               'frequency_id': DAILY,
+                               'source_id': FEWSNET1D})
 
 # MONTHLY EVAPOTRANSPIRATION ANOMALY SAO_PAULO (8)
-print('MONTHLY EVAPOTRANSPIRATION ANOMALY SAO_PAULO')
-x08 = get_df(client, metric_id=ETA_PCT,
-             item_id=ETA_PCT_MEDIAN,
-             region_id=SAO_PAULO,
-             frequency_id=MONTHLY,
-             source_id=FEWSNET1M)
-print(x01.head())
+client.add_single_data_series({'metric_id': ETA_PCT,
+                               'item_id': ETA_PCT_MEDIAN,
+                               'region_id': SAO_PAULO,
+                               'frequency_id': MONTHLY,
+                               'source_id': FEWSNET1M})
 
 # GLOBCOVER RAINFED CROPLAND SAO_PAULO (9)
-print('GLOBCOVER RAINFED CROPLAND SAO_PAULO')
-x09 = get_df(client, metric_id=LAND_COVER,
-             item_id=RAINFED_CROPLAND,
-             region_id=SAO_PAULO,
-             frequency_id=POINT_IN_TIME,
-             source_id=GLOBCOVER)
-print(x01.head())
+client.add_single_data_series({'metric_id': LAND_COVER,
+                               'item_id': RAINFED_CROPLAND,
+                               'region_id': SAO_PAULO,
+                               'frequency_id': POINT_IN_TIME,
+                               'source_id': GLOBCOVER})
 
 # SOIL MOISTURE SAO_PAULO (10)
-print('SOIL MOISTURE SAO_PAULO')
-x10 = get_df(client, metric_id=SOIL_AVAIL,
-             item_id=MOISTURE,
-             region_id=SAO_PAULO,
-             frequency_id=DAILY,
-             source_id=SMOS)
-print(x01.head())
+client.add_single_data_series({'metric_id': SOIL_AVAIL,
+                               'item_id': MOISTURE,
+                               'region_id': SAO_PAULO,
+                               'frequency_id': DAILY,
+                               'source_id': SMOS})
 
 # NAFIS KENYA AVOCADO PRICE (11)
-print('NAFIS KENYA AVOCADO PRICE')
-x11 = get_df(client, metric_id=WHOLESALE_PX,
-             item_id=AVOCADOS,
-             region_id=KENYA_NAIROBI,
-             frequency_id=DAILY,
-             source_id=NAFIS)
-print(x01.head())
+client.add_single_data_series({'metric_id': WHOLESALE_PX,
+                               'item_id': AVOCADOS,
+                               'region_id': KENYA_NAIROBI,
+                               'frequency_id': DAILY,
+                               'source_id': NAFIS})
 
 # GRO US SOYBEAN YIELD (12)
-print('GRO US SOYBEAN YIELD')
-x12 = get_df(client, metric_id=YIELD,
-             item_id=SOYBEANS,
-             region_id=UNITED_STATES,
-             frequency_id=ANNUAL,
-             source_id=GROYM)
-print(x01.head())
+client.add_single_data_series({'metric_id': YIELD,
+                               'item_id': SOYBEANS,
+                               'region_id': UNITED_STATES,
+                               'frequency_id': ANNUAL,
+                               'source_id': GROYM})
+
+print(client.get_df())
