@@ -11,6 +11,15 @@ CROP_CALENDAR_METRIC_ID = 2260063
 
 
 def get_default_logger():
+    """Get a logging object using the default log level set in cfg.
+
+    https://docs.python.org/3/library/logging.html
+
+    Returns
+    -------
+    logger : logging.Logger
+
+    """
     logger = logging.getLogger(__name__)
     logger.setLevel(cfg.DEFAULT_LOG_LEVEL)
     if not logger.handlers:
@@ -20,30 +29,50 @@ def get_default_logger():
 
 
 def get_access_token(api_host, user_email, user_password, logger=None):
+    """Request an access token.
+
+    Parameters
+    ----------
+    api_host : string
+        The API host's url, excluding 'https://'
+        ex. 'api.gro-intelligence.com'
+    user_email : string
+        Email address associated with user's Gro account
+    user_password : string
+        Password for user's Gro account
+    logger : logging.Logger
+        Alternative logger object if wanting to use a non-default one.
+        Otherwise get_default_logger() will be used.
+
+    Returns
+    -------
+    accessToken : string
+
+    """
     retry_count = 0
     if not logger:
         logger = get_default_logger()
     while retry_count < cfg.MAX_RETRIES:
         get_api_token = requests.post('https://' + api_host + '/api-token',
-                                      data={"email": user_email,
-                                            "password": user_password})
+                                      data={'email': user_email,
+                                            'password': user_password})
         if get_api_token.status_code == 200:
-            logger.debug("Authentication succeeded in get_access_token")
+            logger.debug('Authentication succeeded in get_access_token')
             return get_api_token.json()['data']['accessToken']
         else:
-            logger.warning("Error in get_access_token: {}".format(
+            logger.warning('Error in get_access_token: {}'.format(
                 get_api_token.body))
         retry_count += 1
-    raise Exception("Giving up on get_access_token after {0} tries.".format(
+    raise Exception('Giving up on get_access_token after {0} tries.'.format(
         retry_count))
 
 
 def redirect(params, migration):
     """Update query parameters to follow a redirection response from the API.
 
-    >>> redirect( {'metricId': 14, 'sourceId': 2, 'itemId': 145},
-    ...           {'old_metric_id': 14, 'new_metric_id': 15, 'source_id': 2})
-    {'sourceId': 2, 'itemId': 145, 'metricId': 15}
+    >>> redirect({'metricId': 14, 'sourceId': 2, 'itemId': 145},
+    ...          {'old_metric_id': 14, 'new_metric_id': 15, 'source_id': 2})
+    {'metricId': 15, 'sourceId': 2, 'itemId': 145}
 
     Parameters
     ----------
@@ -72,6 +101,18 @@ def get_data(url, headers, params=None, logger=None):
     """General 'make api request' function.
 
     Assigns headers and builds in retries and logging.
+
+    Parameters
+    ----------
+    url : string
+    headers : dict
+    params : dict
+    logger : logging.Logger
+
+    Returns
+    -------
+    data : list or dict
+
     """
     base_log_record = dict(route=url, params=params)
     retry_count = 0
@@ -104,10 +145,24 @@ def get_data(url, headers, params=None, logger=None):
 
 
 def get_available(access_token, api_host, entity_type):
-    """List available entities of the given type.
+    """List the first 5000 available entities of the given type.
 
-    Given an entity_type, which is one of 'items', 'metrics',
-    'regions', returns a JSON dict.
+    Parameters
+    ----------
+    access_token : string
+    api_host : string
+    entity_type : string
+        'items', 'metrics', or 'regions'
+
+    Returns
+    -------
+    data : list of dicts
+        ex: [
+            { 'id': 0, 'contains': [1, 2, 3], 'name': 'World', 'level': 1},
+            { 'id': 1, 'contains': [4, 5, 6], 'name': 'Asia', 'level': 2},
+            ...
+        ]
+
     """
     url = '/'.join(['https:', '', api_host, 'v2', entity_type])
     headers = {'authorization': 'Bearer ' + access_token}
@@ -118,10 +173,30 @@ def get_available(access_token, api_host, entity_type):
 def list_available(access_token, api_host, selected_entities):
     """List available entities given some selected entities.
 
-    Given a dict of selected entity ids of the form
-    { <entity_type>: <entity_id>, ...}, returns a list of dictionaries
-    representing available {item_id: ..., metric_id: ... , region_id: ... ,}
-    for which data series are available which satisfy the input selection.
+    Given one or more selections, return entities combinations that have
+    data for the given selections.
+
+    Parameters
+    ----------
+    access_token : string
+    api_host : string
+    selected_entities : dict
+        ex: { 'metric_id': 123, 'item_id': 456, 'source_id': 7 }
+        Keys may include: metric_id, item_id, region_id, partner_region_id,
+        source_id, frequency_id
+
+    Returns
+    -------
+    list of dicts
+        ex: [
+            {   'metric_id': 11078, 'metric_name': 'Export Value (currency)',
+                'item_id': 274, 'item_name': 'Corn',
+                'region_id': 1215, 'region_name': 'United States',
+                'source_id': 15, 'source_name': 'USDA GATS' },
+            { ... },
+            ...
+        ]
+
     """
     url = '/'.join(['https:', '', api_host, 'v2/entities/list'])
     headers = {'authorization': 'Bearer ' + access_token}
@@ -137,8 +212,28 @@ def list_available(access_token, api_host, selected_entities):
 def lookup(access_token, api_host, entity_type, entity_id):
     """Retrieve details about a given id of type entity_type.
 
-    entity_type is one of 'items', 'metrics', 'regions', 'units', or 'sources'.
-    Returns a JSON dict with the list of available entities of the given type.
+    https://github.com/gro-intelligence/api-client/wiki/Entities-Definition
+
+    Parameters
+    ----------
+    access_token : string
+    api_host : string
+    entity_type : string
+        'items', 'metrics', 'regions', 'units', or 'sources'
+    entity_id : int
+
+    Returns
+    -------
+    dict
+        ex: {
+            'id': 274,
+            'contains': [779, 780, ...]
+            'name': 'Corn',
+            'definition': 'The seeds of the widely cultivated corn plant
+                <i>Zea mays</i>, which is one of the world's most popular
+                grains.'
+        }
+
     """
     url = '/'.join(['https:', '', api_host, 'v2', entity_type, str(entity_id)])
     headers = {'authorization': 'Bearer ' + access_token}
@@ -153,7 +248,7 @@ def snake_to_camel(term):
     """Convert hello_world to helloWorld.
 
     >>> snake_to_camel('hello_world')
-    helloWorld
+    'helloWorld'
     """
     camel = term.split('_')
     return ''.join(camel[:1] + list([x[0].upper()+x[1:] for x in camel[1:]]))
@@ -163,6 +258,27 @@ def get_params_from_selection(**selection):
     """Construct http request params from dict of entity selections.
 
     For use with get_data_series() and rank_series_by_source().
+
+    >>> get_params_from_selection(**{
+    ...     'metric_id': 123,
+    ...     'item_id': 456,
+    ...     'unit_id': 14
+    ... })
+    {'metricId': 123, 'itemId': 456}
+
+    Parameters
+    ----------
+    selection : dict
+        Keys can include: 'metric_id', 'item_id', 'region_id',
+        'partner_region_id', 'source_id', 'frequency_id'. Anything else will
+        be ignored.
+
+    Returns
+    -------
+    dict
+        selections with valid keys converted to camelcase and invalid ones
+        filtered out
+
     """
     params = {}
     for key, value in list(selection.items()):
@@ -175,9 +291,30 @@ def get_params_from_selection(**selection):
 def get_crop_calendar_params(**selection):
     """Construct http request params from dict of entity selections.
 
-    Only region and item are required since metric/item/source/frequency all
-    have default values and start/end date are not allowed inputs since crop
-    calendars are static.
+    For use with get_crop_calendar_data_points()
+
+    >>> get_crop_calendar_params(**{
+    ...     'metric_id': 123,
+    ...     'item_id': 456,
+    ...     'region_id': 14
+    ... })
+    {'itemId': 456, 'regionId': 14}
+
+    Parameters
+    ----------
+    selection : dict
+        Keys can include: 'item_id', 'region_id'. Anything else will be
+        ignored.
+        Only region and item are required since metric/item/source/frequency
+        all have default values and start/end date are not allowed inputs since
+        crop calendars are static.
+
+    Returns
+    -------
+    dict
+        selections with valid keys converted to camelcase and invalid ones
+        filtered out
+
     """
     params = {}
     for key, value in list(selection.items()):
@@ -190,21 +327,60 @@ def get_data_call_params(**selection):
     """Construct http request params from dict of entity selections.
 
     For use with get_data_points().
+
+    >>> get_data_call_params(**{
+    ...     'metric_id': 123,
+    ...     'start_date': '2012-01-01',
+    ...     'unit_id': 14
+    ... })
+    {'metricId': 123, 'startDate': '2012-01-01'}
+
+    Parameters
+    ----------
+    selection : dict
+        Keys can include: 'metric_id', 'item_id', 'region_id',
+        'partner_region_id', 'source_id', 'frequency_id', 'start_date',
+        'end_date', 'show_revisions'. Anything else will be ignored.
+
+    Returns
+    -------
+    dict
+        selections with valid keys converted to camelcase and invalid ones
+        filtered out
+
     """
     params = get_params_from_selection(**selection)
     for key, value in list(selection.items()):
-        if key in ('source_id', 'frequency_id', 'start_date', 'end_date',
-                   'show_revisions'):
+        if key in ('start_date', 'end_date', 'show_revisions'):
             params[snake_to_camel(key)] = value
     return params
 
 
 def get_data_series(access_token, api_host, **selection):
-    """Get data series records for the given selection.
+    """Get available data series for the given selections.
 
-    Selections are entities including: item_id, metric_id, region_id,
-    frequency_id, source_id, partner_region_id. Additional arguments are
-    allowed and ignored.
+    https://github.com/gro-intelligence/api-client/wiki/Data-Series-Definition
+
+    Parameters
+    ----------
+    access_token : string
+    api_host : string
+    selection : dict
+        See get_params_from_selection() for more information on selection
+        formatting
+
+    Returns
+    -------
+    list of dicts
+        ex: [{  'metric_id': 2020032, 'metric_name': 'Seed Use',
+                'item_id': 274, 'item_name': 'Corn',
+                'region_id': 1215, 'region_name': 'United States',
+                'source_id': 24, 'source_name': 'USDA FEEDGRAINS',
+                'frequency_id': 7,
+                'start_date': '1975-03-01T00:00:00.000Z',
+                'end_date': '2018-05-31T00:00:00.000Z'
+            }, { ... }, ... ]
+
     """
     url = '/'.join(['https:', '', api_host, 'v2/data_series/list'])
     headers = {'authorization': 'Bearer ' + access_token}
@@ -219,12 +395,25 @@ def get_data_series(access_token, api_host, **selection):
 def rank_series_by_source(access_token, api_host, series_list):
     """Given a list of series, return them in source-ranked order.
 
-    If there are multiple sources for the same selection, the prefered soruce
+    If there are multiple sources for the same selection, the prefered source
     comes first. Differences other than source_id are not affected.
+
+    Parameters
+    ----------
+    access_token : string
+    api_host : api_host
+    series_list : list of dicts
+        See output of get_data_series()
+
+    Yields
+    ------
+    list of dicts
+        Same dicts as the input series_list but reordered by source_id.
+
     """
     # We sort the internal tuple representations of the dictionaries because
     # otherwise when we call set() we end up with duplicates if iteritems()
-    # returns a different order for the same dictionary. See test case...
+    # returns a different order for the same dictionary. See test case.
     selections_sorted = set(tuple(sorted(
         [k_v for k_v in iter(list(single_series.items())) if k_v[0] !=
             'source_id'],
@@ -244,11 +433,61 @@ def rank_series_by_source(access_token, api_host, series_list):
 
 
 def format_crop_calendar_response(resp):
-    """Make cropcalendar output a similar format to the normal data output.
+    """Make cropcalendar output a format similar to get_data_points().
 
-    Splits the one point with plantingStartDate/plantingEndDate/
-    harvestingStartDate/harvestingEndDate into two distinct points with
-    start/end where the value is the state of the crop as a string.
+    >>> format_crop_calendar_response([
+    ...     {
+    ...         'metricId': 2260063,
+    ...         'itemId': 274,
+    ...         'regionId': 13051,
+    ...         'sourceId': 5,
+    ...         'frequencyId': 15,
+    ...         'data': [{
+    ...             'sageItem': 'Corn',
+    ...             'plantingStartDate': '2000-03-04',
+    ...             'plantingEndDate': '2000-05-17',
+    ...             'harvestingStartDate': '2000-07-20',
+    ...             'harvestingEndDate': '2000-11-01',
+    ...             'multiYear': False
+    ...         }]
+    ...     }
+    ... ])
+    [{'metric_id': 2260063,
+        'item_id': 274,
+        'region_id': 13051,
+        'frequency_id': 15,
+        'source_id': 5,
+        'start_date': '2000-03-04',
+        'end_date': '2000-05-17',
+        'value': 'planting',
+        'input_unit_id': None,
+        'input_unit_scale': None,
+        'reporting_date': None},
+        {'metric_id': 2260063,
+        'item_id': 274,
+        'region_id': 13051,
+        'frequency_id': 15,
+        'source_id': 5,
+        'start_date': '2000-07-20',
+        'end_date': '2000-11-01',
+        'value': 'harvesting',
+        'input_unit_id': None,
+        'input_unit_scale': None,
+        'reporting_date': None}]
+
+    Parameters
+    ----------
+    resp : list of dicts
+        The output from /v2/cropcalendar/data. See doctest
+
+    Returns
+    -------
+    points : list of dicts
+        The input `resp` dicts with keys modified to match the get_data_points
+        output keys. Splits each point with plantingStartDate, plantingEndDate,
+        harvestingStartDate, and harvestingEndDate into two points with start
+        and end date where the value is the state of the crop as a string.
+
     """
     points = []
     for point in resp:
@@ -263,40 +502,40 @@ def format_crop_calendar_response(resp):
             if (dataEntry['plantingStartDate'] != '' or
                     dataEntry['plantingEndDate'] != ''):
                 points.append({
-                    u'input_unit_scale': None,
-                    u'region_id': point['regionId'],
-                    u'end_date': (dataEntry['plantingEndDate']
-                                  if dataEntry['plantingEndDate'] != ''
-                                  else None),
-                    u'input_unit_id': None,
-                    u'value': 'planting',
-                    u'frequency_id': point['frequencyId'],
-                    u'available_date': None,
-                    u'item_id': point['itemId'],
-                    u'reporting_date': None,
-                    u'start_date': (dataEntry['plantingStartDate']
-                                    if dataEntry['plantingStartDate'] != ''
-                                    else None),
-                    u'metric_id': point['metricId']
+                    'metric_id': point['metricId'],
+                    'item_id': point['itemId'],
+                    'region_id': point['regionId'],
+                    'frequency_id': point['frequencyId'],
+                    'source_id': point['sourceId'],
+                    'start_date': (dataEntry['plantingStartDate']
+                                   if dataEntry['plantingStartDate'] != ''
+                                   else None),
+                    'end_date': (dataEntry['plantingEndDate']
+                                 if dataEntry['plantingEndDate'] != ''
+                                 else None),
+                    'value': 'planting',
+                    'input_unit_id': None,
+                    'input_unit_scale': None,
+                    'reporting_date': None
                 })
-            if (dataEntry['harvestingStartDate'] != ''
-                    or dataEntry['harvestingEndDate'] != ''):
+            if (dataEntry['harvestingStartDate'] != '' or
+                    dataEntry['harvestingEndDate'] != ''):
                 points.append({
-                    u'input_unit_scale': None,
-                    u'region_id': point['regionId'],
-                    u'end_date': (dataEntry['harvestingEndDate']
-                                  if dataEntry['harvestingEndDate'] != ''
-                                  else None),
-                    u'input_unit_id': None,
-                    u'value': 'harvesting',
-                    u'frequency_id': point['frequencyId'],
-                    u'available_date': None,
-                    u'item_id': point['itemId'],
-                    u'reporting_date': None,
-                    u'start_date': (dataEntry['harvestingStartDate']
-                                    if dataEntry['harvestingStartDate'] != ''
-                                    else None),
-                    u'metric_id': point['metricId']
+                    'metric_id': point['metricId'],
+                    'item_id': point['itemId'],
+                    'region_id': point['regionId'],
+                    'frequency_id': point['frequencyId'],
+                    'source_id': point['sourceId'],
+                    'start_date': (dataEntry['harvestingStartDate']
+                                   if dataEntry['harvestingStartDate'] != ''
+                                   else None),
+                    'end_date': (dataEntry['harvestingEndDate']
+                                 if dataEntry['harvestingEndDate'] != ''
+                                 else None),
+                    'value': 'harvesting',
+                    'input_unit_id': None,
+                    'input_unit_scale': None,
+                    'reporting_date': None
                 })
     return points
 
@@ -307,6 +546,19 @@ def get_crop_calendar_data_points(access_token, api_host, **selection):
     Has different input/output from the regular /v2/data call, so this
     normalizes the interface and output format to make compatible
     get_data_points().
+
+    Parameters
+    ----------
+    access_token : string
+    api_host : string
+    selection : dict
+        See get_crop_calendar_params() input
+
+    Returns
+    -------
+    list of dicts
+        See format_crop_calendar_response() output
+
     """
     headers = {'authorization': 'Bearer ' + access_token}
     url = '/'.join(['https:', '', api_host, 'v2/cropcalendar/data'])
@@ -318,8 +570,31 @@ def get_crop_calendar_data_points(access_token, api_host, **selection):
 def get_data_points(access_token, api_host, **selection):
     """Get all the data points for a given selection.
 
-    Selections are some or all of: item_id, metric_id, region_id, frequency_id,
-    source_id, partner_region_id. Additional arguments are allowed and ignored.
+    https://github.com/gro-intelligence/api-client/wiki/Data-Point-Definition
+
+    Parameters
+    ----------
+    access_token : string
+    api_host : string
+    selection : dict
+        See get_data_call_params() input
+
+    Returns
+    -------
+    list of dicts
+        Ex: [ {
+            "start_date": "2000-01-01T00:00:00.000Z",
+            "end_date": "2000-12-31T00:00:00.000Z",
+            "value": 251854000,
+            "input_unit_id": 14,
+            "input_unit_scale": 1,
+            "metric_id": 860032,
+            "item_id": 274,
+            "region_id": 1215,
+            "frequency_id": 9,
+            "unit_id": 14
+        }, ...]
+
     """
     if(selection['metric_id'] == CROP_CALENDAR_METRIC_ID):
         return get_crop_calendar_data_points(access_token, api_host,
@@ -335,8 +610,17 @@ def get_data_points(access_token, api_host, **selection):
 def universal_search(access_token, api_host, search_terms):
     """Search across all entity types for the given terms.
 
-    Returns a list of [id, entity_type] pairs, e.g.: [[5604, u'item'], [10204,
-    u'item'], [410032, u'metric'], ....]
+    Parameters
+    ----------
+    access_token : string
+    api_host : string
+    search_terms : string
+
+    Returns
+    -------
+    list of [id, entity_type] pairs
+        Ex: [[5604, 'item'], [10204, 'item'], [410032, 'metric'], ....]
+
     """
     url_pieces = ['https:', '', api_host, 'v2/search']
     url = '/'.join(url_pieces)
@@ -346,12 +630,21 @@ def universal_search(access_token, api_host, search_terms):
 
 
 def search(access_token, api_host, entity_type, search_terms):
-    """Search for the given search term.
+    """Search for the given search term. Better matches appear first.
 
-    Given an entity_type, which is one of 'items', 'metrics',
-    'regions', perform a search for the given terms. Returns a list of
-    dictionaries with individual entities, e.g.: [{u'id': 5604}, {u'id':
-    10204}, {u'id': 10210}, ....]
+    Parameters
+    ----------
+    access_token : string
+    api_host : string
+    entity_type : string
+        One of: 'metrics', 'items', 'regions', or 'sources'
+    search_terms : string
+
+    Returns
+    -------
+    list of dicts
+        Ex: [{'id': 5604}, {'id': 10204}, {'id': 10210}, ....]
+
     """
     url = '/'.join(['https:', '', api_host, 'v2/search', entity_type])
     headers = {'authorization': 'Bearer ' + access_token}
@@ -368,6 +661,24 @@ def search_and_lookup(access_token, api_host, entity_type, search_terms):
         'contains': <array of ids of entities that are contained in this one>,
         ....
         <other properties> }
+
+    Parameters
+    ----------
+    access_token : string
+    api_host : string
+    entity_type : string
+        One of: 'metrics', 'items', 'regions', or 'sources'
+    search_terms : string
+
+    Yields
+    ------
+    dict
+        Result from search() passed to lookup() to get additional details
+        Ex: { 'id': 274, 'contains': [779, 780, ...] 'name': 'Corn',
+              'definition': 'The seeds of the widely cultivated...' }
+        See output of lookup(). Note that as with search(), the first result is
+        the best match for the given search term(s).
+
     """
     search_results = search(access_token, api_host, entity_type, search_terms)
     for result in search_results:
@@ -377,9 +688,27 @@ def search_and_lookup(access_token, api_host, entity_type, search_terms):
 def lookup_belongs(access_token, api_host, entity_type, entity_id):
     """Look up details of entities containing the given entity.
 
-    Given an entity_type, which is one of 'items', 'metrics',
-    'regions', and id, generates a list of JSON dicts of entities it
-    belongs to.
+    Parameters
+    ----------
+    access_token : string
+    api_host : string
+    entity_type : string
+        One of: 'metrics', 'items', 'regions', or 'sources'
+    entity_id : integer
+
+    Yields
+    ------
+    dict
+        Result of lookup() on each entity the given entity belongs to.
+        ex: For the region 'United States', one yielded result will be for
+        'North America.' The format of which matches the output of lookup():
+        {
+            'id': 15,
+            'contains': [ 1008, 1009, 1012, 1215, ... ],
+            'name': 'North America',
+            'level': 2
+        }
+
     """
     url = '/'.join(['https:', '', api_host, 'v2', entity_type, 'belongs-to'])
     params = {'ids': str(entity_id)}
@@ -390,12 +719,26 @@ def lookup_belongs(access_token, api_host, entity_type, entity_id):
 
 
 def get_geo_centre(access_token, api_host, region_id):
-    """Given a region ID, return the geographic centre in degrees lat/lon."""
+    """Given a region ID, return the geographic centre in degrees lat/lon.
+
+    Parameters
+    ----------
+    access_token : string
+    api_host : string
+    region_id : integer
+
+    Returns
+    -------
+    list of dicts
+        Ex: [{ 'centre': [ 45.7228, -112.996 ],
+               'regionId': 1215, 'regionName': 'United States' }]
+
+    """
     url = '/'.join(['https:', '', api_host, 'v2/geocentres?regionIds=' +
                     str(region_id)])
     headers = {'authorization': 'Bearer ' + access_token}
     resp = get_data(url, headers)
-    return resp.json()["data"]
+    return resp.json()['data']
 
 
 def get_descendant_regions(access_token, api_host, region_id,
@@ -409,6 +752,31 @@ def get_descendant_regions(access_token, api_host, region_id,
     acyclic. This will only traverse ordered region levels (strictly
     increasing region level id) and thus skips non-administrative region
     levels.
+
+    Parameters
+    ----------
+    access_token : string
+    api_host : string
+    region_id : integer
+    descendant_level : integer
+        The region level of interest. See REGION_LEVELS constant.
+
+    Returns
+    -------
+    list of dicts
+        Ex: [{
+            'id': 13100,
+            'contains': [139839, 139857, ...],
+            'name': 'Wisconsin',
+            'level': 4
+        } , {
+            'id': 13101,
+            'contains': [139891, 139890, ...],
+            'name': 'Wyoming',
+            'level': 4
+        }, ...]
+        See output of lookup()
+
     """
     descendants = []
     region = lookup(access_token, api_host, 'regions', region_id)
@@ -422,6 +790,9 @@ def get_descendant_regions(access_token, api_host, region_id,
     return descendants
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
+    # To run doctests:
+    # $ python lib.py -v
     import doctest
-    doctest.testmod()
+    doctest.testmod(optionflags=doctest.NORMALIZE_WHITESPACE |
+                    doctest.ELLIPSIS)
