@@ -1,10 +1,11 @@
-unicodecsv
+certifi
+chardet
+future
 numpy
 pandas
 python-dateutil
 pytz
-certifi
-chardet
 requests
+tornado
+unicodecsv
 urllib3
-future

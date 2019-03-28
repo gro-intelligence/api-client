@@ -13,11 +13,7 @@ from tornado.escape import json_decode
 from tornado.httpclient import AsyncHTTPClient, HTTPRequest, HTTPError
 from tornado.ioloop import IOLoop
 from tornado.queues import Queue
-from tornado.locks import Event
 from api.client import cfg, lib, Client
-
-rate_limit_lock = Event()
-rate_limit_lock.set()
 
 
 class BatchClient(Client):
@@ -66,9 +62,7 @@ class BatchClient(Client):
                     self._logger.warning(e.response.error, extra=log_record)
                     retry_count += 1
                     if e.code == 429:
-                        rate_limit_lock.clear()
                         time.sleep(2 ** retry_count)  # Exponential backoff
-                        rate_limit_lock.set()
                 else:
                     self._logger.error(e.response.error, extra=log_record)
                     raise Exception('Giving up on {} after {} tries. \
