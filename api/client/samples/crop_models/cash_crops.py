@@ -26,8 +26,6 @@ through x12. They hold different data as per the comments above each query.
 '''
 
 import os
-
-from api.client.gro_client import get_df
 from api.client.gro_client import GroClient
 
 # GRO GLOBAL VARIABLES
