@@ -407,8 +407,8 @@ def rank_series_by_source(access_token, api_host, series_list):
 
     Yields
     ------
-    list of dicts
-        Same dicts as the input series_list but reordered by source_id.
+    dict
+        The input series_list but reordered by source rank
 
     """
     # We sort the internal tuple representations of the dictionaries because
