@@ -22,7 +22,7 @@ through x12. They hold different data as per the comments above each query.
 9.GlobCover Land Cover
 10.Soil Moisture and Ocean Salinity Mission (SMOS) Soil Moisture
 11.National Farmers Information System (NAFIS) Kenya
-12.Gro Yield Model (data format is N/A?)
+12.Gro Yield Model
 '''
 
 import os
