@@ -1,4 +1,4 @@
-'''  Sample Source Calls
+"""Sample API requests for various Gro data series.
 
 This is a very simple collection of Gro API data pulls, designed to
 show a sample of the various types of information available and
@@ -8,8 +8,10 @@ The various entity IDs are all aliased to global variable names
 in the first section so that the queries themselves read more
 intuitively.
 
-After this script runs, 12 Pandas Dataframes will be in memory, named x01
-through x12. They hold different data as per the comments above each query.
+After this script runs, the 12 series will be combined in a single data frame
+and a preview is printed to the console.
+
+They hold different data as per the comments above each query.
 
 1.International Cocoa Organization (ICCO)
 2.International Coffee Organization (ICO)
@@ -23,7 +25,7 @@ through x12. They hold different data as per the comments above each query.
 10.Soil Moisture and Ocean Salinity Mission (SMOS) Soil Moisture
 11.National Farmers Information System (NAFIS) Kenya
 12.Gro Yield Model
-'''
+"""
 
 import os
 from api.client.gro_client import GroClient
