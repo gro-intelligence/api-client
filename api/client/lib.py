@@ -1,4 +1,9 @@
-"""This module is the base for making API calls."""
+"""Base module for making API requests.
+
+Client, GroClient, CropModel, and BatchClient all build on top of endpoints
+exposed in this module. Helper functions or shims or derivative functionality
+should appear in the client classes rather than here.
+"""
 
 from builtins import map
 from builtins import str
@@ -257,10 +262,19 @@ def lookup(access_token, api_host, entity_type, entity_id):
 
 
 def snake_to_camel(term):
-    """Convert hello_world to helloWorld.
+    """Convert a string from snake_case to camelCase.
 
     >>> snake_to_camel('hello_world')
     'helloWorld'
+
+    Parameters
+    ----------
+    term : string
+
+    Returns
+    -------
+    string
+
     """
     camel = term.split('_')
     return ''.join(camel[:1] + list([x[0].upper()+x[1:] for x in camel[1:]]))
