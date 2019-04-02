@@ -67,7 +67,8 @@ class SimilarRegion(object):
         :param region_ids:
         :return: regions that are most similar to the given region id(s)
         """
-        assert region_id in self.state.mapping, "This region is not available in your configuration."
+        assert region_id in self.state.mapping, "This region is not available in your configuration or " \
+                                                "it lacks coverage in the chosen region properties."
         # list as an index to preserve dimensionality of returned data
         x = self.state.data_standardized[self.state.mapping[region_id], :]
         x = x.reshape(1, -1)

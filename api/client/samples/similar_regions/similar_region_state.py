@@ -144,6 +144,9 @@ class SimilarRegionState(object):
         # update the number of regions
         self.num_regions = len(self.inverse_mapping)
 
+        # update nonstruc from data array
+        self._create_views()
+
         # copy in from the nonstruc view
         np.copyto(self.data_standardized, self.data_nonstruc)
         mean = np.ma.average(self.data_nonstruc, axis=0)

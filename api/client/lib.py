@@ -135,8 +135,8 @@ def get_data(url, headers, params=None, logger=None):
     retry_count = 0
     if not logger:
         logger = get_default_logger()
-    logger.debug(url)
-    logger.debug(params)
+        logger.debug(url)
+        logger.debug(params)
     while retry_count < cfg.MAX_RETRIES:
         start_time = time.time()
         data = requests.get(url, params=params, headers=headers, timeout=None)
@@ -152,13 +152,14 @@ def get_data(url, headers, params=None, logger=None):
         log_record['tag'] = 'failed_gro_api_request'
         if retry_count < cfg.MAX_RETRIES:
             logger.warning(data.text, extra=log_record)
-        else:
-            logger.error(data.text, extra=log_record)
-        if data.status_code == 301:
+        if data.status_code == 429:
+            time.sleep(2 ** retry_count)  # Exponential backoff before retrying
+        elif data.status_code == 301:
             params = redirect(params, data.json()['data'][0])
+        else:
+        logger.error(data.text, extra=log_record)
     raise Exception('Giving up on {} after {} tries. Error is: {}.'.format(
-        url, retry_count, data.text)
-    )
+        url, retry_count, data.text))
 
 
 def get_available(access_token, api_host, entity_type):
