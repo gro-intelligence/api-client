@@ -157,7 +157,7 @@ def get_data(url, headers, params=None, logger=None):
         elif data.status_code == 301:
             params = redirect(params, data.json()['data'][0])
         else:
-        logger.error(data.text, extra=log_record)
+            logger.error(data.text, extra=log_record)
     raise Exception('Giving up on {} after {} tries. Error is: {}.'.format(
         url, retry_count, data.text))
 
