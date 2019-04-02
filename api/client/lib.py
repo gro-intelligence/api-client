@@ -22,7 +22,7 @@ REGION_LEVELS = {
     'district': 5,  # Equivalent to county in the United States
     'city': 6,
     'market': 7,
-    'group': 8,  # arbitrary grouping of regions of any level
+    'other': 8,
     'coordinate': 9
 }
 
