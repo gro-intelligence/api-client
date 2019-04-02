@@ -7,16 +7,17 @@ with open("requirements.txt", "r") as requirements_file:
     requirements = requirements_file.read()
 
 setuptools.setup(
-    name = "gro",
-    version = "1.19.1",
-    description = "Python client library for accessing Gro Intelligence's agricultural data platform",
-    long_description = long_description,
-    long_description_content_type = "text/markdown",
-    url = "https://github.com/gro-intelligence/api-client",
-    packages = setuptools.find_packages(),
-    python_requires = ">=2.7.6",
-    install_requires = requirements,
-    entry_points = {
-      'console_scripts': ['gro_client=api.client.gro_client:main']
+    name="gro",
+    version="1.19.1",
+    description="Python client library for accessing Gro Intelligence's "
+                "agricultural data platform",
+    long_description=long_description,
+    long_description_content_type="text/markdown",
+    url="https://github.com/gro-intelligence/api-client",
+    packages=setuptools.find_packages(),
+    python_requires=">=2.7.6",
+    install_requires=requirements,
+    entry_points={
+        'console_scripts': ['gro_client=api.client.gro_client:main']
     }
 )
