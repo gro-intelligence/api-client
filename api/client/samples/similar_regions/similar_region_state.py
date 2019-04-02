@@ -72,7 +72,7 @@ class SimilarRegionState(object):
         """
         self._logger.info("Starting caching of downloaded data.")
         for name in self.region_properties:
-            with open(os.path.join(CACHE_PATH, "{}.nbz".format(name)), 'wb') as f:
+            with open(os.path.join(os.path.dirname(__file__), CACHE_PATH, "{}.nbz".format(name)), 'wb') as f:
                 np.savez(f,
                          data=self.data[name].data,
                          mask=self.data[name].mask,
@@ -88,7 +88,7 @@ class SimilarRegionState(object):
         self._logger.info("Loading data")
         # Loop through the metric views...
         for name in self.region_properties:
-            path = os.path.join(CACHE_PATH, "{}.nbz".format(name))
+            path = os.path.join(os.path.dirname(__file__), CACHE_PATH, "{}.nbz".format(name))
             if os.path.isfile(path):
                 self._logger.info("Found cached data for {}, loading...".format(name))
                 with open(path, 'rb') as f:

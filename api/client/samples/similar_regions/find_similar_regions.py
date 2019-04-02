@@ -10,7 +10,7 @@ def main():
     parser.add_argument("--region_id", required=True, type=int)
     parser.add_argument("--csv_output", default=True)
     parser.add_argument("--region_level", default=None)
-    parser.add_argument("--num_regions", default=10)
+    parser.add_argument("--num_regions", default=10, type=int)
     args = parser.parse_args()
 
     if args.csv_output:
