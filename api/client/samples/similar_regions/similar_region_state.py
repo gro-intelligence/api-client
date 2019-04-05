@@ -1,7 +1,7 @@
 import math
 from datetime import datetime
 from functools import reduce
-import dateparser
+import tempfile
 import numpy as np
 import os
 
@@ -19,9 +19,18 @@ class SimilarRegionState(object):
     Holds and initializes parameters and provide ssaving/loading logic for a similar_region search.
     """
 
-    def __init__(self, region_properties, regions_to_compare, client):
+    def __init__(self, region_properties, regions_to_compare, client, data_dir=None):
         self.client = client
         self._logger = api.client.lib.get_default_logger()
+
+        # Figure out temporary directory
+        if data_dir:
+            self.data_dir = data_dir
+        elif os.path.isdir(CACHE_PATH) and os.access(CACHE_PATH, os.W_OK):
+            self.data_dir = CACHE_PATH
+        else:
+            self.data_dir = tempfile.gettempdir()
+
         self.region_properties = region_properties
         self.num_regions = len(regions_to_compare)
         self.num_properties = len(region_properties)
@@ -72,7 +81,7 @@ class SimilarRegionState(object):
         """
         self._logger.info("Starting caching of downloaded data.")
         for name in self.region_properties:
-            with open(os.path.join(os.path.dirname(__file__), CACHE_PATH, "{}.nbz".format(name)), 'wb') as f:
+            with open(os.path.join(self.data_dir, "{}.nbz".format(name)), 'wb') as f:
                 np.savez(f,
                          data=self.data[name].data,
                          mask=self.data[name].mask,
@@ -88,7 +97,7 @@ class SimilarRegionState(object):
         self._logger.info("Loading data")
         # Loop through the metric views...
         for name in self.region_properties:
-            path = os.path.join(os.path.dirname(__file__), CACHE_PATH, "{}.nbz".format(name))
+            path = os.path.join(self.data_dir, "{}.nbz".format(name))
             if os.path.isfile(path):
                 self._logger.info("Found cached data for {}, loading...".format(name))
                 with open(path, 'rb') as f:

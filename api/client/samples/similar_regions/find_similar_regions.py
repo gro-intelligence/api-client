@@ -10,7 +10,8 @@ def main():
     parser.add_argument("--region_id", required=True, type=int)
     parser.add_argument("--csv_output", default=True)
     parser.add_argument("--region_level", default=None)
-    parser.add_argument("--num_regions", default=10, type=int)
+    parser.add_argument("--number_of_regions", default=10, type=int)
+    parser.add_argument("--data_dir", default=None, type=str)
     args = parser.parse_args()
 
     if args.csv_output:
@@ -18,8 +19,8 @@ def main():
         f = open(str(args.region_id) + level_suffix + ".csv", 'wb')
         csv_writer = None
 
-    sim = SimilarRegion(region_properties, regions_to_compare=USA_STATES)
-    for output in sim.similar_to(args.region_id, args.num_regions, args.region_level):
+    sim = SimilarRegion(region_properties, regions_to_compare=USA_STATES, data_dir=args.data_dir)
+    for output in sim.similar_to(args.region_id, args.number_of_regions, args.region_level):
         if args.csv_output:
             if not csv_writer:
                 csv_writer = csv.DictWriter(f, fieldnames= output.keys(),

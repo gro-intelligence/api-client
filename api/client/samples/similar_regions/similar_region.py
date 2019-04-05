@@ -11,7 +11,7 @@ ACCESS_TOKEN = os.environ['GROAPI_TOKEN']
 
 class SimilarRegion(object):
 
-    def __init__(self, region_properties, regions_to_compare=None):
+    def __init__(self, region_properties, regions_to_compare=None, data_dir=None):
         """
         :param region_properties: A dict containing the properties of regions to use when doing the similarity
         computation. This is by default defined in region_properties.py, but can be adjusted.
@@ -23,7 +23,7 @@ class SimilarRegion(object):
         if not regions_to_compare:
             regions_to_compare = self._regions_avail_for_selection(region_properties)
         self._logger.info("SimilarRegionState: loading...")
-        self.state = SimilarRegionState(region_properties, regions_to_compare, self.client)
+        self.state = SimilarRegionState(region_properties, regions_to_compare, self.client, data_dir=data_dir)
         self._logger.info("SimilarRegionState: done.")
         self._logger.info("BallTree: computing...")
         self.ball = BallTree(self.state.data_standardized, leaf_size=2)
@@ -64,15 +64,16 @@ class SimilarRegion(object):
         """
         This gives us the regions that are most similar to the either the given region in the case on region is give, or
         similar to the "collective mean" of the regions as given.
-        :param region_ids:
-        :return: regions that are most similar to the given region id(s)
+        :param region_id: a Gro region id representing the reference region you want to find similar regions to.
+        :param number_of_regions: number of most similar matches to return
+        :return: regions that are most similar to the given region id
         """
         assert region_id in self.state.mapping, "This region is not available in your configuration or " \
                                                 "it lacks coverage in the chosen region properties."
         # list as an index to preserve dimensionality of returned data
         x = self.state.data_standardized[self.state.mapping[region_id], :]
         x = x.reshape(1, -1)
-        assert number_of_regions < self.ball.data.shape[0], "num_regions must be smaller than or equal to total " \
+        assert number_of_regions < self.state.num_regions, "number_of_regions must be smaller than or equal to total " \
                                                             "number of regions in the comparison"
         neighbour_dists, neighbour_idxs = self.ball.query(x, k=number_of_regions)
         return neighbour_idxs[0], neighbour_dists[0]
@@ -80,10 +81,10 @@ class SimilarRegion(object):
     def similar_to(self, region_id, number_of_regions=10, requested_level=None):
         """
         Attempt to look up the given name and find similar regions.
-        :param region_id: name of a region.
-        :param number_of_regions: number of similar regions to return in the ranked list.
+        :param region_id: a Gro region id representing the reference region you want to find similar regions to.
+        :param number_of_regions: number of most similar matches to return
         :return: a generator of the most similar regions as a list in the form
-        [{id: 123, name: "abc", distance: 1.23, parent_regions: [{"abc"456, 789]
+        [{id: 123, name: "abc", distance: 1.23, parent_regions: []]
         """
         sim_regions, dists = self._similar_to(region_id, number_of_regions)
         self._logger.info("Found {} regions most similar to '{}'.".format(len(sim_regions), region_id))
