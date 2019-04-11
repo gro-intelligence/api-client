@@ -99,6 +99,7 @@ class SimilarRegionState(object):
         # Loop through the metric views...
         for name in self.region_properties:
             path = os.path.join(self.data_dir, "{}.nbz".format(name))
+            assert (not self.no_download) or os.path.isfile(path), "--no_download requires cached properties to be available" 
             if os.path.isfile(path):
                 self._logger.info("Found cached data for {}, loading...".format(name))
                 with open(path, 'rb') as f:
