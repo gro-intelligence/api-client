@@ -41,7 +41,7 @@ In addition, optionally you can:
 You can use the gro_client command line tool to request an authentication token. Note that you will be prompted to enter a password.
 
 ```sh
-gro_client --user_email='email@example.com' --print_token
+gro_client --user_email=email@example.com --print_token
 ```
 
 This token is used throughout the Gro API client code, wherever authentication is required.
