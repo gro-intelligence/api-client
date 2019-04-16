@@ -12,6 +12,7 @@ def main():
     parser.add_argument("--region_level", default=None, type=int)
     parser.add_argument("--number_of_regions", default=10, type=int)
     parser.add_argument("--data_dir", default=None, type=str)
+    parser.add_argument("--no_download", action='store_true')
     args = parser.parse_args()
 
     if args.csv_output:
@@ -19,7 +20,7 @@ def main():
         f = open(str(args.region_id) + level_suffix + ".csv", 'wb')
         csv_writer = None
 
-    sim = SimilarRegion(region_properties, regions_to_compare=USA_STATES, data_dir=args.data_dir)
+    sim = SimilarRegion(region_properties, regions_to_compare=USA_STATES, data_dir=args.data_dir, no_download=args.no_download)
     for output in sim.similar_to(args.region_id, args.number_of_regions, args.region_level):
         if args.csv_output:
             if not csv_writer:
