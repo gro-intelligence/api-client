@@ -55,7 +55,7 @@ class SimilarRegion(object):
                 grandparent = next(self.client.lookup_belongs("regions", parent["id"]), {"name": "", "id": ""})
             else:
                 grandparent = {"name": "", "id": ""}
-            self._logger.info("{}, {}, {}".format(sim_region_name, parent["name"], grandparent["name"]))
+            self._logger.info("{}, {}, {}".format(sim_region_name.encode('utf8'), parent["name"].encode('utf8'), grandparent["name"].encode('utf8')))
             data_point = {"id": sim_region_region_id, "name": sim_region_name, "dist": dists[ranking],
                           "parent": (parent["id"], parent["name"], grandparent["id"], grandparent["name"])}
             yield data_point
