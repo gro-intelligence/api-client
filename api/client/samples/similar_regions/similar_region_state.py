@@ -130,13 +130,14 @@ class SimilarRegionState(object):
         progress_idx = 0
         for properties in self.region_properties.values():
             num_features = properties["properties"]["num_features"]
+            weight_per_feature = (float(properties["properties"]["weight"])/num_features)**0.5
             if properties["properties"]["type"] == "timeseries" and properties["properties"]["weight_slope"]:
                 slope_vector = np.arange(1.0, LOWEST_PERCENTAGE_WEIGHT_FEATURE,
                                          -(1.0 - LOWEST_PERCENTAGE_WEIGHT_FEATURE) / float(num_features))
-                slope_vector *= properties["properties"]["weight"]
+                slope_vector *= weight_per_feature
                 self.weight_vector[progress_idx:progress_idx+num_features] = slope_vector
             else:
-                self.weight_vector[progress_idx:progress_idx + num_features] *= properties["properties"]["weight"]
+                self.weight_vector[progress_idx:progress_idx + num_features] *= weight_per_feature
             progress_idx += num_features
 
     def _standardize(self):
