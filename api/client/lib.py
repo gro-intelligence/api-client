@@ -78,7 +78,7 @@ def get_access_token(api_host, user_email, user_password, logger=None):
             return get_api_token.json()['data']['accessToken']
         else:
             logger.warning('Error in get_access_token: {}'.format(
-                get_api_token.body))
+                get_api_token))
         retry_count += 1
     raise Exception('Giving up on get_access_token after {0} tries.'.format(
         retry_count))
