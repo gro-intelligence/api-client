@@ -780,13 +780,10 @@ def get_geojson(access_token, api_host, region_id):
 
     Returns
     -------
-    a geojson object
-    Ex: {u'type': u'GeometryCollection',
-         u'geometries':  [{u'type': u'MultiPolygon',
-                           u'coordinates': [[[[-38.394, -4.225],  ...]]]}, ...]
-    }
-
-
+    a geojson object e.g. 
+    { 'type': 'GeometryCollection',
+      'geometries': [{'type': 'MultiPolygon', 
+                      'coordinates': [[[[-38.394, -4.225], ...]]]}, ...]}
     """
     url = '/'.join(['https:', '', api_host, 'v2/geojson?regionIds=' +
                     str(region_id)])
