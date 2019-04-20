@@ -8,6 +8,7 @@ should appear in the client classes rather than here.
 from builtins import map
 from builtins import str
 from api.client import cfg
+import json
 import logging
 import requests
 import time
@@ -766,6 +767,32 @@ def get_geo_centre(access_token, api_host, region_id):
     headers = {'authorization': 'Bearer ' + access_token}
     resp = get_data(url, headers)
     return resp.json()['data']
+
+
+def get_geojson(access_token, api_host, region_id):
+    """Given a region ID, return a geojson shape information
+
+    Parameters
+    ----------
+    access_token : string
+    api_host : string
+    region_id : integer
+
+    Returns
+    -------
+    a geojson object
+    Ex: {u'type': u'GeometryCollection',
+         u'geometries':  [{u'type': u'MultiPolygon',
+                           u'coordinates': [[[[-38.394, -4.225],  ...]]]}, ...]
+    }
+
+
+    """
+    url = '/'.join(['https:', '', api_host, 'v2/geojson?regionIds=' +
+                    str(region_id)])
+    headers = {'authorization': 'Bearer ' + access_token}
+    resp = get_data(url, headers)
+    return json.loads(resp.json()['data'])
 
 
 def get_descendant_regions(access_token, api_host, region_id,
