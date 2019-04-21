@@ -784,12 +784,15 @@ def get_geojson(access_token, api_host, region_id):
     { 'type': 'GeometryCollection',
       'geometries': [{'type': 'MultiPolygon', 
                       'coordinates': [[[[-38.394, -4.225], ...]]]}, ...]}
+    or None if not found.
     """
-    url = '/'.join(['https:', '', api_host, 'v2/geojson?regionIds=' +
+    url = '/'.join(['https:', '', api_host, 'v2/geocentres?includeGeojson=True&regionIds=' +
                     str(region_id)])
     headers = {'authorization': 'Bearer ' + access_token}
     resp = get_data(url, headers)
-    return json.loads(resp.json()['data'])
+    for region in resp.json()['data']:
+        return json.loads(region['geojson'])
+    return None
 
 
 def get_descendant_regions(access_token, api_host, region_id,
