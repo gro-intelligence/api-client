@@ -146,10 +146,11 @@ class SimilarRegionState(object):
         self.missing = self.missing[rows_to_keep]
         self.data_standardized = self.data_standardized[rows_to_keep]
         # Remove this from the region mapping
-        distric_idxs_to_remove = self.inverse_mapping[~rows_to_keep]
         self.inverse_mapping = self.inverse_mapping[rows_to_keep]
-        for idx in distric_idxs_to_remove:
-            del self.mapping[idx]
+        # Recreate the mapping in other direction
+        self.mapping.clear()
+        for idx, region_idx in enumerate(self.inverse_mapping):
+            self.mapping[region_idx] = idx
         # update the number of regions
         self.num_regions = len(self.inverse_mapping)
 

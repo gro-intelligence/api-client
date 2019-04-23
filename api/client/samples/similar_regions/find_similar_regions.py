@@ -8,8 +8,8 @@ USA_STATES = [1215, 13100, 13061, 13053, 13099, 13069, 13091, 13076, 13064, 1306
 def main():
     parser = argparse.ArgumentParser(description="Gro Similar Regions")
     parser.add_argument("--region_id", required=True, type=int)
-    parser.add_argument("--csv_output", default=True)
-    parser.add_argument("--region_level", default=None)
+    parser.add_argument("--csv_output", action='store_true')
+    parser.add_argument("--region_level", default=None, type=int)
     parser.add_argument("--number_of_regions", default=10, type=int)
     parser.add_argument("--data_dir", default=None, type=str)
     args = parser.parse_args()
