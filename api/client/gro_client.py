@@ -59,6 +59,8 @@ class GroClient(Client):
                 **self._data_series_queue.pop())))
         if len(frames) > 1:
             self._data_frame = pandas.concat(frames)
+            self._data_frame.end_date = pandas.to_datetime(self._data_frame.end_date)
+            self._data_frame.start_date = pandas.to_datetime(self._data_frame.start_date)
         return self._data_frame
 
     def get_data_series_list(self):
