@@ -28,6 +28,11 @@ from api.client import cfg, lib, Client
 API_HOST = 'api.gro-intelligence.com'
 OUTPUT_FILENAME = 'gro_client_output.csv'
 
+DATA_POINTS_UNIQUE_COLS = ['item_id', 'metric_id',
+                           'region_id', 'partner_region_id', 
+                           'frequency_id', # 'source_id',
+                           'reporting_date', 'start_date', 'end_date']
+
 
 class GroClient(Client):
     """A Client with methods to find, and manipulate data series related
@@ -53,14 +58,15 @@ class GroClient(Client):
     ###
     def get_df(self):
         """Get the content of all data series in a Pandas frame."""
-        frames = [self._data_frame]
         while self._data_series_queue:
-            frames.append(pandas.DataFrame(data=self.get_data_points(
-                **self._data_series_queue.pop())))
-        if len(frames) > 1:
-            self._data_frame = pandas.concat(frames)
-            self._data_frame.end_date = pandas.to_datetime(self._data_frame.end_date)
-            self._data_frame.start_date = pandas.to_datetime(self._data_frame.start_date)
+            tmp = pandas.DataFrame(
+                data=self.get_data_points(**self._data_series_queue.pop()))
+            tmp.end_date = pandas.to_datetime(tmp.end_date)
+            tmp.start_date = pandas.to_datetime(tmp.start_date)
+            if self._data_frame is None:
+                self._data_frame = tmp
+            else:
+                self._data_frame = self._data_frame.merge(tmp, how='outer')
         return self._data_frame
 
     def get_data_series_list(self):
