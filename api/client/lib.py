@@ -8,6 +8,7 @@ should appear in the client classes rather than here.
 from builtins import map
 from builtins import str
 from api.client import cfg
+import json
 import logging
 import requests
 import time
@@ -78,7 +79,7 @@ def get_access_token(api_host, user_email, user_password, logger=None):
             return get_api_token.json()['data']['accessToken']
         else:
             logger.warning('Error in get_access_token: {}'.format(
-                get_api_token.body))
+                get_api_token))
         retry_count += 1
     raise Exception('Giving up on get_access_token after {0} tries.'.format(
         retry_count))
@@ -766,6 +767,32 @@ def get_geo_centre(access_token, api_host, region_id):
     headers = {'authorization': 'Bearer ' + access_token}
     resp = get_data(url, headers)
     return resp.json()['data']
+
+
+def get_geojson(access_token, api_host, region_id):
+    """Given a region ID, return a geojson shape information
+
+    Parameters
+    ----------
+    access_token : string
+    api_host : string
+    region_id : integer
+
+    Returns
+    -------
+    a geojson object e.g. 
+    { 'type': 'GeometryCollection',
+      'geometries': [{'type': 'MultiPolygon', 
+                      'coordinates': [[[[-38.394, -4.225], ...]]]}, ...]}
+    or None if not found.
+    """
+    url = '/'.join(['https:', '', api_host, 'v2/geocentres?includeGeojson=True&regionIds=' +
+                    str(region_id)])
+    headers = {'authorization': 'Bearer ' + access_token}
+    resp = get_data(url, headers)
+    for region in resp.json()['data']:
+        return json.loads(region['geojson'])
+    return None
 
 
 def get_descendant_regions(access_token, api_host, region_id,
