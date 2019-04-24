@@ -229,7 +229,10 @@ class SimilarRegionState(object):
                         self.data[property_name][data_table_idx] = result
                 elif props["properties"]["type"] == "pit":
                     # for point in time just add the value
-                    self.data[property_name][data_table_idx] = response[0]["value"]
+                    if response[0]["value"] == None or np.isnan(response[0]["value"]):
+                        self.data[property_name][data_table_idx] = np.ma.masked
+                    else:
+                        self.data[property_name][data_table_idx] = response[0]["value"]
                 # Mark this as downloaded.
             self.missing[property_name][data_table_idx] = False
 
