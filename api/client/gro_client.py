@@ -28,11 +28,6 @@ from api.client import cfg, lib, Client
 API_HOST = 'api.gro-intelligence.com'
 OUTPUT_FILENAME = 'gro_client_output.csv'
 
-DATA_POINTS_UNIQUE_COLS = ['item_id', 'metric_id',
-                           'region_id', 'partner_region_id', 
-                           'frequency_id', # 'source_id',
-                           'reporting_date', 'start_date', 'end_date']
-
 
 class GroClient(Client):
     """A Client with methods to find, and manipulate data series related
@@ -108,6 +103,7 @@ class GroClient(Client):
             for data_series in self.rank_series_by_source(data_series_list):
                 self.add_single_data_series(data_series)
                 return
+
     ###
     # Discovery shortcuts
     ###
