@@ -59,7 +59,7 @@ class GroClient(Client):
             if 'end_date' in tmp.columns:
                 tmp.end_date = pandas.to_datetime(tmp.end_date)
             if 'start_date' in tmp.columns:
-            tmp.start_date = pandas.to_datetime(tmp.start_date)
+                tmp.start_date = pandas.to_datetime(tmp.start_date)
             if self._data_frame is None:
                 self._data_frame = tmp
             else:
