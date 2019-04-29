@@ -53,12 +53,17 @@ class GroClient(Client):
     ###
     def get_df(self):
         """Get the content of all data series in a Pandas frame."""
-        frames = [self._data_frame]
         while self._data_series_queue:
-            frames.append(pandas.DataFrame(data=self.get_data_points(
-                **self._data_series_queue.pop())))
-        if len(frames) > 1:
-            self._data_frame = pandas.concat(frames)
+            tmp = pandas.DataFrame(
+                data=self.get_data_points(**self._data_series_queue.pop()))
+            if 'end_date' in tmp.columns:
+                tmp.end_date = pandas.to_datetime(tmp.end_date)
+            if 'start_date' in tmp.columns:
+                tmp.start_date = pandas.to_datetime(tmp.start_date)
+            if self._data_frame is None:
+                self._data_frame = tmp
+            else:
+                self._data_frame = self._data_frame.merge(tmp, how='outer')
         return self._data_frame
 
     def get_data_series_list(self):
@@ -100,6 +105,7 @@ class GroClient(Client):
             for data_series in self.rank_series_by_source(data_series_list):
                 self.add_single_data_series(data_series)
                 return
+
     ###
     # Discovery shortcuts
     ###
