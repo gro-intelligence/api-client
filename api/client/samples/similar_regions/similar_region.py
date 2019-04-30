@@ -11,7 +11,7 @@ ACCESS_TOKEN = os.environ['GROAPI_TOKEN']
 
 class SimilarRegion(object):
 
-    def __init__(self, region_properties, regions_to_compare=None, data_dir=None):
+    def __init__(self, region_properties, regions_to_compare=None, data_dir=None, no_download=False):
         """
         :param region_properties: A dict containing the properties of regions to use when doing the similarity
         computation. This is by default defined in region_properties.py, but can be adjusted.
@@ -23,7 +23,8 @@ class SimilarRegion(object):
         if not regions_to_compare:
             regions_to_compare = self._regions_avail_for_selection(region_properties)
         self._logger.info("SimilarRegionState: loading...")
-        self.state = SimilarRegionState(region_properties, regions_to_compare, self.client, data_dir=data_dir)
+        self.state = SimilarRegionState(region_properties, regions_to_compare, self.client, data_dir=data_dir, 
+                no_download=no_download)
         self._logger.info("SimilarRegionState: done.")
         self._logger.info("BallTree: computing...")
         self.ball = BallTree(self.state.data_standardized, leaf_size=2)

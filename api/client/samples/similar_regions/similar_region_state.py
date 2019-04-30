@@ -19,7 +19,7 @@ class SimilarRegionState(object):
     Holds and initializes parameters and provide ssaving/loading logic for a similar_region search.
     """
 
-    def __init__(self, region_properties, regions_to_compare, client, data_dir=None):
+    def __init__(self, region_properties, regions_to_compare, client, data_dir=None, no_download=False):
         self.client = client
         self._logger = api.client.lib.get_default_logger()
 
@@ -65,7 +65,7 @@ class SimilarRegionState(object):
         # Weights of each metric
         self.weight_vector = np.ones(self.tot_num_features, dtype='d')
 
-        self.load()
+        self.load(no_download)
         self.save()
 
     def _create_views(self):
@@ -90,7 +90,7 @@ class SimilarRegionState(object):
         self._logger.info("Done caching of downloaded data.")
         return
 
-    def load(self):
+    def load(self, no_download):
         """
         Attempt to load any cached information and merge it into our current data situation.
         """
@@ -98,6 +98,7 @@ class SimilarRegionState(object):
         # Loop through the metric views...
         for name in self.region_properties:
             path = os.path.join(self.data_dir, "{}.nbz".format(name))
+            assert (not no_download) or os.path.isfile(path), "--no_download requires cached properties to be available" 
             if os.path.isfile(path):
                 self._logger.info("Found cached data for {}, loading...".format(name))
                 with open(path, 'rb') as f:
@@ -116,7 +117,8 @@ class SimilarRegionState(object):
                 self._logger.info("Loaded {} cached regions for property {}".format(len(mutual_regions), name))
             # Fill in the missing data if any e.g. in case the cache
             # was created with a subset of current regions_to_compare
-            self._get_data(name)
+            if not no_download:
+                self._get_data(name)
         self._standardize()
         self._logger.info("Done loading.")
         return
