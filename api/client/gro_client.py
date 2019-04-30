@@ -28,6 +28,11 @@ from api.client import cfg, lib, Client
 API_HOST = 'api.gro-intelligence.com'
 OUTPUT_FILENAME = 'gro_client_output.csv'
 
+DATA_POINTS_UNIQUE_COLS = ['item_id', 'metric_id',
+                           'region_id', 'partner_region_id', 
+                           'frequency_id', 'source_id',
+                           'reporting_date', 'start_date', 'end_date']
+
 
 class GroClient(Client):
     """A Client with methods to find, and manipulate data series related
@@ -54,14 +59,21 @@ class GroClient(Client):
     def get_df(self):
         """Get the content of all data series in a Pandas frame."""
         while self._data_series_queue:
+            data_series = self._data_series_queue.pop()
             tmp = pandas.DataFrame(
-                data=self.get_data_points(**self._data_series_queue.pop()))
+                data=self.get_data_points(**data_series))
+            # get_data_points response doesn't include the
+            # source_id. We add it as a column, in case we have
+            # several selections series which differ only by source id.
+            tmp['source_id'] = data_series['source_id']
             if 'end_date' in tmp.columns:
                 tmp.end_date = pandas.to_datetime(tmp.end_date)
             if 'start_date' in tmp.columns:
                 tmp.start_date = pandas.to_datetime(tmp.start_date)
             if self._data_frame is None:
                 self._data_frame = tmp
+                self._data_frame.set_index(filter(lambda col: col in tmp.columns,
+                                                  DATA_POINTS_UNIQUE_COLS))
             else:
                 self._data_frame = self._data_frame.merge(tmp, how='outer')
         return self._data_frame
