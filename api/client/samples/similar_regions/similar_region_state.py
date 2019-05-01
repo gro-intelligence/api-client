@@ -129,13 +129,14 @@ class SimilarRegionState(object):
         progress_idx = 0
         for properties in self.region_properties.values():
             num_features = properties["properties"]["num_features"]
-            if properties["properties"]["weight_slope"]:
+            weight_per_feature = (float(properties["properties"]["weight"])/num_features)**0.5
+            if properties["properties"]["type"] == "timeseries_fourier" and properties["properties"]["weight_slope"]:
                 slope_vector = np.arange(1.0, LOWEST_PERCENTAGE_WEIGHT_FEATURE,
                                          -(1.0 - LOWEST_PERCENTAGE_WEIGHT_FEATURE) / float(num_features))
-                slope_vector *= properties["properties"]["weight"]
+                slope_vector *= weight_per_feature
                 self.weight_vector[progress_idx:progress_idx+num_features] = slope_vector
             else:
-                self.weight_vector[progress_idx:progress_idx + num_features] *= properties["properties"]["weight"]
+                self.weight_vector[progress_idx:progress_idx + num_features] *= weight_per_feature
             progress_idx += num_features
 
     def _standardize(self):
@@ -186,14 +187,15 @@ class SimilarRegionState(object):
         series_list = self.client.get_data_series(**query)
         assert len(series_list) > 0, "No data series found for selection {}".format(query)
         data_series = series_list[0]
-        start_date = datetime.strptime(data_series["start_date"], '%Y-%m-%dT%H:%M:%S.%fZ')
-        period_length_days = self.client.lookup('frequencies', query["frequency_id"])['periodLength']['days']
-        end_date = datetime.strptime(data_series["end_date"], '%Y-%m-%dT%H:%M:%S.%fZ')
-        num_of_points = (end_date - start_date).days / period_length_days
-        self._logger.info("length of data series is {} days".format(num_of_points))
-        longest_period_feature_period = props["properties"]["longest_period_feature_period"]
-        start_idx = math.floor(num_of_points / float(longest_period_feature_period))
-        self._logger.info("first coef index will be {}".format(start_idx))
+        if props["properties"]["type"] == "timeseries_fourier":
+            start_date = datetime.strptime(data_series["start_date"], '%Y-%m-%dT%H:%M:%S.%fZ')
+            period_length_days = self.client.lookup('frequencies', query["frequency_id"])['periodLength']['days']
+            end_date = datetime.strptime(data_series["end_date"], '%Y-%m-%dT%H:%M:%S.%fZ')
+            num_of_points = (end_date - start_date).days / period_length_days
+            self._logger.info("length of data series is {} days".format(num_of_points))
+            longest_period_feature_period = props["properties"]["longest_period_feature_period"]
+            start_idx = math.floor(num_of_points / float(longest_period_feature_period))
+            self._logger.info("first coef index will be {}".format(start_idx))
         num_features = props["properties"]["num_features"]
         # deep copy the metric for each query.
         queries = []
@@ -212,18 +214,25 @@ class SimilarRegionState(object):
                 # flag this as invalid.
                 self.data[property_name][data_table_idx] = np.ma.masked
             else:
-                # TODO: remove start_datetime stuff here once we have "addNulls" available in api
-                result, coverage = transform.post_process_timeseries(num_of_points, start_date, response,
-                                                                     start_idx, num_features,
-                                                                     period_length_days=period_length_days)
-                # if there are less points than there are in our lowest period event, let's discard this...
-                if coverage < 1/float(start_idx):
-                    self.data[property_name][data_table_idx] = 0.0
-                    # flag this as invalid.
-                    self.data[property_name][data_table_idx] = np.ma.masked
-                else:
-                    self.data[property_name][data_table_idx] = result
-            # Mark this as downloaded.
+                if props["properties"]["type"] == "timeseries_fourier":
+                    # TODO: remove start_datetime stuff here once we have "addNulls" available in api
+                    result, coverage = transform.post_process_timeseries(num_of_points, start_date, response,
+                                                                         start_idx, num_features,
+                                                                         period_length_days=period_length_days)
+                    # if there are less points than there are in our lowest period event, let's discard this...
+                    if coverage < 1/float(start_idx):
+                        self.data[property_name][data_table_idx] = 0.0
+                        # flag this as invalid.
+                        self.data[property_name][data_table_idx] = np.ma.masked
+                    else:
+                        self.data[property_name][data_table_idx] = result
+                elif props["properties"]["type"] == "pit":
+                    # for point in time just add the value
+                    if response[0]["value"] == None or np.isnan(response[0]["value"]):
+                        self.data[property_name][data_table_idx] = np.ma.masked
+                    else:
+                        self.data[property_name][data_table_idx] = response[0]["value"]
+                # Mark this as downloaded.
             self.missing[property_name][data_table_idx] = False
 
         self._logger.info("Getting data series for {} regions for property {}".format(len(queries), property_name))
