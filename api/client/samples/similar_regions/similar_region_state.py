@@ -131,7 +131,7 @@ class SimilarRegionState(object):
         for properties in self.region_properties.values():
             num_features = properties["properties"]["num_features"]
             weight_per_feature = (float(properties["properties"]["weight"])/num_features)**0.5
-            if properties["properties"]["type"] == "timeseries" and properties["properties"]["weight_slope"]:
+            if properties["properties"]["type"] == "timeseries_fourier" and properties["properties"]["weight_slope"]:
                 slope_vector = np.arange(1.0, LOWEST_PERCENTAGE_WEIGHT_FEATURE,
                                          -(1.0 - LOWEST_PERCENTAGE_WEIGHT_FEATURE) / float(num_features))
                 slope_vector *= weight_per_feature
@@ -188,7 +188,7 @@ class SimilarRegionState(object):
         series_list = self.client.get_data_series(**query)
         assert len(series_list) > 0, "No data series found for selection {}".format(query)
         data_series = series_list[0]
-        if props["properties"]["type"] == "timeseries":
+        if props["properties"]["type"] == "timeseries_fourier":
             start_date = datetime.strptime(data_series["start_date"], '%Y-%m-%dT%H:%M:%S.%fZ')
             period_length_days = self.client.lookup('frequencies', query["frequency_id"])['periodLength']['days']
             end_date = datetime.strptime(data_series["end_date"], '%Y-%m-%dT%H:%M:%S.%fZ')
@@ -215,7 +215,7 @@ class SimilarRegionState(object):
                 # flag this as invalid.
                 self.data[property_name][data_table_idx] = np.ma.masked
             else:
-                if props["properties"]["type"] == "timeseries":
+                if props["properties"]["type"] == "timeseries_fourier":
                     # TODO: remove start_datetime stuff here once we have "addNulls" available in api
                     result, coverage = transform.post_process_timeseries(num_of_points, start_date, response,
                                                                          start_idx, num_features,
