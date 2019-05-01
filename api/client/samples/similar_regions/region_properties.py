@@ -9,7 +9,7 @@ region_properties = {
             'source_id': 43
         },
         "properties": {
-            "type": "timeseries",
+            "type": "timeseries_fourier",
             "num_features": 150,
             "longest_period_feature_period": 365,
             "weight": 0.7,
@@ -24,7 +24,7 @@ region_properties = {
             'source_id': 26
         },
         "properties": {
-            "type": "timeseries",
+            "type": "timeseries_fourier",
             "num_features": 150,
             "longest_period_feature_period": 365,
             "weight": 0.7,
@@ -39,7 +39,7 @@ region_properties = {
             'source_id': 35
         },
         "properties": {
-            "type": "timeseries",
+            "type": "timeseries_fourier",
             "num_features": 150,
             "longest_period_feature_period": 365,
             "weight": 0.7,
