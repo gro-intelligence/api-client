@@ -40,10 +40,7 @@ class SimilarRegion(object):
         return list(regions)
 
     def _format_results(self, sim_regions, region_level_id, dists):
-        for ranking, idx in enumerate(sim_regions):
-            sim_region_region_id = self.state.inverse_mapping[idx]
-            if np.ma.is_masked(self.state.data_nonstruc[idx]):
-                self._logger.info("possible sim_region was masked")
+        for ranking, sim_region_region_id in enumerate(sim_regions):
             sim_region_region = self.client.lookup("regions", sim_region_region_id)
             sim_region_name = self.client.lookup("regions", sim_region_region_id)["name"]
             if region_level_id is not None and sim_region_region["level"] != region_level_id:
@@ -77,7 +74,7 @@ class SimilarRegion(object):
         assert number_of_regions <= self.state.num_regions, "number_of_regions must be smaller than or equal to total " \
                                                             "number of regions in the comparison"
         neighbour_dists, neighbour_idxs = self.ball.query(x, k=number_of_regions)
-        return neighbour_idxs[0], neighbour_dists[0]
+        return self.state.mapping[neighbour_idxs[0]], neighbour_dists[0]
 
     def similar_to(self, region_id, number_of_regions=10, requested_level=None):
         """
