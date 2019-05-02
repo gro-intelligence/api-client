@@ -74,7 +74,7 @@ class SimilarRegion(object):
         assert number_of_regions <= self.state.num_regions, "number_of_regions must be smaller than or equal to total " \
                                                             "number of regions in the comparison"
         neighbour_dists, neighbour_idxs = self.ball.query(x, k=number_of_regions)
-        return self.state.mapping[neighbour_idxs[0]], neighbour_dists[0]
+        return self.state.inverse_mapping[neighbour_idxs[0]], neighbour_dists[0]
 
     def similar_to(self, region_id, number_of_regions=10, requested_level=None):
         """
