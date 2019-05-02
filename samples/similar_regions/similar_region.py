@@ -4,6 +4,7 @@ from sklearn.neighbors import BallTree
 from api.client.batch_client import BatchClient
 from api.client.lib import get_default_logger
 from similar_region_state import SimilarRegionState
+from sklearn.metrics.pairwise import euclidean_distances
 
 """ API Config """
 API_HOST = 'api.gro-intelligence.com'
@@ -11,7 +12,7 @@ ACCESS_TOKEN = os.environ['GROAPI_TOKEN']
 
 class SimilarRegion(object):
 
-    def __init__(self, region_properties, regions_to_compare=None, data_dir=None):
+    def __init__(self, region_properties, regions_to_compare=None, data_dir=None, no_download=False):
         """
         :param region_properties: A dict containing the properties of regions to use when doing the similarity
         computation. This is by default defined in region_properties.py, but can be adjusted.
@@ -23,7 +24,8 @@ class SimilarRegion(object):
         if not regions_to_compare:
             regions_to_compare = self._regions_avail_for_selection(region_properties)
         self._logger.info("SimilarRegionState: loading...")
-        self.state = SimilarRegionState(region_properties, regions_to_compare, self.client, data_dir=data_dir)
+        self.state = SimilarRegionState(region_properties, regions_to_compare, self.client, data_dir=data_dir, 
+                no_download=no_download)
         self._logger.info("SimilarRegionState: done.")
         self._logger.info("BallTree: computing...")
         self.ball = BallTree(self.state.data_standardized, leaf_size=2)
@@ -38,7 +40,7 @@ class SimilarRegion(object):
         self._logger.info("{} regions are available for comparison.".format(len(regions)))
         return list(regions)
 
-    def _format_results(self, sim_regions, region_level_id, dists):
+    def _format_results(self, sim_regions, region_level_id, dists, metric_dists):
         for ranking, idx in enumerate(sim_regions):
             sim_region_region_id = self.state.inverse_mapping[idx]
             if np.ma.is_masked(self.state.data_nonstruc[idx]):
@@ -56,8 +58,9 @@ class SimilarRegion(object):
             else:
                 grandparent = {"name": "", "id": ""}
             self._logger.info(u"{}, {}, {}".format(sim_region_name, parent["name"], grandparent["name"]))
+            metric_dists_dict = {prop_name: distance for (prop_name, distance) in zip(self.state.region_properties.keys(), metric_dists[ranking])}
             data_point = {"id": sim_region_region_id, "name": sim_region_name, "dist": dists[ranking],
-                          "parent": (parent["id"], parent["name"], grandparent["id"], grandparent["name"])}
+                    "parent": (parent["id"], parent["name"], grandparent["id"], grandparent["name"]), "metric_dist": metric_dists_dict}
             yield data_point
 
     def _similar_to(self, region_id, number_of_regions):
@@ -66,7 +69,9 @@ class SimilarRegion(object):
         similar to the "collective mean" of the regions as given.
         :param region_id: a Gro region id representing the reference region you want to find similar regions to.
         :param number_of_regions: number of most similar matches to return
-        :return: regions that are most similar to the given region id
+        :return: regions that are most similar to the given region id, the distances to each of these, and the 
+                    individual distances for each property (in the order of properties as iterated on the properties
+                    dictionary). 
         """
         assert region_id in self.state.mapping, "This region is not available in your configuration or " \
                                                 "it lacks coverage in the chosen region properties."
@@ -76,7 +81,24 @@ class SimilarRegion(object):
         assert number_of_regions < self.state.num_regions, "number_of_regions must be smaller than or equal to total " \
                                                             "number of regions in the comparison"
         neighbour_dists, neighbour_idxs = self.ball.query(x, k=number_of_regions)
-        return neighbour_idxs[0], neighbour_dists[0]
+
+        # get the individual distances 
+        metric_distances = [self._get_distances(self.state.mapping[region_id], idx2) for idx2 in neighbour_idxs[0]]
+
+        return neighbour_idxs[0], neighbour_dists[0], metric_distances
+
+    def _get_distances(self, idx1, idx2):
+        """ Returns the distances in each "metric" for the two given rows """
+        progress_idx = 0
+        distances = []
+        for properties in self.state.region_properties.values():
+            num_features = properties["properties"]["num_features"]
+            subspace_vec1 = self.state.data_standardized[idx1, progress_idx:progress_idx+num_features]
+            subspace_vec2 = self.state.data_standardized[idx2, progress_idx:progress_idx+num_features]
+            dist = euclidean_distances([subspace_vec1], [subspace_vec2])[0][0]
+            distances.append(dist)
+            progress_idx += num_features
+        return distances
 
     def similar_to(self, region_id, number_of_regions=10, requested_level=None):
         """
@@ -86,7 +108,7 @@ class SimilarRegion(object):
         :return: a generator of the most similar regions as a list in the form
         [{id: 123, name: "abc", distance: 1.23, parent_regions: []]
         """
-        sim_regions, dists = self._similar_to(region_id, number_of_regions)
+        sim_regions, dists, metric_dists = self._similar_to(region_id, number_of_regions)
         self._logger.info("Found {} regions most similar to '{}'.".format(len(sim_regions), region_id))
-        for output in self._format_results(sim_regions, requested_level, dists):
+        for output in self._format_results(sim_regions, requested_level, dists, metric_dists):
             yield output
