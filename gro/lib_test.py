@@ -1,7 +1,7 @@
 import pytest
 import mock
 
-from api.client import lib
+from gro import lib
 
 MOCK_HOST = "pytest.groclient.url"
 MOCK_TOKEN = "pytest.groclient.token"

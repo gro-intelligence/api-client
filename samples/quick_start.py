@@ -1,6 +1,6 @@
 import os
 import unicodecsv
-from api.client.gro_client import GroClient
+from gro import GroClient
 
 API_HOST = 'api.gro-intelligence.com'
 OUTPUT_FILENAME = 'gro_client_output.csv'

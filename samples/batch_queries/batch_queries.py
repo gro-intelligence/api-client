@@ -1,5 +1,5 @@
 import os
-from api.client.batch_client import BatchClient
+from gro import BatchClient
 
 def main():
     # set up the Batch Client, same as normal Client

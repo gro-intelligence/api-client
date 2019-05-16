@@ -28,7 +28,7 @@ They hold different data as per the comments above each query.
 """
 
 import os
-from api.client.gro_client import GroClient
+from gro import GroClient
 
 # GRO GLOBAL VARIABLES
 API_HOST = 'api.gro-intelligence.com'
