@@ -4,7 +4,7 @@ from builtins import zip
 import pandas
 import math
 
-from gro.gro_client import GroClient
+from api.client.gro_client import GroClient
 
 
 class CropModel(GroClient):

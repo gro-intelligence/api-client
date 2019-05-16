@@ -1,5 +1,5 @@
 from builtins import object
-from gro import lib
+from api.client import lib
 
 
 class Client(object):

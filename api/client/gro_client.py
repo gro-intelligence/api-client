@@ -22,7 +22,7 @@ import os
 import pandas
 import sys
 import unicodecsv
-from gro import cfg, lib, Client
+from api.client import cfg, lib, Client
 
 
 API_HOST = 'api.gro-intelligence.com'

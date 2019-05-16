@@ -13,7 +13,7 @@ from tornado.escape import json_decode
 from tornado.httpclient import AsyncHTTPClient, HTTPRequest, HTTPError
 from tornado.ioloop import IOLoop
 from tornado.queues import Queue
-from gro import cfg, lib, Client
+from api.client import cfg, lib, Client
 
 
 class BatchClient(Client):

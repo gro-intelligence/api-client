@@ -18,6 +18,6 @@ setuptools.setup(
     python_requires=">=2.7.6",
     install_requires=requirements,
     entry_points={
-        'console_scripts': ['gro_client=api.client.gro_client:main']
+        'console_scripts': ['gro_client=gro.gro_client:main']
     }
 )
