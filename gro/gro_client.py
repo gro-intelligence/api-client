@@ -17,7 +17,6 @@ from random import random
 import argparse
 import getpass
 import itertools
-import math
 import os
 import pandas
 import sys
