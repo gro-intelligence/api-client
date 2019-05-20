@@ -12,6 +12,7 @@ For more information use --help
 """
 
 from __future__ import print_function
+from builtins import zip
 from builtins import str
 from random import random
 import argparse
@@ -72,8 +73,7 @@ class GroClient(Client):
                 tmp.start_date = pandas.to_datetime(tmp.start_date)
             if self._data_frame is None:
                 self._data_frame = tmp
-                self._data_frame.set_index(filter(lambda col: col in tmp.columns,
-                                                  DATA_POINTS_UNIQUE_COLS))
+                self._data_frame.set_index([col for col in DATA_POINTS_UNIQUE_COLS if col in tmp.columns])
             else:
                 self._data_frame = self._data_frame.merge(tmp, how='outer')
         return self._data_frame
