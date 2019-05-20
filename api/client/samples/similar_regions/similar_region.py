@@ -41,10 +41,7 @@ class SimilarRegion(object):
         return list(regions)
 
     def _format_results(self, sim_regions, region_level_id, dists, metric_dists):
-        for ranking, idx in enumerate(sim_regions):
-            sim_region_region_id = self.state.inverse_mapping[idx]
-            if np.ma.is_masked(self.state.data_nonstruc[idx]):
-                self._logger.info("possible sim_region was masked")
+        for ranking, sim_region_region_id in enumerate(sim_regions):
             sim_region_region = self.client.lookup("regions", sim_region_region_id)
             sim_region_name = self.client.lookup("regions", sim_region_region_id)["name"]
             if region_level_id is not None and sim_region_region["level"] != region_level_id:
@@ -78,14 +75,14 @@ class SimilarRegion(object):
         # list as an index to preserve dimensionality of returned data
         x = self.state.data_standardized[self.state.mapping[region_id], :]
         x = x.reshape(1, -1)
-        assert number_of_regions < self.state.num_regions, "number_of_regions must be smaller than or equal to total " \
+        assert number_of_regions <= self.state.num_regions, "number_of_regions must be smaller than or equal to total " \
                                                             "number of regions in the comparison"
         neighbour_dists, neighbour_idxs = self.ball.query(x, k=number_of_regions)
 
         # get the individual distances 
         metric_distances = [self._get_distances(self.state.mapping[region_id], idx2) for idx2 in neighbour_idxs[0]]
 
-        return neighbour_idxs[0], neighbour_dists[0], metric_distances
+        return self.state.inverse_mapping[neighbour_idxs[0]], neighbour_dists[0], metric_distances
 
     def _get_distances(self, idx1, idx2):
         """ Returns the distances in each "metric" for the two given rows """
