@@ -40,7 +40,7 @@ class SimilarRegion(object):
         self._logger.info("{} regions are available for comparison.".format(len(regions)))
         return list(regions)
 
-    def _format_results(self, sim_regions, region_level_id, dists):
+    def _format_results(self, sim_regions, region_level_id, dists, metric_dists):
         for ranking, sim_region_region_id in enumerate(sim_regions):
             sim_region_region = self.client.lookup("regions", sim_region_region_id)
             sim_region_name = self.client.lookup("regions", sim_region_region_id)["name"]
