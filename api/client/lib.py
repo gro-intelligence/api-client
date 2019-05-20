@@ -138,11 +138,6 @@ def get_data(url, headers, params=None, logger=None):
         logger = get_default_logger()
         logger.debug(url)
         logger.debug(params)
-    logger.warning('''
-        Deprecation Warning: Please import from the gro package instead of
-        api.client.
-        api.client will be removed in a future update.
-    ''')
     while retry_count < cfg.MAX_RETRIES:
         start_time = time.time()
         data = requests.get(url, params=params, headers=headers, timeout=None)
