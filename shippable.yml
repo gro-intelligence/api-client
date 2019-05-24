@@ -6,8 +6,13 @@ python:
 
 build:
   ci:
+    - pip install -r requirements.txt
     - pip install -r test-requirements.txt
     # Create folder for test results
     - mkdir -p shippable/testresults
     #Run test and output results to the right folder
     - pytest --junitxml=shippable/testresults/nosetests.xml
+  cache: true
+  cache_dir_list:
+    - /root/venv/2.7/lib/python2.7/site-packages
+    - /root/venv/3.7/lib/python3.7/site-packages
