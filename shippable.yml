@@ -12,7 +12,3 @@ build:
     - mkdir -p shippable/testresults
     #Run test and output results to the right folder
     - pytest --junitxml=shippable/testresults/nosetests.xml
-  cache: true
-  cache_dir_list:
-    - /root/venv/2.7/lib/python2.7/site-packages
-    - /root/venv/3.7/lib/python3.7/site-packages
