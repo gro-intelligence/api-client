@@ -13,4 +13,4 @@ build:
     - mkdir -p shippable/codecoverage
     # Run test and code coverage and output results to the right folder
     - pytest --junitxml=shippable/testresults/nosetests.xml
-    - pytest --cov=modules --cov-report=xml:shippable/codecoverage/coverage.xml
+    - pytest --cov=api --cov-report=xml:shippable/codecoverage/coverage.xml
