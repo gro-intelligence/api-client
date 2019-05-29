@@ -1,3 +1,5 @@
+<p align="center"><img width=8% src="https://gro-intelligence.com/images/logo.jpg"></p>
+
 # Gro API Client
 
 https://www.gro-intelligence.com/products/gro-api
@@ -11,81 +13,36 @@ Client library for accessing Gro Intelligence's agricultural data platform.
 
 ## Install Gro API client packages
 
-There are two installation methods: using pip, or using git. 
-
-### Install with pip install (preferred)
-
 ```sh
-pip install git+https://github.com/gro-intelligence/api-client.git [--target=<your-gro-path>]
+pip install git+https://github.com/gro-intelligence/api-client.git
 ```
-
-If you don't specify your gro installation path, it will be the local [site-packages]( https://stackoverflow.com/questions/31384639/what-is-pythons-site-packages-directory) directory.
-
-### Install with git clone 
-
-```
-git clone https://github.com/gro-intelligence/api-client.git  [<your-gro-path>]
-```
-If you don't specify your gro installation path, it will be the current directory.
-In addition, optionally you can:
-
-1. [Set `PYTHONPATH=<your-gro-path>` as an environment variable](https://www.techwalla.com/articles/how-to-set-your-python-path)
-
-2. Make `gro_client` an alias for `python <your-gro-path>/gro_client.py`
-
 
 ## Gro API authentication token
 
-### Getting a token
+Use the Gro web application to retrieve an authentication token (instructions are in the wiki [here](https://github.com/gro-intelligence/api-client/wiki/Authentication-Tokens#11-using-the-gro-web-application-preferred)).
 
-You can use the gro_client command line tool to request an authentication token. Note that you will be prompted to enter a password.
+### Saving your token as an environment variable (optional)
 
-```sh
-gro_client --user_email=email@example.com --print_token
-```
-
-This token is used throughout the Gro API client code, wherever authentication is required.
-
-Gro authentication tokens *may* expire or be reset by the administrator,
-depending on your account status. You can re-run the above command to get a new one 
-if your previous one has expired.
-
-### Saving your token as an environment variable
-
-If you don't want to enter a password or token each time, you can save
-the token as an environment variable. Please consult your OS or IDE documentation for information on how to set environment variables, e.g. [setting environment variables in Windows Powershell](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_environment_variables?view=powershell-6) and [Mac OS X/Linux](https://apple.stackexchange.com/questions/106778/how-do-i-set-environment-variables-on-os-x).  In some of the sample code, it is assumed that you have the token saved to your environment variables as GROAPI_TOKEN. 
+If you don't want to enter a password or token each time, you can save the token as an environment variable. Please consult your OS or IDE documentation for information on how to set environment variables, e.g. [setting environment variables in Windows Powershell](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_environment_variables?view=powershell-6) and [Mac OS X/Linux](https://apple.stackexchange.com/questions/106778/how-do-i-set-environment-variables-on-os-x). In some of the sample code, it is assumed that you have the token saved to your environment variables as `GROAPI_TOKEN`.
 
 ## Examples
 
 Navigate to [api/client/samples/](api/client/samples/) folder and try executing the provided examples.
 
-Try [quick_start.py](api/client/samples/quick_start.py)
+1. Try [quick_start.py](api/client/samples/quick_start.py).
 
 ```sh
-cd your-gro-path/api-client/api/client/samples/
-
 python quick_start.py
 ```
-Now should be able to find a sample output csv file at: `gro_client_output.csv`
 
-A more advanced example is [sugar.py](api/client/samples/crop_models/sugar.py)
+If the API client is installed and your authentication token is set, a csv file called `gro_client_output.csv` should be created in the directory where the script was run.
 
-```sh
-cd your-gro-path/api-client/api/client/samples/crop_models/
-python sugar.py
-```
-
-You can also use the Gro CLI as a quick and easy way to request a single data series right on the command line. You can either provide your email and enter a password when prompted, or you can provide your --token to avoid typing a password every time:
+2. Try out [soybeans.py](api/client/samples/crop_models/soybeans.py) to see the crop weighted series feature in action:
 
 ```sh
-gro_client --metric='Production Quantity mass' --item='Corn' --region='United States' --user_email='email@expample.com'
-Password: <enter password when prompted>
-
-or
-
-gro_client --metric='Production Quantity mass' --item='Corn' --region='United States' --token='token-generated-in-setup-steps'
+python crop_modles/soybeans.py
 ```
 
-This will choose the first matching data series and output the results to a `gro_client_output.csv` file in your current directory.
+3. See [brazil_soybeans.ipynb](https://github.com/gro-intelligence/api-client/blob/development/api/client/samples/crop_models/brazil_soybeans.ipynb) for a longer, more detailed demonstration of many of the API's capabilities in a Jupyter notebook.
 
 Further documentation can be found in the [api/client/](api/client) directory and on our [wiki](https://github.com/gro-intelligence/api-client/wiki).
