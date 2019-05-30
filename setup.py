@@ -23,7 +23,9 @@ setuptools.setup(
             'pytest-cov'
         ],
         'docs': [
-            'sphinx'
+            'sphinx',
+            'recommonmark',
+            'sphinx_rtd_theme'
         ]
     },
     entry_points={

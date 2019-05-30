@@ -12,28 +12,28 @@ api.client.lib
 api.client.Client
 *****************
 
-.. autoclass:: api.client.Client
+.. automodule:: api.client.Client
     :members:
 
 *********************
 api.client.gro_client
 *********************
 
-.. autoclass:: api.client.gro_client.GroClient
+.. automodule:: api.client.gro_client.GroClient
     :members:
 
 *********************
 api.client.crop_model
 *********************
 
-.. autoclass:: api.client.crop_model.CropModel
+.. automodule:: api.client.crop_model.CropModel
     :members:
 
 ***********************
 api.client.batch_client
 ***********************
 
-.. autoclass:: api.client.batch_client.BatchClient
+.. automodule:: api.client.batch_client.BatchClient
     :members:
 
 .. toctree::
