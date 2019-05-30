@@ -17,6 +17,15 @@ setuptools.setup(
     packages=setuptools.find_packages(),
     python_requires=">=2.7.6",
     install_requires=requirements,
+    extras_require={
+        'tests': [
+            'pytest',
+            'pytest-cov'
+        ],
+        'docs': [
+            'sphinx'
+        ]
+    },
     entry_points={
         'console_scripts': ['gro_client=api.client.gro_client:main']
     }
