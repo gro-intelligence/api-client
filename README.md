@@ -40,7 +40,7 @@ If the API client is installed and your authentication token is set, a csv file 
 2. Try out [soybeans.py](api/client/samples/crop_models/soybeans.py) to see the crop weighted series feature in action:
 
 ```sh
-python crop_modles/soybeans.py
+python crop_models/soybeans.py
 ```
 
 3. See [brazil_soybeans.ipynb](https://github.com/gro-intelligence/api-client/blob/development/api/client/samples/crop_models/brazil_soybeans.ipynb) for a longer, more detailed demonstration of many of the API's capabilities in a Jupyter notebook.
