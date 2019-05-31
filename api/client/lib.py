@@ -379,7 +379,7 @@ def get_data_call_params(**selection):
     """
     params = get_params_from_selection(**selection)
     for key, value in list(selection.items()):
-        if key in ('start_date', 'end_date', 'show_revisions'):
+        if key in ('start_date', 'end_date', 'show_revisions', 'insert_null'):
             params[snake_to_camel(key)] = value
     return params
 
