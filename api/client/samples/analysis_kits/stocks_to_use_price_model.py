@@ -1,7 +1,20 @@
-"""
-Sample Gro API Client script for regressing stocks-to-use ratios vs price
+"""Sample API script for modeling prices based on the stocks-to-use ratio
 
-This script creates a basic CME price valuation model using the US stocks-to-use ratio.
+This script creates a basic CME price valuation model for corn and soybeans
+using the US stocks-to-use ratio. 
+
+The stocks-to-use ratio is calculated each month as reported in the USDA's PS&D
+database. The price variable is defined as the monthly average 'new crop' 
+(December futures for corn and November futures for soybeans) price for the 
+relevant report month. For example, the corn-June scatterplot will compare the US
+stocks-to-use ratio from all June reports relative to the corresponding monthly 
+average December corn futures price.
+
+The output of this script will be a PDF file for each modeled crop, saved in
+the current working directory. Each PDF will have 13 pages in total, 
+including a scatterplot for each report month as well as a 
+scatterplot summarizing the entire sample.
+
 """
 
 import os
@@ -269,3 +282,6 @@ def write_price_model(crop):
     for f in fig_lst: pp.savefig(f)
     pp.close()
     
+if __name__ == "__main__":
+    write_price_model('corn')
+    write_price_model('soybeans')
