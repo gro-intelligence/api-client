@@ -3,7 +3,7 @@ import os
 from sklearn.neighbors import BallTree
 from api.client.batch_client import BatchClient
 from api.client.lib import get_default_logger
-from similar_region_state import SimilarRegionState
+from api.client.samples.similar_regions.similar_region_state import SimilarRegionState
 from sklearn.metrics.pairwise import euclidean_distances
 
 """ API Config """

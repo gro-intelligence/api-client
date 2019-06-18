@@ -368,7 +368,8 @@ def get_data_call_params(**selection):
     selection : dict
         Keys can include: 'metric_id', 'item_id', 'region_id',
         'partner_region_id', 'source_id', 'frequency_id', 'start_date',
-        'end_date', 'show_revisions'. Anything else will be ignored.
+        'end_date', 'show_revisions', and 'insert_null'.
+        Anything else will be ignored.
 
     Returns
     -------
