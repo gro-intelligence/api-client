@@ -2,8 +2,8 @@
 
 In order to start engaging with the Gro API Client, you will need to set up your local environment with some basic requirements.
 
-[System Prerequisites](#SystemPrerequisites)
-[Authentication Token/Saving Environment Variables](#Authentication)
+1. [System Prerequisites](#system-prerequisites)
+2. [Authentication Token/Saving Environment Variables](#authentication-token)
 
 ## System Prerequisites
 
@@ -31,39 +31,38 @@ The Gro API client is compatible with both Python 2.7.x and Python 3.x (3.6 and 
 Now that you have downloaded the base system requirements, you will need to install the packages for the Gro API Client.
 
 Install with pip install
-```pip install git+https://github.com/gro-intelligence/api-client.git```
 
-## Authentication Token/Saving Environment Variables
+```sh
+pip install git+https://github.com/gro-intelligence/api-client.git
+```
+
+## Authentication Token
+
+1. [Retrieving a token](#retrieving-a-token)
+2. [Expiring/Regenerating Tokens](#expiring-regenerating-tokens)
+3. [Saving your token as an environment variable](#saving-your-token-as-an-environment-variable)
 
 To work with the Gro API, you need an authentication token. This token needs to be sent along with every request made to the API. This is typically done by using one of the included Client classes (`Client`, `GroClient`, `BatchClient`, or `CropModel`): you provide your access token when creating the object, and then every API request made thereafter automatically includes the token. See the (MAKE LINK) sample scripts for examples.
-
-[Retrieving a token](#Retrieval)
-
-1. [Using the Web App](#RetrievalWebApp)
-2. [Using the gro_client Command Line Interface](#RetrievalCLI)
-3. [Using the get_access_token() Function](#RetrievalGAT)
-[Expiring/Regenerating Tokens](#ExpiringTokens)
-[Saving your token as an environment variable](#SavingEnvVar)
 
 ### Retrieving a token
 
 Note that your account needs to be activated for API access before you will be able to retrieve a token. See https://gro-intelligence.com/products/gro-api for more info regarding unlocking API access for your account.
 Once you have API access enabled for your account, you may retrieve your token in any of the following ways:
 
-1. Using the Gro Web Application (preferred)
-2. Using the Gro Command Line Interface
-3. Using the get_access_token() Function
+1. [Using the Gro Web Application (preferred)](#option-1-using-the-web-app-recommended)
+2. [Using the Gro Command Line Interface](#option-2-using-the-gro-client-command-line-interface)
+3. [Using the get_access_token() Function](#option-3-using-the-get-access-token-function)
 
 #### Option 1: Using the Web App (Recommended)
 
 1. Log in to your Gro account at http://app.gro-intelligence.com and open your Account menu using the button on the bottom left of the Gro dashboard (see image below).
-![user-profile-annotated](../media/user-profile-annotated.png)
+!(../media/user-profile-annotated.png)
 
 2. In the Account menu, select the API tab (see below).
-![profile-tab-annotated](../media/profile-tab-annotated.png)
+!(../media/profile-tab-annotated.png)
 
 3. Select the text of the token and copy it to your clipboard, or use the "copy to clipboard" button (see below).
-![api-tab-annotated](../media/api-tab-annotated.png)
+!(../media/api-tab-annotated.png)
 
 #### Option 2: Using the gro_client Command Line Interface
 
@@ -95,12 +94,13 @@ It is generally bad practice to put login credentials directly in code as in thi
 ### Expiring/Regenerating Tokens
 
 There are two ways you can invalidate your current authorization token and create a new one, both of which are performed through the Gro web application:
-Changing your password, or
-Using the "Regenerate Token" button in the API section of your Account menu (see instructions below)
+
+1. Changing your password, or
+2. Using the "Regenerate Token" button in the API section of your Account menu (see instructions below)
 If you have your authentication token saved, performing either of these two actions will cause any applications using the old token to cease being able to contact the Gro API. You will need to follow the instructions in Section 1 to retrieve your new token and update any such applications accordingly.
 To regenerate your authentication token, open the API tab in your Account menu as in Section 1.1, but instead of copying the authentication token, press the "Regenerate Token" button (see below). A prompt will appear to warn that any applications using the old token will need to be updated and to confirm your intent.
 
-![regenerate-token](../media/regenerate-token.png)
+!(../media/regenerate-token.png)
 
 ### Saving your token as an environment variable
 
