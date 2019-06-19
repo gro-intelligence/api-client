@@ -1,7 +1,9 @@
 """Sample API script for modeling prices based on the stocks-to-use ratio
 
 This script creates a basic CME price valuation model for corn and soybeans
-using the US stocks-to-use ratio. 
+using the US stocks-to-use ratio. A Gro public display containing the data series
+used in this exercise is linked here: 
+https://app.gro-intelligence.com/displays/1jdOenVRw
 
 The stocks-to-use ratio is calculated each month as reported in the USDA's PS&D
 database. The price variable is defined as the monthly average 'new crop' 
@@ -33,8 +35,10 @@ API_HOST = 'api.gro-intelligence.com'
 TOKEN    = os.environ['GROAPI_TOKEN']
 client   = GroClient(API_HOST, TOKEN)
 
-ref = {'corn':{'id':274, 'futures_contract_month':12},
-       'soybeans':{'id':270, 'futures_contract_month':11}}
+ref = {'corn':{'futures_contract_month':12},
+       'soybeans':{'futures_contract_month':11}}
+
+UNITED_STATES_REGION_ID = 1215
 
 def contract_month_history(crop, contract_month):
     """full history of settlement prices for a specific commodity
@@ -50,24 +54,24 @@ def contract_month_history(crop, contract_month):
     -------
     pandas.Series
     """
-
-    market = ref[crop.lower()]['id']
+    market = client.search_for_entity('items', crop)
     
-    client = GroClient(API_HOST, TOKEN)
-    
-    client.add_single_data_series({'metric_id': 15820065, 
+    SETTLEMENT_PRICE = client.search_for_entity('metrics', 'futures prices settle (currency/mass)')
+    client.add_single_data_series({'metric_id': SETTLEMENT_PRICE, 
                                    'item_id': market, 
                                    'region_id': 1215, 
                                    'source_id': 81,
-                                   'start_date': '2000-01-01',
+                                   'start_date': '2006-01-01',
                                    'show_revisions': True})
     
-    df    = client.get_df()
-    df['reporting_date'] = pd.DatetimeIndex(df['reporting_date'])
-    df = df.set_index('reporting_date')
-    df_ct = df[df['end_date'].dt.month == contract_month]
+    df = client.get_df().copy()
+    df['reporting_date'] = pd.to_datetime(df['reporting_date'])
     
-    ct_grps   = df_ct.groupby('end_date')
+    px_df = df.loc[(df['metric_id'] == SETTLEMENT_PRICE) & \
+                   (df['item_id'] == market) & \
+                   (df['end_date'].dt.month == contract_month)].set_index('reporting_date')
+    
+    ct_grps   = px_df.groupby('end_date')
     contracts = ct_grps.groups.keys()
     contracts.sort()
     
@@ -98,97 +102,50 @@ def get_price(crop):
     
     return ts_out
 
-def get_ending_stocks(crop, region=1215):
-    """Find USDA PS&D's end of marketing year inventory series     
+def get_stocks_to_use(crop, region=UNITED_STATES_REGION_ID):
+    """Calculate historical carryout to use ratio for a given commodity  
 
     Parameters
     ----------
     crop : string
         'corn' or 'soybeans'
-    region : int
-        Gro region id
     Returns
     -------
     pandas.Series
     """
+    crop_id = client.search_for_entity('items', crop)
     
-    c_ref   = ref[crop.lower()]
-    crop_id = c_ref['id']
-
-    client = GroClient(API_HOST, TOKEN)
-    
-    client.add_single_data_series({'metric_id': 1470032, 
+    # add stocks series
+    ENDING_STOCKS = client.search_for_entity('metrics', 'stocks, ending quantity (mass)')
+    client.add_single_data_series({'metric_id': ENDING_STOCKS, 
                                    'item_id': crop_id, 
                                    'region_id': region, 
                                    'source_id': 14, 
                                    'frequency_id': 9, 
-                                   'show_revisions': True})
+                                   'start_date': '2006-12-31',
+                                   'show_revisions': True})    
     
-    df_pts = client.get_df()
-    df_pts = df_pts.sort_values('end_date', ascending=True)
-    df_pts['report_date'] = pd.to_datetime(df_pts['reporting_date'])
-    df_grp = df_pts.groupby('report_date').last()
     
-    ts_out = df_grp['value']
-    ts_out.name = 'stocks'
-    
-    return ts_out
-
-def get_consumption(crop, region=1215):
-    """Find USDA PS&D's domestic consumption series     
-
-    Parameters
-    ----------
-    crop : string
-        'corn' or 'soybeans'
-    region : int
-        Gro region id
-    Returns
-    -------
-    pandas.Series
-    """
-    c_ref   = ref[crop.lower()]
-    crop_id = c_ref['id']
-    
-    client = GroClient(API_HOST, TOKEN)
-    
-    client.add_single_data_series({'metric_id': 1480032, 
+    # add consumption series
+    CONSUMPTION = client.search_for_entity('metrics', 'domestic consumption (mass)')
+    client.add_single_data_series({'metric_id': CONSUMPTION, 
                                     'item_id': crop_id, 
                                     'region_id': region, 
                                     'source_id': 14, 
                                     'frequency_id': 9,
+                                    'start_date': '2006-12-31',
                                     'show_revisions': True})
 
-    df_pts = client.get_df()
+    df_pts = client.get_df().copy()
     df_pts = df_pts.sort_values('end_date', ascending=True)
-    df_pts['report_date'] = pd.to_datetime(df_pts['reporting_date'])
-    df_grp = df_pts.groupby('report_date').last()
+    df_pts['reporting_date'] = pd.to_datetime(df_pts['reporting_date'])
     
-    ts_out = df_grp['value']
-    ts_out.name = 'use'
+    df_grp = df_pts.groupby(['item_id', 'metric_id', 'reporting_date']).last()
     
-    return ts_out
-
-def get_stocks_to_use(crop):
-    """Calculate historical US carryout to use ratio for a given commodity  
-
-    Parameters
-    ----------
-    crop : string
-        'corn' or 'soybeans'
-    Returns
-    -------
-    pandas.Series
-    """
-    united_states = 1215
+    stocks = df_grp.loc[(crop_id, ENDING_STOCKS), :]['value']
+    cons   = df_grp.loc[(crop_id, CONSUMPTION), :]['value']
     
-    # model is based on US ending stocks and consumption
-    stocks = get_ending_stocks(crop, region=united_states)
-    cons   = get_consumption(crop, region=united_states)
-    
-    df_tot = pd.concat([stocks, cons], axis=1)
-   
-    ts_out = df_tot['stocks'].div(df_tot['use'])
+    ts_out = stocks.div(cons)
     ts_out.name = 'stocks_to_use'
     
     return ts_out
@@ -206,11 +163,11 @@ def run_regression(df):
         r-squared value, intercept, and x variable coefficient
     """
     lm = linear_model.LinearRegression()
-    X  = df.loc[:,['stocks_to_use']]
+    X  = df.loc[:, ['stocks_to_use']]
     
     lm.fit(X, df['price'])
     
-    rsq = lm.score(X,df['price'])
+    rsq = lm.score(X, df['price'])
     
     return rsq, lm.intercept_, lm.coef_[0]
 
@@ -226,7 +183,6 @@ def create_scatterplot(df_in, name, crop):
     crop : string
         'corn' or 'soybeans'
     """    
-    
     stu = df_in['stocks_to_use']
     px  = df_in['price']
     
@@ -251,7 +207,7 @@ def create_scatterplot(df_in, name, crop):
     plt.legend(fontsize=9)
 
     fig.suptitle(ttl, fontsize=12)
-    ax.set_xlabel('Stocks to Use')
+    ax.set_xlabel('Stocks to Use Ratio')
     ax.set_ylabel('Price')
 
     plt.close()
