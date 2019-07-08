@@ -31,7 +31,7 @@ REGION_LEVELS = {
 def get_default_logger():
     """Get a logging object using the default log level set in cfg.
 
-    https://docs.python.org/3/library/logging.html
+    http://docs.python.org/3/library/logging.html
 
     Returns
     -------
@@ -52,7 +52,7 @@ def get_access_token(api_host, user_email, user_password, logger=None):
     Parameters
     ----------
     api_host : string
-        The API host's url, excluding 'https://'
+        The API host's url, excluding 'http://'
         ex. 'api.gro-intelligence.com'
     user_email : string
         Email address associated with user's Gro account
@@ -71,7 +71,7 @@ def get_access_token(api_host, user_email, user_password, logger=None):
     if not logger:
         logger = get_default_logger()
     while retry_count < cfg.MAX_RETRIES:
-        get_api_token = requests.post('https://' + api_host + '/api-token',
+        get_api_token = requests.post('http://' + api_host + '/api-token',
                                       data={'email': user_email,
                                             'password': user_password})
         if get_api_token.status_code == 200:
@@ -79,7 +79,7 @@ def get_access_token(api_host, user_email, user_password, logger=None):
             return get_api_token.json()['data']['accessToken']
         else:
             logger.warning('Error in get_access_token: {}'.format(
-                get_api_token))
+                get_api_token.json()['error']))
         retry_count += 1
     raise Exception('Giving up on get_access_token after {0} tries.'.format(
         retry_count))
@@ -183,7 +183,7 @@ def get_available(access_token, api_host, entity_type):
         ]
 
     """
-    url = '/'.join(['https:', '', api_host, 'v2', entity_type])
+    url = '/'.join(['http:', '', api_host, 'v2', entity_type])
     headers = {'authorization': 'Bearer ' + access_token}
     resp = get_data(url, headers)
     return resp.json()['data']
@@ -217,7 +217,7 @@ def list_available(access_token, api_host, selected_entities):
         ]
 
     """
-    url = '/'.join(['https:', '', api_host, 'v2/entities/list'])
+    url = '/'.join(['http:', '', api_host, 'v2/entities/list'])
     headers = {'authorization': 'Bearer ' + access_token}
     params = dict([(snake_to_camel(key), value)
                    for (key, value) in list(selected_entities.items())])
@@ -231,14 +231,14 @@ def list_available(access_token, api_host, selected_entities):
 def lookup(access_token, api_host, entity_type, entity_id):
     """Retrieve details about a given id of type entity_type.
 
-    https://github.com/gro-intelligence/api-client/wiki/Entities-Definition
+    http://github.com/gro-intelligence/api-client/wiki/Entities-Definition
 
     Parameters
     ----------
     access_token : string
     api_host : string
     entity_type : string
-        'items', 'metrics', 'regions', 'units', or 'sources'
+        'items', 'metrics', 'regions', 'units', 'frequencies', or 'sources'
     entity_id : int
 
     Returns
@@ -254,7 +254,7 @@ def lookup(access_token, api_host, entity_type, entity_id):
         }
 
     """
-    url = '/'.join(['https:', '', api_host, 'v2', entity_type, str(entity_id)])
+    url = '/'.join(['http:', '', api_host, 'v2', entity_type, str(entity_id)])
     headers = {'authorization': 'Bearer ' + access_token}
     resp = get_data(url, headers)
     try:
@@ -368,7 +368,7 @@ def get_data_call_params(**selection):
     selection : dict
         Keys can include: 'metric_id', 'item_id', 'region_id',
         'partner_region_id', 'source_id', 'frequency_id', 'start_date',
-        'end_date', 'show_revisions', and 'insert_null'.
+        'end_date', 'show_revisions', 'insert_null', and 'at_time'.
         Anything else will be ignored.
 
     Returns
@@ -380,7 +380,8 @@ def get_data_call_params(**selection):
     """
     params = get_params_from_selection(**selection)
     for key, value in list(selection.items()):
-        if key in ('start_date', 'end_date', 'show_revisions', 'insert_null'):
+        if key in ('start_date', 'end_date', 'show_revisions', 'insert_null',
+                   'at_time'):
             params[snake_to_camel(key)] = value
     return params
 
@@ -388,7 +389,7 @@ def get_data_call_params(**selection):
 def get_data_series(access_token, api_host, **selection):
     """Get available data series for the given selections.
 
-    https://github.com/gro-intelligence/api-client/wiki/Data-Series-Definition
+    http://github.com/gro-intelligence/api-client/wiki/Data-Series-Definition
 
     Parameters
     ----------
@@ -411,7 +412,7 @@ def get_data_series(access_token, api_host, **selection):
             }, { ... }, ... ]
 
     """
-    url = '/'.join(['https:', '', api_host, 'v2/data_series/list'])
+    url = '/'.join(['http:', '', api_host, 'v2/data_series/list'])
     headers = {'authorization': 'Bearer ' + access_token}
     params = get_params_from_selection(**selection)
     resp = get_data(url, headers, params)
@@ -449,7 +450,7 @@ def rank_series_by_source(access_token, api_host, series_list):
         key=lambda x: x[0])) for single_series in series_list)
 
     for series in map(dict, selections_sorted):
-        url = '/'.join(['https:', '', api_host, 'v2/available/sources'])
+        url = '/'.join(['http:', '', api_host, 'v2/available/sources'])
         headers = {'authorization': 'Bearer ' + access_token}
         params = dict((k + 's', v) for k, v in iter(list(
             get_params_from_selection(**series).items())))
@@ -590,7 +591,7 @@ def get_crop_calendar_data_points(access_token, api_host, **selection):
 
     """
     headers = {'authorization': 'Bearer ' + access_token}
-    url = '/'.join(['https:', '', api_host, 'v2/cropcalendar/data'])
+    url = '/'.join(['http:', '', api_host, 'v2/cropcalendar/data'])
     params = get_crop_calendar_params(**selection)
     resp = get_data(url, headers, params)
     return format_crop_calendar_response(resp.json())
@@ -599,7 +600,7 @@ def get_crop_calendar_data_points(access_token, api_host, **selection):
 def get_data_points(access_token, api_host, **selection):
     """Get all the data points for a given selection.
 
-    https://github.com/gro-intelligence/api-client/wiki/Data-Point-Definition
+    http://github.com/gro-intelligence/api-client/wiki/Data-Point-Definition
 
     Parameters
     ----------
@@ -630,7 +631,7 @@ def get_data_points(access_token, api_host, **selection):
                                              **selection)
 
     headers = {'authorization': 'Bearer ' + access_token}
-    url = '/'.join(['https:', '', api_host, 'v2/data'])
+    url = '/'.join(['http:', '', api_host, 'v2/data'])
     params = get_data_call_params(**selection)
     resp = get_data(url, headers, params)
     return resp.json()
@@ -651,7 +652,7 @@ def universal_search(access_token, api_host, search_terms):
         Ex: [[5604, 'item'], [10204, 'item'], [410032, 'metric'], ....]
 
     """
-    url_pieces = ['https:', '', api_host, 'v2/search']
+    url_pieces = ['http:', '', api_host, 'v2/search']
     url = '/'.join(url_pieces)
     headers = {'authorization': 'Bearer ' + access_token}
     resp = get_data(url, headers, {'q': search_terms})
@@ -675,7 +676,7 @@ def search(access_token, api_host, entity_type, search_terms):
         Ex: [{'id': 5604}, {'id': 10204}, {'id': 10210}, ....]
 
     """
-    url = '/'.join(['https:', '', api_host, 'v2/search', entity_type])
+    url = '/'.join(['http:', '', api_host, 'v2/search', entity_type])
     headers = {'authorization': 'Bearer ' + access_token}
     resp = get_data(url, headers, {'q': search_terms})
     return resp.json()
@@ -722,7 +723,7 @@ def lookup_belongs(access_token, api_host, entity_type, entity_id):
     access_token : string
     api_host : string
     entity_type : string
-        One of: 'metrics', 'items', 'regions', or 'sources'
+        One of: 'metrics', 'items', or 'regions'
     entity_id : integer
 
     Yields
@@ -739,7 +740,7 @@ def lookup_belongs(access_token, api_host, entity_type, entity_id):
         }
 
     """
-    url = '/'.join(['https:', '', api_host, 'v2', entity_type, 'belongs-to'])
+    url = '/'.join(['http:', '', api_host, 'v2', entity_type, 'belongs-to'])
     params = {'ids': str(entity_id)}
     headers = {'authorization': 'Bearer ' + access_token}
     resp = get_data(url, headers, params)
@@ -763,7 +764,7 @@ def get_geo_centre(access_token, api_host, region_id):
                'regionId': 1215, 'regionName': 'United States' }]
 
     """
-    url = '/'.join(['https:', '', api_host, 'v2/geocentres?regionIds=' +
+    url = '/'.join(['http:', '', api_host, 'v2/geocentres?regionIds=' +
                     str(region_id)])
     headers = {'authorization': 'Bearer ' + access_token}
     resp = get_data(url, headers)
@@ -787,7 +788,7 @@ def get_geojson(access_token, api_host, region_id):
                       'coordinates': [[[[-38.394, -4.225], ...]]]}, ...]}
     or None if not found.
     """
-    url = '/'.join(['https:', '', api_host, 'v2/geocentres?includeGeojson=True&regionIds=' +
+    url = '/'.join(['http:', '', api_host, 'v2/geocentres?includeGeojson=True&regionIds=' +
                     str(region_id)])
     headers = {'authorization': 'Bearer ' + access_token}
     resp = get_data(url, headers)
