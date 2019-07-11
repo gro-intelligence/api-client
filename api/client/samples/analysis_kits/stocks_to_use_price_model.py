@@ -38,7 +38,9 @@ client   = GroClient(API_HOST, TOKEN)
 ref = {'corn':{'futures_contract_month':12},
        'soybeans':{'futures_contract_month':11}}
 
-UNITED_STATES_REGION_ID = 1215
+UNITED_STATES_REGION_ID = client.search_for_entity('regions', 'United States of America')
+SETTLEMENT_PRICE_METRIC_ID = client.search_for_entity('metrics', 'futures prices settle (currency/mass)')
+
 
 def contract_month_history(crop, contract_month):
     """full history of settlement prices for a specific commodity
@@ -56,10 +58,9 @@ def contract_month_history(crop, contract_month):
     """
     market = client.search_for_entity('items', crop)
     
-    SETTLEMENT_PRICE = client.search_for_entity('metrics', 'futures prices settle (currency/mass)')
-    client.add_single_data_series({'metric_id': SETTLEMENT_PRICE, 
+    client.add_single_data_series({'metric_id': SETTLEMENT_PRICE_METRIC_ID,
                                    'item_id': market, 
-                                   'region_id': 1215, 
+                                   'region_id': UNITED_STATES_REGION_ID,
                                    'source_id': 81,
                                    'start_date': '2006-01-01',
                                    'show_revisions': True})
@@ -67,7 +68,7 @@ def contract_month_history(crop, contract_month):
     df = client.get_df().copy()
     df['reporting_date'] = pd.to_datetime(df['reporting_date'])
     
-    px_df = df.loc[(df['metric_id'] == SETTLEMENT_PRICE) & \
+    px_df = df.loc[(df['metric_id'] == SETTLEMENT_PRICE_METRIC_ID) & \
                    (df['item_id'] == market) & \
                    (df['end_date'].dt.month == contract_month)].set_index('reporting_date')
     
