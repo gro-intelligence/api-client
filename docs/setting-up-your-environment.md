@@ -36,6 +36,9 @@ Install with pip install
 pip install git+https://github.com/gro-intelligence/api-client.git
 ```
 
+Note: to find the location where Gro packages have been installed you can use the query:
+```pip show gro
+```
 ## Authentication Token
 
 1. [Retrieving a token](#retrieving-a-token)
