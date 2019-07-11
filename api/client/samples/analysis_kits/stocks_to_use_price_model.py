@@ -65,9 +65,7 @@ def contract_month_history(crop, contract_month):
                                    'start_date': '2006-01-01',
                                    'show_revisions': True})
     
-    df = client.get_df().copy()
-    df['reporting_date'] = pd.to_datetime(df['reporting_date'])
-    
+    df = client.get_df()
     px_df = df.loc[(df['metric_id'] == SETTLEMENT_PRICE_METRIC_ID) & \
                    (df['item_id'] == market) & \
                    (df['end_date'].dt.month == contract_month)].set_index('reporting_date')
@@ -137,10 +135,8 @@ def get_stocks_to_use(crop, region=UNITED_STATES_REGION_ID):
                                     'start_date': '2006-12-31',
                                     'show_revisions': True})
 
-    df_pts = client.get_df().copy()
+    df_pts = client.get_df()
     df_pts = df_pts.sort_values('end_date', ascending=True)
-    df_pts['reporting_date'] = pd.to_datetime(df_pts['reporting_date'])
-    
     df_grp = df_pts.groupby(['item_id', 'metric_id', 'reporting_date']).last()
     
     stocks = df_grp.loc[(crop_id, ENDING_STOCKS), :]['value']
