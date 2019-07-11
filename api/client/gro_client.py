@@ -71,7 +71,7 @@ class GroClient(Client):
             if 'start_date' in tmp.columns:
                 tmp.start_date = pandas.to_datetime(tmp.start_date)
             if 'reporting_date' in tmp.columns:
-                tmp.start_date = pandas.to_datetime(tmp.reporting_date)
+                tmp.reporting_date = pandas.to_datetime(tmp.reporting_date)
             if self._data_frame is None:
                 self._data_frame = tmp
                 self._data_frame.set_index(filter(lambda col: col in tmp.columns,
