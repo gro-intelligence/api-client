@@ -30,7 +30,7 @@ API_HOST = 'api.gro-intelligence.com'
 OUTPUT_FILENAME = 'gro_client_output.csv'
 
 DATA_POINTS_UNIQUE_COLS = ['item_id', 'metric_id',
-                           'region_id', 'partner_region_id', 
+                           'region_id', 'partner_region_id',
                            'frequency_id', 'source_id',
                            'reporting_date', 'start_date', 'end_date']
 
@@ -71,6 +71,8 @@ class GroClient(Client):
                 tmp.end_date = pandas.to_datetime(tmp.end_date)
             if 'start_date' in tmp.columns:
                 tmp.start_date = pandas.to_datetime(tmp.start_date)
+            if 'reporting_date' in tmp.columns:
+                tmp.reporting_date = pandas.to_datetime(tmp.reporting_date)
             if self._data_frame is None:
                 self._data_frame = tmp
                 self._data_frame.set_index([col for col in DATA_POINTS_UNIQUE_COLS if col in tmp.columns])
