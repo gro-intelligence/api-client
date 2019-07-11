@@ -681,7 +681,7 @@ def search(access_token, api_host, entity_type, search_terms):
     return resp.json()
 
 
-def search_and_lookup(access_token, api_host, entity_type, search_terms):
+def search_and_lookup(access_token, api_host, entity_type, search_terms, num_results=10):
     """Search for the given search terms and look up their details.
 
     For each result, yield a dict of the entity and it's properties:
@@ -698,6 +698,8 @@ def search_and_lookup(access_token, api_host, entity_type, search_terms):
     entity_type : string
         One of: 'metrics', 'items', 'regions', or 'sources'
     search_terms : string
+    num_results: int
+        Maximum number of results to return
 
     Yields
     ------
@@ -710,7 +712,7 @@ def search_and_lookup(access_token, api_host, entity_type, search_terms):
 
     """
     search_results = search(access_token, api_host, entity_type, search_terms)
-    for result in search_results:
+    for result in search_results[:num_results]:
         yield lookup(access_token, api_host, entity_type, result['id'])
 
 
