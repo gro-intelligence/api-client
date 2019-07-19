@@ -78,6 +78,27 @@ class GroClient(Client):
                 self._data_frame = self._data_frame.merge(tmp, how='outer')
         return self._data_frame
 
+    ###
+    # clear the series to fetch and already fetched frames
+    ###
+    def reset(self):
+        # we avoid emptying the lists as they may be in use somewhere else...
+        self._data_series_list = []  # all that have been added
+        self._data_series_queue = []  # added but not loaded in data frame
+        self._data_frame = None
+
+    ###
+    # get_df but clear series after returning them
+    ###
+    def pop_df(self):
+        """Get the contents of all data series then clear them from this class object."""
+        tmp = self.get_df()
+        if tmp is None:
+            return None
+        tmp = tmp.copy()
+        self.reset()
+        return tmp
+
     def get_data_series_list(self):
         return list(self._data_series_list)
 
