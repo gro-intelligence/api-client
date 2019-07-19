@@ -1,9 +1,6 @@
-Shapely==1.6.4.post2
-xgboost==0.81
-matplotlib==2.2.3
-geopandas==0.4.1
-pandas==0.23.4
-numpy==1.16.2
-ipython==7.6.1
-api==0.0.7
-scikit_learn==0.21.2
+Shapely
+xgboost
+matplotlib
+geopandas
+ipython
+scikit_learn
