@@ -14,18 +14,35 @@ For a general technical overview of the approach taken, please take a read throu
 
 #### Interactively:
 
-To use in the Python REPL:
+Suppose we want to get the 10 US states that are most similar to Wisconsin.  We will run SimilarRegions restricted to US states only. 
 
 ```
 >>> from api.client.samples.similar_regions.region_properties import region_properties
 >>> from api.client.samples.similar_regions.similar_region import SimilarRegion
->>> USA_STATES = [13100, 13061, 13053, 13099, 13069, 13091, 13076, 13064, 13060, 13101, 13057, 13067, 13077, 13056, 13065, 13093, 13097, 13059, 13054, 13062, 13070, 13055, 13071, 13080, 13052, 13079, 13089, 13075, 13058, 13072, 13051, 13087, 13082, 13088, 13092, 13074, 13068, 13095, 13085, 13078, 13066, 13090, 13063, 13086, 13084, 13083, 13098, 13081, 13096, 13094, 13073]
->>> sim = SimilarRegion(region_properties, regions_to_compare=USA_STATES)
->>> for result in sim.similar_to(13100, 5, 4):
+>>>
+>>> WISCONSIN_REGION_ID = client.search_for_entity('regions', 'Wisconsin')
+>>> USA_REGION_ID = client.search_for_entity('regions', 'United States of America')
+>>> ALL_US_STATES = client.get_descendant_regions(USA_REGION_ID, 4)    
+>>>
+>>> sim = SimilarRegion(region_properties, regions_to_compare=ALL_US_STATES)
+>>> for result in sim.similar_to(WISCONSIN_REGION_ID, number_of_regions=10, requested_level=4):
         print(result)
 ```
 
-The fourth line (constructing the SimilarRegion object) will take some time depending on the amount of cached data and the number of regions you’ve specified. The output should show you that the closest state to Wisconsin is of course, Wisconsin, and then a number of other similar states. 
+The fourth line (constructing the SimilarRegion object) will take some time depending on the amount of cached data and the number of regions you’ve specified. The output should show you that the region most similar to Wisconsin is of course, Wisconsin, and then a number of other similar states. 
+
+Now suppose we wanted to expand our search to the whole world, and extend it to all region levels not just provinces. In that case, we just omit regions_to_compare.  Constructing the SimilarRegion object will now take even longer since the model is getting data for all the provinces of the world.  
+
+```
+>>> from api.client.samples.similar_regions.region_properties import region_properties
+>>> from api.client.samples.similar_regions.similar_region import SimilarRegion
+>>>
+>>> sim = SimilarRegion(region_properties)
+>>> for result in sim.similar_to(WISCONSIN_REGION_ID, 10, 4):
+        print(result)
+```
+
+If we want to compare it to countries instead of provinces we would change the region_level from `4` to `3`, and for a districte 5. 
 
 #### Programmatically:
 
