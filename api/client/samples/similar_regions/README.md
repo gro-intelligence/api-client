@@ -31,18 +31,15 @@ Suppose we want to get the 10 US states that are most similar to Wisconsin.  We 
 
 The fourth line (constructing the SimilarRegion object) will take some time depending on the amount of cached data and the number of regions you’ve specified. The output should show you that the region most similar to Wisconsin is of course, Wisconsin, and then a number of other similar states. 
 
-Now suppose we wanted to expand our search to the whole world, and extend it to all region levels not just provinces. In that case, we just omit regions_to_compare.  Constructing the SimilarRegion object will now take even longer since the model is getting data for all the provinces of the world.  
+Now suppose we wanted to expand our search to all provinces in the world. In that case, we just omit regions_to_compare, but we still leave the region level as `4`.  Constructing the SimilarRegion object will now take even longer since the model is getting data for the whole world.  
 
 ```
->>> from api.client.samples.similar_regions.region_properties import region_properties
->>> from api.client.samples.similar_regions.similar_region import SimilarRegion
->>>
 >>> sim = SimilarRegion(region_properties)
 >>> for result in sim.similar_to(WISCONSIN_REGION_ID, 10, 4):
         print(result)
 ```
 
-If we want to compare it to countries instead of provinces we would change the region_level from `4` to `3`, and for a districte 5. 
+If we wanted to compare it to countries instead of provinces we would change the region_level from `4` to `3`, and for  districts we would use region level `5`. 
 
 #### Programmatically:
 
