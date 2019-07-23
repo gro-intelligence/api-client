@@ -32,12 +32,13 @@ Now that you have downloaded the base system requirements, you will need to inst
 
 Install with pip install
 
-```sh
+```
 pip install git+https://github.com/gro-intelligence/api-client.git
 ```
 
 Note: to find the location where Gro packages have been installed you can use the query:
-```pip show gro
+```
+pip show gro
 ```
 ## Authentication Token
 
@@ -85,7 +86,8 @@ Limitation: The `get_access_token()` function cannot retrieve tokens for users u
 
 If you would like to programmatically retrieve your active token, you may use the `get_access_token()` function in the API Client library. See below:
 
-```from api.client.lib import get_access_token
+```
+from api.client.lib import get_access_token
 API_HOST = 'api.gro-intelligence.com'
 EMAIL = 'example@example.com'
 PASSWORD = 'password123'
