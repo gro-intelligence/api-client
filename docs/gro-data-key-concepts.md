@@ -19,7 +19,8 @@ units -- the units in which the data is presented (e.g. tonnes, liters, etc.).
 
 ### Entity fields
 Each specific entity will have an id, name, and various other properties. For example, "Soybeans" is a specific item with id = 270 and the following information
-```{'allowedAggregations': None,
+```
+{'allowedAggregations': None,
  'contains': [1737,
   7401,
   7578,
@@ -117,7 +118,8 @@ Another example is if you get weekly precipitation data for a given region in a 
 
 ## Data Point Field Definition
 When using the `get_data_points()` function, you are returned an array of points, each of which is a Python dictionary object that looks something like:
-```{
+```
+{
   u'input_unit_scale': 1,
   u'region_id': 1038,
   u'end_date': u'2000-12-31T00:00:00.000Z',
