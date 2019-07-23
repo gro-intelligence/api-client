@@ -71,12 +71,14 @@ Similarly, for regions, `client.lookup('regions', 1215)[contains]` will return a
 The Lookup Contains method can return a list of an entity's direct children. However, you may wish to discover all of the lower level regions the belong to a high level region. For this special case of traversing regions, there's a shortcut function that does it more directly and gives the option of filtering by region level: `get_descendant_regions(region_id, descendant_level)`.
 
 Where:
-```provinces_of_brazil = client.get_descendant_regions(1029, 4)
+```
+provinces_of_brazil = client.get_descendant_regions(1029, 4)
 ```
 will recursively lookup all descendants of region 1029 (Brazil) that are of level 4 (provinces) i.e. all the provinces of Brazil. 
 
 And: 
-```districts_of_brazil = client.get_descendant_regions(1029, 5)
+```
+districts_of_brazil = client.get_descendant_regions(1029, 5)
 ```
 will recursively lookup all descendants of region 1029 (Brazil) that are of level 5 (districts), i.e. all the districts in all the provinces of Brazil.
 
@@ -106,7 +108,8 @@ Note that limiting the specificity of your selection can greatly increase the ti
 
 ### Data frame
 Data frames are popular format for viewing data responses, and our `gro_client` library offers you the ability view your data series in a data frame. If you've imported the library into your file, like:
-```import api.client.gro_client
+```
+import api.client.gro_client
 from api.client.gro_client import get_df
 ```
 Then you can use the `get_df` method to return data in a data frame.
@@ -114,17 +117,20 @@ Then you can use the `get_df` method to return data in a data frame.
 `get_df` is a stateful method, so you must first save the series into your client object. You can do this with the `add_single_data_series` method. 
 
 The following code will return Wheat - Area Harvested (area) - India (USDA PS&D) in a data frame.
-```client.add_single_data_series({'metric_id': 570001, 'item_id': 95,'region_id': 1094, 'source_id': 14, 'frequency_id': 9, })
+```
+client.add_single_data_series({'metric_id': 570001, 'item_id': 95,'region_id': 1094, 'source_id': 14, 'frequency_id': 9, })
 client.get_df()
 ```
 
 ### Show revisions
 Sometimes looking at the most recent data point doesn't tell you the whole story. You may want to see if there have been any revisions to data, especially if the data is a forecast value. This standard `get_data_points` query will return the annual values for soybean yield in Argentina since 2017:
-```# Soybeans - Yield (mass/area) - Argentina (USDA PS&D)
+```
+# Soybeans - Yield (mass/area) - Argentina (USDA PS&D)
 client.get_data_points(**{'metric_id': 170037, 'item_id': 270, 'region_id': 1010, 'source_id': 14, 'frequency_id': 9, 'start_date': '2017-01-01T00:00:00.000Z'})
 ``` 
 But the USDA begins forecasting the yield well before harvest time, and will continue to update its estimate for many months after the harvest is over. In order to see how the forecasts and estimates for each year has changed, you can include the `show_revisions` field as follows:
-```# Soybeans - Yield (mass/area) - Argentina (USDA PS&D)
+```
+# Soybeans - Yield (mass/area) - Argentina (USDA PS&D)
 client.get_data_points(**{'metric_id': 170037, 'item_id': 270, 'region_id': 1010, 'source_id': 14, 'frequency_id': 9, 'start_date': '2017-01-01T00:00:00.000Z', 'show_revisions': True})
 ```
 
@@ -138,7 +144,8 @@ returns:
 
 ```client.lookup('metrics','1480032')```
 returns:
-```{'allowNegative': False,
+```
+{'allowNegative': False,
  'allowedAggregations': '{sum,average}',
  'contains': [],
  'definition': 'The quantity of an item which has been consumed within a given country or region. Data generally refers to consumption as including any form of disappearance, such as waste, loss, and human consumption.',
@@ -149,7 +156,8 @@ returns:
  
 ```client.lookup('units', '10')```
 returns:
-```{'abbreviation': 'kg',
+```
+{'abbreviation': 'kg',
  'baseConvFactor': {'factor': 1},
  'baseUnit': True,
  'convType': 0,
