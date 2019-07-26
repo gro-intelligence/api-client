@@ -1,6 +1,6 @@
 # FAQ
 
-##Exploring What's Available
+## Exploring What's Available
 
 ### Q: Why is it that when I use client.search() to find metrics/items/regions I'm interested in, sometimes client.get_data_series() doesn't have any data for those metrics/items/regions?
 `client.search()` provides a way to search across everything we have identified and defined in our ontology. Sometimes, data doesn't exist for a particular result for a number of reasons, most commonly because we may have defined new entries in preparation for an incoming source which is undergoing testing. `client.get_data_series()` will tell you what data is actually available. You can intersect the results from those two functions to find things programmatically, or you can use the web application at app.gro-intelligence.com to explore what data is available, intersected already.
@@ -14,7 +14,7 @@ Source lag is defined as the worst normal case scenario in regards to how long a
 start_date and end_date behave as ranges. Specifying end_date is interpreted as "all points with an end date prior to this date" and start_date is "all points with a start_date later than this date." Both can be specified to narrow down the range.
 
 ## Account
-Q: I tried using my Gro username and login but am getting a 401 Unauthorized error
+### Q: I tried using my Gro username and login but am getting a 401 Unauthorized error
 A Gro account gives you access to the web application at app.gro-intelligence.com. API access is sold as an add-on product you need to be activated for. To learn more about getting an API account, contact our sales team using the link at gro-intelligence.com/products/gro-api
 
 ## Gro Models
