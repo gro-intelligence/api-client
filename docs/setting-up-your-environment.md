@@ -109,4 +109,28 @@ To regenerate your authentication token, open the API tab in your Account menu a
 
 ### Saving your token as an environment variable
 
-If you don't want to enter a password or token each time, you can save the token as an environment variable. Please consult your OS or IDE documentation for information on how to set environment variables, e.g. setting environment variables in Windows Powershell and Mac OS X/Linux. In some of the sample code, it is assumed that you have the token saved to your environment variables as `GROAPI_TOKEN`.
+If you don't want to enter a password or token each time, you can save the token as an environment variable. In some of the sample code, it is assumed that you have the token saved to your environment variables as `GROAPI_TOKEN`.
+
+Please consult your OS or IDE documentation for the most accurate and up-to-date information on how to set environment variables, e.g. setting environment variables in Windows Powershell and Mac OS X/Linux. As a quick quide, the following steps should work:
+
+For Windows:
+1. Click on start menu and search for "environment variables." Click on "Edit the system environment variables" option.
+2. In the "Advanced" tab, select the "Environment Variables..." button.
+3. Under the first section called "User variables for <username>", click on the "New" button.
+4. Enter the information as follows:
+  Variable name: GROAPI_TOKEN
+  Variable value: <insert your Gro API Token here>
+5. Click OK
+
+Your environment variable should now be saved. Whenever you run code that includes the code `os.environ['GROAPI_TOKEN']` it should automatically pull in your API Token.
+
+For Mac:
+1. Open up your terminal and navigate to your project directory
+2. type `python`
+3. when the python editor opens type:
+`>>> import os`
+`>>> os.environ['GROAPI_TOKEN'] = "YOUR TOKEN HERE"`
+4. to exit type:
+`>>>exit()`
+
+Your environment variable should now be saved.
