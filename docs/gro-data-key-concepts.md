@@ -107,17 +107,7 @@ For example, if you select item=Wheat, metric=Production Quantity (mass), region
 To get all the available data series for a given selection of entities, use the `get_data_series` function as described in the [FAQ](../docs/faqs.md###Q:-how-do-I-get-data-series?).
 
 ## Data Point Definition
-Gro defines a "data point" as a discrete result produced by our API.
-
-The content of a single data point is defined in the [Data Point Field Definitions](#data-point-field-definition).
-
-For example, if you requested NDVI for Bureau county Illinois for a particular 8-day time period, the Gro API would yield a single response that would count as a single data point. Even though the value is computed from tens of thousands of underlying pixels, the API response counts as a single point because we are returning the value at the county (aka district) level.
-
-Another example is if you get weekly precipitation data for a given region in a given week, you will get a single point. On the other hand, if you get daily precipitation for a given region for a period of a week, you will get 7 data points.
-
-
-## Data Point Field Definition
-When using the `get_data_points()` function, you are returned an array of points, each of which is a Python dictionary object that looks something like:
+Gro defines a "data point" as a discrete result produced by our API. When using the `get_data_points()` function, you are returned an array of points, each of which is a Python dictionary object that looks something like:
 ```
 {
   u'input_unit_scale': 1,
@@ -132,14 +122,19 @@ When using the `get_data_points()` function, you are returned an array of points
   u'metric_id': 5590032
 }
 ```
+
+For example, if you requested NDVI for Bureau county Illinois for a particular 8-day time period, the Gro API would yield a single response that would count as a single data point. Even though the value is computed from tens of thousands of underlying pixels, the API response counts as a single point because we are returning the value at the county (aka district) level.
+
+Another example is if you get weekly precipitation data for a given region in a given week, you will get a single point. On the other hand, if you get daily precipitation for a given region for a period of a week, you will get 7 data points.
+
 Below are some explanations of what each of those fields represent:
-"start_date": beginning of the period this point represents
-"end_date": end of the period this point represents
-"reporting_date": date the source reported this value (only included when source provides reporting date)
-"value": the value, typically a number. In some cases, the value may be non-numeric. E.g. when the metric is Crop Calendar, a value of 'planting', represents the fact that the planting period is from 'start_date' to 'end_date'.
-"input_unit_id": this is a Gro unit id you can look up the name/abbreviation/etc. of using the `client.lookup('units', input_unit_id)` function. It's the "input" unit because that's the unit the source provided the data in - different from if you had selected a unit to convert it to. There's also a helper function you can see an example of in the [quickstart](https://github.com/gro-intelligence/api-client/blob/9c2c17642980b5415b8a8167a28276b77e34915c/api/client/samples/quick_start.py#L30) for getting just the abbreviation from the unit id, `client.lookup_unit_abbreviation(point['input_unit_id'])`, which is the common case you probably want
-"input_unit_scale": the value may be given as `{value: 100, input_unit: kg, input_unit_scale: 1000}` meaning the source reported the data in 1000s of kilograms. So a value of 100 would represent 100,000kg. It's important you not forget to multiply the scale with the value. You can see an example of that being done in [gro_client.py's](https://github.com/gro-intelligence/api-client/blob/9c2c17642980b5415b8a8167a28276b77e34915c/api/client/gro_client.py#L44) `print_random_data_series()` function.
-"metric_id": unique id for the metric (i.e. "Export Value (currency)") you selected - get more details (name, definition, ...) using `client.lookup('metrics', metric_id)`
-"item_id": unique id for the item (i.e. "Corn") you selected - get more details (name, definition, ...) using `client.lookup('items', item_id)`
-"region_id": unique id for the region (i.e. "United States") you selected - get more details (name, administrative level, ...) using `client.lookup('regions', region_id)`
-"frequency_id": unique id for the frequency (i.e. "annual") you selected - get more details (name, abbreviation, period length, ...) using `client.lookup('frequencies', frequency_id)`
+`start_date`: beginning of the period this point represents
+`end_date`: end of the period this point represents
+`reporting_date`: date the source reported this value (only included when source provides reporting date)
+`value`: the value, typically a number. In some cases, the value may be non-numeric. E.g. when the metric is Crop Calendar, a value of "planting", represents the fact that the planting period is from `start_date` to `end_date`.
+`input_unit_id`: this is a Gro unit id you can look up the name/abbreviation/etc. of using the `client.lookup('units', input_unit_id)` function. It's the "input" unit because that's the unit the source provided the data in - different from if you had selected a unit to convert it to. There's also a helper function you can see an example of in the [quickstart](https://github.com/gro-intelligence/api-client/blob/9c2c17642980b5415b8a8167a28276b77e34915c/api/client/samples/quick_start.py#L30) for getting just the abbreviation from the unit id, `client.lookup_unit_abbreviation(point['input_unit_id'])`, which is the common case you probably want
+`input_unit_scale`: the value may be given as `{value: 100, input_unit: kg, input_unit_scale: 1000}` meaning the source reported the data in 1000s of kilograms. So a value of 100 would represent 100,000kg. It's important you not forget to multiply the scale with the value. You can see an example of that being done in [gro_client.py's](https://github.com/gro-intelligence/api-client/blob/9c2c17642980b5415b8a8167a28276b77e34915c/api/client/gro_client.py#L44) `print_random_data_series()` function.
+`metric_id`: unique id for the metric (i.e. "Export Value (currency)") you selected - get more details (name, definition, ...) using `client.lookup('metrics', metric_id)`
+`item_id`: unique id for the item (i.e. "Corn") you selected - get more details (name, definition, ...) using `client.lookup('items', item_id)`
+`region_id`: unique id for the region (i.e. "United States") you selected - get more details (name, administrative level, ...) using `client.lookup('regions', region_id)`
+`frequency_id`: unique id for the frequency (i.e. "annual") you selected - get more details (name, abbreviation, period length, ...) using `client.lookup('frequencies', frequency_id)`
