@@ -58,3 +58,6 @@ class Client(object):
     def get_descendant_regions(self, region_id, descendant_level=None):
         return lib.get_descendant_regions(self.access_token, self.api_host,
                                           region_id, descendant_level)
+
+    def convert_unit(self, value, from_unit_id, to_unit_id):
+        return lib.convert_unit(self.access_token, self.api_host, value, from_unit_id, to_unit_id)

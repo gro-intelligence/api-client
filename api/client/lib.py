@@ -847,6 +847,33 @@ def get_descendant_regions(access_token, api_host, region_id,
     return descendants
 
 
+def convert_unit(access_token, api_host, value, from_unit_id, to_unit_id):
+    """Convert the value from one unit_id to another unit_id.
+
+    If any of these two unit_ids is not-convertible type, it would throw an error.
+
+    Parameters
+    ----------
+    access_token : string
+    api_host : string
+    value: scalar
+    from_unit_id: integer
+    to_unit_id: integer
+
+    Returns
+    -------
+    a scalar
+    """
+    from_convert_factor = lookup(access_token, api_host, 'units', from_unit_id).get('baseConvFactor')
+    if not from_convert_factor.get('factor'):
+        raise Exception('unit_id {} is not convertible'.format(from_unit_id))
+    value_in_base_unit = value * from_convert_factor.get('factor') + from_convert_factor.get('offset', 0)
+    to_convert_factor = lookup(access_token, api_host, 'units', to_unit_id).get('baseConvFactor')
+    if not to_convert_factor.get('factor'):
+        raise Exception('unit_id {} is not convertible'.format(to_unit_id))
+    return (value_in_base_unit - to_convert_factor.get('offset', 0)) / to_convert_factor.get('factor')
+
+
 if __name__ == '__main__':
     # To run doctests:
     # $ python lib.py -v
