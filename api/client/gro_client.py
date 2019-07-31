@@ -153,7 +153,8 @@ class GroClient(Client):
         """
         results = self.search(entity_type, keywords)
         for result in results:
-            self._logger.debug("First result, out of {} {}: {}".format(len(results), entity_type, result['id']))
+            self._logger.debug("First result, out of {} {}: {}".format(
+                len(results), entity_type, result['id']))
             return result['id']
 
     def get_provinces(self, country_name):
