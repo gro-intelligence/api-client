@@ -15,7 +15,7 @@ with open("test-requirements.txt", "r") as test_requirements_file:
 
 setuptools.setup(
     name="gro",
-    version="1.19.1",
+    version="1.19.2",
     description="Python client library for accessing Gro Intelligence's "
                 "agricultural data platform",
     long_description=long_description,
