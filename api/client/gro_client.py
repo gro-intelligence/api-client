@@ -18,6 +18,7 @@ from random import random
 import argparse
 import getpass
 import itertools
+import functools
 import math
 import os
 import pandas
@@ -75,10 +76,34 @@ class GroClient(Client):
                 tmp.reporting_date = pandas.to_datetime(tmp.reporting_date)
             if self._data_frame is None:
                 self._data_frame = tmp
-                self._data_frame.set_index([col for col in DATA_POINTS_UNIQUE_COLS if col in tmp.columns])
+                self._data_frame.set_index(
+                    [col for col in DATA_POINTS_UNIQUE_COLS if col in tmp.columns])
             else:
                 self._data_frame = self._data_frame.merge(tmp, how='outer')
         return self._data_frame
+
+    def get_data_points(self, **selections):
+        """Extend the Client's get_data_points method to add unit conversion.
+
+        Parameters
+        ----------
+        selections : dict
+            See lib.py get_data_points() for the base list of inputs
+            This extended version may additionally include 'unit_id' which is
+            the unit you wish to convert all points to.
+
+        Returns
+        -------
+        list of dicts
+            Unchanged output format from lib.py get_data_points()
+
+        """
+        data_points = super(GroClient, self).get_data_points(**selections)
+        # Apply unit conversion if a unit is specified
+        if 'unit_id' in selections:
+            return map(functools.partial(self.convert_unit, target_unit_id=selections['unit_id']), data_points)
+        # Return data points in input units if not unit is specified
+        return data_points
 
     def get_data_series_list(self):
         return list(self._data_series_list)
@@ -135,9 +160,11 @@ class GroClient(Client):
 
     def get_provinces(self, country_name):
         for region in self.search_and_lookup('regions', country_name):
-            if region['level'] == 3: # country
-                provinces =  self.get_descendant_regions(region['id'], 4) # provinces
-                self._logger.debug("Provinces of {}: {}".format(country_name, provinces))
+            if region['level'] == 3:  # country
+                provinces = self.get_descendant_regions(
+                    region['id'], 4)  # provinces
+                self._logger.debug(
+                    "Provinces of {}: {}".format(country_name, provinces))
                 return provinces
         return None
 
@@ -157,7 +184,8 @@ class GroClient(Client):
             entity_list = self.list_available(selected_entities)
             num = len(entity_list)
         entities = entity_list[int(num*random())]
-        self._logger.info("Using randomly selected entities: {}".format(str(entities)))
+        self._logger.info(
+            "Using randomly selected entities: {}".format(str(entities)))
         selected_entities.update(entities)
         return selected_entities
 
@@ -169,7 +197,8 @@ class GroClient(Client):
         if not data_series_list:
             raise Exception("No data series available for {}".format(
                 selected_entities))
-        selected_data_series = data_series_list[int(len(data_series_list)*random())]
+        selected_data_series = data_series_list[int(
+            len(data_series_list)*random())]
         return selected_data_series
 
     # TODO: rename function to "write_..." rather than "print_..."
@@ -182,6 +211,46 @@ class GroClient(Client):
             writer.writerow([point['start_date'], point['end_date'],
                              point['value'] * point['input_unit_scale'],
                              self.lookup_unit_abbreviation(point['input_unit_id'])])
+
+    def convert_unit(self, point, target_unit_id):
+        """Convert the data point from one unit to another unit.
+
+        If original or target unit is non-convertible, throw an error.
+
+        Parameters
+        ----------
+        point : dict
+            { value: float, unit_id: integer, ... }
+        to_unit_id : integer
+
+        Returns
+        -------
+        dict
+            { value: float, unit_id: integer, ... }
+            unit_id is changed to the target, and value is converted to use the
+            new unit_id. Other properties are unchanged.
+
+        """
+        if point['unit_id'] == target_unit_id:
+            return point
+        from_convert_factor = self.lookup(
+            'units', point['unit_id']).get('baseConvFactor')
+        if not from_convert_factor.get('factor'):
+            raise Exception(
+                'unit_id {} is not convertible'.format(point['unit_id']))
+        value_in_base_unit = point['value'] * \
+            from_convert_factor.get('factor') + \
+            from_convert_factor.get('offset', 0)
+        to_convert_factor = self.lookup(
+            'units', target_unit_id).get('baseConvFactor')
+        if not to_convert_factor.get('factor'):
+            raise Exception(
+                'unit_id {} is not convertible'.format(target_unit_id))
+        point['value'] = (
+            value_in_base_unit - to_convert_factor.get('offset', 0)
+        ) / to_convert_factor.get('factor')
+        point['unit_id'] = target_unit_id
+        return point
 
 
 def main():
@@ -207,7 +276,8 @@ def main():
     else:
         if not args.user_password:
             args.user_password = getpass.getpass()
-        access_token = lib.get_access_token(API_HOST, args.user_email, args.user_password)
+        access_token = lib.get_access_token(
+            API_HOST, args.user_email, args.user_password)
     if args.print_token:
         print(access_token)
         sys.exit(0)
@@ -215,13 +285,17 @@ def main():
 
     selected_entities = {}
     if args.item:
-        selected_entities['item_id'] = client.search_for_entity('items', args.item)
+        selected_entities['item_id'] = client.search_for_entity(
+            'items', args.item)
     if args.metric:
-        selected_entities['metric_id'] = client.search_for_entity('metrics', args.metric)
+        selected_entities['metric_id'] = client.search_for_entity(
+            'metrics', args.metric)
     if args.region:
-        selected_entities['region_id'] = client.search_for_entity('regions', args.region)
+        selected_entities['region_id'] = client.search_for_entity(
+            'regions', args.region)
     if args.partner_region:
-        selected_entities['partner_region_id'] = client.search_for_entity('regions', args.partner_region)
+        selected_entities['partner_region_id'] = client.search_for_entity(
+            'regions', args.partner_region)
     if not selected_entities:
         selected_entities = client.pick_random_entities()
 
