@@ -12,6 +12,11 @@ import json
 import logging
 import requests
 import time
+try:
+    # functools are native in Python 3.2.3+
+    from functools import lru_cache as memoize
+except ImportError:
+    from backports.functools_lru_cache import lru_cache as memoize
 
 CROP_CALENDAR_METRIC_ID = 2260063
 
@@ -162,7 +167,7 @@ def get_data(url, headers, params=None, logger=None):
     raise Exception('Giving up on {} after {} tries. Error is: {}.'.format(
         url, retry_count, data.text))
 
-
+@memoize(maxsize=None)
 def get_available(access_token, api_host, entity_type):
     """List the first 5000 available entities of the given type.
 
@@ -227,7 +232,7 @@ def list_available(access_token, api_host, selected_entities):
     except KeyError:
         raise Exception(resp.text)
 
-
+@memoize(maxsize=None)
 def lookup(access_token, api_host, entity_type, entity_id):
     """Retrieve details about a given id of type entity_type.
 
@@ -262,7 +267,7 @@ def lookup(access_token, api_host, entity_type, entity_id):
     except KeyError:
         raise Exception(resp.text)
 
-
+@memoize(maxsize=None)
 def snake_to_camel(term):
     """Convert a string from snake_case to camelCase.
 
@@ -635,7 +640,7 @@ def get_data_points(access_token, api_host, **selection):
     resp = get_data(url, headers, params)
     return resp.json()
 
-
+@memoize(maxsize=None)
 def universal_search(access_token, api_host, search_terms):
     """Search across all entity types for the given terms.
 
@@ -657,7 +662,7 @@ def universal_search(access_token, api_host, search_terms):
     resp = get_data(url, headers, {'q': search_terms})
     return resp.json()
 
-
+@memoize(maxsize=None)
 def search(access_token, api_host, entity_type, search_terms):
     """Search for the given search term. Better matches appear first.
 
@@ -771,7 +776,7 @@ def get_geo_centre(access_token, api_host, region_id):
     resp = get_data(url, headers)
     return resp.json()['data']
 
-
+@memoize(maxsize=None)
 def get_geojson(access_token, api_host, region_id):
     """Given a region ID, return a geojson shape information
 
@@ -845,33 +850,6 @@ def get_descendant_regions(access_token, api_host, region_id,
             descendants += get_descendant_regions(
                 access_token, api_host, member_id, descendant_level)
     return descendants
-
-
-def convert_unit(access_token, api_host, value, from_unit_id, to_unit_id):
-    """Convert the value from one unit_id to another unit_id.
-
-    If any of these two unit_ids is not-convertible type, it would throw an error.
-
-    Parameters
-    ----------
-    access_token : string
-    api_host : string
-    value: scalar
-    from_unit_id: integer
-    to_unit_id: integer
-
-    Returns
-    -------
-    a scalar
-    """
-    from_convert_factor = lookup(access_token, api_host, 'units', from_unit_id).get('baseConvFactor')
-    if not from_convert_factor.get('factor'):
-        raise Exception('unit_id {} is not convertible'.format(from_unit_id))
-    value_in_base_unit = value * from_convert_factor.get('factor') + from_convert_factor.get('offset', 0)
-    to_convert_factor = lookup(access_token, api_host, 'units', to_unit_id).get('baseConvFactor')
-    if not to_convert_factor.get('factor'):
-        raise Exception('unit_id {} is not convertible'.format(to_unit_id))
-    return (value_in_base_unit - to_convert_factor.get('offset', 0)) / to_convert_factor.get('factor')
 
 
 if __name__ == '__main__':
