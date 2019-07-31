@@ -245,7 +245,7 @@ class GroClient(Client):
             raise Exception(
                 'unit_id {} is not convertible'.format(target_unit_id)
             )
-        point['value'] = (
+        point['value'] = float(
             value_in_base_unit - to_convert_factor.get('offset', 0)
         ) / to_convert_factor.get('factor')
         point['unit_id'] = target_unit_id
