@@ -216,7 +216,7 @@ class GroClient(Client):
         ----------
         point : dict
             { value: float, unit_id: integer, ... }
-        to_unit_id : integer
+        target_unit_id : integer
 
         Returns
         -------
@@ -229,16 +229,18 @@ class GroClient(Client):
         if point['unit_id'] == target_unit_id:
             return point
         from_convert_factor = self.lookup(
-            'units', point['unit_id']).get('baseConvFactor')
+            'units', point['unit_id']
+        ).get('baseConvFactor')
         if not from_convert_factor.get('factor'):
             raise Exception(
                 'unit_id {} is not convertible'.format(point['unit_id'])
             )
-        value_in_base_unit = point['value'] * \
-            from_convert_factor.get('factor') + \
-            from_convert_factor.get('offset', 0)
+        value_in_base_unit = (
+            point['value'] * from_convert_factor.get('factor')
+         ) + from_convert_factor.get('offset', 0)
         to_convert_factor = self.lookup(
-            'units', target_unit_id).get('baseConvFactor')
+            'units', target_unit_id
+        ).get('baseConvFactor')
         if not to_convert_factor.get('factor'):
             raise Exception(
                 'unit_id {} is not convertible'.format(target_unit_id)
