@@ -12,7 +12,11 @@ import json
 import logging
 import requests
 import time
-from functools import lru_cache as memoize
+try:
+    # functools are native in Python 3.2.3+
+    from functools import lru_cache as memoize
+except ImportError:
+    from backports.functools_lru_cache import lru_cache as memoize
 
 CROP_CALENDAR_METRIC_ID = 2260063
 
