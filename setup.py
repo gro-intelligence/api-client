@@ -15,14 +15,14 @@ with open("test-requirements.txt", "r") as test_requirements_file:
 
 setuptools.setup(
     name="gro",
-    version="1.19.1",
+    version="1.19.2",
     description="Python client library for accessing Gro Intelligence's "
                 "agricultural data platform",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/gro-intelligence/api-client",
     packages=setuptools.find_packages(),
-    python_requires=">=2.7.6",
+    python_requires=">=2.7.6, !=3.0.*, !=3.1.*, !=3.2.*, <4",
     install_requires=requirements,
     extras_require={
         'docs': [
