@@ -71,8 +71,7 @@ def contract_month_history(crop, contract_month):
                    (df['end_date'].dt.month == contract_month)].set_index('reporting_date')
     
     ct_grps   = px_df.groupby('end_date')
-    contracts = ct_grps.groups.keys()
-    contracts.sort()
+    contracts = sorted(ct_grps.groups.keys())
     
     df_out = pd.concat([ct_grps.get_group(c)['value'] for c in contracts], 
                         sort=True, keys=contracts, axis=1)
