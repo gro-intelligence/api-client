@@ -100,7 +100,7 @@ class GroClient(Client):
         data_points = super(GroClient, self).get_data_points(**selections)
         # Apply unit conversion if a unit is specified
         if 'unit_id' in selections:
-            return map(functools.partial(self.convert_unit, target_unit_id=selections['unit_id']), data_points)
+            return list(map(functools.partial(self.convert_unit, target_unit_id=selections['unit_id']), data_points))
         # Return data points in input units if not unit is specified
         return data_points
 
