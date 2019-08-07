@@ -3,4 +3,5 @@ xgboost
 matplotlib
 geopandas
 ipython
-scikit_learn
+scikit-learn
+jupyter
