@@ -226,7 +226,7 @@ class GroClient(Client):
             new unit_id. Other properties are unchanged.
 
         """
-        if point['unit_id'] == target_unit_id:
+        if point.get('unit_id') is None or point.get('unit_id') == target_unit_id:
             return point
         from_convert_factor = self.lookup(
             'units', point['unit_id']
