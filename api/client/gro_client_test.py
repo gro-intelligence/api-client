@@ -77,5 +77,8 @@ def test_convert_unit():
         'value': -17.5,
         'unit_id': 36
     }
+
+    assert client.convert_unit({}, 36) == {}
+
     with pytest.raises(Exception):
         assert client.convert_unit({ 'value': 1, 'unit_id': 10 }, 43)
