@@ -8,7 +8,7 @@
 pip install git+https://github.com/gro-intelligence/api-client.git
 ```
 
-### Run prevent plant
+### Run prevented plant
 
 1. Download [the requirements file](./requirements.txt) to your working directory
 2. Run `pip install -r requirements.txt` to automatically install the required dependencies
@@ -26,7 +26,7 @@ conda install pip
 pip install git+https://github.com/gro-intelligence/api-client.git
 ```
 
-### Run prevent plant
+### Run prevented plant
 
 1. Download [the Windows requirements file](./windows-requirements.txt) to your working directory
 2. Run `conda install --file windows-requirements.txt` to automatically install the required dependencies
