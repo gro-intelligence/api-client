@@ -2,7 +2,7 @@
 
 # Gro API Client
 
-https://www.gro-intelligence.com/products/gro-api
+<https://www.gro-intelligence.com/products/gro-api>
 
 Client library for accessing Gro Intelligence's agricultural data platform.
 

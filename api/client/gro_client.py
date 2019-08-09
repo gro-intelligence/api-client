@@ -1,16 +1,3 @@
-"""
-Basic gro api client.
-
-Usage examples:
-
-python gro_client.py --item=soybeans  --region=brazil --partner_region china --metric export
-python gro_client.py --item=sesame --region=ethiopia
-
-python gro_client.py --user_email=john.doe@example.com  --print_token
-
-For more information use --help
-"""
-
 from __future__ import print_function
 from builtins import zip
 from builtins import str
@@ -37,14 +24,13 @@ DATA_POINTS_UNIQUE_COLS = ['item_id', 'metric_id',
 
 
 class GroClient(Client):
-    """A Client with methods to find, and manipulate data series related
-    to a crop and/or region.
+    """An extension of the Client class with extra convenience methods for some common operations.
 
-    This class offers convenience methods for some common scenarios
-
-    - finding entities by name rather than ids
-    - exploration shortcuts filling in partial selections
-    - finding and saving data series for repeated use, including in a data frame
+    Extra functionality includes:
+    - Automatic conversion of units
+    - Finding data series using entity names rather than ids
+    - Exploration shortcuts for filling in partial selections
+    - Saving data series in a data frame for repeated use
 
     """
 
