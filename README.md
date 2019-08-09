@@ -17,13 +17,15 @@ Client library for accessing Gro Intelligence's agricultural data platform.
 pip install git+https://github.com/gro-intelligence/api-client.git
 ```
 
+Note that even if you are using [Anaconda](https://www.anaconda.com/), the API Client install should still be performed using pip and not [conda](https://docs.conda.io/en/latest/).
+
 ## Gro API authentication token
 
 Use the Gro web application to retrieve an authentication token (instructions are in the wiki [here](https://github.com/gro-intelligence/api-client/wiki/Authentication-Tokens#11-using-the-gro-web-application-preferred)).
 
 ### Saving your token as an environment variable (optional)
 
-If you don't want to enter a password or token each time, you can save the token as an environment variable. Please consult your OS or IDE documentation for information on how to set environment variables, e.g. [setting environment variables in Windows Powershell](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_environment_variables?view=powershell-6) and [Mac OS X/Linux](https://apple.stackexchange.com/questions/106778/how-do-i-set-environment-variables-on-os-x). In some of the sample code, it is assumed that you have the token saved to your environment variables as `GROAPI_TOKEN`.
+If you don't want to enter a password or token each time, you can save the token as an environment variable. Please consult your OS or IDE documentation for information on how to set environment variables, e.g. [setting environment variables in Windows Powershell](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_environment_variables?view=powershell-6) or [Mac OS X/Linux](https://apple.stackexchange.com/questions/106778/how-do-i-set-environment-variables-on-os-x) or [Anaconda environmnent variables](https://anaconda-project.readthedocs.io/en/latest/user-guide/tasks/work-with-variables.html). In some of the sample code, it is assumed that you have the token saved to your environment variables as `GROAPI_TOKEN`.
 
 ## Examples
 
