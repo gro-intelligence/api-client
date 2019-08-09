@@ -238,8 +238,18 @@ class GroClient(Client):
         return point
 
 
+"""Basic Gro API command line interface.
+
+Note that results are chosen randomly from matching selections, and so results are not deterministic. This tool is useful for simple queries, but anything more complex should be done using the provided Python packages.
+
+Usage examples:
+    gro_client --item=soybeans  --region=brazil --partner_region china --metric export
+    gro_client --item=sesame --region=ethiopia
+    gro_client --user_email=john.doe@example.com  --print_token
+For more information use --help
+"""
 def main():
-    parser = argparse.ArgumentParser(description="Gro api client")
+    parser = argparse.ArgumentParser(description="Gro API command line interface")
     parser.add_argument("--user_email")
     parser.add_argument("--user_password")
     parser.add_argument("--item")
