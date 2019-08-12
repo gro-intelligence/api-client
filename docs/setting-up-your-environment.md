@@ -9,18 +9,26 @@ In order to start engaging with the Gro API Client, you will need to set up your
 
 The Gro API Client requires the following OS-dependant system requirements.
 
-MacOS and Linux
+### MacOS and Linux
 
 1. git (Installation instructions)
 2. python (2.7.x or 3.x) (2 Installation instructions / 3 Installation instructions)
 3. pip (Installation instructions. Note "pip is already installed if you are using Python 2 >=2.7.9 or Python 3 >=3.4")
 
-Windows
+### Windows
 
-1. Powershell (should come default with Windows)
-2. Python version >= 2.7.13 (available for download from python.org)
-3. Install both Python and pip to PATH either in installer (enable component during the installation) or manually. The easiest way to do this is to make sure the below is checked during installation: readme_add_python_to_path_installer
-4. Install Git from git-scm.com. Proceed with the default options.
+The Gro API Client package is supported both with or without Anaconda. However, some popular data science packages, including some used in the sample scripts provided, are only available on Windows via [conda](https://docs.conda.io/en/latest/). For that reason, instructions are provided for both. You should select the distribution that fits your requirements.
+
+Anaconda
+1. Download Anaconda with Python 3.5 or above from [anaconda.com](https://www.anaconda.com/distribution/). Support for Python 2.7.13 or above is also maintained, but with [its End of Life](https://mail.python.org/pipermail/python-dev/2018-March/152348.html) soon approaching, it is recommended you start with Python 3.
+2. Install Git from [git-scm.com](https://git-scm.com/download/win). Proceed with the default options.
+
+Non-Anaconda
+1. Powershell (should come default with Windows) 
+2. Download Python version 3.5 or above from [python.org](https://www.python.org/downloads/windows/). Support for Python 2.7.13 or above is also maintained, but with [its End of Life](https://mail.python.org/pipermail/python-dev/2018-March/152348.html) soon approaching, it is recommended you start with Python 3.
+3. Install both Python and pip to PATH either in the installer (enable component during the installation) or manually. The easiest way to do this is to make sure the below is checked during installation: ![readme_add_python_to_path_installer](readme_add_python_to_path_installer.png)
+4. Install Git from [git-scm.com](https://git-scm.com/download/win). Proceed with the default options.
+
 
 ### Python
 
@@ -35,6 +43,7 @@ Install with pip install
 ```
 pip install git+https://github.com/gro-intelligence/api-client.git
 ```
+Note: even if you are using [Anaconda](https://www.anaconda.com/), the API Client install should still be performed using pip and not [conda](https://docs.conda.io/en/latest/).
 
 Note: to find the location where Gro packages have been installed you can use the query:
 ```
@@ -111,7 +120,7 @@ To regenerate your authentication token, open the API tab in your Account menu a
 
 If you don't want to enter a password or token each time, you can save the token as an environment variable. In some of the sample code, it is assumed that you have the token saved to your environment variables as `GROAPI_TOKEN`.
 
-Please consult your OS or IDE documentation for the most accurate and up-to-date information on how to set environment variables, e.g. setting environment variables in Windows Powershell and Mac OS X/Linux. As a quick quide, the following steps should work:
+Please consult your OS or IDE documentation for the most accurate and up-to-date information on how to set environment variables, e.g. setting environment variables in [Windows Powershell](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_environment_variables?view=powershell-6) or [Mac OS X/Linux](https://apple.stackexchange.com/questions/106778/how-do-i-set-environment-variables-on-os-x) or [Anaconda](https://anaconda-project.readthedocs.io/en/latest/user-guide/tasks/work-with-variables.html). As a quick quide, the following steps should work:
 
 For Windows:
 1. Click on start menu and search for "environment variables." Click on "Edit the system environment variables" option.
