@@ -26,7 +26,7 @@ conda install pip
 pip install git+https://github.com/gro-intelligence/api-client.git
 ```
 
-### Run prevented plant
+### Run Brazil Soybeans
 
 1. Download [the requirements file](./requirements.txt) to your working directory
 2. Run `conda install --file requirements.txt` to automatically install the required dependencies
