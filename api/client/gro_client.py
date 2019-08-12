@@ -18,6 +18,7 @@ from random import random
 import argparse
 import getpass
 import itertools
+import functools
 import math
 import os
 import pandas
@@ -30,7 +31,7 @@ API_HOST = 'api.gro-intelligence.com'
 OUTPUT_FILENAME = 'gro_client_output.csv'
 
 DATA_POINTS_UNIQUE_COLS = ['item_id', 'metric_id',
-                           'region_id', 'partner_region_id', 
+                           'region_id', 'partner_region_id',
                            'frequency_id', 'source_id',
                            'reporting_date', 'start_date', 'end_date']
 
@@ -71,12 +72,37 @@ class GroClient(Client):
                 tmp.end_date = pandas.to_datetime(tmp.end_date)
             if 'start_date' in tmp.columns:
                 tmp.start_date = pandas.to_datetime(tmp.start_date)
+            if 'reporting_date' in tmp.columns:
+                tmp.reporting_date = pandas.to_datetime(tmp.reporting_date)
             if self._data_frame is None:
                 self._data_frame = tmp
                 self._data_frame.set_index([col for col in DATA_POINTS_UNIQUE_COLS if col in tmp.columns])
             else:
                 self._data_frame = self._data_frame.merge(tmp, how='outer')
         return self._data_frame
+
+    def get_data_points(self, **selections):
+        """Extend the Client's get_data_points method to add unit conversion.
+
+        Parameters
+        ----------
+        selections : dict
+            See lib.py get_data_points() for the base list of inputs
+            This extended version may additionally include 'unit_id' which is
+            the unit you wish to convert all points to.
+
+        Returns
+        -------
+        list of dicts
+            Unchanged output format from lib.py get_data_points()
+
+        """
+        data_points = super(GroClient, self).get_data_points(**selections)
+        # Apply unit conversion if a unit is specified
+        if 'unit_id' in selections:
+            return list(map(functools.partial(self.convert_unit, target_unit_id=selections['unit_id']), data_points))
+        # Return data points in input units if not unit is specified
+        return data_points
 
     def get_data_series_list(self):
         return list(self._data_series_list)
@@ -133,8 +159,8 @@ class GroClient(Client):
 
     def get_provinces(self, country_name):
         for region in self.search_and_lookup('regions', country_name):
-            if region['level'] == 3: # country
-                provinces =  self.get_descendant_regions(region['id'], 4) # provinces
+            if region['level'] == lib.REGION_LEVELS['country']:
+                provinces = self.get_descendant_regions(region['id'], lib.REGION_LEVELS['province'])
                 self._logger.debug("Provinces of {}: {}".format(country_name, provinces))
                 return provinces
         return None
@@ -180,6 +206,50 @@ class GroClient(Client):
             writer.writerow([point['start_date'], point['end_date'],
                              point['value'] * point['input_unit_scale'],
                              self.lookup_unit_abbreviation(point['input_unit_id'])])
+
+    def convert_unit(self, point, target_unit_id):
+        """Convert the data point from one unit to another unit.
+
+        If original or target unit is non-convertible, throw an error.
+
+        Parameters
+        ----------
+        point : dict
+            { value: float, unit_id: integer, ... }
+        target_unit_id : integer
+
+        Returns
+        -------
+        dict
+            { value: float, unit_id: integer, ... }
+            unit_id is changed to the target, and value is converted to use the
+            new unit_id. Other properties are unchanged.
+
+        """
+        if point.get('unit_id') is None or point.get('unit_id') == target_unit_id:
+            return point
+        from_convert_factor = self.lookup(
+            'units', point['unit_id']
+        ).get('baseConvFactor')
+        if not from_convert_factor.get('factor'):
+            raise Exception(
+                'unit_id {} is not convertible'.format(point['unit_id'])
+            )
+        value_in_base_unit = (
+            point['value'] * from_convert_factor.get('factor')
+         ) + from_convert_factor.get('offset', 0)
+        to_convert_factor = self.lookup(
+            'units', target_unit_id
+        ).get('baseConvFactor')
+        if not to_convert_factor.get('factor'):
+            raise Exception(
+                'unit_id {} is not convertible'.format(target_unit_id)
+            )
+        point['value'] = float(
+            value_in_base_unit - to_convert_factor.get('offset', 0)
+        ) / to_convert_factor.get('factor')
+        point['unit_id'] = target_unit_id
+        return point
 
 
 def main():
