@@ -167,7 +167,7 @@ def get_data(url, headers, params=None, logger=None):
     raise Exception('Giving up on {} after {} tries. Error is: {}.'.format(
         url, retry_count, data.text))
 
-@memoize(maxsize=None)
+@memoize(maxsize=3)
 def get_available(access_token, api_host, entity_type):
     """List the first 5000 available entities of the given type.
 
@@ -232,7 +232,7 @@ def list_available(access_token, api_host, selected_entities):
     except KeyError:
         raise Exception(resp.text)
 
-@memoize(maxsize=None)
+@memoize(maxsize=1024)
 def lookup(access_token, api_host, entity_type, entity_id):
     """Retrieve details about a given id of type entity_type.
 
@@ -267,7 +267,7 @@ def lookup(access_token, api_host, entity_type, entity_id):
     except KeyError:
         raise Exception(resp.text)
 
-@memoize(maxsize=None)
+@memoize(maxsize=64)
 def snake_to_camel(term):
     """Convert a string from snake_case to camelCase.
 
@@ -640,7 +640,7 @@ def get_data_points(access_token, api_host, **selection):
     resp = get_data(url, headers, params)
     return resp.json()
 
-@memoize(maxsize=None)
+@memoize(maxsize=64)
 def universal_search(access_token, api_host, search_terms):
     """Search across all entity types for the given terms.
 
@@ -662,7 +662,7 @@ def universal_search(access_token, api_host, search_terms):
     resp = get_data(url, headers, {'q': search_terms})
     return resp.json()
 
-@memoize(maxsize=None)
+@memoize(maxsize=64)
 def search(access_token, api_host, entity_type, search_terms):
     """Search for the given search term. Better matches appear first.
 
@@ -776,7 +776,7 @@ def get_geo_centre(access_token, api_host, region_id):
     resp = get_data(url, headers)
     return resp.json()['data']
 
-@memoize(maxsize=None)
+@memoize(maxsize=128)
 def get_geojson(access_token, api_host, region_id):
     """Given a region ID, return a geojson shape information
 
@@ -788,9 +788,9 @@ def get_geojson(access_token, api_host, region_id):
 
     Returns
     -------
-    a geojson object e.g. 
+    a geojson object e.g.
     { 'type': 'GeometryCollection',
-      'geometries': [{'type': 'MultiPolygon', 
+      'geometries': [{'type': 'MultiPolygon',
                       'coordinates': [[[[-38.394, -4.225], ...]]]}, ...]}
     or None if not found.
     """
