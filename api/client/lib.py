@@ -93,9 +93,11 @@ def get_access_token(api_host, user_email, user_password, logger=None):
 def redirect(params, migration):
     """Update query parameters to follow a redirection response from the API.
 
-    >>> redirect({'metricId': 14, 'sourceId': 2, 'itemId': 145},
-    ...          {'old_metric_id': 14, 'new_metric_id': 15, 'source_id': 2})
-    {'metricId': 15, 'sourceId': 2, 'itemId': 145}
+    >>> redirect(
+    ...     {'metricId': 14, 'sourceId': 2, 'itemId': 145},
+    ...     {'old_metric_id': 14, 'new_metric_id': 15, 'source_id': 2}
+    ... ) == {'sourceId': 2, 'itemId': 145, 'metricId': 15}
+    True
 
     Parameters
     ----------
@@ -292,25 +294,24 @@ def get_params_from_selection(**selection):
 
     For use with get_data_series() and rank_series_by_source().
 
-    >>> get_params_from_selection(**{
-    ...     'metric_id': 123,
-    ...     'item_id': 456,
-    ...     'unit_id': 14
-    ... })
-    {'metricId': 123, 'itemId': 456}
+    >>> get_params_from_selection(
+    ...     metric_id=123, item_id=456, unit_id=14
+    ... ) == { 'itemId': 456, 'metricId': 123 }
+    True
 
     Parameters
     ----------
-    selection : dict
-        Keys can include: 'metric_id', 'item_id', 'region_id',
-        'partner_region_id', 'source_id', 'frequency_id'. Anything else will
-        be ignored.
+    metric_id : integer, optional
+    item_id : integer, optional
+    region_id : integer, optional
+    partner_region_id : integer, optional
+    source_id : integer, optional
+    frequency_id : integer, optional
 
     Returns
     -------
     dict
-        selections with valid keys converted to camelcase and invalid ones
-        filtered out
+        selections with valid keys converted to camelcase and invalid ones filtered out
 
     """
     params = {}
@@ -326,21 +327,15 @@ def get_crop_calendar_params(**selection):
 
     For use with get_crop_calendar_data_points()
 
-    >>> get_crop_calendar_params(**{
-    ...     'metric_id': 123,
-    ...     'item_id': 456,
-    ...     'region_id': 14
-    ... })
-    {'itemId': 456, 'regionId': 14}
+    >>> get_crop_calendar_params(
+    ...     metric_id=123, item_id=456, region_id=14
+    ... ) == { 'itemId': 456, 'regionId': 14 }
+    True
 
     Parameters
     ----------
-    selection : dict
-        Keys can include: 'item_id', 'region_id'. Anything else will be
-        ignored.
-        Only region and item are required since metric/item/source/frequency
-        all have default values and start/end date are not allowed inputs since
-        crop calendars are static.
+    item_id : integer
+    region_id : integer
 
     Returns
     -------
@@ -361,32 +356,34 @@ def get_data_call_params(**selection):
 
     For use with get_data_points().
 
-    >>> get_data_call_params(**{
-    ...     'metric_id': 123,
-    ...     'start_date': '2012-01-01',
-    ...     'unit_id': 14
-    ... })
-    {'metricId': 123, 'startDate': '2012-01-01'}
+    >>> get_data_call_params(
+    ...     metric_id=123, start_date='2012-01-01', unit_id=14
+    ... ) == {'startDate': '2012-01-01', 'metricId': 123}
+    True
 
     Parameters
     ----------
-    selection : dict
-        Keys can include: 'metric_id', 'item_id', 'region_id',
-        'partner_region_id', 'source_id', 'frequency_id', 'start_date',
-        'end_date', 'show_revisions', 'insert_null', and 'at_time'.
-        Anything else will be ignored.
+    metric_id : integer
+    item_id : integer
+    region_id : integer
+    partner_region_id : integer
+    source_id : integer
+    frequency_id : integer
+    start_date : string, optional
+    end_date : string, optional
+    show_revisions : boolean, optional
+    insert_null : boolean, optional
+    at_time : string, optional
 
     Returns
     -------
     dict
-        selections with valid keys converted to camelcase and invalid ones
-        filtered out
+        selections with valid keys converted to camelcase and invalid ones filtered out
 
     """
     params = get_params_from_selection(**selection)
     for key, value in list(selection.items()):
-        if key in ('start_date', 'end_date', 'show_revisions', 'insert_null',
-                   'at_time'):
+        if key in ('start_date', 'end_date', 'show_revisions', 'insert_null', 'at_time'):
             params[snake_to_camel(key)] = value
     return params
 
@@ -400,9 +397,12 @@ def get_data_series(access_token, api_host, **selection):
     ----------
     access_token : string
     api_host : string
-    selection : dict
-        See get_params_from_selection() for more information on selection
-        formatting
+    metric_id : integer, optional
+    item_id : integer, optional
+    region_id : integer, optional
+    partner_region_id : integer, optional
+    source_id : integer, optional
+    frequency_id : integer, optional
 
     Returns
     -------
@@ -470,45 +470,46 @@ def rank_series_by_source(access_token, api_host, series_list):
 def format_crop_calendar_response(resp):
     """Make cropcalendar output a format similar to get_data_points().
 
-    >>> format_crop_calendar_response([
-    ...     {
-    ...         'metricId': 2260063,
-    ...         'itemId': 274,
-    ...         'regionId': 13051,
-    ...         'sourceId': 5,
-    ...         'frequencyId': 15,
-    ...         'data': [{
-    ...             'sageItem': 'Corn',
-    ...             'plantingStartDate': '2000-03-04',
-    ...             'plantingEndDate': '2000-05-17',
-    ...             'harvestingStartDate': '2000-07-20',
-    ...             'harvestingEndDate': '2000-11-01',
-    ...             'multiYear': False
-    ...         }]
-    ...     }
-    ... ])
-    [{'metric_id': 2260063,
-        'item_id': 274,
-        'region_id': 13051,
-        'frequency_id': 15,
-        'source_id': 5,
-        'start_date': '2000-03-04',
-        'end_date': '2000-05-17',
-        'value': 'planting',
-        'input_unit_id': None,
-        'input_unit_scale': None,
-        'reporting_date': None},
-        {'metric_id': 2260063,
-        'item_id': 274,
-        'region_id': 13051,
-        'frequency_id': 15,
-        'source_id': 5,
-        'start_date': '2000-07-20',
-        'end_date': '2000-11-01',
-        'value': 'harvesting',
-        'input_unit_id': None,
-        'input_unit_scale': None,
-        'reporting_date': None}]
+    >>> format_crop_calendar_response([{
+    ...     'metricId': 2260063,
+    ...     'itemId': 274,
+    ...     'regionId': 13051,
+    ...     'sourceId': 5,
+    ...     'frequencyId': 15,
+    ...     'data': [{
+    ...         'sageItem': 'Corn',
+    ...         'plantingStartDate': '2000-03-04',
+    ...         'plantingEndDate': '2000-05-17',
+    ...         'harvestingStartDate': '2000-07-20',
+    ...         'harvestingEndDate': '2000-11-01',
+    ...         'multiYear': False
+    ...     }]
+    ... }]) == [{
+    ...     'metric_id': 2260063,
+    ...     'item_id': 274,
+    ...     'region_id': 13051,
+    ...     'frequency_id': 15,
+    ...     'source_id': 5,
+    ...     'start_date': '2000-03-04',
+    ...     'end_date': '2000-05-17',
+    ...     'value': 'planting',
+    ...     'input_unit_id': None,
+    ...     'input_unit_scale': None,
+    ...     'reporting_date': None
+    ... }, {
+    ...     'metric_id': 2260063,
+    ...     'item_id': 274,
+    ...     'region_id': 13051,
+    ...     'frequency_id': 15,
+    ...     'source_id': 5,
+    ...     'start_date': '2000-07-20',
+    ...     'end_date': '2000-11-01',
+    ...     'value': 'harvesting',
+    ...     'input_unit_id': None,
+    ...     'input_unit_scale': None,
+    ...     'reporting_date': None
+    ... }]
+    True
 
     Parameters
     ----------
@@ -611,8 +612,25 @@ def get_data_points(access_token, api_host, **selection):
     ----------
     access_token : string
     api_host : string
-    selection : dict
-        See get_data_call_params() input
+    metric_id : integer
+    item_id : integer
+    region_id : integer
+    partner_region_id : integer
+    source_id : integer
+    frequency_id : integer
+    start_date : string, optional
+        all points with start dates equal to or after this date
+    end_date : string, optional
+        all points with end dates equal to or after this date
+    show_revisions : boolean, optional
+        False by default, meaning only the latest value for each period. If true, will return all
+        values for a given period, differentiated by the `reporting_date` field.
+    insert_null : boolean, optional
+        False by default. If True, will include a data point with a None value for each period
+        that does not have data.
+    at_time : string, optional
+        Estimate what data would have been available via Gro at a given time in the past. See
+        /api/client/samples/at-time-query-examples.ipynb for more details.
 
     Returns
     -------
@@ -857,5 +875,4 @@ if __name__ == '__main__':
     # To run doctests:
     # $ python lib.py -v
     import doctest
-    doctest.testmod(optionflags=doctest.NORMALIZE_WHITESPACE |
-                    doctest.ELLIPSIS)
+    doctest.testmod(optionflags=doctest.NORMALIZE_WHITESPACE | doctest.ELLIPSIS)
