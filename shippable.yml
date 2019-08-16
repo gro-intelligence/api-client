@@ -14,5 +14,6 @@ build:
     - pytest --junitxml=shippable/testresults/nosetests.xml
     - pytest --cov=api --cov-report=xml:shippable/codecoverage/coverage.xml
   post_ci:
-    - shippable_retry pip install .[docs]
-    - sphinx-versioning push -r CLEWS-15766 docs gh-pages . # TODO: swap CLEWS-15766 for development
+    - if [ "$SHIPPABLE_PYTHON_VERSION" == "2.7" ]; then shippable_retry pip install .[docs]; fi
+    # TODO: swap CLEWS-15766 for development
+    - if [ "$SHIPPABLE_PYTHON_VERSION" == "2.7" ]; then sphinx-versioning push -r CLEWS-15766 docs gh-pages .; fi
