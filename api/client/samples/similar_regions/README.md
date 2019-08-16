@@ -22,9 +22,9 @@ Suppose we want to get the 10 US states that are most similar to Wisconsin.  We 
 >>>
 >>> WISCONSIN_REGION_ID = client.search_for_entity('regions', 'Wisconsin')
 >>> USA_REGION_ID = client.search_for_entity('regions', 'United States of America')
->>> ALL_US_STATES = client.get_descendant_regions(USA_REGION_ID, 4)    
+>>> US_STATES_IDS = [province['id'] for province in client.get_descendant_regions(USA_REGION_ID, 4)]
 >>>
->>> sim = SimilarRegion(region_properties, regions_to_compare=ALL_US_STATES)
+>>> sim = SimilarRegion(region_properties, regions_to_compare=US_STATES_IDS)
 >>> for result in sim.similar_to(WISCONSIN_REGION_ID, number_of_regions=10, requested_level=4):
         print(result)
 ```

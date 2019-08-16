@@ -1,16 +1,3 @@
-"""
-Basic gro api client.
-
-Usage examples:
-
-python gro_client.py --item=soybeans  --region=brazil --partner_region china --metric export
-python gro_client.py --item=sesame --region=ethiopia
-
-python gro_client.py --user_email=john.doe@example.com  --print_token
-
-For more information use --help
-"""
-
 from __future__ import print_function
 from builtins import zip
 from builtins import str
@@ -37,14 +24,13 @@ DATA_POINTS_UNIQUE_COLS = ['item_id', 'metric_id',
 
 
 class GroClient(Client):
-    """A Client with methods to find, and manipulate data series related
-    to a crop and/or region.
+    """An extension of the Client class with extra convenience methods for some common operations.
 
-    This class offers convenience methods for some common scenarios
-
-    - finding entities by name rather than ids
-    - exploration shortcuts filling in partial selections
-    - finding and saving data series for repeated use, including in a data frame
+    Extra functionality includes:
+    - Automatic conversion of units
+    - Finding data series using entity names rather than ids
+    - Exploration shortcuts for filling in partial selections
+    - Saving data series in a data frame for repeated use
 
     """
 
@@ -100,7 +86,7 @@ class GroClient(Client):
         data_points = super(GroClient, self).get_data_points(**selections)
         # Apply unit conversion if a unit is specified
         if 'unit_id' in selections:
-            return map(functools.partial(self.convert_unit, target_unit_id=selections['unit_id']), data_points)
+            return list(map(functools.partial(self.convert_unit, target_unit_id=selections['unit_id']), data_points))
         # Return data points in input units if not unit is specified
         return data_points
 
@@ -226,7 +212,7 @@ class GroClient(Client):
             new unit_id. Other properties are unchanged.
 
         """
-        if point['unit_id'] == target_unit_id:
+        if point.get('unit_id') is None or point.get('unit_id') == target_unit_id:
             return point
         from_convert_factor = self.lookup(
             'units', point['unit_id']
@@ -252,8 +238,18 @@ class GroClient(Client):
         return point
 
 
+"""Basic Gro API command line interface.
+
+Note that results are chosen randomly from matching selections, and so results are not deterministic. This tool is useful for simple queries, but anything more complex should be done using the provided Python packages.
+
+Usage examples:
+    gro_client --item=soybeans  --region=brazil --partner_region china --metric export
+    gro_client --item=sesame --region=ethiopia
+    gro_client --user_email=john.doe@example.com  --print_token
+For more information use --help
+"""
 def main():
-    parser = argparse.ArgumentParser(description="Gro api client")
+    parser = argparse.ArgumentParser(description="Gro API command line interface")
     parser.add_argument("--user_email")
     parser.add_argument("--user_password")
     parser.add_argument("--item")
