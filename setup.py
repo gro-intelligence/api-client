@@ -10,8 +10,11 @@ with open("README.md", "r") as readme_file:
 with open("requirements.txt", "r") as requirements_file:
     requirements = requirements_file.read()
 
-with open("test-requirements.txt", "r") as test_requirements_file:
+with open("requirements-test.txt", "r") as test_requirements_file:
     test_requirements = test_requirements_file.read()
+
+with open("requirements-docs.txt", "r") as docs_requirements_file:
+    docs_requirements = docs_requirements_file.read()
 
 setuptools.setup(
     name="gro",
@@ -25,16 +28,8 @@ setuptools.setup(
     python_requires=">=2.7.12, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*, <4",
     install_requires=requirements,
     extras_require={
-        'docs': [
-            # sphinx 1.6+ is incompatible with sphinxcontrib-versioning as of
-            # 2019-08-16 (version 2.2.1). Project is transferring ownership currently.
-            # TODO: revisit later to see if it has been revived.
-            # https://github.com/sphinx-contrib/sphinxcontrib-versioning/issues/59
-            'sphinx==1.5.6',
-            'recommonmark',
-            'sphinx_rtd_theme',
-            'sphinxcontrib-versioning'
-        ]
+        'docs': docs_requirements,
+        'test': test_requirements
     },
     setup_requires=pytest_runner,
     test_suite='pytest',
