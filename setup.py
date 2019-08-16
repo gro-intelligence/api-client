@@ -26,9 +26,10 @@ setuptools.setup(
     install_requires=requirements,
     extras_require={
         'docs': [
-            'sphinx',
+            'sphinx==1.5.6',
             'recommonmark',
-            'sphinx_rtd_theme'
+            'sphinx_rtd_theme',
+            'sphinxcontrib-versioning'
         ]
     },
     setup_requires=pytest_runner,
