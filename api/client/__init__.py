@@ -4,7 +4,7 @@ from api.client import lib
 
 class Client(object):
 
-    """API client with stateful authentication for lib functions. """
+    """API client with stateful authentication for lib functions."""
 
     def __init__(self, api_host, access_token):
         self.api_host = api_host
