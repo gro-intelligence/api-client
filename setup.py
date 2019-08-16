@@ -26,6 +26,10 @@ setuptools.setup(
     install_requires=requirements,
     extras_require={
         'docs': [
+            # sphinx 1.6+ is incompatible with sphinxcontrib-versioning as of
+            # 2019-08-16 (version 2.2.1). Project is transferring ownership currently.
+            # TODO: revisit later to see if it has been revived.
+            # https://github.com/sphinx-contrib/sphinxcontrib-versioning/issues/59
             'sphinx==1.5.6',
             'recommonmark',
             'sphinx_rtd_theme',
