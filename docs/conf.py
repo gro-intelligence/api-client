@@ -18,6 +18,7 @@ sys.path.insert(0, os.path.abspath('..'))
 # -- Project information -----------------------------------------------------
 
 project = 'Gro API Client'
+html_logo = 'media/logo.jpg'
 copyright = '2019, Gro Intelligence'
 author = 'Gro Intelligence'
 
@@ -37,7 +38,7 @@ extensions = [
     'sphinx.ext.viewcode',
     'sphinx.ext.napoleon',
     'recommonmark',
-    'sphinxcontrib.fulltoc'
+    # 'sphinxcontrib.fulltoc'
 ]
 
 source_suffix = {
@@ -57,6 +58,16 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 # -- Options for HTML output -------------------------------------------------
 
 html_theme = 'sphinx_rtd_theme'
+
+html_theme_options = {
+    'collapse_navigation': False,
+    'sticky_navigation': True,
+    'navigation_depth': -1,
+    'includehidden': False,
+    'titles_only': False,
+    'prev_next_buttons_location': 'both',
+    'style_external_links': True
+}
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
