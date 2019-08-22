@@ -1,0 +1,13 @@
+@import 'theme.css';
+
+.wy-side-nav-search {
+    background-color: #ffffff;
+}
+
+.wy-nav-side {
+    background: #ffffff;
+}
+
+.wy-nav-content {
+    border-left: 2px #EEEEF1 solid;
+}
