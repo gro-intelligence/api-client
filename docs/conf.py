@@ -69,7 +69,7 @@ html_theme_options = {
     'style_external_links': True
 }
 
-html_style = 'custom-theme.css'
+html_style = 'css/custom-theme.css'
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
