@@ -40,7 +40,7 @@
     
 
   
-  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/custom-theme.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/banner.css" type="text/css" />
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -61,6 +61,9 @@
             <a href="../../../index.html" class="icon icon-home"> Gro API Client
           
 
+          
+            
+            <img src="../../../_static/logo.jpg" class="logo" alt="Logo"/>
           
           </a>
 
@@ -88,8 +91,40 @@
               
             
             
-              <!-- Local TOC -->
-              <div class="local-toc"></div>
+              <p class="caption"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../setting-up-your-environment.html">Setting Up Your Environment</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../setting-up-your-environment.html#system-prerequisites">System Prerequisites</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../setting-up-your-environment.html#python">Python</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../setting-up-your-environment.html#installing-gro-packages">Installing Gro Packages</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../setting-up-your-environment.html#authentication-token">Authentication Token</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../setting-up-your-environment.html#retrieving-a-token">Retrieving a token</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../setting-up-your-environment.html#option-1-using-the-web-app-recommended">Option 1: Using the Web App (Recommended)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../setting-up-your-environment.html#option-2-using-the-gro-client-command-line-interface">Option 2: Using the gro_client Command Line Interface</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../setting-up-your-environment.html#option-3-using-the-get-access-token-function">Option 3: Using the <code class="docutils literal"><span class="pre">get_access_token()</span></code> Function</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../setting-up-your-environment.html#expiring-regenerating-tokens">Expiring/Regenerating Tokens</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../setting-up-your-environment.html#saving-your-token-as-an-environment-variable">Saving your token as an environment variable</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../api.html">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../api.html#module-api.client.lib">api.client.lib</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api.html#api-client-client">api.client.Client</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api.html#api-client-gro-client">api.client.gro_client</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api.html#api-client-crop-model">api.client.crop_model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api.html#api-client-batch-client">api.client.batch_client</a></li>
+</ul>
+</li>
+</ul>
+
             
           
         </div>
@@ -109,7 +144,7 @@
 
       <div class="wy-nav-content">
         
-        <div class="rst-content">
+        <div class="rst-content style-external-links">
         
           
 
@@ -171,7 +206,7 @@
 <span class="kn">from</span> <span class="nn">api.client</span> <span class="k">import</span> <span class="n">cfg</span><span class="p">,</span> <span class="n">lib</span><span class="p">,</span> <span class="n">Client</span>
 
 
-<div class="viewcode-block" id="BatchClient"><a class="viewcode-back" href="../../../index.html#api.client.batch_client.BatchClient">[docs]</a><span class="k">class</span> <span class="nc">BatchClient</span><span class="p">(</span><span class="n">Client</span><span class="p">):</span>
+<div class="viewcode-block" id="BatchClient"><a class="viewcode-back" href="../../../api.html#api.client.batch_client.BatchClient">[docs]</a><span class="k">class</span> <span class="nc">BatchClient</span><span class="p">(</span><span class="n">Client</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;API client with support for batch asynchronous queries.&quot;&quot;&quot;</span>
 
     <span class="n">_logger</span> <span class="o">=</span> <span class="kc">None</span>
@@ -183,7 +218,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_http_client</span> <span class="o">=</span> <span class="n">AsyncHTTPClient</span><span class="p">()</span>
 
     <span class="nd">@gen</span><span class="o">.</span><span class="n">coroutine</span>
-<div class="viewcode-block" id="BatchClient.get_data"><a class="viewcode-back" href="../../../index.html#api.client.batch_client.BatchClient.get_data">[docs]</a>    <span class="k">def</span> <span class="nf">get_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="BatchClient.get_data"><a class="viewcode-back" href="../../../api.html#api.client.batch_client.BatchClient.get_data">[docs]</a>    <span class="k">def</span> <span class="nf">get_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;General &#39;make api request&#39; function.</span>
 
 <span class="sd">        Assigns headers and builds in retries and logging.</span>
@@ -225,7 +260,7 @@
                         <span class="n">url</span><span class="p">,</span> <span class="n">retry_count</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">error</span><span class="p">))</span></div>
 
     <span class="nd">@gen</span><span class="o">.</span><span class="n">coroutine</span>
-<div class="viewcode-block" id="BatchClient.get_data_points"><a class="viewcode-back" href="../../../index.html#api.client.batch_client.BatchClient.get_data_points">[docs]</a>    <span class="k">def</span> <span class="nf">get_data_points</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">selection</span><span class="p">):</span>
+<div class="viewcode-block" id="BatchClient.get_data_points"><a class="viewcode-back" href="../../../api.html#api.client.batch_client.BatchClient.get_data_points">[docs]</a>    <span class="k">def</span> <span class="nf">get_data_points</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">selection</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Get all the data points for a given selection, which is some or all</span>
 <span class="sd">        of: item_id, metric_id, region_id, frequency_id, source_id,</span>
 <span class="sd">        partner_region_id. Additional arguments are allowed and ignored.</span>
@@ -241,7 +276,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">batch_async_queue</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_data_points</span><span class="p">,</span> <span class="n">batched_args</span><span class="p">,</span>
                                       <span class="n">output_list</span><span class="p">,</span> <span class="n">map_result</span><span class="p">)</span>
 
-<div class="viewcode-block" id="BatchClient.batch_async_queue"><a class="viewcode-back" href="../../../index.html#api.client.batch_client.BatchClient.batch_async_queue">[docs]</a>    <span class="k">def</span> <span class="nf">batch_async_queue</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">,</span> <span class="n">batched_args</span><span class="p">,</span> <span class="n">output_list</span><span class="p">,</span> <span class="n">map_result</span><span class="p">):</span>
+<div class="viewcode-block" id="BatchClient.batch_async_queue"><a class="viewcode-back" href="../../../api.html#api.client.batch_client.BatchClient.batch_async_queue">[docs]</a>    <span class="k">def</span> <span class="nf">batch_async_queue</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">,</span> <span class="n">batched_args</span><span class="p">,</span> <span class="n">output_list</span><span class="p">,</span> <span class="n">map_result</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Asynchronously call func.</span>
 
 <span class="sd">        :param func: function to be called on each member of batched_args</span>

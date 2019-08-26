@@ -40,7 +40,7 @@
     
 
   
-  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/custom-theme.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/banner.css" type="text/css" />
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -61,6 +61,9 @@
             <a href="../../../index.html" class="icon icon-home"> Gro API Client
           
 
+          
+            
+            <img src="../../../_static/logo.jpg" class="logo" alt="Logo"/>
           
           </a>
 
@@ -88,8 +91,40 @@
               
             
             
-              <!-- Local TOC -->
-              <div class="local-toc"></div>
+              <p class="caption"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../setting-up-your-environment.html">Setting Up Your Environment</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../setting-up-your-environment.html#system-prerequisites">System Prerequisites</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../setting-up-your-environment.html#python">Python</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../setting-up-your-environment.html#installing-gro-packages">Installing Gro Packages</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../setting-up-your-environment.html#authentication-token">Authentication Token</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../setting-up-your-environment.html#retrieving-a-token">Retrieving a token</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../setting-up-your-environment.html#option-1-using-the-web-app-recommended">Option 1: Using the Web App (Recommended)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../setting-up-your-environment.html#option-2-using-the-gro-client-command-line-interface">Option 2: Using the gro_client Command Line Interface</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../setting-up-your-environment.html#option-3-using-the-get-access-token-function">Option 3: Using the <code class="docutils literal"><span class="pre">get_access_token()</span></code> Function</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../setting-up-your-environment.html#expiring-regenerating-tokens">Expiring/Regenerating Tokens</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../setting-up-your-environment.html#saving-your-token-as-an-environment-variable">Saving your token as an environment variable</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../api.html">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../api.html#module-api.client.lib">api.client.lib</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api.html#api-client-client">api.client.Client</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api.html#api-client-gro-client">api.client.gro_client</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api.html#api-client-crop-model">api.client.crop_model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api.html#api-client-batch-client">api.client.batch_client</a></li>
+</ul>
+</li>
+</ul>
+
             
           
         </div>
@@ -109,7 +144,7 @@
 
       <div class="wy-nav-content">
         
-        <div class="rst-content">
+        <div class="rst-content style-external-links">
         
           
 
@@ -188,7 +223,7 @@
 <span class="p">}</span>
 
 
-<div class="viewcode-block" id="get_default_logger"><a class="viewcode-back" href="../../../index.html#api.client.lib.get_default_logger">[docs]</a><span class="k">def</span> <span class="nf">get_default_logger</span><span class="p">():</span>
+<div class="viewcode-block" id="get_default_logger"><a class="viewcode-back" href="../../../api.html#api.client.lib.get_default_logger">[docs]</a><span class="k">def</span> <span class="nf">get_default_logger</span><span class="p">():</span>
     <span class="sd">&quot;&quot;&quot;Get a logging object using the default log level set in cfg.</span>
 
 <span class="sd">    https://docs.python.org/3/library/logging.html</span>
@@ -206,7 +241,7 @@
     <span class="k">return</span> <span class="n">logger</span></div>
 
 
-<div class="viewcode-block" id="get_access_token"><a class="viewcode-back" href="../../../index.html#api.client.lib.get_access_token">[docs]</a><span class="k">def</span> <span class="nf">get_access_token</span><span class="p">(</span><span class="n">api_host</span><span class="p">,</span> <span class="n">user_email</span><span class="p">,</span> <span class="n">user_password</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="get_access_token"><a class="viewcode-back" href="../../../api.html#api.client.lib.get_access_token">[docs]</a><span class="k">def</span> <span class="nf">get_access_token</span><span class="p">(</span><span class="n">api_host</span><span class="p">,</span> <span class="n">user_email</span><span class="p">,</span> <span class="n">user_password</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Request an access token.</span>
 
 <span class="sd">    Parameters</span>
@@ -245,7 +280,7 @@
         <span class="n">retry_count</span><span class="p">))</span></div>
 
 
-<div class="viewcode-block" id="redirect"><a class="viewcode-back" href="../../../index.html#api.client.lib.redirect">[docs]</a><span class="k">def</span> <span class="nf">redirect</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">migration</span><span class="p">):</span>
+<div class="viewcode-block" id="redirect"><a class="viewcode-back" href="../../../api.html#api.client.lib.redirect">[docs]</a><span class="k">def</span> <span class="nf">redirect</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">migration</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Update query parameters to follow a redirection response from the API.</span>
 
 <span class="sd">    &gt;&gt;&gt; redirect({&#39;metricId&#39;: 14, &#39;sourceId&#39;: 2, &#39;itemId&#39;: 145},</span>
@@ -275,7 +310,7 @@
     <span class="k">return</span> <span class="n">params</span></div>
 
 
-<div class="viewcode-block" id="get_data"><a class="viewcode-back" href="../../../index.html#api.client.lib.get_data">[docs]</a><span class="k">def</span> <span class="nf">get_data</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="get_data"><a class="viewcode-back" href="../../../api.html#api.client.lib.get_data">[docs]</a><span class="k">def</span> <span class="nf">get_data</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;General &#39;make api request&#39; function.</span>
 
 <span class="sd">    Assigns headers and builds in retries and logging.</span>
@@ -323,7 +358,7 @@
         <span class="n">url</span><span class="p">,</span> <span class="n">retry_count</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">text</span><span class="p">))</span></div>
 
 <span class="nd">@memoize</span><span class="p">(</span><span class="n">maxsize</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
-<div class="viewcode-block" id="get_available"><a class="viewcode-back" href="../../../index.html#api.client.lib.get_available">[docs]</a><span class="k">def</span> <span class="nf">get_available</span><span class="p">(</span><span class="n">access_token</span><span class="p">,</span> <span class="n">api_host</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">):</span>
+<div class="viewcode-block" id="get_available"><a class="viewcode-back" href="../../../api.html#api.client.lib.get_available">[docs]</a><span class="k">def</span> <span class="nf">get_available</span><span class="p">(</span><span class="n">access_token</span><span class="p">,</span> <span class="n">api_host</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;List the first 5000 available entities of the given type.</span>
 
 <span class="sd">    Parameters</span>
@@ -349,7 +384,7 @@
     <span class="k">return</span> <span class="n">resp</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s1">&#39;data&#39;</span><span class="p">]</span></div>
 
 
-<div class="viewcode-block" id="list_available"><a class="viewcode-back" href="../../../index.html#api.client.lib.list_available">[docs]</a><span class="k">def</span> <span class="nf">list_available</span><span class="p">(</span><span class="n">access_token</span><span class="p">,</span> <span class="n">api_host</span><span class="p">,</span> <span class="n">selected_entities</span><span class="p">):</span>
+<div class="viewcode-block" id="list_available"><a class="viewcode-back" href="../../../api.html#api.client.lib.list_available">[docs]</a><span class="k">def</span> <span class="nf">list_available</span><span class="p">(</span><span class="n">access_token</span><span class="p">,</span> <span class="n">api_host</span><span class="p">,</span> <span class="n">selected_entities</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;List available entities given some selected entities.</span>
 
 <span class="sd">    Given one or more selections, return entities combinations that have</span>
@@ -388,7 +423,7 @@
         <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="n">resp</span><span class="o">.</span><span class="n">text</span><span class="p">)</span></div>
 
 <span class="nd">@memoize</span><span class="p">(</span><span class="n">maxsize</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
-<div class="viewcode-block" id="lookup"><a class="viewcode-back" href="../../../index.html#api.client.lib.lookup">[docs]</a><span class="k">def</span> <span class="nf">lookup</span><span class="p">(</span><span class="n">access_token</span><span class="p">,</span> <span class="n">api_host</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">,</span> <span class="n">entity_id</span><span class="p">):</span>
+<div class="viewcode-block" id="lookup"><a class="viewcode-back" href="../../../api.html#api.client.lib.lookup">[docs]</a><span class="k">def</span> <span class="nf">lookup</span><span class="p">(</span><span class="n">access_token</span><span class="p">,</span> <span class="n">api_host</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">,</span> <span class="n">entity_id</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Retrieve details about a given id of type entity_type.</span>
 
 <span class="sd">    https://github.com/gro-intelligence/api-client/wiki/Entities-Definition</span>
@@ -423,7 +458,7 @@
         <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="n">resp</span><span class="o">.</span><span class="n">text</span><span class="p">)</span></div>
 
 <span class="nd">@memoize</span><span class="p">(</span><span class="n">maxsize</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
-<div class="viewcode-block" id="snake_to_camel"><a class="viewcode-back" href="../../../index.html#api.client.lib.snake_to_camel">[docs]</a><span class="k">def</span> <span class="nf">snake_to_camel</span><span class="p">(</span><span class="n">term</span><span class="p">):</span>
+<div class="viewcode-block" id="snake_to_camel"><a class="viewcode-back" href="../../../api.html#api.client.lib.snake_to_camel">[docs]</a><span class="k">def</span> <span class="nf">snake_to_camel</span><span class="p">(</span><span class="n">term</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Convert a string from snake_case to camelCase.</span>
 
 <span class="sd">    &gt;&gt;&gt; snake_to_camel(&#39;hello_world&#39;)</span>
@@ -442,7 +477,7 @@
     <span class="k">return</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">camel</span><span class="p">[:</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="nb">list</span><span class="p">([</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="o">+</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">camel</span><span class="p">[</span><span class="mi">1</span><span class="p">:]]))</span></div>
 
 
-<div class="viewcode-block" id="get_params_from_selection"><a class="viewcode-back" href="../../../index.html#api.client.lib.get_params_from_selection">[docs]</a><span class="k">def</span> <span class="nf">get_params_from_selection</span><span class="p">(</span><span class="o">**</span><span class="n">selection</span><span class="p">):</span>
+<div class="viewcode-block" id="get_params_from_selection"><a class="viewcode-back" href="../../../api.html#api.client.lib.get_params_from_selection">[docs]</a><span class="k">def</span> <span class="nf">get_params_from_selection</span><span class="p">(</span><span class="o">**</span><span class="n">selection</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Construct http request params from dict of entity selections.</span>
 
 <span class="sd">    For use with get_data_series() and rank_series_by_source().</span>
@@ -476,7 +511,7 @@
     <span class="k">return</span> <span class="n">params</span></div>
 
 
-<div class="viewcode-block" id="get_crop_calendar_params"><a class="viewcode-back" href="../../../index.html#api.client.lib.get_crop_calendar_params">[docs]</a><span class="k">def</span> <span class="nf">get_crop_calendar_params</span><span class="p">(</span><span class="o">**</span><span class="n">selection</span><span class="p">):</span>
+<div class="viewcode-block" id="get_crop_calendar_params"><a class="viewcode-back" href="../../../api.html#api.client.lib.get_crop_calendar_params">[docs]</a><span class="k">def</span> <span class="nf">get_crop_calendar_params</span><span class="p">(</span><span class="o">**</span><span class="n">selection</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Construct http request params from dict of entity selections.</span>
 
 <span class="sd">    For use with get_crop_calendar_data_points()</span>
@@ -511,7 +546,7 @@
     <span class="k">return</span> <span class="n">params</span></div>
 
 
-<div class="viewcode-block" id="get_data_call_params"><a class="viewcode-back" href="../../../index.html#api.client.lib.get_data_call_params">[docs]</a><span class="k">def</span> <span class="nf">get_data_call_params</span><span class="p">(</span><span class="o">**</span><span class="n">selection</span><span class="p">):</span>
+<div class="viewcode-block" id="get_data_call_params"><a class="viewcode-back" href="../../../api.html#api.client.lib.get_data_call_params">[docs]</a><span class="k">def</span> <span class="nf">get_data_call_params</span><span class="p">(</span><span class="o">**</span><span class="n">selection</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Construct http request params from dict of entity selections.</span>
 
 <span class="sd">    For use with get_data_points().</span>
@@ -545,7 +580,7 @@
     <span class="k">return</span> <span class="n">params</span></div>
 
 
-<div class="viewcode-block" id="get_data_series"><a class="viewcode-back" href="../../../index.html#api.client.lib.get_data_series">[docs]</a><span class="k">def</span> <span class="nf">get_data_series</span><span class="p">(</span><span class="n">access_token</span><span class="p">,</span> <span class="n">api_host</span><span class="p">,</span> <span class="o">**</span><span class="n">selection</span><span class="p">):</span>
+<div class="viewcode-block" id="get_data_series"><a class="viewcode-back" href="../../../api.html#api.client.lib.get_data_series">[docs]</a><span class="k">def</span> <span class="nf">get_data_series</span><span class="p">(</span><span class="n">access_token</span><span class="p">,</span> <span class="n">api_host</span><span class="p">,</span> <span class="o">**</span><span class="n">selection</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Get available data series for the given selections.</span>
 
 <span class="sd">    https://github.com/gro-intelligence/api-client/wiki/Data-Series-Definition</span>
@@ -581,7 +616,7 @@
         <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="n">resp</span><span class="o">.</span><span class="n">text</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="rank_series_by_source"><a class="viewcode-back" href="../../../index.html#api.client.lib.rank_series_by_source">[docs]</a><span class="k">def</span> <span class="nf">rank_series_by_source</span><span class="p">(</span><span class="n">access_token</span><span class="p">,</span> <span class="n">api_host</span><span class="p">,</span> <span class="n">series_list</span><span class="p">):</span>
+<div class="viewcode-block" id="rank_series_by_source"><a class="viewcode-back" href="../../../api.html#api.client.lib.rank_series_by_source">[docs]</a><span class="k">def</span> <span class="nf">rank_series_by_source</span><span class="p">(</span><span class="n">access_token</span><span class="p">,</span> <span class="n">api_host</span><span class="p">,</span> <span class="n">series_list</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Given a list of series, return them in source-ranked order.</span>
 
 <span class="sd">    If there are multiple sources for the same selection, the prefered source</span>
@@ -621,7 +656,7 @@
             <span class="k">yield</span> <span class="n">series_with_source</span></div>
 
 
-<div class="viewcode-block" id="format_crop_calendar_response"><a class="viewcode-back" href="../../../index.html#api.client.lib.format_crop_calendar_response">[docs]</a><span class="k">def</span> <span class="nf">format_crop_calendar_response</span><span class="p">(</span><span class="n">resp</span><span class="p">):</span>
+<div class="viewcode-block" id="format_crop_calendar_response"><a class="viewcode-back" href="../../../api.html#api.client.lib.format_crop_calendar_response">[docs]</a><span class="k">def</span> <span class="nf">format_crop_calendar_response</span><span class="p">(</span><span class="n">resp</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Make cropcalendar output a format similar to get_data_points().</span>
 
 <span class="sd">    &gt;&gt;&gt; format_crop_calendar_response([</span>
@@ -729,7 +764,7 @@
     <span class="k">return</span> <span class="n">points</span></div>
 
 
-<div class="viewcode-block" id="get_crop_calendar_data_points"><a class="viewcode-back" href="../../../index.html#api.client.lib.get_crop_calendar_data_points">[docs]</a><span class="k">def</span> <span class="nf">get_crop_calendar_data_points</span><span class="p">(</span><span class="n">access_token</span><span class="p">,</span> <span class="n">api_host</span><span class="p">,</span> <span class="o">**</span><span class="n">selection</span><span class="p">):</span>
+<div class="viewcode-block" id="get_crop_calendar_data_points"><a class="viewcode-back" href="../../../api.html#api.client.lib.get_crop_calendar_data_points">[docs]</a><span class="k">def</span> <span class="nf">get_crop_calendar_data_points</span><span class="p">(</span><span class="n">access_token</span><span class="p">,</span> <span class="n">api_host</span><span class="p">,</span> <span class="o">**</span><span class="n">selection</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Get crop calendar data.</span>
 
 <span class="sd">    Has different input/output from the regular /v2/data call, so this</span>
@@ -756,7 +791,7 @@
     <span class="k">return</span> <span class="n">format_crop_calendar_response</span><span class="p">(</span><span class="n">resp</span><span class="o">.</span><span class="n">json</span><span class="p">())</span></div>
 
 
-<div class="viewcode-block" id="get_data_points"><a class="viewcode-back" href="../../../index.html#api.client.lib.get_data_points">[docs]</a><span class="k">def</span> <span class="nf">get_data_points</span><span class="p">(</span><span class="n">access_token</span><span class="p">,</span> <span class="n">api_host</span><span class="p">,</span> <span class="o">**</span><span class="n">selection</span><span class="p">):</span>
+<div class="viewcode-block" id="get_data_points"><a class="viewcode-back" href="../../../api.html#api.client.lib.get_data_points">[docs]</a><span class="k">def</span> <span class="nf">get_data_points</span><span class="p">(</span><span class="n">access_token</span><span class="p">,</span> <span class="n">api_host</span><span class="p">,</span> <span class="o">**</span><span class="n">selection</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Get all the data points for a given selection.</span>
 
 <span class="sd">    https://github.com/gro-intelligence/api-client/wiki/Data-Point-Definition</span>
@@ -796,7 +831,7 @@
     <span class="k">return</span> <span class="n">resp</span><span class="o">.</span><span class="n">json</span><span class="p">()</span></div>
 
 <span class="nd">@memoize</span><span class="p">(</span><span class="n">maxsize</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
-<div class="viewcode-block" id="universal_search"><a class="viewcode-back" href="../../../index.html#api.client.lib.universal_search">[docs]</a><span class="k">def</span> <span class="nf">universal_search</span><span class="p">(</span><span class="n">access_token</span><span class="p">,</span> <span class="n">api_host</span><span class="p">,</span> <span class="n">search_terms</span><span class="p">):</span>
+<div class="viewcode-block" id="universal_search"><a class="viewcode-back" href="../../../api.html#api.client.lib.universal_search">[docs]</a><span class="k">def</span> <span class="nf">universal_search</span><span class="p">(</span><span class="n">access_token</span><span class="p">,</span> <span class="n">api_host</span><span class="p">,</span> <span class="n">search_terms</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Search across all entity types for the given terms.</span>
 
 <span class="sd">    Parameters</span>
@@ -818,7 +853,7 @@
     <span class="k">return</span> <span class="n">resp</span><span class="o">.</span><span class="n">json</span><span class="p">()</span></div>
 
 <span class="nd">@memoize</span><span class="p">(</span><span class="n">maxsize</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
-<div class="viewcode-block" id="search"><a class="viewcode-back" href="../../../index.html#api.client.lib.search">[docs]</a><span class="k">def</span> <span class="nf">search</span><span class="p">(</span><span class="n">access_token</span><span class="p">,</span> <span class="n">api_host</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">,</span> <span class="n">search_terms</span><span class="p">):</span>
+<div class="viewcode-block" id="search"><a class="viewcode-back" href="../../../api.html#api.client.lib.search">[docs]</a><span class="k">def</span> <span class="nf">search</span><span class="p">(</span><span class="n">access_token</span><span class="p">,</span> <span class="n">api_host</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">,</span> <span class="n">search_terms</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Search for the given search term. Better matches appear first.</span>
 
 <span class="sd">    Parameters</span>
@@ -841,7 +876,7 @@
     <span class="k">return</span> <span class="n">resp</span><span class="o">.</span><span class="n">json</span><span class="p">()</span></div>
 
 
-<div class="viewcode-block" id="search_and_lookup"><a class="viewcode-back" href="../../../index.html#api.client.lib.search_and_lookup">[docs]</a><span class="k">def</span> <span class="nf">search_and_lookup</span><span class="p">(</span><span class="n">access_token</span><span class="p">,</span> <span class="n">api_host</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">,</span> <span class="n">search_terms</span><span class="p">,</span> <span class="n">num_results</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
+<div class="viewcode-block" id="search_and_lookup"><a class="viewcode-back" href="../../../api.html#api.client.lib.search_and_lookup">[docs]</a><span class="k">def</span> <span class="nf">search_and_lookup</span><span class="p">(</span><span class="n">access_token</span><span class="p">,</span> <span class="n">api_host</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">,</span> <span class="n">search_terms</span><span class="p">,</span> <span class="n">num_results</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Search for the given search terms and look up their details.</span>
 
 <span class="sd">    For each result, yield a dict of the entity and it&#39;s properties:</span>
@@ -876,7 +911,7 @@
         <span class="k">yield</span> <span class="n">lookup</span><span class="p">(</span><span class="n">access_token</span><span class="p">,</span> <span class="n">api_host</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">,</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">])</span></div>
 
 
-<div class="viewcode-block" id="lookup_belongs"><a class="viewcode-back" href="../../../index.html#api.client.lib.lookup_belongs">[docs]</a><span class="k">def</span> <span class="nf">lookup_belongs</span><span class="p">(</span><span class="n">access_token</span><span class="p">,</span> <span class="n">api_host</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">,</span> <span class="n">entity_id</span><span class="p">):</span>
+<div class="viewcode-block" id="lookup_belongs"><a class="viewcode-back" href="../../../api.html#api.client.lib.lookup_belongs">[docs]</a><span class="k">def</span> <span class="nf">lookup_belongs</span><span class="p">(</span><span class="n">access_token</span><span class="p">,</span> <span class="n">api_host</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">,</span> <span class="n">entity_id</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Look up details of entities containing the given entity.</span>
 
 <span class="sd">    Parameters</span>
@@ -909,7 +944,7 @@
         <span class="k">yield</span> <span class="n">lookup</span><span class="p">(</span><span class="n">access_token</span><span class="p">,</span> <span class="n">api_host</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">,</span> <span class="n">parent_entity_id</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="get_geo_centre"><a class="viewcode-back" href="../../../index.html#api.client.lib.get_geo_centre">[docs]</a><span class="k">def</span> <span class="nf">get_geo_centre</span><span class="p">(</span><span class="n">access_token</span><span class="p">,</span> <span class="n">api_host</span><span class="p">,</span> <span class="n">region_id</span><span class="p">):</span>
+<div class="viewcode-block" id="get_geo_centre"><a class="viewcode-back" href="../../../api.html#api.client.lib.get_geo_centre">[docs]</a><span class="k">def</span> <span class="nf">get_geo_centre</span><span class="p">(</span><span class="n">access_token</span><span class="p">,</span> <span class="n">api_host</span><span class="p">,</span> <span class="n">region_id</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Given a region ID, return the geographic centre in degrees lat/lon.</span>
 
 <span class="sd">    Parameters</span>
@@ -932,7 +967,7 @@
     <span class="k">return</span> <span class="n">resp</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s1">&#39;data&#39;</span><span class="p">]</span></div>
 
 <span class="nd">@memoize</span><span class="p">(</span><span class="n">maxsize</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
-<div class="viewcode-block" id="get_geojson"><a class="viewcode-back" href="../../../index.html#api.client.lib.get_geojson">[docs]</a><span class="k">def</span> <span class="nf">get_geojson</span><span class="p">(</span><span class="n">access_token</span><span class="p">,</span> <span class="n">api_host</span><span class="p">,</span> <span class="n">region_id</span><span class="p">):</span>
+<div class="viewcode-block" id="get_geojson"><a class="viewcode-back" href="../../../api.html#api.client.lib.get_geojson">[docs]</a><span class="k">def</span> <span class="nf">get_geojson</span><span class="p">(</span><span class="n">access_token</span><span class="p">,</span> <span class="n">api_host</span><span class="p">,</span> <span class="n">region_id</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Given a region ID, return a geojson shape information</span>
 
 <span class="sd">    Parameters</span>
@@ -958,7 +993,7 @@
     <span class="k">return</span> <span class="kc">None</span></div>
 
 
-<div class="viewcode-block" id="get_descendant_regions"><a class="viewcode-back" href="../../../index.html#api.client.lib.get_descendant_regions">[docs]</a><span class="k">def</span> <span class="nf">get_descendant_regions</span><span class="p">(</span><span class="n">access_token</span><span class="p">,</span> <span class="n">api_host</span><span class="p">,</span> <span class="n">region_id</span><span class="p">,</span>
+<div class="viewcode-block" id="get_descendant_regions"><a class="viewcode-back" href="../../../api.html#api.client.lib.get_descendant_regions">[docs]</a><span class="k">def</span> <span class="nf">get_descendant_regions</span><span class="p">(</span><span class="n">access_token</span><span class="p">,</span> <span class="n">api_host</span><span class="p">,</span> <span class="n">region_id</span><span class="p">,</span>
                            <span class="n">descendant_level</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Look up details of regions of the given level contained by a region.</span>
 

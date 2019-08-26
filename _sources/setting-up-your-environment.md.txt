@@ -56,13 +56,13 @@ Once you have API access enabled for your account, you may retrieve your token i
 #### Option 1: Using the Web App (Recommended)
 
 1. Log in to your Gro account at http://app.gro-intelligence.com and open your Account menu using the button on the bottom left of the Gro dashboard (see image below).
-!(../media/user-profile-annotated.png)
+![user-profile-annotated.png](./_images/user-profile-annotated.png)
 
 2. In the Account menu, select the API tab (see below).
-!(../media/profile-tab-annotated.png)
+![profile-tab-annotated.png](./_images/profile-tab-annotated.png)
 
 3. Select the text of the token and copy it to your clipboard, or use the "copy to clipboard" button (see below).
-!(../media/api-tab-annotated.png)
+![api-tab-annotated.png](./_images/api-tab-annotated.png)
 
 #### Option 2: Using the gro_client Command Line Interface
 
@@ -100,7 +100,7 @@ There are two ways you can invalidate your current authorization token and creat
 If you have your authentication token saved, performing either of these two actions will cause any applications using the old token to cease being able to contact the Gro API. You will need to follow the instructions in Section 1 to retrieve your new token and update any such applications accordingly.
 To regenerate your authentication token, open the API tab in your Account menu as in Section 1.1, but instead of copying the authentication token, press the "Regenerate Token" button (see below). A prompt will appear to warn that any applications using the old token will need to be updated and to confirm your intent.
 
-!(../media/regenerate-token.png)
+![regenerate-token.png](./_images/regenerate-token.png)
 
 ### Saving your token as an environment variable
 

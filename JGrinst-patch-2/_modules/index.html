@@ -40,7 +40,7 @@
     
 
   
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/custom-theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
   <link rel="stylesheet" href="../_static/banner.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
@@ -61,6 +61,9 @@
             <a href="../index.html" class="icon icon-home"> Gro API Client
           
 
+          
+            
+            <img src="../_static/logo.jpg" class="logo" alt="Logo"/>
           
           </a>
 
@@ -88,8 +91,96 @@
               
             
             
-              <!-- Local TOC -->
-              <div class="local-toc"></div>
+              <p class="caption"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../setting-up-your-environment.html">Setting Up Your Environment</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../setting-up-your-environment.html#system-prerequisites">System Prerequisites</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../setting-up-your-environment.html#macos-and-linux">MacOS and Linux</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../setting-up-your-environment.html#windows">Windows</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../setting-up-your-environment.html#python">Python</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../setting-up-your-environment.html#installing-gro-packages">Installing Gro Packages</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../setting-up-your-environment.html#authentication-token">Authentication Token</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../setting-up-your-environment.html#retrieving-a-token">Retrieving a token</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../setting-up-your-environment.html#option-1-using-the-web-app-recommended">Option 1: Using the Web App (Recommended)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../setting-up-your-environment.html#option-2-using-the-gro-client-command-line-interface">Option 2: Using the gro_client Command Line Interface</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../setting-up-your-environment.html#option-3-using-the-get-access-token-function">Option 3: Using the <code class="docutils literal"><span class="pre">get_access_token()</span></code> Function</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../setting-up-your-environment.html#expiring-regenerating-tokens">Expiring/Regenerating Tokens</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../setting-up-your-environment.html#saving-your-token-as-an-environment-variable">Saving your token as an environment variable</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../getting-started.html">Getting Started</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../getting-started.html#examples">Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../getting-started.html#discovering-data">Discovering Data</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../getting-started.html#code-snippets">Code Snippets</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../getting-started.html#search">Search</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../getting-started.html#get-data-series">Get data series</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../getting-started.html#lookup-contains">Lookup contains</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../getting-started.html#get-descendants">Get Descendants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../getting-started.html#lookup-belongs">Lookup belongs</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../getting-started.html#retrieving-data">Retrieving Data</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../getting-started.html#get-data-points">Get data points</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../getting-started.html#data-frame">Data frame</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../getting-started.html#show-revisions">Show revisions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../getting-started.html#understanding-data-responses">Understanding Data Responses</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../getting-started.html#look-up">Look up</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../gro-data-key-concepts.html">Gro Data Key Concepts</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../gro-data-key-concepts.html#gro-ontology">Gro Ontology</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../gro-data-key-concepts.html#entity-fields">Entity fields</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../gro-data-key-concepts.html#entity-relationships-i-e-contains">Entity Relationships i.e. contains</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../gro-data-key-concepts.html#special-properties-for-regions">Special Properties for regions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../gro-data-key-concepts.html#data-series-definition">Data Series Definition</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gro-data-key-concepts.html#data-point-definition">Data Point Definition</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api.html">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#module-api.client.lib">api.client.lib</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#api-client-client">api.client.Client</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#api-client-gro-client">api.client.gro_client</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#api-client-crop-model">api.client.crop_model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#api-client-batch-client">api.client.batch_client</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../faq.html">FAQ</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../faq.html#exploring-what-s-available">Exploring What&#8216;s Available</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../faq.html#q-why-is-it-that-when-i-use-client-search-to-find-metrics-items-regions-i-m-interested-in-sometimes-client-get-data-series-doesn-t-have-any-data-for-those-metrics-items-regions">Q: Why is it that when I use client.search() to find metrics/items/regions I&#8216;m interested in, sometimes client.get_data_series() doesn&#8216;t have any data for those metrics/items/regions?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../faq.html#q-what-does-sourcelag-mean-when-i-use-client-lookup-to-inspect-a-source-s-details">Q: What does &#8216;sourceLag&#8216; mean when I use client.lookup() to inspect a source&#8216;s details?</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../faq.html#data-retrieval">Data Retrieval</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../faq.html#q-i-specified-an-end-date-when-calling-get-data-points-but-i-am-getting-points-with-other-end-dates">Q: I specified an end_date when calling get_data_points(), but I am getting points with other end_dates:</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../faq.html#account">Account</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../faq.html#q-i-tried-using-my-gro-username-and-login-but-am-getting-a-401-unauthorized-error">Q: I tried using my Gro username and login but am getting a 401 Unauthorized error</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../faq.html#gro-models">Gro Models</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../faq.html#q-do-your-predictive-models-only-run-during-the-crop-season">Q: Do your predictive models only run during the crop season?</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
             
           
         </div>
@@ -109,7 +200,7 @@
 
       <div class="wy-nav-content">
         
-        <div class="rst-content">
+        <div class="rst-content style-external-links">
         
           
 
@@ -149,8 +240,12 @@
            <div itemprop="articleBody">
             
   <h1>All modules for which code is available</h1>
-<ul><li><a href="api/client/lib.html">api.client.lib</a></li>
-</ul>
+<ul><li><a href="api/client.html">api.client</a></li>
+<ul><li><a href="api/client/batch_client.html">api.client.batch_client</a></li>
+<li><a href="api/client/crop_model.html">api.client.crop_model</a></li>
+<li><a href="api/client/gro_client.html">api.client.gro_client</a></li>
+<li><a href="api/client/lib.html">api.client.lib</a></li>
+</ul></ul>
 
            </div>
            
