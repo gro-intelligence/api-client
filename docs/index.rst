@@ -4,7 +4,7 @@ Gro API Client
 See the sidebar to get started.
 
 .. toctree::
-    :titlesonly:
+    :maxdepth: 0
 
     Home <index>
 
