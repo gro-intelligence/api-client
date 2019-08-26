@@ -79,3 +79,5 @@ master_doc = 'index'
 
 # Do not delete these files:
 scv_grm_exclude = ('README.md', '.gitignore', '.nojekyll', 'CNAME')
+scv_show_banner = True
+scv_banner_main_ref = 'development'
