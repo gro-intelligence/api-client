@@ -6,11 +6,14 @@ python:
 
 build:
   ci:
-    - pip install -r requirements.txt
-    - pip install -r test-requirements.txt
+    - shippable_retry pip install .[test]
     # Create folders for test and code coverage
     - mkdir -p shippable/testresults
     - mkdir -p shippable/codecoverage
     # Run test and code coverage and output results to the right folder
     - pytest --junitxml=shippable/testresults/nosetests.xml
     - pytest --cov=api --cov-report=xml:shippable/codecoverage/coverage.xml
+  post_ci:
+    - if [ "$SHIPPABLE_PYTHON_VERSION" == "2.7" ]; then shippable_retry pip install .[docs]; fi
+    # TODO: swap CLEWS-15766 for development
+    - if [ "$SHIPPABLE_PYTHON_VERSION" == "2.7" ]; then sphinx-versioning push -r CLEWS-15766 docs gh-pages .; fi

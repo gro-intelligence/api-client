@@ -1,0 +1,6 @@
+Shapely
+matplotlib
+geopandas
+ipython
+scikit-learn
+jupyter

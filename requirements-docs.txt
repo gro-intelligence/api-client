@@ -1,0 +1,5 @@
+sphinx==1.5.6
+recommonmark
+sphinx_rtd_theme
+sphinxcontrib-versioning
+sphinxcontrib-fulltoc
