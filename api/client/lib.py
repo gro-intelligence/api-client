@@ -181,11 +181,14 @@ def get_available(access_token, api_host, entity_type):
     Returns
     -------
     data : list of dicts
-        ex: [
-            { 'id': 0, 'contains': [1, 2, 3], 'name': 'World', 'level': 1},
-            { 'id': 1, 'contains': [4, 5, 6], 'name': 'Asia', 'level': 2},
-            ...
-        ]
+        
+        Example:
+        
+        ```
+        [ { 'id': 0, 'contains': [1, 2, 3], 'name': 'World', 'level': 1},
+          { 'id': 1, 'contains': [4, 5, 6], 'name': 'Asia', 'level': 2},
+          ... ]
+        ```
 
     """
     url = '/'.join(['https:', '', api_host, 'v2', entity_type])
@@ -205,21 +208,26 @@ def list_available(access_token, api_host, selected_entities):
     access_token : string
     api_host : string
     selected_entities : dict
-        ex: { 'metric_id': 123, 'item_id': 456, 'source_id': 7 }
+        
+        Example: `{ 'metric_id': 123, 'item_id': 456, 'source_id': 7 }`
+        
         Keys may include: metric_id, item_id, region_id, partner_region_id,
         source_id, frequency_id
 
     Returns
     -------
     list of dicts
-        ex: [
-            {   'metric_id': 11078, 'metric_name': 'Export Value (currency)',
-                'item_id': 274, 'item_name': 'Corn',
-                'region_id': 1215, 'region_name': 'United States',
-                'source_id': 15, 'source_name': 'USDA GATS' },
-            { ... },
-            ...
-        ]
+
+        Example:
+
+        ```
+        [ { 'metric_id': 11078, 'metric_name': 'Export Value (currency)',
+            'item_id': 274, 'item_name': 'Corn',
+            'region_id': 1215, 'region_name': 'United States',
+            'source_id': 15, 'source_name': 'USDA GATS' },
+          { ... },
+        ... ]
+        ```
 
     """
     url = '/'.join(['https:', '', api_host, 'v2/entities/list'])
@@ -405,14 +413,18 @@ def get_data_series(access_token, api_host, **selection):
     Returns
     -------
     list of dicts
-        ex: [{  'metric_id': 2020032, 'metric_name': 'Seed Use',
-                'item_id': 274, 'item_name': 'Corn',
-                'region_id': 1215, 'region_name': 'United States',
-                'source_id': 24, 'source_name': 'USDA FEEDGRAINS',
-                'frequency_id': 7,
-                'start_date': '1975-03-01T00:00:00.000Z',
-                'end_date': '2018-05-31T00:00:00.000Z'
-            }, { ... }, ... ]
+        
+        Example:
+        
+        ```
+        [{ 'metric_id': 2020032, 'metric_name': 'Seed Use',
+           'item_id': 274, 'item_name': 'Corn',
+           'region_id': 1215, 'region_name': 'United States',
+           'source_id': 24, 'source_name': 'USDA FEEDGRAINS',
+           'frequency_id': 7,
+           'start_date': '1975-03-01T00:00:00.000Z', 'end_date': '2018-05-31T00:00:00.000Z'
+        }, { ... }, ... ]
+        ```
 
     """
     url = '/'.join(['https:', '', api_host, 'v2/data_series/list'])
@@ -615,7 +627,11 @@ def get_data_points(access_token, api_host, **selection):
     Returns
     -------
     list of dicts
-        Ex: [ {
+
+        Example:
+        
+        ```
+        [ {
             "start_date": "2000-01-01T00:00:00.000Z",
             "end_date": "2000-12-31T00:00:00.000Z",
             "value": 251854000,
@@ -627,6 +643,7 @@ def get_data_points(access_token, api_host, **selection):
             "frequency_id": 9,
             "unit_id": 14
         }, ...]
+        ```
 
     """
     if(selection['metric_id'] == CROP_CALENDAR_METRIC_ID):
@@ -652,7 +669,8 @@ def universal_search(access_token, api_host, search_terms):
     Returns
     -------
     list of [id, entity_type] pairs
-        Ex: [[5604, 'item'], [10204, 'item'], [410032, 'metric'], ....]
+        
+        Example: `[[5604, 'item'], [10204, 'item'], [410032, 'metric'], ....]`
 
     """
     url_pieces = ['https:', '', api_host, 'v2/search']
@@ -676,7 +694,8 @@ def search(access_token, api_host, entity_type, search_terms):
     Returns
     -------
     list of dicts
-        Ex: [{'id': 5604}, {'id': 10204}, {'id': 10210}, ....]
+        
+        Example: `[{'id': 5604}, {'id': 10204}, {'id': 10210}, ....]`
 
     """
     url = '/'.join(['https:', '', api_host, 'v2/search', entity_type])
@@ -710,8 +729,10 @@ def search_and_lookup(access_token, api_host, entity_type, search_terms, num_res
     dict
         Result from search() passed to lookup() to get additional details. For example:
 
+        ```
         { 'id': 274, 'contains': [779, 780, ...] 'name': 'Corn',
           'definition': 'The seeds of the widely cultivated...' }
+        ```
 
         See output of lookup(). Note that as with search(), the first result is
         the best match for the given search term(s).
@@ -741,10 +762,12 @@ def lookup_belongs(access_token, api_host, entity_type, entity_id):
         For example: For the region 'United States', one yielded result will be for
         'North America.' The format of which matches the output of lookup():
 
+        ```
         { 'id': 15,
           'contains': [ 1008, 1009, 1012, 1215, ... ],
           'name': 'North America',
           'level': 2 }
+        ```
 
     """
     url = '/'.join(['https:', '', api_host, 'v2', entity_type, 'belongs-to'])
@@ -767,8 +790,13 @@ def get_geo_centre(access_token, api_host, region_id):
     Returns
     -------
     list of dicts
-        Ex: [{ 'centre': [ 45.7228, -112.996 ],
-               'regionId': 1215, 'regionName': 'United States' }]
+
+        Example:
+
+        ```
+        [{ 'centre': [ 45.7228, -112.996 ],
+            'regionId': 1215, 'regionName': 'United States' }]
+        ```
 
     """
     url = '/'.join(['https:', '', api_host, 'v2/geocentres?regionIds=' +
@@ -827,7 +855,11 @@ def get_descendant_regions(access_token, api_host, region_id,
     Returns
     -------
     list of dicts
-        Ex: [{
+
+        Example:
+
+        ```
+        [{
             'id': 13100,
             'contains': [139839, 139857, ...],
             'name': 'Wisconsin',
@@ -838,6 +870,8 @@ def get_descendant_regions(access_token, api_host, region_id,
             'name': 'Wyoming',
             'level': 4
         }, ...]
+        ```
+
         See output of lookup()
 
     """
