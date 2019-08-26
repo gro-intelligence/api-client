@@ -40,7 +40,7 @@
     
 
   
-  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/custom-theme.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/banner.css" type="text/css" />
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -61,6 +61,9 @@
             <a href="../../../index.html" class="icon icon-home"> Gro API Client
           
 
+          
+            
+            <img src="../../../_static/logo.jpg" class="logo" alt="Logo"/>
           
           </a>
 
@@ -88,8 +91,40 @@
               
             
             
-              <!-- Local TOC -->
-              <div class="local-toc"></div>
+              <p class="caption"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../setting-up-your-environment.html">Setting Up Your Environment</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../setting-up-your-environment.html#system-prerequisites">System Prerequisites</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../setting-up-your-environment.html#python">Python</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../setting-up-your-environment.html#installing-gro-packages">Installing Gro Packages</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../setting-up-your-environment.html#authentication-token">Authentication Token</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../setting-up-your-environment.html#retrieving-a-token">Retrieving a token</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../setting-up-your-environment.html#option-1-using-the-web-app-recommended">Option 1: Using the Web App (Recommended)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../setting-up-your-environment.html#option-2-using-the-gro-client-command-line-interface">Option 2: Using the gro_client Command Line Interface</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../setting-up-your-environment.html#option-3-using-the-get-access-token-function">Option 3: Using the <code class="docutils literal"><span class="pre">get_access_token()</span></code> Function</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../setting-up-your-environment.html#expiring-regenerating-tokens">Expiring/Regenerating Tokens</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../setting-up-your-environment.html#saving-your-token-as-an-environment-variable">Saving your token as an environment variable</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../api.html">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../api.html#module-api.client.lib">api.client.lib</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api.html#api-client-client">api.client.Client</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api.html#api-client-gro-client">api.client.gro_client</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api.html#api-client-crop-model">api.client.crop_model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api.html#api-client-batch-client">api.client.batch_client</a></li>
+</ul>
+</li>
+</ul>
+
             
           
         </div>
@@ -109,7 +144,7 @@
 
       <div class="wy-nav-content">
         
-        <div class="rst-content">
+        <div class="rst-content style-external-links">
         
           
 
@@ -162,8 +197,8 @@
 <span class="kn">from</span> <span class="nn">api.client.gro_client</span> <span class="k">import</span> <span class="n">GroClient</span>
 
 
-<div class="viewcode-block" id="CropModel"><a class="viewcode-back" href="../../../index.html#api.client.crop_model.CropModel">[docs]</a><span class="k">class</span> <span class="nc">CropModel</span><span class="p">(</span><span class="n">GroClient</span><span class="p">):</span>
-<div class="viewcode-block" id="CropModel.compute_weights"><a class="viewcode-back" href="../../../index.html#api.client.crop_model.CropModel.compute_weights">[docs]</a>    <span class="k">def</span> <span class="nf">compute_weights</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">crop_name</span><span class="p">,</span> <span class="n">metric_name</span><span class="p">,</span> <span class="n">regions</span><span class="p">):</span>
+<div class="viewcode-block" id="CropModel"><a class="viewcode-back" href="../../../api.html#api.client.crop_model.CropModel">[docs]</a><span class="k">class</span> <span class="nc">CropModel</span><span class="p">(</span><span class="n">GroClient</span><span class="p">):</span>
+<div class="viewcode-block" id="CropModel.compute_weights"><a class="viewcode-back" href="../../../api.html#api.client.crop_model.CropModel.compute_weights">[docs]</a>    <span class="k">def</span> <span class="nf">compute_weights</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">crop_name</span><span class="p">,</span> <span class="n">metric_name</span><span class="p">,</span> <span class="n">regions</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Add the weighting data series to this model. Compute the weights,</span>
 <span class="sd">        which is the mean value for each region in regions, normalized</span>
 <span class="sd">        to add up to 1.0 across regions. Returns a list of weights</span>
@@ -193,7 +228,7 @@
         <span class="n">total</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">fsum</span><span class="p">([</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">means</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">math</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">x</span><span class="p">)])</span>
         <span class="k">return</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">mean</span><span class="p">)</span><span class="o">/</span><span class="n">total</span> <span class="k">for</span> <span class="n">mean</span> <span class="ow">in</span> <span class="n">means</span><span class="p">]</span></div>
 
-<div class="viewcode-block" id="CropModel.compute_crop_weighted_series"><a class="viewcode-back" href="../../../index.html#api.client.crop_model.CropModel.compute_crop_weighted_series">[docs]</a>    <span class="k">def</span> <span class="nf">compute_crop_weighted_series</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+<div class="viewcode-block" id="CropModel.compute_crop_weighted_series"><a class="viewcode-back" href="../../../api.html#api.client.crop_model.CropModel.compute_crop_weighted_series">[docs]</a>    <span class="k">def</span> <span class="nf">compute_crop_weighted_series</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                                      <span class="n">weighting_crop_name</span><span class="p">,</span> <span class="n">weighting_metric_name</span><span class="p">,</span>
                                      <span class="n">item_name</span><span class="p">,</span> <span class="n">metric_name</span><span class="p">,</span> <span class="n">regions</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Add the data series for the given item_name and metric_name to this</span>

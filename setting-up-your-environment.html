@@ -40,11 +40,13 @@
     
 
   
-  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/custom-theme.css" type="text/css" />
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
   <link rel="stylesheet" href="_static/banner.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
-    <link rel="search" title="Search" href="search.html" /> 
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="API Reference" href="api.html" />
+    <link rel="prev" title="Gro API Client" href="index.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -61,6 +63,9 @@
             <a href="index.html" class="icon icon-home"> Gro API Client
           
 
+          
+            
+            <img src="_static/logo.jpg" class="logo" alt="Logo"/>
           
           </a>
 
@@ -88,29 +93,40 @@
               
             
             
-              <!-- Local TOC -->
-              <div class="local-toc"><ul>
-<li><a class="reference internal" href="#">Setting Up Your Environment</a><ul>
-<li><a class="reference internal" href="#system-prerequisites">System Prerequisites</a><ul>
-<li><a class="reference internal" href="#python">Python</a></li>
-<li><a class="reference internal" href="#installing-gro-packages">Installing Gro Packages</a></li>
+              <p class="caption"><span class="caption-text">Getting Started</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Setting Up Your Environment</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#system-prerequisites">System Prerequisites</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#python">Python</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#installing-gro-packages">Installing Gro Packages</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#authentication-token">Authentication Token</a><ul>
-<li><a class="reference internal" href="#retrieving-a-token">Retrieving a token</a><ul>
-<li><a class="reference internal" href="#option-1-using-the-web-app-recommended">Option 1: Using the Web App (Recommended)</a></li>
-<li><a class="reference internal" href="#option-2-using-the-gro-client-command-line-interface">Option 2: Using the gro_client Command Line Interface</a></li>
-<li><a class="reference internal" href="#option-3-using-the-get-access-token-function">Option 3: Using the <code class="docutils literal"><span class="pre">get_access_token()</span></code> Function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#authentication-token">Authentication Token</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#retrieving-a-token">Retrieving a token</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#option-1-using-the-web-app-recommended">Option 1: Using the Web App (Recommended)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#option-2-using-the-gro-client-command-line-interface">Option 2: Using the gro_client Command Line Interface</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#option-3-using-the-get-access-token-function">Option 3: Using the <code class="docutils literal"><span class="pre">get_access_token()</span></code> Function</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#expiring-regenerating-tokens">Expiring/Regenerating Tokens</a></li>
-<li><a class="reference internal" href="#saving-your-token-as-an-environment-variable">Saving your token as an environment variable</a></li>
-</ul>
-</li>
+<li class="toctree-l3"><a class="reference internal" href="#expiring-regenerating-tokens">Expiring/Regenerating Tokens</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#saving-your-token-as-an-environment-variable">Saving your token as an environment variable</a></li>
 </ul>
 </li>
 </ul>
-</div>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api.html#module-api.client.lib">api.client.lib</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#api-client-client">api.client.Client</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#api-client-gro-client">api.client.gro_client</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#api-client-crop-model">api.client.crop_model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#api-client-batch-client">api.client.batch_client</a></li>
+</ul>
+</li>
+</ul>
+
             
           
         </div>
@@ -130,7 +146,7 @@
 
       <div class="wy-nav-content">
         
-        <div class="rst-content">
+        <div class="rst-content style-external-links">
         
           
 
@@ -167,6 +183,15 @@
     
   </ul>
 
+  
+  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
+      
+        <a href="api.html" class="btn btn-neutral float-right" title="API Reference" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="index.html" class="btn btn-neutral float-left" title="Gro API Client" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+  </div>
   
   <hr/>
 </div>
@@ -230,11 +255,11 @@ Once you have API access enabled for your account, you may retrieve your token i
 <h4>Option 1: Using the Web App (Recommended)<a class="headerlink" href="#option-1-using-the-web-app-recommended" title="Permalink to this headline">¶</a></h4>
 <ol class="simple">
 <li>Log in to your Gro account at http://app.gro-intelligence.com and open your Account menu using the button on the bottom left of the Gro dashboard (see image below).
-!(../media/user-profile-annotated.png)</li>
+<img alt="user-profile-annotated.png" src="_images/user-profile-annotated.png" /></li>
 <li>In the Account menu, select the API tab (see below).
-!(../media/profile-tab-annotated.png)</li>
+<img alt="profile-tab-annotated.png" src="_images/profile-tab-annotated.png" /></li>
 <li>Select the text of the token and copy it to your clipboard, or use the &#8220;copy to clipboard&#8220; button (see below).
-!(../media/api-tab-annotated.png)</li>
+<img alt="api-tab-annotated.png" src="_images/api-tab-annotated.png" /></li>
 </ol>
 </div>
 <div class="section" id="option-2-using-the-gro-client-command-line-interface">
@@ -267,7 +292,7 @@ ACCESS_TOKEN = get_access_token(API_HOST, EMAIL, PASSWORD)
 If you have your authentication token saved, performing either of these two actions will cause any applications using the old token to cease being able to contact the Gro API. You will need to follow the instructions in Section 1 to retrieve your new token and update any such applications accordingly.
 To regenerate your authentication token, open the API tab in your Account menu as in Section 1.1, but instead of copying the authentication token, press the &#8220;Regenerate Token&#8220; button (see below). A prompt will appear to warn that any applications using the old token will need to be updated and to confirm your intent.</li>
 </ol>
-<p>!(../media/regenerate-token.png)</p>
+<p><img alt="regenerate-token.png" src="_images/regenerate-token.png" /></p>
 </div>
 <div class="section" id="saving-your-token-as-an-environment-variable">
 <h3>Saving your token as an environment variable<a class="headerlink" href="#saving-your-token-as-an-environment-variable" title="Permalink to this headline">¶</a></h3>
@@ -281,6 +306,15 @@ To regenerate your authentication token, open the API tab in your Account menu a
            
           </div>
           <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="api.html" class="btn btn-neutral float-right" title="API Reference" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="index.html" class="btn btn-neutral float-left" title="Gro API Client" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
   
 
   <hr/>

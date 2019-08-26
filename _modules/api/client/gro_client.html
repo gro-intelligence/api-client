@@ -40,7 +40,7 @@
     
 
   
-  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/custom-theme.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/banner.css" type="text/css" />
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -61,6 +61,9 @@
             <a href="../../../index.html" class="icon icon-home"> Gro API Client
           
 
+          
+            
+            <img src="../../../_static/logo.jpg" class="logo" alt="Logo"/>
           
           </a>
 
@@ -88,8 +91,40 @@
               
             
             
-              <!-- Local TOC -->
-              <div class="local-toc"></div>
+              <p class="caption"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../setting-up-your-environment.html">Setting Up Your Environment</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../setting-up-your-environment.html#system-prerequisites">System Prerequisites</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../setting-up-your-environment.html#python">Python</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../setting-up-your-environment.html#installing-gro-packages">Installing Gro Packages</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../setting-up-your-environment.html#authentication-token">Authentication Token</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../setting-up-your-environment.html#retrieving-a-token">Retrieving a token</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../setting-up-your-environment.html#option-1-using-the-web-app-recommended">Option 1: Using the Web App (Recommended)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../setting-up-your-environment.html#option-2-using-the-gro-client-command-line-interface">Option 2: Using the gro_client Command Line Interface</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../setting-up-your-environment.html#option-3-using-the-get-access-token-function">Option 3: Using the <code class="docutils literal"><span class="pre">get_access_token()</span></code> Function</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../setting-up-your-environment.html#expiring-regenerating-tokens">Expiring/Regenerating Tokens</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../setting-up-your-environment.html#saving-your-token-as-an-environment-variable">Saving your token as an environment variable</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../api.html">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../api.html#module-api.client.lib">api.client.lib</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api.html#api-client-client">api.client.Client</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api.html#api-client-gro-client">api.client.gro_client</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api.html#api-client-crop-model">api.client.crop_model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api.html#api-client-batch-client">api.client.batch_client</a></li>
+</ul>
+</li>
+</ul>
+
             
           
         </div>
@@ -109,7 +144,7 @@
 
       <div class="wy-nav-content">
         
-        <div class="rst-content">
+        <div class="rst-content style-external-links">
         
           
 
@@ -178,7 +213,7 @@
                            <span class="s1">&#39;reporting_date&#39;</span><span class="p">,</span> <span class="s1">&#39;start_date&#39;</span><span class="p">,</span> <span class="s1">&#39;end_date&#39;</span><span class="p">]</span>
 
 
-<div class="viewcode-block" id="GroClient"><a class="viewcode-back" href="../../../index.html#api.client.gro_client.GroClient">[docs]</a><span class="k">class</span> <span class="nc">GroClient</span><span class="p">(</span><span class="n">Client</span><span class="p">):</span>
+<div class="viewcode-block" id="GroClient"><a class="viewcode-back" href="../../../api.html#api.client.gro_client.GroClient">[docs]</a><span class="k">class</span> <span class="nc">GroClient</span><span class="p">(</span><span class="n">Client</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;An extension of the Client class with extra convenience methods for some common operations.</span>
 
 <span class="sd">    Extra functionality includes:</span>
@@ -199,7 +234,7 @@
     <span class="c1">###</span>
     <span class="c1"># Finding, indexing and loading multiple data series into a data frame</span>
     <span class="c1">###</span>
-<div class="viewcode-block" id="GroClient.get_df"><a class="viewcode-back" href="../../../index.html#api.client.gro_client.GroClient.get_df">[docs]</a>    <span class="k">def</span> <span class="nf">get_df</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="GroClient.get_df"><a class="viewcode-back" href="../../../api.html#api.client.gro_client.GroClient.get_df">[docs]</a>    <span class="k">def</span> <span class="nf">get_df</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Get the content of all data series in a Pandas frame.&quot;&quot;&quot;</span>
         <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_series_queue</span><span class="p">:</span>
             <span class="n">data_series</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_series_queue</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
@@ -222,7 +257,7 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">_data_frame</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_frame</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">tmp</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s1">&#39;outer&#39;</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_frame</span></div>
 
-<div class="viewcode-block" id="GroClient.get_data_points"><a class="viewcode-back" href="../../../index.html#api.client.gro_client.GroClient.get_data_points">[docs]</a>    <span class="k">def</span> <span class="nf">get_data_points</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">selections</span><span class="p">):</span>
+<div class="viewcode-block" id="GroClient.get_data_points"><a class="viewcode-back" href="../../../api.html#api.client.gro_client.GroClient.get_data_points">[docs]</a>    <span class="k">def</span> <span class="nf">get_data_points</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">selections</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Extend the Client&#39;s get_data_points method to add unit conversion.</span>
 
 <span class="sd">        Parameters</span>
@@ -254,7 +289,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Added </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">data_series</span><span class="p">))</span>
         <span class="k">return</span>
 
-<div class="viewcode-block" id="GroClient.add_data_series"><a class="viewcode-back" href="../../../index.html#api.client.gro_client.GroClient.add_data_series">[docs]</a>    <span class="k">def</span> <span class="nf">add_data_series</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="GroClient.add_data_series"><a class="viewcode-back" href="../../../api.html#api.client.gro_client.GroClient.add_data_series">[docs]</a>    <span class="k">def</span> <span class="nf">add_data_series</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Search for entities matching the given names, find data series for</span>
 <span class="sd">        the given combination, and add them to this objects list of</span>
 <span class="sd">        series.&quot;&quot;&quot;</span>
@@ -288,7 +323,7 @@
     <span class="c1">###</span>
     <span class="c1"># Discovery shortcuts</span>
     <span class="c1">###</span>
-<div class="viewcode-block" id="GroClient.search_for_entity"><a class="viewcode-back" href="../../../index.html#api.client.gro_client.GroClient.search_for_entity">[docs]</a>    <span class="k">def</span> <span class="nf">search_for_entity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">,</span> <span class="n">keywords</span><span class="p">):</span>
+<div class="viewcode-block" id="GroClient.search_for_entity"><a class="viewcode-back" href="../../../api.html#api.client.gro_client.GroClient.search_for_entity">[docs]</a>    <span class="k">def</span> <span class="nf">search_for_entity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">,</span> <span class="n">keywords</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Returns the first result of entity_type (which is items, metrics or</span>
 <span class="sd">        regions) that matches the given keywords.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -309,7 +344,7 @@
     <span class="c1">###</span>
     <span class="c1"># Convenience methods that automatically fill in partial selections with random entities</span>
     <span class="c1">###</span>
-<div class="viewcode-block" id="GroClient.pick_random_entities"><a class="viewcode-back" href="../../../index.html#api.client.gro_client.GroClient.pick_random_entities">[docs]</a>    <span class="k">def</span> <span class="nf">pick_random_entities</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="GroClient.pick_random_entities"><a class="viewcode-back" href="../../../api.html#api.client.gro_client.GroClient.pick_random_entities">[docs]</a>    <span class="k">def</span> <span class="nf">pick_random_entities</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Pick a random item that has some data associated with it, and a</span>
 <span class="sd">        random metric and region pair for that item with data</span>
 <span class="sd">        available.</span>
@@ -326,7 +361,7 @@
         <span class="n">selected_entities</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">entities</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">selected_entities</span></div>
 
-<div class="viewcode-block" id="GroClient.pick_random_data_series"><a class="viewcode-back" href="../../../index.html#api.client.gro_client.GroClient.pick_random_data_series">[docs]</a>    <span class="k">def</span> <span class="nf">pick_random_data_series</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">selected_entities</span><span class="p">):</span>
+<div class="viewcode-block" id="GroClient.pick_random_data_series"><a class="viewcode-back" href="../../../api.html#api.client.gro_client.GroClient.pick_random_data_series">[docs]</a>    <span class="k">def</span> <span class="nf">pick_random_data_series</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">selected_entities</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Given a selection of tentities, pick a random available data series</span>
 <span class="sd">        the given selection of entities.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -338,7 +373,7 @@
         <span class="k">return</span> <span class="n">selected_data_series</span></div>
 
     <span class="c1"># TODO: rename function to &quot;write_...&quot; rather than &quot;print_...&quot;</span>
-<div class="viewcode-block" id="GroClient.print_one_data_series"><a class="viewcode-back" href="../../../index.html#api.client.gro_client.GroClient.print_one_data_series">[docs]</a>    <span class="k">def</span> <span class="nf">print_one_data_series</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_series</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
+<div class="viewcode-block" id="GroClient.print_one_data_series"><a class="viewcode-back" href="../../../api.html#api.client.gro_client.GroClient.print_one_data_series">[docs]</a>    <span class="k">def</span> <span class="nf">print_one_data_series</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_series</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Output a data series to a CSV file.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Using data series: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">data_series</span><span class="p">)))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Outputing to file: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">filename</span><span class="p">))</span>
@@ -348,7 +383,7 @@
                              <span class="n">point</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="n">point</span><span class="p">[</span><span class="s1">&#39;input_unit_scale&#39;</span><span class="p">],</span>
                              <span class="bp">self</span><span class="o">.</span><span class="n">lookup_unit_abbreviation</span><span class="p">(</span><span class="n">point</span><span class="p">[</span><span class="s1">&#39;input_unit_id&#39;</span><span class="p">])])</span></div>
 
-<div class="viewcode-block" id="GroClient.convert_unit"><a class="viewcode-back" href="../../../index.html#api.client.gro_client.GroClient.convert_unit">[docs]</a>    <span class="k">def</span> <span class="nf">convert_unit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">point</span><span class="p">,</span> <span class="n">target_unit_id</span><span class="p">):</span>
+<div class="viewcode-block" id="GroClient.convert_unit"><a class="viewcode-back" href="../../../api.html#api.client.gro_client.GroClient.convert_unit">[docs]</a>    <span class="k">def</span> <span class="nf">convert_unit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">point</span><span class="p">,</span> <span class="n">target_unit_id</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Convert the data point from one unit to another unit.</span>
 
 <span class="sd">        If original or target unit is non-convertible, throw an error.</span>
