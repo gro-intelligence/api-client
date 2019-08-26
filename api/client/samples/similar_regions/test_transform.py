@@ -3,6 +3,7 @@ import unittest
 from datetime import datetime
 from api.client.samples.similar_regions.transform import _fill_in_blank_days, FourierCoef
 
+
 class TransformTests(unittest.TestCase):
 
     def setUp(self):
@@ -21,8 +22,8 @@ class TransformTests(unittest.TestCase):
         start_datetime = datetime(2018, 9, 25)
 
         np.testing.assert_equal(_fill_in_blank_days(10, start_datetime, fake_pulled_dataset),
-                         np.array([3.0, 4.0, float('NaN'), 5.0, 6.0, float('NaN'),
-                          float('NaN'), float('NaN'), float('NaN'), float('NaN')]))
+                                np.array([3.0, 4.0, float('NaN'), 5.0, 6.0, float('NaN'),
+                                          float('NaN'), float('NaN'), float('NaN'), float('NaN')]))
 
         return
 

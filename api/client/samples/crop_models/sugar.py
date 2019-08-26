@@ -28,6 +28,7 @@ from api.client.crop_model import CropModel
 
 API_HOST = 'api.gro-intelligence.com'
 
+
 def main():
     parser = argparse.ArgumentParser(description="Gro api client")
     parser.add_argument("--user_email")

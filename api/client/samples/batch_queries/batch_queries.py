@@ -1,6 +1,7 @@
 import os
 from api.client.batch_client import BatchClient
 
+
 def main():
     # set up the Batch Client, same as normal Client
     """ API Config """
@@ -33,10 +34,11 @@ def main():
 
     # the output data is in the same order as the input queries. 
     for county_id, data in zip(mississippi_county_ids, output):
-        if len(data) > 0: # some counties are missing data
+        if len(data) > 0:  # some counties are missing data
             print("county_idx=%i produced %.0f tonnes of corn in 1998" % (county_id, data[0]["value"]))
         else:
             print("county_idx=%i has no data for 1998" % county_id)
 
+
 if __name__ == "__main__":
-        main()
+    main()

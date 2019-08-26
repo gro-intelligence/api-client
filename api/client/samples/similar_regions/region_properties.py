@@ -1,4 +1,4 @@
-### These are the data series we should use when doing a similar regions similarity computation.
+# These are the data series we should use when doing a similar regions similarity computation.
 
 region_properties = {
     "soil_moisture": {

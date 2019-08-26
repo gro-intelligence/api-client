@@ -77,6 +77,12 @@ html_static_path = ['_static', '_images']
 
 master_doc = 'index'
 
+# Autodoc settings:
+# =================
+napoleon_numpy_docstring = True
+
+# Sphinx Versioning build settings:
+# =================================
 # Do not delete these files:
 scv_grm_exclude = ('README.md', '.gitignore', '.nojekyll', 'CNAME')
 scv_show_banner = True

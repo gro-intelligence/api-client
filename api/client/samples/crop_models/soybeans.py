@@ -6,17 +6,9 @@ from __future__ import print_function
 #
 #   python soybeans.py
 #
-# If you haven't saved the token, you can pass it via cmd line
-#
-#   python soybeans.py --token ...
 #
 # Ref https://app.gro-intelligence.com/#/displays/25894
-
-import argparse
 import os
-import sys
-
-import api.client.lib
 from api.client.crop_model import CropModel
 
 
@@ -25,7 +17,7 @@ def add_brazil_soybeans_yield(model):
     Brazil. There are multiple series from different sources, we add them all."""
     entities = {}
     # Search for item and metric by name, and use the top result
-    entities['item_id'] =  model.search_for_entity('items', "soybeans")
+    entities['item_id'] = model.search_for_entity('items', "soybeans")
     entities['metric_id'] = model.search_for_entity('metrics', "yield mass/area")
     # There are many regions with "brazil" in the name, level = 3 is
     # the country
@@ -53,10 +45,6 @@ def get_brazil_soybeans_weighted_ndvi(model):
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Gro api client")
-    parser.add_argument("--token", default=os.environ['GROAPI_TOKEN'])
-    args = parser.parse_args()
-
     model = CropModel('api.gro-intelligence.com', os.environ['GROAPI_TOKEN'])
     add_brazil_soybeans_yield(model)
     cwdf = get_brazil_soybeans_weighted_ndvi(model)

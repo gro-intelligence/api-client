@@ -14,6 +14,7 @@ CACHE_PATH = "similar_region_state_cache"
 # The features (coefficients for FFT) per metric will be weighted from 1.0 to LOWEST_PERCENTAGE_WEIGHT_FEATURE
 LOWEST_PERCENTAGE_WEIGHT_FEATURE = 0.6
 
+
 class SimilarRegionState(object):
     """
     Holds and initializes parameters and provide ssaving/loading logic for a similar_region search.
@@ -39,14 +40,14 @@ class SimilarRegionState(object):
                                        0)
 
         # Mapping to and from our internal numpy idxs
-        self.mapping = {region_idx:idx for (idx,region_idx) in enumerate(regions_to_compare)}
+        self.mapping = {region_idx: idx for (idx, region_idx) in enumerate(regions_to_compare)}
         self.inverse_mapping = np.array(regions_to_compare)
 
         # Data stores and views of this data
         structure = [(name, 'd', p["properties"]["num_features"]) for name, p in
                      region_properties.items()]
         structure_bool = [(name, bool) for name, p in
-                     region_properties.items()]
+                          region_properties.items()]
         self.data = np.ma.zeros(self.num_regions, dtype=structure)
         self.data[:] = np.ma.masked
 
@@ -98,15 +99,15 @@ class SimilarRegionState(object):
         # Loop through the metric views...
         for name in self.region_properties:
             path = os.path.join(self.data_dir, "{}.nbz".format(name))
-            assert (not no_download) or os.path.isfile(path), "--no_download requires cached properties to be available" 
+            assert (not no_download) or os.path.isfile(path), "--no_download requires cached properties to be available"
             if os.path.isfile(path):
                 self._logger.info("Found cached data for {}, loading...".format(name))
                 with open(path, 'rb') as f:
                     variables = np.load(f)
                     mutual_regions = set(variables["inverse_mapping"]) & set(self.inverse_mapping)
                     mutual_regions_mapping = np.array([self.mapping[idx] for idx in mutual_regions])
-                    old_mapping = {region_idx:idx
-                                   for (idx,region_idx) in enumerate(variables["inverse_mapping"])}
+                    old_mapping = {region_idx: idx
+                                   for (idx, region_idx) in enumerate(variables["inverse_mapping"])}
                     mutual_regions_old_mapping = [old_mapping[idx] for idx in mutual_regions]
                     self.data[name][mutual_regions_mapping] = variables["data"][mutual_regions_old_mapping]
                     mutual_regions_masked = variables["mask"][mutual_regions_old_mapping]
@@ -172,7 +173,7 @@ class SimilarRegionState(object):
         self.data_standardized *= self.weight_vector
 
         # TODO: handle missing data properly.
-        #https://math.stackexchange.com/questions/195245/average-distance-between-random-points-on-a-line-segment
+        # https://math.stackexchange.com/questions/195245/average-distance-between-random-points-on-a-line-segment
 
         self._logger.info("Done standardizing data matrix.")
         return
@@ -228,7 +229,7 @@ class SimilarRegionState(object):
                         self.data[property_name][data_table_idx] = result
                 elif props["properties"]["type"] == "pit":
                     # for point in time just add the value
-                    if response[0]["value"] == None or np.isnan(response[0]["value"]):
+                    if response[0]["value"] is None or np.isnan(response[0]["value"]):
                         self.data[property_name][data_table_idx] = np.ma.masked
                     else:
                         self.data[property_name][data_table_idx] = response[0]["value"]
@@ -238,5 +239,3 @@ class SimilarRegionState(object):
         self._logger.info("Getting data series for {} regions for property {}".format(len(queries), property_name))
         self.client.batch_async_get_data_points(queries, map_result=map_response)
         return
-
-

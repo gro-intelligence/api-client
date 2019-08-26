@@ -1,4 +1,3 @@
-import numpy as np
 import os
 from sklearn.neighbors import BallTree
 from api.client.batch_client import BatchClient
@@ -9,6 +8,7 @@ from sklearn.metrics.pairwise import euclidean_distances
 """ API Config """
 API_HOST = 'api.gro-intelligence.com'
 ACCESS_TOKEN = os.environ['GROAPI_TOKEN']
+
 
 class SimilarRegion(object):
 
@@ -24,8 +24,8 @@ class SimilarRegion(object):
         if not regions_to_compare:
             regions_to_compare = self._regions_avail_for_selection(region_properties)
         self._logger.info("SimilarRegionState: loading...")
-        self.state = SimilarRegionState(region_properties, regions_to_compare, self.client, data_dir=data_dir, 
-                no_download=no_download)
+        self.state = SimilarRegionState(region_properties, regions_to_compare, self.client, data_dir=data_dir,
+                                        no_download=no_download)
         self._logger.info("SimilarRegionState: done.")
         self._logger.info("BallTree: computing...")
         self.ball = BallTree(self.state.data_standardized, leaf_size=2)
@@ -55,9 +55,15 @@ class SimilarRegion(object):
             else:
                 grandparent = {"name": "", "id": ""}
             self._logger.info(u"{}, {}, {}".format(sim_region_name, parent["name"], grandparent["name"]))
-            metric_dists_dict = {prop_name: distance for (prop_name, distance) in zip(self.state.region_properties.keys(), metric_dists[ranking])}
+            metric_dists_dict = {
+                prop_name: distance for (prop_name, distance) in zip(
+                    self.state.region_properties.keys(),
+                    metric_dists[ranking]
+                )
+            }
             data_point = {"id": sim_region_region_id, "name": sim_region_name, "dist": dists[ranking],
-                    "parent": (parent["id"], parent["name"], grandparent["id"], grandparent["name"]), "metric_dist": metric_dists_dict}
+                          "parent": (parent["id"], parent["name"], grandparent["id"], grandparent["name"]),
+                          "metric_dist": metric_dists_dict}
             yield data_point
 
     def _similar_to(self, region_id, number_of_regions):
@@ -66,20 +72,20 @@ class SimilarRegion(object):
         similar to the "collective mean" of the regions as given.
         :param region_id: a Gro region id representing the reference region you want to find similar regions to.
         :param number_of_regions: number of most similar matches to return
-        :return: regions that are most similar to the given region id, the distances to each of these, and the 
+        :return: regions that are most similar to the given region id, the distances to each of these, and the
                     individual distances for each property (in the order of properties as iterated on the properties
-                    dictionary). 
+                    dictionary).
         """
         assert region_id in self.state.mapping, "This region is not available in your configuration or " \
                                                 "it lacks coverage in the chosen region properties."
         # list as an index to preserve dimensionality of returned data
         x = self.state.data_standardized[self.state.mapping[region_id], :]
         x = x.reshape(1, -1)
-        assert number_of_regions <= self.state.num_regions, "number_of_regions must be smaller than or equal to total " \
-                                                            "number of regions in the comparison"
+        assert number_of_regions <= self.state.num_regions, ("number_of_regions must be smaller than or equal to total"
+                                                             " number of regions in the comparison")
         neighbour_dists, neighbour_idxs = self.ball.query(x, k=number_of_regions)
 
-        # get the individual distances 
+        # get the individual distances
         metric_distances = [self._get_distances(self.state.mapping[region_id], idx2) for idx2 in neighbour_idxs[0]]
 
         return self.state.inverse_mapping[neighbour_idxs[0]], neighbour_dists[0], metric_distances

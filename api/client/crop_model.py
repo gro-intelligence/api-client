@@ -28,8 +28,8 @@ class CropModel(GroClient):
         df = self.get_df()
         
         def mapper(region):
-            return df[(df['item_id'] == entities['item_id']) & \
-                      (df['metric_id'] == entities['metric_id']) & \
+            return df[(df['item_id'] == entities['item_id']) &
+                      (df['metric_id'] == entities['metric_id']) &
                       (df['region_id'] == region['id'])]['value'].mean(skipna=True)
         means = list(map(mapper, regions))
         self._logger.debug('Means = {}'.format(
@@ -62,8 +62,8 @@ class CropModel(GroClient):
         for (region, weight) in zip(regions, weights):
             self._logger.info(u'Computing {}_{}_{} x {}'.format(
                 item_name, metric_name,  region['name'], weight))
-            series = df[(df['item_id'] == entities['item_id']) & \
-                        (df['metric_id'] == entities['metric_id']) & \
+            series = df[(df['item_id'] == entities['item_id']) &
+                        (df['metric_id'] == entities['metric_id']) &
                         (df['region_id'] == region['id'])].copy()
             series.loc[:, 'value'] = series['value']*weight
             # TODO: change metric to reflect it is weighted in this copy

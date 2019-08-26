@@ -27,6 +27,7 @@ from api.client.gro_client import GroClient
 API_HOST = 'api.gro-intelligence.com'
 ACCESS_TOKEN = os.environ['GROAPI_TOKEN']
 
+
 def main():
     client = GroClient(API_HOST, ACCESS_TOKEN)
 
@@ -37,10 +38,10 @@ def main():
     # Note that you can search across metrics, items, regions, and sources.
 
     print('client.search()')
-    print(client.search('metrics', 'Exports')[0]) # { 'id': 125 }
-    print(client.search('items', 'Wheat')[0]) # { 'id': 95 }
-    print(client.search('regions', 'India')[0]) # { 'id': 1094 }
-    print(client.search('sources', 'USDA NASS')[0]) # { 'id': 29 }
+    print(client.search('metrics', 'Exports')[0])  # { 'id': 125 }
+    print(client.search('items', 'Wheat')[0])  # { 'id': 95 }
+    print(client.search('regions', 'India')[0])  # { 'id': 1094 }
+    print(client.search('sources', 'USDA NASS')[0])  # { 'id': 29 }
 
     # ==============================
     # | client.search_and_lookup() |
@@ -141,6 +142,7 @@ def main():
     # Hard red winter wheat
     # Corn
     # Wheat
+
 
 if __name__ == "__main__":
     main()

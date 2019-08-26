@@ -13,6 +13,7 @@ build:
     # Run test and code coverage and output results to the right folder
     - pytest --junitxml=shippable/testresults/nosetests.xml
     - pytest --cov=api --cov-report=xml:shippable/codecoverage/coverage.xml
+    - flake8 --docstring-convention numpy --statistics --count --doctests --ignore=E,W api
   post_ci:
     # TODO: swap CLEWS-15766 for development
     - >

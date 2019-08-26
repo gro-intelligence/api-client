@@ -167,6 +167,7 @@ def get_data(url, headers, params=None, logger=None):
     raise Exception('Giving up on {} after {} tries. Error is: {}.'.format(
         url, retry_count, data.text))
 
+
 @memoize(maxsize=None)
 def get_available(access_token, api_host, entity_type):
     """List the first 5000 available entities of the given type.
@@ -238,6 +239,7 @@ def list_available(access_token, api_host, selected_entities):
     except KeyError:
         raise Exception(resp.text)
 
+
 @memoize(maxsize=None)
 def lookup(access_token, api_host, entity_type, entity_id):
     """Retrieve details about a given id of type entity_type.
@@ -272,6 +274,7 @@ def lookup(access_token, api_host, entity_type, entity_id):
         return resp.json()['data']
     except KeyError:
         raise Exception(resp.text)
+
 
 @memoize(maxsize=None)
 def snake_to_camel(term):
@@ -651,6 +654,7 @@ def get_data_points(access_token, api_host, **selection):
     resp = get_data(url, headers, params)
     return resp.json()
 
+
 @memoize(maxsize=None)
 def universal_search(access_token, api_host, search_terms):
     """Search across all entity types for the given terms.
@@ -675,6 +679,7 @@ def universal_search(access_token, api_host, search_terms):
     headers = {'authorization': 'Bearer ' + access_token}
     resp = get_data(url, headers, {'q': search_terms})
     return resp.json()
+
 
 @memoize(maxsize=None)
 def search(access_token, api_host, entity_type, search_terms):
@@ -796,6 +801,7 @@ def get_geo_centre(access_token, api_host, region_id):
     headers = {'authorization': 'Bearer ' + access_token}
     resp = get_data(url, headers)
     return resp.json()['data']
+
 
 @memoize(maxsize=None)
 def get_geojson(access_token, api_host, region_id):
