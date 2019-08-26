@@ -19,10 +19,10 @@ build:
       if [ "$SHIPPABLE_PYTHON_VERSION" == "2.7" ]; then
         shippable_retry pip install .[docs] &&
 
-        sphinx-versioning
-        -e .gitignore
-        -e .nojekyll
-        -e README.md
-        -e CNAME
+        sphinx-versioning \
+        -e .gitignore \
+        -e .nojekyll \
+        -e README.md \
+        -e CNAME \
         push -r CLEWS-15766 docs gh-pages .;
       fi;
