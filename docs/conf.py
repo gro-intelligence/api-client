@@ -38,7 +38,7 @@ extensions = [
     'sphinx.ext.viewcode',
     'sphinx.ext.napoleon',
     'recommonmark',
-    'sphinxcontrib.fulltoc'
+    # 'sphinxcontrib.fulltoc'
 ]
 
 source_suffix = {
@@ -64,7 +64,7 @@ html_theme_options = {
     'sticky_navigation': True,
     'navigation_depth': -1,
     'includehidden': False,
-    #'titles_only': False,
+    'titles_only': False,
     'prev_next_buttons_location': 'both',
     'style_external_links': True
 }
