@@ -162,6 +162,8 @@ def get_data(url, headers, params=None, logger=None):
             time.sleep(2 ** retry_count)  # Exponential backoff before retrying
         elif data.status_code == 301:
             params = redirect(params, data.json()['data'][0])
+        elif data.status_code in [404, 401, 500]:
+            break
         else:
             logger.error(data.text, extra=log_record)
     raise Exception('Giving up on {} after {} tries. Error is: {}.'.format(
@@ -788,9 +790,9 @@ def get_geojson(access_token, api_host, region_id):
 
     Returns
     -------
-    a geojson object e.g. 
+    a geojson object e.g.
     { 'type': 'GeometryCollection',
-      'geometries': [{'type': 'MultiPolygon', 
+      'geometries': [{'type': 'MultiPolygon',
                       'coordinates': [[[[-38.394, -4.225], ...]]]}, ...]}
     or None if not found.
     """
