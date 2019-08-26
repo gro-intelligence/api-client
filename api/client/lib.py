@@ -249,14 +249,13 @@ def lookup(access_token, api_host, entity_type, entity_id):
     Returns
     -------
     dict
-        ex: {
-            'id': 274,
-            'contains': [779, 780, ...]
-            'name': 'Corn',
-            'definition': 'The seeds of the widely cultivated corn plant
-                <i>Zea mays</i>, which is one of the world's most popular
-                grains.'
-        }
+        Example:
+
+        { 'id': 274,
+          'contains': [779, 780, ...]
+          'name': 'Corn',
+          'definition': ('The seeds of the widely cultivated corn plant <i>Zea mays</i>, which is'
+                         ' one of the world\'s most popular grains.') }
 
     """
     url = '/'.join(['https:', '', api_host, 'v2', entity_type, str(entity_id)])
@@ -709,9 +708,11 @@ def search_and_lookup(access_token, api_host, entity_type, search_terms, num_res
     Yields
     ------
     dict
-        Result from search() passed to lookup() to get additional details
-        Ex: { 'id': 274, 'contains': [779, 780, ...] 'name': 'Corn',
-              'definition': 'The seeds of the widely cultivated...' }
+        Result from search() passed to lookup() to get additional details. For example:
+
+        { 'id': 274, 'contains': [779, 780, ...] 'name': 'Corn',
+          'definition': 'The seeds of the widely cultivated...' }
+
         See output of lookup(). Note that as with search(), the first result is
         the best match for the given search term(s).
 
@@ -736,14 +737,14 @@ def lookup_belongs(access_token, api_host, entity_type, entity_id):
     ------
     dict
         Result of lookup() on each entity the given entity belongs to.
-        ex: For the region 'United States', one yielded result will be for
+
+        For example: For the region 'United States', one yielded result will be for
         'North America.' The format of which matches the output of lookup():
-        {
-            'id': 15,
-            'contains': [ 1008, 1009, 1012, 1215, ... ],
-            'name': 'North America',
-            'level': 2
-        }
+
+        { 'id': 15,
+          'contains': [ 1008, 1009, 1012, 1215, ... ],
+          'name': 'North America',
+          'level': 2 }
 
     """
     url = '/'.join(['https:', '', api_host, 'v2', entity_type, 'belongs-to'])
