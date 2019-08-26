@@ -76,3 +76,6 @@ html_style = 'css/custom-theme.css'
 html_static_path = ['_static', '_images']
 
 master_doc = 'index'
+
+# Do not delete these files:
+scv_grm_exclude = ('README.md', '.gitignore', '.nojekyll', 'CNAME')
