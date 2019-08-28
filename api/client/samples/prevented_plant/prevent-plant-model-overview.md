@@ -37,7 +37,7 @@ Corn Prevent Plant Model Output
 ## Methodology
 __Corn Model Methodology:__
 * Compute weekly averages for soil moisture and weekly cumulative precipitation by county across the Corn Belt.
-* Test cumulative soil moisture and weekly precipitation signals from week 14 (beginning of April) to the current week along with planting progress using XGBoost. Weeks are defined by the planting progress date. 
+* Test cumulative soil moisture and weekly precipitation signals from week 14 (beginning of April) to the current week along with planting progress using XGBoost or Grandient Boosting regressor. Weeks are defined by the planting progress date. 
 * Backtest the signals from 2011-2018, which covers available prevented planting data.
 * Latitude and longitude are used to measure the exact location of each county modeled using an API function in Gro.
 
@@ -45,11 +45,10 @@ __Soybean Model Methodology:__
 
 *Note, in addition to the corn model methodology, the soybean model includes the following:* 
 
-* Test weekly soil moisture (average) and precipitation (cumulative) from week 16 (second half of April) to the current week along with planting progress and soil characteristics using XGBoost. 
+* Test weekly soil moisture (average) and precipitation (cumulative) from week 16 (second half of April) to the current week along with planting progress and soil characteristics using XGBoost or Grandient Boosting regressor. 
 * Incorporation of soil characteristics such as soil water storage, soil organic carbon stock, crop productivity index for corn and soybeans.
 
 ## Future Improvements
 *The current model primarily utilizes realized weather to make a prediction about a very complicated decision to take prevented plant insurance.*
 * GFS weather forecasts are being tested to enhance predictive power for a given point in the season.
-* National report on planting progress tends to end by week 23 (early June), but state level data will be reported for another week or two if planting is delayed. Incorporating state level data for 2019 would allow the model to predict a value for weeks 24 and 25. For states that stop reporting before 100%, an assumption can be made that planting has been completed.
 * Non-weather based factors, such as crop and input economics, should be tested and included.
