@@ -1,37 +1,40 @@
 API Reference
 =============
 
-**************
-api.client.lib
-**************
+***
+lib
+***
 
 .. automodule:: api.client.lib
     :members:
 
-*****************
-api.client.Client
-*****************
+******
+Client
+******
 
 .. autoclass:: api.client.Client
     :members:
 
-*********************
-api.client.gro_client
-*********************
+*********
+GroClient
+*********
 
 .. autoclass:: api.client.gro_client.GroClient
     :members:
 
-*********************
-api.client.crop_model
-*********************
+**********
+Crop Model
+**********
 
 .. autoclass:: api.client.crop_model.CropModel
     :members:
 
-***********************
-api.client.batch_client
-***********************
+************
+Batch Client
+************
 
 .. autoclass:: api.client.batch_client.BatchClient
     :members:
+
+.. NOTE: autoclass with nested classes throwing errors. Fixed in Sphinx 1.8:
+   <https://github.com/sphinx-doc/sphinx/pull/5203>
