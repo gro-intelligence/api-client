@@ -117,11 +117,11 @@
 <p class="caption"><span class="caption-text">Reference</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">API Reference</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#module-api.client.lib">api.client.lib</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#api-client-client">api.client.Client</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#api-client-gro-client">api.client.gro_client</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#api-client-crop-model">api.client.crop_model</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#api-client-batch-client">api.client.batch_client</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-api.client.lib">lib</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#client">Client</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#groclient">GroClient</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#crop-model">Crop Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#batch-client">Batch Client</a></li>
 </ul>
 </li>
 </ul>
@@ -195,10 +195,16 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="api-reference">
+  
+
+
+
+
+
+<div class="section" id="api-reference">
 <h1>API Reference<a class="headerlink" href="#api-reference" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="module-api.client.lib">
-<span id="api-client-lib"></span><h2>api.client.lib<a class="headerlink" href="#module-api.client.lib" title="Permalink to this headline">¶</a></h2>
+<span id="lib"></span><h2>lib<a class="headerlink" href="#module-api.client.lib" title="Permalink to this headline">¶</a></h2>
 <p>Base module for making API requests.</p>
 <p>Client, GroClient, CropModel, and BatchClient all build on top of endpoints
 exposed in this module. Helper functions or shims or derivative functionality
@@ -254,7 +260,7 @@ should appear in the client classes rather than here.</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>resp</strong> (<em>list of dicts</em>) &#8211; The output from /v2/cropcalendar/data. See doctest</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>points</strong> &#8211; The input <cite>resp</cite> dicts with keys modified to match the get_data_points
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>points</strong> &#8211; The input <code class="docutils literal"><span class="pre">resp</span></code> dicts with keys modified to match the get_data_points
 output keys. Splits each point with plantingStartDate, plantingEndDate,
 harvestingStartDate, and harvestingEndDate into two points with start
 and end date where the value is the state of the crop as a string.</td>
@@ -309,14 +315,12 @@ Otherwise get_default_logger() will be used.</li>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><p><strong>data</strong> &#8211;</p>
-<dl class="docutils">
-<dt>ex: [</dt>
-<dd><p class="first last">{ &#8216;id&#8217;: 0, &#8216;contains&#8217;: [1, 2, 3], &#8216;name&#8217;: &#8216;World&#8217;, &#8216;level&#8217;: 1},
-{ &#8216;id&#8217;: 1, &#8216;contains&#8217;: [4, 5, 6], &#8216;name&#8217;: &#8216;Asia&#8217;, &#8216;level&#8217;: 2},
-...</p>
-</dd>
-</dl>
-<p>]</p>
+<p>Example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="p">[</span> <span class="p">{</span> <span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;contains&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;World&#39;</span><span class="p">,</span> <span class="s1">&#39;level&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">},</span>
+<span class="p">{</span> <span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;contains&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">],</span> <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Asia&#39;</span><span class="p">,</span> <span class="s1">&#39;level&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">},</span>
+<span class="o">...</span> <span class="p">]</span>
+</pre></div>
+</div>
 </p>
 </td>
 </tr>
@@ -461,21 +465,21 @@ filtered out</td>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><dl class="docutils">
-<dt>Ex: [ {</dt>
-<dd><p class="first last">&#8220;start_date&#8221;: &#8220;2000-01-01T00:00:00.000Z&#8221;,
-&#8220;end_date&#8221;: &#8220;2000-12-31T00:00:00.000Z&#8221;,
-&#8220;value&#8221;: 251854000,
-&#8220;input_unit_id&#8221;: 14,
-&#8220;input_unit_scale&#8221;: 1,
-&#8220;metric_id&#8221;: 860032,
-&#8220;item_id&#8221;: 274,
-&#8220;region_id&#8221;: 1215,
-&#8220;frequency_id&#8221;: 9,
-&#8220;unit_id&#8221;: 14</p>
-</dd>
-</dl>
-<p>}, ...]</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><p>Example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="p">[</span> <span class="p">{</span>
+    <span class="s2">&quot;start_date&quot;</span><span class="p">:</span> <span class="s2">&quot;2000-01-01T00:00:00.000Z&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;end_date&quot;</span><span class="p">:</span> <span class="s2">&quot;2000-12-31T00:00:00.000Z&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="mi">251854000</span><span class="p">,</span>
+    <span class="s2">&quot;input_unit_id&quot;</span><span class="p">:</span> <span class="mi">14</span><span class="p">,</span>
+    <span class="s2">&quot;input_unit_scale&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s2">&quot;metric_id&quot;</span><span class="p">:</span> <span class="mi">860032</span><span class="p">,</span>
+    <span class="s2">&quot;item_id&quot;</span><span class="p">:</span> <span class="mi">274</span><span class="p">,</span>
+    <span class="s2">&quot;region_id&quot;</span><span class="p">:</span> <span class="mi">1215</span><span class="p">,</span>
+    <span class="s2">&quot;frequency_id&quot;</span><span class="p">:</span> <span class="mi">9</span><span class="p">,</span>
+    <span class="s2">&quot;unit_id&quot;</span><span class="p">:</span> <span class="mi">14</span>
+<span class="p">},</span> <span class="o">...</span><span class="p">]</span>
+</pre></div>
+</div>
 </p>
 </td>
 </tr>
@@ -503,19 +507,16 @@ formatting</li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><dl class="docutils">
-<dt>ex: [{  &#8216;metric_id&#8217;: 2020032, &#8216;metric_name&#8217;: &#8216;Seed Use&#8217;,</dt>
-<dd><blockquote class="first">
-<div><p>&#8216;item_id&#8217;: 274, &#8216;item_name&#8217;: &#8216;Corn&#8217;,
-&#8216;region_id&#8217;: 1215, &#8216;region_name&#8217;: &#8216;United States&#8217;,
-&#8216;source_id&#8217;: 24, &#8216;source_name&#8217;: &#8216;USDA FEEDGRAINS&#8217;,
-&#8216;frequency_id&#8217;: 7,
-&#8216;start_date&#8217;: &#8216;1975-03-01T00:00:00.000Z&#8217;,
-&#8216;end_date&#8217;: &#8216;2018-05-31T00:00:00.000Z&#8217;</p>
-</div></blockquote>
-<p class="last">}, { ... }, ... ]</p>
-</dd>
-</dl>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><p>Example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="p">[{</span> <span class="s1">&#39;metric_id&#39;</span><span class="p">:</span> <span class="mi">2020032</span><span class="p">,</span> <span class="s1">&#39;metric_name&#39;</span><span class="p">:</span> <span class="s1">&#39;Seed Use&#39;</span><span class="p">,</span>
+   <span class="s1">&#39;item_id&#39;</span><span class="p">:</span> <span class="mi">274</span><span class="p">,</span> <span class="s1">&#39;item_name&#39;</span><span class="p">:</span> <span class="s1">&#39;Corn&#39;</span><span class="p">,</span>
+   <span class="s1">&#39;region_id&#39;</span><span class="p">:</span> <span class="mi">1215</span><span class="p">,</span> <span class="s1">&#39;region_name&#39;</span><span class="p">:</span> <span class="s1">&#39;United States&#39;</span><span class="p">,</span>
+   <span class="s1">&#39;source_id&#39;</span><span class="p">:</span> <span class="mi">24</span><span class="p">,</span> <span class="s1">&#39;source_name&#39;</span><span class="p">:</span> <span class="s1">&#39;USDA FEEDGRAINS&#39;</span><span class="p">,</span>
+   <span class="s1">&#39;frequency_id&#39;</span><span class="p">:</span> <span class="mi">7</span><span class="p">,</span>
+   <span class="s1">&#39;start_date&#39;</span><span class="p">:</span> <span class="s1">&#39;1975-03-01T00:00:00.000Z&#39;</span><span class="p">,</span> <span class="s1">&#39;end_date&#39;</span><span class="p">:</span> <span class="s1">&#39;2018-05-31T00:00:00.000Z&#39;</span>
+<span class="p">},</span> <span class="p">{</span> <span class="o">...</span> <span class="p">},</span> <span class="o">...</span> <span class="p">]</span>
+</pre></div>
+</div>
 </p>
 </td>
 </tr>
@@ -565,22 +566,21 @@ levels.</p>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><dl class="docutils">
-<dt>Ex: [{</dt>
-<dd><p class="first last">&#8216;id&#8217;: 13100,
-&#8216;contains&#8217;: [139839, 139857, ...],
-&#8216;name&#8217;: &#8216;Wisconsin&#8217;,
-&#8216;level&#8217;: 4</p>
-</dd>
-<dt>} , {</dt>
-<dd><p class="first last">&#8216;id&#8217;: 13101,
-&#8216;contains&#8217;: [139891, 139890, ...],
-&#8216;name&#8217;: &#8216;Wyoming&#8217;,
-&#8216;level&#8217;: 4</p>
-</dd>
-</dl>
-<p>}, ...]
-See output of lookup()</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><p>Example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="p">[{</span>
+    <span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="mi">13100</span><span class="p">,</span>
+    <span class="s1">&#39;contains&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">139839</span><span class="p">,</span> <span class="mi">139857</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span>
+    <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Wisconsin&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;level&#39;</span><span class="p">:</span> <span class="mi">4</span>
+<span class="p">}</span> <span class="p">,</span> <span class="p">{</span>
+    <span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="mi">13101</span><span class="p">,</span>
+    <span class="s1">&#39;contains&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">139891</span><span class="p">,</span> <span class="mi">139890</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span>
+    <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Wyoming&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;level&#39;</span><span class="p">:</span> <span class="mi">4</span>
+<span class="p">},</span> <span class="o">...</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>See output of lookup()</p>
 </p>
 </td>
 </tr>
@@ -606,11 +606,10 @@ See output of lookup()</p>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><dl class="docutils">
-<dt>Ex: [{ &#8216;centre&#8217;: [ 45.7228, -112.996 ],</dt>
-<dd><p class="first last">&#8216;regionId&#8217;: 1215, &#8216;regionName&#8217;: &#8216;United States&#8217; }]</p>
-</dd>
-</dl>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><p>Example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="p">[{</span> <span class="s1">&#39;centre&#39;</span><span class="p">:</span> <span class="p">[</span> <span class="mf">45.7228</span><span class="p">,</span> <span class="o">-</span><span class="mf">112.996</span> <span class="p">],</span> <span class="s1">&#39;regionId&#39;</span><span class="p">:</span> <span class="mi">1215</span><span class="p">,</span> <span class="s1">&#39;regionName&#39;</span><span class="p">:</span> <span class="s1">&#39;United States&#39;</span> <span class="p">}]</span>
+</pre></div>
+</div>
 </p>
 </td>
 </tr>
@@ -699,26 +698,25 @@ data for the given selections.</p>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>access_token</strong> (<em>string</em>) &#8211; </li>
 <li><strong>api_host</strong> (<em>string</em>) &#8211; </li>
-<li><strong>selected_entities</strong> (<em>dict</em>) &#8211; ex: { &#8216;metric_id&#8217;: 123, &#8216;item_id&#8217;: 456, &#8216;source_id&#8217;: 7 }
-Keys may include: metric_id, item_id, region_id, partner_region_id,
-source_id, frequency_id</li>
+<li><strong>selected_entities</strong> (<em>dict</em>) &#8211; <p>Example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s1">&#39;metric_id&#39;</span><span class="p">:</span> <span class="mi">123</span><span class="p">,</span> <span class="s1">&#39;item_id&#39;</span><span class="p">:</span> <span class="mi">456</span><span class="p">,</span> <span class="s1">&#39;source_id&#39;</span><span class="p">:</span> <span class="mi">7</span> <span class="p">}</span>
+</pre></div>
+</div>
+<p>Keys may include: metric_id, item_id, region_id, partner_region_id,
+source_id, frequency_id</p>
+</li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><dl class="docutils">
-<dt>ex: [</dt>
-<dd><dl class="first docutils">
-<dt>{   &#8216;metric_id&#8217;: 11078, &#8216;metric_name&#8217;: &#8216;Export Value (currency)&#8217;,</dt>
-<dd><p class="first last">&#8216;item_id&#8217;: 274, &#8216;item_name&#8217;: &#8216;Corn&#8217;,
-&#8216;region_id&#8217;: 1215, &#8216;region_name&#8217;: &#8216;United States&#8217;,
-&#8216;source_id&#8217;: 15, &#8216;source_name&#8217;: &#8216;USDA GATS&#8217; },</p>
-</dd>
-</dl>
-<p class="last">{ ... },
-...</p>
-</dd>
-</dl>
-<p>]</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><p>Example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="p">[</span> <span class="p">{</span> <span class="s1">&#39;metric_id&#39;</span><span class="p">:</span> <span class="mi">11078</span><span class="p">,</span> <span class="s1">&#39;metric_name&#39;</span><span class="p">:</span> <span class="s1">&#39;Export Value (currency)&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;item_id&#39;</span><span class="p">:</span> <span class="mi">274</span><span class="p">,</span> <span class="s1">&#39;item_name&#39;</span><span class="p">:</span> <span class="s1">&#39;Corn&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;region_id&#39;</span><span class="p">:</span> <span class="mi">1215</span><span class="p">,</span> <span class="s1">&#39;region_name&#39;</span><span class="p">:</span> <span class="s1">&#39;United States&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;source_id&#39;</span><span class="p">:</span> <span class="mi">15</span><span class="p">,</span> <span class="s1">&#39;source_name&#39;</span><span class="p">:</span> <span class="s1">&#39;USDA GATS&#39;</span> <span class="p">},</span>
+<span class="p">{</span> <span class="o">...</span> <span class="p">},</span>
+<span class="o">...</span> <span class="p">]</span>
+</pre></div>
+</div>
 </p>
 </td>
 </tr>
@@ -746,19 +744,14 @@ source_id, frequency_id</li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><dl class="docutils">
-<dt>ex: {</dt>
-<dd><p class="first">&#8216;id&#8217;: 274,
-&#8216;contains&#8217;: [779, 780, ...]
-&#8216;name&#8217;: &#8216;Corn&#8217;,
-&#8216;definition&#8217;: &#8216;The seeds of the widely cultivated corn plant</p>
-<blockquote class="last">
-<div><p>&lt;i&gt;Zea mays&lt;/i&gt;, which is one of the world&#8217;s most popular
-grains.&#8217;</p>
-</div></blockquote>
-</dd>
-</dl>
-<p>}</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><p>Example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="mi">274</span><span class="p">,</span>
+  <span class="s1">&#39;contains&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">779</span><span class="p">,</span> <span class="mi">780</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span>
+  <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Corn&#39;</span><span class="p">,</span>
+  <span class="s1">&#39;definition&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;The seeds of the widely cultivated corn plant &lt;i&gt;Zea mays&lt;/i&gt;, which&#39;</span>
+               <span class="s1">&#39; is one of the world&#39;</span><span class="n">s</span> <span class="n">most</span> <span class="n">popular</span> <span class="n">grains</span><span class="o">.</span><span class="s1">&#39;) }</span>
+</pre></div>
+</div>
 </p>
 </td>
 </tr>
@@ -785,17 +778,15 @@ grains.&#8217;</p>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Yields:</th><td class="field-body"><p class="first"><em>dict</em> &#8211; Result of lookup() on each entity the given entity belongs to.
-ex: For the region &#8216;United States&#8217;, one yielded result will be for
-&#8216;North America.&#8217; The format of which matches the output of lookup():
-{</p>
-<blockquote>
-<div><p>&#8216;id&#8217;: 15,
-&#8216;contains&#8217;: [ 1008, 1009, 1012, 1215, ... ],
-&#8216;name&#8217;: &#8216;North America&#8217;,
-&#8216;level&#8217;: 2</p>
-</div></blockquote>
-<p class="last">}</p>
+<tr class="field-even field"><th class="field-name">Yields:</th><td class="field-body"><p class="first"><em>dict</em> &#8211; Result of lookup() on each entity the given entity belongs to.</p>
+<p>For example: For the region &#8216;United States&#8217;, one yielded result will be for
+&#8216;North America.&#8217; The format of which matches the output of lookup():</p>
+<div class="last highlight-default"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="mi">15</span><span class="p">,</span>
+  <span class="s1">&#39;contains&#39;</span><span class="p">:</span> <span class="p">[</span> <span class="mi">1008</span><span class="p">,</span> <span class="mi">1009</span><span class="p">,</span> <span class="mi">1012</span><span class="p">,</span> <span class="mi">1215</span><span class="p">,</span> <span class="o">...</span> <span class="p">],</span>
+  <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;North America&#39;</span><span class="p">,</span>
+  <span class="s1">&#39;level&#39;</span><span class="p">:</span> <span class="mi">2</span> <span class="p">}</span>
+</pre></div>
+</div>
 </td>
 </tr>
 </tbody>
@@ -873,7 +864,11 @@ redirection instructions provided by the API</p>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Ex: [{&#8216;id&#8217;: 5604}, {&#8216;id&#8217;: 10204}, {&#8216;id&#8217;: 10210}, ....]</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><p>Example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="p">[{</span><span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="mi">5604</span><span class="p">},</span> <span class="p">{</span><span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="mi">10204</span><span class="p">},</span> <span class="p">{</span><span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="mi">10210</span><span class="p">},</span> <span class="o">....</span><span class="p">]</span>
+</pre></div>
+</div>
+</p>
 </td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list of dicts</p>
@@ -907,11 +902,12 @@ redirection instructions provided by the API</p>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Yields:</th><td class="field-body"><p class="first"><em>dict</em> &#8211; Result from search() passed to lookup() to get additional details
-Ex: { &#8216;id&#8217;: 274, &#8216;contains&#8217;: [779, 780, ...] &#8216;name&#8217;: &#8216;Corn&#8217;,</p>
-<blockquote>
-<div><p>&#8216;definition&#8217;: &#8216;The seeds of the widely cultivated...&#8217; }</p>
-</div></blockquote>
+<tr class="field-even field"><th class="field-name">Yields:</th><td class="field-body"><p class="first"><em>dict</em> &#8211;</p>
+<p>Result from search() passed to lookup() to get additional details. For example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="mi">274</span><span class="p">,</span> <span class="s1">&#39;contains&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">779</span><span class="p">,</span> <span class="mi">780</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Corn&#39;</span><span class="p">,</span>
+<span class="s1">&#39;definition&#39;</span><span class="p">:</span> <span class="s1">&#39;The seeds of the widely cultivated...&#39;</span> <span class="p">}</span>
+</pre></div>
+</div>
 <p class="last">See output of lookup(). Note that as with search(), the first result is
 the best match for the given search term(s).</p>
 </td>
@@ -957,7 +953,11 @@ the best match for the given search term(s).</p>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Ex: [[5604, &#8216;item&#8217;], [10204, &#8216;item&#8217;], [410032, &#8216;metric&#8217;], ....]</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><p>Example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="p">[[</span><span class="mi">5604</span><span class="p">,</span> <span class="s1">&#39;item&#39;</span><span class="p">],</span> <span class="p">[</span><span class="mi">10204</span><span class="p">,</span> <span class="s1">&#39;item&#39;</span><span class="p">],</span> <span class="p">[</span><span class="mi">410032</span><span class="p">,</span> <span class="s1">&#39;metric&#39;</span><span class="p">],</span> <span class="o">....</span><span class="p">]</span>
+</pre></div>
+</div>
+</p>
 </td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list of [id, entity_type] pairs</p>
@@ -968,8 +968,8 @@ the best match for the given search term(s).</p>
 </dd></dl>
 
 </div>
-<div class="section" id="api-client-client">
-<h2>api.client.Client<a class="headerlink" href="#api-client-client" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="client">
+<h2>Client<a class="headerlink" href="#client" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="api.client.Client">
 <em class="property">class </em><code class="descclassname">api.client.</code><code class="descname">Client</code><span class="sig-paren">(</span><em>api_host</em>, <em>access_token</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client.html#Client"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.Client" title="Permalink to this definition">¶</a></dt>
@@ -977,8 +977,8 @@ the best match for the given search term(s).</p>
 </dd></dl>
 
 </div>
-<div class="section" id="api-client-gro-client">
-<h2>api.client.gro_client<a class="headerlink" href="#api-client-gro-client" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="groclient">
+<h2>GroClient<a class="headerlink" href="#groclient" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="api.client.gro_client.GroClient">
 <em class="property">class </em><code class="descclassname">api.client.gro_client.</code><code class="descname">GroClient</code><span class="sig-paren">(</span><em>api_host</em>, <em>access_token</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/gro_client.html#GroClient"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.gro_client.GroClient" title="Permalink to this definition">¶</a></dt>
@@ -1080,8 +1080,8 @@ regions) that matches the given keywords.</p>
 </dd></dl>
 
 </div>
-<div class="section" id="api-client-crop-model">
-<h2>api.client.crop_model<a class="headerlink" href="#api-client-crop-model" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="crop-model">
+<h2>Crop Model<a class="headerlink" href="#crop-model" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="api.client.crop_model.CropModel">
 <em class="property">class </em><code class="descclassname">api.client.crop_model.</code><code class="descname">CropModel</code><span class="sig-paren">(</span><em>api_host</em>, <em>access_token</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/crop_model.html#CropModel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.crop_model.CropModel" title="Permalink to this definition">¶</a></dt>
@@ -1106,8 +1106,8 @@ corresponding to the regions.</p>
 </dd></dl>
 
 </div>
-<div class="section" id="api-client-batch-client">
-<h2>api.client.batch_client<a class="headerlink" href="#api-client-batch-client" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="batch-client">
+<h2>Batch Client<a class="headerlink" href="#batch-client" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="api.client.batch_client.BatchClient">
 <em class="property">class </em><code class="descclassname">api.client.batch_client.</code><code class="descname">BatchClient</code><span class="sig-paren">(</span><em>api_host</em>, <em>access_token</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/batch_client.html#BatchClient"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.batch_client.BatchClient" title="Permalink to this definition">¶</a></dt>
@@ -1196,6 +1196,7 @@ partner_region_id. Additional arguments are allowed and ignored.</p>
     <div class="rst-other-versions">
         <dl>
             <dt>Branches</dt>
+            <dd><a href="CLEWS-15762/api.html">CLEWS-15762</a></dd>
             <dd><a href="CLEWS-15766/api.html">CLEWS-15766</a></dd>
             <dd><a href="JGrinst-patch-1/index.html">JGrinst-patch-1</a></dd>
             <dd><a href="JGrinst-patch-2/api.html">JGrinst-patch-2</a></dd>

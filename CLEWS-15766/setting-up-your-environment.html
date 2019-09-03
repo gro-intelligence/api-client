@@ -118,11 +118,11 @@
 <p class="caption"><span class="caption-text">Reference</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="api.html">API Reference</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="api.html#module-api.client.lib">api.client.lib</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api.html#api-client-client">api.client.Client</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api.html#api-client-gro-client">api.client.gro_client</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api.html#api-client-crop-model">api.client.crop_model</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api.html#api-client-batch-client">api.client.batch_client</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#module-api.client.lib">lib</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#client">Client</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#groclient">GroClient</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#crop-model">Crop Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#batch-client">Batch Client</a></li>
 </ul>
 </li>
 </ul>
@@ -198,7 +198,13 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="setting-up-your-environment">
+  
+
+
+
+
+
+<div class="section" id="setting-up-your-environment">
 <h1>Setting Up Your Environment<a class="headerlink" href="#setting-up-your-environment" title="Permalink to this headline">¶</a></h1>
 <p>In order to start engaging with the Gro API Client, you will need to set up your local environment with some basic requirements.</p>
 <ol class="simple">
@@ -266,7 +272,9 @@ Once you have API access enabled for your account, you may retrieve your token i
 <h4>Option 2: Using the gro_client Command Line Interface<a class="headerlink" href="#option-2-using-the-gro-client-command-line-interface" title="Permalink to this headline">¶</a></h4>
 <p>Limitation: The Gro Command Line Interface cannot retrieve tokens for users using OAuth authentication. If this applies to you, please use the Gro web application instead.</p>
 <p>When you install the Gro API Client via pip, the <code class="docutils literal"><span class="pre">gro_client</span></code> command line interface is automatically added to your PATH. This is a convenience tool for doing basic operations on the command line without needing to write a full Python script. One of its uses is it can retrieve your authentication token and print that token out to the console. To do so, execute the command below on your command line, substituting email&#64;example.com for the email address associated with your Gro web application account:</p>
-<p><code class="docutils literal"><span class="pre">gro_client</span> <span class="pre">--user_email=email&#64;example.com</span> <span class="pre">--print_token</span></code></p>
+<div class="highlight-sh"><div class="highlight"><pre><span></span>gro_client --user_email<span class="o">=</span>email@example.com --print_token
+</pre></div>
+</div>
 <p>You should then be prompted for a password. Note that this password prompt does not display any user input on the command line, so it may appear as though you are not typing anything. This is intended. Simply type your password and press Enter.</p>
 <p>If the password is accepted, your access token is printed to the console.</p>
 </div>
@@ -274,10 +282,11 @@ Once you have API access enabled for your account, you may retrieve your token i
 <h4>Option 3: Using the <code class="docutils literal"><span class="pre">get_access_token()</span></code> Function<a class="headerlink" href="#option-3-using-the-get-access-token-function" title="Permalink to this headline">¶</a></h4>
 <p>Limitation: The <code class="docutils literal"><span class="pre">get_access_token()</span></code> function cannot retrieve tokens for users using OAuth authentication. If this applies to you, please use the Gro web application instead.</p>
 <p>If you would like to programmatically retrieve your active token, you may use the <code class="docutils literal"><span class="pre">get_access_token()</span></code> function in the API Client library. See below:</p>
-<div class="highlight-from api.client.lib import get_access_token"><div class="highlight"><pre><span></span>API_HOST = &#39;api.gro-intelligence.com&#39;
-EMAIL = &#39;example@example.com&#39;
-PASSWORD = &#39;password123&#39;
-ACCESS_TOKEN = get_access_token(API_HOST, EMAIL, PASSWORD)
+<div class="highlight-py"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">api.client.lib</span> <span class="kn">import</span> <span class="n">get_access_token</span>
+<span class="n">API_HOST</span> <span class="o">=</span> <span class="s1">&#39;api.gro-intelligence.com&#39;</span>
+<span class="n">EMAIL</span> <span class="o">=</span> <span class="s1">&#39;example@example.com&#39;</span>
+<span class="n">PASSWORD</span> <span class="o">=</span> <span class="s1">&#39;password123&#39;</span>
+<span class="n">ACCESS_TOKEN</span> <span class="o">=</span> <span class="n">get_access_token</span><span class="p">(</span><span class="n">API_HOST</span><span class="p">,</span> <span class="n">EMAIL</span><span class="p">,</span> <span class="n">PASSWORD</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>It is generally bad practice to put login credentials directly in code as in this example, but the <code class="docutils literal"><span class="pre">get_access_token()</span></code> function may be useful for productionization purposes, making the application more robust to tokens expiring (see the next section).</p>
@@ -345,6 +354,7 @@ To regenerate your authentication token, open the API tab in your Account menu a
     <div class="rst-other-versions">
         <dl>
             <dt>Branches</dt>
+            <dd><a href="../CLEWS-15762/setting-up-your-environment.html">CLEWS-15762</a></dd>
             <dd><a href="setting-up-your-environment.html">CLEWS-15766</a></dd>
             <dd><a href="../JGrinst-patch-1/setting-up-your-environment.html">JGrinst-patch-1</a></dd>
             <dd><a href="../JGrinst-patch-2/setting-up-your-environment.html">JGrinst-patch-2</a></dd>
