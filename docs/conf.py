@@ -37,8 +37,7 @@ extensions = [
     'sphinx.ext.coverage',
     'sphinx.ext.viewcode',
     'sphinx.ext.napoleon',
-    'recommonmark',
-    # 'sphinxcontrib.fulltoc'
+    'recommonmark'
 ]
 
 source_suffix = {
@@ -77,3 +76,9 @@ html_style = 'css/custom-theme.css'
 html_static_path = ['_static', '_images']
 
 master_doc = 'index'
+
+# Do not delete these files:
+scv_grm_exclude = ('README.md', '.gitignore', '.nojekyll', 'CNAME')
+scv_show_banner = True
+# TODO: change CLEWS-15766 to development
+scv_banner_main_ref = 'CLEWS-15766'

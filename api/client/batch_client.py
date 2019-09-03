@@ -95,6 +95,7 @@ class BatchClient(Client):
         :param output_list:
         :param map_result:
         :return:
+        
         """
         assert type(batched_args) is list, \
             "Only argument to a batch async decorated function should be a \
