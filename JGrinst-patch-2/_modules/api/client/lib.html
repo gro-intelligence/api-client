@@ -152,11 +152,11 @@
 <p class="caption"><span class="caption-text">Reference</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../api.html">API Reference</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../../api.html#module-api.client.lib">api.client.lib</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../api.html#api-client-client">api.client.Client</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../api.html#api-client-gro-client">api.client.gro_client</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../api.html#api-client-crop-model">api.client.crop_model</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../api.html#api-client-batch-client">api.client.batch_client</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api.html#module-api.client.lib">lib</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api.html#client">Client</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api.html#groclient">GroClient</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api.html#crop-model">Crop Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api.html#batch-client">Batch Client</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../faq.html">FAQ</a><ul>
@@ -436,11 +436,12 @@
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    data : list of dicts</span>
-<span class="sd">        ex: [</span>
-<span class="sd">            { &#39;id&#39;: 0, &#39;contains&#39;: [1, 2, 3], &#39;name&#39;: &#39;World&#39;, &#39;level&#39;: 1},</span>
+<span class="sd">        </span>
+<span class="sd">        Example::</span>
+<span class="sd">        </span>
+<span class="sd">            [ { &#39;id&#39;: 0, &#39;contains&#39;: [1, 2, 3], &#39;name&#39;: &#39;World&#39;, &#39;level&#39;: 1},</span>
 <span class="sd">            { &#39;id&#39;: 1, &#39;contains&#39;: [4, 5, 6], &#39;name&#39;: &#39;Asia&#39;, &#39;level&#39;: 2},</span>
-<span class="sd">            ...</span>
-<span class="sd">        ]</span>
+<span class="sd">            ... ]</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">url</span> <span class="o">=</span> <span class="s1">&#39;/&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s1">&#39;https:&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">api_host</span><span class="p">,</span> <span class="s1">&#39;v2&#39;</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">])</span>
@@ -460,21 +461,26 @@
 <span class="sd">    access_token : string</span>
 <span class="sd">    api_host : string</span>
 <span class="sd">    selected_entities : dict</span>
-<span class="sd">        ex: { &#39;metric_id&#39;: 123, &#39;item_id&#39;: 456, &#39;source_id&#39;: 7 }</span>
+<span class="sd">        </span>
+<span class="sd">        Example::</span>
+<span class="sd">        </span>
+<span class="sd">            { &#39;metric_id&#39;: 123, &#39;item_id&#39;: 456, &#39;source_id&#39;: 7 }</span>
+<span class="sd">        </span>
 <span class="sd">        Keys may include: metric_id, item_id, region_id, partner_region_id,</span>
 <span class="sd">        source_id, frequency_id</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    list of dicts</span>
-<span class="sd">        ex: [</span>
-<span class="sd">            {   &#39;metric_id&#39;: 11078, &#39;metric_name&#39;: &#39;Export Value (currency)&#39;,</span>
+
+<span class="sd">        Example::</span>
+
+<span class="sd">            [ { &#39;metric_id&#39;: 11078, &#39;metric_name&#39;: &#39;Export Value (currency)&#39;,</span>
 <span class="sd">                &#39;item_id&#39;: 274, &#39;item_name&#39;: &#39;Corn&#39;,</span>
 <span class="sd">                &#39;region_id&#39;: 1215, &#39;region_name&#39;: &#39;United States&#39;,</span>
 <span class="sd">                &#39;source_id&#39;: 15, &#39;source_name&#39;: &#39;USDA GATS&#39; },</span>
 <span class="sd">            { ... },</span>
-<span class="sd">            ...</span>
-<span class="sd">        ]</span>
+<span class="sd">            ... ]</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">url</span> <span class="o">=</span> <span class="s1">&#39;/&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s1">&#39;https:&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">api_host</span><span class="p">,</span> <span class="s1">&#39;v2/entities/list&#39;</span><span class="p">])</span>
@@ -504,14 +510,14 @@
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    dict</span>
-<span class="sd">        ex: {</span>
-<span class="sd">            &#39;id&#39;: 274,</span>
-<span class="sd">            &#39;contains&#39;: [779, 780, ...]</span>
-<span class="sd">            &#39;name&#39;: &#39;Corn&#39;,</span>
-<span class="sd">            &#39;definition&#39;: &#39;The seeds of the widely cultivated corn plant</span>
-<span class="sd">                &lt;i&gt;Zea mays&lt;/i&gt;, which is one of the world&#39;s most popular</span>
-<span class="sd">                grains.&#39;</span>
-<span class="sd">        }</span>
+
+<span class="sd">        Example::</span>
+
+<span class="sd">            { &#39;id&#39;: 274,</span>
+<span class="sd">              &#39;contains&#39;: [779, 780, ...]</span>
+<span class="sd">              &#39;name&#39;: &#39;Corn&#39;,</span>
+<span class="sd">              &#39;definition&#39;: (&#39;The seeds of the widely cultivated corn plant &lt;i&gt;Zea mays&lt;/i&gt;, which&#39;</span>
+<span class="sd">                           &#39; is one of the world\&#39;s most popular grains.&#39;) }</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">url</span> <span class="o">=</span> <span class="s1">&#39;/&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s1">&#39;https:&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">api_host</span><span class="p">,</span> <span class="s1">&#39;v2&#39;</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">entity_id</span><span class="p">)])</span>
@@ -661,13 +667,15 @@
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    list of dicts</span>
-<span class="sd">        ex: [{  &#39;metric_id&#39;: 2020032, &#39;metric_name&#39;: &#39;Seed Use&#39;,</span>
-<span class="sd">                &#39;item_id&#39;: 274, &#39;item_name&#39;: &#39;Corn&#39;,</span>
-<span class="sd">                &#39;region_id&#39;: 1215, &#39;region_name&#39;: &#39;United States&#39;,</span>
-<span class="sd">                &#39;source_id&#39;: 24, &#39;source_name&#39;: &#39;USDA FEEDGRAINS&#39;,</span>
-<span class="sd">                &#39;frequency_id&#39;: 7,</span>
-<span class="sd">                &#39;start_date&#39;: &#39;1975-03-01T00:00:00.000Z&#39;,</span>
-<span class="sd">                &#39;end_date&#39;: &#39;2018-05-31T00:00:00.000Z&#39;</span>
+<span class="sd">        </span>
+<span class="sd">        Example::</span>
+<span class="sd">        </span>
+<span class="sd">            [{ &#39;metric_id&#39;: 2020032, &#39;metric_name&#39;: &#39;Seed Use&#39;,</span>
+<span class="sd">               &#39;item_id&#39;: 274, &#39;item_name&#39;: &#39;Corn&#39;,</span>
+<span class="sd">               &#39;region_id&#39;: 1215, &#39;region_name&#39;: &#39;United States&#39;,</span>
+<span class="sd">               &#39;source_id&#39;: 24, &#39;source_name&#39;: &#39;USDA FEEDGRAINS&#39;,</span>
+<span class="sd">               &#39;frequency_id&#39;: 7,</span>
+<span class="sd">               &#39;start_date&#39;: &#39;1975-03-01T00:00:00.000Z&#39;, &#39;end_date&#39;: &#39;2018-05-31T00:00:00.000Z&#39;</span>
 <span class="sd">            }, { ... }, ... ]</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -772,7 +780,7 @@
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    points : list of dicts</span>
-<span class="sd">        The input `resp` dicts with keys modified to match the get_data_points</span>
+<span class="sd">        The input ``resp`` dicts with keys modified to match the get_data_points</span>
 <span class="sd">        output keys. Splits each point with plantingStartDate, plantingEndDate,</span>
 <span class="sd">        harvestingStartDate, and harvestingEndDate into two points with start</span>
 <span class="sd">        and end date where the value is the state of the crop as a string.</span>
@@ -871,18 +879,21 @@
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    list of dicts</span>
-<span class="sd">        Ex: [ {</span>
-<span class="sd">            &quot;start_date&quot;: &quot;2000-01-01T00:00:00.000Z&quot;,</span>
-<span class="sd">            &quot;end_date&quot;: &quot;2000-12-31T00:00:00.000Z&quot;,</span>
-<span class="sd">            &quot;value&quot;: 251854000,</span>
-<span class="sd">            &quot;input_unit_id&quot;: 14,</span>
-<span class="sd">            &quot;input_unit_scale&quot;: 1,</span>
-<span class="sd">            &quot;metric_id&quot;: 860032,</span>
-<span class="sd">            &quot;item_id&quot;: 274,</span>
-<span class="sd">            &quot;region_id&quot;: 1215,</span>
-<span class="sd">            &quot;frequency_id&quot;: 9,</span>
-<span class="sd">            &quot;unit_id&quot;: 14</span>
-<span class="sd">        }, ...]</span>
+
+<span class="sd">        Example::</span>
+<span class="sd">        </span>
+<span class="sd">            [ {</span>
+<span class="sd">                &quot;start_date&quot;: &quot;2000-01-01T00:00:00.000Z&quot;,</span>
+<span class="sd">                &quot;end_date&quot;: &quot;2000-12-31T00:00:00.000Z&quot;,</span>
+<span class="sd">                &quot;value&quot;: 251854000,</span>
+<span class="sd">                &quot;input_unit_id&quot;: 14,</span>
+<span class="sd">                &quot;input_unit_scale&quot;: 1,</span>
+<span class="sd">                &quot;metric_id&quot;: 860032,</span>
+<span class="sd">                &quot;item_id&quot;: 274,</span>
+<span class="sd">                &quot;region_id&quot;: 1215,</span>
+<span class="sd">                &quot;frequency_id&quot;: 9,</span>
+<span class="sd">                &quot;unit_id&quot;: 14</span>
+<span class="sd">            }, ...]</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span><span class="p">(</span><span class="n">selection</span><span class="p">[</span><span class="s1">&#39;metric_id&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">CROP_CALENDAR_METRIC_ID</span><span class="p">):</span>
@@ -908,7 +919,10 @@
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    list of [id, entity_type] pairs</span>
-<span class="sd">        Ex: [[5604, &#39;item&#39;], [10204, &#39;item&#39;], [410032, &#39;metric&#39;], ....]</span>
+<span class="sd">        </span>
+<span class="sd">        Example::</span>
+
+<span class="sd">            [[5604, &#39;item&#39;], [10204, &#39;item&#39;], [410032, &#39;metric&#39;], ....]</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">url_pieces</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;https:&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">api_host</span><span class="p">,</span> <span class="s1">&#39;v2/search&#39;</span><span class="p">]</span>
@@ -932,7 +946,10 @@
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    list of dicts</span>
-<span class="sd">        Ex: [{&#39;id&#39;: 5604}, {&#39;id&#39;: 10204}, {&#39;id&#39;: 10210}, ....]</span>
+<span class="sd">        </span>
+<span class="sd">        Example::</span>
+
+<span class="sd">            [{&#39;id&#39;: 5604}, {&#39;id&#39;: 10204}, {&#39;id&#39;: 10210}, ....]</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">url</span> <span class="o">=</span> <span class="s1">&#39;/&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s1">&#39;https:&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">api_host</span><span class="p">,</span> <span class="s1">&#39;v2/search&#39;</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">])</span>
@@ -964,9 +981,11 @@
 <span class="sd">    Yields</span>
 <span class="sd">    ------</span>
 <span class="sd">    dict</span>
-<span class="sd">        Result from search() passed to lookup() to get additional details</span>
-<span class="sd">        Ex: { &#39;id&#39;: 274, &#39;contains&#39;: [779, 780, ...] &#39;name&#39;: &#39;Corn&#39;,</span>
-<span class="sd">              &#39;definition&#39;: &#39;The seeds of the widely cultivated...&#39; }</span>
+<span class="sd">        Result from search() passed to lookup() to get additional details. For example::</span>
+
+<span class="sd">            { &#39;id&#39;: 274, &#39;contains&#39;: [779, 780, ...] &#39;name&#39;: &#39;Corn&#39;,</span>
+<span class="sd">            &#39;definition&#39;: &#39;The seeds of the widely cultivated...&#39; }</span>
+
 <span class="sd">        See output of lookup(). Note that as with search(), the first result is</span>
 <span class="sd">        the best match for the given search term(s).</span>
 
@@ -991,14 +1010,14 @@
 <span class="sd">    ------</span>
 <span class="sd">    dict</span>
 <span class="sd">        Result of lookup() on each entity the given entity belongs to.</span>
-<span class="sd">        ex: For the region &#39;United States&#39;, one yielded result will be for</span>
-<span class="sd">        &#39;North America.&#39; The format of which matches the output of lookup():</span>
-<span class="sd">        {</span>
-<span class="sd">            &#39;id&#39;: 15,</span>
-<span class="sd">            &#39;contains&#39;: [ 1008, 1009, 1012, 1215, ... ],</span>
-<span class="sd">            &#39;name&#39;: &#39;North America&#39;,</span>
-<span class="sd">            &#39;level&#39;: 2</span>
-<span class="sd">        }</span>
+
+<span class="sd">        For example: For the region &#39;United States&#39;, one yielded result will be for</span>
+<span class="sd">        &#39;North America.&#39; The format of which matches the output of lookup()::</span>
+
+<span class="sd">            { &#39;id&#39;: 15,</span>
+<span class="sd">              &#39;contains&#39;: [ 1008, 1009, 1012, 1215, ... ],</span>
+<span class="sd">              &#39;name&#39;: &#39;North America&#39;,</span>
+<span class="sd">              &#39;level&#39;: 2 }</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">url</span> <span class="o">=</span> <span class="s1">&#39;/&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s1">&#39;https:&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">api_host</span><span class="p">,</span> <span class="s1">&#39;v2&#39;</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">,</span> <span class="s1">&#39;belongs-to&#39;</span><span class="p">])</span>
@@ -1021,8 +1040,10 @@
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    list of dicts</span>
-<span class="sd">        Ex: [{ &#39;centre&#39;: [ 45.7228, -112.996 ],</span>
-<span class="sd">               &#39;regionId&#39;: 1215, &#39;regionName&#39;: &#39;United States&#39; }]</span>
+
+<span class="sd">        Example::</span>
+
+<span class="sd">            [{ &#39;centre&#39;: [ 45.7228, -112.996 ], &#39;regionId&#39;: 1215, &#39;regionName&#39;: &#39;United States&#39; }]</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">url</span> <span class="o">=</span> <span class="s1">&#39;/&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s1">&#39;https:&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">api_host</span><span class="p">,</span> <span class="s1">&#39;v2/geocentres?regionIds=&#39;</span> <span class="o">+</span>
@@ -1081,17 +1102,21 @@
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    list of dicts</span>
-<span class="sd">        Ex: [{</span>
-<span class="sd">            &#39;id&#39;: 13100,</span>
-<span class="sd">            &#39;contains&#39;: [139839, 139857, ...],</span>
-<span class="sd">            &#39;name&#39;: &#39;Wisconsin&#39;,</span>
-<span class="sd">            &#39;level&#39;: 4</span>
-<span class="sd">        } , {</span>
-<span class="sd">            &#39;id&#39;: 13101,</span>
-<span class="sd">            &#39;contains&#39;: [139891, 139890, ...],</span>
-<span class="sd">            &#39;name&#39;: &#39;Wyoming&#39;,</span>
-<span class="sd">            &#39;level&#39;: 4</span>
-<span class="sd">        }, ...]</span>
+
+<span class="sd">        Example::</span>
+
+<span class="sd">            [{</span>
+<span class="sd">                &#39;id&#39;: 13100,</span>
+<span class="sd">                &#39;contains&#39;: [139839, 139857, ...],</span>
+<span class="sd">                &#39;name&#39;: &#39;Wisconsin&#39;,</span>
+<span class="sd">                &#39;level&#39;: 4</span>
+<span class="sd">            } , {</span>
+<span class="sd">                &#39;id&#39;: 13101,</span>
+<span class="sd">                &#39;contains&#39;: [139891, 139890, ...],</span>
+<span class="sd">                &#39;name&#39;: &#39;Wyoming&#39;,</span>
+<span class="sd">                &#39;level&#39;: 4</span>
+<span class="sd">            }, ...]</span>
+
 <span class="sd">        See output of lookup()</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
