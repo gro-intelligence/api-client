@@ -213,45 +213,46 @@ should appear in the client classes rather than here.</p>
 <dt id="api.client.lib.format_crop_calendar_response">
 <code class="descclassname">api.client.lib.</code><code class="descname">format_crop_calendar_response</code><span class="sig-paren">(</span><em>resp</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/lib.html#format_crop_calendar_response"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.lib.format_crop_calendar_response" title="Permalink to this definition">¶</a></dt>
 <dd><p>Make cropcalendar output a format similar to get_data_points().</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">format_crop_calendar_response</span><span class="p">([</span>
-<span class="gp">... </span>    <span class="p">{</span>
-<span class="gp">... </span>        <span class="s1">&#39;metricId&#39;</span><span class="p">:</span> <span class="mi">2260063</span><span class="p">,</span>
-<span class="gp">... </span>        <span class="s1">&#39;itemId&#39;</span><span class="p">:</span> <span class="mi">274</span><span class="p">,</span>
-<span class="gp">... </span>        <span class="s1">&#39;regionId&#39;</span><span class="p">:</span> <span class="mi">13051</span><span class="p">,</span>
-<span class="gp">... </span>        <span class="s1">&#39;sourceId&#39;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
-<span class="gp">... </span>        <span class="s1">&#39;frequencyId&#39;</span><span class="p">:</span> <span class="mi">15</span><span class="p">,</span>
-<span class="gp">... </span>        <span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="p">[{</span>
-<span class="gp">... </span>            <span class="s1">&#39;sageItem&#39;</span><span class="p">:</span> <span class="s1">&#39;Corn&#39;</span><span class="p">,</span>
-<span class="gp">... </span>            <span class="s1">&#39;plantingStartDate&#39;</span><span class="p">:</span> <span class="s1">&#39;2000-03-04&#39;</span><span class="p">,</span>
-<span class="gp">... </span>            <span class="s1">&#39;plantingEndDate&#39;</span><span class="p">:</span> <span class="s1">&#39;2000-05-17&#39;</span><span class="p">,</span>
-<span class="gp">... </span>            <span class="s1">&#39;harvestingStartDate&#39;</span><span class="p">:</span> <span class="s1">&#39;2000-07-20&#39;</span><span class="p">,</span>
-<span class="gp">... </span>            <span class="s1">&#39;harvestingEndDate&#39;</span><span class="p">:</span> <span class="s1">&#39;2000-11-01&#39;</span><span class="p">,</span>
-<span class="gp">... </span>            <span class="s1">&#39;multiYear&#39;</span><span class="p">:</span> <span class="kc">False</span>
-<span class="gp">... </span>        <span class="p">}]</span>
-<span class="gp">... </span>    <span class="p">}</span>
-<span class="gp">... </span><span class="p">])</span>
-<span class="go">[{&#39;metric_id&#39;: 2260063,</span>
-<span class="go">    &#39;item_id&#39;: 274,</span>
-<span class="go">    &#39;region_id&#39;: 13051,</span>
-<span class="go">    &#39;frequency_id&#39;: 15,</span>
-<span class="go">    &#39;source_id&#39;: 5,</span>
-<span class="go">    &#39;start_date&#39;: &#39;2000-03-04&#39;,</span>
-<span class="go">    &#39;end_date&#39;: &#39;2000-05-17&#39;,</span>
-<span class="go">    &#39;value&#39;: &#39;planting&#39;,</span>
-<span class="go">    &#39;input_unit_id&#39;: None,</span>
-<span class="go">    &#39;input_unit_scale&#39;: None,</span>
-<span class="go">    &#39;reporting_date&#39;: None},</span>
-<span class="go">    {&#39;metric_id&#39;: 2260063,</span>
-<span class="go">    &#39;item_id&#39;: 274,</span>
-<span class="go">    &#39;region_id&#39;: 13051,</span>
-<span class="go">    &#39;frequency_id&#39;: 15,</span>
-<span class="go">    &#39;source_id&#39;: 5,</span>
-<span class="go">    &#39;start_date&#39;: &#39;2000-07-20&#39;,</span>
-<span class="go">    &#39;end_date&#39;: &#39;2000-11-01&#39;,</span>
-<span class="go">    &#39;value&#39;: &#39;harvesting&#39;,</span>
-<span class="go">    &#39;input_unit_id&#39;: None,</span>
-<span class="go">    &#39;input_unit_scale&#39;: None,</span>
-<span class="go">    &#39;reporting_date&#39;: None}]</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">format_crop_calendar_response</span><span class="p">([{</span>
+<span class="gp">... </span>    <span class="s1">&#39;metricId&#39;</span><span class="p">:</span> <span class="mi">2260063</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s1">&#39;itemId&#39;</span><span class="p">:</span> <span class="mi">274</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s1">&#39;regionId&#39;</span><span class="p">:</span> <span class="mi">13051</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s1">&#39;sourceId&#39;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s1">&#39;frequencyId&#39;</span><span class="p">:</span> <span class="mi">15</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="p">[{</span>
+<span class="gp">... </span>        <span class="s1">&#39;sageItem&#39;</span><span class="p">:</span> <span class="s1">&#39;Corn&#39;</span><span class="p">,</span>
+<span class="gp">... </span>        <span class="s1">&#39;plantingStartDate&#39;</span><span class="p">:</span> <span class="s1">&#39;2000-03-04&#39;</span><span class="p">,</span>
+<span class="gp">... </span>        <span class="s1">&#39;plantingEndDate&#39;</span><span class="p">:</span> <span class="s1">&#39;2000-05-17&#39;</span><span class="p">,</span>
+<span class="gp">... </span>        <span class="s1">&#39;harvestingStartDate&#39;</span><span class="p">:</span> <span class="s1">&#39;2000-07-20&#39;</span><span class="p">,</span>
+<span class="gp">... </span>        <span class="s1">&#39;harvestingEndDate&#39;</span><span class="p">:</span> <span class="s1">&#39;2000-11-01&#39;</span><span class="p">,</span>
+<span class="gp">... </span>        <span class="s1">&#39;multiYear&#39;</span><span class="p">:</span> <span class="kc">False</span>
+<span class="gp">... </span>    <span class="p">}]</span>
+<span class="gp">... </span><span class="p">}])</span> <span class="o">==</span> <span class="p">[{</span>
+<span class="gp">... </span>    <span class="s1">&#39;metric_id&#39;</span><span class="p">:</span> <span class="mi">2260063</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s1">&#39;item_id&#39;</span><span class="p">:</span> <span class="mi">274</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s1">&#39;region_id&#39;</span><span class="p">:</span> <span class="mi">13051</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s1">&#39;frequency_id&#39;</span><span class="p">:</span> <span class="mi">15</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s1">&#39;source_id&#39;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s1">&#39;start_date&#39;</span><span class="p">:</span> <span class="s1">&#39;2000-03-04&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s1">&#39;end_date&#39;</span><span class="p">:</span> <span class="s1">&#39;2000-05-17&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="s1">&#39;planting&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s1">&#39;input_unit_id&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s1">&#39;input_unit_scale&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s1">&#39;reporting_date&#39;</span><span class="p">:</span> <span class="kc">None</span>
+<span class="gp">... </span><span class="p">},</span> <span class="p">{</span>
+<span class="gp">... </span>    <span class="s1">&#39;metric_id&#39;</span><span class="p">:</span> <span class="mi">2260063</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s1">&#39;item_id&#39;</span><span class="p">:</span> <span class="mi">274</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s1">&#39;region_id&#39;</span><span class="p">:</span> <span class="mi">13051</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s1">&#39;frequency_id&#39;</span><span class="p">:</span> <span class="mi">15</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s1">&#39;source_id&#39;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s1">&#39;start_date&#39;</span><span class="p">:</span> <span class="s1">&#39;2000-07-20&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s1">&#39;end_date&#39;</span><span class="p">:</span> <span class="s1">&#39;2000-11-01&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="s1">&#39;harvesting&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s1">&#39;input_unit_id&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s1">&#39;input_unit_scale&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s1">&#39;reporting_date&#39;</span><span class="p">:</span> <span class="kc">None</span>
+<span class="gp">... </span><span class="p">}]</span>
+<span class="go">True</span>
 </pre></div>
 </div>
 <table class="docutils field-list" frame="void" rules="none">
@@ -364,28 +365,28 @@ get_data_points().</p>
 <code class="descclassname">api.client.lib.</code><code class="descname">get_crop_calendar_params</code><span class="sig-paren">(</span><em>**selection</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/lib.html#get_crop_calendar_params"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.lib.get_crop_calendar_params" title="Permalink to this definition">¶</a></dt>
 <dd><p>Construct http request params from dict of entity selections.</p>
 <p>For use with get_crop_calendar_data_points()</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">get_crop_calendar_params</span><span class="p">(</span><span class="o">**</span><span class="p">{</span>
-<span class="gp">... </span>    <span class="s1">&#39;metric_id&#39;</span><span class="p">:</span> <span class="mi">123</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="s1">&#39;item_id&#39;</span><span class="p">:</span> <span class="mi">456</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="s1">&#39;region_id&#39;</span><span class="p">:</span> <span class="mi">14</span>
-<span class="gp">... </span><span class="p">})</span>
-<span class="go">{&#39;itemId&#39;: 456, &#39;regionId&#39;: 14}</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">get_crop_calendar_params</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">metric_id</span><span class="o">=</span><span class="mi">123</span><span class="p">,</span> <span class="n">item_id</span><span class="o">=</span><span class="mi">456</span><span class="p">,</span> <span class="n">region_id</span><span class="o">=</span><span class="mi">14</span>
+<span class="gp">... </span><span class="p">)</span> <span class="o">==</span> <span class="p">{</span> <span class="s1">&#39;itemId&#39;</span><span class="p">:</span> <span class="mi">456</span><span class="p">,</span> <span class="s1">&#39;regionId&#39;</span><span class="p">:</span> <span class="mi">14</span> <span class="p">}</span>
+<span class="go">True</span>
 </pre></div>
 </div>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>selection</strong> (<em>dict</em>) &#8211; Keys can include: &#8216;item_id&#8217;, &#8216;region_id&#8217;. Anything else will be
-ignored.
-Only region and item are required since metric/item/source/frequency
-all have default values and start/end date are not allowed inputs since
-crop calendars are static.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>item_id</strong> (<em>integer</em>) &#8211; </li>
+<li><strong>region_id</strong> (<em>integer</em>) &#8211; </li>
+</ul>
+</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">selections with valid keys converted to camelcase and invalid ones
-filtered out</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">selections with valid keys converted to camelcase and invalid ones
+filtered out</p>
+</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">dict</p>
+</td>
 </tr>
 </tbody>
 </table>
@@ -423,27 +424,36 @@ filtered out</td>
 <code class="descclassname">api.client.lib.</code><code class="descname">get_data_call_params</code><span class="sig-paren">(</span><em>**selection</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/lib.html#get_data_call_params"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.lib.get_data_call_params" title="Permalink to this definition">¶</a></dt>
 <dd><p>Construct http request params from dict of entity selections.</p>
 <p>For use with get_data_points().</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">get_data_call_params</span><span class="p">(</span><span class="o">**</span><span class="p">{</span>
-<span class="gp">... </span>    <span class="s1">&#39;metric_id&#39;</span><span class="p">:</span> <span class="mi">123</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="s1">&#39;start_date&#39;</span><span class="p">:</span> <span class="s1">&#39;2012-01-01&#39;</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="s1">&#39;unit_id&#39;</span><span class="p">:</span> <span class="mi">14</span>
-<span class="gp">... </span><span class="p">})</span>
-<span class="go">{&#39;metricId&#39;: 123, &#39;startDate&#39;: &#39;2012-01-01&#39;}</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">get_data_call_params</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">metric_id</span><span class="o">=</span><span class="mi">123</span><span class="p">,</span> <span class="n">start_date</span><span class="o">=</span><span class="s1">&#39;2012-01-01&#39;</span><span class="p">,</span> <span class="n">unit_id</span><span class="o">=</span><span class="mi">14</span>
+<span class="gp">... </span><span class="p">)</span> <span class="o">==</span> <span class="p">{</span><span class="s1">&#39;startDate&#39;</span><span class="p">:</span> <span class="s1">&#39;2012-01-01&#39;</span><span class="p">,</span> <span class="s1">&#39;metricId&#39;</span><span class="p">:</span> <span class="mi">123</span><span class="p">}</span>
+<span class="go">True</span>
 </pre></div>
 </div>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>selection</strong> (<em>dict</em>) &#8211; Keys can include: &#8216;metric_id&#8217;, &#8216;item_id&#8217;, &#8216;region_id&#8217;,
-&#8216;partner_region_id&#8217;, &#8216;source_id&#8217;, &#8216;frequency_id&#8217;, &#8216;start_date&#8217;,
-&#8216;end_date&#8217;, &#8216;show_revisions&#8217;, and &#8216;insert_null&#8217;.
-Anything else will be ignored.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>metric_id</strong> (<em>integer</em>) &#8211; </li>
+<li><strong>item_id</strong> (<em>integer</em>) &#8211; </li>
+<li><strong>region_id</strong> (<em>integer</em>) &#8211; </li>
+<li><strong>partner_region_id</strong> (<em>integer</em>) &#8211; </li>
+<li><strong>source_id</strong> (<em>integer</em>) &#8211; </li>
+<li><strong>frequency_id</strong> (<em>integer</em>) &#8211; </li>
+<li><strong>start_date</strong> (<em>string</em><em>, </em><em>optional</em>) &#8211; </li>
+<li><strong>end_date</strong> (<em>string</em><em>, </em><em>optional</em>) &#8211; </li>
+<li><strong>show_revisions</strong> (<em>boolean</em><em>, </em><em>optional</em>) &#8211; </li>
+<li><strong>insert_null</strong> (<em>boolean</em><em>, </em><em>optional</em>) &#8211; </li>
+<li><strong>at_time</strong> (<em>string</em><em>, </em><em>optional</em>) &#8211; </li>
+</ul>
+</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">selections with valid keys converted to camelcase and invalid ones
-filtered out</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">selections with valid keys converted to camelcase and invalid ones filtered out</p>
+</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">dict</p>
+</td>
 </tr>
 </tbody>
 </table>
@@ -461,7 +471,20 @@ filtered out</td>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>access_token</strong> (<em>string</em>) &#8211; </li>
 <li><strong>api_host</strong> (<em>string</em>) &#8211; </li>
-<li><strong>selection</strong> (<em>dict</em>) &#8211; See get_data_call_params() input</li>
+<li><strong>metric_id</strong> (<em>integer</em>) &#8211; </li>
+<li><strong>item_id</strong> (<em>integer</em>) &#8211; </li>
+<li><strong>region_id</strong> (<em>integer</em>) &#8211; </li>
+<li><strong>partner_region_id</strong> (<em>integer</em>) &#8211; </li>
+<li><strong>source_id</strong> (<em>integer</em>) &#8211; </li>
+<li><strong>frequency_id</strong> (<em>integer</em>) &#8211; </li>
+<li><strong>start_date</strong> (<em>string</em><em>, </em><em>optional</em>) &#8211; all points with start dates equal to or after this date</li>
+<li><strong>end_date</strong> (<em>string</em><em>, </em><em>optional</em>) &#8211; all points with end dates equal to or after this date</li>
+<li><strong>show_revisions</strong> (<em>boolean</em><em>, </em><em>optional</em>) &#8211; False by default, meaning only the latest value for each period. If true, will return all
+values for a given period, differentiated by the <cite>reporting_date</cite> field.</li>
+<li><strong>insert_null</strong> (<em>boolean</em><em>, </em><em>optional</em>) &#8211; False by default. If True, will include a data point with a None value for each period
+that does not have data.</li>
+<li><strong>at_time</strong> (<em>string</em><em>, </em><em>optional</em>) &#8211; Estimate what data would have been available via Gro at a given time in the past. See
+/api/client/samples/at-time-query-examples.ipynb for more details.</li>
 </ul>
 </td>
 </tr>
@@ -502,8 +525,12 @@ filtered out</td>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>access_token</strong> (<em>string</em>) &#8211; </li>
 <li><strong>api_host</strong> (<em>string</em>) &#8211; </li>
-<li><strong>selection</strong> (<em>dict</em>) &#8211; See get_params_from_selection() for more information on selection
-formatting</li>
+<li><strong>metric_id</strong> (<em>integer</em><em>, </em><em>optional</em>) &#8211; </li>
+<li><strong>item_id</strong> (<em>integer</em><em>, </em><em>optional</em>) &#8211; </li>
+<li><strong>region_id</strong> (<em>integer</em><em>, </em><em>optional</em>) &#8211; </li>
+<li><strong>partner_region_id</strong> (<em>integer</em><em>, </em><em>optional</em>) &#8211; </li>
+<li><strong>source_id</strong> (<em>integer</em><em>, </em><em>optional</em>) &#8211; </li>
+<li><strong>frequency_id</strong> (<em>integer</em><em>, </em><em>optional</em>) &#8211; </li>
 </ul>
 </td>
 </tr>
@@ -660,26 +687,31 @@ levels.</p>
 <code class="descclassname">api.client.lib.</code><code class="descname">get_params_from_selection</code><span class="sig-paren">(</span><em>**selection</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/lib.html#get_params_from_selection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.lib.get_params_from_selection" title="Permalink to this definition">¶</a></dt>
 <dd><p>Construct http request params from dict of entity selections.</p>
 <p>For use with get_data_series() and rank_series_by_source().</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">get_params_from_selection</span><span class="p">(</span><span class="o">**</span><span class="p">{</span>
-<span class="gp">... </span>    <span class="s1">&#39;metric_id&#39;</span><span class="p">:</span> <span class="mi">123</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="s1">&#39;item_id&#39;</span><span class="p">:</span> <span class="mi">456</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="s1">&#39;unit_id&#39;</span><span class="p">:</span> <span class="mi">14</span>
-<span class="gp">... </span><span class="p">})</span>
-<span class="go">{&#39;metricId&#39;: 123, &#39;itemId&#39;: 456}</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">get_params_from_selection</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">metric_id</span><span class="o">=</span><span class="mi">123</span><span class="p">,</span> <span class="n">item_id</span><span class="o">=</span><span class="mi">456</span><span class="p">,</span> <span class="n">unit_id</span><span class="o">=</span><span class="mi">14</span>
+<span class="gp">... </span><span class="p">)</span> <span class="o">==</span> <span class="p">{</span> <span class="s1">&#39;itemId&#39;</span><span class="p">:</span> <span class="mi">456</span><span class="p">,</span> <span class="s1">&#39;metricId&#39;</span><span class="p">:</span> <span class="mi">123</span> <span class="p">}</span>
+<span class="go">True</span>
 </pre></div>
 </div>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>selection</strong> (<em>dict</em>) &#8211; Keys can include: &#8216;metric_id&#8217;, &#8216;item_id&#8217;, &#8216;region_id&#8217;,
-&#8216;partner_region_id&#8217;, &#8216;source_id&#8217;, &#8216;frequency_id&#8217;. Anything else will
-be ignored.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>metric_id</strong> (<em>integer</em><em>, </em><em>optional</em>) &#8211; </li>
+<li><strong>item_id</strong> (<em>integer</em><em>, </em><em>optional</em>) &#8211; </li>
+<li><strong>region_id</strong> (<em>integer</em><em>, </em><em>optional</em>) &#8211; </li>
+<li><strong>partner_region_id</strong> (<em>integer</em><em>, </em><em>optional</em>) &#8211; </li>
+<li><strong>source_id</strong> (<em>integer</em><em>, </em><em>optional</em>) &#8211; </li>
+<li><strong>frequency_id</strong> (<em>integer</em><em>, </em><em>optional</em>) &#8211; </li>
+</ul>
+</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">selections with valid keys converted to camelcase and invalid ones
-filtered out</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">selections with valid keys converted to camelcase and invalid ones filtered out</p>
+</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">dict</p>
+</td>
 </tr>
 </tbody>
 </table>
@@ -739,7 +771,7 @@ source_id, frequency_id</p>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>access_token</strong> (<em>string</em>) &#8211; </li>
 <li><strong>api_host</strong> (<em>string</em>) &#8211; </li>
-<li><strong>entity_type</strong> (<em>string</em>) &#8211; &#8216;items&#8217;, &#8216;metrics&#8217;, &#8216;regions&#8217;, &#8216;units&#8217;, or &#8216;sources&#8217;</li>
+<li><strong>entity_type</strong> (<em>string</em>) &#8211; &#8216;items&#8217;, &#8216;metrics&#8217;, &#8216;regions&#8217;, &#8216;units&#8217;, &#8216;frequencies&#8217;, or &#8216;sources&#8217;</li>
 <li><strong>entity_id</strong> (<em>int</em>) &#8211; </li>
 </ul>
 </td>
@@ -773,7 +805,7 @@ source_id, frequency_id</p>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>access_token</strong> (<em>string</em>) &#8211; </li>
 <li><strong>api_host</strong> (<em>string</em>) &#8211; </li>
-<li><strong>entity_type</strong> (<em>string</em>) &#8211; One of: &#8216;metrics&#8217;, &#8216;items&#8217;, &#8216;regions&#8217;, or &#8216;sources&#8217;</li>
+<li><strong>entity_type</strong> (<em>string</em>) &#8211; One of: &#8216;metrics&#8217;, &#8216;items&#8217;, or &#8216;regions&#8217;</li>
 <li><strong>entity_id</strong> (<em>integer</em>) &#8211; </li>
 </ul>
 </td>
@@ -821,9 +853,11 @@ comes first. Differences other than source_id are not affected.</p>
 <dt id="api.client.lib.redirect">
 <code class="descclassname">api.client.lib.</code><code class="descname">redirect</code><span class="sig-paren">(</span><em>params</em>, <em>migration</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/lib.html#redirect"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.lib.redirect" title="Permalink to this definition">¶</a></dt>
 <dd><p>Update query parameters to follow a redirection response from the API.</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">redirect</span><span class="p">({</span><span class="s1">&#39;metricId&#39;</span><span class="p">:</span> <span class="mi">14</span><span class="p">,</span> <span class="s1">&#39;sourceId&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;itemId&#39;</span><span class="p">:</span> <span class="mi">145</span><span class="p">},</span>
-<span class="gp">... </span>         <span class="p">{</span><span class="s1">&#39;old_metric_id&#39;</span><span class="p">:</span> <span class="mi">14</span><span class="p">,</span> <span class="s1">&#39;new_metric_id&#39;</span><span class="p">:</span> <span class="mi">15</span><span class="p">,</span> <span class="s1">&#39;source_id&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">})</span>
-<span class="go">{&#39;metricId&#39;: 15, &#39;sourceId&#39;: 2, &#39;itemId&#39;: 145}</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">redirect</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="p">{</span><span class="s1">&#39;metricId&#39;</span><span class="p">:</span> <span class="mi">14</span><span class="p">,</span> <span class="s1">&#39;sourceId&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;itemId&#39;</span><span class="p">:</span> <span class="mi">145</span><span class="p">},</span>
+<span class="gp">... </span>    <span class="p">{</span><span class="s1">&#39;old_metric_id&#39;</span><span class="p">:</span> <span class="mi">14</span><span class="p">,</span> <span class="s1">&#39;new_metric_id&#39;</span><span class="p">:</span> <span class="mi">15</span><span class="p">,</span> <span class="s1">&#39;source_id&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">}</span>
+<span class="gp">... </span><span class="p">)</span> <span class="o">==</span> <span class="p">{</span><span class="s1">&#39;sourceId&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;itemId&#39;</span><span class="p">:</span> <span class="mi">145</span><span class="p">,</span> <span class="s1">&#39;metricId&#39;</span><span class="p">:</span> <span class="mi">15</span><span class="p">}</span>
+<span class="go">True</span>
 </pre></div>
 </div>
 <table class="docutils field-list" frame="void" rules="none">
