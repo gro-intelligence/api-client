@@ -10,8 +10,10 @@ Using historical yield, production quantity, and NDVI data from within Gro, this
 ## Model Inputs
 [GIMMS MODIS NDVI](https://app.gro-intelligence.com/dictionary/sources/3)
 * __Model Specific Data:__ 8-day averages for soil moisture by county for Brazil’s corn-producing areas.
+
 [FAO](https://app.gro-intelligence.com/dictionary/sources/2), [PS&D](https://app.gro-intelligence.com/dictionary/sources/14), and [IGC](https://app.gro-intelligence.com/dictionary/sources/19)
 * __Model Specific Data:__ Annual soybean yields at the national level.
+
 [IBGE](https://app.gro-intelligence.com/dictionary/sources/114) and [CONAB](https://app.gro-intelligence.com/dictionary/sources/73)
 * __Model Specific Data:__ May be used to determine weighting of each province’s contribution to national soybean production.
 
