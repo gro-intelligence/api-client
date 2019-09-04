@@ -2,7 +2,7 @@
 
 # Gro API Client
 
-https://www.gro-intelligence.com/products/gro-api
+<https://www.gro-intelligence.com/products/gro-api>
 
 Client library for accessing Gro Intelligence's agricultural data platform.
 
@@ -17,13 +17,15 @@ Client library for accessing Gro Intelligence's agricultural data platform.
 pip install git+https://github.com/gro-intelligence/api-client.git
 ```
 
+Note that even if you are using [Anaconda](https://www.anaconda.com/), the API Client install should still be performed using pip and not [conda](https://docs.conda.io/en/latest/).
+
 ## Gro API authentication token
 
 Use the Gro web application to retrieve an authentication token (instructions are in the wiki [here](https://github.com/gro-intelligence/api-client/wiki/Authentication-Tokens#11-using-the-gro-web-application-preferred)).
 
 ### Saving your token as an environment variable (optional)
 
-If you don't want to enter a password or token each time, you can save the token as an environment variable. Please consult your OS or IDE documentation for information on how to set environment variables, e.g. [setting environment variables in Windows Powershell](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_environment_variables?view=powershell-6) and [Mac OS X/Linux](https://apple.stackexchange.com/questions/106778/how-do-i-set-environment-variables-on-os-x). In some of the sample code, it is assumed that you have the token saved to your environment variables as `GROAPI_TOKEN`.
+If you don't want to enter a password or token each time, you can save the token as an environment variable. Please consult your OS or IDE documentation for information on how to set environment variables, e.g. [setting environment variables in Windows Powershell](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_environment_variables?view=powershell-6) or [Mac OS X/Linux](https://apple.stackexchange.com/questions/106778/how-do-i-set-environment-variables-on-os-x) or [Anaconda environmnent variables](https://anaconda-project.readthedocs.io/en/latest/user-guide/tasks/work-with-variables.html). In some of the sample code, it is assumed that you have the token saved to your environment variables as `GROAPI_TOKEN`.
 
 ## Examples
 
@@ -50,9 +52,9 @@ python crop_models/soybeans.py
 4. You can also use the included `gro_client` tool as a quick way to request a single data series right on the command line. Try the following:
 
 ```sh
-gro_client --metric='Production Quantity mass' --item='Corn' --region='United States' --user_email='email@example.com'
+gro_client --metric="Production Quantity mass" --item="Corn" --region="United States" --user_email="email@example.com"
 ```
 
-The `gro_client` command line interface does a keyword search for the inputs and finds a random matching data series. It displays the data series it picked in the command line and writes the data points out to a file in the current directory called `gro_client_output.csv`. This tool is useful for simple queries, but anything more complex should be done using the Python packages.
+The `gro_client` command line interface does a keyword search for the inputs and finds a random matching data series. It displays the data series it picked in the command line and writes the data points out to a file in the current directory called `gro_client_output.csv`. This tool is useful for simple queries, but anything more complex should be done using the provided Python packages.
 
 Further documentation can be found in the [api/client/](api/client) directory and on our [wiki](https://github.com/gro-intelligence/api-client/wiki).
