@@ -6,11 +6,24 @@ python:
 
 build:
   ci:
-    - pip install -r requirements.txt
-    - pip install -r test-requirements.txt
+    - shippable_retry pip install .[test]
     # Create folders for test and code coverage
     - mkdir -p shippable/testresults
     - mkdir -p shippable/codecoverage
     # Run test and code coverage and output results to the right folder
     - pytest --junitxml=shippable/testresults/nosetests.xml
     - pytest --cov=api --cov-report=xml:shippable/codecoverage/coverage.xml
+  post_ci:
+    # Only build docs on the Python 2.7 run. It is unnecessary to run on both 2.x and 3.x - one or
+    # the other should suffice. However, as of this writing
+    # https://github.com/sphinx-contrib/sphinxcontrib-versioning does not support the latest 3.x
+    # versions, which we do want to run unit tests on. That is why 2.x is used, rather than adding
+    # an older 3.x version to the build matrix just to support docs.
+    - >
+      if [ "$SHIPPABLE_PYTHON_VERSION" == "2.7" ]; then
+        shippable_retry pip install .[docs] &&
+        git config --global user.email "api-documentation@gro-intelligence.com" &&
+        git config --global user.name "Gro Intelligence" &&
+        git remote set-url origin git@github.com:$REPO_FULL_NAME.git &&
+        ssh-agent bash -c 'ssh-add /tmp/ssh/00_sub; sphinx-versioning push -r development docs gh-pages .';
+      fi;
