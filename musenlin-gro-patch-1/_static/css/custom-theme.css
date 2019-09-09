@@ -1,0 +1,27 @@
+@import 'theme.css';
+h1 {
+    font-family: Roboto,Arial,sans-serif;
+    font-weight:300;
+    font-size: 48px;
+    color: #444447;
+    line-height: 48px;
+}
+.wy-side-nav-search {
+    background-color: #ffffff;
+}
+
+.wy-menu-vertical a {
+    color: #404040;
+}
+
+.wy-menu-vertical a:hover {
+    color: #d9d9d9;
+}
+
+.wy-nav-side {
+    background: #ffffff;
+}
+
+.wy-nav-content {
+    border-left: 2px #EEEEF1 solid;
+}
