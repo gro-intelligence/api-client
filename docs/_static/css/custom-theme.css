@@ -6,6 +6,42 @@ h1 {
     color: #444447;
     line-height: 48px;
 }
+
+h2 {
+    font-family: Roboto,Arial,sans-serif;
+    font-weight:300;
+    font-size: 32px;
+    color: #444447;
+    line-height: 36px;
+}
+
+h3 {
+    font-family: Roboto,Arial,sans-serif;
+    font-weight:500;
+    font-size: 18px;
+    color: #666669;
+    line-height: 21px;
+}
+
+p {
+    font-family: Roboto,Arial,sans-serif;
+    font-weight:400;
+    font-size: 16px;
+    color: #666669;
+    line-height: 28px;
+}
+
+a {
+    font-family: Roboto,Arial,sans-serif;
+    font-weight:400;
+    font-size: 16px;
+    color: #E31B37;
+    line-height: 28px;
+    text-decoration: underline;
+    
+}
+
+
 .wy-side-nav-search {
     background-color: #ffffff;
 }
