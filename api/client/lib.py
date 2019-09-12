@@ -12,6 +12,8 @@ import json
 import logging
 import requests
 import time
+import pandas as pd
+import geopandas as gpd
 try:
     # functools are native in Python 3.2.3+
     from functools import lru_cache as memoize
@@ -31,6 +33,7 @@ REGION_LEVELS = {
     'other': 8,
     'coordinate': 9
 }
+
 
 
 def get_default_logger():
@@ -844,6 +847,95 @@ def get_geojson(access_token, api_host, region_id):
         return json.loads(region['geojson'])
     return None
 
+@memoize(maxsize=None)
+def get_geometry_list(access_token, api_host, region_id_list):
+    """Given a region ID, return a geojson shape information
+
+    Parameters
+    ----------
+    access_token : string
+    api_host : string
+    region_id_list : integer list
+
+    Returns
+    -------
+    [{'type': 'MultiPolygon',
+                      'coordinates': [[[[-38.394, -4.225], ...]]]}, ...]}, ...]
+    """
+    region_id_str = '&'.join(['regionIds=' + str(id_) for id_ in region_id_list])
+    url = '/'.join(['https:', '', api_host, 'v2/geocentres?includeGeojson=True&' + region_id_str])
+    headers = {'authorization': 'Bearer ' + access_token}
+    resp = get_data(url, headers)
+    geometry_list = [json.loads(object_['geojson'])['geometries'][0] for object_ in resp.json()['data']]
+    return geometry_list
+
+def get_region_id_given_lat_lon(access_token, api_host, latitude, longitude, output_region_level):
+"""Look up details of regions of the given level contained by a region.
+
+    Given any region by id, recursively get all the descendant regions
+    that are of the specified level.
+
+    This takes advantage of the assumption that region graph is
+    acyclic. This will only traverse ordered region levels (strictly
+    increasing region level id) and thus skips non-administrative region
+    levels.
+
+    Parameters
+    ----------
+    access_token : string
+    api_host : string
+    latitude : list of float
+    longitude: list of float
+    output_region_level : integer
+        The region level of interest. See REGION_LEVELS constant.
+
+    Returns
+    -------
+    Geopandas Spatial Point data frame with column names of region ids
+"""
+    points_geometry = [Point(xy) for xy in zip(longitude, latitude)]
+    gdf = gpd.GeoDataFrame(
+        pd.DataFrame({'latitude': latitude, 'longitude': longitude}),
+        geometry=points_geometry, crs={'init': u'epsg:4326'})
+
+    continent_ids = range(11, 18)
+    continents = gpd.GeoDataFrame(pd.DataFrame({
+                   'continent_id': continent_ids, 
+                   'geometry': [shape(g) for g in get_geometry_list(acess_token, api_host, continent_ids)]
+                }) , crs={'init': u'epsg:4326'})
+    points_with_continent_id = gpd.sjoin(gdf, continents, how="left", op='intersects')
+    country_df_list = list()
+    for continent_id in points_with_continent_id['continent_id'].unique():
+        country_ids = get_descendant_regions(access_token, api_host, continent_id, 3)
+        country_df_list.append(pd.DataFrame({
+            'country_id': country_ids,
+            'geometry': [shape(g) for g in get_geometry_list(acess_token, api_host, country_ids)]
+            }))
+    countries = gpd.GeoDataFrame(pd.concat(country_df_list, ignore_index=True), crs={'init': u'epsg:4326'})
+    points_with_country_id = gpd.sjoin(points_with_continent_id, countries, how="left", op='intersects')
+    if output_region_level == 3:
+        return points_with_country_id
+    province_df_list = list()
+    for country_id in points_with_country_id['country_id'].unique():
+        province_ids = get_descendant_regions(access_token, api_host, country_id, 4)
+        province_df_list.append(pd.DataFrame({
+            'province_id': province_ids,
+            'geometry': [shape(g) for g in get_geometry_list(acess_token, api_host, province_ids)]
+            }))
+    provinces = gpd.GeoDataFrame(pd.concat(province_df_list, ignore_index=True), crs={'init': u'epsg:4326'})
+    points_with_province_id = gpd.sjoin(points_with_country_id, provinces, how="left", op='intersects')
+    if output_region_level == 4:
+        return points_with_province_id
+    district_df_list = list()
+    for province_id in points_with_province_id['province_id'].unique():
+        district_ids = get_descendant_regions(access_token, api_host, province_id, 4)
+        district_df_list.append(pd.DataFrame({
+            'district_id': district_ids,
+            'geometry': [shape(g) for g in get_geometry_list(acess_token, api_host, district_ids)]
+            }))
+    districts = gpd.GeoDataFrame(pd.concat(district_df_list, ignore_index=True), crs={'init': u'epsg:4326'})
+    points_with_district_id = gpd.sjoin(points_with_province_id, districts, how="left", op='intersects')
+    return points_with_district_id
 
 def get_descendant_regions(access_token, api_host, region_id,
                            descendant_level):
