@@ -155,6 +155,8 @@ img {
 .wy-side-nav-search>a.icon img.logo, .wy-side-nav-search .wy-dropdown>a.icon img.logo {
     margin-left: 0;
     margin-top: 0;
+    width: 180px;
+    margin-bottom: 24px;
 }
 
 .wy-breadcrumbs {
@@ -165,12 +167,6 @@ img {
 }
 .rst-footer-buttons {
     display: none;
-}
-.contentinfo {
-    font-family: Roboto,Arial,sans-serif;
-    font-weight:400;
-    font-size: 13px;
-    color: #666669;
 }
 
 
@@ -186,9 +182,8 @@ img {
     color: #e31b37;
 }
 
-.rst-content tt.literal, .rst-content tt.literal, .rst-content code.literal {
-    color: #e31b37;
-}
+
+
 .highlight .kn {
     color: #FF0079 !important;
 }
@@ -212,4 +207,28 @@ img {
 }
 .highlight .s2 {
     color: #e31b37 !important;
+}
+
+
+#search-results .context {
+    font-family: Roboto,Arial,sans-serif;
+}
+.rst-content .highlighted {
+    font-family: Roboto,Arial,sans-serif;
+  
+}
+footer {
+    font-family: Roboto,Arial,sans-serif;
+    color: #fcfcfc;
+}
+footer p{
+    font-weight:400;
+    color: #9b9b9e;
+    font-size: 12px;
+}
+footer a {
+    display: none;
+}
+#text {
+    display: none;
 }
