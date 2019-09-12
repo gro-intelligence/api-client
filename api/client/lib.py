@@ -14,6 +14,7 @@ import requests
 import time
 import pandas as pd
 import geopandas as gpd
+from shapely.geometry import shape, Point
 try:
     # functools are native in Python 3.2.3+
     from functools import lru_cache as memoize
