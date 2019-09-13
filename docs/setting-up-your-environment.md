@@ -7,7 +7,7 @@ In order to start engaging with the Gro API Client, you will need to set up your
 
 ## System Prerequisites
 
-The Gro API Client requires the following OS-dependant system requirements.
+The Gro API Client requires the following OS-dependent system requirements.
 
 ### MacOS and Linux
 
@@ -74,7 +74,7 @@ Once you have API access enabled for your account, you may retrieve your token i
 2. In the Account menu, select the API tab (see below).
 ![profile-tab-annotated.png](./_images/profile-tab-annotated.png)
 
-3. Select the text of the token and copy it to your clipboard, or use the "copy to clipboard" button (see below).
+3. Select the text of the token and copy it to your clipboard, or use the "Copy to clipboard" button (see below).
 ![api-tab-annotated.png](./_images/api-tab-annotated.png)
 
 #### Option 2: Using the gro_client Command Line Interface
@@ -114,7 +114,7 @@ There are two ways you can invalidate your current authorization token and creat
 1. Changing your password, or
 2. Using the "Regenerate Token" button in the API section of your Account menu (see instructions below)
 If you have your authentication token saved, performing either of these two actions will cause any applications using the old token to cease being able to contact the Gro API. You will need to follow the instructions in Section 1 to retrieve your new token and update any such applications accordingly.
-To regenerate your authentication token, open the API tab in your Account menu as in Section 1.1, but instead of copying the authentication token, press the "Regenerate Token" button (see below). A prompt will appear to warn that any applications using the old token will need to be updated and to confirm your intent.
+To regenerate your authentication token, open the API tab in your Account menu as in [Retrieving a token, Option 1: Using the Web App](#option-1-using-the-web-app-recommended), but instead of copying the authentication token, press the "Regenerate Token" button (see below). A prompt will appear to warn that any applications using the old token will need to be updated and to confirm your intent.
 
 ![regenerate-token.png](./_images/regenerate-token.png)
 
@@ -122,12 +122,12 @@ To regenerate your authentication token, open the API tab in your Account menu a
 
 If you don't want to enter a password or token each time, you can save the token as an environment variable. In some of the sample code, it is assumed that you have the token saved to your environment variables as `GROAPI_TOKEN`.
 
-Please consult your OS or IDE documentation for the most accurate and up-to-date information on how to set environment variables, e.g. setting environment variables in [Windows Powershell](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_environment_variables?view=powershell-6) or [Mac OS X/Linux](https://apple.stackexchange.com/questions/106778/how-do-i-set-environment-variables-on-os-x) or [Anaconda](https://anaconda-project.readthedocs.io/en/latest/user-guide/tasks/work-with-variables.html). As a quick quide, the following steps should work:
+Please consult your OS or IDE documentation for the most accurate and up-to-date information on how to set environment variables, e.g. setting environment variables in [Windows Powershell](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_environment_variables?view=powershell-6) or [Mac OS X/Linux](https://apple.stackexchange.com/questions/106778/how-do-i-set-environment-variables-on-os-x) or [Anaconda](https://anaconda-project.readthedocs.io/en/latest/user-guide/tasks/work-with-variables.html). As a quick guide, the following steps should work:
 
 For Windows:
 1. Click on start menu and search for "environment variables." Click on "Edit the system environment variables" option.
 2. In the "Advanced" tab, select the "Environment Variables..." button.
-3. Under the first section called "User variables for <username>", click on the "New" button.
+3. Under the first section called "User variables for <username>," click on the "New" button.
 4. Enter the information as follows:
   Variable name: GROAPI_TOKEN
   Variable value: <insert your Gro API Token here>
