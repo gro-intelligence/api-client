@@ -142,8 +142,8 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Gro Data Key Concepts</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#gro-ontology">Gro Ontology</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#entity-fields">Entity fields</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#entity-relationships-i-e-contains">Entity Relationships i.e. contains</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#special-properties-for-regions">Special Properties for regions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#entity-relationships-contains">Entity Relationships: Contains</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#special-properties-for-regions">Special Properties for Regions</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#data-series-definition">Data Series Definition</a></li>
@@ -275,15 +275,15 @@
 <h2>Gro Ontology<a class="headerlink" href="#gro-ontology" title="Permalink to this headline">¶</a></h2>
 <p>Gro has brought the world of agricultural data into a single ontology. This ontology classifies all data into a limited set of entities.</p>
 <p>The entity types around which the data is organized in Gro are:</p>
-<p>items &#8211; what the data is about (e.g. Rice, Sugar, Rainfall, etc.)
-metrics &#8211; how the data is measured (e.g. Production, Precipitation, etc.)
-regions &#8211; where the data is from/about (e.g. a country, a weather station, a city etc.). Some data such as trade flows might have a partner region.
-frequencies &#8211; e.g. daily, weekly etc.
-sources &#8211; the organization or sub-organization that generates the data (e.g. USDA PS&amp;D)
-units &#8211; the units in which the data is presented (e.g. tonnes, liters, etc.).</p>
+<p>items &#8211; what the data is about (e.g., Rice, Sugar, Rainfall, etc.).
+metrics &#8211; how the data is measured (e.g., Production, Precipitation, etc.).
+regions &#8211; where the data is from/about (e.g., a country, a weather station, a city etc.). Some data such as trade flows might have a partner region.
+frequencies &#8211; e.g., daily, weekly etc.
+sources &#8211; the organization or sub-organization that generates the data (e.g., USDA PS&amp;D).
+units &#8211; the units in which the data is presented (e.g., tonnes, liters, etc.).</p>
 <div class="section" id="entity-fields">
 <h3>Entity fields<a class="headerlink" href="#entity-fields" title="Permalink to this headline">¶</a></h3>
-<p>Each specific entity will have an id, name, and various other properties. For example, &#8220;Soybeans&#8220; is a specific item with id = 270 and the following information</p>
+<p>Each specific entity will have an <code class="docutils literal"><span class="pre">id</span></code>, <code class="docutils literal"><span class="pre">name</span></code>, and various other properties. For example, &#8220;Soybeans&#8220; is a specific item with <code class="docutils literal"><span class="pre">id</span> <span class="pre">=</span> <span class="pre">270</span></code> and the following information</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;allowedAggregations&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
  <span class="s1">&#39;contains&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1737</span><span class="p">,</span>
   <span class="mi">7401</span><span class="p">,</span>
@@ -319,14 +319,14 @@ units &#8211; the units in which the data is presented (e.g. tonnes, liters, etc
  <span class="s1">&#39;rankingScore&#39;</span><span class="p">:</span> <span class="mf">2.204</span><span class="p">}</span>
 </pre></div>
 </div>
-<p>Names and ids and names are unique within a particular entity type, i.e. there&#8216;s only one item called Soybeans, and there&#8216;s no other item with id = 270.</p>
+<p>Names and ids are unique within a particular entity type, i.e., there&#8216;s only one item called Soybeans, and there&#8216;s no other item with id = 270.</p>
 <p>The above information can be retrieved using the client.search function:
 <code class="docutils literal"><span class="pre">client.lookup('items',</span> <span class="pre">270)</span></code></p>
 <p><a class="reference external" href="../docs/faqs.md#q-how-do-i-figure-out-what-an-id-refers-to">See FAQs for help on finding entities by name or by id.</a></p>
 </div>
-<div class="section" id="entity-relationships-i-e-contains">
-<h3>Entity Relationships i.e. contains<a class="headerlink" href="#entity-relationships-i-e-contains" title="Permalink to this headline">¶</a></h3>
-<p>Items, metrics and regions have a property called contains, which is an array of the other entities that it contains, or that belong to it. For example, the item &#8220;Cereals&#8220; contains the items &#8220;Wheat&#8220;, &#8220;Corn&#8220;, etc.</p>
+<div class="section" id="entity-relationships-contains">
+<h3>Entity Relationships: Contains<a class="headerlink" href="#entity-relationships-contains" title="Permalink to this headline">¶</a></h3>
+<p>Items, metrics, and regions have a property called <code class="docutils literal"><span class="pre">contains</span></code>, which is an array of the other entities that it contains, or that belong to it. For example, the item &#8220;Cereals&#8220; contains the items &#8220;Wheat,&#8220; &#8220;Corn,&#8220; etc.</p>
 <p>Variations of the <code class="docutils literal"><span class="pre">client.lookup(type,</span> <span class="pre">id)</span></code> function can help you understand what a given entity contains or belongs to. For example:
 <code class="docutils literal"><span class="pre">client.lookup('items',</span> <span class="pre">10009)['contains']</span></code>
 Will return a list of items that are contained within the item &#8220;Cereals&#8220; (item_id: 10009).</p>
@@ -335,7 +335,7 @@ Will return a list of regions to which &#8220;California&#8220; (region_id: 1305
 <p><a class="reference external" href="../docs/faqs.md#q-is-it-possible-to-find-out-how-entities-are-related-to-each-other-like-missouri-is-a-province-of-the-us-buenos-aires-belongs-to-argentina-corn-is-a-cereal-etc">See FAQs for navigation of relationships between entities.</a></p>
 </div>
 <div class="section" id="special-properties-for-regions">
-<h3>Special Properties for regions<a class="headerlink" href="#special-properties-for-regions" title="Permalink to this headline">¶</a></h3>
+<h3>Special Properties for Regions<a class="headerlink" href="#special-properties-for-regions" title="Permalink to this headline">¶</a></h3>
 <p>The following properties exist for regions only:</p>
 <p><code class="docutils literal"><span class="pre">level</span></code>
 Region level corresponds to the administrative level of the region:</p>
@@ -349,7 +349,7 @@ level 7: market
 level 8: other arbitrary regions
 level 9: point-location</p>
 <p><code class="docutils literal"><span class="pre">latitude</span></code> and <code class="docutils literal"><span class="pre">longitude</span></code></p>
-<p>For point-locations (i.e. region level 9), these properties correspond to the location&#8216;s coordinates. More generally for other regions, these properties are optional, but if specified, correspond to the coordinates of the geographic center of the region.</p>
+<p>For point-locations (i.e., region level 9), these properties correspond to the location&#8216;s coordinates. More generally for other regions, these properties are optional, but if specified, they correspond to the coordinates of the geographic center of the region.</p>
 </div>
 </div>
 <div class="section" id="data-series-definition">
@@ -362,7 +362,7 @@ region
 partner_region (optional)
 frequency
 source
-For example, if you select item=Wheat, metric=Production Quantity (mass), region=India, frequency=Annual, source=FAO, that would be one data series. Partner region is optional and used only in series that represent a flow between two places, e.g. if the metric is exports, the region would be the exporter and the partner region would be the importer.</p>
+For example, if you select <code class="docutils literal"><span class="pre">item=Wheat</span></code>, <code class="docutils literal"><span class="pre">metric=Production</span> <span class="pre">Quantity</span> <span class="pre">(mass)</span></code>, <code class="docutils literal"><span class="pre">region=India</span></code>, <code class="docutils literal"><span class="pre">frequency=Annual</span></code>, <code class="docutils literal"><span class="pre">source=FAO</span></code>, that would be one data series. Partner_region is optional and used only in series that represent a flow between two places, e.g. if the metric is exports, the region would be the exporter and the partner_region would be the importer.</p>
 <p>To get all the available data series for a given selection of entities, use the <code class="docutils literal"><span class="pre">get_data_series</span></code> function as described in the <a class="reference external" href="../docs/faqs.md###Q:-how-do-I-get-data-series?">FAQ</a>.</p>
 </div>
 <div class="section" id="data-point-definition">
@@ -382,19 +382,19 @@ For example, if you select item=Wheat, metric=Production Quantity (mass), region
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>For example, if you requested NDVI for Bureau county Illinois for a particular 8-day time period, the Gro API would yield a single response that would count as a single data point. Even though the value is computed from tens of thousands of underlying pixels, the API response counts as a single point because we are returning the value at the county (aka district) level.</p>
-<p>Another example is if you get weekly precipitation data for a given region in a given week, you will get a single point. On the other hand, if you get daily precipitation for a given region for a period of a week, you will get 7 data points.</p>
+<p>For example, if you requested NDVI for Bureau county, Illinois, for a particular 8-day time period, the Gro API would yield a single response that would count as a single data point. Even though the value is computed from tens of thousands of underlying pixels, the API response counts as a single point because we are returning the value at the county (aka district) level.</p>
+<p>Another example is if you get weekly precipitation data for a given region in a given week, you will get a single point. On the other hand, if you get daily precipitation for a given region for a period of a week, you will get seven data points.</p>
 <p>Below are some explanations of what each of those fields represent:
 <code class="docutils literal"><span class="pre">start_date</span></code>: beginning of the period this point represents
 <code class="docutils literal"><span class="pre">end_date</span></code>: end of the period this point represents
 <code class="docutils literal"><span class="pre">reporting_date</span></code>: date the source reported this value (only included when source provides reporting date)
-<code class="docutils literal"><span class="pre">value</span></code>: the value, typically a number. In some cases, the value may be non-numeric. E.g. when the metric is Crop Calendar, a value of &#8220;planting&#8220;, represents the fact that the planting period is from <code class="docutils literal"><span class="pre">start_date</span></code> to <code class="docutils literal"><span class="pre">end_date</span></code>.
-<code class="docutils literal"><span class="pre">input_unit_id</span></code>: this is a Gro unit id you can look up the name/abbreviation/etc. of using the <code class="docutils literal"><span class="pre">client.lookup('units',</span> <span class="pre">input_unit_id)</span></code> function. It&#8216;s the &#8220;input&#8220; unit because that&#8216;s the unit the source provided the data in - different from if you had selected a unit to convert it to. There&#8216;s also a helper function you can see an example of in the <a class="reference external" href="https://github.com/gro-intelligence/api-client/blob/9c2c17642980b5415b8a8167a28276b77e34915c/api/client/samples/quick_start.py#L30">quickstart</a> for getting just the abbreviation from the unit id, <code class="docutils literal"><span class="pre">client.lookup_unit_abbreviation(point['input_unit_id'])</span></code>, which is the common case you probably want
+<code class="docutils literal"><span class="pre">value</span></code>: the value, typically a number. In some cases, the value may be non-numeric. E.g., when the metric is Crop Calendar, a value of &#8220;planting,&#8220; represents the fact that the planting period is from <code class="docutils literal"><span class="pre">start_date</span></code> to <code class="docutils literal"><span class="pre">end_date</span></code>.
+<code class="docutils literal"><span class="pre">input_unit_id</span></code>: this is a Gro unit id you can look up the name/abbreviation/etc. of using the <code class="docutils literal"><span class="pre">client.lookup('units',</span> <span class="pre">input_unit_id)</span></code> function. It&#8216;s the &#8220;input&#8220; unit because that&#8216;s the unit the source provided the data in, which is different from if you had selected a unit to convert it to. There&#8216;s also a helper function of which you can see an example in the <a class="reference external" href="https://github.com/gro-intelligence/api-client/blob/9c2c17642980b5415b8a8167a28276b77e34915c/api/client/samples/quick_start.py#L30">quickstart</a> for getting just the abbreviation from the unit id, <code class="docutils literal"><span class="pre">client.lookup_unit_abbreviation(point['input_unit_id'])</span></code>, which is the common case you probably want
 <code class="docutils literal"><span class="pre">input_unit_scale</span></code>: the value may be given as <code class="docutils literal"><span class="pre">{value:</span> <span class="pre">100,</span> <span class="pre">input_unit:</span> <span class="pre">kg,</span> <span class="pre">input_unit_scale:</span> <span class="pre">1000}</span></code> meaning the source reported the data in 1000s of kilograms. So a value of 100 would represent 100,000kg. It&#8216;s important you not forget to multiply the scale with the value. You can see an example of that being done in <a class="reference external" href="https://github.com/gro-intelligence/api-client/blob/9c2c17642980b5415b8a8167a28276b77e34915c/api/client/gro_client.py#L44">gro_client.py&#8216;s</a> <code class="docutils literal"><span class="pre">print_random_data_series()</span></code> function.
 <code class="docutils literal"><span class="pre">metric_id</span></code>: unique id for the metric (i.e. &#8220;Export Value (currency)&#8220;) you selected - get more details (name, definition, ...) using <code class="docutils literal"><span class="pre">client.lookup('metrics',</span> <span class="pre">metric_id)</span></code>
-<code class="docutils literal"><span class="pre">item_id</span></code>: unique id for the item (i.e. &#8220;Corn&#8220;) you selected - get more details (name, definition, ...) using <code class="docutils literal"><span class="pre">client.lookup('items',</span> <span class="pre">item_id)</span></code>
-<code class="docutils literal"><span class="pre">region_id</span></code>: unique id for the region (i.e. &#8220;United States&#8220;) you selected - get more details (name, administrative level, ...) using <code class="docutils literal"><span class="pre">client.lookup('regions',</span> <span class="pre">region_id)</span></code>
-<code class="docutils literal"><span class="pre">frequency_id</span></code>: unique id for the frequency (i.e. &#8220;annual&#8220;) you selected - get more details (name, abbreviation, period length, ...) using <code class="docutils literal"><span class="pre">client.lookup('frequencies',</span> <span class="pre">frequency_id)</span></code></p>
+<code class="docutils literal"><span class="pre">item_id</span></code>: unique id for the item (i.e., &#8220;Corn&#8220;) you selected - get more details (name, definition, ...) using <code class="docutils literal"><span class="pre">client.lookup('items',</span> <span class="pre">item_id)</span></code>
+<code class="docutils literal"><span class="pre">region_id</span></code>: unique id for the region (i.e., &#8220;United States&#8220;) you selected - get more details (name, administrative level, ...) using <code class="docutils literal"><span class="pre">client.lookup('regions',</span> <span class="pre">region_id)</span></code>
+<code class="docutils literal"><span class="pre">frequency_id</span></code>: unique id for the frequency (i.e., &#8220;annual&#8220;) you selected - get more details (name, abbreviation, period length, ...) using <code class="docutils literal"><span class="pre">client.lookup('frequencies',</span> <span class="pre">frequency_id)</span></code></p>
 </div>
 </div>
 
