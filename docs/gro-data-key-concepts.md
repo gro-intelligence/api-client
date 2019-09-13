@@ -109,6 +109,7 @@ For point-locations (i.e., region level 9), these properties correspond to the l
 ## Data Series Definition
 Gro defines a "data series" as a series of data points over time.
 Each data series is defined by a unique selection of:
+
 item
 
 metric
@@ -147,6 +148,7 @@ For example, if you requested NDVI for Bureau county, Illinois, for a particular
 Another example is if you get weekly precipitation data for a given region in a given week, you will get a single point. On the other hand, if you get daily precipitation for a given region for a period of a week, you will get seven data points.
 
 Below are some explanations of what each of those fields represent:
+
 `start_date`: beginning of the period this point represents
 
 `end_date`: end of the period this point represents
