@@ -127,7 +127,7 @@ Please consult your OS or IDE documentation for the most accurate and up-to-date
 For Windows:
 1. Click on start menu and search for "environment variables." Click on "Edit the system environment variables" option.
 2. In the "Advanced" tab, select the "Environment Variables..." button.
-3. Under the first section called "User variables for <username>," click on the "New" button.
+3. Under the first section called "User variables for &lt;username&gt;," click on the "New" button.
 4. Enter the information as follows:
   Variable name: GROAPI_TOKEN
   Variable value: <insert your Gro API Token here>
