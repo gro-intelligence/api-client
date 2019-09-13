@@ -3,10 +3,10 @@
 ## Exploring What's Available
 
 ### Q: Why is it that when I use client.search() to find metrics/items/regions I'm interested in, sometimes client.get_data_series() doesn't have any data for those metrics/items/regions?
-`client.search()` provides a way to search across everything we have identified and defined in our ontology. Sometimes, data doesn't exist for a particular result for a number of reasons, most commonly because we may have defined new entries in preparation for an incoming source which is undergoing testing. `client.get_data_series()` will tell you what data is actually available. You can intersect the results from those two functions to find things programmatically, or you can use the web application at app.gro-intelligence.com to explore what data is available, intersected already.
+`client.search()` provides a way to search across everything we have identified and defined in our ontology. Sometimes data doesn't exist for a particular result for a number of reasons, most commonly because we may have defined new entries in preparation for an incoming source which is undergoing testing. `client.get_data_series()` will tell you what data is actually available. You can intersect the results from those two functions to find things programmatically, or you can use the web application at app.gro-intelligence.com to explore what data is available, intersected already.
 
 ### Q: What does 'sourceLag' mean when I use client.lookup() to inspect a source's details?
-Source lag is defined as the worst normal case scenario in regards to how long a source might report data after a point's end date. In other words, a source lag of 1 month would mean that an annual source might report the 01/01/2017-12/31/2017 data point on 02/01/2018 at the latest. Occasional extraordinary delays do occur from time to time, such as in a government shutdown or satellite data center malfunctions, but in general the data is expected to be updated by the endDate of the point + the sourceLag.
+Source lag is defined as the worst normal case scenario in regards to how long a source might report data after a point's end date. In other words, a source lag of one month would mean that an annual source might report the 01/01/2017-12/31/2017 data point on 02/01/2018 at the latest. Extraordinary delays do occur from time to time, such as in a government shutdown or satellite data center malfunctions, but in general the data is expected to be updated by the endDate of the point + the sourceLag.
 
 ## Data Retrieval
 
@@ -19,4 +19,4 @@ A Gro account gives you access to the web application at app.gro-intelligence.co
 
 ## Gro Models
 ### Q: Do your predictive models only run during the crop season?
-We provide predictions year around (always for the current market year, so for US it is also always the current calendar year). Take the US for an example: before planting ends (Jan to May) we predict at country level with long term trend. Between planting and harvesting (May to Oct) we predict at district level with daily updates. After harvesting until the end of the year, we only adjust the previous predictions if there is any adjustment from the sources that we used for the in-season predictions.
+We provide predictions year around (always for the current market year, so for the US it is also always the current calendar year). Take the US, for example: before planting ends (Jan to May) we predict at the country level with the long-term trend. Between planting and harvesting (May to Oct) we predict at the district level with daily updates. After harvesting and until the end of the year, we only adjust the previous predictions if there is any adjustment from the sources that we used for the in-season predictions.
