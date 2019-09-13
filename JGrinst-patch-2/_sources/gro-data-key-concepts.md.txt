@@ -10,17 +10,12 @@ Gro has brought the world of agricultural data into a single ontology. This onto
 
 The entity types around which the data is organized in Gro are:
 
-items -- what the data is about (e.g., Rice, Sugar, Rainfall, etc.).
-
-metrics -- how the data is measured (e.g., Production, Precipitation, etc.).
-
-regions -- where the data is from/about (e.g., a country, a weather station, a city etc.). Some data such as trade flows might have a partner region.
-
-frequencies -- e.g., daily, weekly etc.
-
-sources -- the organization or sub-organization that generates the data (e.g., USDA PS&D).
-
-units -- the units in which the data is presented (e.g., tonnes, liters, etc.).
+items -- what the data is about (e.g., Rice, Sugar, Rainfall, etc.).\
+metrics -- how the data is measured (e.g., Production, Precipitation, etc.).\
+regions -- where the data is from/about (e.g., a country, a weather station, a city etc.). Some data such as trade flows might have a partner region.\
+frequencies -- e.g., daily, weekly etc.\
+sources -- the organization or sub-organization that generates the data (e.g., USDA PS&D).\
+units -- the units in which the data is presented (e.g., tonnes, liters, etc.).\
 
 ### Entity fields
 Each specific entity will have an `id`, `name`, and various other properties. For example, "Soybeans" is a specific item with `id = 270` and the following information
@@ -81,29 +76,20 @@ Will return a list of regions to which "California" (region_id: 13055) belongs.
 ### Special Properties for Regions
 The following properties exist for regions only:
 
-`level`
+`level`\
 Region level corresponds to the administrative level of the region:
 
-level 1: world
+level 1: world\
+level 2: continent\
+level 3: country\
+level 4: provinces\
+level 5: districts\
+level 6: city\
+level 7: market\
+level 8: other arbitrary regions\
+level 9: point-location\
 
-level 2: continent
-
-level 3: country
-
-level 4: provinces
-
-level 5: districts
-
-level 6: city
-
-level 7: market
-
-level 8: other arbitrary regions
-
-level 9: point-location
-
-`latitude` and `longitude`
-
+`latitude` and `longitude`\
 For point-locations (i.e., region level 9), these properties correspond to the location's coordinates. More generally for other regions, these properties are optional, but if specified, they correspond to the coordinates of the geographic center of the region.
 
 ## Data Series Definition

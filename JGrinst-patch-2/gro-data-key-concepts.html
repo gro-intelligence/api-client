@@ -275,12 +275,7 @@
 <h2>Gro Ontology<a class="headerlink" href="#gro-ontology" title="Permalink to this headline">¶</a></h2>
 <p>Gro has brought the world of agricultural data into a single ontology. This ontology classifies all data into a limited set of entities.</p>
 <p>The entity types around which the data is organized in Gro are:</p>
-<p>items &#8211; what the data is about (e.g., Rice, Sugar, Rainfall, etc.).</p>
-<p>metrics &#8211; how the data is measured (e.g., Production, Precipitation, etc.).</p>
-<p>regions &#8211; where the data is from/about (e.g., a country, a weather station, a city etc.). Some data such as trade flows might have a partner region.</p>
-<p>frequencies &#8211; e.g., daily, weekly etc.</p>
-<p>sources &#8211; the organization or sub-organization that generates the data (e.g., USDA PS&amp;D).</p>
-<p>units &#8211; the units in which the data is presented (e.g., tonnes, liters, etc.).</p>
+<p>items &#8211; what the data is about (e.g., Rice, Sugar, Rainfall, etc.).<br />metrics &#8211; how the data is measured (e.g., Production, Precipitation, etc.).<br />regions &#8211; where the data is from/about (e.g., a country, a weather station, a city etc.). Some data such as trade flows might have a partner region.<br />frequencies &#8211; e.g., daily, weekly etc.<br />sources &#8211; the organization or sub-organization that generates the data (e.g., USDA PS&amp;D).<br />units &#8211; the units in which the data is presented (e.g., tonnes, liters, etc.).\</p>
 <div class="section" id="entity-fields">
 <h3>Entity fields<a class="headerlink" href="#entity-fields" title="Permalink to this headline">¶</a></h3>
 <p>Each specific entity will have an <code class="docutils literal"><span class="pre">id</span></code>, <code class="docutils literal"><span class="pre">name</span></code>, and various other properties. For example, &#8220;Soybeans&#8220; is a specific item with <code class="docutils literal"><span class="pre">id</span> <span class="pre">=</span> <span class="pre">270</span></code> and the following information</p>
@@ -337,19 +332,9 @@ Will return a list of regions to which &#8220;California&#8220; (region_id: 1305
 <div class="section" id="special-properties-for-regions">
 <h3>Special Properties for Regions<a class="headerlink" href="#special-properties-for-regions" title="Permalink to this headline">¶</a></h3>
 <p>The following properties exist for regions only:</p>
-<p><code class="docutils literal"><span class="pre">level</span></code>
-Region level corresponds to the administrative level of the region:</p>
-<p>level 1: world</p>
-<p>level 2: continent</p>
-<p>level 3: country</p>
-<p>level 4: provinces</p>
-<p>level 5: districts</p>
-<p>level 6: city</p>
-<p>level 7: market</p>
-<p>level 8: other arbitrary regions</p>
-<p>level 9: point-location</p>
-<p><code class="docutils literal"><span class="pre">latitude</span></code> and <code class="docutils literal"><span class="pre">longitude</span></code></p>
-<p>For point-locations (i.e., region level 9), these properties correspond to the location&#8216;s coordinates. More generally for other regions, these properties are optional, but if specified, they correspond to the coordinates of the geographic center of the region.</p>
+<p><code class="docutils literal"><span class="pre">level</span></code><br />Region level corresponds to the administrative level of the region:</p>
+<p>level 1: world<br />level 2: continent<br />level 3: country<br />level 4: provinces<br />level 5: districts<br />level 6: city<br />level 7: market<br />level 8: other arbitrary regions<br />level 9: point-location\</p>
+<p><code class="docutils literal"><span class="pre">latitude</span></code> and <code class="docutils literal"><span class="pre">longitude</span></code><br />For point-locations (i.e., region level 9), these properties correspond to the location&#8216;s coordinates. More generally for other regions, these properties are optional, but if specified, they correspond to the coordinates of the geographic center of the region.</p>
 </div>
 </div>
 <div class="section" id="data-series-definition">
