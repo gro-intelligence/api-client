@@ -2,17 +2,17 @@
 Below you will find code examples that demonstrate some of the useful methods available in the Gro API Client. This is followed by guidance on how you can best go about discovering, retrieving, and understanding data from our API Client. 
 
 ## Examples
-Navigate to [api/client/samples/](https://github.com/gro-intelligence/api-client/blob/development/api/client/samples) folder and try executing the provided examples.
+Navigate to the [api/client/samples/](https://github.com/gro-intelligence/api-client/blob/development/api/client/samples) folder and try executing the provided examples.
 
-1. [quick_start.py](https://github.com/gro-intelligence/api-client/blob/development/api/client/samples/quick_start.py) is a simple script that creates an authenticated `GroClient` object and uses the `get_data_series()` and `get_data_points()` methods to find Area Harvested series for Ukrainian Wheat from a variety of different sources and output the time series points to a CSV file. You will likely want to revisit this script as a starting point for building your own scripts.
+1. [quick_start.py](https://github.com/gro-intelligence/api-client/blob/development/api/client/samples/quick_start.py) is a simple script that creates an authenticated `GroClient` object and uses the `get_data_series()` and `get_data_points()` methods to find Area Harvested series for Ukrainian Wheat from a variety of different sources, and outputs the time series points to a CSV file. You will likely want to revisit this script as a starting point for building your own scripts.
 
 Note that the script assumes you have your authentication token set to a `GROAPI_TOKEN` environment variable (see Saving your token as an environment variable). If you don't wish to use environment variables, you can modify the sample script to set `[ACCESS_TOKEN](..docs/setting-up-your-environment#retrieving-a-token)` in some other way.
 
 ```python quick_start.py```
 
-If the API client is installed and your authentication token is set, a csv file called `gro_client_output.csv` should be created in the directory where the script was run.
+If the API client is installed and your authentication token is set, a CSV file called `gro_client_output.csv` should be created in the directory where the script was run.
 
-2. Try out [soybeans.py](https://github.com/gro-intelligence/api-client/blob/development/api/client/samples/crop_models/soybeans.py) to see the `CropModel` class and its `compute_crop_weighted_series()` method in action. In this example, NDVI ([Normalized difference vegetation index](https://app.gro-intelligence.com/dictionary/items/321)) for provinces in Brazil is weighted against each province's historical soybean production to put the latest NDVI values into context. This information is put into a pandas dataframe, the description of which is printed to the console.
+2. Try out [soybeans.py](https://github.com/gro-intelligence/api-client/blob/development/api/client/samples/crop_models/soybeans.py) to see the `CropModel` class and its `compute_crop_weighted_series()` method in action. In this example, NDVI ([normalized difference vegetation index](https://app.gro-intelligence.com/dictionary/items/321)) for provinces in Brazil is weighted against each province's historical soybean production to put the latest NDVI values into context. This information is put into a pandas dataframe, the description of which is printed to the console.
 
 ```python crop_models/soybeans.py```
 
@@ -29,8 +29,8 @@ Further documentation can be found in the api/client/ directory and on our wiki.
 ## Discovering Data
 To derive the insights you want from Gro's data, you will first want to find the data you're interested in. Below you will find some of the most useful tips on how to discover the data of greatest value to you.
 
-### Code Snippets
-Users may find that the Gro API is at its most powerful when used in conjunction with the Gro web application. The web app provides the most convenient format for selecting the data series that is of most interest to you. In our Add Data Series window, you can select entities of interest and then other entities for which no data is available based on your selection will be filtered out from the remaining options. For example, after selecting the item 'Corn' only metrics and regions that have data for 'Corn' will remain selectable.
+### Code snippets
+Users may find that the Gro API is at its most powerful when used in conjunction with the Gro web application. The web app provides the most convenient format for selecting the data series that is of most interest to you. In our Add Data Series window, you can select entities of interest, and then other entities for which no data is available based on your selection will be filtered out from the remaining options. For example, after selecting the item "Corn" only metrics and regions that have data for 'Corn' will remain selectable.
 ![add-data-series-example](../media/add-data-series-example.png)
 
 Once you have created a chart with data that you want, you can take advantage of our Code Snippets feature to pull that data into your API client code.
@@ -45,7 +45,7 @@ For charts that have multiple data series, you have the option to Select all uni
 ![code-snippet-select-all](../media/code-snippet-select-all.png)
 
 ### Search
-As described in the [Gro Data: Key Concepts](../docs/gro-data-key-concepts) page, a data series in Gro is a unique combination of the entities: item, metric, region, partner_region (optional), frequency, and source. To find the specific entity you would like to retrieve data for, you can use a variety of search methods. For example, `client.search` will return a list of ids that match your search term. If you want to understand the differences between various search results, you may find the `client.search_and_lookup` method more helpful.
+As described in the [Gro Data: Key Concepts](../docs/gro-data-key-concepts) page, a data series in Gro is a unique combination of the entities: item, metric, region, partner_region (optional), frequency, and source. To find the specific entity you would like to retrieve data for, you can use a variety of search methods. For example, `client.search` will return a list of IDs that match your search term. If you want to understand the differences between various search results, you may find the `client.search_and_lookup` method more helpful.
 
 `client.search_and_lookup('items','Corn')` will return a list of all items that contain "corn" in their name, along with supporting information like id, name, and ids of other items contained by a given item.
 
@@ -54,7 +54,7 @@ Note: the above query will return a generator object. Running a query such as:
 should help produce a list of all the relevant information.
 
 ### Get data series
-Instead of searching for all the individual entity ids required to create a data series, the `client.get_data_series` method will return a list of all the data series available for the filters you have supplied. For example, if you are interested in Russian Oats you could use the following code to find out all the available data series that have "Oats" (item_id = 327) as the item and "Russia" (region_id = 1168) as the region:
+Instead of searching for all the individual entity IDs required to create a data series, the `client.get_data_series` method will return a list of all the data series available for the filters you have supplied. For example, if you are interested in Russian Oats you could use the following code to find out all the available data series that have "Oats" (item_id = 327) as the item and "Russia" (region_id = 1168) as the region:
 
 ```client.get_data_series(**{'item_id': 327, 'region_id': 1168})```
 
@@ -67,20 +67,20 @@ will return a list of items ids for items that are cereals (item_id = 10009): `[
 
 Similarly, for regions, `client.lookup('regions', 1215)[contains]` will return a list of region ids for regions that are in the US (region_id = 1215): `[13100, 13061, 13053, 13099, ....]`. And each of those can be further looked up e.g. `client.lookup('regions', 13100)` will return `{'name': 'Wisconsin', 'level': 4, 'contains': [139839, 139857, 139863, ...]}`.
 
-### Get Descendants
-The Lookup Contains method can return a list of an entity's direct children. However, you may wish to discover all of the lower level regions the belong to a high level region. For this special case of traversing regions, there's a shortcut function that does it more directly and gives the option of filtering by region level: `get_descendant_regions(region_id, descendant_level)`.
+### Get descendants
+The Lookup Contains method can return a list of an entity's direct children. However, you may wish to discover all of the lower level regions that belong to a high level region. For this special case of traversing regions, there's a shortcut function that does it more directly and gives the option of filtering by region level: `get_descendant_regions(region_id, descendant_level)`.
 
 Where:
 ```
 provinces_of_brazil = client.get_descendant_regions(1029, 4)
 ```
-will recursively lookup all descendants of region 1029 (Brazil) that are of level 4 (provinces) i.e. all the provinces of Brazil. 
+will recursively look up all descendants of region 1029 (Brazil) that are of level 4 (provinces) i.e., all the provinces of Brazil. 
 
 And: 
 ```
 districts_of_brazil = client.get_descendant_regions(1029, 5)
 ```
-will recursively lookup all descendants of region 1029 (Brazil) that are of level 5 (districts), i.e. all the districts in all the provinces of Brazil.
+will recursively look up all descendants of region 1029 (Brazil) that are of level 5 (districts), i.e., all the districts in all the provinces of Brazil.
 
 For more information on region levels, please refer to the [Special properties for regions](../docs/gro-data-key-concepts#special-properties-for-regions) section of [Gro Data: Key Concepts]((../docs/gro-data-key-concepts)
 
@@ -91,7 +91,7 @@ If you want to find "what entities contain the given entity?" there is a helper 
 will return `[{id: 15, name: 'North America', contains: [1215, 1037, ...], level: 2}, ...]`
 
 ## Retrieving Data
-Once you've identified the data you want, you'll want to start retrieve it and start putting it to use. The follow methods should help you get the data in the format that you want.
+Once you've identified the data you want, you'll want to start retrieving it and putting it to use. The following methods should help you get the data in the format that you want.
 
 ### Get data points
 `get_data_points(**selection)` is the primary method for retrieving data. The [code snippets](#code-snippets) feature covered earlier provides you with a fully completed `get_data_points` query, such as:
@@ -107,9 +107,8 @@ Will return the Area Harvested series for all items in India as available from U
 Note that limiting the specificity of your selection can greatly increase the time it takes for a response to be returned.
 
 ### Data frame
-Data frames are popular format for viewing data responses, and our `gro_client` library offers you the ability view your data series in a data frame. If you've imported the library into your file, like:
+Data frames are a popular format for viewing data responses, and our `gro_client` library offers you the ability to view your data series in a data frame. If you've imported the library into your file, as follows:
 ```
-import api.client.gro_client
 from api.client.gro_client import get_df
 ```
 Then you can use the `get_df` method to return data in a data frame.
@@ -128,7 +127,7 @@ Sometimes looking at the most recent data point doesn't tell you the whole story
 # Soybeans - Yield (mass/area) - Argentina (USDA PS&D)
 client.get_data_points(**{'metric_id': 170037, 'item_id': 270, 'region_id': 1010, 'source_id': 14, 'frequency_id': 9, 'start_date': '2017-01-01T00:00:00.000Z'})
 ``` 
-But the USDA begins forecasting the yield well before harvest time, and will continue to update its estimate for many months after the harvest is over. In order to see how the forecasts and estimates for each year has changed, you can include the `show_revisions` field as follows:
+But the USDA begins forecasting the yield well before harvest time, and will continue to update its estimate for many months after the harvest is over. In order to see how the forecasts and estimates for each year have changed, you can include the `show_revisions` field as follows:
 ```
 # Soybeans - Yield (mass/area) - Argentina (USDA PS&D)
 client.get_data_points(**{'metric_id': 170037, 'item_id': 270, 'region_id': 1010, 'source_id': 14, 'frequency_id': 9, 'start_date': '2017-01-01T00:00:00.000Z', 'show_revisions': True})
