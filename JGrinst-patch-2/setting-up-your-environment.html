@@ -272,7 +272,7 @@
 </ol>
 <div class="section" id="system-prerequisites">
 <h2>System Prerequisites<a class="headerlink" href="#system-prerequisites" title="Permalink to this headline">¶</a></h2>
-<p>The Gro API Client requires the following OS-dependant system requirements.</p>
+<p>The Gro API Client requires the following OS-dependent system requirements.</p>
 <div class="section" id="macos-and-linux">
 <h3>MacOS and Linux<a class="headerlink" href="#macos-and-linux" title="Permalink to this headline">¶</a></h3>
 <ol class="simple">
@@ -339,7 +339,7 @@ Once you have API access enabled for your account, you may retrieve your token i
 <img alt="user-profile-annotated.png" src="_images/user-profile-annotated.png" /></li>
 <li>In the Account menu, select the API tab (see below).
 <img alt="profile-tab-annotated.png" src="_images/profile-tab-annotated.png" /></li>
-<li>Select the text of the token and copy it to your clipboard, or use the &#8220;copy to clipboard&#8220; button (see below).
+<li>Select the text of the token and copy it to your clipboard, or use the &#8220;Copy to clipboard&#8220; button (see below).
 <img alt="api-tab-annotated.png" src="_images/api-tab-annotated.png" /></li>
 </ol>
 </div>
@@ -374,19 +374,19 @@ Once you have API access enabled for your account, you may retrieve your token i
 <li>Changing your password, or</li>
 <li>Using the &#8220;Regenerate Token&#8220; button in the API section of your Account menu (see instructions below)
 If you have your authentication token saved, performing either of these two actions will cause any applications using the old token to cease being able to contact the Gro API. You will need to follow the instructions in Section 1 to retrieve your new token and update any such applications accordingly.
-To regenerate your authentication token, open the API tab in your Account menu as in Section 1.1, but instead of copying the authentication token, press the &#8220;Regenerate Token&#8220; button (see below). A prompt will appear to warn that any applications using the old token will need to be updated and to confirm your intent.</li>
+To regenerate your authentication token, open the API tab in your Account menu as in <a class="reference external" href="#option-1-using-the-web-app-recommended">Retrieving a token, Option 1: Using the Web App</a>, but instead of copying the authentication token, press the &#8220;Regenerate Token&#8220; button (see below). A prompt will appear to warn that any applications using the old token will need to be updated and to confirm your intent.</li>
 </ol>
 <p><img alt="regenerate-token.png" src="_images/regenerate-token.png" /></p>
 </div>
 <div class="section" id="saving-your-token-as-an-environment-variable">
 <h3>Saving your token as an environment variable<a class="headerlink" href="#saving-your-token-as-an-environment-variable" title="Permalink to this headline">¶</a></h3>
 <p>If you don&#8216;t want to enter a password or token each time, you can save the token as an environment variable. In some of the sample code, it is assumed that you have the token saved to your environment variables as <code class="docutils literal"><span class="pre">GROAPI_TOKEN</span></code>.</p>
-<p>Please consult your OS or IDE documentation for the most accurate and up-to-date information on how to set environment variables, e.g. setting environment variables in <a class="reference external" href="https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_environment_variables?view=powershell-6">Windows Powershell</a> or <a class="reference external" href="https://apple.stackexchange.com/questions/106778/how-do-i-set-environment-variables-on-os-x">Mac OS X/Linux</a> or <a class="reference external" href="https://anaconda-project.readthedocs.io/en/latest/user-guide/tasks/work-with-variables.html">Anaconda</a>. As a quick quide, the following steps should work:</p>
+<p>Please consult your OS or IDE documentation for the most accurate and up-to-date information on how to set environment variables, e.g. setting environment variables in <a class="reference external" href="https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_environment_variables?view=powershell-6">Windows Powershell</a> or <a class="reference external" href="https://apple.stackexchange.com/questions/106778/how-do-i-set-environment-variables-on-os-x">Mac OS X/Linux</a> or <a class="reference external" href="https://anaconda-project.readthedocs.io/en/latest/user-guide/tasks/work-with-variables.html">Anaconda</a>. As a quick guide, the following steps should work:</p>
 <p>For Windows:</p>
 <ol class="simple">
 <li>Click on start menu and search for &#8220;environment variables.&#8220; Click on &#8220;Edit the system environment variables&#8220; option.</li>
 <li>In the &#8220;Advanced&#8220; tab, select the &#8220;Environment Variables...&#8220; button.</li>
-<li>Under the first section called &#8220;User variables for <username>&#8220;, click on the &#8220;New&#8220; button.</li>
+<li>Under the first section called &#8220;User variables for <username>,&#8220; click on the &#8220;New&#8220; button.</li>
 <li>Enter the information as follows:
 Variable name: GROAPI_TOKEN
 Variable value: <insert your Gro API Token here></li>
