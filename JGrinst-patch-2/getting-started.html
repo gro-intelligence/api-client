@@ -269,23 +269,23 @@
 <div class="section" id="examples">
 <h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
 <p>Navigate to the <a class="reference external" href="https://github.com/gro-intelligence/api-client/blob/development/api/client/samples">api/client/samples/</a> folder and try executing the provided examples.</p>
-<ol class="simple">
-<li><a class="reference external" href="https://github.com/gro-intelligence/api-client/blob/development/api/client/samples/quick_start.py">quick_start.py</a> is a simple script that creates an authenticated <code class="docutils literal"><span class="pre">GroClient</span></code> object and uses the <code class="docutils literal"><span class="pre">get_data_series()</span></code> and <code class="docutils literal"><span class="pre">get_data_points()</span></code> methods to find Area Harvested series for Ukrainian Wheat from a variety of different sources, and outputs the time series points to a CSV file. You will likely want to revisit this script as a starting point for building your own scripts.</li>
-</ol>
+<ol>
+<li><p class="first"><a class="reference external" href="https://github.com/gro-intelligence/api-client/blob/development/api/client/samples/quick_start.py">quick_start.py</a> is a simple script that creates an authenticated <code class="docutils literal"><span class="pre">GroClient</span></code> object and uses the <code class="docutils literal"><span class="pre">get_data_series()</span></code> and <code class="docutils literal"><span class="pre">get_data_points()</span></code> methods to find Area Harvested series for Ukrainian Wheat from a variety of different sources, and outputs the time series points to a CSV file. You will likely want to revisit this script as a starting point for building your own scripts.</p>
 <p>Note that the script assumes you have your authentication token set to a <code class="docutils literal"><span class="pre">GROAPI_TOKEN</span></code> environment variable (see Saving your token as an environment variable). If you don&#8216;t wish to use environment variables, you can modify the sample script to set <code class="docutils literal"><span class="pre">[ACCESS_TOKEN](..docs/setting-up-your-environment#retrieving-a-token)</span></code> in some other way.</p>
 <p><code class="docutils literal"><span class="pre">python</span> <span class="pre">quick_start.py</span></code></p>
 <p>If the API client is installed and your authentication token is set, a CSV file called <code class="docutils literal"><span class="pre">gro_client_output.csv</span></code> should be created in the directory where the script was run.</p>
-<ol class="simple">
-<li>Try out <a class="reference external" href="https://github.com/gro-intelligence/api-client/blob/development/api/client/samples/crop_models/soybeans.py">soybeans.py</a> to see the <code class="docutils literal"><span class="pre">CropModel</span></code> class and its <code class="docutils literal"><span class="pre">compute_crop_weighted_series()</span></code> method in action. In this example, NDVI (<a class="reference external" href="https://app.gro-intelligence.com/dictionary/items/321">normalized difference vegetation index</a>) for provinces in Brazil is weighted against each province&#8216;s historical soybean production to put the latest NDVI values into context. This information is put into a pandas dataframe, the description of which is printed to the console.</li>
-</ol>
+</li>
+<li><p class="first">Try out <a class="reference external" href="https://github.com/gro-intelligence/api-client/blob/development/api/client/samples/crop_models/soybeans.py">soybeans.py</a> to see the <code class="docutils literal"><span class="pre">CropModel</span></code> class and its <code class="docutils literal"><span class="pre">compute_crop_weighted_series()</span></code> method in action. In this example, NDVI (<a class="reference external" href="https://app.gro-intelligence.com/dictionary/items/321">normalized difference vegetation index</a>) for provinces in Brazil is weighted against each province&#8216;s historical soybean production to put the latest NDVI values into context. This information is put into a pandas dataframe, the description of which is printed to the console.</p>
 <p><code class="docutils literal"><span class="pre">python</span> <span class="pre">crop_models/soybeans.py</span></code></p>
-<ol class="simple">
-<li>See <a class="reference external" href="https://github.com/gro-intelligence/api-client/blob/development/api/client/samples/crop_models/brazil_soybeans.ipynb">brazil_soybeans.ipynb</a> for a longer, more detailed demonstration of many of the API&#8216;s capabilities in the form of a Jupyter notebook.</li>
-<li>You can also use the included gro_client tool as a quick way to request a single data series right on the command line. Try the following:</li>
-</ol>
+</li>
+<li><p class="first">See <a class="reference external" href="https://github.com/gro-intelligence/api-client/blob/development/api/client/samples/crop_models/brazil_soybeans.ipynb">brazil_soybeans.ipynb</a> for a longer, more detailed demonstration of many of the API&#8216;s capabilities in the form of a Jupyter notebook.</p>
+</li>
+<li><p class="first">You can also use the included gro_client tool as a quick way to request a single data series right on the command line. Try the following:</p>
 <p><code class="docutils literal"><span class="pre">gro_client</span> <span class="pre">--metric=&quot;Production</span> <span class="pre">Quantity</span> <span class="pre">mass&quot;</span> <span class="pre">--item=&quot;Corn&quot;</span> <span class="pre">--region=&quot;United</span> <span class="pre">States&quot;</span> <span class="pre">--user_email=&quot;email&#64;example.com&quot;</span></code></p>
 <p>The gro_client command line interface does a keyword search for the inputs and finds a random matching data series. It displays the data series it picked in the command line and writes the data points out to a file in the current directory called gro_client_output.csv. This tool is useful for simple queries, but anything more complex should be done using the Python packages.</p>
 <p>Further documentation can be found in the api/client/ directory and on our wiki.</p>
+</li>
+</ol>
 </div>
 <div class="section" id="discovering-data">
 <h2>Discovering Data<a class="headerlink" href="#discovering-data" title="Permalink to this headline">¶</a></h2>
