@@ -3,7 +3,6 @@
 1. [Gro Ontology](#gro-ontology)
 2. [Data Series Definition](#data-series-definition)
 3. [Data Point Definition](#data-point-definition)
-4. [Data Point Field Definition](#data-point-field-definition)
 
 ## Gro Ontology
 Gro has brought the world of agricultural data into a single ontology. This ontology classifies all data into a limited set of entities. 
@@ -96,17 +95,12 @@ For point-locations (i.e., region level 9), these properties correspond to the l
 Gro defines a "data series" as a series of data points over time.
 Each data series is defined by a unique selection of:
 
-item
-
-metric
-
-region
-
-partner_region (optional)
-
-frequency
-
-source
+`item`\
+`metric`\
+`region`\
+`partner_region` (optional)\
+`frequency`\
+`source`\
 
 For example, if you select `item=Wheat`, `metric=Production Quantity (mass)`, `region=India`, `frequency=Annual`, `source=FAO`, that would be one data series. Partner_region is optional and used only in series that represent a flow between two places, e.g. if the metric is exports, the region would be the exporter and the partner_region would be the importer.
 
