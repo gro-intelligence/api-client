@@ -98,8 +98,11 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Setting Up Your Environment</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#system-prerequisites">System Prerequisites</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#macos-and-linux">MacOS and Linux</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#windows">Windows</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#python">Python</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#windows">Windows</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#anaconda">Anaconda</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#non-anaconda">Non-Anaconda</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="#installing-gro-packages">Installing Gro Packages</a></li>
 </ul>
 </li>
@@ -266,7 +269,7 @@
 
 
 
-    <p class="scv-banner scv-sphinx_rtd_theme"><a href="../CLEWS-15766/setting-up-your-environment.html"><b>Warning:</b> This document is for the development version of Gro API Client. The main version is CLEWS-15766.</a></p>
+    <p class="scv-banner scv-sphinx_rtd_theme"><a href="../development/setting-up-your-environment.html"><b>Warning:</b> This document is for the development version of Gro API Client. The main version is development.</a></p>
 <div class="section" id="setting-up-your-environment">
 <h1>Setting Up Your Environment<a class="headerlink" href="#setting-up-your-environment" title="Permalink to this headline">¶</a></h1>
 <p>In order to start engaging with the Gro API Client, you will need to set up your local environment with some basic requirements.</p>
@@ -280,30 +283,30 @@
 <div class="section" id="macos-and-linux">
 <h3>MacOS and Linux<a class="headerlink" href="#macos-and-linux" title="Permalink to this headline">¶</a></h3>
 <ol class="simple">
-<li>git (Installation instructions)</li>
-<li>python (2.7.x or 3.x) (2 Installation instructions / 3 Installation instructions)</li>
-<li>pip (Installation instructions. Note &#8220;pip is already installed if you are using Python 2 &gt;=2.7.9 or Python 3 &gt;=3.4&#8220;)</li>
+<li>git (<a class="reference external" href="https://git-scm.com/book/en/v2/Getting-Started-Installing-Git">Installation instructions</a>)</li>
+<li>python version 3.5 or above from &lt;python.org&gt;. Support for Python 2.7.13 or above is also maintained, but with its <a class="reference external" href="https://mail.python.org/pipermail/python-dev/2018-March/152348.html">End of Life</a> soon approaching, Python 3 is recommended.</li>
+<li>pip (<a class="reference external" href="https://pip.pypa.io/en/stable/installing/">Installation instructions</a>. Note &#8220;pip is already installed if you are using Python 2 &gt;=2.7.9 or Python 3 &gt;=3.4&#8220;)</li>
 </ol>
 </div>
 <div class="section" id="windows">
 <h3>Windows<a class="headerlink" href="#windows" title="Permalink to this headline">¶</a></h3>
 <p>The Gro API Client package is supported both with or without Anaconda. However, some popular data science packages, including some used in the sample scripts provided, are only available on Windows via <a class="reference external" href="https://docs.conda.io/en/latest/">conda</a>. For that reason, instructions are provided for both. You should select the distribution that fits your requirements.</p>
-<p>Anaconda</p>
+<div class="section" id="anaconda">
+<h4>Anaconda<a class="headerlink" href="#anaconda" title="Permalink to this headline">¶</a></h4>
 <ol class="simple">
 <li>Download Anaconda with Python 3.5 or above from <a class="reference external" href="https://www.anaconda.com/distribution/">anaconda.com</a>. Support for Python 2.7.13 or above is also maintained, but with <a class="reference external" href="https://mail.python.org/pipermail/python-dev/2018-March/152348.html">its End of Life</a> soon approaching, it is recommended you start with Python 3.</li>
 <li>Install Git from <a class="reference external" href="https://git-scm.com/download/win">git-scm.com</a>. Proceed with the default options.</li>
 </ol>
-<p>Non-Anaconda</p>
+</div>
+<div class="section" id="non-anaconda">
+<h4>Non-Anaconda<a class="headerlink" href="#non-anaconda" title="Permalink to this headline">¶</a></h4>
 <ol class="simple">
 <li>Powershell (should come default with Windows)</li>
 <li>Download Python version 3.5 or above from <a class="reference external" href="https://www.python.org/downloads/windows/">python.org</a>. Support for Python 2.7.13 or above is also maintained, but with <a class="reference external" href="https://mail.python.org/pipermail/python-dev/2018-March/152348.html">its End of Life</a> soon approaching, it is recommended you start with Python 3.</li>
-<li>Install both Python and pip to PATH either in the installer (enable component during the installation) or manually. The easiest way to do this is to make sure the below is checked during installation: <img alt="readme_add_python_to_path_installer" src="readme_add_python_to_path_installer.png" /></li>
+<li>Install both Python and pip to PATH either in the installer (enable component during the installation) or manually. The easiest way to do this is to make sure the below is checked during installation: <img alt="readme_add_python_to_path_installer" src="api-client/readme_add_python_to_path_installer.png" /></li>
 <li>Install Git from <a class="reference external" href="https://git-scm.com/download/win">git-scm.com</a>. Proceed with the default options.</li>
 </ol>
 </div>
-<div class="section" id="python">
-<h3>Python<a class="headerlink" href="#python" title="Permalink to this headline">¶</a></h3>
-<p>The Gro API client is compatible with both Python 2.7.x and Python 3.x (3.6 and 3.7 are currently tested).</p>
 </div>
 <div class="section" id="installing-gro-packages">
 <h3>Installing Gro Packages<a class="headerlink" href="#installing-gro-packages" title="Permalink to this headline">¶</a></h3>
@@ -329,7 +332,7 @@
 <p>To work with the Gro API, you need an authentication token. This token needs to be sent along with every request made to the API. This is typically done by using one of the included Client classes (<code class="docutils literal"><span class="pre">Client</span></code>, <code class="docutils literal"><span class="pre">GroClient</span></code>, <code class="docutils literal"><span class="pre">BatchClient</span></code>, or <code class="docutils literal"><span class="pre">CropModel</span></code>): you provide your access token when creating the object, and then every API request made thereafter automatically includes the token. See the (MAKE LINK) sample scripts for examples.</p>
 <div class="section" id="retrieving-a-token">
 <h3>Retrieving a token<a class="headerlink" href="#retrieving-a-token" title="Permalink to this headline">¶</a></h3>
-<p>Note that your account needs to be activated for API access before you will be able to retrieve a token. See https://gro-intelligence.com/products/gro-api for more info regarding unlocking API access for your account.
+<p>Note that your account needs to be activated for API access before you will be able to retrieve a token. See <a class="reference external" href="https://gro-intelligence.com/products/gro-api">https://gro-intelligence.com/products/gro-api</a> for more info regarding unlocking API access for your account.
 Once you have API access enabled for your account, you may retrieve your token in any of the following ways:</p>
 <ol class="simple">
 <li><a class="reference external" href="#option-1-using-the-web-app-recommended">Using the Gro Web Application (preferred)</a></li>
@@ -339,7 +342,7 @@ Once you have API access enabled for your account, you may retrieve your token i
 <div class="section" id="option-1-using-the-web-app-recommended">
 <h4>Option 1: Using the Web App (Recommended)<a class="headerlink" href="#option-1-using-the-web-app-recommended" title="Permalink to this headline">¶</a></h4>
 <ol class="simple">
-<li>Log in to your Gro account at http://app.gro-intelligence.com and open your Account menu using the button on the bottom left of the Gro dashboard (see image below).
+<li>Log in to your Gro account at <a class="reference external" href="http://app.gro-intelligence.com">http://app.gro-intelligence.com</a> and open your Account menu using the button on the bottom left of the Gro dashboard (see image below).
 <img alt="user-profile-annotated.png" src="_images/user-profile-annotated.png" /></li>
 <li>In the Account menu, select the API tab (see below).
 <img alt="profile-tab-annotated.png" src="_images/profile-tab-annotated.png" /></li>
@@ -351,7 +354,7 @@ Once you have API access enabled for your account, you may retrieve your token i
 <h4>Option 2: Using the gro_client Command Line Interface<a class="headerlink" href="#option-2-using-the-gro-client-command-line-interface" title="Permalink to this headline">¶</a></h4>
 <p>Limitation: The Gro Command Line Interface cannot retrieve tokens for users using OAuth authentication. If this applies to you, please use the Gro web application instead.</p>
 <p>When you install the Gro API Client via pip, the <code class="docutils literal"><span class="pre">gro_client</span></code> command line interface is automatically added to your PATH. This is a convenience tool for doing basic operations on the command line without needing to write a full Python script. One of its uses is it can retrieve your authentication token and print that token out to the console. To do so, execute the command below on your command line, substituting email&#64;example.com for the email address associated with your Gro web application account:</p>
-<div class="highlight-sh"><div class="highlight"><pre><span></span>gro_client --user_email<span class="o">=</span>email@example.com --print_token
+<div class="highlight-sh"><div class="highlight"><pre><span></span>gro_client --user_email<span class="o">=</span><span class="s2">&quot;email@example.com&quot;</span> --print_token
 </pre></div>
 </div>
 <p>You should then be prompted for a password. Note that this password prompt does not display any user input on the command line, so it may appear as though you are not typing anything. This is intended. Simply type your password and press Enter.</p>
@@ -376,38 +379,33 @@ Once you have API access enabled for your account, you may retrieve your token i
 <p>There are two ways you can invalidate your current authorization token and create a new one, both of which are performed through the Gro web application:</p>
 <ol class="simple">
 <li>Changing your password, or</li>
-<li>Using the &#8220;Regenerate Token&#8220; button in the API section of your Account menu (see instructions below)
-If you have your authentication token saved, performing either of these two actions will cause any applications using the old token to cease being able to contact the Gro API. You will need to follow the instructions in Section 1 to retrieve your new token and update any such applications accordingly.
-To regenerate your authentication token, open the API tab in your Account menu as in <a class="reference external" href="#option-1-using-the-web-app-recommended">Retrieving a token, Option 1: Using the Web App</a>, but instead of copying the authentication token, press the &#8220;Regenerate Token&#8220; button (see below). A prompt will appear to warn that any applications using the old token will need to be updated and to confirm your intent.</li>
+<li>Using the &#8220;Regenerate Token&#8220; button in the API section of your Account menu (see instructions below)</li>
 </ol>
+<p>If you have your authentication token saved, performing either of these two actions will cause any applications using the old token to cease being able to contact the Gro API. You will need to follow the instructions in Section 1 to retrieve your new token and update any such applications accordingly.</p>
+<p>To regenerate your authentication token, open the API tab in your Account menu as in <a class="reference external" href="#option-1-using-the-web-app-recommended">Retrieving a token, Option 1: Using the Web App</a>, but instead of copying the authentication token, press the &#8220;Regenerate Token&#8220; button (see below). A prompt will appear to warn that any applications using the old token will need to be updated and to confirm your intent.</p>
 <p><img alt="regenerate-token.png" src="_images/regenerate-token.png" /></p>
 </div>
 <div class="section" id="saving-your-token-as-an-environment-variable">
 <h3>Saving your token as an environment variable<a class="headerlink" href="#saving-your-token-as-an-environment-variable" title="Permalink to this headline">¶</a></h3>
 <p>If you don&#8216;t want to enter a password or token each time, you can save the token as an environment variable. In some of the sample code, it is assumed that you have the token saved to your environment variables as <code class="docutils literal"><span class="pre">GROAPI_TOKEN</span></code>.</p>
 <p>Please consult your OS or IDE documentation for the most accurate and up-to-date information on how to set environment variables, e.g. setting environment variables in <a class="reference external" href="https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_environment_variables?view=powershell-6">Windows Powershell</a> or <a class="reference external" href="https://apple.stackexchange.com/questions/106778/how-do-i-set-environment-variables-on-os-x">Mac OS X/Linux</a> or <a class="reference external" href="https://anaconda-project.readthedocs.io/en/latest/user-guide/tasks/work-with-variables.html">Anaconda</a>. As a quick guide, the following steps should work:</p>
-<p>For Windows:</p>
+<p>For Windows 10:</p>
 <ol class="simple">
 <li>Click on start menu and search for &#8220;environment variables.&#8220; Click on &#8220;Edit the system environment variables&#8220; option.</li>
 <li>In the &#8220;Advanced&#8220; tab, select the &#8220;Environment Variables...&#8220; button.</li>
-<li>Under the first section called &#8220;User variables for &lt;username&gt;,&#8220; click on the &#8220;New&#8220; button.</li>
+<li>Under the first section called &#8220;User variables for &lt;username&gt;,&#8220; and click on the &#8220;New&#8220; button.</li>
 <li>Enter the information as follows:
 Variable name: GROAPI_TOKEN
 Variable value: <insert your Gro API Token here></li>
 <li>Click OK</li>
 </ol>
-<p>Your environment variable should now be saved. Whenever you run code that includes the code <code class="docutils literal"><span class="pre">os.environ['GROAPI_TOKEN']</span></code> it should automatically pull in your API Token.</p>
+<p>Your environment variable should now be saved. You will likely need to close an re-open your IDE for the IDE to recognize the change. Whenever you run code that includes the code <code class="docutils literal"><span class="pre">os.environ['GROAPI_TOKEN']</span></code> it should automatically pull in your API Token.</p>
 <p>For Mac:</p>
 <ol class="simple">
-<li>Open up your terminal and navigate to your project directory</li>
-<li>type <code class="docutils literal"><span class="pre">python</span></code></li>
-<li>when the python editor opens type:
-<code class="docutils literal"><span class="pre">&gt;&gt;&gt;</span> <span class="pre">import</span> <span class="pre">os</span></code>
-<code class="docutils literal"><span class="pre">&gt;&gt;&gt;</span> <span class="pre">os.environ['GROAPI_TOKEN']</span> <span class="pre">=</span> <span class="pre">&quot;YOUR</span> <span class="pre">TOKEN</span> <span class="pre">HERE&quot;</span></code></li>
-<li>to exit type:
-<code class="docutils literal"><span class="pre">&gt;&gt;&gt;exit()</span></code></li>
+<li>Open up your terminal and type <code class="docutils literal"><span class="pre">open</span> <span class="pre">~/.bash_profile</span></code></li>
+<li>Add the following line: <code class="docutils literal"><span class="pre">export</span> <span class="pre">GROAPI_TOKEN=&quot;YOUR</span> <span class="pre">TOKEN</span> <span class="pre">HERE&quot;</span></code></li>
+<li>Save the file and close any shells you have open. The environment variable should be available next time you open a shell.</li>
 </ol>
-<p>Your environment variable should now be saved.</p>
 </div>
 </div>
 </div>
