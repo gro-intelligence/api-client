@@ -108,6 +108,9 @@ img {
     line-height: 20px;
     text-decoration: none;
 }
+a:hover.reference.internal {
+    color: #e31b37;
+}
 .wy-menu-vertical li span.toctree-expand {
     line-height: 20px;
 }
