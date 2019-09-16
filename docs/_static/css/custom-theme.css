@@ -70,9 +70,6 @@ img {
     color: #404040;
 }
 
-.wy-menu-vertical a:hover {
-    color: #d9d9d9;
-}
 
 .wy-nav-side {
     background: #ffffff;
@@ -89,7 +86,7 @@ img {
     font-family: Roboto,Arial,sans-serif;
     font-weight:500;
     font-size: 12px;
-    color: #666669;
+    color: #9b9b9e;
     line-height: 14px;
     text-transform: capitalize;
 }
@@ -111,6 +108,18 @@ img {
     line-height: 20px;
     text-decoration: none;
 }
+.wy-menu-vertical li span.toctree-expand {
+    line-height: 20px;
+}
+.wy-menu-vertical li.toctree-l2 span.toctree-expand {
+    line-height: 20px;
+}
+.wy-menu-vertical li.toctree-l2 a:hover span.toctree-expand{
+    line-height: 20px;
+}
+.wy-menu-vertical li.on a span.toctree-expand, .wy-menu-vertical li.current>a span.toctree-expand {
+    line-height: 20px;
+}
 .wy-menu-vertical a:hover {
     background: #fff;
     color: #e31b37;
@@ -127,6 +136,7 @@ img {
 }
 .wy-menu-vertical li.toctree-l1.current>a {
     border:none;
+    font-size: 16px;
 }
 .wy-menu-vertical li.toctree-l2.current>a {
     background: #fff;
@@ -219,7 +229,7 @@ img {
 }
 footer {
     font-family: Roboto,Arial,sans-serif;
-    color: #fcfcfc;
+    font-size: 0;
 }
 footer p{
     font-weight:400;
