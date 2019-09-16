@@ -9,12 +9,12 @@ Gro has brought the world of agricultural data into a single ontology. This onto
 
 The entity types around which the data is organized in Gro are:
 
-items -- what the data is about (e.g., Rice, Sugar, Rainfall, etc.).\
-metrics -- how the data is measured (e.g., Production, Precipitation, etc.).\
-regions -- where the data is from/about (e.g., a country, a weather station, a city etc.). Some data such as trade flows might have a partner region.\
-frequencies -- e.g., daily, weekly etc.\
-sources -- the organization or sub-organization that generates the data (e.g., USDA PS&D).\
-units -- the units in which the data is presented (e.g., tonnes, liters, etc.).\
+* items -- what the data is about (e.g., Rice, Sugar, Rainfall, etc.).
+* metrics -- how the data is measured (e.g., Production, Precipitation, etc.).
+* regions -- where the data is from/about (e.g., a country, a weather station, a city etc.). Some data such as trade flows might have a partner region.
+* frequencies -- e.g., daily, weekly etc.
+* sources -- the organization or sub-organization that generates the data (e.g., USDA PS&D).
+* units -- the units in which the data is presented (e.g., tonnes, liters, etc.).
 
 ### Entity fields
 Each specific entity will have an `id`, `name`, and various other properties. For example, "Soybeans" is a specific item with `id = 270` and the following information
@@ -53,7 +53,7 @@ Each specific entity will have an `id`, `name`, and various other properties. Fo
  'name': 'Soybeans',
  'rankingScore': 2.204}
 ```
-Names and ids are unique within a particular entity type, i.e., there's only one item called Soybeans, and there's no other item with id = 270.
+IDs are unique within a particular entity type, i.e., there's only one item with id = 270.
 
 The above information can be retrieved using the client.search function:
 ```client.lookup('items', 270)```
@@ -75,32 +75,32 @@ Will return a list of regions to which "California" (region_id: 13055) belongs.
 ### Special Properties for Regions
 The following properties exist for regions only:
 
-`level`\
+####`level`
 Region level corresponds to the administrative level of the region:
 
-level 1: world\
-level 2: continent\
-level 3: country\
-level 4: provinces\
-level 5: districts\
-level 6: city\
-level 7: market\
-level 8: other arbitrary regions\
-level 9: point-location\
+* level 1: world
+* level 2: continent
+* level 3: country
+* level 4: provinces
+* level 5: districts
+* level 6: city
+* level 7: market
+* level 8: other arbitrary regions
+* level 9: point-location
 
-`latitude` and `longitude`\
+####`latitude` and `longitude`
 For point-locations (i.e., region level 9), these properties correspond to the location's coordinates. More generally for other regions, these properties are optional, but if specified, they correspond to the coordinates of the geographic center of the region.
 
 ## Data Series Definition
 Gro defines a "data series" as a series of data points over time.
 Each data series is defined by a unique selection of:
 
-`item`\
-`metric`\
-`region`\
-`partner_region` (optional)\
-`frequency`\
-`source`\
+* `item`
+* `metric`
+* `region`
+* `partner_region` (optional)
+* `frequency`
+* `source`
 
 For example, if you select `item=Wheat`, `metric=Production Quantity (mass)`, `region=India`, `frequency=Annual`, `source=FAO`, that would be one data series. Partner_region is optional and used only in series that represent a flow between two places, e.g. if the metric is exports, the region would be the exporter and the partner_region would be the importer.
 
@@ -129,22 +129,12 @@ Another example is if you get weekly precipitation data for a given region in a 
 
 Below are some explanations of what each of those fields represent:
 
-`start_date`: beginning of the period this point represents
-
-`end_date`: end of the period this point represents
-
-`reporting_date`: date the source reported this value (only included when source provides reporting date)
-
-`value`: the value, typically a number. In some cases, the value may be non-numeric. E.g., when the metric is Crop Calendar, a value of "planting," represents the fact that the planting period is from `start_date` to `end_date`.
-
-`input_unit_id`: this is a Gro unit id you can look up the name/abbreviation/etc. of using the `client.lookup('units', input_unit_id)` function. It's the "input" unit because that's the unit the source provided the data in, which is different from if you had selected a unit to convert it to. There's also a helper function of which you can see an example in the [quickstart](https://github.com/gro-intelligence/api-client/blob/9c2c17642980b5415b8a8167a28276b77e34915c/api/client/samples/quick_start.py#L30) for getting just the abbreviation from the unit id, `client.lookup_unit_abbreviation(point['input_unit_id'])`, which is the common case you probably want
-
-`input_unit_scale`: the value may be given as `{value: 100, input_unit: kg, input_unit_scale: 1000}` meaning the source reported the data in 1000s of kilograms. So a value of 100 would represent 100,000kg. It's important you not forget to multiply the scale with the value. You can see an example of that being done in [gro_client.py's](https://github.com/gro-intelligence/api-client/blob/9c2c17642980b5415b8a8167a28276b77e34915c/api/client/gro_client.py#L44) `print_random_data_series()` function.
-
-`metric_id`: unique id for the metric (i.e. "Export Value (currency)") you selected - get more details (name, definition, ...) using `client.lookup('metrics', metric_id)`
-
-`item_id`: unique id for the item (i.e., "Corn") you selected - get more details (name, definition, ...) using `client.lookup('items', item_id)`
-
-`region_id`: unique id for the region (i.e., "United States") you selected - get more details (name, administrative level, ...) using `client.lookup('regions', region_id)`
-
-`frequency_id`: unique id for the frequency (i.e., "annual") you selected - get more details (name, abbreviation, period length, ...) using `client.lookup('frequencies', frequency_id)`
+* `start_date`: beginning of the period this point represents
+* `end_date`: end of the period this point represents
+* `reporting_date`: date the source reported this value (only included when source provides reporting date)
+* `value`: the value, typically a number. In some cases, the value may be non-numeric. E.g., when the metric is Crop Calendar, a value of "planting," represents the fact that the planting period is from `start_date` to `end_date`.
+* `unit_id`: this is a Gro unit id you can look up the name/abbreviation/etc. of using the `client.lookup('units', unit_id)` function. There's also a helper function of which you can see an example in the [quickstart](https://github.com/gro-intelligence/api-client/blob/9c2c17642980b5415b8a8167a28276b77e34915c/api/client/samples/quick_start.py#L30) for getting just the abbreviation from the unit id, `client.lookup_unit_abbreviation(point['unit_id'])`, which is the common case you probably want
+* `metric_id`: unique id for the metric (i.e. "Export Value (currency)") you selected - get more details (name, definition, ...) using `client.lookup('metrics', metric_id)`
+* `item_id`: unique id for the item (i.e., "Corn") you selected - get more details (name, definition, ...) using `client.lookup('items', item_id)`
+* `region_id`: unique id for the region (i.e., "United States") you selected - get more details (name, administrative level, ...) using `client.lookup('regions', region_id)`
+* `frequency_id`: unique id for the frequency (i.e., "annual") you selected - get more details (name, abbreviation, period length, ...) using `client.lookup('frequencies', frequency_id)`
