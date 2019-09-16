@@ -65,7 +65,7 @@ for result in client.search_and_lookup('items','corn'):
 Instead of searching for all the individual entity IDs required to create a data series, the [`client.get_data_series()`](https://gro-intelligence.github.io/api-client/JGrinst-patch-2/api.html#api.client.lib.get_data_series) method will return a list of all the data series available for the filters you have supplied. For example, if you are interested in Russian Oats you could use the following code to find out all the available data series that have "Oats" (item_id = 327) as the item and "Russia" (region_id = 1168) as the region:
 
 ```py
-client.get_data_series(item_id=327, region_id=1168})
+client.get_data_series(item_id=327, region_id=1168)
 ```
 
 ### Lookup contains
