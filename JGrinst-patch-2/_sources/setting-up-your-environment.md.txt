@@ -11,28 +11,25 @@ The Gro API Client requires the following OS-dependent system requirements.
 
 ### MacOS and Linux
 
-1. git (Installation instructions)
-2. python (2.7.x or 3.x) (2 Installation instructions / 3 Installation instructions)
-3. pip (Installation instructions. Note "pip is already installed if you are using Python 2 >=2.7.9 or Python 3 >=3.4")
+1. git ([Installation instructions](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git))
+2. python version 3.5 or above from <python.org>. Support for Python 2.7.13 or above is also maintained, but with its [End of Life](https://mail.python.org/pipermail/python-dev/2018-March/152348.html) soon approaching, Python 3 is recommended.
+3. pip ([Installation instructions](https://pip.pypa.io/en/stable/installing/). Note "pip is already installed if you are using Python 2 >=2.7.9 or Python 3 >=3.4")
 
 ### Windows
 
 The Gro API Client package is supported both with or without Anaconda. However, some popular data science packages, including some used in the sample scripts provided, are only available on Windows via [conda](https://docs.conda.io/en/latest/). For that reason, instructions are provided for both. You should select the distribution that fits your requirements.
 
-Anaconda
+#### Anaconda
+
 1. Download Anaconda with Python 3.5 or above from [anaconda.com](https://www.anaconda.com/distribution/). Support for Python 2.7.13 or above is also maintained, but with [its End of Life](https://mail.python.org/pipermail/python-dev/2018-March/152348.html) soon approaching, it is recommended you start with Python 3.
 2. Install Git from [git-scm.com](https://git-scm.com/download/win). Proceed with the default options.
 
-Non-Anaconda
+#### Non-Anaconda
+
 1. Powershell (should come default with Windows) 
 2. Download Python version 3.5 or above from [python.org](https://www.python.org/downloads/windows/). Support for Python 2.7.13 or above is also maintained, but with [its End of Life](https://mail.python.org/pipermail/python-dev/2018-March/152348.html) soon approaching, it is recommended you start with Python 3.
-3. Install both Python and pip to PATH either in the installer (enable component during the installation) or manually. The easiest way to do this is to make sure the below is checked during installation: ![readme_add_python_to_path_installer](readme_add_python_to_path_installer.png)
+3. Install both Python and pip to PATH either in the installer (enable component during the installation) or manually. The easiest way to do this is to make sure the below is checked during installation: ![readme_add_python_to_path_installer](api-client/readme_add_python_to_path_installer.png)
 4. Install Git from [git-scm.com](https://git-scm.com/download/win). Proceed with the default options.
-
-
-### Python
-
-The Gro API client is compatible with both Python 2.7.x and Python 3.x (3.6 and 3.7 are currently tested). 
 
 ### Installing Gro Packages
 
@@ -59,7 +56,7 @@ To work with the Gro API, you need an authentication token. This token needs to 
 
 ### Retrieving a token
 
-Note that your account needs to be activated for API access before you will be able to retrieve a token. See https://gro-intelligence.com/products/gro-api for more info regarding unlocking API access for your account.
+Note that your account needs to be activated for API access before you will be able to retrieve a token. See <https://gro-intelligence.com/products/gro-api> for more info regarding unlocking API access for your account.
 Once you have API access enabled for your account, you may retrieve your token in any of the following ways:
 
 1. [Using the Gro Web Application (preferred)](#option-1-using-the-web-app-recommended)
@@ -68,7 +65,7 @@ Once you have API access enabled for your account, you may retrieve your token i
 
 #### Option 1: Using the Web App (Recommended)
 
-1. Log in to your Gro account at http://app.gro-intelligence.com and open your Account menu using the button on the bottom left of the Gro dashboard (see image below).
+1. Log in to your Gro account at <http://app.gro-intelligence.com> and open your Account menu using the button on the bottom left of the Gro dashboard (see image below).
 ![user-profile-annotated.png](./_images/user-profile-annotated.png)
 
 2. In the Account menu, select the API tab (see below).
@@ -84,7 +81,7 @@ Limitation: The Gro Command Line Interface cannot retrieve tokens for users usin
 When you install the Gro API Client via pip, the `gro_client` command line interface is automatically added to your PATH. This is a convenience tool for doing basic operations on the command line without needing to write a full Python script. One of its uses is it can retrieve your authentication token and print that token out to the console. To do so, execute the command below on your command line, substituting email@example.com for the email address associated with your Gro web application account:
 
 ```sh
-gro_client --user_email=email@example.com --print_token
+gro_client --user_email="email@example.com" --print_token
 ```
 
 You should then be prompted for a password. Note that this password prompt does not display any user input on the command line, so it may appear as though you are not typing anything. This is intended. Simply type your password and press Enter.
@@ -113,7 +110,9 @@ There are two ways you can invalidate your current authorization token and creat
 
 1. Changing your password, or
 2. Using the "Regenerate Token" button in the API section of your Account menu (see instructions below)
+
 If you have your authentication token saved, performing either of these two actions will cause any applications using the old token to cease being able to contact the Gro API. You will need to follow the instructions in Section 1 to retrieve your new token and update any such applications accordingly.
+
 To regenerate your authentication token, open the API tab in your Account menu as in [Retrieving a token, Option 1: Using the Web App](#option-1-using-the-web-app-recommended), but instead of copying the authentication token, press the "Regenerate Token" button (see below). A prompt will appear to warn that any applications using the old token will need to be updated and to confirm your intent.
 
 ![regenerate-token.png](./_images/regenerate-token.png)
@@ -124,24 +123,18 @@ If you don't want to enter a password or token each time, you can save the token
 
 Please consult your OS or IDE documentation for the most accurate and up-to-date information on how to set environment variables, e.g. setting environment variables in [Windows Powershell](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_environment_variables?view=powershell-6) or [Mac OS X/Linux](https://apple.stackexchange.com/questions/106778/how-do-i-set-environment-variables-on-os-x) or [Anaconda](https://anaconda-project.readthedocs.io/en/latest/user-guide/tasks/work-with-variables.html). As a quick guide, the following steps should work:
 
-For Windows:
+For Windows 10:
 1. Click on start menu and search for "environment variables." Click on "Edit the system environment variables" option.
 2. In the "Advanced" tab, select the "Environment Variables..." button.
-3. Under the first section called "User variables for &lt;username&gt;," click on the "New" button.
+3. Under the first section called "User variables for &lt;username&gt;," and click on the "New" button.
 4. Enter the information as follows:
   Variable name: GROAPI_TOKEN
   Variable value: <insert your Gro API Token here>
 5. Click OK
 
-Your environment variable should now be saved. Whenever you run code that includes the code `os.environ['GROAPI_TOKEN']` it should automatically pull in your API Token.
+Your environment variable should now be saved. You will likely need to close an re-open your IDE for the IDE to recognize the change. Whenever you run code that includes the code `os.environ['GROAPI_TOKEN']` it should automatically pull in your API Token.
 
 For Mac:
-1. Open up your terminal and navigate to your project directory
-2. type `python`
-3. when the python editor opens type:
-`>>> import os`
-`>>> os.environ['GROAPI_TOKEN'] = "YOUR TOKEN HERE"`
-4. to exit type:
-`>>>exit()`
-
-Your environment variable should now be saved.
+1. Open up your terminal and type `open ~/.bash_profile`
+2. Add the following line: `export GROAPI_TOKEN="YOUR TOKEN HERE"`
+3. Save the file and close any shells you have open. The environment variable should be available next time you open a shell.
