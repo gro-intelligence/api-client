@@ -18,7 +18,7 @@ The entity types around which the data is organized in Gro are:
 
 ### Entity fields
 Each specific entity will have an `id`, `name`, and various other properties. For example, "Soybeans" is a specific item with `id = 270` and the following information
-```
+```py
 {'allowedAggregations': None,
  'contains': [1737,
   7401,
@@ -75,7 +75,7 @@ Will return a list of regions to which "California" (region_id: 13055) belongs.
 ### Special Properties for Regions
 The following properties exist for regions only:
 
-####`level`
+#### `level`
 Region level corresponds to the administrative level of the region:
 
 * level 1: world
@@ -88,7 +88,7 @@ Region level corresponds to the administrative level of the region:
 * level 8: other arbitrary regions
 * level 9: point-location
 
-####`latitude` and `longitude`
+#### `latitude` and `longitude`
 For point-locations (i.e., region level 9), these properties correspond to the location's coordinates. More generally for other regions, these properties are optional, but if specified, they correspond to the coordinates of the geographic center of the region.
 
 ## Data Series Definition
@@ -108,7 +108,7 @@ To get all the available data series for a given selection of entities, use the 
 
 ## Data Point Definition
 Gro defines a "data point" as a discrete result produced by our API. When using the `get_data_points()` function, you are returned an array of points, each of which is a Python dictionary object that looks something like:
-```
+```py
 {
   u'input_unit_scale': 1,
   u'region_id': 1038,

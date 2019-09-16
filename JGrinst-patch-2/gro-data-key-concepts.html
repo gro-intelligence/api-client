@@ -143,7 +143,11 @@
 <li class="toctree-l2"><a class="reference internal" href="#gro-ontology">Gro Ontology</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#entity-fields">Entity fields</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#entity-relationships-contains">Entity Relationships: Contains</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#special-properties-for-regions">Special Properties for Regions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#special-properties-for-regions">Special Properties for Regions</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#level"><code class="docutils literal"><span class="pre">level</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#latitude-and-longitude"><code class="docutils literal"><span class="pre">latitude</span></code> and <code class="docutils literal"><span class="pre">longitude</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#data-series-definition">Data Series Definition</a></li>
@@ -285,7 +289,7 @@
 <div class="section" id="entity-fields">
 <h3>Entity fields<a class="headerlink" href="#entity-fields" title="Permalink to this headline">¶</a></h3>
 <p>Each specific entity will have an <code class="docutils literal"><span class="pre">id</span></code>, <code class="docutils literal"><span class="pre">name</span></code>, and various other properties. For example, &#8220;Soybeans&#8220; is a specific item with <code class="docutils literal"><span class="pre">id</span> <span class="pre">=</span> <span class="pre">270</span></code> and the following information</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;allowedAggregations&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+<div class="highlight-py"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;allowedAggregations&#39;</span><span class="p">:</span> <span class="bp">None</span><span class="p">,</span>
  <span class="s1">&#39;contains&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1737</span><span class="p">,</span>
   <span class="mi">7401</span><span class="p">,</span>
   <span class="mi">7578</span><span class="p">,</span>
@@ -338,8 +342,9 @@ Will return a list of regions to which &#8220;California&#8220; (region_id: 1305
 <div class="section" id="special-properties-for-regions">
 <h3>Special Properties for Regions<a class="headerlink" href="#special-properties-for-regions" title="Permalink to this headline">¶</a></h3>
 <p>The following properties exist for regions only:</p>
-<p>####<code class="docutils literal"><span class="pre">level</span></code>
-Region level corresponds to the administrative level of the region:</p>
+<div class="section" id="level">
+<h4><code class="docutils literal"><span class="pre">level</span></code><a class="headerlink" href="#level" title="Permalink to this headline">¶</a></h4>
+<p>Region level corresponds to the administrative level of the region:</p>
 <ul class="simple">
 <li>level 1: world</li>
 <li>level 2: continent</li>
@@ -351,8 +356,11 @@ Region level corresponds to the administrative level of the region:</p>
 <li>level 8: other arbitrary regions</li>
 <li>level 9: point-location</li>
 </ul>
-<p>####<code class="docutils literal"><span class="pre">latitude</span></code> and <code class="docutils literal"><span class="pre">longitude</span></code>
-For point-locations (i.e., region level 9), these properties correspond to the location&#8216;s coordinates. More generally for other regions, these properties are optional, but if specified, they correspond to the coordinates of the geographic center of the region.</p>
+</div>
+<div class="section" id="latitude-and-longitude">
+<h4><code class="docutils literal"><span class="pre">latitude</span></code> and <code class="docutils literal"><span class="pre">longitude</span></code><a class="headerlink" href="#latitude-and-longitude" title="Permalink to this headline">¶</a></h4>
+<p>For point-locations (i.e., region level 9), these properties correspond to the location&#8216;s coordinates. More generally for other regions, these properties are optional, but if specified, they correspond to the coordinates of the geographic center of the region.</p>
+</div>
 </div>
 </div>
 <div class="section" id="data-series-definition">
@@ -373,7 +381,7 @@ Each data series is defined by a unique selection of:</p>
 <div class="section" id="data-point-definition">
 <h2>Data Point Definition<a class="headerlink" href="#data-point-definition" title="Permalink to this headline">¶</a></h2>
 <p>Gro defines a &#8220;data point&#8220; as a discrete result produced by our API. When using the <code class="docutils literal"><span class="pre">get_data_points()</span></code> function, you are returned an array of points, each of which is a Python dictionary object that looks something like:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="p">{</span>
+<div class="highlight-py"><div class="highlight"><pre><span></span><span class="p">{</span>
   <span class="sa">u</span><span class="s1">&#39;input_unit_scale&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
   <span class="sa">u</span><span class="s1">&#39;region_id&#39;</span><span class="p">:</span> <span class="mi">1038</span><span class="p">,</span>
   <span class="sa">u</span><span class="s1">&#39;end_date&#39;</span><span class="p">:</span> <span class="sa">u</span><span class="s1">&#39;2000-12-31T00:00:00.000Z&#39;</span><span class="p">,</span>
@@ -381,7 +389,7 @@ Each data series is defined by a unique selection of:</p>
   <span class="sa">u</span><span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="mf">0.2623</span><span class="p">,</span>
   <span class="sa">u</span><span class="s1">&#39;frequency_id&#39;</span><span class="p">:</span> <span class="mi">9</span><span class="p">,</span>
   <span class="sa">u</span><span class="s1">&#39;item_id&#39;</span><span class="p">:</span> <span class="mi">5187</span><span class="p">,</span>
-  <span class="sa">u</span><span class="s1">&#39;reporting_date&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+  <span class="sa">u</span><span class="s1">&#39;reporting_date&#39;</span><span class="p">:</span> <span class="bp">None</span><span class="p">,</span>
   <span class="sa">u</span><span class="s1">&#39;start_date&#39;</span><span class="p">:</span> <span class="sa">u</span><span class="s1">&#39;2000-01-01T00:00:00.000Z&#39;</span><span class="p">,</span>
   <span class="sa">u</span><span class="s1">&#39;metric_id&#39;</span><span class="p">:</span> <span class="mi">5590032</span>
 <span class="p">}</span>
