@@ -271,19 +271,25 @@
 <p>Navigate to the <a class="reference external" href="https://github.com/gro-intelligence/api-client/blob/development/api/client/samples">api/client/samples/</a> folder and try executing the provided examples.</p>
 <ol>
 <li><p class="first"><a class="reference external" href="https://github.com/gro-intelligence/api-client/blob/development/api/client/samples/quick_start.py">quick_start.py</a> is a simple script that creates an authenticated <code class="docutils literal"><span class="pre">GroClient</span></code> object and uses the <code class="docutils literal"><span class="pre">get_data_series()</span></code> and <code class="docutils literal"><span class="pre">get_data_points()</span></code> methods to find Area Harvested series for Ukrainian Wheat from a variety of different sources, and outputs the time series points to a CSV file. You will likely want to revisit this script as a starting point for building your own scripts.</p>
-<p>Note that the script assumes you have your authentication token set to a <code class="docutils literal"><span class="pre">GROAPI_TOKEN</span></code> environment variable (see Saving your token as an environment variable). If you don&#8216;t wish to use environment variables, you can modify the sample script to set <code class="docutils literal"><span class="pre">[ACCESS_TOKEN](..docs/setting-up-your-environment#retrieving-a-token)</span></code> in some other way.</p>
-<p><code class="docutils literal"><span class="pre">python</span> <span class="pre">quick_start.py</span></code></p>
+<p>Note that the script assumes you have your authentication token set to a <code class="docutils literal"><span class="pre">GROAPI_TOKEN</span></code> environment variable (<a class="reference external" href="..docs/setting-up-your-environment#retrieving-a-token">see Saving your token as an environment variable</a>). If you don&#8216;t wish to use environment variables, you can modify the sample script to set <code class="docutils literal"><span class="pre">[ACCESS_TOKEN]</span></code> in some other way.</p>
+<div class="highlight-sh"><div class="highlight"><pre><span></span>$ python quick_start.py
+</pre></div>
+</div>
 <p>If the API client is installed and your authentication token is set, a CSV file called <code class="docutils literal"><span class="pre">gro_client_output.csv</span></code> should be created in the directory where the script was run.</p>
 </li>
 <li><p class="first">Try out <a class="reference external" href="https://github.com/gro-intelligence/api-client/blob/development/api/client/samples/crop_models/soybeans.py">soybeans.py</a> to see the <code class="docutils literal"><span class="pre">CropModel</span></code> class and its <code class="docutils literal"><span class="pre">compute_crop_weighted_series()</span></code> method in action. In this example, NDVI (<a class="reference external" href="https://app.gro-intelligence.com/dictionary/items/321">normalized difference vegetation index</a>) for provinces in Brazil is weighted against each province&#8216;s historical soybean production to put the latest NDVI values into context. This information is put into a pandas dataframe, the description of which is printed to the console.</p>
-<p><code class="docutils literal"><span class="pre">python</span> <span class="pre">crop_models/soybeans.py</span></code></p>
+<div class="highlight-sh"><div class="highlight"><pre><span></span>python crop_models/soybeans.py
+</pre></div>
+</div>
 </li>
-<li><p class="first">See <a class="reference external" href="https://github.com/gro-intelligence/api-client/blob/development/api/client/samples/crop_models/brazil_soybeans.ipynb">brazil_soybeans.ipynb</a> for a longer, more detailed demonstration of many of the API&#8216;s capabilities in the form of a Jupyter notebook.</p>
+<li><p class="first">See the <a class="reference external" href="https://github.com/gro-intelligence/api-client/blob/development/api/client/samples/crop_models">Brazil Soybeans</a> example in the crop models folder for a longer, more detailed demonstration of many of the API&#8216;s capabilities in the form of a Jupyter notebook.</p>
 </li>
 <li><p class="first">You can also use the included gro_client tool as a quick way to request a single data series right on the command line. Try the following:</p>
-<p><code class="docutils literal"><span class="pre">gro_client</span> <span class="pre">--metric=&quot;Production</span> <span class="pre">Quantity</span> <span class="pre">mass&quot;</span> <span class="pre">--item=&quot;Corn&quot;</span> <span class="pre">--region=&quot;United</span> <span class="pre">States&quot;</span> <span class="pre">--user_email=&quot;email&#64;example.com&quot;</span></code></p>
+<div class="highlight-sh"><div class="highlight"><pre><span></span>gro_client --metric<span class="o">=</span><span class="s2">&quot;Production Quantity mass&quot;</span> --item<span class="o">=</span><span class="s2">&quot;Corn&quot;</span> --region<span class="o">=</span><span class="s2">&quot;United States&quot;</span> --user_email<span class="o">=</span><span class="s2">&quot;email@example.com&quot;</span>
+</pre></div>
+</div>
 <p>The gro_client command line interface does a keyword search for the inputs and finds a random matching data series. It displays the data series it picked in the command line and writes the data points out to a file in the current directory called gro_client_output.csv. This tool is useful for simple queries, but anything more complex should be done using the Python packages.</p>
-<p>Further documentation can be found in the api/client/ directory and on our wiki.</p>
+<p>Further documentation can be found in the <a class="reference external" href="https://github.com/gro-intelligence/api-client">api/client/</a> directory and on our wiki.</p>
 </li>
 </ol>
 </div>
@@ -304,44 +310,53 @@
 </div>
 <div class="section" id="search">
 <h3>Search<a class="headerlink" href="#search" title="Permalink to this headline">¶</a></h3>
-<p>As described in the <a class="reference external" href="../docs/gro-data-key-concepts">Gro Data: Key Concepts</a> page, a data series in Gro is a unique combination of the entities: item, metric, region, partner_region (optional), frequency, and source. To find the specific entity you would like to retrieve data for, you can use a variety of search methods. For example, <code class="docutils literal"><span class="pre">client.search</span></code> will return a list of IDs that match your search term. If you want to understand the differences between various search results, you may find the <code class="docutils literal"><span class="pre">client.search_and_lookup</span></code> method more helpful.</p>
+<p>As described in the <a class="reference external" href="../docs/gro-data-key-concepts">Gro Data: Key Concepts</a> page, a data series in Gro is a unique combination of the entities: item, metric, region, partner_region (optional), frequency, and source. To find the specific entity you would like to retrieve data for, you can use a variety of search methods. For example, <code class="docutils literal"><span class="pre">[client.search()](https://gro-intelligence.github.io/api-client/JGrinst-patch-2/api.html#api.client.lib.search)</span></code> will return a list of IDs that match your search term. If you want to understand the differences between various search results, you may find the <code class="docutils literal"><span class="pre">[client.search_and_lookup()](https://gro-intelligence.github.io/api-client/JGrinst-patch-2/api.html#api.client.lib.search_and_lookup)</span></code> method more helpful.</p>
 <p><code class="docutils literal"><span class="pre">client.search_and_lookup('items','Corn')</span></code> will return a list of all items that contain &#8220;corn&#8220; in their name, along with supporting information like id, name, and ids of other items contained by a given item.</p>
-<p>Note: the above query will return a generator object. Running a query such as:
-<code class="docutils literal"><span class="pre">for</span> <span class="pre">result</span> <span class="pre">in</span> <span class="pre">client.search_and_lookup('items','corn'):</span> <span class="pre">print(result)</span></code>
-should help produce a list of all the relevant information.</p>
+<p>Note: the above query will return a <a class="reference external" href="https://wiki.python.org/moin/Generators">generator</a> object. Running a query like the one below will print every result:</p>
+<div class="highlight-py"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">client</span><span class="o">.</span><span class="n">search_and_lookup</span><span class="p">(</span><span class="s1">&#39;items&#39;</span><span class="p">,</span><span class="s1">&#39;corn&#39;</span><span class="p">):</span> 
+  <span class="k">print</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+</pre></div>
+</div>
 </div>
 <div class="section" id="get-data-series">
 <h3>Get data series<a class="headerlink" href="#get-data-series" title="Permalink to this headline">¶</a></h3>
-<p>Instead of searching for all the individual entity IDs required to create a data series, the <code class="docutils literal"><span class="pre">client.get_data_series</span></code> method will return a list of all the data series available for the filters you have supplied. For example, if you are interested in Russian Oats you could use the following code to find out all the available data series that have &#8220;Oats&#8220; (item_id = 327) as the item and &#8220;Russia&#8220; (region_id = 1168) as the region:</p>
-<p><code class="docutils literal"><span class="pre">client.get_data_series(**{'item_id':</span> <span class="pre">327,</span> <span class="pre">'region_id':</span> <span class="pre">1168})</span></code></p>
+<p>Instead of searching for all the individual entity IDs required to create a data series, the <code class="docutils literal"><span class="pre">[client.get_data_series()](https://gro-intelligence.github.io/api-client/JGrinst-patch-2/api.html#api.client.lib.get_data_series)</span></code> method will return a list of all the data series available for the filters you have supplied. For example, if you are interested in Russian Oats you could use the following code to find out all the available data series that have &#8220;Oats&#8220; (item_id = 327) as the item and &#8220;Russia&#8220; (region_id = 1168) as the region:</p>
+<div class="highlight-py"><div class="highlight"><pre><span></span><span class="n">client</span><span class="o">.</span><span class="n">get_data_series</span><span class="p">(</span><span class="n">item_id</span><span class="o">=</span><span class="mi">327</span><span class="p">,</span> <span class="n">region_id</span><span class="o">=</span><span class="mi">1168</span><span class="p">})</span>
+</pre></div>
+</div>
 </div>
 <div class="section" id="lookup-contains">
 <h3>Lookup contains<a class="headerlink" href="#lookup-contains" title="Permalink to this headline">¶</a></h3>
 <p>Our ontology is defined in terms of a graph, with metrics/items/regions containing others. In each case, you can see the <code class="docutils literal"><span class="pre">'contains'</span></code> property in the output of <code class="docutils literal"><span class="pre">client.lookup(type,</span> <span class="pre">id)</span></code>. For example:</p>
-<p><code class="docutils literal"><span class="pre">client.lookup('items',</span> <span class="pre">10009)['contains']</span> </code></p>
+<div class="highlight-py"><div class="highlight"><pre><span></span><span class="n">client</span><span class="o">.</span><span class="n">lookup</span><span class="p">(</span><span class="s1">&#39;items&#39;</span><span class="p">,</span> <span class="mi">10009</span><span class="p">)[</span><span class="s1">&#39;contains&#39;</span><span class="p">]</span> 
+</pre></div>
+</div>
 <p>will return a list of items ids for items that are cereals (item_id = 10009): <code class="docutils literal"><span class="pre">[...,</span> <span class="pre">274,</span> <span class="pre">422,</span> <span class="pre">...]</span></code>. Once you have those ids, you can use the <code class="docutils literal"><span class="pre">client.lookup()</span></code> function on each one to find more info, like their names, e.g.: <code class="docutils literal"><span class="pre">client.lookup('items',</span> <span class="pre">274)['name']</span></code> will return <code class="docutils literal"><span class="pre">Corn</span></code>.</p>
 <p>Similarly, for regions, <code class="docutils literal"><span class="pre">client.lookup('regions',</span> <span class="pre">1215)[contains]</span></code> will return a list of region ids for regions that are in the US (region_id = 1215): <code class="docutils literal"><span class="pre">[13100,</span> <span class="pre">13061,</span> <span class="pre">13053,</span> <span class="pre">13099,</span> <span class="pre">....]</span></code>. And each of those can be further looked up e.g. <code class="docutils literal"><span class="pre">client.lookup('regions',</span> <span class="pre">13100)</span></code> will return <code class="docutils literal"><span class="pre">{'name':</span> <span class="pre">'Wisconsin',</span> <span class="pre">'level':</span> <span class="pre">4,</span> <span class="pre">'contains':</span> <span class="pre">[139839,</span> <span class="pre">139857,</span> <span class="pre">139863,</span> <span class="pre">...]}</span></code>.</p>
 </div>
 <div class="section" id="get-descendants">
 <h3>Get descendants<a class="headerlink" href="#get-descendants" title="Permalink to this headline">¶</a></h3>
-<p>The Lookup Contains method can return a list of an entity&#8216;s direct children. However, you may wish to discover all of the lower level regions that belong to a high level region. For this special case of traversing regions, there&#8216;s a shortcut function that does it more directly and gives the option of filtering by region level: <code class="docutils literal"><span class="pre">get_descendant_regions(region_id,</span> <span class="pre">descendant_level)</span></code>.</p>
-<p>Where:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">provinces_of_brazil</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get_descendant_regions</span><span class="p">(</span><span class="mi">1029</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+<p>Using the <code class="docutils literal"><span class="pre">lookup()</span></code> method, you can get an entity&#8216;s list of direct children (i.e. country-&gt;provinces). However, you may want all of the lower level regions that belong to a higher level region (i.e. country-&gt;provinces, districts, coordinates, etc.). To do this, there&#8216;s a helper function which also gives the option of filtering by region level: <code class="docutils literal"><span class="pre">[get_descendant_regions(region_id,</span> <span class="pre">descendant_level)](https://gro-intelligence.github.io/api-client/JGrinst-patch-2/api.html#api.client.lib.get_descendant_regions)</span></code>.</p>
+<p>To look up all descendants of region 1029 (Brazil) that are of level 4 (provinces):</p>
+<div class="highlight-py"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">api.client.lib</span> <span class="kn">import</span> <span class="n">REGION_LEVELS</span>
+<span class="n">provinces_of_brazil</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get_descendant_regions</span><span class="p">(</span><span class="mi">1029</span><span class="p">,</span> <span class="n">REGION_LEVELS</span><span class="p">[</span><span class="s1">&#39;province&#39;</span><span class="p">])</span>
 </pre></div>
 </div>
-<p>will recursively look up all descendants of region 1029 (Brazil) that are of level 4 (provinces) i.e., all the provinces of Brazil.</p>
-<p>And:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">districts_of_brazil</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get_descendant_regions</span><span class="p">(</span><span class="mi">1029</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+<p>To look up all descendants of region 1029 (Brazil) that are of level 5 (districts):</p>
+<div class="highlight-py"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">api.client.lib</span> <span class="kn">import</span> <span class="n">REGION_LEVELS</span>
+<span class="n">provinces_of_brazil</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get_descendant_regions</span><span class="p">(</span><span class="mi">1029</span><span class="p">,</span> <span class="n">REGION_LEVELS</span><span class="p">[</span><span class="s1">&#39;district&#39;</span><span class="p">])</span>
 </pre></div>
 </div>
-<p>will recursively look up all descendants of region 1029 (Brazil) that are of level 5 (districts), i.e., all the districts in all the provinces of Brazil.</p>
-<p>For more information on region levels, please refer to the <a class="reference external" href="../docs/gro-data-key-concepts#special-properties-for-regions">Special properties for regions</a> section of [Gro Data: Key Concepts]((../docs/gro-data-key-concepts)</p>
+<p>For more information on region levels, please refer to the <a class="reference external" href="../docs/gro-data-key-concepts.md#special-properties-for-regions">Special properties for regions</a> section of <a class="reference external" href="../docs/gro-data-key-concepts">Gro Data: Key Concepts</a></p>
 </div>
 <div class="section" id="lookup-belongs">
 <h3>Lookup belongs<a class="headerlink" href="#lookup-belongs" title="Permalink to this headline">¶</a></h3>
-<p>If you want to find &#8220;what entities contain the given entity?&#8220; there is a helper function, <code class="docutils literal"><span class="pre">client.lookup_belongs(type,</span> <span class="pre">child_id)</span></code> to does just that. For example:</p>
-<p><code class="docutils literal"><span class="pre">client.lookup_belongs('regions',</span> <span class="pre">1215)</span></code>
-will return <code class="docutils literal"><span class="pre">[{id:</span> <span class="pre">15,</span> <span class="pre">name:</span> <span class="pre">'North</span> <span class="pre">America',</span> <span class="pre">contains:</span> <span class="pre">[1215,</span> <span class="pre">1037,</span> <span class="pre">...],</span> <span class="pre">level:</span> <span class="pre">2},</span> <span class="pre">...]</span></code></p>
+<p>If you want to find &#8220;what entities contain the given entity?&#8220; there is a method, <code class="docutils literal"><span class="pre">[client.lookup_belongs(type,</span> <span class="pre">child_id)](https://gro-intelligence.github.io/api-client/JGrinst-patch-2/api.html#api.client.lib.lookup_belongs)</span></code> that does just that. For example:</p>
+<div class="highlight-py"><div class="highlight"><pre><span></span><span class="n">UNITED_STATES</span> <span class="o">=</span> <span class="mi">1215</span>
+<span class="n">client</span><span class="o">.</span><span class="n">lookup_belongs</span><span class="p">(</span><span class="s1">&#39;regions&#39;</span><span class="p">,</span> <span class="n">UNITED_STATES</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>will return <code class="docutils literal"><span class="pre">[{id:</span> <span class="pre">15,</span> <span class="pre">name:</span> <span class="pre">'North</span> <span class="pre">America',</span> <span class="pre">contains:</span> <span class="pre">[1215,</span> <span class="pre">1037,</span> <span class="pre">...],</span> <span class="pre">level:</span> <span class="pre">2},</span> <span class="pre">...]</span></code></p>
 </div>
 </div>
 <div class="section" id="retrieving-data">
@@ -349,26 +364,36 @@ will return <code class="docutils literal"><span class="pre">[{id:</span> <span 
 <p>Once you&#8216;ve identified the data you want, you&#8216;ll want to start retrieving it and putting it to use. The following methods should help you get the data in the format that you want.</p>
 <div class="section" id="get-data-points">
 <h3>Get data points<a class="headerlink" href="#get-data-points" title="Permalink to this headline">¶</a></h3>
-<p><code class="docutils literal"><span class="pre">get_data_points(**selection)</span></code> is the primary method for retrieving data. The <a class="reference external" href="#code-snippets">code snippets</a> feature covered earlier provides you with a fully completed <code class="docutils literal"><span class="pre">get_data_points</span></code> query, such as:</p>
-<div class="highlight-# Wheat - Area Harvested (area) India (USDA PS&amp;D)"><div class="highlight"><pre><span></span>client.get_data_points(**{&#39;metric_id&#39;: 570001, &#39;item_id&#39;: 95,&#39;region_id&#39;: 1094, &#39;source_id&#39;: 14, &#39;frequency_id&#39;: 9})
+<p><code class="docutils literal"><span class="pre">get_data_points(**selection)</span></code> is the primary method for retrieving data. The <a class="reference external" href="#code-snippets">code snippets</a> feature covered earlier provides you with a fully completed <code class="docutils literal"><span class="pre">get_data_points()</span></code> query, such as:</p>
+<div class="highlight-py"><div class="highlight"><pre><span></span><span class="c1"># Wheat - Area Harvested (area) - India (USDA PS&amp;D)</span>
+<span class="n">client</span><span class="o">.</span><span class="n">get_data_points</span><span class="p">(</span><span class="o">**</span><span class="p">{</span>
+    <span class="s1">&#39;metric_id&#39;</span><span class="p">:</span> <span class="mi">570001</span><span class="p">,</span>
+    <span class="s1">&#39;item_id&#39;</span><span class="p">:</span> <span class="mi">95</span><span class="p">,</span>
+    <span class="s1">&#39;region_id&#39;</span><span class="p">:</span> <span class="mi">1094</span><span class="p">,</span> 
+    <span class="s1">&#39;source_id&#39;</span><span class="p">:</span> <span class="mi">14</span><span class="p">,</span> 
+    <span class="s1">&#39;frequency_id&#39;</span><span class="p">:</span> <span class="mi">9</span>
+<span class="p">})</span>
 </pre></div>
 </div>
-<p>The above query has completed fields for <code class="docutils literal"><span class="pre">metric_id</span></code>, <code class="docutils literal"><span class="pre">item_id</span></code>, <code class="docutils literal"><span class="pre">region_id</span></code>, <code class="docutils literal"><span class="pre">source_id</span></code>, and <code class="docutils literal"><span class="pre">frequency_id</span></code>. However, <code class="docutils literal"><span class="pre">get_data_points</span></code> can also accept fields to further narrow your data series of interest: <code class="docutils literal"><span class="pre">partner_region_id</span></code> (used only in series that represent a flow between two places), <code class="docutils literal"><span class="pre">start_date</span></code>, <code class="docutils literal"><span class="pre">end_date</span></code>, and <a class="reference external" href="#show-revisions"><code class="docutils literal"><span class="pre">show_revisions</span></code></a>.</p>
-<p>At a minimum, get_data_points must have a <code class="docutils literal"><span class="pre">metric_id</span></code> and a <code class="docutils literal"><span class="pre">source_id</span></code> specified. Omitting some of the default fields can help you retrieve greater amounts of data in a single query. For example, removing the <code class="docutils literal"><span class="pre">item_id</span></code> from the above query:
-<code class="docutils literal"><span class="pre">client.get_data_points(**{'metric_id':</span> <span class="pre">570001,</span> <span class="pre">'region_id':</span> <span class="pre">1094,</span> <span class="pre">'source_id':</span> <span class="pre">14,</span> <span class="pre">'frequency_id':</span> <span class="pre">9})</span></code>
-Will return the Area Harvested series for all items in India as available from USDA PS&amp;D.</p>
+<p>The above query has completed fields for <code class="docutils literal"><span class="pre">metric_id</span></code>, <code class="docutils literal"><span class="pre">item_id</span></code>, <code class="docutils literal"><span class="pre">region_id</span></code>, <code class="docutils literal"><span class="pre">source_id</span></code>, and <code class="docutils literal"><span class="pre">frequency_id</span></code>. However, <code class="docutils literal"><span class="pre">get_data_points()</span></code> can also accept fields to further narrow your data series of interest: <code class="docutils literal"><span class="pre">partner_region_id</span></code> (used only in series that represent a flow between two places), <code class="docutils literal"><span class="pre">start_date</span></code>, <code class="docutils literal"><span class="pre">end_date</span></code>, <a class="reference external" href="#show-revisions"><code class="docutils literal"><span class="pre">show_revisions</span></code></a>, <a class="reference external" href="https://gro-intelligence.github.io/api-client/development/api.html#api.client.lib.get_data_points"><code class="docutils literal"><span class="pre">insert_null</span></code></a>, and <a class="reference external" href="https://gro-intelligence.github.io/api-client/development/api.html#api.client.lib.get_data_points"><code class="docutils literal"><span class="pre">at_time</span></code></a>.</p>
 <p>Note that limiting the specificity of your selection can greatly increase the time it takes for a response to be returned.</p>
 </div>
 <div class="section" id="data-frame">
 <h3>Data frame<a class="headerlink" href="#data-frame" title="Permalink to this headline">¶</a></h3>
 <p>Data frames are a popular format for viewing data responses, and our <code class="docutils literal"><span class="pre">gro_client</span></code> library offers you the ability to view your data series in a data frame. If you&#8216;ve imported the library into your file, as follows:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">api.client.gro_client</span> <span class="k">import</span> <span class="n">get_df</span>
+<div class="highlight-py"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">api.client.gro_client</span> <span class="kn">import</span> <span class="n">GroClient</span>
 </pre></div>
 </div>
-<p>Then you can use the <code class="docutils literal"><span class="pre">get_df</span></code> method to return data in a data frame.</p>
-<p><code class="docutils literal"><span class="pre">get_df</span></code> is a stateful method, so you must first save the series into your client object. You can do this with the <code class="docutils literal"><span class="pre">add_single_data_series</span></code> method.</p>
+<p>Then you can use the <code class="docutils literal"><span class="pre">get_df()</span></code> method to return data in a data frame.</p>
+<p><code class="docutils literal"><span class="pre">get_df()</span></code> is a stateful method, so you must first save the series into your client object. You can do this with the <code class="docutils literal"><span class="pre">add_single_data_series()</span></code> method.</p>
 <p>The following code will return Wheat - Area Harvested (area) - India (USDA PS&amp;D) in a data frame.</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">client</span><span class="o">.</span><span class="n">add_single_data_series</span><span class="p">({</span><span class="s1">&#39;metric_id&#39;</span><span class="p">:</span> <span class="mi">570001</span><span class="p">,</span> <span class="s1">&#39;item_id&#39;</span><span class="p">:</span> <span class="mi">95</span><span class="p">,</span><span class="s1">&#39;region_id&#39;</span><span class="p">:</span> <span class="mi">1094</span><span class="p">,</span> <span class="s1">&#39;source_id&#39;</span><span class="p">:</span> <span class="mi">14</span><span class="p">,</span> <span class="s1">&#39;frequency_id&#39;</span><span class="p">:</span> <span class="mi">9</span><span class="p">,</span> <span class="p">})</span>
+<div class="highlight-py"><div class="highlight"><pre><span></span><span class="n">client</span><span class="o">.</span><span class="n">add_single_data_series</span><span class="p">({</span>
+     <span class="s1">&#39;metric_id&#39;</span><span class="p">:</span> <span class="mi">570001</span><span class="p">,</span> 
+     <span class="s1">&#39;item_id&#39;</span><span class="p">:</span> <span class="mi">95</span><span class="p">,</span>
+     <span class="s1">&#39;region_id&#39;</span><span class="p">:</span> <span class="mi">1094</span><span class="p">,</span> 
+     <span class="s1">&#39;source_id&#39;</span><span class="p">:</span> <span class="mi">14</span><span class="p">,</span> 
+     <span class="s1">&#39;frequency_id&#39;</span><span class="p">:</span> <span class="mi">9</span>
+<span class="p">})</span>
 <span class="n">client</span><span class="o">.</span><span class="n">get_df</span><span class="p">()</span>
 </pre></div>
 </div>
@@ -376,13 +401,28 @@ Will return the Area Harvested series for all items in India as available from U
 <div class="section" id="show-revisions">
 <h3>Show revisions<a class="headerlink" href="#show-revisions" title="Permalink to this headline">¶</a></h3>
 <p>Sometimes looking at the most recent data point doesn&#8216;t tell you the whole story. You may want to see if there have been any revisions to data, especially if the data is a forecast value. This standard <code class="docutils literal"><span class="pre">get_data_points</span></code> query will return the annual values for soybean yield in Argentina since 2017:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1"># Soybeans - Yield (mass/area) - Argentina (USDA PS&amp;D)</span>
-<span class="n">client</span><span class="o">.</span><span class="n">get_data_points</span><span class="p">(</span><span class="o">**</span><span class="p">{</span><span class="s1">&#39;metric_id&#39;</span><span class="p">:</span> <span class="mi">170037</span><span class="p">,</span> <span class="s1">&#39;item_id&#39;</span><span class="p">:</span> <span class="mi">270</span><span class="p">,</span> <span class="s1">&#39;region_id&#39;</span><span class="p">:</span> <span class="mi">1010</span><span class="p">,</span> <span class="s1">&#39;source_id&#39;</span><span class="p">:</span> <span class="mi">14</span><span class="p">,</span> <span class="s1">&#39;frequency_id&#39;</span><span class="p">:</span> <span class="mi">9</span><span class="p">,</span> <span class="s1">&#39;start_date&#39;</span><span class="p">:</span> <span class="s1">&#39;2017-01-01T00:00:00.000Z&#39;</span><span class="p">})</span>
+<div class="highlight-py"><div class="highlight"><pre><span></span><span class="c1"># Soybeans - Yield (mass/area) - Argentina (USDA PS&amp;D)</span>
+<span class="n">client</span><span class="o">.</span><span class="n">get_data_points</span><span class="p">(</span><span class="o">**</span><span class="p">{</span>
+    <span class="s1">&#39;metric_id&#39;</span><span class="p">:</span> <span class="mi">170037</span><span class="p">,</span> 
+    <span class="s1">&#39;item_id&#39;</span><span class="p">:</span> <span class="mi">270</span><span class="p">,</span> 
+    <span class="s1">&#39;region_id&#39;</span><span class="p">:</span> <span class="mi">1010</span><span class="p">,</span> 
+    <span class="s1">&#39;source_id&#39;</span><span class="p">:</span> <span class="mi">14</span><span class="p">,</span> 
+    <span class="s1">&#39;frequency_id&#39;</span><span class="p">:</span> <span class="mi">9</span><span class="p">,</span> 
+    <span class="s1">&#39;start_date&#39;</span><span class="p">:</span> <span class="s1">&#39;2017-01-01T00:00:00.000Z&#39;</span>
+<span class="p">})</span>
 </pre></div>
 </div>
 <p>But the USDA begins forecasting the yield well before harvest time, and will continue to update its estimate for many months after the harvest is over. In order to see how the forecasts and estimates for each year have changed, you can include the <code class="docutils literal"><span class="pre">show_revisions</span></code> field as follows:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1"># Soybeans - Yield (mass/area) - Argentina (USDA PS&amp;D)</span>
-<span class="n">client</span><span class="o">.</span><span class="n">get_data_points</span><span class="p">(</span><span class="o">**</span><span class="p">{</span><span class="s1">&#39;metric_id&#39;</span><span class="p">:</span> <span class="mi">170037</span><span class="p">,</span> <span class="s1">&#39;item_id&#39;</span><span class="p">:</span> <span class="mi">270</span><span class="p">,</span> <span class="s1">&#39;region_id&#39;</span><span class="p">:</span> <span class="mi">1010</span><span class="p">,</span> <span class="s1">&#39;source_id&#39;</span><span class="p">:</span> <span class="mi">14</span><span class="p">,</span> <span class="s1">&#39;frequency_id&#39;</span><span class="p">:</span> <span class="mi">9</span><span class="p">,</span> <span class="s1">&#39;start_date&#39;</span><span class="p">:</span> <span class="s1">&#39;2017-01-01T00:00:00.000Z&#39;</span><span class="p">,</span> <span class="s1">&#39;show_revisions&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">})</span>
+<div class="highlight-py"><div class="highlight"><pre><span></span><span class="c1"># Soybeans - Yield (mass/area) - Argentina (USDA PS&amp;D)</span>
+<span class="n">client</span><span class="o">.</span><span class="n">get_data_points</span><span class="p">(</span><span class="o">**</span><span class="p">{</span>
+    <span class="s1">&#39;metric_id&#39;</span><span class="p">:</span> <span class="mi">170037</span><span class="p">,</span> 
+    <span class="s1">&#39;item_id&#39;</span><span class="p">:</span> <span class="mi">270</span><span class="p">,</span> 
+    <span class="s1">&#39;region_id&#39;</span><span class="p">:</span> <span class="mi">1010</span><span class="p">,</span> 
+    <span class="s1">&#39;source_id&#39;</span><span class="p">:</span> <span class="mi">14</span><span class="p">,</span> 
+    <span class="s1">&#39;frequency_id&#39;</span><span class="p">:</span> <span class="mi">9</span><span class="p">,</span> 
+    <span class="s1">&#39;start_date&#39;</span><span class="p">:</span> <span class="s1">&#39;2017-01-01T00:00:00.000Z&#39;</span><span class="p">,</span> 
+    <span class="s1">&#39;show_revisions&#39;</span><span class="p">:</span> <span class="bp">True</span>
+<span class="p">})</span>
 </pre></div>
 </div>
 </div>
@@ -397,7 +437,7 @@ returns:
 <code class="docutils literal"><span class="pre">{'abbrev':</span> <span class="pre">None,</span> <span class="pre">'id':</span> <span class="pre">7,</span> <span class="pre">'name':</span> <span class="pre">'quarterly',</span> <span class="pre">'periodLength':</span> <span class="pre">{'months':</span> <span class="pre">3}}</span></code></p>
 <p><code class="docutils literal"><span class="pre">client.lookup('metrics','1480032')</span></code>
 returns:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;allowNegative&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+<div class="highlight-py"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;allowNegative&#39;</span><span class="p">:</span> <span class="bp">False</span><span class="p">,</span>
  <span class="s1">&#39;allowedAggregations&#39;</span><span class="p">:</span> <span class="s1">&#39;{sum,average}&#39;</span><span class="p">,</span>
  <span class="s1">&#39;contains&#39;</span><span class="p">:</span> <span class="p">[],</span>
  <span class="s1">&#39;definition&#39;</span><span class="p">:</span> <span class="s1">&#39;The quantity of an item which has been consumed within a given country or region. Data generally refers to consumption as including any form of disappearance, such as waste, loss, and human consumption.&#39;</span><span class="p">,</span>
@@ -408,16 +448,16 @@ returns:</p>
 </div>
 <p><code class="docutils literal"><span class="pre">client.lookup('units',</span> <span class="pre">'10')</span></code>
 returns:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;abbreviation&#39;</span><span class="p">:</span> <span class="s1">&#39;kg&#39;</span><span class="p">,</span>
+<div class="highlight-py"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;abbreviation&#39;</span><span class="p">:</span> <span class="s1">&#39;kg&#39;</span><span class="p">,</span>
  <span class="s1">&#39;baseConvFactor&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;factor&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">},</span>
- <span class="s1">&#39;baseUnit&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+ <span class="s1">&#39;baseUnit&#39;</span><span class="p">:</span> <span class="bp">True</span><span class="p">,</span>
  <span class="s1">&#39;convType&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
  <span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
  <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;kilogram&#39;</span><span class="p">,</span>
  <span class="s1">&#39;namePlural&#39;</span><span class="p">:</span> <span class="s1">&#39;kilograms&#39;</span><span class="p">}</span>
 </pre></div>
 </div>
-<p>You can also get this information by going to the URL of the dictionary entry for individual entities in the Gro ontology, e.g. https://app.gro-intelligence.com/#/dictionary/items/270 or https://app.gro-intelligence.com/#/dictionary/regions/1309</p>
+<p>You can also get this information by going to the URL of the dictionary entry for individual entities in the Gro ontology, e.g. <a class="reference external" href="https://app.gro-intelligence.com/#/dictionary/items/270">https://app.gro-intelligence.com/#/dictionary/items/270</a> or <a class="reference external" href="https://app.gro-intelligence.com/#/dictionary/regions/1309">https://app.gro-intelligence.com/#/dictionary/regions/1309</a>.</p>
 </div>
 </div>
 </div>
