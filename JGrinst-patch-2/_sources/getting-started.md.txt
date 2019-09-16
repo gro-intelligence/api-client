@@ -6,7 +6,7 @@ Navigate to the [api/client/samples/](https://github.com/gro-intelligence/api-cl
 
 1. [quick_start.py](https://github.com/gro-intelligence/api-client/blob/development/api/client/samples/quick_start.py) is a simple script that creates an authenticated `GroClient` object and uses the `get_data_series()` and `get_data_points()` methods to find Area Harvested series for Ukrainian Wheat from a variety of different sources, and outputs the time series points to a CSV file. You will likely want to revisit this script as a starting point for building your own scripts.
 
-    Note that the script assumes you have your authentication token set to a `GROAPI_TOKEN` environment variable ([see Saving your token as an environment variable](..docs/setting-up-your-environment#retrieving-a-token)). If you don't wish to use environment variables, you can modify the sample script to set `[ACCESS_TOKEN]` in some other way.
+    Note that the script assumes you have your authentication token set to a `GROAPI_TOKEN` environment variable ([see Saving your token as an environment variable](..docs/setting-up-your-environment#retrieving-a-token)). If you don't wish to use environment variables, you can modify the sample script to set `ACCESS_TOKEN` in some other way.
 
     ```sh
     $ python quick_start.py
@@ -51,7 +51,7 @@ For charts that have multiple data series, you have the option to Select all uni
 ![code-snippet-select-all](../_images/code-snippet-select-all.png)
 
 ### Search
-As described in the [Gro Data: Key Concepts](../docs/gro-data-key-concepts.md) page, a data series in Gro is a unique combination of the entities: item, metric, region, partner_region (optional), frequency, and source. To find the specific entity you would like to retrieve data for, you can use a variety of search methods. For example, `[client.search()](https://gro-intelligence.github.io/api-client/JGrinst-patch-2/api.html#api.client.lib.search)` will return a list of IDs that match your search term. If you want to understand the differences between various search results, you may find the `[client.search_and_lookup()](https://gro-intelligence.github.io/api-client/JGrinst-patch-2/api.html#api.client.lib.search_and_lookup)` method more helpful.
+As described in the [Gro Data: Key Concepts](../docs/gro-data-key-concepts.md) page, a data series in Gro is a unique combination of the entities: item, metric, region, partner_region (optional), frequency, and source. To find the specific entity you would like to retrieve data for, you can use a variety of search methods. For example, [`client.search()`](https://gro-intelligence.github.io/api-client/JGrinst-patch-2/api.html#api.client.lib.search) will return a list of IDs that match your search term. If you want to understand the differences between various search results, you may find the [`client.search_and_lookup()`](https://gro-intelligence.github.io/api-client/JGrinst-patch-2/api.html#api.client.lib.search_and_lookup) method more helpful.
 
 `client.search_and_lookup('items','Corn')` will return a list of all items that contain "corn" in their name, along with supporting information like id, name, and ids of other items contained by a given item.
 
@@ -62,10 +62,10 @@ for result in client.search_and_lookup('items','corn'):
 ```
 
 ### Get data series
-Instead of searching for all the individual entity IDs required to create a data series, the `[client.get_data_series()](https://gro-intelligence.github.io/api-client/JGrinst-patch-2/api.html#api.client.lib.get_data_series)` method will return a list of all the data series available for the filters you have supplied. For example, if you are interested in Russian Oats you could use the following code to find out all the available data series that have "Oats" (item_id = 327) as the item and "Russia" (region_id = 1168) as the region:
+Instead of searching for all the individual entity IDs required to create a data series, the [`client.get_data_series()`](https://gro-intelligence.github.io/api-client/JGrinst-patch-2/api.html#api.client.lib.get_data_series) method will return a list of all the data series available for the filters you have supplied. For example, if you are interested in Russian Oats you could use the following code to find out all the available data series that have "Oats" (item_id = 327) as the item and "Russia" (region_id = 1168) as the region:
 
 ```py
-client.get_data_series(item_id=327, region_id=1168})
+client.get_data_series(item_id=327, region_id=1168)
 ```
 
 ### Lookup contains
@@ -80,7 +80,7 @@ will return a list of items ids for items that are cereals (item_id = 10009): `[
 Similarly, for regions, `client.lookup('regions', 1215)[contains]` will return a list of region ids for regions that are in the US (region_id = 1215): `[13100, 13061, 13053, 13099, ....]`. And each of those can be further looked up e.g. `client.lookup('regions', 13100)` will return `{'name': 'Wisconsin', 'level': 4, 'contains': [139839, 139857, 139863, ...]}`.
 
 ### Get descendants
-Using the `lookup()` method, you can get an entity's list of direct children (i.e. country->provinces). However, you may want all of the lower level regions that belong to a higher level region (i.e. country->provinces, districts, coordinates, etc.). To do this, there's a helper function which also gives the option of filtering by region level: `[get_descendant_regions(region_id, descendant_level)](https://gro-intelligence.github.io/api-client/JGrinst-patch-2/api.html#api.client.lib.get_descendant_regions)`.
+Using the `lookup()` method, you can get an entity's list of direct children (i.e. country->provinces). However, you may want all of the lower level regions that belong to a higher level region (i.e. country->provinces, districts, coordinates, etc.). To do this, there's a helper function which also gives the option of filtering by region level: [`get_descendant_regions(region_id, descendant_level)`](https://gro-intelligence.github.io/api-client/JGrinst-patch-2/api.html#api.client.lib.get_descendant_regions).
 
 To look up all descendants of region 1029 (Brazil) that are of level 4 (provinces):
 ```py
@@ -96,7 +96,7 @@ provinces_of_brazil = client.get_descendant_regions(1029, REGION_LEVELS['distric
 For more information on region levels, please refer to the [Special properties for regions](../docs/gro-data-key-concepts.md#special-properties-for-regions) section of [Gro Data: Key Concepts](../docs/gro-data-key-concepts.md)
 
 ### Lookup belongs
-If you want to find "what entities contain the given entity?" there is a method, `[client.lookup_belongs(type, child_id)](https://gro-intelligence.github.io/api-client/JGrinst-patch-2/api.html#api.client.lib.lookup_belongs)` that does just that. For example:
+If you want to find "what entities contain the given entity?" there is a method, [`client.lookup_belongs(type, child_id)`](https://gro-intelligence.github.io/api-client/JGrinst-patch-2/api.html#api.client.lib.lookup_belongs) that does just that. For example:
 
 ```py
 UNITED_STATES = 1215
