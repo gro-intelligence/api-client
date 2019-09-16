@@ -30,7 +30,7 @@ Navigate to the [api/client/samples/](https://github.com/gro-intelligence/api-cl
 
     The gro_client command line interface does a keyword search for the inputs and finds a random matching data series. It displays the data series it picked in the command line and writes the data points out to a file in the current directory called gro_client_output.csv. This tool is useful for simple queries, but anything more complex should be done using the Python packages.
 
-    Further documentation can be found in the [api/client/](https://github.com/gro-intelligence/api-client) directory and on our wiki.
+    Further documentation can be found in the [api/client/](https://github.com/gro-intelligence/api-client) directory.
 
 ## Discovering Data
 To derive the insights you want from Gro's data, you will first want to find the data you're interested in. Below you will find some of the most useful tips on how to discover the data of greatest value to you.
