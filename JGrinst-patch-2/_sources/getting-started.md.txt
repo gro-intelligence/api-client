@@ -31,18 +31,18 @@ To derive the insights you want from Gro's data, you will first want to find the
 
 ### Code snippets
 Users may find that the Gro API is at its most powerful when used in conjunction with the Gro web application. The web app provides the most convenient format for selecting the data series that is of most interest to you. In our Add Data Series window, you can select entities of interest, and then other entities for which no data is available based on your selection will be filtered out from the remaining options. For example, after selecting the item "Corn" only metrics and regions that have data for 'Corn' will remain selectable.
-![add-data-series-example](../media/add-data-series-example.png)
+![add-data-series-example](../_images/add-data-series-example.png)
 
 Once you have created a chart with data that you want, you can take advantage of our Code Snippets feature to pull that data into your API client code.
 
 Simply click on the Chart Dropdown Button, then select Export and API Client Code Snippets. 
-![code-snippet-dropdown](../media/code-snippet-dropdown.png)
+![code-snippet-dropdown](../_images/code-snippet-dropdown.png)
 
 Every unique data series from your chart will now be available in a client.get_data_points function for easy copying and pasting into your code or command line.
-![code-snippet-copy-code](../media/code-snippet-copy-code.png)
+![code-snippet-copy-code](../_images/code-snippet-copy-code.png)
 
 For charts that have multiple data series, you have the option to Select all unique data series, or to select the individual series that are of greatest interest to you. 
-![code-snippet-select-all](../media/code-snippet-select-all.png)
+![code-snippet-select-all](../_images/code-snippet-select-all.png)
 
 ### Search
 As described in the [Gro Data: Key Concepts](../docs/gro-data-key-concepts) page, a data series in Gro is a unique combination of the entities: item, metric, region, partner_region (optional), frequency, and source. To find the specific entity you would like to retrieve data for, you can use a variety of search methods. For example, `client.search` will return a list of IDs that match your search term. If you want to understand the differences between various search results, you may find the `client.search_and_lookup` method more helpful.
