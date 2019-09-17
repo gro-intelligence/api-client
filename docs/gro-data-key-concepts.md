@@ -58,7 +58,7 @@ IDs are unique within a particular entity type, i.e., there's only one item with
 The above information can be retrieved using the client.search function:
 ```client.lookup('items', 270)```
 
-[See FAQs for help on finding entities by name or by id.](../docs/faqs.md#q-how-do-i-figure-out-what-an-id-refers-to)
+[See this Getting Started section for help on finding entities by name or by id.](../docs/getting-started.html#look-up)
 
 ### Entity Relationships: Contains
 Items, metrics, and regions have a property called `contains`, which is an array of the other entities that it contains, or that belong to it. For example, the item "Cereals" contains the items "Wheat," "Corn," etc.
@@ -70,7 +70,7 @@ Will return a list of items that are contained within the item "Cereals" (item_i
 ```client.lookup_belongs('regions', 13055)```
 Will return a list of regions to which "California" (region_id: 13055) belongs.
 
-[See FAQs for navigation of relationships between entities.](../docs/faqs.md#q-is-it-possible-to-find-out-how-entities-are-related-to-each-other-like-missouri-is-a-province-of-the-us-buenos-aires-belongs-to-argentina-corn-is-a-cereal-etc)
+[See this Getting Started section for navigation of relationships between entities.](../docs/getting-started.html#lookup-contains)
 
 ### Special Properties for Regions
 The following properties exist for regions only:
