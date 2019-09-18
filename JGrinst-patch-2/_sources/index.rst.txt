@@ -15,6 +15,7 @@ See the sidebar to get started.
 
     API Reference <api>
     FAQ <faq>
+    Other <other>
 
 .. toctree::
     :caption: Advanced
