@@ -30,8 +30,6 @@ Navigate to the [api/client/samples/](https://github.com/gro-intelligence/api-cl
 
     The gro_client command line interface does a keyword search for the inputs and finds a random matching data series. It displays the data series it picked in the command line and writes the data points out to a file in the current directory called gro_client_output.csv. This tool is useful for simple queries, but anything more complex should be done using the Python packages.
 
-    Further documentation can be found in the [api/client/](https://github.com/gro-intelligence/api-client) directory.
-
 ## Discovering Data
 To derive the insights you want from Gro's data, you will first want to find the data you're interested in. Below you will find some of the most useful tips on how to discover the data of greatest value to you.
 
@@ -93,7 +91,7 @@ To look up all descendants of region 1029 (Brazil) that are of level 5 (district
 from api.client.lib import REGION_LEVELS
 provinces_of_brazil = client.get_descendant_regions(1029, REGION_LEVELS['district'])
 ```
-For more information on region levels, please refer to the [Special properties for regions](../docs/gro-data-key-concepts.md#special-properties-for-regions) section of [Gro Data: Key Concepts](../docs/gro-data-key-concepts.md)
+For more information on region levels, please refer to the [Special properties for regions](./gro-data-key-concepts.md#special-properties-for-regions) section of [Gro Data: Key Concepts](./gro-data-key-concepts.md)
 
 ### Lookup belongs
 If you want to find "what entities contain the given entity?" there is a method, [`client.lookup_belongs(type, child_id)`](https://gro-intelligence.github.io/api-client/JGrinst-patch-2/api.html#api.client.lib.lookup_belongs) that does just that. For example:
