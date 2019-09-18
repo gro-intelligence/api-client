@@ -172,7 +172,7 @@ client.get_data_points(**{
 ## Understanding Data Responses
 
 ### Look up
-If it is ever unclear what an id number represents, you can use `lookup` to get all the information you'd need. `lookup` works for any of the [data series selection entities]((../docs/gro-data-key-concepts#data-series-definition): `items`, `metrics`, `regions`, `frequencies`, `sources` and also `input_unit_id`. For example:
+If it is ever unclear what an id number represents, you can use `lookup` to get all the information you'd need. `lookup` works for any of the [data series selection entities](./gro-data-key-concepts#data-series-definition): `items`, `metrics`, `regions`, `frequencies`, `sources` and also `input_unit_id`. For example:
 ```client.lookup('frequencies','7')```
 returns:
 ```{'abbrev': None, 'id': 7, 'name': 'quarterly', 'periodLength': {'months': 3}}```

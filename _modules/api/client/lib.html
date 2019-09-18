@@ -289,11 +289,9 @@
 <div class="viewcode-block" id="redirect"><a class="viewcode-back" href="../../../api.html#api.client.lib.redirect">[docs]</a><span class="k">def</span> <span class="nf">redirect</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">migration</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Update query parameters to follow a redirection response from the API.</span>
 
-<span class="sd">    &gt;&gt;&gt; redirect(</span>
-<span class="sd">    ...     {&#39;metricId&#39;: 14, &#39;sourceId&#39;: 2, &#39;itemId&#39;: 145},</span>
-<span class="sd">    ...     {&#39;old_metric_id&#39;: 14, &#39;new_metric_id&#39;: 15, &#39;source_id&#39;: 2}</span>
-<span class="sd">    ... ) == {&#39;sourceId&#39;: 2, &#39;itemId&#39;: 145, &#39;metricId&#39;: 15}</span>
-<span class="sd">    True</span>
+<span class="sd">    &gt;&gt;&gt; redirect({&#39;metricId&#39;: 14, &#39;sourceId&#39;: 2, &#39;itemId&#39;: 145},</span>
+<span class="sd">    ...          {&#39;old_metric_id&#39;: 14, &#39;new_metric_id&#39;: 15, &#39;source_id&#39;: 2})</span>
+<span class="sd">    {&#39;metricId&#39;: 15, &#39;sourceId&#39;: 2, &#39;itemId&#39;: 145}</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -360,8 +358,6 @@
             <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">2</span> <span class="o">**</span> <span class="n">retry_count</span><span class="p">)</span>  <span class="c1"># Exponential backoff before retrying</span>
         <span class="k">elif</span> <span class="n">data</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">301</span><span class="p">:</span>
             <span class="n">params</span> <span class="o">=</span> <span class="n">redirect</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s1">&#39;data&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
-        <span class="k">elif</span> <span class="n">data</span><span class="o">.</span><span class="n">status_code</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">404</span><span class="p">,</span> <span class="mi">401</span><span class="p">,</span> <span class="mi">500</span><span class="p">]:</span>
-            <span class="k">break</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">text</span><span class="p">,</span> <span class="n">extra</span><span class="o">=</span><span class="n">log_record</span><span class="p">)</span>
     <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;Giving up on </span><span class="si">{}</span><span class="s1"> after </span><span class="si">{}</span><span class="s1"> tries. Error is: </span><span class="si">{}</span><span class="s1">.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
@@ -449,7 +445,7 @@
 <span class="sd">    access_token : string</span>
 <span class="sd">    api_host : string</span>
 <span class="sd">    entity_type : string</span>
-<span class="sd">        &#39;items&#39;, &#39;metrics&#39;, &#39;regions&#39;, &#39;units&#39;, &#39;frequencies&#39;, or &#39;sources&#39;</span>
+<span class="sd">        &#39;items&#39;, &#39;metrics&#39;, &#39;regions&#39;, &#39;units&#39;, or &#39;sources&#39;</span>
 <span class="sd">    entity_id : int</span>
 
 <span class="sd">    Returns</span>
@@ -498,24 +494,25 @@
 
 <span class="sd">    For use with get_data_series() and rank_series_by_source().</span>
 
-<span class="sd">    &gt;&gt;&gt; get_params_from_selection(</span>
-<span class="sd">    ...     metric_id=123, item_id=456, unit_id=14</span>
-<span class="sd">    ... ) == { &#39;itemId&#39;: 456, &#39;metricId&#39;: 123 }</span>
-<span class="sd">    True</span>
+<span class="sd">    &gt;&gt;&gt; get_params_from_selection(**{</span>
+<span class="sd">    ...     &#39;metric_id&#39;: 123,</span>
+<span class="sd">    ...     &#39;item_id&#39;: 456,</span>
+<span class="sd">    ...     &#39;unit_id&#39;: 14</span>
+<span class="sd">    ... })</span>
+<span class="sd">    {&#39;metricId&#39;: 123, &#39;itemId&#39;: 456}</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    metric_id : integer, optional</span>
-<span class="sd">    item_id : integer, optional</span>
-<span class="sd">    region_id : integer, optional</span>
-<span class="sd">    partner_region_id : integer, optional</span>
-<span class="sd">    source_id : integer, optional</span>
-<span class="sd">    frequency_id : integer, optional</span>
+<span class="sd">    selection : dict</span>
+<span class="sd">        Keys can include: &#39;metric_id&#39;, &#39;item_id&#39;, &#39;region_id&#39;,</span>
+<span class="sd">        &#39;partner_region_id&#39;, &#39;source_id&#39;, &#39;frequency_id&#39;. Anything else will</span>
+<span class="sd">        be ignored.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    dict</span>
-<span class="sd">        selections with valid keys converted to camelcase and invalid ones filtered out</span>
+<span class="sd">        selections with valid keys converted to camelcase and invalid ones</span>
+<span class="sd">        filtered out</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">params</span> <span class="o">=</span> <span class="p">{}</span>
@@ -531,15 +528,21 @@
 
 <span class="sd">    For use with get_crop_calendar_data_points()</span>
 
-<span class="sd">    &gt;&gt;&gt; get_crop_calendar_params(</span>
-<span class="sd">    ...     metric_id=123, item_id=456, region_id=14</span>
-<span class="sd">    ... ) == { &#39;itemId&#39;: 456, &#39;regionId&#39;: 14 }</span>
-<span class="sd">    True</span>
+<span class="sd">    &gt;&gt;&gt; get_crop_calendar_params(**{</span>
+<span class="sd">    ...     &#39;metric_id&#39;: 123,</span>
+<span class="sd">    ...     &#39;item_id&#39;: 456,</span>
+<span class="sd">    ...     &#39;region_id&#39;: 14</span>
+<span class="sd">    ... })</span>
+<span class="sd">    {&#39;itemId&#39;: 456, &#39;regionId&#39;: 14}</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    item_id : integer</span>
-<span class="sd">    region_id : integer</span>
+<span class="sd">    selection : dict</span>
+<span class="sd">        Keys can include: &#39;item_id&#39;, &#39;region_id&#39;. Anything else will be</span>
+<span class="sd">        ignored.</span>
+<span class="sd">        Only region and item are required since metric/item/source/frequency</span>
+<span class="sd">        all have default values and start/end date are not allowed inputs since</span>
+<span class="sd">        crop calendars are static.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -560,34 +563,31 @@
 
 <span class="sd">    For use with get_data_points().</span>
 
-<span class="sd">    &gt;&gt;&gt; get_data_call_params(</span>
-<span class="sd">    ...     metric_id=123, start_date=&#39;2012-01-01&#39;, unit_id=14</span>
-<span class="sd">    ... ) == {&#39;startDate&#39;: &#39;2012-01-01&#39;, &#39;metricId&#39;: 123}</span>
-<span class="sd">    True</span>
+<span class="sd">    &gt;&gt;&gt; get_data_call_params(**{</span>
+<span class="sd">    ...     &#39;metric_id&#39;: 123,</span>
+<span class="sd">    ...     &#39;start_date&#39;: &#39;2012-01-01&#39;,</span>
+<span class="sd">    ...     &#39;unit_id&#39;: 14</span>
+<span class="sd">    ... })</span>
+<span class="sd">    {&#39;metricId&#39;: 123, &#39;startDate&#39;: &#39;2012-01-01&#39;}</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    metric_id : integer</span>
-<span class="sd">    item_id : integer</span>
-<span class="sd">    region_id : integer</span>
-<span class="sd">    partner_region_id : integer</span>
-<span class="sd">    source_id : integer</span>
-<span class="sd">    frequency_id : integer</span>
-<span class="sd">    start_date : string, optional</span>
-<span class="sd">    end_date : string, optional</span>
-<span class="sd">    show_revisions : boolean, optional</span>
-<span class="sd">    insert_null : boolean, optional</span>
-<span class="sd">    at_time : string, optional</span>
+<span class="sd">    selection : dict</span>
+<span class="sd">        Keys can include: &#39;metric_id&#39;, &#39;item_id&#39;, &#39;region_id&#39;,</span>
+<span class="sd">        &#39;partner_region_id&#39;, &#39;source_id&#39;, &#39;frequency_id&#39;, &#39;start_date&#39;,</span>
+<span class="sd">        &#39;end_date&#39;, &#39;show_revisions&#39;, and &#39;insert_null&#39;.</span>
+<span class="sd">        Anything else will be ignored.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    dict</span>
-<span class="sd">        selections with valid keys converted to camelcase and invalid ones filtered out</span>
+<span class="sd">        selections with valid keys converted to camelcase and invalid ones</span>
+<span class="sd">        filtered out</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">params</span> <span class="o">=</span> <span class="n">get_params_from_selection</span><span class="p">(</span><span class="o">**</span><span class="n">selection</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">selection</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>
-        <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;start_date&#39;</span><span class="p">,</span> <span class="s1">&#39;end_date&#39;</span><span class="p">,</span> <span class="s1">&#39;show_revisions&#39;</span><span class="p">,</span> <span class="s1">&#39;insert_null&#39;</span><span class="p">,</span> <span class="s1">&#39;at_time&#39;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;start_date&#39;</span><span class="p">,</span> <span class="s1">&#39;end_date&#39;</span><span class="p">,</span> <span class="s1">&#39;show_revisions&#39;</span><span class="p">,</span> <span class="s1">&#39;insert_null&#39;</span><span class="p">):</span>
             <span class="n">params</span><span class="p">[</span><span class="n">snake_to_camel</span><span class="p">(</span><span class="n">key</span><span class="p">)]</span> <span class="o">=</span> <span class="n">value</span>
     <span class="k">return</span> <span class="n">params</span></div>
 
@@ -601,12 +601,9 @@
 <span class="sd">    ----------</span>
 <span class="sd">    access_token : string</span>
 <span class="sd">    api_host : string</span>
-<span class="sd">    metric_id : integer, optional</span>
-<span class="sd">    item_id : integer, optional</span>
-<span class="sd">    region_id : integer, optional</span>
-<span class="sd">    partner_region_id : integer, optional</span>
-<span class="sd">    source_id : integer, optional</span>
-<span class="sd">    frequency_id : integer, optional</span>
+<span class="sd">    selection : dict</span>
+<span class="sd">        See get_params_from_selection() for more information on selection</span>
+<span class="sd">        formatting</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -676,46 +673,45 @@
 <div class="viewcode-block" id="format_crop_calendar_response"><a class="viewcode-back" href="../../../api.html#api.client.lib.format_crop_calendar_response">[docs]</a><span class="k">def</span> <span class="nf">format_crop_calendar_response</span><span class="p">(</span><span class="n">resp</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Make cropcalendar output a format similar to get_data_points().</span>
 
-<span class="sd">    &gt;&gt;&gt; format_crop_calendar_response([{</span>
-<span class="sd">    ...     &#39;metricId&#39;: 2260063,</span>
-<span class="sd">    ...     &#39;itemId&#39;: 274,</span>
-<span class="sd">    ...     &#39;regionId&#39;: 13051,</span>
-<span class="sd">    ...     &#39;sourceId&#39;: 5,</span>
-<span class="sd">    ...     &#39;frequencyId&#39;: 15,</span>
-<span class="sd">    ...     &#39;data&#39;: [{</span>
-<span class="sd">    ...         &#39;sageItem&#39;: &#39;Corn&#39;,</span>
-<span class="sd">    ...         &#39;plantingStartDate&#39;: &#39;2000-03-04&#39;,</span>
-<span class="sd">    ...         &#39;plantingEndDate&#39;: &#39;2000-05-17&#39;,</span>
-<span class="sd">    ...         &#39;harvestingStartDate&#39;: &#39;2000-07-20&#39;,</span>
-<span class="sd">    ...         &#39;harvestingEndDate&#39;: &#39;2000-11-01&#39;,</span>
-<span class="sd">    ...         &#39;multiYear&#39;: False</span>
-<span class="sd">    ...     }]</span>
-<span class="sd">    ... }]) == [{</span>
-<span class="sd">    ...     &#39;metric_id&#39;: 2260063,</span>
-<span class="sd">    ...     &#39;item_id&#39;: 274,</span>
-<span class="sd">    ...     &#39;region_id&#39;: 13051,</span>
-<span class="sd">    ...     &#39;frequency_id&#39;: 15,</span>
-<span class="sd">    ...     &#39;source_id&#39;: 5,</span>
-<span class="sd">    ...     &#39;start_date&#39;: &#39;2000-03-04&#39;,</span>
-<span class="sd">    ...     &#39;end_date&#39;: &#39;2000-05-17&#39;,</span>
-<span class="sd">    ...     &#39;value&#39;: &#39;planting&#39;,</span>
-<span class="sd">    ...     &#39;input_unit_id&#39;: None,</span>
-<span class="sd">    ...     &#39;input_unit_scale&#39;: None,</span>
-<span class="sd">    ...     &#39;reporting_date&#39;: None</span>
-<span class="sd">    ... }, {</span>
-<span class="sd">    ...     &#39;metric_id&#39;: 2260063,</span>
-<span class="sd">    ...     &#39;item_id&#39;: 274,</span>
-<span class="sd">    ...     &#39;region_id&#39;: 13051,</span>
-<span class="sd">    ...     &#39;frequency_id&#39;: 15,</span>
-<span class="sd">    ...     &#39;source_id&#39;: 5,</span>
-<span class="sd">    ...     &#39;start_date&#39;: &#39;2000-07-20&#39;,</span>
-<span class="sd">    ...     &#39;end_date&#39;: &#39;2000-11-01&#39;,</span>
-<span class="sd">    ...     &#39;value&#39;: &#39;harvesting&#39;,</span>
-<span class="sd">    ...     &#39;input_unit_id&#39;: None,</span>
-<span class="sd">    ...     &#39;input_unit_scale&#39;: None,</span>
-<span class="sd">    ...     &#39;reporting_date&#39;: None</span>
-<span class="sd">    ... }]</span>
-<span class="sd">    True</span>
+<span class="sd">    &gt;&gt;&gt; format_crop_calendar_response([</span>
+<span class="sd">    ...     {</span>
+<span class="sd">    ...         &#39;metricId&#39;: 2260063,</span>
+<span class="sd">    ...         &#39;itemId&#39;: 274,</span>
+<span class="sd">    ...         &#39;regionId&#39;: 13051,</span>
+<span class="sd">    ...         &#39;sourceId&#39;: 5,</span>
+<span class="sd">    ...         &#39;frequencyId&#39;: 15,</span>
+<span class="sd">    ...         &#39;data&#39;: [{</span>
+<span class="sd">    ...             &#39;sageItem&#39;: &#39;Corn&#39;,</span>
+<span class="sd">    ...             &#39;plantingStartDate&#39;: &#39;2000-03-04&#39;,</span>
+<span class="sd">    ...             &#39;plantingEndDate&#39;: &#39;2000-05-17&#39;,</span>
+<span class="sd">    ...             &#39;harvestingStartDate&#39;: &#39;2000-07-20&#39;,</span>
+<span class="sd">    ...             &#39;harvestingEndDate&#39;: &#39;2000-11-01&#39;,</span>
+<span class="sd">    ...             &#39;multiYear&#39;: False</span>
+<span class="sd">    ...         }]</span>
+<span class="sd">    ...     }</span>
+<span class="sd">    ... ])</span>
+<span class="sd">    [{&#39;metric_id&#39;: 2260063,</span>
+<span class="sd">        &#39;item_id&#39;: 274,</span>
+<span class="sd">        &#39;region_id&#39;: 13051,</span>
+<span class="sd">        &#39;frequency_id&#39;: 15,</span>
+<span class="sd">        &#39;source_id&#39;: 5,</span>
+<span class="sd">        &#39;start_date&#39;: &#39;2000-03-04&#39;,</span>
+<span class="sd">        &#39;end_date&#39;: &#39;2000-05-17&#39;,</span>
+<span class="sd">        &#39;value&#39;: &#39;planting&#39;,</span>
+<span class="sd">        &#39;input_unit_id&#39;: None,</span>
+<span class="sd">        &#39;input_unit_scale&#39;: None,</span>
+<span class="sd">        &#39;reporting_date&#39;: None},</span>
+<span class="sd">        {&#39;metric_id&#39;: 2260063,</span>
+<span class="sd">        &#39;item_id&#39;: 274,</span>
+<span class="sd">        &#39;region_id&#39;: 13051,</span>
+<span class="sd">        &#39;frequency_id&#39;: 15,</span>
+<span class="sd">        &#39;source_id&#39;: 5,</span>
+<span class="sd">        &#39;start_date&#39;: &#39;2000-07-20&#39;,</span>
+<span class="sd">        &#39;end_date&#39;: &#39;2000-11-01&#39;,</span>
+<span class="sd">        &#39;value&#39;: &#39;harvesting&#39;,</span>
+<span class="sd">        &#39;input_unit_id&#39;: None,</span>
+<span class="sd">        &#39;input_unit_scale&#39;: None,</span>
+<span class="sd">        &#39;reporting_date&#39;: None}]</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -818,25 +814,8 @@
 <span class="sd">    ----------</span>
 <span class="sd">    access_token : string</span>
 <span class="sd">    api_host : string</span>
-<span class="sd">    metric_id : integer</span>
-<span class="sd">    item_id : integer</span>
-<span class="sd">    region_id : integer</span>
-<span class="sd">    partner_region_id : integer</span>
-<span class="sd">    source_id : integer</span>
-<span class="sd">    frequency_id : integer</span>
-<span class="sd">    start_date : string, optional</span>
-<span class="sd">        all points with start dates equal to or after this date</span>
-<span class="sd">    end_date : string, optional</span>
-<span class="sd">        all points with end dates equal to or after this date</span>
-<span class="sd">    show_revisions : boolean, optional</span>
-<span class="sd">        False by default, meaning only the latest value for each period. If true, will return all</span>
-<span class="sd">        values for a given period, differentiated by the `reporting_date` field.</span>
-<span class="sd">    insert_null : boolean, optional</span>
-<span class="sd">        False by default. If True, will include a data point with a None value for each period</span>
-<span class="sd">        that does not have data.</span>
-<span class="sd">    at_time : string, optional</span>
-<span class="sd">        Estimate what data would have been available via Gro at a given time in the past. See</span>
-<span class="sd">        /api/client/samples/at-time-query-examples.ipynb for more details.</span>
+<span class="sd">    selection : dict</span>
+<span class="sd">        See get_data_call_params() input</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -965,7 +944,7 @@
 <span class="sd">    access_token : string</span>
 <span class="sd">    api_host : string</span>
 <span class="sd">    entity_type : string</span>
-<span class="sd">        One of: &#39;metrics&#39;, &#39;items&#39;, or &#39;regions&#39;</span>
+<span class="sd">        One of: &#39;metrics&#39;, &#39;items&#39;, &#39;regions&#39;, or &#39;sources&#39;</span>
 <span class="sd">    entity_id : integer</span>
 
 <span class="sd">    Yields</span>
@@ -1026,9 +1005,9 @@
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    a geojson object e.g.</span>
+<span class="sd">    a geojson object e.g. </span>
 <span class="sd">    { &#39;type&#39;: &#39;GeometryCollection&#39;,</span>
-<span class="sd">      &#39;geometries&#39;: [{&#39;type&#39;: &#39;MultiPolygon&#39;,</span>
+<span class="sd">      &#39;geometries&#39;: [{&#39;type&#39;: &#39;MultiPolygon&#39;, </span>
 <span class="sd">                      &#39;coordinates&#39;: [[[[-38.394, -4.225], ...]]]}, ...]}</span>
 <span class="sd">    or None if not found.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -1098,7 +1077,8 @@
     <span class="c1"># To run doctests:</span>
     <span class="c1"># $ python lib.py -v</span>
     <span class="kn">import</span> <span class="nn">doctest</span>
-    <span class="n">doctest</span><span class="o">.</span><span class="n">testmod</span><span class="p">(</span><span class="n">optionflags</span><span class="o">=</span><span class="n">doctest</span><span class="o">.</span><span class="n">NORMALIZE_WHITESPACE</span> <span class="o">|</span> <span class="n">doctest</span><span class="o">.</span><span class="n">ELLIPSIS</span><span class="p">)</span>
+    <span class="n">doctest</span><span class="o">.</span><span class="n">testmod</span><span class="p">(</span><span class="n">optionflags</span><span class="o">=</span><span class="n">doctest</span><span class="o">.</span><span class="n">NORMALIZE_WHITESPACE</span> <span class="o">|</span>
+                    <span class="n">doctest</span><span class="o">.</span><span class="n">ELLIPSIS</span><span class="p">)</span>
 </pre></div>
 
            </div>
@@ -1129,7 +1109,7 @@
 <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
     <span class="rst-current-version" data-toggle="rst-current-version">
         <span class="fa fa-book"> Other Versions</span>
-        v: development
+        v: CLEWS-15766
         <span class="fa fa-caret-down"></span>
     </span>
     <div class="rst-other-versions">
@@ -1140,10 +1120,10 @@
         <dl>
             <dt>Branches</dt>
             <dd><a href="../../../CLEWS-15762/index.html">CLEWS-15762</a></dd>
-            <dd><a href="../../../CLEWS-15766/index.html">CLEWS-15766</a></dd>
+            <dd><a href="../../../CLEWS-15766/_modules/api/client/lib.html">CLEWS-15766</a></dd>
             <dd><a href="../../../JGrinst-patch-1/index.html">JGrinst-patch-1</a></dd>
             <dd><a href="../../../JGrinst-patch-2/index.html">JGrinst-patch-2</a></dd>
-            <dd><a href="../../../development/_modules/api/client/lib.html">development</a></dd>
+            <dd><a href="../../../development/index.html">development</a></dd>
             <dd><a href="../../../get_region_id_given_lat_lon/index.html">get_region_id_given_lat_lon</a></dd>
         </dl>
     </div>
