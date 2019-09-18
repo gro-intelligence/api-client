@@ -12,8 +12,7 @@ The Gro API Client requires the following OS-dependent system requirements.
 ### MacOS and Linux
 
 1. git ([Installation instructions](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git))
-2. python version 3.5 or above from <python.org>. Support for Python 2.7.13 or above is also maintained, but with its [End of Life](https://mail.python.org/pipermail/python-dev/2018-March/152348.html) soon approaching, Python 3 is recommended.
-3. pip ([Installation instructions](https://pip.pypa.io/en/stable/installing/). Note "pip is already installed if you are using Python 2 >=2.7.9 or Python 3 >=3.4")
+2. python version 3.5 or above from <https://www.python.org>. Support for Python 2.7.13 or above is also maintained, but with its [End of Life](https://mail.python.org/pipermail/python-dev/2018-March/152348.html) soon approaching, Python 3 is recommended.
 
 ### Windows
 
@@ -52,7 +51,7 @@ pip show gro
 2. [Expiring/Regenerating Tokens](#expiring-regenerating-tokens)
 3. [Saving your token as an environment variable](#saving-your-token-as-an-environment-variable)
 
-To work with the Gro API, you need an authentication token. This token needs to be sent along with every request made to the API. This is typically done by using one of the included Client classes (`Client`, `GroClient`, `BatchClient`, or `CropModel`): you provide your access token when creating the object, and then every API request made thereafter automatically includes the token. See the (MAKE LINK) sample scripts for examples.
+To work with the Gro API, you need an authentication token. This token needs to be sent along with every request made to the API. This is typically done by using one of the included Client classes (`Client`, `GroClient`, `BatchClient`, or `CropModel`): you provide your access token when creating the object, and then every API request made thereafter automatically includes the token. 
 
 ### Retrieving a token
 
@@ -123,18 +122,21 @@ If you don't want to enter a password or token each time, you can save the token
 
 Please consult your OS or IDE documentation for the most accurate and up-to-date information on how to set environment variables, e.g. setting environment variables in [Windows Powershell](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_environment_variables?view=powershell-6) or [Mac OS X/Linux](https://apple.stackexchange.com/questions/106778/how-do-i-set-environment-variables-on-os-x) or [Anaconda](https://anaconda-project.readthedocs.io/en/latest/user-guide/tasks/work-with-variables.html). As a quick guide, the following steps should work:
 
-For Windows 10:
+#### For Windows 10:
 1. Click on start menu and search for "environment variables." Click on "Edit the system environment variables" option.
 2. In the "Advanced" tab, select the "Environment Variables..." button.
 3. Under the first section called "User variables for &lt;username&gt;," and click on the "New" button.
 4. Enter the information as follows:
-  Variable name: GROAPI_TOKEN
-  Variable value: <insert your Gro API Token here>
+  
+  Variable name: `GROAPI_TOKEN`
+  
+  Variable value: `<insert your Gro API Token here>`
+
 5. Click OK
 
 Your environment variable should now be saved. You will likely need to close an re-open your IDE for the IDE to recognize the change. Whenever you run code that includes the code `os.environ['GROAPI_TOKEN']` it should automatically pull in your API Token.
 
-For Mac:
+#### For Mac:
 1. Open up your terminal and type `open ~/.bash_profile`
 2. Add the following line: `export GROAPI_TOKEN="YOUR TOKEN HERE"`
 3. Save the file and close any shells you have open. The environment variable should be available next time you open a shell.
