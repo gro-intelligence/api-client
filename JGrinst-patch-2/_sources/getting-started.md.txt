@@ -91,7 +91,7 @@ To look up all descendants of region 1029 (Brazil) that are of level 5 (district
 from api.client.lib import REGION_LEVELS
 provinces_of_brazil = client.get_descendant_regions(1029, REGION_LEVELS['district'])
 ```
-For more information on region levels, please refer to the [Special properties for regions](./gro-data-key-concepts.md#special-properties-for-regions) section of [Gro Data: Key Concepts](./gro-data-key-concepts.md)
+For more information on region levels, please refer to the [Special properties for regions](https://gro-intelligence.github.io/api-client/JGrinst-patch-2/gro-data-key-concepts.html#special-properties-for-regions) section of [Gro Data: Key Concepts](https://gro-intelligence.github.io/api-client/JGrinst-patch-2/gro-data-key-concepts.html)
 
 ### Lookup belongs
 If you want to find "what entities contain the given entity?" there is a method, [`client.lookup_belongs(type, child_id)`](https://gro-intelligence.github.io/api-client/JGrinst-patch-2/api.html#api.client.lib.lookup_belongs) that does just that. For example:
