@@ -1,0 +1,311 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Data Point Definition &mdash; Gro API Client  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'./',
+              VERSION:'',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/custom-theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/banner.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Gro API Client
+          
+
+          
+            
+            <img src="_static/logo.jpg" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api.html#module-api.client.lib">lib</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#client">Client</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#groclient">GroClient</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#crop-model">Crop Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#batch-client">Batch Client</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="faq.html">FAQ</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="faq.html#exploring-what-s-available">Exploring What&#8216;s Available</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="faq.html#q-why-is-it-that-when-i-use-client-search-to-find-metrics-items-regions-i-m-interested-in-sometimes-client-get-data-series-doesn-t-have-any-data-for-those-metrics-items-regions">Q: Why is it that when I use client.search() to find metrics/items/regions I&#8216;m interested in, sometimes client.get_data_series() doesn&#8216;t have any data for those metrics/items/regions?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="faq.html#q-what-does-sourcelag-mean-when-i-use-client-lookup-to-inspect-a-source-s-details">Q: What does &#8216;sourceLag&#8216; mean when I use client.lookup() to inspect a source&#8216;s details?</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="faq.html#data-retrieval">Data Retrieval</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="faq.html#q-i-specified-an-end-date-when-calling-get-data-points-but-i-am-getting-points-with-other-end-dates">Q: I specified an end_date when calling get_data_points(), but I am getting points with other end_dates:</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="faq.html#account">Account</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="faq.html#q-i-tried-using-my-gro-username-and-login-but-am-getting-a-401-unauthorized-error">Q: I tried using my Gro username and login but am getting a 401 Unauthorized error</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="faq.html#gro-models">Gro Models</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="faq.html#q-do-your-predictive-models-only-run-during-the-crop-season">Q: Do your predictive models only run during the crop season?</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="other.html">Other</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="other.html#gro-crop-masks">Gro Crop Masks</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="other.html#introduction">Introduction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="other.html#methodology">Methodology</a></li>
+<li class="toctree-l3"><a class="reference internal" href="other.html#us-corn">US Corn</a></li>
+<li class="toctree-l3"><a class="reference internal" href="other.html#us-soy">US Soy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="other.html#argentina-soy">Argentina Soy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="other.html#india-wheat">India Wheat</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="other.html#gro-yield-model-backtest-data">Gro Yield Model Backtest Data</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="other.html#id1">Introduction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="other.html#file-formats">File Formats</a></li>
+<li class="toctree-l3"><a class="reference internal" href="other.html#download-the-data-by-model">Download the Data by Model</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="other.html#radio-frequency-interference-effects-on-smos">Radio Frequency Interference Effects On SMOS</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Gro API Client</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content style-external-links">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Data Point Definition</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/data-point-definition.md.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  
+
+
+    
+    
+
+
+
+    <p class="scv-banner scv-sphinx_rtd_theme"><b>Warning:</b> This document is for the development version of Gro API Client.</p>
+<div class="section" id="data-point-definition">
+<h1>Data Point Definition<a class="headerlink" href="#data-point-definition" title="Permalink to this headline">¶</a></h1>
+<p>Gro defines a &#8220;data point&#8220; as a discrete result produced by our API. When using the <code class="docutils literal"><span class="pre">get_data_points()</span></code> function, you are returned an array of points, each of which is a Python dictionary object that looks something like:</p>
+<div class="highlight-py"><div class="highlight"><pre><span></span><span class="p">{</span>
+  <span class="sa">u</span><span class="s1">&#39;input_unit_scale&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+  <span class="sa">u</span><span class="s1">&#39;region_id&#39;</span><span class="p">:</span> <span class="mi">1038</span><span class="p">,</span>
+  <span class="sa">u</span><span class="s1">&#39;end_date&#39;</span><span class="p">:</span> <span class="sa">u</span><span class="s1">&#39;2000-12-31T00:00:00.000Z&#39;</span><span class="p">,</span>
+  <span class="sa">u</span><span class="s1">&#39;input_unit_id&#39;</span><span class="p">:</span> <span class="mi">17</span><span class="p">,</span>
+  <span class="sa">u</span><span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="mf">0.2623</span><span class="p">,</span>
+  <span class="sa">u</span><span class="s1">&#39;frequency_id&#39;</span><span class="p">:</span> <span class="mi">9</span><span class="p">,</span>
+  <span class="sa">u</span><span class="s1">&#39;item_id&#39;</span><span class="p">:</span> <span class="mi">5187</span><span class="p">,</span>
+  <span class="sa">u</span><span class="s1">&#39;reporting_date&#39;</span><span class="p">:</span> <span class="bp">None</span><span class="p">,</span>
+  <span class="sa">u</span><span class="s1">&#39;start_date&#39;</span><span class="p">:</span> <span class="sa">u</span><span class="s1">&#39;2000-01-01T00:00:00.000Z&#39;</span><span class="p">,</span>
+  <span class="sa">u</span><span class="s1">&#39;metric_id&#39;</span><span class="p">:</span> <span class="mi">5590032</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>For example, if you requested NDVI for Bureau county, Illinois, for a particular 8-day time period, the Gro API would yield a single response that would count as a single data point. Even though the value is computed from tens of thousands of underlying pixels, the API response counts as a single point because we are returning the value at the county (aka district) level.</p>
+<p>Another example is if you get weekly precipitation data for a given region in a given week, you will get a single point. On the other hand, if you get daily precipitation for a given region for a period of a week, you will get seven data points.</p>
+<p>Below are some explanations of what each of those fields represent:</p>
+<ul class="simple">
+<li><code class="docutils literal"><span class="pre">start_date</span></code>: beginning of the period this point represents</li>
+<li><code class="docutils literal"><span class="pre">end_date</span></code>: end of the period this point represents</li>
+<li><code class="docutils literal"><span class="pre">reporting_date</span></code>: date the source reported this value (only included when source provides reporting date)</li>
+<li><code class="docutils literal"><span class="pre">value</span></code>: the value, typically a number. In some cases, the value may be non-numeric. E.g., when the metric is Crop Calendar, a value of &#8220;planting,&#8220; represents the fact that the planting period is from <code class="docutils literal"><span class="pre">start_date</span></code> to <code class="docutils literal"><span class="pre">end_date</span></code>.</li>
+<li><code class="docutils literal"><span class="pre">unit_id</span></code>: this is a Gro unit id you can look up the name/abbreviation/etc. of using the <code class="docutils literal"><span class="pre">client.lookup('units',</span> <span class="pre">unit_id)</span></code> function. There&#8216;s also a helper function of which you can see an example in the <a class="reference external" href="https://github.com/gro-intelligence/api-client/blob/9c2c17642980b5415b8a8167a28276b77e34915c/api/client/samples/quick_start.py#L30">quickstart</a> for getting just the abbreviation from the unit id, <code class="docutils literal"><span class="pre">client.lookup_unit_abbreviation(point['unit_id'])</span></code>, which is the common case you probably want</li>
+<li><code class="docutils literal"><span class="pre">metric_id</span></code>: unique id for the metric (i.e. &#8220;Export Value (currency)&#8220;) you selected - get more details (name, definition, ...) using <code class="docutils literal"><span class="pre">client.lookup('metrics',</span> <span class="pre">metric_id)</span></code></li>
+<li><code class="docutils literal"><span class="pre">item_id</span></code>: unique id for the item (i.e., &#8220;Corn&#8220;) you selected - get more details (name, definition, ...) using <code class="docutils literal"><span class="pre">client.lookup('items',</span> <span class="pre">item_id)</span></code></li>
+<li><code class="docutils literal"><span class="pre">region_id</span></code>: unique id for the region (i.e., &#8220;United States&#8220;) you selected - get more details (name, administrative level, ...) using <code class="docutils literal"><span class="pre">client.lookup('regions',</span> <span class="pre">region_id)</span></code></li>
+<li><code class="docutils literal"><span class="pre">frequency_id</span></code>: unique id for the frequency (i.e., &#8220;annual&#8220;) you selected - get more details (name, abbreviation, period length, ...) using <code class="docutils literal"><span class="pre">client.lookup('frequencies',</span> <span class="pre">frequency_id)</span></code></li>
+</ul>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Gro Intelligence
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+<div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+        <span class="fa fa-book"> Other Versions</span>
+        v: docs-reorg
+        <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+        <dl>
+            <dt>Tags</dt>
+            <dd><a href="../v1.40.0/index.html">v1.40.0</a></dd>
+        </dl>
+        <dl>
+            <dt>Branches</dt>
+            <dd><a href="../CLEWS-15762/index.html">CLEWS-15762</a></dd>
+            <dd><a href="../CLEWS-15766/index.html">CLEWS-15766</a></dd>
+            <dd><a href="../JGrinst-patch-1/index.html">JGrinst-patch-1</a></dd>
+            <dd><a href="../development/index.html">development</a></dd>
+            <dd><a href="data-point-definition.html">docs-reorg</a></dd>
+            <dd><a href="../get_region_id_given_lat_lon/index.html">get_region_id_given_lat_lon</a></dd>
+        </dl>
+    </div>
+</div>
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

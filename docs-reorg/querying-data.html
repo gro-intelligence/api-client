@@ -1,0 +1,347 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Querying Data &mdash; Gro API Client  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'./',
+              VERSION:'',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/custom-theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/banner.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Gro API Client
+          
+
+          
+            
+            <img src="_static/logo.jpg" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api.html#module-api.client.lib">lib</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#client">Client</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#groclient">GroClient</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#crop-model">Crop Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#batch-client">Batch Client</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="faq.html">FAQ</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="faq.html#exploring-what-s-available">Exploring What&#8216;s Available</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="faq.html#q-why-is-it-that-when-i-use-client-search-to-find-metrics-items-regions-i-m-interested-in-sometimes-client-get-data-series-doesn-t-have-any-data-for-those-metrics-items-regions">Q: Why is it that when I use client.search() to find metrics/items/regions I&#8216;m interested in, sometimes client.get_data_series() doesn&#8216;t have any data for those metrics/items/regions?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="faq.html#q-what-does-sourcelag-mean-when-i-use-client-lookup-to-inspect-a-source-s-details">Q: What does &#8216;sourceLag&#8216; mean when I use client.lookup() to inspect a source&#8216;s details?</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="faq.html#data-retrieval">Data Retrieval</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="faq.html#q-i-specified-an-end-date-when-calling-get-data-points-but-i-am-getting-points-with-other-end-dates">Q: I specified an end_date when calling get_data_points(), but I am getting points with other end_dates:</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="faq.html#account">Account</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="faq.html#q-i-tried-using-my-gro-username-and-login-but-am-getting-a-401-unauthorized-error">Q: I tried using my Gro username and login but am getting a 401 Unauthorized error</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="faq.html#gro-models">Gro Models</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="faq.html#q-do-your-predictive-models-only-run-during-the-crop-season">Q: Do your predictive models only run during the crop season?</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="other.html">Other</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="other.html#gro-crop-masks">Gro Crop Masks</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="other.html#introduction">Introduction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="other.html#methodology">Methodology</a></li>
+<li class="toctree-l3"><a class="reference internal" href="other.html#us-corn">US Corn</a></li>
+<li class="toctree-l3"><a class="reference internal" href="other.html#us-soy">US Soy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="other.html#argentina-soy">Argentina Soy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="other.html#india-wheat">India Wheat</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="other.html#gro-yield-model-backtest-data">Gro Yield Model Backtest Data</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="other.html#id1">Introduction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="other.html#file-formats">File Formats</a></li>
+<li class="toctree-l3"><a class="reference internal" href="other.html#download-the-data-by-model">Download the Data by Model</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="other.html#radio-frequency-interference-effects-on-smos">Radio Frequency Interference Effects On SMOS</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Gro API Client</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content style-external-links">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Querying Data</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/querying-data.md.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  
+
+
+    
+    
+
+
+
+    <p class="scv-banner scv-sphinx_rtd_theme"><b>Warning:</b> This document is for the development version of Gro API Client.</p>
+<div class="section" id="querying-data">
+<h1>Querying Data<a class="headerlink" href="#querying-data" title="Permalink to this headline">¶</a></h1>
+<p>Once you&#8216;ve identified the data you want, you&#8216;ll want to start retrieving it and putting it to use. The following methods should help you get the data in the format that you want.</p>
+<div class="section" id="get-data-points">
+<h2>Get data points<a class="headerlink" href="#get-data-points" title="Permalink to this headline">¶</a></h2>
+<p><code class="docutils literal"><span class="pre">get_data_points(**selection)</span></code> is the primary method for retrieving data. The <a class="reference external" href="./searching-data#code-snippets">code snippets</a> feature covered earlier provides you with a fully completed <code class="docutils literal"><span class="pre">get_data_points()</span></code> query, such as:</p>
+<div class="highlight-py"><div class="highlight"><pre><span></span><span class="c1"># Wheat - Area Harvested (area) - India (USDA PS&amp;D)</span>
+<span class="n">client</span><span class="o">.</span><span class="n">get_data_points</span><span class="p">(</span><span class="o">**</span><span class="p">{</span>
+    <span class="s1">&#39;metric_id&#39;</span><span class="p">:</span> <span class="mi">570001</span><span class="p">,</span>
+    <span class="s1">&#39;item_id&#39;</span><span class="p">:</span> <span class="mi">95</span><span class="p">,</span>
+    <span class="s1">&#39;region_id&#39;</span><span class="p">:</span> <span class="mi">1094</span><span class="p">,</span> 
+    <span class="s1">&#39;source_id&#39;</span><span class="p">:</span> <span class="mi">14</span><span class="p">,</span> 
+    <span class="s1">&#39;frequency_id&#39;</span><span class="p">:</span> <span class="mi">9</span>
+<span class="p">})</span>
+</pre></div>
+</div>
+<p>The above query has completed fields for <code class="docutils literal"><span class="pre">metric_id</span></code>, <code class="docutils literal"><span class="pre">item_id</span></code>, <code class="docutils literal"><span class="pre">region_id</span></code>, <code class="docutils literal"><span class="pre">source_id</span></code>, and <code class="docutils literal"><span class="pre">frequency_id</span></code>. However, <code class="docutils literal"><span class="pre">get_data_points()</span></code> can also accept fields to further narrow your data series of interest: <code class="docutils literal"><span class="pre">partner_region_id</span></code> (used only in series that represent a flow between two places), <code class="docutils literal"><span class="pre">start_date</span></code>, <code class="docutils literal"><span class="pre">end_date</span></code>, <a class="reference external" href="#show-revisions"><code class="docutils literal"><span class="pre">show_revisions</span></code></a>, <a class="reference external" href="https://gro-intelligence.github.io/api-client/development/api.html#api.client.lib.get_data_points"><code class="docutils literal"><span class="pre">insert_null</span></code></a>, and <a class="reference external" href="https://gro-intelligence.github.io/api-client/development/api.html#api.client.lib.get_data_points"><code class="docutils literal"><span class="pre">at_time</span></code></a>.</p>
+<p>Note that limiting the specificity of your selection can greatly increase the time it takes for a response to be returned.</p>
+</div>
+<div class="section" id="data-frame">
+<h2>Data frame<a class="headerlink" href="#data-frame" title="Permalink to this headline">¶</a></h2>
+<p>Data frames are a popular format for viewing data responses, and our <code class="docutils literal"><span class="pre">gro_client</span></code> library offers you the ability to view your data series in a data frame. If you&#8216;ve imported the library into your file, as follows:</p>
+<div class="highlight-py"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">api.client.gro_client</span> <span class="kn">import</span> <span class="n">GroClient</span>
+</pre></div>
+</div>
+<p>Then you can use the <code class="docutils literal"><span class="pre">get_df()</span></code> method to return data in a data frame.</p>
+<p><code class="docutils literal"><span class="pre">get_df()</span></code> is a stateful method, so you must first save the series into your client object. You can do this with the <code class="docutils literal"><span class="pre">add_single_data_series()</span></code> method.</p>
+<p>The following code will return Wheat - Area Harvested (area) - India (USDA PS&amp;D) in a data frame.</p>
+<div class="highlight-py"><div class="highlight"><pre><span></span><span class="n">client</span><span class="o">.</span><span class="n">add_single_data_series</span><span class="p">({</span>
+     <span class="s1">&#39;metric_id&#39;</span><span class="p">:</span> <span class="mi">570001</span><span class="p">,</span> 
+     <span class="s1">&#39;item_id&#39;</span><span class="p">:</span> <span class="mi">95</span><span class="p">,</span>
+     <span class="s1">&#39;region_id&#39;</span><span class="p">:</span> <span class="mi">1094</span><span class="p">,</span> 
+     <span class="s1">&#39;source_id&#39;</span><span class="p">:</span> <span class="mi">14</span><span class="p">,</span> 
+     <span class="s1">&#39;frequency_id&#39;</span><span class="p">:</span> <span class="mi">9</span>
+<span class="p">})</span>
+<span class="n">client</span><span class="o">.</span><span class="n">get_df</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="show-revisions">
+<h2>Show revisions<a class="headerlink" href="#show-revisions" title="Permalink to this headline">¶</a></h2>
+<p>Sometimes looking at the most recent data point doesn&#8216;t tell you the whole story. You may want to see if there have been any revisions to data, especially if the data is a forecast value. This standard <code class="docutils literal"><span class="pre">get_data_points</span></code> query will return the annual values for soybean yield in Argentina since 2017:</p>
+<div class="highlight-py"><div class="highlight"><pre><span></span><span class="c1"># Soybeans - Yield (mass/area) - Argentina (USDA PS&amp;D)</span>
+<span class="n">client</span><span class="o">.</span><span class="n">get_data_points</span><span class="p">(</span><span class="o">**</span><span class="p">{</span>
+    <span class="s1">&#39;metric_id&#39;</span><span class="p">:</span> <span class="mi">170037</span><span class="p">,</span> 
+    <span class="s1">&#39;item_id&#39;</span><span class="p">:</span> <span class="mi">270</span><span class="p">,</span> 
+    <span class="s1">&#39;region_id&#39;</span><span class="p">:</span> <span class="mi">1010</span><span class="p">,</span> 
+    <span class="s1">&#39;source_id&#39;</span><span class="p">:</span> <span class="mi">14</span><span class="p">,</span> 
+    <span class="s1">&#39;frequency_id&#39;</span><span class="p">:</span> <span class="mi">9</span><span class="p">,</span> 
+    <span class="s1">&#39;start_date&#39;</span><span class="p">:</span> <span class="s1">&#39;2017-01-01T00:00:00.000Z&#39;</span>
+<span class="p">})</span>
+</pre></div>
+</div>
+<p>But the USDA begins forecasting the yield well before harvest time, and will continue to update its estimate for many months after the harvest is over. In order to see how the forecasts and estimates for each year have changed, you can include the <code class="docutils literal"><span class="pre">show_revisions</span></code> field as follows:</p>
+<div class="highlight-py"><div class="highlight"><pre><span></span><span class="c1"># Soybeans - Yield (mass/area) - Argentina (USDA PS&amp;D)</span>
+<span class="n">client</span><span class="o">.</span><span class="n">get_data_points</span><span class="p">(</span><span class="o">**</span><span class="p">{</span>
+    <span class="s1">&#39;metric_id&#39;</span><span class="p">:</span> <span class="mi">170037</span><span class="p">,</span> 
+    <span class="s1">&#39;item_id&#39;</span><span class="p">:</span> <span class="mi">270</span><span class="p">,</span> 
+    <span class="s1">&#39;region_id&#39;</span><span class="p">:</span> <span class="mi">1010</span><span class="p">,</span> 
+    <span class="s1">&#39;source_id&#39;</span><span class="p">:</span> <span class="mi">14</span><span class="p">,</span> 
+    <span class="s1">&#39;frequency_id&#39;</span><span class="p">:</span> <span class="mi">9</span><span class="p">,</span> 
+    <span class="s1">&#39;start_date&#39;</span><span class="p">:</span> <span class="s1">&#39;2017-01-01T00:00:00.000Z&#39;</span><span class="p">,</span> 
+    <span class="s1">&#39;show_revisions&#39;</span><span class="p">:</span> <span class="bp">True</span>
+<span class="p">})</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Gro Intelligence
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+<div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+        <span class="fa fa-book"> Other Versions</span>
+        v: docs-reorg
+        <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+        <dl>
+            <dt>Tags</dt>
+            <dd><a href="../v1.40.0/index.html">v1.40.0</a></dd>
+        </dl>
+        <dl>
+            <dt>Branches</dt>
+            <dd><a href="../CLEWS-15762/index.html">CLEWS-15762</a></dd>
+            <dd><a href="../CLEWS-15766/index.html">CLEWS-15766</a></dd>
+            <dd><a href="../JGrinst-patch-1/index.html">JGrinst-patch-1</a></dd>
+            <dd><a href="../development/index.html">development</a></dd>
+            <dd><a href="querying-data.html">docs-reorg</a></dd>
+            <dd><a href="../get_region_id_given_lat_lon/index.html">get_region_id_given_lat_lon</a></dd>
+        </dl>
+    </div>
+</div>
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
