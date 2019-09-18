@@ -114,7 +114,11 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#expiring-regenerating-tokens">Expiring/Regenerating Tokens</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#saving-your-token-as-an-environment-variable">Saving your token as an environment variable</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#saving-your-token-as-an-environment-variable">Saving your token as an environment variable</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#for-windows-10">For Windows 10:</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#for-mac">For Mac:</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -269,7 +273,7 @@
 
 
 
-    <p class="scv-banner scv-sphinx_rtd_theme"><a href="../CLEWS-15766/setting-up-your-environment.html"><b>Warning:</b> This document is for the development version of Gro API Client. The main version is CLEWS-15766.</a></p>
+    <p class="scv-banner scv-sphinx_rtd_theme"><a href="../development/setting-up-your-environment.html"><b>Warning:</b> This document is for the development version of Gro API Client. The main version is development.</a></p>
 <div class="section" id="setting-up-your-environment">
 <h1>Setting Up Your Environment<a class="headerlink" href="#setting-up-your-environment" title="Permalink to this headline">¶</a></h1>
 <p>In order to start engaging with the Gro API Client, you will need to set up your local environment with some basic requirements.</p>
@@ -284,8 +288,7 @@
 <h3>MacOS and Linux<a class="headerlink" href="#macos-and-linux" title="Permalink to this headline">¶</a></h3>
 <ol class="simple">
 <li>git (<a class="reference external" href="https://git-scm.com/book/en/v2/Getting-Started-Installing-Git">Installation instructions</a>)</li>
-<li>python version 3.5 or above from &lt;python.org&gt;. Support for Python 2.7.13 or above is also maintained, but with its <a class="reference external" href="https://mail.python.org/pipermail/python-dev/2018-March/152348.html">End of Life</a> soon approaching, Python 3 is recommended.</li>
-<li>pip (<a class="reference external" href="https://pip.pypa.io/en/stable/installing/">Installation instructions</a>. Note &#8220;pip is already installed if you are using Python 2 &gt;=2.7.9 or Python 3 &gt;=3.4&#8220;)</li>
+<li>python version 3.5 or above from <a class="reference external" href="https://www.python.org">https://www.python.org</a>. Support for Python 2.7.13 or above is also maintained, but with its <a class="reference external" href="https://mail.python.org/pipermail/python-dev/2018-March/152348.html">End of Life</a> soon approaching, Python 3 is recommended.</li>
 </ol>
 </div>
 <div class="section" id="windows">
@@ -329,7 +332,7 @@
 <li><a class="reference external" href="#expiring-regenerating-tokens">Expiring/Regenerating Tokens</a></li>
 <li><a class="reference external" href="#saving-your-token-as-an-environment-variable">Saving your token as an environment variable</a></li>
 </ol>
-<p>To work with the Gro API, you need an authentication token. This token needs to be sent along with every request made to the API. This is typically done by using one of the included Client classes (<code class="docutils literal"><span class="pre">Client</span></code>, <code class="docutils literal"><span class="pre">GroClient</span></code>, <code class="docutils literal"><span class="pre">BatchClient</span></code>, or <code class="docutils literal"><span class="pre">CropModel</span></code>): you provide your access token when creating the object, and then every API request made thereafter automatically includes the token. See the (MAKE LINK) sample scripts for examples.</p>
+<p>To work with the Gro API, you need an authentication token. This token needs to be sent along with every request made to the API. This is typically done by using one of the included Client classes (<code class="docutils literal"><span class="pre">Client</span></code>, <code class="docutils literal"><span class="pre">GroClient</span></code>, <code class="docutils literal"><span class="pre">BatchClient</span></code>, or <code class="docutils literal"><span class="pre">CropModel</span></code>): you provide your access token when creating the object, and then every API request made thereafter automatically includes the token.</p>
 <div class="section" id="retrieving-a-token">
 <h3>Retrieving a token<a class="headerlink" href="#retrieving-a-token" title="Permalink to this headline">¶</a></h3>
 <p>Note that your account needs to be activated for API access before you will be able to retrieve a token. See <a class="reference external" href="https://gro-intelligence.com/products/gro-api">https://gro-intelligence.com/products/gro-api</a> for more info regarding unlocking API access for your account.
@@ -389,23 +392,29 @@ Once you have API access enabled for your account, you may retrieve your token i
 <h3>Saving your token as an environment variable<a class="headerlink" href="#saving-your-token-as-an-environment-variable" title="Permalink to this headline">¶</a></h3>
 <p>If you don&#8216;t want to enter a password or token each time, you can save the token as an environment variable. In some of the sample code, it is assumed that you have the token saved to your environment variables as <code class="docutils literal"><span class="pre">GROAPI_TOKEN</span></code>.</p>
 <p>Please consult your OS or IDE documentation for the most accurate and up-to-date information on how to set environment variables, e.g. setting environment variables in <a class="reference external" href="https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_environment_variables?view=powershell-6">Windows Powershell</a> or <a class="reference external" href="https://apple.stackexchange.com/questions/106778/how-do-i-set-environment-variables-on-os-x">Mac OS X/Linux</a> or <a class="reference external" href="https://anaconda-project.readthedocs.io/en/latest/user-guide/tasks/work-with-variables.html">Anaconda</a>. As a quick guide, the following steps should work:</p>
-<p>For Windows 10:</p>
+<div class="section" id="for-windows-10">
+<h4>For Windows 10:<a class="headerlink" href="#for-windows-10" title="Permalink to this headline">¶</a></h4>
 <ol class="simple">
 <li>Click on start menu and search for &#8220;environment variables.&#8220; Click on &#8220;Edit the system environment variables&#8220; option.</li>
 <li>In the &#8220;Advanced&#8220; tab, select the &#8220;Environment Variables...&#8220; button.</li>
 <li>Under the first section called &#8220;User variables for &lt;username&gt;,&#8220; and click on the &#8220;New&#8220; button.</li>
-<li>Enter the information as follows:
-Variable name: GROAPI_TOKEN
-Variable value: <insert your Gro API Token here></li>
+<li>Enter the information as follows:</li>
+</ol>
+<p>Variable name: <code class="docutils literal"><span class="pre">GROAPI_TOKEN</span></code></p>
+<p>Variable value: <code class="docutils literal"><span class="pre">&lt;insert</span> <span class="pre">your</span> <span class="pre">Gro</span> <span class="pre">API</span> <span class="pre">Token</span> <span class="pre">here&gt;</span></code></p>
+<ol class="simple">
 <li>Click OK</li>
 </ol>
 <p>Your environment variable should now be saved. You will likely need to close an re-open your IDE for the IDE to recognize the change. Whenever you run code that includes the code <code class="docutils literal"><span class="pre">os.environ['GROAPI_TOKEN']</span></code> it should automatically pull in your API Token.</p>
-<p>For Mac:</p>
+</div>
+<div class="section" id="for-mac">
+<h4>For Mac:<a class="headerlink" href="#for-mac" title="Permalink to this headline">¶</a></h4>
 <ol class="simple">
 <li>Open up your terminal and type <code class="docutils literal"><span class="pre">open</span> <span class="pre">~/.bash_profile</span></code></li>
 <li>Add the following line: <code class="docutils literal"><span class="pre">export</span> <span class="pre">GROAPI_TOKEN=&quot;YOUR</span> <span class="pre">TOKEN</span> <span class="pre">HERE&quot;</span></code></li>
 <li>Save the file and close any shells you have open. The environment variable should be available next time you open a shell.</li>
 </ol>
+</div>
 </div>
 </div>
 </div>
