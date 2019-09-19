@@ -1,7 +1,15 @@
-Gro API Client
+Gro API Client: The World of Agriculture in One API
 ==============
 
-See the sidebar to get started.
+Welcome to Gro!
+
+With the Gro API Client, you have the power to:
+* Access to tens of millions of data series and trillions of data points
+* Build your own predictive models 
+* Integrate Gro data with your own to develop highly customized forecasts
+* Launch conversational interfaces — chatbot, Alexa skills
+* Set up real-time alerts and dashboards
+* Create bespoke data visualizations
 
 .. toctree::
     :caption: Getting Started
