@@ -77,7 +77,8 @@ img {
 
 .wy-nav-content {
     border-left: 2px #EEEEF1 solid;
-    max-width: 1200px;
+    max-width: 800px;
+    height: 100vh;
 }
 .caption {
     border-top: 1px solid #eeeef1;
@@ -173,7 +174,10 @@ a:hover.reference.internal {
 }
 
 .wy-breadcrumbs {
-    display: none;
+    font-family: Roboto,Arial,sans-serif;
+
+
+
 }
 .rst-breadcrumbs-buttons {
     display: none;
