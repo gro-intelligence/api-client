@@ -1,0 +1,7 @@
+pandas
+matplotlib
+geopandas
+scikit-learn
+ipython
+jupyter
+descartes
