@@ -83,4 +83,37 @@ Region level corresponds to the administrative level of the region:
 * level 9: point-location
 
 ### `latitude` and `longitude`
-For point-locations (i.e., region level 9), these properties correspond to the location's coordinates. More generally for other regions, these properties are optional, but if specified, they correspond to the coordinates of the geographic center of the region.
+For point-locations (i.e., region level 9), these properties correspond to the location's coordinates. More generally for other regions, these properties correspond to the coordinates of the geographic center of the region.
+
+The `lookup()` function will return the `latitude` and `longitude` of a region. For example, you can find the geographic center of Nairobi `region_id=13474` with the following query:
+
+```client.lookup('regions',13474)```
+
+Which has the result:
+
+```py
+{'contains': [142828,
+  142830,
+  1000272,
+  142836,
+  142831,
+  142834,
+  142838,
+  142833,
+  142837,
+  143105,
+  143103,
+  142829,
+  142835,
+  143104,
+  143102,
+  143106,
+  143101,
+  142832],
+ 'id': 13474,
+ 'latitude': -1.29359,
+ 'level': 4,
+ 'longitude': 36.8691,
+ 'name': 'Nairobi',
+ 'rankingScore': 1}
+```
