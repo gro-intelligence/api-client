@@ -17,7 +17,7 @@ The above query has completed fields for `metric_id`, `item_id`, `region_id`, `s
 
 Note that limiting the specificity of your selection can greatly increase the time it takes for a response to be returned.
 
-## Data frame
+## Get Data frame
 Data frames are a popular format for viewing data responses, and our `gro_client` library offers you the ability to view your data series in a data frame. If you've imported the library into your file, as follows:
 ```py
 from api.client.gro_client import GroClient
