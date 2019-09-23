@@ -141,7 +141,7 @@
 </li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Querying Data</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#get-data-points">Get data points</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#data-frame">Data frame</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#get-data-frame">Get Data frame</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#show-revisions">Show revisions</a></li>
 </ul>
 </li>
@@ -315,8 +315,8 @@
 <p>The above query has completed fields for <code class="docutils literal"><span class="pre">metric_id</span></code>, <code class="docutils literal"><span class="pre">item_id</span></code>, <code class="docutils literal"><span class="pre">region_id</span></code>, <code class="docutils literal"><span class="pre">source_id</span></code>, and <code class="docutils literal"><span class="pre">frequency_id</span></code>. However, <code class="docutils literal"><span class="pre">get_data_points()</span></code> can also accept fields to further narrow your data series of interest: <code class="docutils literal"><span class="pre">partner_region_id</span></code> (used only in series that represent a flow between two places), <code class="docutils literal"><span class="pre">start_date</span></code>, <code class="docutils literal"><span class="pre">end_date</span></code>, <a class="reference external" href="#show-revisions"><code class="docutils literal"><span class="pre">show_revisions</span></code></a>, <a class="reference external" href="https://gro-intelligence.github.io/api-client/development/api.html#api.client.lib.get_data_points"><code class="docutils literal"><span class="pre">insert_null</span></code></a>, and <a class="reference external" href="https://gro-intelligence.github.io/api-client/development/api.html#api.client.lib.get_data_points"><code class="docutils literal"><span class="pre">at_time</span></code></a>.</p>
 <p>Note that limiting the specificity of your selection can greatly increase the time it takes for a response to be returned.</p>
 </div>
-<div class="section" id="data-frame">
-<h2>Data frame<a class="headerlink" href="#data-frame" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="get-data-frame">
+<h2>Get Data frame<a class="headerlink" href="#get-data-frame" title="Permalink to this headline">¶</a></h2>
 <p>Data frames are a popular format for viewing data responses, and our <code class="docutils literal"><span class="pre">gro_client</span></code> library offers you the ability to view your data series in a data frame. If you&#8216;ve imported the library into your file, as follows:</p>
 <div class="highlight-py"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">api.client.gro_client</span> <span class="kn">import</span> <span class="n">GroClient</span>
 </pre></div>
