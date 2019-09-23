@@ -381,7 +381,36 @@ Will return a list of regions to which &#8220;California&#8220; (region_id: 1305
 </div>
 <div class="section" id="latitude-and-longitude">
 <h3><code class="docutils literal"><span class="pre">latitude</span></code> and <code class="docutils literal"><span class="pre">longitude</span></code><a class="headerlink" href="#latitude-and-longitude" title="Permalink to this headline">¶</a></h3>
-<p>For point-locations (i.e., region level 9), these properties correspond to the location&#8216;s coordinates. More generally for other regions, these properties are optional, but if specified, they correspond to the coordinates of the geographic center of the region.</p>
+<p>For point-locations (i.e., region level 9), these properties correspond to the location&#8216;s coordinates. More generally for other regions, these properties correspond to the coordinates of the geographic center of the region.</p>
+<p>The <code class="docutils literal"><span class="pre">lookup()</span></code> function will return the <code class="docutils literal"><span class="pre">latitude</span></code> and <code class="docutils literal"><span class="pre">longitude</span></code> of a region. For example, you can find the geographic center of Nairobi <code class="docutils literal"><span class="pre">region_id=13474</span></code> with the following query:</p>
+<p><code class="docutils literal"><span class="pre">client.lookup('regions',13474)</span></code></p>
+<p>Which has the result:</p>
+<div class="highlight-py"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;contains&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">142828</span><span class="p">,</span>
+  <span class="mi">142830</span><span class="p">,</span>
+  <span class="mi">1000272</span><span class="p">,</span>
+  <span class="mi">142836</span><span class="p">,</span>
+  <span class="mi">142831</span><span class="p">,</span>
+  <span class="mi">142834</span><span class="p">,</span>
+  <span class="mi">142838</span><span class="p">,</span>
+  <span class="mi">142833</span><span class="p">,</span>
+  <span class="mi">142837</span><span class="p">,</span>
+  <span class="mi">143105</span><span class="p">,</span>
+  <span class="mi">143103</span><span class="p">,</span>
+  <span class="mi">142829</span><span class="p">,</span>
+  <span class="mi">142835</span><span class="p">,</span>
+  <span class="mi">143104</span><span class="p">,</span>
+  <span class="mi">143102</span><span class="p">,</span>
+  <span class="mi">143106</span><span class="p">,</span>
+  <span class="mi">143101</span><span class="p">,</span>
+  <span class="mi">142832</span><span class="p">],</span>
+ <span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="mi">13474</span><span class="p">,</span>
+ <span class="s1">&#39;latitude&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">1.29359</span><span class="p">,</span>
+ <span class="s1">&#39;level&#39;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+ <span class="s1">&#39;longitude&#39;</span><span class="p">:</span> <span class="mf">36.8691</span><span class="p">,</span>
+ <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Nairobi&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;rankingScore&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">}</span>
+</pre></div>
+</div>
 </div>
 </div>
 </div>
