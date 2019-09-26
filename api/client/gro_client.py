@@ -238,7 +238,7 @@ class GroClient(Client):
         point['unit_id'] = target_unit_id
         return point
 
-    def get_region_info_given_lat_lon(self, latitude, longitude, output_region_level):
+    def get_region_info_given_lat_lon(self, lat_lon_df, output_region_level):
     """Look up region_ids of the given level that contains each pair of latitude and longitude resembling spatial points.
         Start from the continent level, find the continent_ids containing the given points' latitude and longitude
         Then find corresponding country ids that contain these points, province ids and district ids.
@@ -246,8 +246,7 @@ class GroClient(Client):
 
         Parameters
         ----------
-        latitude : list of float
-        longitude: list of float
+        lat_lon_df: data frame with column names latitude, longitude and possibly region_id column
         output_region_level : integer
             The region level of interest. See REGION_LEVELS constant.
 
@@ -255,49 +254,27 @@ class GroClient(Client):
         -------
         Geopandas Spatial Point data frame with column names of region ids
     """
-        points_geometry = [Point(xy) for xy in zip(longitude, latitude)]
-        gdf = gpd.GeoDataFrame(
-            pandas.DataFrame({'latitude': latitude, 'longitude': longitude}),
-            geometry=points_geometry, crs={'init': u'epsg:4326'})
-
-        continent_ids = range(11, 18)
-        continents = gpd.GeoDataFrame(pandas.DataFrame({
-                       'continent_id': continent_ids, 
-                       'geometry': [shape(g['geometries'][0]) for g in lib.get_geojson(acess_token, api_host, continent_ids)]
-                    }) , crs={'init': u'epsg:4326'})
-        points_with_continent_id = gpd.sjoin(gdf, continents, how="left", op='intersects')
-        country_df_list = list()
-        for continent_id in points_with_continent_id['continent_id'].unique():
-            country_ids = self.get_descendant_regions(continent_id, 3)
-            country_df_list.append(pandas.DataFrame({
-                'country_id': country_ids,
-                'geometry': [shape(g['geometries'][0]) for g in self.get_geojson(country_ids)]
+        assert 'latitude' in lat_lon_df.columns
+        assert 'longitude' in lat_lon_df.columns
+        parent_region_id = [1] if not 'region_id' in lat_lon_df.columns else lat_lon_df['region_id'].unique()
+        current_region_level = self.lookup('regions', parent_region_id[0])['level']
+        if output_region_level == current_region_level:
+            return lat_lon_df
+        if not 'geometry' in lat_lon_df:
+            points_geometry = [Point(xy) for xy in zip(lat_lon_df['longitude'], lat_lon_df['latitude'])]
+            lat_lon_df = gpd.GeoDataFrame(lat_lon_df[['latitude', 'longitude']],
+                geometry=points_geometry, crs={'init': u'epsg:4326'})
+        
+        sub_level_df_list = list()
+        for parent in parent_region_id:
+            sub_region_ids = self.get_descendant_regions(parent, current_region_level + 1)
+            sub_level_df_list.append(pandas.DataFrame({
+                'region_id': sub_region_ids,
+                'geometry': [shape(g['geometries'][0]) for g in self.get_geojson(sub_region_ids)]
                 }))
-        countries = gpd.GeoDataFrame(pandas.concat(country_df_list, ignore_index=True), crs={'init': u'epsg:4326'})
-        points_with_country_id = gpd.sjoin(points_with_continent_id, countries, how="left", op='intersects')
-        if output_region_level == 3:
-            return points_with_country_id
-        province_df_list = list()
-        for country_id in points_with_country_id['country_id'].unique():
-            province_ids = self.get_descendant_regions(country_id, 4)
-            province_df_list.append(pandas.DataFrame({
-                'province_id': province_ids,
-                'geometry': [shape(g['geometries'][0]) for g in self.get_geojson(province_ids)]
-                }))
-        provinces = gpd.GeoDataFrame(pandas.concat(province_df_list, ignore_index=True), crs={'init': u'epsg:4326'})
-        points_with_province_id = gpd.sjoin(points_with_country_id, provinces, how="left", op='intersects')
-        if output_region_level == 4:
-            return points_with_province_id
-        district_df_list = list()
-        for province_id in points_with_province_id['province_id'].unique():
-            district_ids = self.get_descendant_regions(province_id, 4)
-            district_df_list.append(pandas.DataFrame({
-                'district_id': district_ids,
-                'geometry': [shape(g['geometries'][0]) for g in self.get_geojson(district_ids)]
-                }))
-        districts = gpd.GeoDataFrame(pandas.concat(district_df_list, ignore_index=True), crs={'init': u'epsg:4326'})
-        points_with_district_id = gpd.sjoin(points_with_province_id, districts, how="left", op='intersects')
-        return points_with_district_id
+        all_sub_regions = gpd.GeoDataFrame(pandas.concat(sub_level_df_list, ignore_index=True), crs={'init': u'epsg:4326'})
+        points_with_region_id = gpd.sjoin(lat_lon_df, sub_regions, how="left", op='intersects')
+        return self.get_region_info_given_lat_lon(points_with_region_id, output_region_level)
 
 
 """Basic Gro API command line interface.
