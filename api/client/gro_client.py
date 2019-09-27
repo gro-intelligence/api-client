@@ -256,7 +256,7 @@ class GroClient(Client):
     """
         assert 'latitude' in lat_lon_df.columns
         assert 'longitude' in lat_lon_df.columns
-        parent_region_id = [1] if not 'region_id' in lat_lon_df.columns else lat_lon_df['region_id'].unique()
+        parent_region_id = [0] if not 'region_id' in lat_lon_df.columns else lat_lon_df['region_id'].unique()
         current_region_level = self.lookup('regions', parent_region_id[0])['level']
         if output_region_level == current_region_level:
             return lat_lon_df
