@@ -1,0 +1,500 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>api.client.batch_client &mdash; Gro API Client  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../../../',
+              VERSION:'',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/custom-theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/banner.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> Gro API Client
+          
+
+          
+            
+            <img src="../../../_static/logo.jpg" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../setting-up-your-environment.html">Setting Up Your Environment</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../setting-up-your-environment.html#system-prerequisites">System Prerequisites</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../setting-up-your-environment.html#macos-and-linux">MacOS and Linux</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../setting-up-your-environment.html#windows">Windows</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../setting-up-your-environment.html#anaconda">Anaconda</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../setting-up-your-environment.html#non-anaconda">Non-Anaconda</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../setting-up-your-environment.html#installing-gro-packages">Installing Gro Packages</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../setting-up-your-environment.html#authentication-token">Authentication Token</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../setting-up-your-environment.html#retrieving-a-token">Retrieving a token</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../setting-up-your-environment.html#option-1-using-the-web-app-recommended">Option 1: Using the Web App (Recommended)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../setting-up-your-environment.html#option-2-using-the-gro-client-command-line-interface">Option 2: Using the gro_client Command Line Interface</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../setting-up-your-environment.html#option-3-using-the-get-access-token-function">Option 3: Using the <code class="docutils literal"><span class="pre">get_access_token()</span></code> Function</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../setting-up-your-environment.html#expiring-regenerating-tokens">Expiring/Regenerating Tokens</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../setting-up-your-environment.html#saving-your-token-as-an-environment-variable">Saving your token as an environment variable</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../setting-up-your-environment.html#for-windows-10">For Windows 10:</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../setting-up-your-environment.html#for-mac">For Mac:</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../getting-started.html">Getting Started</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../getting-started.html#examples">Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../getting-started.html#discovering-data">Discovering Data</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../getting-started.html#code-snippets">Code snippets</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../getting-started.html#search">Search</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../getting-started.html#get-data-series">Get data series</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../getting-started.html#lookup-contains">Lookup contains</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../getting-started.html#get-descendants">Get descendants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../getting-started.html#lookup-belongs">Lookup belongs</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../getting-started.html#retrieving-data">Retrieving Data</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../getting-started.html#get-data-points">Get data points</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../getting-started.html#data-frame">Data frame</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../getting-started.html#show-revisions">Show revisions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../getting-started.html#understanding-data-responses">Understanding Data Responses</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../getting-started.html#look-up">Look up</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../gro-data-key-concepts.html">Gro Data Key Concepts</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../gro-data-key-concepts.html#gro-ontology">Gro Ontology</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../gro-data-key-concepts.html#entity-fields">Entity fields</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../gro-data-key-concepts.html#entity-relationships-contains">Entity Relationships: Contains</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../gro-data-key-concepts.html#special-properties-for-regions">Special Properties for Regions</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../gro-data-key-concepts.html#level"><code class="docutils literal"><span class="pre">level</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../gro-data-key-concepts.html#latitude-and-longitude"><code class="docutils literal"><span class="pre">latitude</span></code> and <code class="docutils literal"><span class="pre">longitude</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../gro-data-key-concepts.html#data-series-definition">Data Series Definition</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../gro-data-key-concepts.html#data-point-definition">Data Point Definition</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../api.html">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../api.html#module-api.client.lib">lib</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api.html#client">Client</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api.html#groclient">GroClient</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api.html#crop-model">Crop Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api.html#batch-client">Batch Client</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../faq.html">FAQ</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../faq.html#exploring-what-s-available">Exploring What&#8216;s Available</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../faq.html#q-why-is-it-that-when-i-use-client-search-to-find-metrics-items-regions-i-m-interested-in-sometimes-client-get-data-series-doesn-t-have-any-data-for-those-metrics-items-regions">Q: Why is it that when I use client.search() to find metrics/items/regions I&#8216;m interested in, sometimes client.get_data_series() doesn&#8216;t have any data for those metrics/items/regions?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../faq.html#q-what-does-sourcelag-mean-when-i-use-client-lookup-to-inspect-a-source-s-details">Q: What does &#8216;sourceLag&#8216; mean when I use client.lookup() to inspect a source&#8216;s details?</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../faq.html#data-retrieval">Data Retrieval</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../faq.html#q-i-specified-an-end-date-when-calling-get-data-points-but-i-am-getting-points-with-other-end-dates">Q: I specified an end_date when calling get_data_points(), but I am getting points with other end_dates:</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../faq.html#account">Account</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../faq.html#q-i-tried-using-my-gro-username-and-login-but-am-getting-a-401-unauthorized-error">Q: I tried using my Gro username and login but am getting a 401 Unauthorized error</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../faq.html#gro-models">Gro Models</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../faq.html#q-do-your-predictive-models-only-run-during-the-crop-season">Q: Do your predictive models only run during the crop season?</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../other.html">Other</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../other.html#gro-crop-masks">Gro Crop Masks</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../other.html#introduction">Introduction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../other.html#methodology">Methodology</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../other.html#us-corn">US Corn</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../other.html#us-soy">US Soy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../other.html#argentina-soy">Argentina Soy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../other.html#india-wheat">India Wheat</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../other.html#gro-yield-model-backtest-data">Gro Yield Model Backtest Data</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../other.html#id1">Introduction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../other.html#file-formats">File Formats</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../other.html#download-the-data-by-model">Download the Data by Model</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../other.html#radio-frequency-interference-effects-on-smos">Radio Frequency Interference Effects On SMOS</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Gro API Client</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content style-external-links">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+          <li><a href="../client.html">api.client</a> &raquo;</li>
+        
+      <li>api.client.batch_client</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  
+
+
+    
+    
+
+
+
+    <p class="scv-banner scv-sphinx_rtd_theme"><b>Warning:</b> This document is for the development version of Gro API Client.</p>
+<h1>Source code for api.client.batch_client</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">time</span>
+
+<span class="c1"># Python3 support</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="c1"># Python3</span>
+    <span class="kn">from</span> <span class="nn">urllib.parse</span> <span class="k">import</span> <span class="n">urlencode</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="c1"># Python2</span>
+    <span class="kn">from</span> <span class="nn">urllib</span> <span class="k">import</span> <span class="n">urlencode</span>
+
+<span class="kn">from</span> <span class="nn">tornado</span> <span class="k">import</span> <span class="n">gen</span>
+<span class="kn">from</span> <span class="nn">tornado.escape</span> <span class="k">import</span> <span class="n">json_decode</span>
+<span class="kn">from</span> <span class="nn">tornado.httpclient</span> <span class="k">import</span> <span class="n">AsyncHTTPClient</span><span class="p">,</span> <span class="n">HTTPRequest</span><span class="p">,</span> <span class="n">HTTPError</span>
+<span class="kn">from</span> <span class="nn">tornado.ioloop</span> <span class="k">import</span> <span class="n">IOLoop</span>
+<span class="kn">from</span> <span class="nn">tornado.queues</span> <span class="k">import</span> <span class="n">Queue</span>
+<span class="kn">from</span> <span class="nn">api.client</span> <span class="k">import</span> <span class="n">cfg</span><span class="p">,</span> <span class="n">lib</span><span class="p">,</span> <span class="n">Client</span>
+
+
+<div class="viewcode-block" id="BatchClient"><a class="viewcode-back" href="../../../api.html#api.client.batch_client.BatchClient">[docs]</a><span class="k">class</span> <span class="nc">BatchClient</span><span class="p">(</span><span class="n">Client</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;API client with support for batch asynchronous queries.&quot;&quot;&quot;</span>
+
+    <span class="n">_logger</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">_http_client</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">api_host</span><span class="p">,</span> <span class="n">access_token</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">BatchClient</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">api_host</span><span class="p">,</span> <span class="n">access_token</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span> <span class="o">=</span> <span class="n">lib</span><span class="o">.</span><span class="n">get_default_logger</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_http_client</span> <span class="o">=</span> <span class="n">AsyncHTTPClient</span><span class="p">()</span>
+
+    <span class="nd">@gen</span><span class="o">.</span><span class="n">coroutine</span>
+<div class="viewcode-block" id="BatchClient.get_data"><a class="viewcode-back" href="../../../api.html#api.client.batch_client.BatchClient.get_data">[docs]</a>    <span class="k">def</span> <span class="nf">get_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;General &#39;make api request&#39; function.</span>
+
+<span class="sd">        Assigns headers and builds in retries and logging.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">params</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">url</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{url}</span><span class="s1">?</span><span class="si">{params}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="n">url</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">urlencode</span><span class="p">(</span><span class="n">params</span><span class="p">))</span>
+        <span class="n">base_log_record</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">route</span><span class="o">=</span><span class="n">url</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">)</span>
+        <span class="n">retry_count</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+        <span class="k">while</span> <span class="n">retry_count</span> <span class="o">&lt;</span> <span class="n">cfg</span><span class="o">.</span><span class="n">MAX_RETRIES</span><span class="p">:</span>
+            <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+            <span class="n">http_request</span> <span class="o">=</span> <span class="n">HTTPRequest</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">,</span>
+                                       <span class="n">request_timeout</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">TIMEOUT</span><span class="p">,</span>
+                                       <span class="n">connect_timeout</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">TIMEOUT</span><span class="p">)</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="k">yield</span> <span class="bp">self</span><span class="o">.</span><span class="n">_http_client</span><span class="o">.</span><span class="n">fetch</span><span class="p">(</span><span class="n">http_request</span><span class="p">)</span>
+                <span class="n">elapsed_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
+                <span class="n">log_record</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">base_log_record</span><span class="p">)</span>
+                <span class="n">log_record</span><span class="p">[</span><span class="s1">&#39;elapsed_time_in_ms&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1000</span> <span class="o">*</span> <span class="n">elapsed_time</span>
+                <span class="n">log_record</span><span class="p">[</span><span class="s1">&#39;retry_count&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">retry_count</span>
+                <span class="n">log_record</span><span class="p">[</span><span class="s1">&#39;status_code&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">code</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;OK&#39;</span><span class="p">,</span> <span class="n">extra</span><span class="o">=</span><span class="n">log_record</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="n">gen</span><span class="o">.</span><span class="n">Return</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">body</span><span class="p">)</span>
+            <span class="k">except</span> <span class="n">HTTPError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="n">elapsed_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
+                <span class="n">log_record</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">base_log_record</span><span class="p">)</span>
+                <span class="n">log_record</span><span class="p">[</span><span class="s1">&#39;elapsed_time_in_ms&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1000</span> <span class="o">*</span> <span class="n">elapsed_time</span>
+                <span class="n">log_record</span><span class="p">[</span><span class="s1">&#39;retry_count&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">retry_count</span>
+                <span class="n">log_record</span><span class="p">[</span><span class="s1">&#39;status_code&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">e</span><span class="o">.</span><span class="n">code</span>
+                <span class="k">if</span> <span class="n">retry_count</span> <span class="o">&lt;</span> <span class="n">cfg</span><span class="o">.</span><span class="n">MAX_RETRIES</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">error</span><span class="p">,</span> <span class="n">extra</span><span class="o">=</span><span class="n">log_record</span><span class="p">)</span>
+                    <span class="n">retry_count</span> <span class="o">+=</span> <span class="mi">1</span>
+                    <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">code</span> <span class="o">==</span> <span class="mi">429</span><span class="p">:</span>
+                        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">2</span> <span class="o">**</span> <span class="n">retry_count</span><span class="p">)</span>  <span class="c1"># Exponential backoff</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">error</span><span class="p">,</span> <span class="n">extra</span><span class="o">=</span><span class="n">log_record</span><span class="p">)</span>
+                    <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;Giving up on </span><span class="si">{}</span><span class="s1"> after </span><span class="si">{}</span><span class="s1"> tries. </span><span class="se">\</span>
+<span class="s1">                        Error is: </span><span class="si">{}</span><span class="s1">.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                        <span class="n">url</span><span class="p">,</span> <span class="n">retry_count</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">error</span><span class="p">))</span></div>
+
+    <span class="nd">@gen</span><span class="o">.</span><span class="n">coroutine</span>
+<div class="viewcode-block" id="BatchClient.get_data_points"><a class="viewcode-back" href="../../../api.html#api.client.batch_client.BatchClient.get_data_points">[docs]</a>    <span class="k">def</span> <span class="nf">get_data_points</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">selection</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get all the data points for a given selection, which is some or all</span>
+<span class="sd">        of: item_id, metric_id, region_id, frequency_id, source_id,</span>
+<span class="sd">        partner_region_id. Additional arguments are allowed and ignored.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;authorization&#39;</span><span class="p">:</span> <span class="s1">&#39;Bearer &#39;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="p">}</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="s1">&#39;/&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s1">&#39;https:&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_host</span><span class="p">,</span> <span class="s1">&#39;v2/data&#39;</span><span class="p">])</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="n">lib</span><span class="o">.</span><span class="n">get_data_call_params</span><span class="p">(</span><span class="o">**</span><span class="n">selection</span><span class="p">)</span>
+        <span class="n">resp</span> <span class="o">=</span> <span class="k">yield</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_data</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="n">gen</span><span class="o">.</span><span class="n">Return</span><span class="p">(</span><span class="n">json_decode</span><span class="p">(</span><span class="n">resp</span><span class="p">))</span></div>
+
+    <span class="k">def</span> <span class="nf">batch_async_get_data_points</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">batched_args</span><span class="p">,</span> <span class="n">output_list</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                                    <span class="n">map_result</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">batch_async_queue</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_data_points</span><span class="p">,</span> <span class="n">batched_args</span><span class="p">,</span>
+                                      <span class="n">output_list</span><span class="p">,</span> <span class="n">map_result</span><span class="p">)</span>
+
+<div class="viewcode-block" id="BatchClient.batch_async_queue"><a class="viewcode-back" href="../../../api.html#api.client.batch_client.BatchClient.batch_async_queue">[docs]</a>    <span class="k">def</span> <span class="nf">batch_async_queue</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">,</span> <span class="n">batched_args</span><span class="p">,</span> <span class="n">output_list</span><span class="p">,</span> <span class="n">map_result</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Asynchronously call func.</span>
+
+<span class="sd">        :param func: function to be called on each member of batched_args</span>
+<span class="sd">        :param batched_args: list of keyword arguments dictionaries, one for</span>
+<span class="sd">        each call to func</span>
+<span class="sd">        :param output_list:</span>
+<span class="sd">        :param map_result:</span>
+<span class="sd">        :return:</span>
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="nb">type</span><span class="p">(</span><span class="n">batched_args</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">list</span><span class="p">,</span> \
+            <span class="s2">&quot;Only argument to a batch async decorated function should be a </span><span class="se">\</span>
+<span class="s2">            list of a list of the individual non-keyword arguments being </span><span class="se">\</span>
+<span class="s2">            passed to the original function.&quot;</span>
+
+        <span class="c1"># Default is identity mapping into results list.</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">map_result</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">output_list</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">output_list</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">batched_args</span><span class="p">)</span>
+
+            <span class="k">def</span> <span class="nf">map_result</span><span class="p">(</span><span class="n">idx</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="n">response</span><span class="p">):</span>
+                <span class="n">output_list</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">response</span>
+
+        <span class="n">q</span> <span class="o">=</span> <span class="n">Queue</span><span class="p">()</span>
+
+        <span class="nd">@gen</span><span class="o">.</span><span class="n">coroutine</span>
+        <span class="k">def</span> <span class="nf">consumer</span><span class="p">():</span>
+            <span class="sd">&quot;&quot;&quot;Execute func on all items in queue asynchronously.&quot;&quot;&quot;</span>
+            <span class="k">while</span> <span class="n">q</span><span class="o">.</span><span class="n">qsize</span><span class="p">():</span>
+                <span class="n">idx</span><span class="p">,</span> <span class="n">item</span> <span class="o">=</span> <span class="n">q</span><span class="o">.</span><span class="n">get</span><span class="p">()</span><span class="o">.</span><span class="n">result</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Doing work on </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">idx</span><span class="p">))</span>
+                <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">item</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">dict</span><span class="p">:</span>
+                    <span class="n">result</span> <span class="o">=</span> <span class="k">yield</span> <span class="n">func</span><span class="p">(</span><span class="o">**</span><span class="n">item</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">result</span> <span class="o">=</span> <span class="k">yield</span> <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">item</span><span class="p">)</span>
+                <span class="n">map_result</span><span class="p">(</span><span class="n">idx</span><span class="p">,</span> <span class="n">item</span><span class="p">,</span> <span class="n">result</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Done with </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">idx</span><span class="p">))</span>
+                <span class="n">q</span><span class="o">.</span><span class="n">task_done</span><span class="p">()</span>
+
+        <span class="k">def</span> <span class="nf">producer</span><span class="p">():</span>
+            <span class="sd">&quot;&quot;&quot;Immediately enqueue the whole batch of requests.&quot;&quot;&quot;</span>
+            <span class="n">lasttime</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">item</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">batched_args</span><span class="p">):</span>
+                <span class="n">q</span><span class="o">.</span><span class="n">put</span><span class="p">((</span><span class="n">idx</span><span class="p">,</span> <span class="n">item</span><span class="p">))</span>
+            <span class="n">elapsed</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">lasttime</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Queued </span><span class="si">{}</span><span class="s2"> requests in </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">q</span><span class="o">.</span><span class="n">qsize</span><span class="p">(),</span>
+                                                                <span class="n">elapsed</span><span class="p">))</span>
+
+        <span class="nd">@gen</span><span class="o">.</span><span class="n">coroutine</span>
+        <span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+            <span class="c1"># Start consumer without waiting (since it never finishes).</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">MAX_QUERIES_PER_SECOND</span><span class="p">):</span>
+                <span class="n">IOLoop</span><span class="o">.</span><span class="n">current</span><span class="p">()</span><span class="o">.</span><span class="n">spawn_callback</span><span class="p">(</span><span class="n">consumer</span><span class="p">)</span>
+            <span class="n">producer</span><span class="p">()</span>  <span class="c1"># Wait for producer to put all tasks.</span>
+            <span class="k">yield</span> <span class="n">q</span><span class="o">.</span><span class="n">join</span><span class="p">()</span>  <span class="c1"># Wait for consumer to finish all tasks.</span>
+
+        <span class="n">IOLoop</span><span class="o">.</span><span class="n">current</span><span class="p">()</span><span class="o">.</span><span class="n">run_sync</span><span class="p">(</span><span class="n">main</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">output_list</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Gro Intelligence
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+<div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+        <span class="fa fa-book"> Other Versions</span>
+        v: CLEWS-21548
+        <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+        <dl>
+            <dt>Tags</dt>
+            <dd><a href="../../../../v1.40.0/index.html">v1.40.0</a></dd>
+        </dl>
+        <dl>
+            <dt>Branches</dt>
+            <dd><a href="../../../../CLEWS-15762/index.html">CLEWS-15762</a></dd>
+            <dd><a href="../../../../CLEWS-15766/index.html">CLEWS-15766</a></dd>
+            <dd><a href="batch_client.html">CLEWS-21548</a></dd>
+            <dd><a href="../../../../JGrinst-patch-1/index.html">JGrinst-patch-1</a></dd>
+            <dd><a href="../../../../development/index.html">development</a></dd>
+            <dd><a href="../../../../docs-reorg/index.html">docs-reorg</a></dd>
+            <dd><a href="../../../../get_region_id_given_lat_lon/index.html">get_region_id_given_lat_lon</a></dd>
+            <dd><a href="../../../../musenlin-gro-patch-1/index.html">musenlin-gro-patch-1</a></dd>
+            <dd><a href="../../../../prevent_plant_rewrite/index.html">prevent_plant_rewrite</a></dd>
+        </dl>
+    </div>
+</div>
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
