@@ -122,7 +122,6 @@
 </li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Quickstart Examples</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#quickstart-py">Quickstart.py</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#soybeans-py">Soybeans.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#brazil-soybeans">Brazil Soybeans</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#gro-client-tool">gro_client tool</a></li>
 </ul>
@@ -308,16 +307,10 @@
 </div>
 <p>If the API client is installed and your authentication token is set, a CSV file called <code class="docutils literal"><span class="pre">gro_client_output.csv</span></code> should be created in the directory where the script was run.</p>
 </div>
-<div class="section" id="soybeans-py">
-<h2>Soybeans.py<a class="headerlink" href="#soybeans-py" title="Permalink to this headline">¶</a></h2>
-<p>Try out <a class="reference external" href="https://github.com/gro-intelligence/api-client/blob/development/api/client/samples/crop_models/soybeans.py">soybeans.py</a> to see the <code class="docutils literal"><span class="pre">CropModel</span></code> class and its <code class="docutils literal"><span class="pre">compute_crop_weighted_series()</span></code> method in action. In this example, NDVI (<a class="reference external" href="https://app.gro-intelligence.com/dictionary/items/321">normalized difference vegetation index</a>) for provinces in Brazil is weighted against each province&#8216;s historical soybean production to put the latest NDVI values into context. This information is put into a pandas dataframe, the description of which is printed to the console.</p>
-<div class="highlight-sh"><div class="highlight"><pre><span></span>python crop_models/soybeans.py
-</pre></div>
-</div>
-</div>
 <div class="section" id="brazil-soybeans">
 <h2>Brazil Soybeans<a class="headerlink" href="#brazil-soybeans" title="Permalink to this headline">¶</a></h2>
 <p>See the <a class="reference external" href="https://github.com/gro-intelligence/api-client/blob/development/api/client/samples/crop_models">Brazil Soybeans</a> example in the crop models folder for a longer, more detailed demonstration of many of the API&#8216;s capabilities in the form of a Jupyter notebook.</p>
+<p>This notebook demonstrates the <code class="docutils literal"><span class="pre">CropModel</span></code> class and its <code class="docutils literal"><span class="pre">compute_crop_weighted_series()</span></code> method in action. In this example, NDVI (<a class="reference external" href="https://app.gro-intelligence.com/dictionary/items/321">normalized difference vegetation index</a>) for provinces in Brazil is weighted against each province&#8216;s historical soybean production to put the latest NDVI values into context.</p>
 </div>
 <div class="section" id="gro-client-tool">
 <h2>gro_client tool<a class="headerlink" href="#gro-client-tool" title="Permalink to this headline">¶</a></h2>
@@ -374,6 +367,7 @@
         <dl>
             <dt>Tags</dt>
             <dd><a href="../v1.40.0/index.html">v1.40.0</a></dd>
+            <dd><a href="../v1.40.1/index.html">v1.40.1</a></dd>
         </dl>
         <dl>
             <dt>Branches</dt>
