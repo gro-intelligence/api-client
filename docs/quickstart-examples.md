@@ -14,17 +14,11 @@ $ python quick_start.py
 
 If the API client is installed and your authentication token is set, a CSV file called `gro_client_output.csv` should be created in the directory where the script was run.
 
-## Soybeans.py
-
-Try out [soybeans.py](https://github.com/gro-intelligence/api-client/blob/development/api/client/samples/crop_models/soybeans.py) to see the `CropModel` class and its `compute_crop_weighted_series()` method in action. In this example, NDVI ([normalized difference vegetation index](https://app.gro-intelligence.com/dictionary/items/321)) for provinces in Brazil is weighted against each province's historical soybean production to put the latest NDVI values into context. This information is put into a pandas dataframe, the description of which is printed to the console.
-
-```sh
-python crop_models/soybeans.py
-```
-
 ## Brazil Soybeans
 
 See the [Brazil Soybeans](https://github.com/gro-intelligence/api-client/blob/development/api/client/samples/crop_models) example in the crop models folder for a longer, more detailed demonstration of many of the API's capabilities in the form of a Jupyter notebook.
+
+This notebook demonstrates the `CropModel` class and its `compute_crop_weighted_series()` method in action. In this example, NDVI ([normalized difference vegetation index](https://app.gro-intelligence.com/dictionary/items/321)) for provinces in Brazil is weighted against each province's historical soybean production to put the latest NDVI values into context. 
 
 ## gro_client tool
 
