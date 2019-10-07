@@ -13,7 +13,7 @@ With the Gro API Client, you have the power to:
 
 .. toctree::
     :caption: Getting Started
-    :maxdepth: 2
+    :maxdepth: 1
 
     Prerequisites <prerequisites>
     Installation <installation>
@@ -22,7 +22,7 @@ With the Gro API Client, you have the power to:
 
 .. toctree::
     :caption: Using the API Client
-    :maxdepth: 2
+    :maxdepth: 1
 
     Searching Data <searching-data>
     Querying Data <querying-data>
@@ -30,7 +30,7 @@ With the Gro API Client, you have the power to:
 
 .. toctree::
     :caption: Gro Data: Key Concepts
-    :maxdepth: 2
+    :maxdepth: 1
 
     Gro Ontology <gro-ontology>
     Data Series Definition <data-series-definition>
@@ -38,7 +38,7 @@ With the Gro API Client, you have the power to:
     
 .. toctree::
     :caption: Additional Resources
-    :maxdepth: 2
+    :maxdepth: 1
 
     API Reference <api>
     FAQ <faq>
@@ -46,6 +46,6 @@ With the Gro API Client, you have the power to:
 
 .. toctree::
     :caption: Advanced
-    :maxdepth: 2
+    :maxdepth: 1
 
     Productionization Recommendations
