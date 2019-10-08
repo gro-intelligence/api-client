@@ -11,9 +11,11 @@ __Step 1: Get your API token__
 2. Open the Account button in the bottom left corner of the app.
 
 ![account-button](./_images/account-button.PNG)
+
 3. Navigate to the API tab.
 
 ![account-api-section](./_images/account-api-section.PNG)
+
 4. Copy your token.
 
 __Step 2: Run the code in a notebook__
@@ -62,12 +64,15 @@ __Step 3: Bonus Round__
 2. Click the dropdown arrow in the top right of the chart.
 
 ![chart-dropdown](./_images/chart-dropdown.PNG)
+
 3. Click Export, and then click API Client Code Snippets.
 
 ![export-code-snippet](./_images/export-code-snippet.PNG)
+
 4. Copy to code from the pop up window.
 
 ![code-snippet-window](./_images/code-snippet-window.PNG)
+
 5. Add another cell with the "+ Code" button, then paste the code you just copied.
 6. Click the "Run Cell" button to the left of the call. Congrats! You've just discovered data in the web app and then pulled it via the API client.
 
