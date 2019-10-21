@@ -126,7 +126,7 @@ region_properties = {
     },
     "soil_water_capacity_100cm": {
         "selected_entities": {
-            'metric_id': 15531050,
+            'metric_id': 15531082,
             'item_id': 9194,
             'source_id': 89,
             'frequency_id': 15
