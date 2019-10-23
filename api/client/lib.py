@@ -32,6 +32,15 @@ REGION_LEVELS = {
     'coordinate': 9
 }
 
+GRAPH_TYPES_SINGULAR = ['metric', 'item', 'region']
+EXPANDABLE_TYPES_SINGULAR = GRAPH_TYPES_SINGULAR + ['partner_region']
+SERIES_TYPES_SINGULAR = EXPANDABLE_TYPES_SINGULAR + ['frequency', 'source']
+LOOKUP_TYPES_SINGULAR = SERIES_TYPES_SINGULAR + ['unit']
+SERIES_TYPES_ID_SINGULAR = [type_singular+'_id' for type_singular in SERIES_TYPES_SINGULAR]
+LOOKUP_TYPES_PLURAL = [
+    'frequencies' if type_singular=='frequency' else type_singular+'s'
+    for type_singular in LOOKUP_TYPES_SINGULAR
+]
 
 def get_default_logger():
     """Get a logging object using the default log level set in cfg.
@@ -324,8 +333,7 @@ def get_params_from_selection(**selection):
     """
     params = {}
     for key, value in list(selection.items()):
-        if key in ('region_id', 'partner_region_id', 'item_id', 'metric_id',
-                   'source_id', 'frequency_id'):
+        if key in SERIES_TYPES_ID_SINGULAR:
             params[snake_to_camel(key)] = value
     return params
 
@@ -393,6 +401,8 @@ def get_data_call_params(**selection):
     for key, value in list(selection.items()):
         if key in ('start_date', 'end_date', 'show_revisions', 'insert_null', 'at_time'):
             params[snake_to_camel(key)] = value
+    params['responseType'] = 'list_of_series'
+    params['expansionType'] = 'limited'
     return params
 
 
@@ -613,6 +623,30 @@ def get_crop_calendar_data_points(access_token, api_host, **selection):
     return format_crop_calendar_response(resp.json())
 
 
+def format_list_of_series(series_list):
+    if(isinstance(series_list, list)):
+        output = []
+        for series in series_list:
+            if(isinstance(series, dict) and isinstance(series.get('data', []), list)):
+                for point in series['data']:
+                    output.append({
+                        'start_date': point[0],
+                        'end_date': point[1],
+                        'value': point[2],
+                        'metric_id': series['series']['metricId'],
+                        'item_id': series['series']['itemId'],
+                        'region_id': series['series']['regionId'],
+                        'partner_region_id': series['series'].get('partnerRegionId', 0),
+                        'frequency_id': series['series']['frequencyId'],
+                        'source_id': series['series']['sourceId'],
+                        'unit_id': series['series']['inputUnitId'],
+                        'belongs_to': series['series']['belongsTo']
+                    })
+        return output
+    # If the output is an error or None or something else that's not a list, just propagate
+    return series_list
+
+
 def get_data_points(access_token, api_host, **selection):
     """Get all the data points for a given selection.
 
@@ -665,12 +699,11 @@ def get_data_points(access_token, api_host, **selection):
     if(selection['metric_id'] == CROP_CALENDAR_METRIC_ID):
         return get_crop_calendar_data_points(access_token, api_host,
                                              **selection)
-
     headers = {'authorization': 'Bearer ' + access_token}
     url = '/'.join(['https:', '', api_host, 'v2/data'])
     params = get_data_call_params(**selection)
     resp = get_data(url, headers, params)
-    return resp.json()
+    return format_list_of_series(resp.json())
 
 @memoize(maxsize=None)
 def universal_search(access_token, api_host, search_terms):
