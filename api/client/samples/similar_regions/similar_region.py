@@ -3,7 +3,8 @@ import os
 from sklearn.neighbors import BallTree
 from api.client.batch_client import BatchClient
 from api.client.lib import get_default_logger
-from api.client.samples.similar_regions.similar_region_state import SimilarRegionState
+#from api.client.samples.similar_regions.similar_region_state import SimilarRegionState
+from .similar_region_state import SimilarRegionState
 from sklearn.metrics.pairwise import euclidean_distances
 
 """ API Config """
@@ -28,6 +29,9 @@ class SimilarRegion(object):
                 no_download=no_download)
         self._logger.info("SimilarRegionState: done.")
         self._logger.info("BallTree: computing...")
+        # Featues are weighted at this point, so this is equivalent to using
+        # sklearn.neighbors.DistanceMetric.get_metric('wminkowski', **{'p':2,'w':self.state.weight_vector})
+        # but with unweighted features
         self.ball = BallTree(self.state.data_standardized, leaf_size=2)
         self._logger.info("BallTree: done.")
         return
@@ -40,15 +44,22 @@ class SimilarRegion(object):
         self._logger.info("{} regions are available for comparison.".format(len(regions)))
         return list(regions)
 
-    def _format_results(self, sim_regions, region_level_id, dists, metric_dists):
+    def _format_results(self, sim_regions, requested_region_level, dists, metric_dists):
         for ranking, sim_region_region_id in enumerate(sim_regions):
-            sim_region_region = self.client.lookup("regions", sim_region_region_id)
-            sim_region_name = self.client.lookup("regions", sim_region_region_id)["name"]
-            if region_level_id is not None and sim_region_region["level"] != region_level_id:
-                self._logger.info("not level %s %s" % (region_level_id, sim_region_name))
+            region_info = self.client.lookup("regions", sim_region_region_id)
+            region_level = region_info["level"]
+            sim_region_name = region_info["name"]
+            
+            if requested_region_level is not None and region_level != requested_region_level:
+                self._logger.info("not level %s %s" % (requested_region_level, sim_region_name))
                 continue
-            sim_region_name = self.client.lookup("regions", sim_region_region_id)["name"]
-            parent = next(self.client.lookup_belongs("regions", sim_region_region_id), {"name": ""})
+                
+            # Choose parent one level up from this region
+            parent = {"name": ""}
+            for r in self.client.lookup_belongs("regions", sim_region_region_id):
+                parent = r # just in case there is no parent at correct level - just take the last
+                if r['level'] == region_level-1:
+                    break
 
             if parent.get('id', None):
                 grandparent = next(self.client.lookup_belongs("regions", parent["id"]), {"name": "", "id": ""})
@@ -75,9 +86,9 @@ class SimilarRegion(object):
         # list as an index to preserve dimensionality of returned data
         x = self.state.data_standardized[self.state.mapping[region_id], :]
         x = x.reshape(1, -1)
-        assert number_of_regions <= self.state.num_regions, "number_of_regions must be smaller than or equal to total " \
-                                                            "number of regions in the comparison"
-        neighbour_dists, neighbour_idxs = self.ball.query(x, k=number_of_regions)
+        #assert number_of_regions <= self.state.num_regions, "number_of_regions must be smaller than or equal to total " \
+        #                                                    "number of regions in the comparison"
+        neighbour_dists, neighbour_idxs = self.ball.query(x, k = min(number_of_regions, self.state.num_regions))
 
         # get the individual distances 
         metric_distances = [self._get_distances(self.state.mapping[region_id], idx2) for idx2 in neighbour_idxs[0]]
@@ -85,7 +96,9 @@ class SimilarRegion(object):
         return self.state.inverse_mapping[neighbour_idxs[0]], neighbour_dists[0], metric_distances
 
     def _get_distances(self, idx1, idx2):
-        """ Returns the distances in each "metric" for the two given rows """
+        """ Returns the distances in each "metric" for the two given rows
+            Distances incorporate all aplied weighting
+        """
         progress_idx = 0
         distances = []
         for properties in self.state.region_properties.values():
