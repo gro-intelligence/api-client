@@ -47,7 +47,7 @@ If the API client is installed and your authentication token is set, a csv file 
 python crop_models/soybeans.py
 ```
 
-3. See [brazil_soybeans.ipynb](https://github.com/gro-intelligence/api-client/blob/development/api/client/samples/crop_models/brazil_soybeans.ipynb) for a longer, more detailed demonstration of many of the API's capabilities in the form of a Jupyter notebook.
+3. See [brazil_soybeans.ipynb](https://github.com/gro-intelligence/api-client/blob/development/api/client/samples/crop_models/brazil_soybeans) for a longer, more detailed demonstration of many of the API's capabilities in the form of a Jupyter notebook.
 
 4. You can also use the included `gro_client` tool as a quick way to request a single data series right on the command line. Try the following:
 
