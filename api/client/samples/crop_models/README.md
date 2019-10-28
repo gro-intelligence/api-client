@@ -5,5 +5,3 @@
 2. Run `pip install -r requirements.txt` (for MacOS and Linux) or `conda install --file requirements.txt` (for Windows) to automatically install the required dependencies
 3. Download the notebook to your working directory
 4. Run `jupyter notebook` to start the jupyter server and open the notebook in your web browser
-
-
