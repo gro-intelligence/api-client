@@ -1,7 +1,11 @@
-pandas
-matplotlib
+descartes
 geopandas
-scikit-learn
 ipython
 jupyter
-descartes
+matplotlib
+numpy
+pandas
+scikit-learn
+seaborn
+sklearn
+statsmodels
