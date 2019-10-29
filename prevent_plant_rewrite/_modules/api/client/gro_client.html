@@ -326,6 +326,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_data_series_queue</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># added but not loaded in data frame</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_data_frame</span> <span class="o">=</span> <span class="kc">None</span>
 
+    <span class="k">def</span> <span class="nf">get_logger</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span>
+
     <span class="c1">###</span>
     <span class="c1"># Finding, indexing and loading multiple data series into a data frame</span>
     <span class="c1">###</span>
