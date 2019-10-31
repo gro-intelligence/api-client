@@ -1,12 +1,11 @@
 # Windows Prerequisites
 
-The Gro API Client package is supported both with or without Anaconda. However, some popular data science packages, including some used in the sample scripts provided, are only available on Windows via [conda](https://docs.conda.io/en/latest/), for example [geopandas](http://geopandas.org/install.html). For that reason, instructions are provided for both. You should select the distribution that fits your requirements.
+The Gro API client is a standard python package, which can be installed on Windows with or without Anaconda. However, some popular data science packages, including some used in the sample scripts provided, are only available on Windows via [conda](https://docs.conda.io/en/latest/), for example [geopandas](http://geopandas.org/install.html). For that reason, we recommend using Anaconda on Windows.
 
 ## Anaconda (recommended)
 
-1. Download Anaconda with Python 3.5 or above from [anaconda.com](https://www.anaconda.com/distribution/). Support for Python 2.7.13 or above is also maintained, but with [its End of Life](https://mail.python.org/pipermail/python-dev/2018-March/152348.html) soon approaching, it is recommended you start with Python 3.
+1. Download Anaconda with Python 3.5 or above from [anaconda.com](https://www.anaconda.com/distribution/). Support for Python 2.7.13 or above is also maintained, but with [its End of Life](https://mail.python.org/pipermail/python-dev/2018-March/152348.html) soon approaching, it is recommended you start with Python 3. If you have an older version of Anaconda already installed,  run `conda install pip` to make sure it has pip installed.
 2. Install Git from [git-scm.com](https://git-scm.com/download/win). Proceed with the default options.
-3. Install pip in conda `conda install pip`
 
 ## Non-Anaconda
 
