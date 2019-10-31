@@ -1,4 +1,5 @@
 import time
+import json
 
 # Python3 support
 try:
@@ -10,7 +11,7 @@ except ImportError:
 
 from tornado import gen
 from tornado.escape import json_decode
-from tornado.httpclient import AsyncHTTPClient, HTTPRequest, HTTPError
+from tornado.httpclient import AsyncHTTPClient, HTTPRequest, HTTPClientError
 from tornado.ioloop import IOLoop
 from tornado.queues import Queue
 from api.client import cfg, lib, Client
@@ -33,16 +34,18 @@ class BatchClient(Client):
 
         Assigns headers and builds in retries and logging.
         """
-        if params is not None:
-            url = '{url}?{params}'.format(url=url, params=urlencode(params))
         base_log_record = dict(route=url, params=params)
         retry_count = 0
         self._logger.debug(url)
         while retry_count < cfg.MAX_RETRIES:
             start_time = time.time()
-            http_request = HTTPRequest(url, method="GET", headers=headers,
-                                       request_timeout=cfg.TIMEOUT,
-                                       connect_timeout=cfg.TIMEOUT)
+            http_request = HTTPRequest(
+                '{url}?{params}'.format(url=url, params=urlencode(params)),
+                method="GET",
+                headers=headers,
+                request_timeout=cfg.TIMEOUT,
+                connect_timeout=cfg.TIMEOUT
+            )
             try:
                 data = yield self._http_client.fetch(http_request)
                 elapsed_time = time.time() - start_time
@@ -52,7 +55,7 @@ class BatchClient(Client):
                 log_record['status_code'] = data.code
                 self._logger.debug('OK', extra=log_record)
                 raise gen.Return(data.body)
-            except HTTPError as e:
+            except HTTPClientError as e:
                 elapsed_time = time.time() - start_time
                 log_record = dict(base_log_record)
                 log_record['elapsed_time_in_ms'] = 1000 * elapsed_time
@@ -61,8 +64,10 @@ class BatchClient(Client):
                 if retry_count < cfg.MAX_RETRIES:
                     self._logger.warning(e.response.error, extra=log_record)
                     retry_count += 1
-                    if e.code == 429:
+                    if e.code in [429, 503, 504]:
                         time.sleep(2 ** retry_count)  # Exponential backoff
+                    elif e.code == 301:
+                        params = lib.redirect(params, json.loads(e.response.body.decode("utf-8"))['data'][0])
                 else:
                     self._logger.error(e.response.error, extra=log_record)
                     raise Exception('Giving up on {} after {} tries. \
