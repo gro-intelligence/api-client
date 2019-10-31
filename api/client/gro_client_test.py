@@ -82,3 +82,11 @@ def test_convert_unit():
 
     with pytest.raises(Exception):
         assert client.convert_unit({ 'value': 1, 'unit_id': 10 }, 43)
+
+    assert client.convert_unit({ 'value': None, 'unit_id': 37 }, 36) == {
+        'value': None,
+        'unit_id': 36
+    }
+
+    with pytest.raises(Exception):
+        assert client.convert_unit({ 'value': None, 'unit_id': 10 }, 43)
