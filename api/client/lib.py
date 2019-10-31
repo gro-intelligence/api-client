@@ -147,29 +147,33 @@ def get_data(url, headers, params=None, logger=None):
         logger.debug(params)
     while retry_count < cfg.MAX_RETRIES:
         start_time = time.time()
-        data = requests.get(url, params=params, headers=headers, timeout=None)
-        elapsed_time = time.time() - start_time
-        log_record = dict(base_log_record)
-        log_record['elapsed_time_in_ms'] = 1000 * elapsed_time
-        log_record['retry_count'] = retry_count
-        log_record['status_code'] = data.status_code
-        if data.status_code == 200:
-            logger.debug('OK', extra=log_record)
-            return data
+        try:
+            data = requests.get(url, params=params, headers=headers, timeout=None)
+            elapsed_time = time.time() - start_time
+            log_record = dict(base_log_record)
+            log_record['elapsed_time_in_ms'] = 1000 * elapsed_time
+            log_record['retry_count'] = retry_count
+            log_record['status_code'] = data.status_code
+            if data.status_code == 200:
+                logger.debug('OK', extra=log_record)
+                return data
+            log_record['tag'] = 'failed_gro_api_request'
+            msg = data.text
+            if data.status_code in [429, 503, 504]: # timeouts and rate limiting
+                time.sleep(2 ** retry_count)  # Exponential backoff before retrying
+            elif data.status_code == 301:
+                params = redirect(params, data.json()['data'][0])
+            else:
+                data.raise_for_status()
+        except (requests.ConnectionError, requests.Timeout) as e:
+            msg = e
+        logger.warning(msg, extra=log_record)
+
         retry_count += 1
-        log_record['tag'] = 'failed_gro_api_request'
-        if retry_count < cfg.MAX_RETRIES:
-            logger.warning(data.text, extra=log_record)
-        if data.status_code == 429:
-            time.sleep(2 ** retry_count)  # Exponential backoff before retrying
-        elif data.status_code == 301:
-            params = redirect(params, data.json()['data'][0])
-        elif data.status_code in [404, 401, 500]:
-            break
-        else:
-            logger.error(data.text, extra=log_record)
-    raise Exception('Giving up on {} after {} tries. Error is: {}.'.format(
-        url, retry_count, data.text))
+    raise Exception(
+        'Giving up on {} after {} tries. Error is: {}.'.format(url, log_record['retry_count'], data.text)
+    )
+
 
 @memoize(maxsize=None)
 def get_available(access_token, api_host, entity_type):
