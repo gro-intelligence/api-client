@@ -6,7 +6,6 @@ import argparse
 import getpass
 import itertools
 import functools
-import math
 import os
 import pandas
 import sys
