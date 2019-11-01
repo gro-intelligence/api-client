@@ -372,7 +372,7 @@
         <span class="n">retry_count</span><span class="p">))</span></div>
 
 
-<div class="viewcode-block" id="redirect"><a class="viewcode-back" href="../../../api.html#api.client.lib.redirect">[docs]</a><span class="k">def</span> <span class="nf">redirect</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">migration</span><span class="p">):</span>
+<div class="viewcode-block" id="redirect"><a class="viewcode-back" href="../../../api.html#api.client.lib.redirect">[docs]</a><span class="k">def</span> <span class="nf">redirect</span><span class="p">(</span><span class="n">old_params</span><span class="p">,</span> <span class="n">migration</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Update query parameters to follow a redirection response from the API.</span>
 
 <span class="sd">    &gt;&gt;&gt; redirect(</span>
@@ -383,7 +383,7 @@
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    params : dict</span>
+<span class="sd">    old_params : dict</span>
 <span class="sd">        The original parameters provided to the API request</span>
 <span class="sd">    migration : dict</span>
 <span class="sd">        The body of the 301 response indicating which of the inputs have been</span>
@@ -391,17 +391,18 @@
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    params : dict</span>
+<span class="sd">    new_params : dict</span>
 <span class="sd">        The mutated params object with values replaced according to the</span>
 <span class="sd">        redirection instructions provided by the API</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">new_params</span> <span class="o">=</span> <span class="n">old_params</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
     <span class="k">for</span> <span class="n">migration_key</span> <span class="ow">in</span> <span class="n">migration</span><span class="p">:</span>
         <span class="n">split_mig_key</span> <span class="o">=</span> <span class="n">migration_key</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">split_mig_key</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;new&#39;</span><span class="p">:</span>
             <span class="n">param_key</span> <span class="o">=</span> <span class="n">snake_to_camel</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">split_mig_key</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;id&#39;</span><span class="p">]))</span>
-            <span class="n">params</span><span class="p">[</span><span class="n">param_key</span><span class="p">]</span> <span class="o">=</span> <span class="n">migration</span><span class="p">[</span><span class="n">migration_key</span><span class="p">]</span>
-    <span class="k">return</span> <span class="n">params</span></div>
+            <span class="n">new_params</span><span class="p">[</span><span class="n">param_key</span><span class="p">]</span> <span class="o">=</span> <span class="n">migration</span><span class="p">[</span><span class="n">migration_key</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">new_params</span></div>
 
 
 <div class="viewcode-block" id="get_data"><a class="viewcode-back" href="../../../api.html#api.client.lib.get_data">[docs]</a><span class="k">def</span> <span class="nf">get_data</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
@@ -445,13 +446,16 @@
         <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">429</span><span class="p">:</span>
             <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">2</span> <span class="o">**</span> <span class="n">retry_count</span><span class="p">)</span>  <span class="c1"># Exponential backoff before retrying</span>
         <span class="k">elif</span> <span class="n">data</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">301</span><span class="p">:</span>
-            <span class="n">params</span> <span class="o">=</span> <span class="n">redirect</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s1">&#39;data&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
+            <span class="n">new_params</span> <span class="o">=</span> <span class="n">redirect</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s1">&#39;data&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;Redirecting </span><span class="si">{}</span><span class="s1"> to </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">new_params</span><span class="p">),</span> <span class="n">extra</span><span class="o">=</span><span class="n">log_record</span><span class="p">)</span>
+            <span class="n">params</span> <span class="o">=</span> <span class="n">new_params</span>
         <span class="k">elif</span> <span class="n">data</span><span class="o">.</span><span class="n">status_code</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">404</span><span class="p">,</span> <span class="mi">401</span><span class="p">,</span> <span class="mi">500</span><span class="p">]:</span>
             <span class="k">break</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">text</span><span class="p">,</span> <span class="n">extra</span><span class="o">=</span><span class="n">log_record</span><span class="p">)</span>
     <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;Giving up on </span><span class="si">{}</span><span class="s1"> after </span><span class="si">{}</span><span class="s1"> tries. Error is: </span><span class="si">{}</span><span class="s1">.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
         <span class="n">url</span><span class="p">,</span> <span class="n">retry_count</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">text</span><span class="p">))</span></div>
+
 
 <span class="nd">@memoize</span><span class="p">(</span><span class="n">maxsize</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
 <div class="viewcode-block" id="get_available"><a class="viewcode-back" href="../../../api.html#api.client.lib.get_available">[docs]</a><span class="k">def</span> <span class="nf">get_available</span><span class="p">(</span><span class="n">access_token</span><span class="p">,</span> <span class="n">api_host</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">):</span>
@@ -467,9 +471,9 @@
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    data : list of dicts</span>
-<span class="sd">        </span>
+
 <span class="sd">        Example::</span>
-<span class="sd">        </span>
+
 <span class="sd">            [ { &#39;id&#39;: 0, &#39;contains&#39;: [1, 2, 3], &#39;name&#39;: &#39;World&#39;, &#39;level&#39;: 1},</span>
 <span class="sd">            { &#39;id&#39;: 1, &#39;contains&#39;: [4, 5, 6], &#39;name&#39;: &#39;Asia&#39;, &#39;level&#39;: 2},</span>
 <span class="sd">            ... ]</span>
@@ -492,11 +496,11 @@
 <span class="sd">    access_token : string</span>
 <span class="sd">    api_host : string</span>
 <span class="sd">    selected_entities : dict</span>
-<span class="sd">        </span>
+
 <span class="sd">        Example::</span>
-<span class="sd">        </span>
+
 <span class="sd">            { &#39;metric_id&#39;: 123, &#39;item_id&#39;: 456, &#39;source_id&#39;: 7 }</span>
-<span class="sd">        </span>
+
 <span class="sd">        Keys may include: metric_id, item_id, region_id, partner_region_id,</span>
 <span class="sd">        source_id, frequency_id</span>
 
@@ -523,6 +527,7 @@
         <span class="k">return</span> <span class="n">resp</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s1">&#39;data&#39;</span><span class="p">]</span>
     <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="n">resp</span><span class="o">.</span><span class="n">text</span><span class="p">)</span></div>
+
 
 <span class="nd">@memoize</span><span class="p">(</span><span class="n">maxsize</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
 <div class="viewcode-block" id="lookup"><a class="viewcode-back" href="../../../api.html#api.client.lib.lookup">[docs]</a><span class="k">def</span> <span class="nf">lookup</span><span class="p">(</span><span class="n">access_token</span><span class="p">,</span> <span class="n">api_host</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">,</span> <span class="n">entity_id</span><span class="p">):</span>
@@ -558,6 +563,7 @@
         <span class="k">return</span> <span class="n">resp</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s1">&#39;data&#39;</span><span class="p">]</span>
     <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="n">resp</span><span class="o">.</span><span class="n">text</span><span class="p">)</span></div>
+
 
 <span class="nd">@memoize</span><span class="p">(</span><span class="n">maxsize</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
 <div class="viewcode-block" id="snake_to_camel"><a class="viewcode-back" href="../../../api.html#api.client.lib.snake_to_camel">[docs]</a><span class="k">def</span> <span class="nf">snake_to_camel</span><span class="p">(</span><span class="n">term</span><span class="p">):</span>
@@ -697,9 +703,9 @@
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    list of dicts</span>
-<span class="sd">        </span>
+
 <span class="sd">        Example::</span>
-<span class="sd">        </span>
+
 <span class="sd">            [{ &#39;metric_id&#39;: 2020032, &#39;metric_name&#39;: &#39;Seed Use&#39;,</span>
 <span class="sd">               &#39;item_id&#39;: 274, &#39;item_name&#39;: &#39;Corn&#39;,</span>
 <span class="sd">               &#39;region_id&#39;: 1215, &#39;region_name&#39;: &#39;United States&#39;,</span>
@@ -954,6 +960,7 @@
     <span class="n">resp</span> <span class="o">=</span> <span class="n">get_data</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">resp</span><span class="o">.</span><span class="n">json</span><span class="p">()</span></div>
 
+
 <span class="nd">@memoize</span><span class="p">(</span><span class="n">maxsize</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
 <div class="viewcode-block" id="universal_search"><a class="viewcode-back" href="../../../api.html#api.client.lib.universal_search">[docs]</a><span class="k">def</span> <span class="nf">universal_search</span><span class="p">(</span><span class="n">access_token</span><span class="p">,</span> <span class="n">api_host</span><span class="p">,</span> <span class="n">search_terms</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Search across all entity types for the given terms.</span>
@@ -967,7 +974,7 @@
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    list of [id, entity_type] pairs</span>
-<span class="sd">        </span>
+
 <span class="sd">        Example::</span>
 
 <span class="sd">            [[5604, &#39;item&#39;], [10204, &#39;item&#39;], [410032, &#39;metric&#39;], ....]</span>
@@ -978,6 +985,7 @@
     <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;authorization&#39;</span><span class="p">:</span> <span class="s1">&#39;Bearer &#39;</span> <span class="o">+</span> <span class="n">access_token</span><span class="p">}</span>
     <span class="n">resp</span> <span class="o">=</span> <span class="n">get_data</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;q&#39;</span><span class="p">:</span> <span class="n">search_terms</span><span class="p">})</span>
     <span class="k">return</span> <span class="n">resp</span><span class="o">.</span><span class="n">json</span><span class="p">()</span></div>
+
 
 <span class="nd">@memoize</span><span class="p">(</span><span class="n">maxsize</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
 <div class="viewcode-block" id="search"><a class="viewcode-back" href="../../../api.html#api.client.lib.search">[docs]</a><span class="k">def</span> <span class="nf">search</span><span class="p">(</span><span class="n">access_token</span><span class="p">,</span> <span class="n">api_host</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">,</span> <span class="n">search_terms</span><span class="p">):</span>
@@ -994,7 +1002,7 @@
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    list of dicts</span>
-<span class="sd">        </span>
+
 <span class="sd">        Example::</span>
 
 <span class="sd">            [{&#39;id&#39;: 5604}, {&#39;id&#39;: 10204}, {&#39;id&#39;: 10210}, ....]</span>
@@ -1099,6 +1107,7 @@
     <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;authorization&#39;</span><span class="p">:</span> <span class="s1">&#39;Bearer &#39;</span> <span class="o">+</span> <span class="n">access_token</span><span class="p">}</span>
     <span class="n">resp</span> <span class="o">=</span> <span class="n">get_data</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">resp</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s1">&#39;data&#39;</span><span class="p">]</span></div>
+
 
 <span class="nd">@memoize</span><span class="p">(</span><span class="n">maxsize</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
 <div class="viewcode-block" id="get_geojson"><a class="viewcode-back" href="../../../api.html#api.client.lib.get_geojson">[docs]</a><span class="k">def</span> <span class="nf">get_geojson</span><span class="p">(</span><span class="n">access_token</span><span class="p">,</span> <span class="n">api_host</span><span class="p">,</span> <span class="n">region_id</span><span class="p">):</span>
@@ -1223,6 +1232,7 @@
             <dt>Tags</dt>
             <dd><a href="../../../../v1.40.0/index.html">v1.40.0</a></dd>
             <dd><a href="../../../../v1.40.1/index.html">v1.40.1</a></dd>
+            <dd><a href="../../../../v1.40.2/index.html">v1.40.2</a></dd>
         </dl>
         <dl>
             <dt>Branches</dt>
@@ -1230,7 +1240,6 @@
             <dd><a href="../../../../CLEWS-15766/index.html">CLEWS-15766</a></dd>
             <dd><a href="../../../../CLEWS-20278/index.html">CLEWS-20278</a></dd>
             <dd><a href="../../../../CLEWS-21846/index.html">CLEWS-21846</a></dd>
-            <dd><a href="../../../../CLEWS-22156/index.html">CLEWS-22156</a></dd>
             <dd><a href="../../../../JGrinst-patch-1/index.html">JGrinst-patch-1</a></dd>
             <dd><a href="../../../../brazil-soybeans-broken-link/index.html">brazil-soybeans-broken-link</a></dd>
             <dd><a href="lib.html">development</a></dd>
