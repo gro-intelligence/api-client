@@ -39,13 +39,11 @@ class BatchClient(Client):
         self._logger.debug(url)
         while retry_count < cfg.MAX_RETRIES:
             start_time = time.time()
-            http_request = HTTPRequest(
-                '{url}?{params}'.format(url=url, params=urlencode(params)),
-                method="GET",
-                headers=headers,
-                request_timeout=cfg.TIMEOUT,
-                connect_timeout=cfg.TIMEOUT
-            )
+            http_request = HTTPRequest('{url}?{params}'.format(url=url, params=urlencode(params)),
+                                       method="GET",
+                                       headers=headers,
+                                       request_timeout=cfg.TIMEOUT,
+                                       connect_timeout=cfg.TIMEOUT)
             try:
                 data = yield self._http_client.fetch(http_request)
                 elapsed_time = time.time() - start_time
