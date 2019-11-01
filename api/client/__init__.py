@@ -1,6 +1,10 @@
 from builtins import object
 from api.client import lib
 
+from deprecated.sphinx import deprecated
+# from deprecated.sphinx import versionadded
+# from deprecated.sphinx import versionchanged
+
 
 class Client(object):
 
@@ -92,12 +96,8 @@ class Client(object):
         """
         return lib.lookup(self.access_token, self.api_host, entity_type, entity_id)
 
+    @deprecated(version='v1.40.3', reason='All derivative behavior is moved to GroClient')
     def lookup_unit_abbreviation(self, unit_id):
-        """
-            TODO
-        """
-
-        # DEPRECATED
         return self.lookup('units', unit_id)['abbreviation']
 
     def get_data_series(self, **selection):
@@ -207,6 +207,7 @@ class Client(object):
         return lib.search(self.access_token, self.api_host,
                           entity_type, search_terms)
 
+    @deprecated(version='v1.40.3', reason='All derivative behavior is moved to GroClient')
     def search_and_lookup(self, entity_type, search_terms):
         """Search for the given search terms and look up their details.
 
@@ -239,11 +240,10 @@ class Client(object):
             the best match for the given search term(s).
 
         """
-
-        # DEPRECATED
         return lib.search_and_lookup(self.access_token, self.api_host,
                                      entity_type, search_terms)
 
+    @deprecated(version='v1.40.3', reason='All derivative behavior is moved to GroClient')
     def lookup_belongs(self, entity_type, entity_id):
         """Look up details of entities containing the given entity.
 
@@ -269,8 +269,6 @@ class Client(object):
                 'level': 2 }
 
         """
-
-        # DEPRECATED
         return lib.lookup_belongs(self.access_token, self.api_host,
                                   entity_type, entity_id)
 
