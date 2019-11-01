@@ -67,7 +67,13 @@ class BatchClient(Client):
                     if e.code in [429, 503, 504]:
                         time.sleep(2 ** retry_count)  # Exponential backoff
                     elif e.code == 301:
-                        params = lib.redirect(params, json.loads(e.response.body.decode("utf-8"))['data'][0])
+                        new_params = lib.redirect(
+                            params,
+                            json.loads(e.response.body.decode("utf-8"))['data'][0])
+                        self._logger.warning(
+                            'Redirecting {} to {}'.format(params, new_params),
+                            extra=log_record)
+                        params = new_params
                 else:
                     self._logger.error(e.response.error, extra=log_record)
                     raise Exception('Giving up on {} after {} tries. \
@@ -100,7 +106,7 @@ class BatchClient(Client):
         :param output_list:
         :param map_result:
         :return:
-        
+
         """
         assert type(batched_args) is list, \
             "Only argument to a batch async decorated function should be a \
