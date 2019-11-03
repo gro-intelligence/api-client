@@ -293,106 +293,6 @@
 <h1>API Reference<a class="headerlink" href="#api-reference" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="groclient">
 <h2>GroClient<a class="headerlink" href="#groclient" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
-<dt id="api.client.gro_client.GroClient">
-<em class="property">class </em><code class="descclassname">api.client.gro_client.</code><code class="descname">GroClient</code><span class="sig-paren">(</span><em>api_host</em>, <em>access_token</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/gro_client.html#GroClient"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.gro_client.GroClient" title="Permalink to this definition">¶</a></dt>
-<dd><p>An extension of the Client class with extra convenience methods for some common operations.</p>
-<p>Extra functionality includes:
-- Automatic conversion of units
-- Finding data series using entity names rather than ids
-- Exploration shortcuts for filling in partial selections
-- Saving data series in a data frame for repeated use</p>
-<dl class="method">
-<dt id="api.client.gro_client.GroClient.add_data_series">
-<code class="descname">add_data_series</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/gro_client.html#GroClient.add_data_series"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.gro_client.GroClient.add_data_series" title="Permalink to this definition">¶</a></dt>
-<dd><p>Search for entities matching the given names, find data series for
-the given combination, and add them to this objects list of
-series.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="api.client.gro_client.GroClient.convert_unit">
-<code class="descname">convert_unit</code><span class="sig-paren">(</span><em>point</em>, <em>target_unit_id</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/gro_client.html#GroClient.convert_unit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.gro_client.GroClient.convert_unit" title="Permalink to this definition">¶</a></dt>
-<dd><p>Convert the data point from one unit to another unit.</p>
-<p>If original or target unit is non-convertible, throw an error.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>point</strong> (<em>dict</em>) &#8211; { value: float, unit_id: integer, ... }</li>
-<li><strong>target_unit_id</strong> (<em>integer</em>) &#8211; </li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">{ value: float, unit_id: integer, ... }
-unit_id is changed to the target, and value is converted to use the
-new unit_id. Other properties are unchanged.</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">dict</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="api.client.gro_client.GroClient.get_data_points">
-<code class="descname">get_data_points</code><span class="sig-paren">(</span><em>**selections</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/gro_client.html#GroClient.get_data_points"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.gro_client.GroClient.get_data_points" title="Permalink to this definition">¶</a></dt>
-<dd><p>Extend the Client&#8217;s get_data_points method to add unit conversion.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>selections</strong> (<em>dict</em>) &#8211; See lib.py get_data_points() for the base list of inputs
-This extended version may additionally include &#8216;unit_id&#8217; which is
-the unit you wish to convert all points to.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Unchanged output format from lib.py get_data_points()</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">list of dicts</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="api.client.gro_client.GroClient.get_df">
-<code class="descname">get_df</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/gro_client.html#GroClient.get_df"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.gro_client.GroClient.get_df" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the content of all data series in a Pandas frame.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="api.client.gro_client.GroClient.pick_random_data_series">
-<code class="descname">pick_random_data_series</code><span class="sig-paren">(</span><em>selected_entities</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/gro_client.html#GroClient.pick_random_data_series"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.gro_client.GroClient.pick_random_data_series" title="Permalink to this definition">¶</a></dt>
-<dd><p>Given a selection of tentities, pick a random available data series
-the given selection of entities.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="api.client.gro_client.GroClient.pick_random_entities">
-<code class="descname">pick_random_entities</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/gro_client.html#GroClient.pick_random_entities"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.gro_client.GroClient.pick_random_entities" title="Permalink to this definition">¶</a></dt>
-<dd><p>Pick a random item that has some data associated with it, and a
-random metric and region pair for that item with data
-available.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="api.client.gro_client.GroClient.print_one_data_series">
-<code class="descname">print_one_data_series</code><span class="sig-paren">(</span><em>data_series</em>, <em>filename</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/gro_client.html#GroClient.print_one_data_series"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.gro_client.GroClient.print_one_data_series" title="Permalink to this definition">¶</a></dt>
-<dd><p>Output a data series to a CSV file.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="api.client.gro_client.GroClient.search_for_entity">
-<code class="descname">search_for_entity</code><span class="sig-paren">(</span><em>entity_type</em>, <em>keywords</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/gro_client.html#GroClient.search_for_entity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.gro_client.GroClient.search_for_entity" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the first result of entity_type (which is items, metrics or
-regions) that matches the given keywords.</p>
-</dd></dl>
-
-</dd></dl>
-
 </div>
 </div>
 
@@ -451,6 +351,7 @@ regions) that matches the given keywords.</p>
             <dd><a href="api.html">CLEWS-18836</a></dd>
             <dd><a href="../CLEWS-20278/api.html">CLEWS-20278</a></dd>
             <dd><a href="../CLEWS-21846/api.html">CLEWS-21846</a></dd>
+            <dd><a href="../CLEWS-22341/api.html">CLEWS-22341</a></dd>
             <dd><a href="../JGrinst-patch-1/index.html">JGrinst-patch-1</a></dd>
             <dd><a href="../brazil-soybeans-broken-link/api.html">brazil-soybeans-broken-link</a></dd>
             <dd><a href="../development/api.html">development</a></dd>
