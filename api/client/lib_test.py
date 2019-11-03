@@ -178,6 +178,19 @@ def test_lookup_belongs(mock_requests_get, lookup_mocked):
                      mock.call('pytest.groclient.token', 'pytest.groclient.url', 'items', 3)] \
            == lookup_mocked.mock_calls
 
+
+@mock.patch('requests.get')
+def test_get_source_ranking(mock_requests_get):
+    mock_return = [60, 14, 2, 1]
+    mock_requests_get.return_value.json.return_value = mock_return
+    mock_requests_get.return_value.status_code = 200
+
+    query_parameters = {'item_id': 1, 'metric_id': 2, 'region_id': 3, 'frequency_id': 4}
+
+    ranked_sources_list = lib.get_source_ranking(MOCK_TOKEN, MOCK_HOST, query_parameters)
+    assert len(ranked_sources_list) == 4
+
+
 @mock.patch('requests.get')
 def test_rank_series_by_source(mock_requests_get):
     mock_return = ["data1", "data2", "data3"]
