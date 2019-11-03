@@ -443,6 +443,24 @@ def get_data_series(access_token, api_host, **selection):
         raise Exception(resp.text)
 
 
+# TODO: Add code to handle no query parameters call to v2/available/sources. It is hanging at the moment.
+
+
+def get_source_ranking(access_token, api_host, series):
+    """Given a series, return a list of ranked sources.
+
+    :param access_token: API access token.
+    :param api_host: API host.
+    :param series: Series to calculate source raking for.
+    :return: List of sources that match the series parameters, sorted by rank.
+    """
+    url = '/'.join(['https:', '', api_host, 'v2/available/sources'])
+    headers = {'authorization': 'Bearer ' + access_token}
+    params = dict((k + 's', v) for k, v in iter(list(
+        get_params_from_selection(**series).items())))
+    return get_data(url, headers, params).json()
+
+
 def rank_series_by_source(access_token, api_host, series_list):
     """Given a list of series, return them in source-ranked order.
 
@@ -469,14 +487,8 @@ def rank_series_by_source(access_token, api_host, series_list):
         [k_v for k_v in iter(list(single_series.items())) if k_v[0] !=
             'source_id'],
         key=lambda x: x[0])) for single_series in series_list)
-
     for series in map(dict, selections_sorted):
-        url = '/'.join(['https:', '', api_host, 'v2/available/sources'])
-        headers = {'authorization': 'Bearer ' + access_token}
-        params = dict((k + 's', v) for k, v in iter(list(
-            get_params_from_selection(**series).items())))
-        source_ids = get_data(url, headers, params).json()
-        for source_id in source_ids:
+        for source_id in get_source_ranking(access_token, api_host, series):
             # Make a copy to avoid passing the same reference each time.
             series_with_source = dict(series)
             series_with_source['source_id'] = source_id
