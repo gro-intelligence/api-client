@@ -855,7 +855,7 @@ def get_geojson(access_token, api_host, region_id):
 
 
 def get_descendant_regions(access_token, api_host, region_id,
-                           descendant_level):
+                           descendant_level, include_historical):
     """Look up details of regions of the given level contained by a region.
 
     Given any region by id, recursively get all the descendant regions
@@ -899,11 +899,11 @@ def get_descendant_regions(access_token, api_host, region_id,
     region = lookup(access_token, api_host, 'regions', region_id)
     for member_id in region['contains']:
         member = lookup(access_token, api_host, 'regions', member_id)
-        if descendant_level == member['level'] and not member['historical']:
+        if descendant_level == member['level'] and (include_historical or not member['historical']):
             descendants.append(member)
         elif member['level'] < descendant_level:
             descendants += get_descendant_regions(
-                access_token, api_host, member_id, descendant_level)
+                access_token, api_host, member_id, descendant_level, include_historical)
     return descendants
 
 
