@@ -50,6 +50,6 @@ class Client(object):
     def get_geojson(self, region_id):
         return lib.get_geojson(self.access_token, self.api_host, region_id)
 
-    def get_descendant_regions(self, region_id, descendant_level=None):
+    def get_descendant_regions(self, region_id, descendant_level=None, includeHistorical=True):
         return lib.get_descendant_regions(self.access_token, self.api_host,
-                                          region_id, descendant_level)
+                                          region_id, descendant_level, includeHistorical)
