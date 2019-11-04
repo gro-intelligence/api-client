@@ -46,7 +46,12 @@ class SimilarRegionState(object):
         # Data stores and views of this data
         structure = [(name, 'd', p["properties"]["num_features"]) for name, p in
                      region_properties.items()]
+        
+        # Numpy gives "future deprication" warning about structured type specs of the form
+        # (name,'d',1), i.e. where type is really just a single integer
+        # Change such cases into (name,'d')
         structure = [item if item[2] != 1 else (item[0], item[1]) for item in structure]
+        
         structure_bool = [(name, bool) for name, p in
                      region_properties.items()]
         self.data = np.ma.zeros(self.num_regions, dtype=structure)

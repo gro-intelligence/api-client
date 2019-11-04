@@ -3,8 +3,7 @@ import os
 from sklearn.neighbors import BallTree
 from api.client.batch_client import BatchClient
 from api.client.lib import get_default_logger
-#from api.client.samples.similar_regions.similar_region_state import SimilarRegionState
-from .similar_region_state import SimilarRegionState
+from api.client.samples.similar_regions.similar_region_state import SimilarRegionState
 from sklearn.metrics.pairwise import euclidean_distances
 
 """ API Config """
@@ -57,7 +56,7 @@ class SimilarRegion(object):
             # Choose parent one level up from this region
             parent = {"name": ""}
             for r in self.client.lookup_belongs("regions", sim_region_region_id):
-                parent = r # just in case there is no parent at correct level - just take the last
+                parent = r # in case there is no parent at correct level we will just take the last
                 if r['level'] == region_level-1:
                     break
 
