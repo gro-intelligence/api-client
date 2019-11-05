@@ -899,7 +899,9 @@ def get_descendant_regions(access_token, api_host, region_id,
     region = lookup(access_token, api_host, 'regions', region_id)
     for member_id in region['contains']:
         member = lookup(access_token, api_host, 'regions', member_id)
-        if descendant_level == member['level'] and (include_historical or not member['historical']):
+        if (not include_historical and member['historical']):
+            pass
+        elif descendant_level == member['level']:
             descendants.append(member)
         elif member['level'] < descendant_level:
             descendants += get_descendant_regions(
