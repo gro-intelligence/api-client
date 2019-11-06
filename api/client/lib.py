@@ -873,6 +873,8 @@ def get_descendant_regions(access_token, api_host, region_id,
     region_id : integer
     descendant_level : integer
         The region level of interest. See REGION_LEVELS constant.
+    include_historical : boolean
+        option to include historical regions
 
     Returns
     -------
