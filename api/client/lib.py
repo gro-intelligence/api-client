@@ -440,7 +440,7 @@ def get_data_series(access_token, api_host, **selection):
     resp = get_data(url, headers, params)
     try:
         response = resp.json()['data']
-        if any((series.get('historical_region', True) or series.get('historical_partner_region', True)) for series in response):
+        if any((series.get('includes_historical_region', True)) for series in response):
             logger.warning('Some of the regions in your data call are historical, with boundaries that may be outdated. The regions may have overlapping values with current regions')
         return response
     except KeyError:
