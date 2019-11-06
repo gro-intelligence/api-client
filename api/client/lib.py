@@ -433,15 +433,16 @@ def get_data_series(access_token, api_host, **selection):
             }, { ... }, ... ]
 
     """
+    if not logger:
+        logger = get_default_logger()
     url = '/'.join(['https:', '', api_host, 'v2/data_series/list'])
     headers = {'authorization': 'Bearer ' + access_token}
     params = get_params_from_selection(**selection)
     resp = get_data(url, headers, params)
     try:
         response = resp.json()['data']
-        if any(map(lambda series: 
-            series['historical_region'] or series['historical_partner_region'], response)):
-            raise Warning('Some of the regions in your data call are historical, with boundaries that may be outdated. The regions may have overlapping values with current regions')
+        if any((series.get('historical_region', True) or series.get('historical_partner_region', True)) for series in response):
+            logger.warning('Some of the regions in your data call are historical, with boundaries that may be outdated. The regions may have overlapping values with current regions')
         return response
     except KeyError:
         raise Exception(resp.text)
