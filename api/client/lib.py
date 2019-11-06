@@ -433,8 +433,7 @@ def get_data_series(access_token, api_host, **selection):
             }, { ... }, ... ]
 
     """
-    if not logger:
-        logger = get_default_logger()
+    logger = get_default_logger()
     url = '/'.join(['https:', '', api_host, 'v2/data_series/list'])
     headers = {'authorization': 'Bearer ' + access_token}
     params = get_params_from_selection(**selection)
