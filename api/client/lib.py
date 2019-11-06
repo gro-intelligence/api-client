@@ -438,7 +438,11 @@ def get_data_series(access_token, api_host, **selection):
     params = get_params_from_selection(**selection)
     resp = get_data(url, headers, params)
     try:
-        return resp.json()['data']
+        response = resp.json()['data']
+        if any(map(lambda series: 
+            series['historical_region'] or series['historical_partner_region'], response)):
+            raise Warning('Some of the regions in your data call are historical, with boundaries that may be outdated. The regions may have overlapping values with current regions')
+        return response
     except KeyError:
         raise Exception(resp.text)
 
