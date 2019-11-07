@@ -102,10 +102,15 @@ class GroClient(Client):
         self._logger.info("Added {}".format(data_series))
         return
 
-    def add_data_series(self, **kwargs):
+    def find_data_series(self, **kwargs):
         """Search for entities matching the given names, find data series for
-        the given combination, and add them to this objects list of
-        series."""
+        the given combination.
+
+        Returns
+        -------
+        dict
+           A data series, same output format as lib.py get_data_series().
+        """
         search_results = []
         keys = []
         if kwargs.get('item'):
@@ -130,8 +135,18 @@ class GroClient(Client):
             self._logger.debug("Found {} distinct data series for {}".format(
                 len(data_series_list), entities))
             for data_series in self.rank_series_by_source(data_series_list):
-                self.add_single_data_series(data_series)
-                return
+                return data_series
+        self.get_logger().warning("Could not find any data series for {}".format(
+            kwargs))
+
+    def add_data_series(self, **kwargs):
+        """Search for entities matching the given names, find data series for
+        the given combination, and add them to this objects list of
+        series."""
+        the_data_series = self.find_data_series(**kwargs)
+        if the_data_series:
+            self.add_single_data_series(the_data_series)
+        return
 
     ###
     # Discovery shortcuts
@@ -231,7 +246,7 @@ class GroClient(Client):
             raise Exception(
                 'unit_id {} is not convertible'.format(target_unit_id)
             )
-        if point.get('value') is not None:        
+        if point.get('value') is not None:
             value_in_base_unit = (
                 point['value'] * from_convert_factor.get('factor')
             ) + from_convert_factor.get('offset', 0)
