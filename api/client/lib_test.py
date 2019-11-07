@@ -8,6 +8,7 @@ MOCK_TOKEN = "pytest.groclient.token"
 
 # TODO: Handle cases like the crop-calendar logic.
 
+
 def initialize_requests_mocker_and_get_mock_data(mock_requests_get, mock_data={"data": ["obj1", "obj2", "obj3"]}):
     mock_requests_get.return_value.json.return_value = mock_data
     mock_requests_get.return_value.status_code = 200

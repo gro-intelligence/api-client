@@ -27,6 +27,7 @@ class BatchClient(Client):
         super(BatchClient, self).__init__(api_host, access_token)
         self._logger = lib.get_default_logger()
         self._http_client = AsyncHTTPClient()
+        self.path = ''
 
     @gen.coroutine
     def get_data(self, url, headers, params=None):
@@ -80,9 +81,8 @@ class BatchClient(Client):
 
     @gen.coroutine
     def get_data_points(self, **selection):
-        """Get all the data points for a given selection, which is some or all
-        of: item_id, metric_id, region_id, frequency_id, source_id,
-        partner_region_id. Additional arguments are allowed and ignored.
+        """Get all the data points for a given selection, which is some or all of: item_id, metric_id, region_id,
+        frequency_id, source_id, partner_region_id. Additional arguments are allowed and ignored.
         """
         headers = {'authorization': 'Bearer ' + self.access_token}
         url = '/'.join(['https:', '', self.api_host, 'v2/data'])
@@ -90,10 +90,24 @@ class BatchClient(Client):
         resp = yield self.get_data(url, headers, params)
         raise gen.Return(json_decode(resp))
 
-    def batch_async_get_data_points(self, batched_args, output_list=None,
-                                    map_result=None):
-        return self.batch_async_queue(self.get_data_points, batched_args,
-                                      output_list, map_result)
+    def batch_async_get_data_points(self, batched_args, output_list=None, map_result=None):
+        return self.batch_async_queue(self.get_data_points, batched_args, output_list, map_result)
+
+    @gen.coroutine
+    def get_ranked_sources(self, **selection):
+        """Get all sources, in ranked order, for a given selection.
+        """
+        headers = {'authorization': 'Bearer ' + self.access_token}
+        url = '/'.join(['https:', '', self.api_host, 'v2/available/sources'])
+        params = dict((k + 's', v) for k, v in iter(list(
+            lib.get_params_from_selection(**selection).items())))
+        resp = yield self.get_data(url, headers, params)
+        response = selection
+        response['ranked_sources'] = json_decode(resp)
+        raise gen.Return(response)
+
+    def batch_async_get_ranked_sources(self, batched_args, output_list=None, map_result=None):
+        return self.batch_async_queue(self.get_ranked_sources, batched_args, output_list, map_result)
 
     def batch_async_queue(self, func, batched_args, output_list, map_result):
         """Asynchronously call func.
