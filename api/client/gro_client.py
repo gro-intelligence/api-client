@@ -134,6 +134,12 @@ class GroClient(Client):
             data_series_list = self.get_data_series(**entities)
             self._logger.debug("Found {} distinct data series for {}".format(
                 len(data_series_list), entities))
+            # temporal coverage affects ranking so add time range if specified.
+            for data_series in data_series_list:
+                if kwargs.get('start_date'):
+                    data_series['start_date'] = kwargs['start_date']
+                if kwargs.get('end_date'):
+                    data_series['end_date'] = kwargs['end_date']
             for data_series in self.rank_series_by_source(data_series_list):
                 return data_series
         self.get_logger().warning("Could not find any data series for {}".format(
