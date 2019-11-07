@@ -99,7 +99,7 @@ def get_access_token(api_host, user_email, user_password, logger=None):
         retry_count))
 
 
-def redirect(params, migration):
+def redirect(old_params, migration):
     """Update query parameters to follow a redirection response from the API.
 
     >>> redirect(
@@ -110,7 +110,7 @@ def redirect(params, migration):
 
     Parameters
     ----------
-    params : dict
+    old_params : dict
         The original parameters provided to the API request
     migration : dict
         The body of the 301 response indicating which of the inputs have been
@@ -118,17 +118,18 @@ def redirect(params, migration):
 
     Returns
     -------
-    params : dict
+    new_params : dict
         The mutated params object with values replaced according to the
         redirection instructions provided by the API
 
     """
+    new_params = old_params.copy()
     for migration_key in migration:
         split_mig_key = migration_key.split('_')
         if split_mig_key[0] == 'new':
             param_key = snake_to_camel('_'.join([split_mig_key[1], 'id']))
-            params[param_key] = migration[migration_key]
-    return params
+            new_params[param_key] = migration[migration_key]
+    return new_params
 
 
 def get_data(url, headers, params=None, logger=None):
@@ -172,13 +173,16 @@ def get_data(url, headers, params=None, logger=None):
         if data.status_code == 429:
             time.sleep(2 ** retry_count)  # Exponential backoff before retrying
         elif data.status_code == 301:
-            params = redirect(params, data.json()['data'][0])
+            new_params = redirect(params, data.json()['data'][0])
+            logger.warning('Redirecting {} to {}'.format(params, new_params), extra=log_record)
+            params = new_params
         elif data.status_code in [404, 401, 500]:
             break
         else:
             logger.error(data.text, extra=log_record)
     raise Exception('Giving up on {} after {} tries. Error is: {}.'.format(
         url, retry_count, data.text))
+
 
 @memoize(maxsize=None)
 def get_available(access_token, api_host, entity_type):
@@ -194,9 +198,9 @@ def get_available(access_token, api_host, entity_type):
     Returns
     -------
     data : list of dicts
-        
+
         Example::
-        
+
             [ { 'id': 0, 'contains': [1, 2, 3], 'name': 'World', 'level': 1},
             { 'id': 1, 'contains': [4, 5, 6], 'name': 'Asia', 'level': 2},
             ... ]
@@ -219,11 +223,11 @@ def list_available(access_token, api_host, selected_entities):
     access_token : string
     api_host : string
     selected_entities : dict
-        
+
         Example::
-        
+
             { 'metric_id': 123, 'item_id': 456, 'source_id': 7 }
-        
+
         Keys may include: metric_id, item_id, region_id, partner_region_id,
         source_id, frequency_id
 
@@ -250,6 +254,7 @@ def list_available(access_token, api_host, selected_entities):
         return resp.json()['data']
     except KeyError:
         raise Exception(resp.text)
+
 
 @memoize(maxsize=None)
 def lookup(access_token, api_host, entity_type, entity_id):
@@ -285,6 +290,7 @@ def lookup(access_token, api_host, entity_type, entity_id):
         return resp.json()['data']
     except KeyError:
         raise Exception(resp.text)
+
 
 @memoize(maxsize=None)
 def snake_to_camel(term):
@@ -425,9 +431,9 @@ def get_data_series(access_token, api_host, **selection):
     Returns
     -------
     list of dicts
-        
+
         Example::
-        
+
             [{ 'metric_id': 2020032, 'metric_name': 'Seed Use',
                'item_id': 274, 'item_name': 'Corn',
                'region_id': 1215, 'region_name': 'United States',
@@ -705,6 +711,7 @@ def get_data_points(access_token, api_host, **selection):
     resp = get_data(url, headers, params)
     return format_list_of_series(resp.json())
 
+
 @memoize(maxsize=None)
 def universal_search(access_token, api_host, search_terms):
     """Search across all entity types for the given terms.
@@ -718,7 +725,7 @@ def universal_search(access_token, api_host, search_terms):
     Returns
     -------
     list of [id, entity_type] pairs
-        
+
         Example::
 
             [[5604, 'item'], [10204, 'item'], [410032, 'metric'], ....]
@@ -729,6 +736,7 @@ def universal_search(access_token, api_host, search_terms):
     headers = {'authorization': 'Bearer ' + access_token}
     resp = get_data(url, headers, {'q': search_terms})
     return resp.json()
+
 
 @memoize(maxsize=None)
 def search(access_token, api_host, entity_type, search_terms):
@@ -745,7 +753,7 @@ def search(access_token, api_host, entity_type, search_terms):
     Returns
     -------
     list of dicts
-        
+
         Example::
 
             [{'id': 5604}, {'id': 10204}, {'id': 10210}, ....]
@@ -850,6 +858,7 @@ def get_geo_centre(access_token, api_host, region_id):
     headers = {'authorization': 'Bearer ' + access_token}
     resp = get_data(url, headers)
     return resp.json()['data']
+
 
 @memoize(maxsize=None)
 def get_geojson(access_token, api_host, region_id):
