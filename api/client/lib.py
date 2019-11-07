@@ -403,12 +403,12 @@ def get_data_call_params(**selection):
         selections with valid keys converted to camelcase and invalid ones filtered out
 
     """
+    
     params = get_params_from_selection(**selection)
     for key, value in list(selection.items()):
         if key in ('start_date', 'end_date', 'show_revisions', 'insert_null', 'at_time'):
             params[snake_to_camel(key)] = value
     params['responseType'] = 'list_of_series'
-    params['expansionType'] = 'limited'
     return params
 
 
@@ -634,8 +634,8 @@ def format_list_of_series(series_list):
         output = []
         for series in series_list:
             if(isinstance(series, dict) and isinstance(series.get('data', []), list)):
-                for point in series['data']:
-                    output.append({
+                for point in series.get('data', []):
+                    single_series_point = {
                         'start_date': point[0],
                         'end_date': point[1],
                         'value': point[2],
@@ -647,7 +647,10 @@ def format_list_of_series(series_list):
                         'source_id': series['series']['sourceId'],
                         'unit_id': series['series']['inputUnitId'],
                         'belongs_to': series['series']['belongsTo']
-                    })
+                    }
+                    if(len(point) > 3):
+                        single_series_point['reporting_date'] = point[3]
+                    output.append(single_series_point)
         return output
     # If the output is an error or None or something else that's not a list, just propagate
     return series_list
@@ -707,7 +710,7 @@ def get_data_points(access_token, api_host, **selection):
                                              **selection)
     headers = {'authorization': 'Bearer ' + access_token}
     url = '/'.join(['https:', '', api_host, 'v2/data'])
-    params = get_data_call_params(**selection)
+    paramsList = get_data_call_params(**selection)
     resp = get_data(url, headers, params)
     return format_list_of_series(resp.json())
 
