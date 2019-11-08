@@ -1,4 +1,4 @@
-"""Base module for making API requests.
+*"""Base module for making API requests.
 
 Client, GroClient, CropModel, and BatchClient all build on top of endpoints
 exposed in this module. Helper functions or shims or derivative functionality
@@ -459,14 +459,14 @@ def get_source_ranking(access_token, api_host, series):
     :param series: Series to calculate source raking for.
     :return: List of sources that match the series parameters, sorted by rank.
     """
-    url = '/'.join(['https:', '', api_host, 'v2/available/sources'])
-    headers = {'authorization': 'Bearer ' + access_token}
-    params = dict((make_key(k), v) for k, v in iter(list(
-        get_params_from_selection(**series).items())))
     def make_key(key):
         if key not in ('startDate', 'endDate'):
             return key + 's'
         return key
+    params = dict((make_key(k), v) for k, v in iter(list(
+        get_params_from_selection(**series).items())))
+    url = '/'.join(['https:', '', api_host, 'v2/available/sources'])
+    headers = {'authorization': 'Bearer ' + access_token}
     return get_data(url, headers, params).json()
 
 
