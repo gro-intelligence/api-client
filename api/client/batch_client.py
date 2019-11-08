@@ -82,8 +82,7 @@ class BatchClient(GroClient):
     def get_data_points(self, **selection):
         """Get all the data points for a given selection, which is some or all
         of: item_id, metric_id, region_id, frequency_id, source_id,
-        partner_region_id. Additional arguments are allowed and
-        ignored.
+        partner_region_id. Additional arguments are allowed and ignored.
         """
         headers = {'authorization': 'Bearer ' + self.access_token}
         url = '/'.join(['https:', '', self.api_host, 'v2/data'])
