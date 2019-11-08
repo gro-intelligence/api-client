@@ -27,7 +27,6 @@ class BatchClient(GroClient):
         super(BatchClient, self).__init__(api_host, access_token)
         self._logger = lib.get_default_logger()
         self._http_client = AsyncHTTPClient()
-        self.path = ''
 
     @gen.coroutine
     def get_data(self, url, headers, params=None):
@@ -81,8 +80,10 @@ class BatchClient(GroClient):
 
     @gen.coroutine
     def get_data_points(self, **selection):
-        """Get all the data points for a given selection, which is some or all of: item_id, metric_id, region_id,
-        frequency_id, source_id, partner_region_id. Additional arguments are allowed and ignored.
+        """Get all the data points for a given selection, which is some or all
+        of: item_id, metric_id, region_id, frequency_id, source_id,
+        partner_region_id. Additional arguments are allowed and
+        ignored.
         """
         headers = {'authorization': 'Bearer ' + self.access_token}
         url = '/'.join(['https:', '', self.api_host, 'v2/data'])
@@ -90,8 +91,10 @@ class BatchClient(GroClient):
         resp = yield self.get_data(url, headers, params)
         raise gen.Return(json_decode(resp))
 
-    def batch_async_get_data_points(self, batched_args, output_list=None, map_result=None):
-        return self.batch_async_queue(self.get_data_points, batched_args, output_list, map_result)
+    def batch_async_get_data_points(self, batched_args, output_list=None,
+                                    map_result=None):
+        return self.batch_async_queue(self.get_data_points, batched_args,
+                                      output_list, map_result)
 
     @gen.coroutine
     def get_ranked_sources(self, **selection):
