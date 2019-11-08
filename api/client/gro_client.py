@@ -126,6 +126,7 @@ class GroClient(Client):
             search_results.append(
                 self.search('regions', kwargs['partner_region'])[:cfg.MAX_RESULT_COMBINATION_DEPTH])
             keys.append('partner_region_id')
+        all_data_series = []
         for comb in itertools.product(*search_results):
             entities = dict(list(zip(keys, [entity['id'] for entity in comb])))
             data_series_list = self.get_data_series(**entities)
@@ -137,18 +138,19 @@ class GroClient(Client):
                     data_series['start_date'] = kwargs['start_date']
                 if kwargs.get('end_date'):
                     data_series['end_date'] = kwargs['end_date']
-            for data_series in self.rank_series_by_source(data_series_list):
-                return data_series
-        self.get_logger().warning("Could not find any data series for {}".format(
-            kwargs))
+            all_data_series += data_series_list
+        self._logger.warning("Found {} distinct data series total for {}".format(
+            len(all_data_series), kwargs))
+        for data_series in self.rank_series_by_source(all_data_series):
+            yield data_series
 
     def add_data_series(self, **kwargs):
         """Search for entities matching the given names, find data series for
         the given combination, and add them to this objects list of
         series."""
-        the_data_series = self.find_data_series(**kwargs)
-        if the_data_series:
+        for the_data_series in self.find_data_series(**kwargs):
             self.add_single_data_series(the_data_series)
+            return
         return
 
     ###
