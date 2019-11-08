@@ -15,9 +15,9 @@ from tornado.httpclient import AsyncHTTPClient, HTTPRequest, HTTPClientError
 from tornado.ioloop import IOLoop
 from tornado.queues import Queue
 from api.client import cfg, lib, Client
+from api.client.gro_client import GroClient
 
-
-class BatchClient(Client):
+class BatchClient(GroClient):
     """API client with support for batch asynchronous queries."""
 
     _logger = None
