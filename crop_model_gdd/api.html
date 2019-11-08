@@ -922,9 +922,11 @@ source_id, frequency_id</p>
 <dl class="function">
 <dt id="api.client.lib.rank_series_by_source">
 <code class="descclassname">api.client.lib.</code><code class="descname">rank_series_by_source</code><span class="sig-paren">(</span><em>access_token</em>, <em>api_host</em>, <em>series_list</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/lib.html#rank_series_by_source"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.lib.rank_series_by_source" title="Permalink to this definition">¶</a></dt>
-<dd><p>Given a list of series, return them in source-ranked order.</p>
-<p>If there are multiple sources for the same selection, the prefered source
-comes first. Differences other than source_id are not affected.</p>
+<dd><p>Given a list of series selections, for each unique combination
+excluding source, expand to all available sources and return them
+in ranked order.  The orders corresponds to how well that source
+covers the selection (items, metrics, regions, and time range and
+frequency).</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -936,7 +938,7 @@ comes first. Differences other than source_id are not affected.</p>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Yields:</th><td class="field-body"><p class="first last"><em>dict</em> &#8211; The input series_list but reordered by source rank</p>
+<tr class="field-even field"><th class="field-name">Yields:</th><td class="field-body"><p class="first last"><em>dict</em> &#8211; The input series_list X each possible source, ordered by coverage</p>
 </td>
 </tr>
 </tbody>
