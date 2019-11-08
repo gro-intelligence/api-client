@@ -446,10 +446,11 @@ def get_data_series(access_token, api_host, **selection):
 
 
 def rank_series_by_source(access_token, api_host, series_list):
-    """Given a list of series, return them in source-ranked order.
-
-    If there are multiple sources for the same selection, the prefered source
-    comes first. Differences other than source_id are not affected.
+    """Given a list of series selections, for each unique combination
+    excluding source, expand to all available sources and return them
+    in ranked order.  The orders corresponds to how well that source
+    covers the selection (items, metrics, regions, and time range and
+    frequency).
 
     Parameters
     ----------
@@ -461,15 +462,15 @@ def rank_series_by_source(access_token, api_host, series_list):
     Yields
     ------
     dict
-        The input series_list but reordered by source rank
+        The input series_list X each possible source, ordered by coverage
 
     """
     # We sort the internal tuple representations of the dictionaries because
     # otherwise when we call set() we end up with duplicates if iteritems()
     # returns a different order for the same dictionary. See test case.
     selections_sorted = set(tuple(sorted(
-        [k_v for k_v in iter(list(single_series.items())) if k_v[0] !=
-            'source_id'],
+        [k_v for k_v in iter(list(single_series.items()))
+         if k_v[0] not in ('source_id', 'source_name')],
         key=lambda x: x[0])) for single_series in series_list)
 
     def make_key(key):
