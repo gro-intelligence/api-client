@@ -157,6 +157,9 @@ def get_data(url, headers, params=None, logger=None):
         if data.status_code == 200:
             logger.debug('OK', extra=log_record)
             return data
+        if data.status_code == 204:
+            logger.warning('No Content', extra=log_record)
+            return data
         retry_count += 1
         log_record['tag'] = 'failed_gro_api_request'
         if retry_count < cfg.MAX_RETRIES:
@@ -170,9 +173,9 @@ def get_data(url, headers, params=None, logger=None):
         elif data.status_code in [404, 401, 500]:
             break
         else:
-            logger.error(data.text, extra=log_record)
-    raise Exception('Giving up on {} after {} tries. Error is: {}.'.format(
-        url, retry_count, data.text))
+            logger.error('{}'.format(data), extra=log_record)
+    raise Exception('Giving up on {} after {} tries: {}.'.format(
+        url, retry_count, data))
 
 
 @memoize(maxsize=None)
@@ -483,13 +486,15 @@ def rank_series_by_source(access_token, api_host, series_list):
         headers = {'authorization': 'Bearer ' + access_token}
         params = dict((make_key(k), v) for k, v in iter(list(
             get_params_from_selection(**series).items())))
-        source_ids = get_data(url, headers, params).json()
+        try:
+            source_ids = get_data(url, headers, params).json()
+        except ValueError:
+            continue  # empty response
         for source_id in source_ids:
             # Make a copy to avoid passing the same reference each time.
             series_with_source = dict(series)
             series_with_source['source_id'] = source_id
             yield series_with_source
-
 
 def format_crop_calendar_response(resp):
     """Make cropcalendar output a format similar to get_data_points().
