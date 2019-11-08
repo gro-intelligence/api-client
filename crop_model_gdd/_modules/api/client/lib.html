@@ -442,6 +442,9 @@
         <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">200</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;OK&#39;</span><span class="p">,</span> <span class="n">extra</span><span class="o">=</span><span class="n">log_record</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">data</span>
+        <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">204</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;No Content&#39;</span><span class="p">,</span> <span class="n">extra</span><span class="o">=</span><span class="n">log_record</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">data</span>
         <span class="n">retry_count</span> <span class="o">+=</span> <span class="mi">1</span>
         <span class="n">log_record</span><span class="p">[</span><span class="s1">&#39;tag&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;failed_gro_api_request&#39;</span>
         <span class="k">if</span> <span class="n">retry_count</span> <span class="o">&lt;</span> <span class="n">cfg</span><span class="o">.</span><span class="n">MAX_RETRIES</span><span class="p">:</span>
@@ -455,9 +458,9 @@
         <span class="k">elif</span> <span class="n">data</span><span class="o">.</span><span class="n">status_code</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">404</span><span class="p">,</span> <span class="mi">401</span><span class="p">,</span> <span class="mi">500</span><span class="p">]:</span>
             <span class="k">break</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">text</span><span class="p">,</span> <span class="n">extra</span><span class="o">=</span><span class="n">log_record</span><span class="p">)</span>
-    <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;Giving up on </span><span class="si">{}</span><span class="s1"> after </span><span class="si">{}</span><span class="s1"> tries. Error is: </span><span class="si">{}</span><span class="s1">.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-        <span class="n">url</span><span class="p">,</span> <span class="n">retry_count</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">text</span><span class="p">))</span></div>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">data</span><span class="p">),</span> <span class="n">extra</span><span class="o">=</span><span class="n">log_record</span><span class="p">)</span>
+    <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;Giving up on </span><span class="si">{}</span><span class="s1"> after </span><span class="si">{}</span><span class="s1"> tries: </span><span class="si">{}</span><span class="s1">.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+        <span class="n">url</span><span class="p">,</span> <span class="n">retry_count</span><span class="p">,</span> <span class="n">data</span><span class="p">))</span></div>
 
 
 <span class="nd">@memoize</span><span class="p">(</span><span class="n">maxsize</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
@@ -768,13 +771,15 @@
         <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;authorization&#39;</span><span class="p">:</span> <span class="s1">&#39;Bearer &#39;</span> <span class="o">+</span> <span class="n">access_token</span><span class="p">}</span>
         <span class="n">params</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">((</span><span class="n">make_key</span><span class="p">(</span><span class="n">k</span><span class="p">),</span> <span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">iter</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span>
             <span class="n">get_params_from_selection</span><span class="p">(</span><span class="o">**</span><span class="n">series</span><span class="p">)</span><span class="o">.</span><span class="n">items</span><span class="p">())))</span>
-        <span class="n">source_ids</span> <span class="o">=</span> <span class="n">get_data</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">source_ids</span> <span class="o">=</span> <span class="n">get_data</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+            <span class="k">continue</span>  <span class="c1"># empty response</span>
         <span class="k">for</span> <span class="n">source_id</span> <span class="ow">in</span> <span class="n">source_ids</span><span class="p">:</span>
             <span class="c1"># Make a copy to avoid passing the same reference each time.</span>
             <span class="n">series_with_source</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">series</span><span class="p">)</span>
             <span class="n">series_with_source</span><span class="p">[</span><span class="s1">&#39;source_id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">source_id</span>
             <span class="k">yield</span> <span class="n">series_with_source</span></div>
-
 
 <div class="viewcode-block" id="format_crop_calendar_response"><a class="viewcode-back" href="../../../api.html#api.client.lib.format_crop_calendar_response">[docs]</a><span class="k">def</span> <span class="nf">format_crop_calendar_response</span><span class="p">(</span><span class="n">resp</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Make cropcalendar output a format similar to get_data_points().</span>
