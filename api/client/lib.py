@@ -321,6 +321,8 @@ def get_params_from_selection(**selection):
     partner_region_id : integer, optional
     source_id : integer, optional
     frequency_id : integer, optional
+    start_date: string, optional
+    end_date: string, optional
 
     Returns
     -------
@@ -331,7 +333,7 @@ def get_params_from_selection(**selection):
     params = {}
     for key, value in list(selection.items()):
         if key in ('region_id', 'partner_region_id', 'item_id', 'metric_id',
-                   'source_id', 'frequency_id'):
+                   'source_id', 'frequency_id', 'start_date', 'end_date'):
             params[snake_to_camel(key)] = value
     return params
 
@@ -470,10 +472,15 @@ def rank_series_by_source(access_token, api_host, series_list):
             'source_id'],
         key=lambda x: x[0])) for single_series in series_list)
 
+    def make_key(key):
+        if key not in ('startDate', 'endDate'):
+            return key + 's'
+        return key
+
     for series in map(dict, selections_sorted):
         url = '/'.join(['https:', '', api_host, 'v2/available/sources'])
         headers = {'authorization': 'Bearer ' + access_token}
-        params = dict((k + 's', v) for k, v in iter(list(
+        params = dict((make_key(k), v) for k, v in iter(list(
             get_params_from_selection(**series).items())))
         source_ids = get_data(url, headers, params).json()
         for source_id in source_ids:
@@ -653,7 +660,7 @@ def get_data_points(access_token, api_host, **selection):
     list of dicts
 
         Example::
-        
+
             [ {
                 "start_date": "2000-01-01T00:00:00.000Z",
                 "end_date": "2000-12-31T00:00:00.000Z",
