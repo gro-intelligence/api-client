@@ -312,7 +312,6 @@
         <span class="nb">super</span><span class="p">(</span><span class="n">BatchClient</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">api_host</span><span class="p">,</span> <span class="n">access_token</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span> <span class="o">=</span> <span class="n">lib</span><span class="o">.</span><span class="n">get_default_logger</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_http_client</span> <span class="o">=</span> <span class="n">AsyncHTTPClient</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
 
     <span class="nd">@gen</span><span class="o">.</span><span class="n">coroutine</span>
 <div class="viewcode-block" id="BatchClient.get_data"><a class="viewcode-back" href="../../../api.html#api.client.batch_client.BatchClient.get_data">[docs]</a>    <span class="k">def</span> <span class="nf">get_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
@@ -366,8 +365,10 @@
 
     <span class="nd">@gen</span><span class="o">.</span><span class="n">coroutine</span>
 <div class="viewcode-block" id="BatchClient.get_data_points"><a class="viewcode-back" href="../../../api.html#api.client.batch_client.BatchClient.get_data_points">[docs]</a>    <span class="k">def</span> <span class="nf">get_data_points</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">selection</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Get all the data points for a given selection, which is some or all of: item_id, metric_id, region_id,</span>
-<span class="sd">        frequency_id, source_id, partner_region_id. Additional arguments are allowed and ignored.</span>
+        <span class="sd">&quot;&quot;&quot;Get all the data points for a given selection, which is some or all</span>
+<span class="sd">        of: item_id, metric_id, region_id, frequency_id, source_id,</span>
+<span class="sd">        partner_region_id. Additional arguments are allowed and</span>
+<span class="sd">        ignored.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;authorization&#39;</span><span class="p">:</span> <span class="s1">&#39;Bearer &#39;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="p">}</span>
         <span class="n">url</span> <span class="o">=</span> <span class="s1">&#39;/&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s1">&#39;https:&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_host</span><span class="p">,</span> <span class="s1">&#39;v2/data&#39;</span><span class="p">])</span>
@@ -375,8 +376,10 @@
         <span class="n">resp</span> <span class="o">=</span> <span class="k">yield</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_data</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
         <span class="k">raise</span> <span class="n">gen</span><span class="o">.</span><span class="n">Return</span><span class="p">(</span><span class="n">json_decode</span><span class="p">(</span><span class="n">resp</span><span class="p">))</span></div>
 
-    <span class="k">def</span> <span class="nf">batch_async_get_data_points</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">batched_args</span><span class="p">,</span> <span class="n">output_list</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">map_result</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">batch_async_queue</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_data_points</span><span class="p">,</span> <span class="n">batched_args</span><span class="p">,</span> <span class="n">output_list</span><span class="p">,</span> <span class="n">map_result</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">batch_async_get_data_points</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">batched_args</span><span class="p">,</span> <span class="n">output_list</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                                    <span class="n">map_result</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">batch_async_queue</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_data_points</span><span class="p">,</span> <span class="n">batched_args</span><span class="p">,</span>
+                                      <span class="n">output_list</span><span class="p">,</span> <span class="n">map_result</span><span class="p">)</span>
 
     <span class="nd">@gen</span><span class="o">.</span><span class="n">coroutine</span>
 <div class="viewcode-block" id="BatchClient.get_ranked_sources"><a class="viewcode-back" href="../../../api.html#api.client.batch_client.BatchClient.get_ranked_sources">[docs]</a>    <span class="k">def</span> <span class="nf">get_ranked_sources</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">selection</span><span class="p">):</span>
