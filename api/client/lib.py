@@ -1,4 +1,4 @@
-*"""Base module for making API requests.
+"""Base module for making API requests.
 
 Client, GroClient, CropModel, and BatchClient all build on top of endpoints
 exposed in this module. Helper functions or shims or derivative functionality
