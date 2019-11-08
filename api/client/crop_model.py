@@ -8,6 +8,7 @@ from api.client.gro_client import GroClient
 
 
 class CropModel(GroClient):
+
     def compute_weights(self, crop_name, metric_name, regions):
         """Add the weighting data series to this model. Compute the weights,
         which is the mean value for each region in regions, normalized
@@ -69,3 +70,51 @@ class CropModel(GroClient):
             # TODO: change metric to reflect it is weighted in this copy
             series_list.append(series)
         return pandas.concat(series_list)
+
+
+    def growing_degree_days(self, region_name, base_temperature,
+                            start_date, end_date):
+        """Get Growing Degree Days (GDD) for a region.
+
+        Growing degree days (GDD) are a weather-based indicator that
+        allows for assessing crop phenology and crop development,
+        based on heat accumulation. GDD for one day is defined as
+        [(T_max + T_min)/2 - T_base], and the GDD over a longer time
+        interval is the sum of the GDD over all days in the interval.
+
+        The region can be any region of the Gro regions, from a point
+        location to a district, province etc. This will use the best
+        available data series for T_max and T_min for the given region
+        and time period, using "find_data_series". 
+
+        In the simplest case, if the given region is a weather station
+        location which has data for the time period, then that will be
+        used. If it's a district or other region, the underlying data
+        could be from one or more weather stations and/or satellite.
+
+        Parameters
+        ----------
+        region_name: string, required
+        base_temperature: number, required
+        start_date: optional
+        end_date: optional
+
+        """
+        for tmax in self.find_data_series(
+                item='Temperature max', metric='Temperature',
+                region=region_name, start_date=start_date, end_date=end_date):
+            self.add_single_data_series(tmax)
+            break
+        for tmin in self.find_data_series(
+                item='Temperature min', metric='Temperature',
+                region=region_name, start_date=start_date, end_date=end_date):
+            self.add_single_data_series(tmin)
+            break
+        df = self.get_df()
+        gdd_values = df.loc[(df.item_id == tmax['item_id']) | \
+                            (df.item_id == tmin['item_id'])].groupby(
+                                ['region_id', 'metric_id', 'frequency_id',
+                                 'start_date', 'end_date']).value.sum()/2  - \
+                                 base_temperature
+        # TODO: group by freq and normalize in case not daily
+        return gdd_values.sum()
