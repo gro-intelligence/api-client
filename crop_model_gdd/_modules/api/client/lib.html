@@ -731,10 +731,11 @@
 
 
 <div class="viewcode-block" id="rank_series_by_source"><a class="viewcode-back" href="../../../api.html#api.client.lib.rank_series_by_source">[docs]</a><span class="k">def</span> <span class="nf">rank_series_by_source</span><span class="p">(</span><span class="n">access_token</span><span class="p">,</span> <span class="n">api_host</span><span class="p">,</span> <span class="n">series_list</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Given a list of series, return them in source-ranked order.</span>
-
-<span class="sd">    If there are multiple sources for the same selection, the prefered source</span>
-<span class="sd">    comes first. Differences other than source_id are not affected.</span>
+    <span class="sd">&quot;&quot;&quot;Given a list of series selections, for each unique combination</span>
+<span class="sd">    excluding source, expand to all available sources and return them</span>
+<span class="sd">    in ranked order.  The orders corresponds to how well that source</span>
+<span class="sd">    covers the selection (items, metrics, regions, and time range and</span>
+<span class="sd">    frequency).</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -746,15 +747,15 @@
 <span class="sd">    Yields</span>
 <span class="sd">    ------</span>
 <span class="sd">    dict</span>
-<span class="sd">        The input series_list but reordered by source rank</span>
+<span class="sd">        The input series_list X each possible source, ordered by coverage</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># We sort the internal tuple representations of the dictionaries because</span>
     <span class="c1"># otherwise when we call set() we end up with duplicates if iteritems()</span>
     <span class="c1"># returns a different order for the same dictionary. See test case.</span>
     <span class="n">selections_sorted</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="nb">tuple</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span>
-        <span class="p">[</span><span class="n">k_v</span> <span class="k">for</span> <span class="n">k_v</span> <span class="ow">in</span> <span class="nb">iter</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">single_series</span><span class="o">.</span><span class="n">items</span><span class="p">()))</span> <span class="k">if</span> <span class="n">k_v</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span>
-            <span class="s1">&#39;source_id&#39;</span><span class="p">],</span>
+        <span class="p">[</span><span class="n">k_v</span> <span class="k">for</span> <span class="n">k_v</span> <span class="ow">in</span> <span class="nb">iter</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">single_series</span><span class="o">.</span><span class="n">items</span><span class="p">()))</span>
+         <span class="k">if</span> <span class="n">k_v</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;source_id&#39;</span><span class="p">,</span> <span class="s1">&#39;source_name&#39;</span><span class="p">)],</span>
         <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span> <span class="k">for</span> <span class="n">single_series</span> <span class="ow">in</span> <span class="n">series_list</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">make_key</span><span class="p">(</span><span class="n">key</span><span class="p">):</span>
