@@ -80,7 +80,7 @@ class CropModel(GroClient):
         allows for assessing crop phenology and crop development,
         based on heat accumulation. GDD for one day is defined as
         [(T_max + T_min)/2 - T_base], and the GDD over a longer time
-        interval is the sum of the GDD over all days in the interval.
+        interval is the sum of the GDD over all days in the interval. 
 
         The region can be any region of the Gro regions, from a point
         location to a district, province etc. This will use the best
@@ -111,10 +111,12 @@ class CropModel(GroClient):
             self.add_single_data_series(tmin)
             break
         df = self.get_df()
-        gdd_values = df.loc[(df.item_id == tmax['item_id']) | \
-                            (df.item_id == tmin['item_id'])].groupby(
-                                ['region_id', 'metric_id', 'frequency_id',
-                                 'start_date', 'end_date']).value.sum()/2  - \
-                                 base_temperature
+        # For each day we want (t_min + t_max)/2, or more generally,
+        # the average temperature for that day.
+        tmean = df.loc[(df.item_id == tmax['item_id']) | \
+                       (df.item_id == tmin['item_id'])].groupby(
+                           ['region_id', 'metric_id', 'frequency_id',
+                            'start_date', 'end_date']).mean()
+        gdd_values = tmean.value - base_temperature
         # TODO: group by freq and normalize in case not daily
         return gdd_values.sum()
