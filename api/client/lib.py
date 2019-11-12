@@ -1,4 +1,4 @@
-*"""Base module for making API requests.
+"""Base module for making API requests.
 
 Client, GroClient, CropModel, and BatchClient all build on top of endpoints
 exposed in this module. Helper functions or shims or derivative functionality
@@ -925,9 +925,9 @@ def get_descendant_regions(access_token, api_host, region_id,
     region = lookup(access_token, api_host, 'regions', region_id)
     for member_id in region['contains']:
         member = lookup(access_token, api_host, 'regions', member_id)
-        if descendant_level == member['level']:
+        if not descendant_level or descendant_level == member['level']:
             descendants.append(member)
-        elif member['level'] < descendant_level:
+        if not descendant_level or member['level'] < descendant_level:
             descendants += get_descendant_regions(
                 access_token, api_host, member_id, descendant_level)
     return descendants
