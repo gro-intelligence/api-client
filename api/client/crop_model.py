@@ -1,9 +1,9 @@
 from __future__ import division
 from builtins import map
 from builtins import zip
-import pandas
+from datetime import datetime
 import math
-
+import pandas
 from api.client.gro_client import GroClient
 
 
@@ -73,14 +73,25 @@ class CropModel(GroClient):
 
 
     def growing_degree_days(self, region_name, base_temperature,
-                            start_date, end_date):
+                            start_date, end_date, min_temporal_coverage=0.5):
         """Get Growing Degree Days (GDD) for a region.
 
         Growing degree days (GDD) are a weather-based indicator that
         allows for assessing crop phenology and crop development,
         based on heat accumulation. GDD for one day is defined as
-        [(T_max + T_min)/2 - T_base], and the GDD over a longer time
-        interval is the sum of the GDD over all days in the interval. 
+        [T_mean - T_base], where T_mean is the average temperature of
+        that day if available. Typically T_mean is approximated as
+        (T_max + T_min)/2.
+
+        The GDD over a longer time interval is the sum of the GDD over
+        all days in the interval. Days where the data is missing
+        contribute 0 GDDs, i.e. are treated as if T_mean = T_base.
+        Use the temporal coverage threshold to avoid computing GDD
+        with too little data.
+
+        The threshold and the base temperature should be carefuly
+        selected based on fundamental understanding of the crops and
+        region of interest.
 
         The region can be any region of the Gro regions, from a point
         location to a district, province etc. This will use the best
@@ -96,8 +107,9 @@ class CropModel(GroClient):
         ----------
         region_name: string, required
         base_temperature: number, required
-        start_date: optional
-        end_date: optional
+        start_date: '%Y-%m-%d' string, required
+        end_date: '%Y-%m-%d' string, required
+        min_temporal_coverage: float, optional
 
         """
         for tmax in self.find_data_series(
@@ -111,12 +123,22 @@ class CropModel(GroClient):
             self.add_single_data_series(tmin)
             break
         df = self.get_df()
+        if not df:
+            raise Exception("Insufficient data for GDD in region {}".format(
+                region_name))
         # For each day we want (t_min + t_max)/2, or more generally,
         # the average temperature for that day.
         tmean = df.loc[(df.item_id == tmax['item_id']) | \
                        (df.item_id == tmin['item_id'])].groupby(
                            ['region_id', 'metric_id', 'frequency_id',
                             'start_date', 'end_date']).mean()
+        duration = datetime.strptime(end_date, '%Y-%m-%d') - \
+                   datetime.strptime(start_date, '%Y-%m-%d')
+        coverage_threshold = min_temporal_coverage * duration.days
+        if tmean.value.size < coverage_threshold:
+            raise Exception("Insufficient temporal coverage for GDD, " + \
+                            "{} < {} data points available".format(
+                                tmean.value.size, coverage_threshold))
         gdd_values = tmean.value - base_temperature
         # TODO: group by freq and normalize in case not daily
         return gdd_values.sum()
