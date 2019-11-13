@@ -1252,13 +1252,22 @@ corresponding to the regions.</p>
 
 <dl class="method">
 <dt id="api.client.crop_model.CropModel.growing_degree_days">
-<code class="descname">growing_degree_days</code><span class="sig-paren">(</span><em>region_name</em>, <em>base_temperature</em>, <em>start_date</em>, <em>end_date</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/crop_model.html#CropModel.growing_degree_days"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.crop_model.CropModel.growing_degree_days" title="Permalink to this definition">¶</a></dt>
+<code class="descname">growing_degree_days</code><span class="sig-paren">(</span><em>region_name</em>, <em>base_temperature</em>, <em>start_date</em>, <em>end_date</em>, <em>min_temporal_coverage=0.5</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/crop_model.html#CropModel.growing_degree_days"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.crop_model.CropModel.growing_degree_days" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get Growing Degree Days (GDD) for a region.</p>
 <p>Growing degree days (GDD) are a weather-based indicator that
 allows for assessing crop phenology and crop development,
 based on heat accumulation. GDD for one day is defined as
-[(T_max + T_min)/2 - T_base], and the GDD over a longer time
-interval is the sum of the GDD over all days in the interval.</p>
+[T_mean - T_base], where T_mean is the average temperature of
+that day if available. Typically T_mean is approximated as
+(T_max + T_min)/2.</p>
+<p>The GDD over a longer time interval is the sum of the GDD over
+all days in the interval. Days where the data is missing
+contribute 0 GDDs, i.e. are treated as if T_mean = T_base.
+Use the temporal coverage threshold to avoid computing GDD
+with too little data.</p>
+<p>The threshold and the base temperature should be carefuly
+selected based on fundamental understanding of the crops and
+region of interest.</p>
 <p>The region can be any region of the Gro regions, from a point
 location to a district, province etc. This will use the best
 available data series for T_max and T_min for the given region
@@ -1274,8 +1283,9 @@ could be from one or more weather stations and/or satellite.</p>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>region_name</strong> (<em>string</em><em>, </em><em>required</em>) &#8211; </li>
 <li><strong>base_temperature</strong> (<em>number</em><em>, </em><em>required</em>) &#8211; </li>
-<li><strong>start_date</strong> (<em>optional</em>) &#8211; </li>
-<li><strong>end_date</strong> (<em>optional</em>) &#8211; </li>
+<li><strong>start_date</strong> (<em>'%Y-%m-%d' string</em><em>, </em><em>required</em>) &#8211; </li>
+<li><strong>end_date</strong> (<em>'%Y-%m-%d' string</em><em>, </em><em>required</em>) &#8211; </li>
+<li><strong>min_temporal_coverage</strong> (<em>float</em><em>, </em><em>optional</em>) &#8211; </li>
 </ul>
 </td>
 </tr>

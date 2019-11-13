@@ -286,9 +286,9 @@
 <span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">division</span>
 <span class="kn">from</span> <span class="nn">builtins</span> <span class="k">import</span> <span class="nb">map</span>
 <span class="kn">from</span> <span class="nn">builtins</span> <span class="k">import</span> <span class="nb">zip</span>
-<span class="kn">import</span> <span class="nn">pandas</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="k">import</span> <span class="n">datetime</span>
 <span class="kn">import</span> <span class="nn">math</span>
-
+<span class="kn">import</span> <span class="nn">pandas</span>
 <span class="kn">from</span> <span class="nn">api.client.gro_client</span> <span class="k">import</span> <span class="n">GroClient</span>
 
 
@@ -358,14 +358,25 @@
 
 
 <div class="viewcode-block" id="CropModel.growing_degree_days"><a class="viewcode-back" href="../../../api.html#api.client.crop_model.CropModel.growing_degree_days">[docs]</a>    <span class="k">def</span> <span class="nf">growing_degree_days</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">region_name</span><span class="p">,</span> <span class="n">base_temperature</span><span class="p">,</span>
-                            <span class="n">start_date</span><span class="p">,</span> <span class="n">end_date</span><span class="p">):</span>
+                            <span class="n">start_date</span><span class="p">,</span> <span class="n">end_date</span><span class="p">,</span> <span class="n">min_temporal_coverage</span><span class="o">=</span><span class="mf">0.5</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Get Growing Degree Days (GDD) for a region.</span>
 
 <span class="sd">        Growing degree days (GDD) are a weather-based indicator that</span>
 <span class="sd">        allows for assessing crop phenology and crop development,</span>
 <span class="sd">        based on heat accumulation. GDD for one day is defined as</span>
-<span class="sd">        [(T_max + T_min)/2 - T_base], and the GDD over a longer time</span>
-<span class="sd">        interval is the sum of the GDD over all days in the interval. </span>
+<span class="sd">        [T_mean - T_base], where T_mean is the average temperature of</span>
+<span class="sd">        that day if available. Typically T_mean is approximated as</span>
+<span class="sd">        (T_max + T_min)/2.</span>
+
+<span class="sd">        The GDD over a longer time interval is the sum of the GDD over</span>
+<span class="sd">        all days in the interval. Days where the data is missing</span>
+<span class="sd">        contribute 0 GDDs, i.e. are treated as if T_mean = T_base.</span>
+<span class="sd">        Use the temporal coverage threshold to avoid computing GDD</span>
+<span class="sd">        with too little data.</span>
+
+<span class="sd">        The threshold and the base temperature should be carefuly</span>
+<span class="sd">        selected based on fundamental understanding of the crops and</span>
+<span class="sd">        region of interest.</span>
 
 <span class="sd">        The region can be any region of the Gro regions, from a point</span>
 <span class="sd">        location to a district, province etc. This will use the best</span>
@@ -381,8 +392,9 @@
 <span class="sd">        ----------</span>
 <span class="sd">        region_name: string, required</span>
 <span class="sd">        base_temperature: number, required</span>
-<span class="sd">        start_date: optional</span>
-<span class="sd">        end_date: optional</span>
+<span class="sd">        start_date: &#39;%Y-%m-%d&#39; string, required</span>
+<span class="sd">        end_date: &#39;%Y-%m-%d&#39; string, required</span>
+<span class="sd">        min_temporal_coverage: float, optional</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">tmax</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">find_data_series</span><span class="p">(</span>
@@ -396,12 +408,22 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">add_single_data_series</span><span class="p">(</span><span class="n">tmin</span><span class="p">)</span>
             <span class="k">break</span>
         <span class="n">df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_df</span><span class="p">()</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">df</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Insufficient data for GDD in region </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">region_name</span><span class="p">))</span>
         <span class="c1"># For each day we want (t_min + t_max)/2, or more generally,</span>
         <span class="c1"># the average temperature for that day.</span>
         <span class="n">tmean</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[(</span><span class="n">df</span><span class="o">.</span><span class="n">item_id</span> <span class="o">==</span> <span class="n">tmax</span><span class="p">[</span><span class="s1">&#39;item_id&#39;</span><span class="p">])</span> <span class="o">|</span> \
                        <span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">item_id</span> <span class="o">==</span> <span class="n">tmin</span><span class="p">[</span><span class="s1">&#39;item_id&#39;</span><span class="p">])]</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span>
                            <span class="p">[</span><span class="s1">&#39;region_id&#39;</span><span class="p">,</span> <span class="s1">&#39;metric_id&#39;</span><span class="p">,</span> <span class="s1">&#39;frequency_id&#39;</span><span class="p">,</span>
                             <span class="s1">&#39;start_date&#39;</span><span class="p">,</span> <span class="s1">&#39;end_date&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+        <span class="n">duration</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">end_date</span><span class="p">,</span> <span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1">&#39;</span><span class="p">)</span> <span class="o">-</span> \
+                   <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">start_date</span><span class="p">,</span> <span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">coverage_threshold</span> <span class="o">=</span> <span class="n">min_temporal_coverage</span> <span class="o">*</span> <span class="n">duration</span><span class="o">.</span><span class="n">days</span>
+        <span class="k">if</span> <span class="n">tmean</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">size</span> <span class="o">&lt;</span> <span class="n">coverage_threshold</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Insufficient temporal coverage for GDD, &quot;</span> <span class="o">+</span> \
+                            <span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> &lt; </span><span class="si">{}</span><span class="s2"> data points available&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                                <span class="n">tmean</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="n">coverage_threshold</span><span class="p">))</span>
         <span class="n">gdd_values</span> <span class="o">=</span> <span class="n">tmean</span><span class="o">.</span><span class="n">value</span> <span class="o">-</span> <span class="n">base_temperature</span>
         <span class="c1"># TODO: group by freq and normalize in case not daily</span>
         <span class="k">return</span> <span class="n">gdd_values</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span></div></div>
