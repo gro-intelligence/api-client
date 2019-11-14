@@ -129,54 +129,6 @@ class Client(object):
         return lib.get_data_series(self.access_token, self.api_host, **selection)
 
     def get_data_points(self, **selection):
-        """Get all the data points for a given selection.
-
-        https://github.com/gro-intelligence/api-client/wiki/Data-Point-Definition
-
-        Parameters
-        ----------
-        access_token : string
-        api_host : string
-        metric_id : integer
-        item_id : integer
-        region_id : integer
-        partner_region_id : integer
-        source_id : integer
-        frequency_id : integer
-        start_date : string, optional
-            all points with start dates equal to or after this date
-        end_date : string, optional
-            all points with end dates equal to or after this date
-        show_revisions : boolean, optional
-            False by default, meaning only the latest value for each period. If true, will return all
-            values for a given period, differentiated by the `reporting_date` field.
-        insert_null : boolean, optional
-            False by default. If True, will include a data point with a None value for each period
-            that does not have data.
-        at_time : string, optional
-            Estimate what data would have been available via Gro at a given time in the past. See
-            /api/client/samples/at-time-query-examples.ipynb for more details.
-
-        Returns
-        -------
-        list of dicts
-
-            Example::
-
-                [ {
-                    "start_date": "2000-01-01T00:00:00.000Z",
-                    "end_date": "2000-12-31T00:00:00.000Z",
-                    "value": 251854000,
-                    "input_unit_id": 14,
-                    "input_unit_scale": 1,
-                    "metric_id": 860032,
-                    "item_id": 274,
-                    "region_id": 1215,
-                    "frequency_id": 9,
-                    "unit_id": 14
-                }, ...]
-
-        """
         return lib.get_data_points(self.access_token, self.api_host, **selection)
 
     def search(self, entity_type, search_terms):

@@ -40,11 +40,15 @@ class GroClient(Client):
         self._data_series_queue = []  # added but not loaded in data frame
         self._data_frame = None
 
-    ###
-    # Finding, indexing and loading multiple data series into a data frame
-    ###
+
     def get_df(self):
-        """Get the content of all data series in a Pandas frame."""
+        """Call get_data_points() for each saved data series and return as a combined dataframe.
+        
+        Note you must have first called either add_data_series() or add_single_data_series() to save
+        data series into the GroClient's data_series_list. You can inspect the client's saved list
+        using get_data_series_list().
+
+        """
         while self._data_series_queue:
             data_series = self._data_series_queue.pop()
             tmp = pandas.DataFrame(
@@ -66,22 +70,60 @@ class GroClient(Client):
                 self._data_frame = self._data_frame.merge(tmp, how='outer')
         return self._data_frame
 
+
     def get_data_points(self, **selections):
-        """Extend the Client's get_data_points method to add unit conversion.
+        """Get all the data points for a given selection.
+
+        https://github.com/gro-intelligence/api-client/wiki/Data-Point-Definition
 
         Parameters
         ----------
-        selections : dict
-            See lib.py get_data_points() for the base list of inputs
-            This extended version may additionally include 'unit_id' which is
-            the unit you wish to convert all points to.
+        metric_id : integer
+        item_id : integer
+        region_id : integer
+        partner_region_id : integer, optional
+            partner_region refers to an interaction between two regions, like trade or
+            transportation. For example, for an Export metric, the "region" would be the exporter
+            and the "partner_region" would be the importer. For most series, this can be excluded
+            or set to 0 ("World") by default.
+        source_id : integer
+        frequency_id : integer
+        unit_id : integer, optional
+        start_date : string, optional
+            all points with start dates equal to or after this date
+        end_date : string, optional
+            all points with end dates equal to or after this date
+        show_revisions : boolean, optional
+            False by default, meaning only the latest value for each period. If true, will return all
+            values for a given period, differentiated by the `reporting_date` field.
+        insert_null : boolean, optional
+            False by default. If True, will include a data point with a None value for each period
+            that does not have data.
+        at_time : string, optional
+            Estimate what data would have been available via Gro at a given time in the past. See
+            /api/client/samples/at-time-query-examples.ipynb for more details.
 
         Returns
         -------
         list of dicts
-            Unchanged output format from lib.py get_data_points()
+
+            Example::
+
+                [ {
+                    "start_date": "2000-01-01T00:00:00.000Z",
+                    "end_date": "2000-12-31T00:00:00.000Z",
+                    "value": 251854000,
+                    "input_unit_id": 14,
+                    "input_unit_scale": 1,
+                    "metric_id": 860032,
+                    "item_id": 274,
+                    "region_id": 1215,
+                    "frequency_id": 9,
+                    "unit_id": 14
+                }, ...]
 
         """
+
         data_points = super(GroClient, self).get_data_points(**selections)
         # Apply unit conversion if a unit is specified
         if 'unit_id' in selections:
@@ -89,14 +131,23 @@ class GroClient(Client):
         # Return data points in input units if not unit is specified
         return data_points
 
+
     def get_data_series_list(self):
+        """Inspect the current list of saved data series contained in the GroClient.
+        
+        For use with get_df(). Add new data series to the list using add_data_series() and
+        add_single_data_series().
+        """
         return list(self._data_series_list)
 
+
     def add_single_data_series(self, data_series):
+        """Save a data series object to the GroClient's data_series_list for use with get_df()."""
         self._data_series_list.append(data_series)
         self._data_series_queue.append(data_series)
         self._logger.info("Added {}".format(data_series))
         return
+
 
     def add_data_series(self, **kwargs):
         """Search for entities matching the given names, find data series for
