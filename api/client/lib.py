@@ -8,7 +8,6 @@ should appear in the client classes rather than here.
 from builtins import map
 from builtins import str
 from api.client import cfg
-from deprecated.sphinx import deprecated
 import json
 import logging
 import requests
@@ -337,7 +336,6 @@ def get_data_series(access_token, api_host, **selection):
         raise Exception(resp.text)
 
 
-@deprecated(version='v1.40.3', reason='All derivative functions moved to GroClient')
 def rank_series_by_source(access_token, api_host, series_list):
     """Given a list of series, return them in source-ranked order.
 

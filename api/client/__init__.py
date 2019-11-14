@@ -1,11 +1,6 @@
 from builtins import object
 from api.client import lib
 
-from deprecated.sphinx import deprecated
-# from deprecated.sphinx import versionadded
-# from deprecated.sphinx import versionchanged
-
-
 class Client(object):
 
     """API client with stateful authentication for lib functions."""
@@ -96,7 +91,7 @@ class Client(object):
         """
         return lib.lookup(self.access_token, self.api_host, entity_type, entity_id)
 
-    @deprecated(version='v1.40.3', reason='All derivative behavior is moved to GroClient')
+
     def lookup_unit_abbreviation(self, unit_id):
         return self.lookup('units', unit_id)['abbreviation']
 
@@ -207,7 +202,7 @@ class Client(object):
         return lib.search(self.access_token, self.api_host,
                           entity_type, search_terms)
 
-    @deprecated(version='v1.40.3', reason='All derivative behavior is moved to GroClient')
+
     def search_and_lookup(self, entity_type, search_terms):
         """Search for the given search terms and look up their details.
 
@@ -243,7 +238,7 @@ class Client(object):
         return lib.search_and_lookup(self.access_token, self.api_host,
                                      entity_type, search_terms)
 
-    @deprecated(version='v1.40.3', reason='All derivative behavior is moved to GroClient')
+
     def lookup_belongs(self, entity_type, entity_id):
         """Look up details of entities containing the given entity.
 
