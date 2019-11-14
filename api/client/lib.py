@@ -438,12 +438,16 @@ def get_data_series(access_token, api_host, **selection):
             }, { ... }, ... ]
 
     """
+    logger = get_default_logger()
     url = '/'.join(['https:', '', api_host, 'v2/data_series/list'])
     headers = {'authorization': 'Bearer ' + access_token}
     params = get_params_from_selection(**selection)
     resp = get_data(url, headers, params)
     try:
-        return resp.json()['data']
+        response = resp.json()['data']
+        if any((series.get('metadata', {}).get('includes_historical_region', False)) for series in response):
+            logger.warning('Some of the regions in your data call are historical, with boundaries that may be outdated. The regions may have overlapping values with current regions')
+        return response
     except KeyError:
         raise Exception(resp.text)
 
