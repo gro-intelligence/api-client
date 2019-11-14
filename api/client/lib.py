@@ -448,9 +448,6 @@ def get_data_series(access_token, api_host, **selection):
         raise Exception(resp.text)
 
 
-# TODO: Add code to handle no query parameters call to v2/available/sources. It is hanging at the moment.
-
-
 def get_source_ranking(access_token, api_host, series):
     """Given a series, return a list of ranked sources.
 
