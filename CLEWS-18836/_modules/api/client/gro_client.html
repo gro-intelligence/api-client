@@ -325,11 +325,15 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_data_series_queue</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># added but not loaded in data frame</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_data_frame</span> <span class="o">=</span> <span class="kc">None</span>
 
-    <span class="c1">###</span>
-    <span class="c1"># Finding, indexing and loading multiple data series into a data frame</span>
-    <span class="c1">###</span>
+
 <div class="viewcode-block" id="GroClient.get_df"><a class="viewcode-back" href="../../../api.html#api.client.gro_client.GroClient.get_df">[docs]</a>    <span class="k">def</span> <span class="nf">get_df</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Get the content of all data series in a Pandas frame.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Call get_data_points() for each saved data series and return as a combined dataframe.</span>
+<span class="sd">        </span>
+<span class="sd">        Note you must have first called either add_data_series() or add_single_data_series() to save</span>
+<span class="sd">        data series into the GroClient&#39;s data_series_list. You can inspect the client&#39;s saved list</span>
+<span class="sd">        using get_data_series_list().</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_series_queue</span><span class="p">:</span>
             <span class="n">data_series</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_series_queue</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
             <span class="n">tmp</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
@@ -351,22 +355,60 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">_data_frame</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_frame</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">tmp</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s1">&#39;outer&#39;</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_frame</span></div>
 
+
 <div class="viewcode-block" id="GroClient.get_data_points"><a class="viewcode-back" href="../../../api.html#api.client.gro_client.GroClient.get_data_points">[docs]</a>    <span class="k">def</span> <span class="nf">get_data_points</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">selections</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Extend the Client&#39;s get_data_points method to add unit conversion.</span>
+        <span class="sd">&quot;&quot;&quot;Get all the data points for a given selection.</span>
+
+<span class="sd">        https://github.com/gro-intelligence/api-client/wiki/Data-Point-Definition</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        selections : dict</span>
-<span class="sd">            See lib.py get_data_points() for the base list of inputs</span>
-<span class="sd">            This extended version may additionally include &#39;unit_id&#39; which is</span>
-<span class="sd">            the unit you wish to convert all points to.</span>
+<span class="sd">        metric_id : integer</span>
+<span class="sd">        item_id : integer</span>
+<span class="sd">        region_id : integer</span>
+<span class="sd">        partner_region_id : integer, optional</span>
+<span class="sd">            partner_region refers to an interaction between two regions, like trade or</span>
+<span class="sd">            transportation. For example, for an Export metric, the &quot;region&quot; would be the exporter</span>
+<span class="sd">            and the &quot;partner_region&quot; would be the importer. For most series, this can be excluded</span>
+<span class="sd">            or set to 0 (&quot;World&quot;) by default.</span>
+<span class="sd">        source_id : integer</span>
+<span class="sd">        frequency_id : integer</span>
+<span class="sd">        unit_id : integer, optional</span>
+<span class="sd">        start_date : string, optional</span>
+<span class="sd">            all points with start dates equal to or after this date</span>
+<span class="sd">        end_date : string, optional</span>
+<span class="sd">            all points with end dates equal to or after this date</span>
+<span class="sd">        show_revisions : boolean, optional</span>
+<span class="sd">            False by default, meaning only the latest value for each period. If true, will return all</span>
+<span class="sd">            values for a given period, differentiated by the `reporting_date` field.</span>
+<span class="sd">        insert_null : boolean, optional</span>
+<span class="sd">            False by default. If True, will include a data point with a None value for each period</span>
+<span class="sd">            that does not have data.</span>
+<span class="sd">        at_time : string, optional</span>
+<span class="sd">            Estimate what data would have been available via Gro at a given time in the past. See</span>
+<span class="sd">            /api/client/samples/at-time-query-examples.ipynb for more details.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        list of dicts</span>
-<span class="sd">            Unchanged output format from lib.py get_data_points()</span>
+
+<span class="sd">            Example::</span>
+
+<span class="sd">                [ {</span>
+<span class="sd">                    &quot;start_date&quot;: &quot;2000-01-01T00:00:00.000Z&quot;,</span>
+<span class="sd">                    &quot;end_date&quot;: &quot;2000-12-31T00:00:00.000Z&quot;,</span>
+<span class="sd">                    &quot;value&quot;: 251854000,</span>
+<span class="sd">                    &quot;input_unit_id&quot;: 14,</span>
+<span class="sd">                    &quot;input_unit_scale&quot;: 1,</span>
+<span class="sd">                    &quot;metric_id&quot;: 860032,</span>
+<span class="sd">                    &quot;item_id&quot;: 274,</span>
+<span class="sd">                    &quot;region_id&quot;: 1215,</span>
+<span class="sd">                    &quot;frequency_id&quot;: 9,</span>
+<span class="sd">                    &quot;unit_id&quot;: 14</span>
+<span class="sd">                }, ...]</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="n">data_points</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">GroClient</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">get_data_points</span><span class="p">(</span><span class="o">**</span><span class="n">selections</span><span class="p">)</span>
         <span class="c1"># Apply unit conversion if a unit is specified</span>
         <span class="k">if</span> <span class="s1">&#39;unit_id&#39;</span> <span class="ow">in</span> <span class="n">selections</span><span class="p">:</span>
@@ -374,14 +416,23 @@
         <span class="c1"># Return data points in input units if not unit is specified</span>
         <span class="k">return</span> <span class="n">data_points</span></div>
 
-    <span class="k">def</span> <span class="nf">get_data_series_list</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_data_series_list</span><span class="p">)</span>
+
+<div class="viewcode-block" id="GroClient.get_data_series_list"><a class="viewcode-back" href="../../../api.html#api.client.gro_client.GroClient.get_data_series_list">[docs]</a>    <span class="k">def</span> <span class="nf">get_data_series_list</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Inspect the current list of saved data series contained in the GroClient.</span>
+<span class="sd">        </span>
+<span class="sd">        For use with get_df(). Add new data series to the list using add_data_series() and</span>
+<span class="sd">        add_single_data_series().</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_data_series_list</span><span class="p">)</span></div>
+
 
 <div class="viewcode-block" id="GroClient.add_single_data_series"><a class="viewcode-back" href="../../../api.html#api.client.gro_client.GroClient.add_single_data_series">[docs]</a>    <span class="k">def</span> <span class="nf">add_single_data_series</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_series</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Save a data series object to the GroClient&#39;s data_series_list for use with get_df().&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_data_series_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">data_series</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_data_series_queue</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">data_series</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Added </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">data_series</span><span class="p">))</span>
         <span class="k">return</span></div>
+
 
 <div class="viewcode-block" id="GroClient.add_data_series"><a class="viewcode-back" href="../../../api.html#api.client.gro_client.GroClient.add_data_series">[docs]</a>    <span class="k">def</span> <span class="nf">add_data_series</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Search for entities matching the given names, find data series for</span>
