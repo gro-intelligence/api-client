@@ -43,9 +43,10 @@ Advanced Exploration
 Pandas Utils
 ************
 
+.. automethod:: api.client.gro_client.GroClient.get_df
+
 .. automethod:: api.client.gro_client.GroClient.add_data_series
 
 .. automethod:: api.client.gro_client.GroClient.add_single_data_series
 
-.. automethod:: api.client.gro_client.GroClient.get_df
-
+.. automethod:: api.client.gro_client.GroClient.get_data_series_list
