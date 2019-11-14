@@ -454,18 +454,54 @@ regions) that matches the given keywords.</p>
 <dl class="method">
 <dt id="api.client.gro_client.GroClient.get_data_points">
 <code class="descclassname">GroClient.</code><code class="descname">get_data_points</code><span class="sig-paren">(</span><em>**selections</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/gro_client.html#GroClient.get_data_points"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.gro_client.GroClient.get_data_points" title="Permalink to this definition">¶</a></dt>
-<dd><p>Extend the Client&#8217;s get_data_points method to add unit conversion.</p>
+<dd><p>Get all the data points for a given selection.</p>
+<p><a class="reference external" href="https://github.com/gro-intelligence/api-client/wiki/Data-Point-Definition">https://github.com/gro-intelligence/api-client/wiki/Data-Point-Definition</a></p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>selections</strong> (<em>dict</em>) &#8211; See lib.py get_data_points() for the base list of inputs
-This extended version may additionally include &#8216;unit_id&#8217; which is
-the unit you wish to convert all points to.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>metric_id</strong> (<em>integer</em>) &#8211; </li>
+<li><strong>item_id</strong> (<em>integer</em>) &#8211; </li>
+<li><strong>region_id</strong> (<em>integer</em>) &#8211; </li>
+<li><strong>partner_region_id</strong> (<em>integer</em><em>, </em><em>optional</em>) &#8211; partner_region refers to an interaction between two regions, like trade or
+transportation. For example, for an Export metric, the &#8220;region&#8221; would be the exporter
+and the &#8220;partner_region&#8221; would be the importer. For most series, this can be excluded
+or set to 0 (&#8220;World&#8221;) by default.</li>
+<li><strong>source_id</strong> (<em>integer</em>) &#8211; </li>
+<li><strong>frequency_id</strong> (<em>integer</em>) &#8211; </li>
+<li><strong>unit_id</strong> (<em>integer</em><em>, </em><em>optional</em>) &#8211; </li>
+<li><strong>start_date</strong> (<em>string</em><em>, </em><em>optional</em>) &#8211; all points with start dates equal to or after this date</li>
+<li><strong>end_date</strong> (<em>string</em><em>, </em><em>optional</em>) &#8211; all points with end dates equal to or after this date</li>
+<li><strong>show_revisions</strong> (<em>boolean</em><em>, </em><em>optional</em>) &#8211; False by default, meaning only the latest value for each period. If true, will return all
+values for a given period, differentiated by the <cite>reporting_date</cite> field.</li>
+<li><strong>insert_null</strong> (<em>boolean</em><em>, </em><em>optional</em>) &#8211; False by default. If True, will include a data point with a None value for each period
+that does not have data.</li>
+<li><strong>at_time</strong> (<em>string</em><em>, </em><em>optional</em>) &#8211; Estimate what data would have been available via Gro at a given time in the past. See
+/api/client/samples/at-time-query-examples.ipynb for more details.</li>
+</ul>
+</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Unchanged output format from lib.py get_data_points()</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><p>Example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="p">[</span> <span class="p">{</span>
+    <span class="s2">&quot;start_date&quot;</span><span class="p">:</span> <span class="s2">&quot;2000-01-01T00:00:00.000Z&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;end_date&quot;</span><span class="p">:</span> <span class="s2">&quot;2000-12-31T00:00:00.000Z&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="mi">251854000</span><span class="p">,</span>
+    <span class="s2">&quot;input_unit_id&quot;</span><span class="p">:</span> <span class="mi">14</span><span class="p">,</span>
+    <span class="s2">&quot;input_unit_scale&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s2">&quot;metric_id&quot;</span><span class="p">:</span> <span class="mi">860032</span><span class="p">,</span>
+    <span class="s2">&quot;item_id&quot;</span><span class="p">:</span> <span class="mi">274</span><span class="p">,</span>
+    <span class="s2">&quot;region_id&quot;</span><span class="p">:</span> <span class="mi">1215</span><span class="p">,</span>
+    <span class="s2">&quot;frequency_id&quot;</span><span class="p">:</span> <span class="mi">9</span><span class="p">,</span>
+    <span class="s2">&quot;unit_id&quot;</span><span class="p">:</span> <span class="mi">14</span>
+<span class="p">},</span> <span class="o">...</span><span class="p">]</span>
+</pre></div>
+</div>
+</p>
+</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">list of dicts</td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list of dicts</p>
+</td>
 </tr>
 </tbody>
 </table>
@@ -597,6 +633,15 @@ levels.</p>
 <div class="section" id="pandas-utils">
 <h2>Pandas Utils<a class="headerlink" href="#pandas-utils" title="Permalink to this headline">¶</a></h2>
 <dl class="method">
+<dt id="api.client.gro_client.GroClient.get_df">
+<code class="descclassname">GroClient.</code><code class="descname">get_df</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/gro_client.html#GroClient.get_df"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.gro_client.GroClient.get_df" title="Permalink to this definition">¶</a></dt>
+<dd><p>Call get_data_points() for each saved data series and return as a combined dataframe.</p>
+<p>Note you must have first called either add_data_series() or add_single_data_series() to save
+data series into the GroClient&#8217;s data_series_list. You can inspect the client&#8217;s saved list
+using get_data_series_list().</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="api.client.gro_client.GroClient.add_data_series">
 <code class="descclassname">GroClient.</code><code class="descname">add_data_series</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/gro_client.html#GroClient.add_data_series"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.gro_client.GroClient.add_data_series" title="Permalink to this definition">¶</a></dt>
 <dd><p>Search for entities matching the given names, find data series for
@@ -607,12 +652,15 @@ series.</p>
 <dl class="method">
 <dt id="api.client.gro_client.GroClient.add_single_data_series">
 <code class="descclassname">GroClient.</code><code class="descname">add_single_data_series</code><span class="sig-paren">(</span><em>data_series</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/gro_client.html#GroClient.add_single_data_series"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.gro_client.GroClient.add_single_data_series" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Save a data series object to the GroClient&#8217;s data_series_list for use with get_df().</p>
+</dd></dl>
 
 <dl class="method">
-<dt id="api.client.gro_client.GroClient.get_df">
-<code class="descclassname">GroClient.</code><code class="descname">get_df</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/gro_client.html#GroClient.get_df"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.gro_client.GroClient.get_df" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the content of all data series in a Pandas frame.</p>
+<dt id="api.client.gro_client.GroClient.get_data_series_list">
+<code class="descclassname">GroClient.</code><code class="descname">get_data_series_list</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/gro_client.html#GroClient.get_data_series_list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.gro_client.GroClient.get_data_series_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Inspect the current list of saved data series contained in the GroClient.</p>
+<p>For use with get_df(). Add new data series to the list using add_data_series() and
+add_single_data_series().</p>
 </dd></dl>
 
 </div>

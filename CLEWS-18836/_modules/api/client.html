@@ -412,54 +412,6 @@
         <span class="k">return</span> <span class="n">lib</span><span class="o">.</span><span class="n">get_data_series</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_host</span><span class="p">,</span> <span class="o">**</span><span class="n">selection</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">get_data_points</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">selection</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Get all the data points for a given selection.</span>
-
-<span class="sd">        https://github.com/gro-intelligence/api-client/wiki/Data-Point-Definition</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        access_token : string</span>
-<span class="sd">        api_host : string</span>
-<span class="sd">        metric_id : integer</span>
-<span class="sd">        item_id : integer</span>
-<span class="sd">        region_id : integer</span>
-<span class="sd">        partner_region_id : integer</span>
-<span class="sd">        source_id : integer</span>
-<span class="sd">        frequency_id : integer</span>
-<span class="sd">        start_date : string, optional</span>
-<span class="sd">            all points with start dates equal to or after this date</span>
-<span class="sd">        end_date : string, optional</span>
-<span class="sd">            all points with end dates equal to or after this date</span>
-<span class="sd">        show_revisions : boolean, optional</span>
-<span class="sd">            False by default, meaning only the latest value for each period. If true, will return all</span>
-<span class="sd">            values for a given period, differentiated by the `reporting_date` field.</span>
-<span class="sd">        insert_null : boolean, optional</span>
-<span class="sd">            False by default. If True, will include a data point with a None value for each period</span>
-<span class="sd">            that does not have data.</span>
-<span class="sd">        at_time : string, optional</span>
-<span class="sd">            Estimate what data would have been available via Gro at a given time in the past. See</span>
-<span class="sd">            /api/client/samples/at-time-query-examples.ipynb for more details.</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        list of dicts</span>
-
-<span class="sd">            Example::</span>
-
-<span class="sd">                [ {</span>
-<span class="sd">                    &quot;start_date&quot;: &quot;2000-01-01T00:00:00.000Z&quot;,</span>
-<span class="sd">                    &quot;end_date&quot;: &quot;2000-12-31T00:00:00.000Z&quot;,</span>
-<span class="sd">                    &quot;value&quot;: 251854000,</span>
-<span class="sd">                    &quot;input_unit_id&quot;: 14,</span>
-<span class="sd">                    &quot;input_unit_scale&quot;: 1,</span>
-<span class="sd">                    &quot;metric_id&quot;: 860032,</span>
-<span class="sd">                    &quot;item_id&quot;: 274,</span>
-<span class="sd">                    &quot;region_id&quot;: 1215,</span>
-<span class="sd">                    &quot;frequency_id&quot;: 9,</span>
-<span class="sd">                    &quot;unit_id&quot;: 14</span>
-<span class="sd">                }, ...]</span>
-
-<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">lib</span><span class="o">.</span><span class="n">get_data_points</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_host</span><span class="p">,</span> <span class="o">**</span><span class="n">selection</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">search</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">,</span> <span class="n">search_terms</span><span class="p">):</span>
