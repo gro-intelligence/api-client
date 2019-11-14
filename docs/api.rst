@@ -1,13 +1,51 @@
 API Reference
 =============
 
-*********
-GroClient
-*********
+*****************
+Basic Exploration
+*****************
 
-.. autoclass:: api.client.gro_client.GroClient
-    :inherited-members: lookup, search, search_and_lookup, get_data_series, get_data_points, lookup_belongs, get_geojson, get_descendant_regions, rank_series_by_source
-    :members: add_data_series, add_single_data_series, search_for_entity, get_provinces, get_df
+.. automethod:: api.client.gro_client.GroClient.lookup
 
-.. NOTE: autoclass with nested classes throwing errors. Fixed in Sphinx 1.8:
-   <https://github.com/sphinx-doc/sphinx/pull/5203>
+.. automethod:: api.client.gro_client.GroClient.search
+
+.. automethod:: api.client.gro_client.GroClient.search_and_lookup
+
+.. automethod:: api.client.gro_client.GroClient.search_for_entity
+
+.. automethod:: api.client.gro_client.GroClient.get_data_series
+
+**************
+Data Retrieval
+**************
+
+.. automethod:: api.client.gro_client.GroClient.get_data_points
+
+**********
+Geographic
+**********
+
+.. automethod:: api.client.gro_client.GroClient.get_geojson
+
+.. automethod:: api.client.gro_client.GroClient.get_descendant_regions
+
+.. automethod:: api.client.gro_client.GroClient.get_provinces
+
+********************
+Advanced Exploration
+********************
+
+.. automethod:: api.client.gro_client.GroClient.lookup_belongs
+
+.. automethod:: api.client.gro_client.GroClient.rank_series_by_source
+
+************
+Pandas Utils
+************
+
+.. automethod:: api.client.gro_client.GroClient.add_data_series
+
+.. automethod:: api.client.gro_client.GroClient.add_single_data_series
+
+.. automethod:: api.client.gro_client.GroClient.get_df
+
