@@ -9,11 +9,11 @@ def main():
 
     api_client = BatchClient(API_HOST, ACCESS_TOKEN)
 
-    # specify everything except region_id 
+    # specify everything except region_id
     selection = {
-        'metric_id': 860032, 
-        'item_id': 274, 
-        'source_id': 25, 
+        'metric_id': 860032,
+        'item_id': 274,
+        'source_id': 25,
         'frequency_id': 9,
         'start_date': '1998-01-01T00:00:00.000Z',
         'end_date': '1998-01-01T00:00:00.000Z'
