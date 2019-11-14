@@ -311,6 +311,57 @@ series.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="api.client.gro_client.GroClient.convert_unit">
+<code class="descname">convert_unit</code><span class="sig-paren">(</span><em>point</em>, <em>target_unit_id</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/gro_client.html#GroClient.convert_unit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.gro_client.GroClient.convert_unit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert the data point from one unit to another unit.</p>
+<p>If original or target unit is non-convertible, throw an error.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>point</strong> (<em>dict</em>) &#8211; { value: float, unit_id: integer, ... }</li>
+<li><strong>target_unit_id</strong> (<em>integer</em>) &#8211; </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">{ value: float, unit_id: integer, ... }
+unit_id is changed to the target, and value is converted to use the
+new unit_id. Other properties are unchanged.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">dict</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="api.client.gro_client.GroClient.get_available">
+<code class="descname">get_available</code><span class="sig-paren">(</span><em>entity_type</em><span class="sig-paren">)</span><a class="headerlink" href="#api.client.gro_client.GroClient.get_available" title="Permalink to this definition">¶</a></dt>
+<dd><p>List the first 5000 available entities of the given type.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>entity_type</strong> (<em>string</em>) &#8211; &#8216;items&#8217;, &#8216;metrics&#8217;, or &#8216;regions&#8217;</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>data</strong> &#8211;<p>Example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="p">[</span> <span class="p">{</span> <span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;contains&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;World&#39;</span><span class="p">,</span> <span class="s1">&#39;level&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">},</span>
+<span class="p">{</span> <span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;contains&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">],</span> <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Asia&#39;</span><span class="p">,</span> <span class="s1">&#39;level&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">},</span>
+<span class="o">...</span> <span class="p">]</span>
+</pre></div>
+</div>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">list of dicts</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="api.client.gro_client.GroClient.get_data_points">
 <code class="descname">get_data_points</code><span class="sig-paren">(</span><em>**selections</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/gro_client.html#GroClient.get_data_points"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.gro_client.GroClient.get_data_points" title="Permalink to this definition">¶</a></dt>
 <dd><p>Extend the Client&#8217;s get_data_points method to add unit conversion.</p>
@@ -425,6 +476,35 @@ levels.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="api.client.gro_client.GroClient.get_geo_centre">
+<code class="descname">get_geo_centre</code><span class="sig-paren">(</span><em>region_id</em><span class="sig-paren">)</span><a class="headerlink" href="#api.client.gro_client.GroClient.get_geo_centre" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given a region ID, return the geographic centre in degrees lat/lon.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>access_token</strong> (<em>string</em>) &#8211; </li>
+<li><strong>api_host</strong> (<em>string</em>) &#8211; </li>
+<li><strong>region_id</strong> (<em>integer</em>) &#8211; </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><p>Example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="p">[{</span> <span class="s1">&#39;centre&#39;</span><span class="p">:</span> <span class="p">[</span> <span class="mf">45.7228</span><span class="p">,</span> <span class="o">-</span><span class="mf">112.996</span> <span class="p">],</span> <span class="s1">&#39;regionId&#39;</span><span class="p">:</span> <span class="mi">1215</span><span class="p">,</span> <span class="s1">&#39;regionName&#39;</span><span class="p">:</span> <span class="s1">&#39;United States&#39;</span> <span class="p">}]</span>
+</pre></div>
+</div>
+</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list of dicts</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="api.client.gro_client.GroClient.get_geojson">
 <code class="descname">get_geojson</code><span class="sig-paren">(</span><em>region_id</em><span class="sig-paren">)</span><a class="headerlink" href="#api.client.gro_client.GroClient.get_geojson" title="Permalink to this definition">¶</a></dt>
 <dd><p>Given a region ID, return a geojson shape information</p>
@@ -447,6 +527,40 @@ levels.</p>
 </ul>
 </p>
 </td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="api.client.gro_client.GroClient.list_available">
+<code class="descname">list_available</code><span class="sig-paren">(</span><em>selected_entities</em><span class="sig-paren">)</span><a class="headerlink" href="#api.client.gro_client.GroClient.list_available" title="Permalink to this definition">¶</a></dt>
+<dd><p>List available entities given some selected entities.</p>
+<p>Given one or more selections, return entities combinations that have
+data for the given selections.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>selected_entities</strong> (<em>dict</em>) &#8211; <p>Example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s1">&#39;metric_id&#39;</span><span class="p">:</span> <span class="mi">123</span><span class="p">,</span> <span class="s1">&#39;item_id&#39;</span><span class="p">:</span> <span class="mi">456</span><span class="p">,</span> <span class="s1">&#39;source_id&#39;</span><span class="p">:</span> <span class="mi">7</span> <span class="p">}</span>
+</pre></div>
+</div>
+<p>Keys may include: metric_id, item_id, region_id, partner_region_id,
+source_id, frequency_id</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Example:<div class="highlight-default"><div class="highlight"><pre><span></span><span class="p">[</span> <span class="p">{</span> <span class="s1">&#39;metric_id&#39;</span><span class="p">:</span> <span class="mi">11078</span><span class="p">,</span> <span class="s1">&#39;metric_name&#39;</span><span class="p">:</span> <span class="s1">&#39;Export Value (currency)&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;item_id&#39;</span><span class="p">:</span> <span class="mi">274</span><span class="p">,</span> <span class="s1">&#39;item_name&#39;</span><span class="p">:</span> <span class="s1">&#39;Corn&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;region_id&#39;</span><span class="p">:</span> <span class="mi">1215</span><span class="p">,</span> <span class="s1">&#39;region_name&#39;</span><span class="p">:</span> <span class="s1">&#39;United States&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;source_id&#39;</span><span class="p">:</span> <span class="mi">15</span><span class="p">,</span> <span class="s1">&#39;source_name&#39;</span><span class="p">:</span> <span class="s1">&#39;USDA GATS&#39;</span> <span class="p">},</span>
+<span class="p">{</span> <span class="o">...</span> <span class="p">},</span>
+<span class="o">...</span> <span class="p">]</span>
+</pre></div>
+</div>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">list of dicts</td>
 </tr>
 </tbody>
 </table>
@@ -516,6 +630,27 @@ levels.</p>
 </tr>
 </tbody>
 </table>
+</dd></dl>
+
+<dl class="method">
+<dt id="api.client.gro_client.GroClient.pick_random_data_series">
+<code class="descname">pick_random_data_series</code><span class="sig-paren">(</span><em>selected_entities</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/gro_client.html#GroClient.pick_random_data_series"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.gro_client.GroClient.pick_random_data_series" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given a selection of tentities, pick a random available data series
+the given selection of entities.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="api.client.gro_client.GroClient.pick_random_entities">
+<code class="descname">pick_random_entities</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/gro_client.html#GroClient.pick_random_entities"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.gro_client.GroClient.pick_random_entities" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pick a random item that has some data associated with it, and a
+random metric and region pair for that item with data
+available.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="api.client.gro_client.GroClient.print_one_data_series">
+<code class="descname">print_one_data_series</code><span class="sig-paren">(</span><em>data_series</em>, <em>filename</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/gro_client.html#GroClient.print_one_data_series"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.gro_client.GroClient.print_one_data_series" title="Permalink to this definition">¶</a></dt>
+<dd><p>Output a data series to a CSV file.</p>
 </dd></dl>
 
 <dl class="method">
