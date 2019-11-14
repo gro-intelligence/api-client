@@ -90,7 +90,7 @@ def get_access_token(api_host, user_email, user_password, logger=None):
         retry_count))
 
 
-def redirect(params, migration):
+def redirect(old_params, migration):
     """Update query parameters to follow a redirection response from the API.
 
     >>> redirect(
@@ -101,7 +101,7 @@ def redirect(params, migration):
 
     Parameters
     ----------
-    params : dict
+    old_params : dict
         The original parameters provided to the API request
     migration : dict
         The body of the 301 response indicating which of the inputs have been
@@ -109,17 +109,18 @@ def redirect(params, migration):
 
     Returns
     -------
-    params : dict
+    new_params : dict
         The mutated params object with values replaced according to the
         redirection instructions provided by the API
 
     """
+    new_params = old_params.copy()
     for migration_key in migration:
         split_mig_key = migration_key.split('_')
         if split_mig_key[0] == 'new':
             param_key = snake_to_camel('_'.join([split_mig_key[1], 'id']))
-            params[param_key] = migration[migration_key]
-    return params
+            new_params[param_key] = migration[migration_key]
+    return new_params
 
 
 def get_data(url, headers, params=None, logger=None):
@@ -156,6 +157,9 @@ def get_data(url, headers, params=None, logger=None):
         if data.status_code == 200:
             logger.debug('OK', extra=log_record)
             return data
+        if data.status_code == 204:
+            logger.warning('No Content', extra=log_record)
+            return data
         retry_count += 1
         log_record['tag'] = 'failed_gro_api_request'
         if retry_count < cfg.MAX_RETRIES:
@@ -163,13 +167,16 @@ def get_data(url, headers, params=None, logger=None):
         if data.status_code == 429:
             time.sleep(2 ** retry_count)  # Exponential backoff before retrying
         elif data.status_code == 301:
-            params = redirect(params, data.json()['data'][0])
+            new_params = redirect(params, data.json()['data'][0])
+            logger.warning('Redirecting {} to {}'.format(params, new_params), extra=log_record)
+            params = new_params
         elif data.status_code in [404, 401, 500]:
             break
         else:
-            logger.error(data.text, extra=log_record)
-    raise Exception('Giving up on {} after {} tries. Error is: {}.'.format(
-        url, retry_count, data.text))
+            logger.error('{}'.format(data), extra=log_record)
+    raise Exception('Giving up on {} after {} tries: {}.'.format(
+        url, retry_count, data))
+
 
 @memoize(maxsize=None)
 def get_available(access_token, api_host, entity_type):
@@ -185,9 +192,9 @@ def get_available(access_token, api_host, entity_type):
     Returns
     -------
     data : list of dicts
-        
+
         Example::
-        
+
             [ { 'id': 0, 'contains': [1, 2, 3], 'name': 'World', 'level': 1},
             { 'id': 1, 'contains': [4, 5, 6], 'name': 'Asia', 'level': 2},
             ... ]
@@ -210,11 +217,11 @@ def list_available(access_token, api_host, selected_entities):
     access_token : string
     api_host : string
     selected_entities : dict
-        
+
         Example::
-        
+
             { 'metric_id': 123, 'item_id': 456, 'source_id': 7 }
-        
+
         Keys may include: metric_id, item_id, region_id, partner_region_id,
         source_id, frequency_id
 
@@ -241,6 +248,7 @@ def list_available(access_token, api_host, selected_entities):
         return resp.json()['data']
     except KeyError:
         raise Exception(resp.text)
+
 
 @memoize(maxsize=None)
 def lookup(access_token, api_host, entity_type, entity_id):
@@ -276,6 +284,7 @@ def lookup(access_token, api_host, entity_type, entity_id):
         return resp.json()['data']
     except KeyError:
         raise Exception(resp.text)
+
 
 @memoize(maxsize=None)
 def snake_to_camel(term):
@@ -315,6 +324,8 @@ def get_params_from_selection(**selection):
     partner_region_id : integer, optional
     source_id : integer, optional
     frequency_id : integer, optional
+    start_date: string, optional
+    end_date: string, optional
 
     Returns
     -------
@@ -325,7 +336,7 @@ def get_params_from_selection(**selection):
     params = {}
     for key, value in list(selection.items()):
         if key in ('region_id', 'partner_region_id', 'item_id', 'metric_id',
-                   'source_id', 'frequency_id'):
+                   'source_id', 'frequency_id', 'start_date', 'end_date'):
             params[snake_to_camel(key)] = value
     return params
 
@@ -415,9 +426,9 @@ def get_data_series(access_token, api_host, **selection):
     Returns
     -------
     list of dicts
-        
+
         Example::
-        
+
             [{ 'metric_id': 2020032, 'metric_name': 'Seed Use',
                'item_id': 274, 'item_name': 'Corn',
                'region_id': 1215, 'region_name': 'United States',
@@ -438,10 +449,11 @@ def get_data_series(access_token, api_host, **selection):
 
 
 def rank_series_by_source(access_token, api_host, series_list):
-    """Given a list of series, return them in source-ranked order.
-
-    If there are multiple sources for the same selection, the prefered source
-    comes first. Differences other than source_id are not affected.
+    """Given a list of series selections, for each unique combination
+    excluding source, expand to all available sources and return them
+    in ranked order.  The orders corresponds to how well that source
+    covers the selection (items, metrics, regions, and time range and
+    frequency).
 
     Parameters
     ----------
@@ -453,29 +465,36 @@ def rank_series_by_source(access_token, api_host, series_list):
     Yields
     ------
     dict
-        The input series_list but reordered by source rank
+        The input series_list X each possible source, ordered by coverage
 
     """
     # We sort the internal tuple representations of the dictionaries because
     # otherwise when we call set() we end up with duplicates if iteritems()
     # returns a different order for the same dictionary. See test case.
     selections_sorted = set(tuple(sorted(
-        [k_v for k_v in iter(list(single_series.items())) if k_v[0] !=
-            'source_id'],
+        [k_v for k_v in iter(list(single_series.items()))
+         if k_v[0] not in ('source_id', 'source_name')],
         key=lambda x: x[0])) for single_series in series_list)
+
+    def make_key(key):
+        if key not in ('startDate', 'endDate'):
+            return key + 's'
+        return key
 
     for series in map(dict, selections_sorted):
         url = '/'.join(['https:', '', api_host, 'v2/available/sources'])
         headers = {'authorization': 'Bearer ' + access_token}
-        params = dict((k + 's', v) for k, v in iter(list(
+        params = dict((make_key(k), v) for k, v in iter(list(
             get_params_from_selection(**series).items())))
-        source_ids = get_data(url, headers, params).json()
+        try:
+            source_ids = get_data(url, headers, params).json()
+        except ValueError:
+            continue  # empty response
         for source_id in source_ids:
             # Make a copy to avoid passing the same reference each time.
             series_with_source = dict(series)
             series_with_source['source_id'] = source_id
             yield series_with_source
-
 
 def format_crop_calendar_response(resp):
     """Make cropcalendar output a format similar to get_data_points().
@@ -647,7 +666,7 @@ def get_data_points(access_token, api_host, **selection):
     list of dicts
 
         Example::
-        
+
             [ {
                 "start_date": "2000-01-01T00:00:00.000Z",
                 "end_date": "2000-12-31T00:00:00.000Z",
@@ -672,6 +691,7 @@ def get_data_points(access_token, api_host, **selection):
     resp = get_data(url, headers, params)
     return resp.json()
 
+
 @memoize(maxsize=None)
 def universal_search(access_token, api_host, search_terms):
     """Search across all entity types for the given terms.
@@ -685,7 +705,7 @@ def universal_search(access_token, api_host, search_terms):
     Returns
     -------
     list of [id, entity_type] pairs
-        
+
         Example::
 
             [[5604, 'item'], [10204, 'item'], [410032, 'metric'], ....]
@@ -696,6 +716,7 @@ def universal_search(access_token, api_host, search_terms):
     headers = {'authorization': 'Bearer ' + access_token}
     resp = get_data(url, headers, {'q': search_terms})
     return resp.json()
+
 
 @memoize(maxsize=None)
 def search(access_token, api_host, entity_type, search_terms):
@@ -712,7 +733,7 @@ def search(access_token, api_host, entity_type, search_terms):
     Returns
     -------
     list of dicts
-        
+
         Example::
 
             [{'id': 5604}, {'id': 10204}, {'id': 10210}, ....]
@@ -818,6 +839,7 @@ def get_geo_centre(access_token, api_host, region_id):
     resp = get_data(url, headers)
     return resp.json()['data']
 
+
 @memoize(maxsize=None)
 def get_geojson(access_token, api_host, region_id):
     """Given a region ID, return a geojson shape information
@@ -846,7 +868,7 @@ def get_geojson(access_token, api_host, region_id):
 
 
 def get_descendant_regions(access_token, api_host, region_id,
-                           descendant_level):
+                           descendant_level, include_historical=True):
     """Look up details of regions of the given level contained by a region.
 
     Given any region by id, recursively get all the descendant regions
@@ -864,6 +886,8 @@ def get_descendant_regions(access_token, api_host, region_id,
     region_id : integer
     descendant_level : integer
         The region level of interest. See REGION_LEVELS constant.
+    include_historical : boolean
+        option to include historical regions
 
     Returns
     -------
@@ -890,11 +914,13 @@ def get_descendant_regions(access_token, api_host, region_id,
     region = lookup(access_token, api_host, 'regions', region_id)
     for member_id in region['contains']:
         member = lookup(access_token, api_host, 'regions', member_id)
-        if descendant_level == member['level']:
+        if (not include_historical and member['historical']):
+            pass
+        elif descendant_level == member['level']:
             descendants.append(member)
         elif member['level'] < descendant_level:
             descendants += get_descendant_regions(
-                access_token, api_host, member_id, descendant_level)
+                access_token, api_host, member_id, descendant_level, include_historical)
     return descendants
 
 
