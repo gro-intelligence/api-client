@@ -311,33 +311,6 @@ series.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="api.client.gro_client.GroClient.convert_unit">
-<code class="descname">convert_unit</code><span class="sig-paren">(</span><em>point</em>, <em>target_unit_id</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/gro_client.html#GroClient.convert_unit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.gro_client.GroClient.convert_unit" title="Permalink to this definition">¶</a></dt>
-<dd><p>Convert the data point from one unit to another unit.</p>
-<p>If original or target unit is non-convertible, throw an error.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>point</strong> (<em>dict</em>) &#8211; { value: float, unit_id: integer, ... }</li>
-<li><strong>target_unit_id</strong> (<em>integer</em>) &#8211; </li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">{ value: float, unit_id: integer, ... }
-unit_id is changed to the target, and value is converted to use the
-new unit_id. Other properties are unchanged.</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">dict</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
 <dt id="api.client.gro_client.GroClient.get_data_points">
 <code class="descname">get_data_points</code><span class="sig-paren">(</span><em>**selections</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/gro_client.html#GroClient.get_data_points"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.gro_client.GroClient.get_data_points" title="Permalink to this definition">¶</a></dt>
 <dd><p>Extend the Client&#8217;s get_data_points method to add unit conversion.</p>
@@ -358,30 +331,259 @@ the unit you wish to convert all points to.</td>
 </dd></dl>
 
 <dl class="method">
+<dt id="api.client.gro_client.GroClient.get_data_series">
+<code class="descname">get_data_series</code><span class="sig-paren">(</span><em>**selection</em><span class="sig-paren">)</span><a class="headerlink" href="#api.client.gro_client.GroClient.get_data_series" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get available data series for the given selections.</p>
+<p><a class="reference external" href="https://github.com/gro-intelligence/api-client/wiki/Data-Series-Definition">https://github.com/gro-intelligence/api-client/wiki/Data-Series-Definition</a></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>access_token</strong> (<em>string</em>) &#8211; </li>
+<li><strong>api_host</strong> (<em>string</em>) &#8211; </li>
+<li><strong>metric_id</strong> (<em>integer</em><em>, </em><em>optional</em>) &#8211; </li>
+<li><strong>item_id</strong> (<em>integer</em><em>, </em><em>optional</em>) &#8211; </li>
+<li><strong>region_id</strong> (<em>integer</em><em>, </em><em>optional</em>) &#8211; </li>
+<li><strong>partner_region_id</strong> (<em>integer</em><em>, </em><em>optional</em>) &#8211; </li>
+<li><strong>source_id</strong> (<em>integer</em><em>, </em><em>optional</em>) &#8211; </li>
+<li><strong>frequency_id</strong> (<em>integer</em><em>, </em><em>optional</em>) &#8211; </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><p>Example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="p">[{</span> <span class="s1">&#39;metric_id&#39;</span><span class="p">:</span> <span class="mi">2020032</span><span class="p">,</span> <span class="s1">&#39;metric_name&#39;</span><span class="p">:</span> <span class="s1">&#39;Seed Use&#39;</span><span class="p">,</span>
+<span class="s1">&#39;item_id&#39;</span><span class="p">:</span> <span class="mi">274</span><span class="p">,</span> <span class="s1">&#39;item_name&#39;</span><span class="p">:</span> <span class="s1">&#39;Corn&#39;</span><span class="p">,</span>
+<span class="s1">&#39;region_id&#39;</span><span class="p">:</span> <span class="mi">1215</span><span class="p">,</span> <span class="s1">&#39;region_name&#39;</span><span class="p">:</span> <span class="s1">&#39;United States&#39;</span><span class="p">,</span>
+<span class="s1">&#39;source_id&#39;</span><span class="p">:</span> <span class="mi">24</span><span class="p">,</span> <span class="s1">&#39;source_name&#39;</span><span class="p">:</span> <span class="s1">&#39;USDA FEEDGRAINS&#39;</span><span class="p">,</span>
+<span class="s1">&#39;frequency_id&#39;</span><span class="p">:</span> <span class="mi">7</span><span class="p">,</span>
+<span class="s1">&#39;start_date&#39;</span><span class="p">:</span> <span class="s1">&#39;1975-03-01T00:00:00.000Z&#39;</span><span class="p">,</span> <span class="s1">&#39;end_date&#39;</span><span class="p">:</span> <span class="s1">&#39;2018-05-31T00:00:00.000Z&#39;</span>
+<span class="p">},</span> <span class="p">{</span> <span class="o">...</span> <span class="p">},</span> <span class="o">...</span> <span class="p">]</span>
+</pre></div>
+</div>
+</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list of dicts</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="api.client.gro_client.GroClient.get_descendant_regions">
+<code class="descname">get_descendant_regions</code><span class="sig-paren">(</span><em>region_id</em>, <em>descendant_level=None</em><span class="sig-paren">)</span><a class="headerlink" href="#api.client.gro_client.GroClient.get_descendant_regions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Look up details of regions of the given level contained by a region.</p>
+<p>Given any region by id, recursively get all the descendant regions
+that are of the specified level.</p>
+<p>This takes advantage of the assumption that region graph is
+acyclic. This will only traverse ordered region levels (strictly
+increasing region level id) and thus skips non-administrative region
+levels.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>access_token</strong> (<em>string</em>) &#8211; </li>
+<li><strong>api_host</strong> (<em>string</em>) &#8211; </li>
+<li><strong>region_id</strong> (<em>integer</em>) &#8211; </li>
+<li><strong>descendant_level</strong> (<em>integer</em>) &#8211; The region level of interest. See REGION_LEVELS constant.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><p>Example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="p">[{</span>
+    <span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="mi">13100</span><span class="p">,</span>
+    <span class="s1">&#39;contains&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">139839</span><span class="p">,</span> <span class="mi">139857</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span>
+    <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Wisconsin&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;level&#39;</span><span class="p">:</span> <span class="mi">4</span>
+<span class="p">}</span> <span class="p">,</span> <span class="p">{</span>
+    <span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="mi">13101</span><span class="p">,</span>
+    <span class="s1">&#39;contains&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">139891</span><span class="p">,</span> <span class="mi">139890</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span>
+    <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Wyoming&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;level&#39;</span><span class="p">:</span> <span class="mi">4</span>
+<span class="p">},</span> <span class="o">...</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>See output of lookup()</p>
+</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list of dicts</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="api.client.gro_client.GroClient.get_df">
 <code class="descname">get_df</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/gro_client.html#GroClient.get_df"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.gro_client.GroClient.get_df" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the content of all data series in a Pandas frame.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="api.client.gro_client.GroClient.pick_random_data_series">
-<code class="descname">pick_random_data_series</code><span class="sig-paren">(</span><em>selected_entities</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/gro_client.html#GroClient.pick_random_data_series"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.gro_client.GroClient.pick_random_data_series" title="Permalink to this definition">¶</a></dt>
-<dd><p>Given a selection of tentities, pick a random available data series
-the given selection of entities.</p>
+<dt id="api.client.gro_client.GroClient.get_geojson">
+<code class="descname">get_geojson</code><span class="sig-paren">(</span><em>region_id</em><span class="sig-paren">)</span><a class="headerlink" href="#api.client.gro_client.GroClient.get_geojson" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given a region ID, return a geojson shape information</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>access_token</strong> (<em>string</em>) &#8211; </li>
+<li><strong>api_host</strong> (<em>string</em>) &#8211; </li>
+<li><strong>region_id</strong> (<em>integer</em>) &#8211; </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul class="simple">
+<li><em>a geojson object e.g.</em></li>
+<li><strong>{ &#8216;type&#8217;</strong> (<em>&#8216;GeometryCollection&#8217;,</em>)</li>
+<li><strong>&#8216;geometries&#8217;</strong> (<em>[{&#8216;type&#8217;: &#8216;MultiPolygon&#8217;,</em>) &#8211; &#8216;coordinates&#8217;: [[[[-38.394, -4.225], ...]]]}, ...]}</li>
+<li><em>or None if not found.</em></li>
+</ul>
+</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
-<dt id="api.client.gro_client.GroClient.pick_random_entities">
-<code class="descname">pick_random_entities</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/gro_client.html#GroClient.pick_random_entities"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.gro_client.GroClient.pick_random_entities" title="Permalink to this definition">¶</a></dt>
-<dd><p>Pick a random item that has some data associated with it, and a
-random metric and region pair for that item with data
-available.</p>
+<dt id="api.client.gro_client.GroClient.lookup">
+<code class="descname">lookup</code><span class="sig-paren">(</span><em>entity_type</em>, <em>entity_id</em><span class="sig-paren">)</span><a class="headerlink" href="#api.client.gro_client.GroClient.lookup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve details about a given id of type entity_type.</p>
+<p><a class="reference external" href="https://github.com/gro-intelligence/api-client/wiki/Entities-Definition">https://github.com/gro-intelligence/api-client/wiki/Entities-Definition</a></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>access_token</strong> (<em>string</em>) &#8211; </li>
+<li><strong>api_host</strong> (<em>string</em>) &#8211; </li>
+<li><strong>entity_type</strong> (<em>string</em>) &#8211; &#8216;items&#8217;, &#8216;metrics&#8217;, &#8216;regions&#8217;, &#8216;units&#8217;, &#8216;frequencies&#8217;, or &#8216;sources&#8217;</li>
+<li><strong>entity_id</strong> (<em>int</em>) &#8211; </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><p>Example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="mi">274</span><span class="p">,</span>
+<span class="s1">&#39;contains&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">779</span><span class="p">,</span> <span class="mi">780</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span>
+<span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Corn&#39;</span><span class="p">,</span>
+<span class="s1">&#39;definition&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;The seeds of the widely cultivated corn plant &lt;i&gt;Zea mays&lt;/i&gt;, which&#39;</span>
+            <span class="s1">&#39; is one of the world&#39;</span><span class="n">s</span> <span class="n">most</span> <span class="n">popular</span> <span class="n">grains</span><span class="o">.</span><span class="s1">&#39;) }</span>
+</pre></div>
+</div>
+</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">dict</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
-<dt id="api.client.gro_client.GroClient.print_one_data_series">
-<code class="descname">print_one_data_series</code><span class="sig-paren">(</span><em>data_series</em>, <em>filename</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/gro_client.html#GroClient.print_one_data_series"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.gro_client.GroClient.print_one_data_series" title="Permalink to this definition">¶</a></dt>
-<dd><p>Output a data series to a CSV file.</p>
+<dt id="api.client.gro_client.GroClient.lookup_belongs">
+<code class="descname">lookup_belongs</code><span class="sig-paren">(</span><em>entity_type</em>, <em>entity_id</em><span class="sig-paren">)</span><a class="headerlink" href="#api.client.gro_client.GroClient.lookup_belongs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Look up details of entities containing the given entity.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>access_token</strong> (<em>string</em>) &#8211; </li>
+<li><strong>api_host</strong> (<em>string</em>) &#8211; </li>
+<li><strong>entity_type</strong> (<em>string</em>) &#8211; One of: &#8216;metrics&#8217;, &#8216;items&#8217;, or &#8216;regions&#8217;</li>
+<li><strong>entity_id</strong> (<em>integer</em>) &#8211; </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Yields:</th><td class="field-body"><p class="first"><em>dict</em> &#8211; Result of lookup() on each entity the given entity belongs to.</p>
+<p>For example: For the region &#8216;United States&#8217;, one yielded result will be for
+&#8216;North America.&#8217; The format of which matches the output of lookup():</p>
+<div class="last highlight-default"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="mi">15</span><span class="p">,</span>
+<span class="s1">&#39;contains&#39;</span><span class="p">:</span> <span class="p">[</span> <span class="mi">1008</span><span class="p">,</span> <span class="mi">1009</span><span class="p">,</span> <span class="mi">1012</span><span class="p">,</span> <span class="mi">1215</span><span class="p">,</span> <span class="o">...</span> <span class="p">],</span>
+<span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;North America&#39;</span><span class="p">,</span>
+<span class="s1">&#39;level&#39;</span><span class="p">:</span> <span class="mi">2</span> <span class="p">}</span>
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="api.client.gro_client.GroClient.search">
+<code class="descname">search</code><span class="sig-paren">(</span><em>entity_type</em>, <em>search_terms</em><span class="sig-paren">)</span><a class="headerlink" href="#api.client.gro_client.GroClient.search" title="Permalink to this definition">¶</a></dt>
+<dd><p>Search for the given search term. Better matches appear first.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>access_token</strong> (<em>string</em>) &#8211; </li>
+<li><strong>api_host</strong> (<em>string</em>) &#8211; </li>
+<li><strong>entity_type</strong> (<em>string</em>) &#8211; One of: &#8216;metrics&#8217;, &#8216;items&#8217;, &#8216;regions&#8217;, or &#8216;sources&#8217;</li>
+<li><strong>search_terms</strong> (<em>string</em>) &#8211; </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><p>Example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="p">[{</span><span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="mi">5604</span><span class="p">},</span> <span class="p">{</span><span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="mi">10204</span><span class="p">},</span> <span class="p">{</span><span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="mi">10210</span><span class="p">},</span> <span class="o">....</span><span class="p">]</span>
+</pre></div>
+</div>
+</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list of dicts</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="api.client.gro_client.GroClient.search_and_lookup">
+<code class="descname">search_and_lookup</code><span class="sig-paren">(</span><em>entity_type</em>, <em>search_terms</em><span class="sig-paren">)</span><a class="headerlink" href="#api.client.gro_client.GroClient.search_and_lookup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Search for the given search terms and look up their details.</p>
+<p>For each result, yield a dict of the entity and it&#8217;s properties:
+{ &#8216;id&#8217;: &lt;integer id of entity, unique within this entity type&gt;,</p>
+<blockquote>
+<div>&#8216;name&#8217;:    &lt;string canonical name&gt;
+&#8216;contains&#8217;: &lt;array of ids of entities that are contained in this one&gt;,
+....
+&lt;other properties&gt; }</div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>access_token</strong> (<em>string</em>) &#8211; </li>
+<li><strong>api_host</strong> (<em>string</em>) &#8211; </li>
+<li><strong>entity_type</strong> (<em>string</em>) &#8211; One of: &#8216;metrics&#8217;, &#8216;items&#8217;, &#8216;regions&#8217;, or &#8216;sources&#8217;</li>
+<li><strong>search_terms</strong> (<em>string</em>) &#8211; </li>
+<li><strong>num_results</strong> (<em>int</em>) &#8211; Maximum number of results to return</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Yields:</th><td class="field-body"><p class="first"><em>dict</em> &#8211;</p>
+<p>Result from search() passed to lookup() to get additional details. For example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="mi">274</span><span class="p">,</span> <span class="s1">&#39;contains&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">779</span><span class="p">,</span> <span class="mi">780</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Corn&#39;</span><span class="p">,</span>
+<span class="s1">&#39;definition&#39;</span><span class="p">:</span> <span class="s1">&#39;The seeds of the widely cultivated...&#39;</span> <span class="p">}</span>
+</pre></div>
+</div>
+<p class="last">See output of lookup(). Note that as with search(), the first result is
+the best match for the given search term(s).</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">

@@ -252,6 +252,8 @@
         
           <li><a href="../../index.html">Module code</a> &raquo;</li>
         
+          <li><a href="../client.html">api.client</a> &raquo;</li>
+        
       <li>api.client.gro_client</li>
     
     
@@ -432,7 +434,7 @@
     <span class="c1">###</span>
     <span class="c1"># Convenience methods that automatically fill in partial selections with random entities</span>
     <span class="c1">###</span>
-<div class="viewcode-block" id="GroClient.pick_random_entities"><a class="viewcode-back" href="../../../api.html#api.client.gro_client.GroClient.pick_random_entities">[docs]</a>    <span class="k">def</span> <span class="nf">pick_random_entities</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">pick_random_entities</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Pick a random item that has some data associated with it, and a</span>
 <span class="sd">        random metric and region pair for that item with data</span>
 <span class="sd">        available.</span>
@@ -447,9 +449,9 @@
         <span class="n">entities</span> <span class="o">=</span> <span class="n">entity_list</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">num</span><span class="o">*</span><span class="n">random</span><span class="p">())]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Using randomly selected entities: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">entities</span><span class="p">)))</span>
         <span class="n">selected_entities</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">entities</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">selected_entities</span></div>
+        <span class="k">return</span> <span class="n">selected_entities</span>
 
-<div class="viewcode-block" id="GroClient.pick_random_data_series"><a class="viewcode-back" href="../../../api.html#api.client.gro_client.GroClient.pick_random_data_series">[docs]</a>    <span class="k">def</span> <span class="nf">pick_random_data_series</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">selected_entities</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">pick_random_data_series</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">selected_entities</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Given a selection of tentities, pick a random available data series</span>
 <span class="sd">        the given selection of entities.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -458,10 +460,10 @@
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;No data series available for </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                 <span class="n">selected_entities</span><span class="p">))</span>
         <span class="n">selected_data_series</span> <span class="o">=</span> <span class="n">data_series_list</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">data_series_list</span><span class="p">)</span><span class="o">*</span><span class="n">random</span><span class="p">())]</span>
-        <span class="k">return</span> <span class="n">selected_data_series</span></div>
+        <span class="k">return</span> <span class="n">selected_data_series</span>
 
     <span class="c1"># TODO: rename function to &quot;write_...&quot; rather than &quot;print_...&quot;</span>
-<div class="viewcode-block" id="GroClient.print_one_data_series"><a class="viewcode-back" href="../../../api.html#api.client.gro_client.GroClient.print_one_data_series">[docs]</a>    <span class="k">def</span> <span class="nf">print_one_data_series</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_series</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">print_one_data_series</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_series</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Output a data series to a CSV file.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Using data series: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">data_series</span><span class="p">)))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Outputing to file: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">filename</span><span class="p">))</span>
@@ -469,9 +471,9 @@
         <span class="k">for</span> <span class="n">point</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_data_points</span><span class="p">(</span><span class="o">**</span><span class="n">data_series</span><span class="p">):</span>
             <span class="n">writer</span><span class="o">.</span><span class="n">writerow</span><span class="p">([</span><span class="n">point</span><span class="p">[</span><span class="s1">&#39;start_date&#39;</span><span class="p">],</span> <span class="n">point</span><span class="p">[</span><span class="s1">&#39;end_date&#39;</span><span class="p">],</span>
                              <span class="n">point</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="n">point</span><span class="p">[</span><span class="s1">&#39;input_unit_scale&#39;</span><span class="p">],</span>
-                             <span class="bp">self</span><span class="o">.</span><span class="n">lookup_unit_abbreviation</span><span class="p">(</span><span class="n">point</span><span class="p">[</span><span class="s1">&#39;input_unit_id&#39;</span><span class="p">])])</span></div>
+                             <span class="bp">self</span><span class="o">.</span><span class="n">lookup_unit_abbreviation</span><span class="p">(</span><span class="n">point</span><span class="p">[</span><span class="s1">&#39;input_unit_id&#39;</span><span class="p">])])</span>
 
-<div class="viewcode-block" id="GroClient.convert_unit"><a class="viewcode-back" href="../../../api.html#api.client.gro_client.GroClient.convert_unit">[docs]</a>    <span class="k">def</span> <span class="nf">convert_unit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">point</span><span class="p">,</span> <span class="n">target_unit_id</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">convert_unit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">point</span><span class="p">,</span> <span class="n">target_unit_id</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Convert the data point from one unit to another unit.</span>
 
 <span class="sd">        If original or target unit is non-convertible, throw an error.</span>
@@ -514,7 +516,7 @@
                 <span class="n">value_in_base_unit</span> <span class="o">-</span> <span class="n">to_convert_factor</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;offset&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
             <span class="p">)</span> <span class="o">/</span> <span class="n">to_convert_factor</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;factor&#39;</span><span class="p">)</span>
         <span class="n">point</span><span class="p">[</span><span class="s1">&#39;unit_id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">target_unit_id</span>
-        <span class="k">return</span> <span class="n">point</span></div></div>
+        <span class="k">return</span> <span class="n">point</span></div>
 
 
 <span class="sd">&quot;&quot;&quot;Basic Gro API command line interface.</span>
