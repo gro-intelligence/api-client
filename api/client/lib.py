@@ -438,12 +438,16 @@ def get_data_series(access_token, api_host, **selection):
             }, { ... }, ... ]
 
     """
+    logger = get_default_logger()
     url = '/'.join(['https:', '', api_host, 'v2/data_series/list'])
     headers = {'authorization': 'Bearer ' + access_token}
     params = get_params_from_selection(**selection)
     resp = get_data(url, headers, params)
     try:
-        return resp.json()['data']
+        response = resp.json()['data']
+        if any((series.get('metadata', {}).get('includes_historical_region', False)) for series in response):
+            logger.warning('Some of the regions in your data call are historical, with boundaries that may be outdated. The regions may have overlapping values with current regions')
+        return response
     except KeyError:
         raise Exception(resp.text)
 
@@ -878,7 +882,7 @@ def get_geojson(access_token, api_host, region_id):
 
 
 def get_descendant_regions(access_token, api_host, region_id,
-                           descendant_level):
+                           descendant_level, include_historical=True):
     """Look up details of regions of the given level contained by a region.
 
     Given any region by id, recursively get all the descendant regions
@@ -896,6 +900,8 @@ def get_descendant_regions(access_token, api_host, region_id,
     region_id : integer
     descendant_level : integer
         The region level of interest. See REGION_LEVELS constant.
+    include_historical : boolean
+        option to include historical regions
 
     Returns
     -------
@@ -922,11 +928,13 @@ def get_descendant_regions(access_token, api_host, region_id,
     region = lookup(access_token, api_host, 'regions', region_id)
     for member_id in region['contains']:
         member = lookup(access_token, api_host, 'regions', member_id)
-        if not descendant_level or descendant_level == member['level']:
+        if (not include_historical and member['historical']):
+            pass
+        elif descendant_level == member['level']:
             descendants.append(member)
         if not descendant_level or member['level'] < descendant_level:
             descendants += get_descendant_regions(
-                access_token, api_host, member_id, descendant_level)
+                access_token, api_host, member_id, descendant_level, include_historical)
     return descendants
 
 
