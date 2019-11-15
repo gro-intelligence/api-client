@@ -97,16 +97,9 @@ class BatchClient(GroClient):
 
     @gen.coroutine
     def get_ranked_sources(self, **selection):
-        """Get all sources, in ranked order, for a given selection.
-        """
-        headers = {'authorization': 'Bearer ' + self.access_token}
-        url = '/'.join(['https:', '', self.api_host, 'v2/available/sources'])
-        params = dict((k + 's', v) for k, v in iter(list(
-            lib.get_params_from_selection(**selection).items())))
-        resp = yield self.get_data(url, headers, params)
-        response = selection
-        response['ranked_sources'] = json_decode(resp)
-        raise gen.Return(response)
+        """Get all sources, in ranked order, for a given selection."""
+        response = super(BatchClient, self).rank_series_by_source(**selection)
+        raise gen.Return([r for r in response])
 
     def batch_async_get_ranked_sources(self, batched_args, output_list=None, map_result=None):
         return self.batch_async_queue(self.get_ranked_sources, batched_args, output_list, map_result)
