@@ -1282,6 +1282,12 @@ corresponding to the regions.</p>
 <em class="property">class </em><code class="descclassname">api.client.batch_client.</code><code class="descname">BatchClient</code><span class="sig-paren">(</span><em>api_host</em>, <em>access_token</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/batch_client.html#BatchClient"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.batch_client.BatchClient" title="Permalink to this definition">¶</a></dt>
 <dd><p>API client with support for batch asynchronous queries.</p>
 <dl class="method">
+<dt id="api.client.batch_client.BatchClient.async_rank_series_by_source">
+<code class="descname">async_rank_series_by_source</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/batch_client.html#BatchClient.async_rank_series_by_source"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.batch_client.BatchClient.async_rank_series_by_source" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get all sources, in ranked order, for a given selection.</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="api.client.batch_client.BatchClient.batch_async_queue">
 <code class="descname">batch_async_queue</code><span class="sig-paren">(</span><em>func</em>, <em>batched_args</em>, <em>output_list</em>, <em>map_result</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/batch_client.html#BatchClient.batch_async_queue"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.batch_client.BatchClient.batch_async_queue" title="Permalink to this definition">¶</a></dt>
 <dd><p>Asynchronously call func.</p>
@@ -1316,12 +1322,6 @@ corresponding to the regions.</p>
 <dd><p>Get all the data points for a given selection, which is some or all
 of: item_id, metric_id, region_id, frequency_id, source_id,
 partner_region_id. Additional arguments are allowed and ignored.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="api.client.batch_client.BatchClient.get_ranked_sources">
-<code class="descname">get_ranked_sources</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/batch_client.html#BatchClient.get_ranked_sources"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.batch_client.BatchClient.get_ranked_sources" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get all sources, in ranked order, for a given selection.</p>
 </dd></dl>
 
 </dd></dl>
