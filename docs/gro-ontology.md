@@ -44,12 +44,11 @@ Each specific entity will have an `id`, `name`, and various other properties. Fo
   10134],
  'definition': 'The seeds and harvested crops of plants belonging to the species <i>Glycine max</i> that are used in the production of oil and both human and livestock consumption.',
  'id': 270,
- 'name': 'Soybeans',
- 'rankingScore': 2.204}
+ 'name': 'Soybeans'}
 ```
 IDs are unique within a particular entity type, i.e., there's only one item with id = 270.
 
-The above information can be retrieved using the client.search function:
+The above information can be retrieved using the `client.lookup` function:
 ```client.lookup('items', 270)```
 
 [See this Getting Started section for help on finding entities by name or by id.](./understanding-data-responses#look-up)
