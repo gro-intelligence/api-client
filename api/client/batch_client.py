@@ -96,14 +96,14 @@ class BatchClient(GroClient):
                                       output_list, map_result)
 
     @gen.coroutine
-    def get_ranked_sources(self, **selection):
+    def async_rank_series_by_source(self, **selection):
         """Get all sources, in ranked order, for a given selection."""
         response = super(BatchClient, self).rank_series_by_source(**selection)
         raise gen.Return([r for r in response])
 
-    def batch_async_get_ranked_sources(self, batched_args,
+    def batch_async_rank_series_by_source(self, batched_args,
                                        output_list=None, map_result=None):
-        return self.batch_async_queue(self.get_ranked_sources, batched_args,
+        return self.batch_async_queue(self.async_rank_series_by_source, batched_args,
                                       output_list, map_result)
 
     def batch_async_queue(self, func, batched_args, output_list, map_result):
