@@ -116,9 +116,8 @@ class BatchClient(Client):
             if output_list is None:
                 output_list = [0] * len(batched_args)
 
-            def map_result(idx, query, response, output_list):
+            def map_result(idx, query, response):
                 output_list[idx] = response
-                output_list[idx]['region_id'] = 14
 
         q = Queue()
 
@@ -132,7 +131,7 @@ class BatchClient(Client):
                     result = yield func(**item)
                 else:
                     result = yield func(*item)
-                map_result(idx, item, result, output_list)
+                map_result(idx, item, result)
                 self._logger.debug('Done with {}'.format(idx))
                 q.task_done()
 
