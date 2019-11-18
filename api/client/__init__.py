@@ -2,12 +2,12 @@ from builtins import object
 from api.client import lib
 
 class Client(object):
-
     """API client with stateful authentication for lib functions."""
 
     def __init__(self, api_host, access_token):
         self.api_host = api_host
         self.access_token = access_token
+
 
     def get_available(self, entity_type):
         """List the first 5000 available entities of the given type.
@@ -28,6 +28,7 @@ class Client(object):
 
         """
         return lib.get_available(self.access_token, self.api_host, entity_type)
+
 
     def list_available(self, selected_entities):
         """List available entities given some selected entities.
@@ -61,6 +62,7 @@ class Client(object):
 
         """
         return lib.list_available(self.access_token, self.api_host, selected_entities)
+
 
     def lookup(self, entity_type, entity_id):
         """Retrieve details about a given id of type entity_type.
@@ -123,8 +125,10 @@ class Client(object):
         """
         return lib.get_data_series(self.access_token, self.api_host, **selection)
 
+
     def get_data_points(self, **selection):
         return lib.get_data_points(self.access_token, self.api_host, **selection)
+
 
     def search(self, entity_type, search_terms):
         """Search for the given search term. Better matches appear first.
@@ -201,8 +205,8 @@ class Client(object):
                 'level': 2 }
 
         """
-        return lib.lookup_belongs(self.access_token, self.api_host,
-                                  entity_type, entity_id)
+        return lib.lookup_belongs(self.access_token, self.api_host, entity_type, entity_id)
+
 
     def rank_series_by_source(self, series_list):
         """Given a list of series selections, for each unique combination excluding source, expand
@@ -223,6 +227,7 @@ class Client(object):
         return lib.rank_series_by_source(self.access_token, self.api_host,
                                          series_list)
 
+
     def get_geo_centre(self, region_id):
         """Given a region ID, return the geographic centre in degrees lat/lon.
 
@@ -240,6 +245,7 @@ class Client(object):
 
         """
         return lib.get_geo_centre(self.access_token, self.api_host, region_id)
+
 
     def get_geojson(self, region_id):
         """Given a region ID, return a geojson shape information
