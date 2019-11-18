@@ -515,10 +515,13 @@ that does not have data.</li>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>region_id</strong> (<em>integer</em>) &#8211; </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><ul class="simple">
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><ul>
 <li><em>a geojson object e.g.</em></li>
-<li><strong>{ &#8216;type&#8217;</strong> (<em>&#8216;GeometryCollection&#8217;,</em>)</li>
-<li><strong>&#8216;geometries&#8217;</strong> (<em>[{&#8216;type&#8217;: &#8216;MultiPolygon&#8217;,</em>) &#8211; &#8216;coordinates&#8217;: [[[[-38.394, -4.225], ...]]]}, ...]}</li>
+<li><strong>{ &#8216;type&#8217;</strong> (<em>&#8216;GeometryCollection&#8217;,</em>) &#8211;<dl class="docutils">
+<dt>&#8216;geometries&#8217;: [{&#8216;type&#8217;: &#8216;MultiPolygon&#8217;,</dt>
+<dd>&#8216;coordinates&#8217;: [[[[-38.394, -4.225], ...]]]}, ...]}</dd>
+</dl>
+</li>
 <li><em>or None if not found.</em></li>
 </ul>
 </td>
@@ -529,21 +532,17 @@ that does not have data.</li>
 
 <dl class="method">
 <dt id="api.client.gro_client.GroClient.get_descendant_regions">
-<code class="descclassname">GroClient.</code><code class="descname">get_descendant_regions</code><span class="sig-paren">(</span><em>region_id</em>, <em>descendant_level=None</em><span class="sig-paren">)</span><a class="headerlink" href="#api.client.gro_client.GroClient.get_descendant_regions" title="Permalink to this definition">¶</a></dt>
-<dd><p>Look up details of regions of the given level contained by a region.</p>
-<p>Given any region by id, recursively get all the descendant regions
-that are of the specified level.</p>
-<p>This takes advantage of the assumption that region graph is
-acyclic. This will only traverse ordered region levels (strictly
-increasing region level id) and thus skips non-administrative region
-levels.</p>
+<code class="descclassname">GroClient.</code><code class="descname">get_descendant_regions</code><span class="sig-paren">(</span><em>region_id</em>, <em>descendant_level=None</em>, <em>include_historical=True</em><span class="sig-paren">)</span><a class="headerlink" href="#api.client.gro_client.GroClient.get_descendant_regions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Look up details of all regions of the given level contained by a region.</p>
+<p>Given any region by id, get all the descendant regions that are of the specified level.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>region_id</strong> (<em>integer</em>) &#8211; </li>
-<li><strong>descendant_level</strong> (<em>integer</em>) &#8211; The region level of interest. See REGION_LEVELS constant.</li>
+<li><strong>descendant_level</strong> (<em>integer</em><em>, </em><em>optional</em>) &#8211; The region level of interest. See REGION_LEVELS constant. If not provided, get all
+descendants.</li>
 </ul>
 </td>
 </tr>
