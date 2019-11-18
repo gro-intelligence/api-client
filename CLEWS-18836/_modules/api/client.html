@@ -523,11 +523,14 @@
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        a geojson object e.g.</span>
-<span class="sd">        { &#39;type&#39;: &#39;GeometryCollection&#39;,</span>
-<span class="sd">          &#39;geometries&#39;: [{&#39;type&#39;: &#39;MultiPolygon&#39;,</span>
-<span class="sd">                          &#39;coordinates&#39;: [[[[-38.394, -4.225], ...]]]}, ...]}</span>
-<span class="sd">        or None if not found.</span>
+<span class="sd">        a geojson object or None</span>
+<span class="sd">        </span>
+<span class="sd">            Example::</span>
+
+<span class="sd">                { &#39;type&#39;: &#39;GeometryCollection&#39;,</span>
+<span class="sd">                &#39;geometries&#39;: [{&#39;type&#39;: &#39;MultiPolygon&#39;,</span>
+<span class="sd">                                &#39;coordinates&#39;: [[[[-38.394, -4.225], ...]]]}, ...]}</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">lib</span><span class="o">.</span><span class="n">get_geojson</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_host</span><span class="p">,</span> <span class="n">region_id</span><span class="p">)</span>
 
@@ -543,6 +546,9 @@
 <span class="sd">        descendant_level : integer, optional</span>
 <span class="sd">            The region level of interest. See REGION_LEVELS constant. If not provided, get all</span>
 <span class="sd">            descendants.</span>
+<span class="sd">        include_historical : boolean, optional</span>
+<span class="sd">            True by default. If False is specified, regions that only exist in historical data</span>
+<span class="sd">            (e.g. the Soviet Union) will be excluded.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
