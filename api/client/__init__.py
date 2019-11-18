@@ -14,8 +14,7 @@ class Client(object):
 
         Parameters
         ----------
-        entity_type : string
-            'items', 'metrics', or 'regions'
+        entity_type : {'metrics', 'items', 'regions'}
 
         Returns
         -------
@@ -24,7 +23,7 @@ class Client(object):
             Example::
 
                 [ { 'id': 0, 'contains': [1, 2, 3], 'name': 'World', 'level': 1},
-                { 'id': 1, 'contains': [4, 5, 6], 'name': 'Asia', 'level': 2},
+                  { 'id': 1, 'contains': [4, 5, 6], 'name': 'Asia', 'level': 2},
                 ... ]
 
         """
@@ -57,7 +56,7 @@ class Client(object):
                     'item_id': 274, 'item_name': 'Corn',
                     'region_id': 1215, 'region_name': 'United States',
                     'source_id': 15, 'source_name': 'USDA GATS' },
-                { ... },
+                  { ... },
                 ... ]
 
         """
@@ -70,10 +69,7 @@ class Client(object):
 
         Parameters
         ----------
-        access_token : string
-        api_host : string
-        entity_type : string
-            'items', 'metrics', 'regions', 'units', 'frequencies', or 'sources'
+        entity_type : { 'metrics', 'items', 'regions', 'frequencies', 'sources', 'units' }
         entity_id : int
 
         Returns
@@ -83,10 +79,10 @@ class Client(object):
             Example::
 
                 { 'id': 274,
-                'contains': [779, 780, ...]
-                'name': 'Corn',
-                'definition': ('The seeds of the widely cultivated corn plant <i>Zea mays</i>, which'
-                            ' is one of the world\'s most popular grains.') }
+                  'contains': [779, 780, ...]
+                  'name': 'Corn',
+                  'definition': 'The seeds of the widely cultivated corn plant <i>Zea mays</i>,'
+                                ' which is one of the world\'s most popular grains.' }
 
         """
         return lib.lookup(self.access_token, self.api_host, entity_type, entity_id)
@@ -102,8 +98,6 @@ class Client(object):
 
         Parameters
         ----------
-        access_token : string
-        api_host : string
         metric_id : integer, optional
         item_id : integer, optional
         region_id : integer, optional
@@ -118,12 +112,13 @@ class Client(object):
             Example::
 
                 [{ 'metric_id': 2020032, 'metric_name': 'Seed Use',
-                'item_id': 274, 'item_name': 'Corn',
-                'region_id': 1215, 'region_name': 'United States',
-                'source_id': 24, 'source_name': 'USDA FEEDGRAINS',
-                'frequency_id': 7,
-                'start_date': '1975-03-01T00:00:00.000Z', 'end_date': '2018-05-31T00:00:00.000Z'
-                }, { ... }, ... ]
+                   'item_id': 274, 'item_name': 'Corn',
+                   'region_id': 1215, 'region_name': 'United States',
+                   'source_id': 24, 'source_name': 'USDA FEEDGRAINS',
+                   'frequency_id': 7,
+                   'start_date': '1975-03-01T00:00:00.000Z',
+                   'end_date': '2018-05-31T00:00:00.000Z'
+                 }, { ... }, ... ]
 
         """
         return lib.get_data_series(self.access_token, self.api_host, **selection)
@@ -136,10 +131,7 @@ class Client(object):
 
         Parameters
         ----------
-        access_token : string
-        api_host : string
-        entity_type : string
-            One of: 'metrics', 'items', 'regions', or 'sources'
+        entity_type : { 'metrics', 'items', 'regions', 'sources' }
         search_terms : string
 
         Returns
@@ -155,7 +147,7 @@ class Client(object):
                           entity_type, search_terms)
 
 
-    def search_and_lookup(self, entity_type, search_terms):
+    def search_and_lookup(self, entity_type, search_terms, num_results=10):
         """Search for the given search terms and look up their details.
 
         For each result, yield a dict of the entity and it's properties:
@@ -167,28 +159,29 @@ class Client(object):
 
         Parameters
         ----------
-        access_token : string
-        api_host : string
-        entity_type : string
-            One of: 'metrics', 'items', 'regions', or 'sources'
+        entity_type : { 'metrics', 'items', 'regions', 'sources' }
         search_terms : string
         num_results: int
-            Maximum number of results to return
+            Maximum number of results to return. Defaults to 10.
 
         Yields
         ------
         dict
-            Result from search() passed to lookup() to get additional details. For example::
+            Result from search() passed to lookup() to get additional details.
+            
+            Example::
 
-                { 'id': 274, 'contains': [779, 780, ...] 'name': 'Corn',
-                'definition': 'The seeds of the widely cultivated...' }
+                { 'id': 274,
+                  'contains': [779, 780, ...],
+                  'name': 'Corn',
+                  'definition': 'The seeds of the widely cultivated...' }
 
             See output of lookup(). Note that as with search(), the first result is
             the best match for the given search term(s).
 
         """
         return lib.search_and_lookup(self.access_token, self.api_host,
-                                     entity_type, search_terms)
+                                     entity_type, search_terms, num_results)
 
 
     def lookup_belongs(self, entity_type, entity_id):
@@ -196,11 +189,8 @@ class Client(object):
 
         Parameters
         ----------
-        access_token : string
-        api_host : string
-        entity_type : string
-            One of: 'metrics', 'items', or 'regions'
-        entity_id : integer
+        entity_type : { 'metrics', 'items', 'regions' }
+        entity_id : int
 
         Yields
         ------
@@ -228,8 +218,6 @@ class Client(object):
 
         Parameters
         ----------
-        access_token : string
-        api_host : string
         region_id : integer
 
         Returns
@@ -248,8 +236,6 @@ class Client(object):
 
         Parameters
         ----------
-        access_token : string
-        api_host : string
         region_id : integer
 
         Returns
@@ -275,8 +261,6 @@ class Client(object):
 
         Parameters
         ----------
-        access_token : string
-        api_host : string
         region_id : integer
         descendant_level : integer
             The region level of interest. See REGION_LEVELS constant.

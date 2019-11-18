@@ -559,19 +559,28 @@ def search(access_token, api_host, entity_type, search_terms):
 
 
 def search_and_lookup(access_token, api_host, entity_type, search_terms, num_results=10):
-    # DEPRECATED
+    """
+    .. deprecated:: 1.6.0
+            Derivative functions not exposing any new endpoints moved up to Client classes
+    """
     search_results = search(access_token, api_host, entity_type, search_terms)
     for result in search_results[:num_results]:
         yield lookup(access_token, api_host, entity_type, result['id'])
 
 
-def lookup_belongs(access_token, api_host, entity_type, entity_id):
-    # DEPRECATED
+def get_belongs(access_token, api_host, entity_type, entity_id):
     url = '/'.join(['https:', '', api_host, 'v2', entity_type, 'belongs-to'])
     params = {'ids': str(entity_id)}
     headers = {'authorization': 'Bearer ' + access_token}
-    resp = get_data(url, headers, params)
-    for parent_entity_id in resp.json().get('data').get(str(entity_id), []):
+    return get_data(url, headers, params).json().get('data').get(str(entity_id), [])
+
+
+def lookup_belongs(access_token, api_host, entity_type, entity_id):
+    """
+    .. deprecated:: 1.6.0
+            Derivative functions not exposing any new endpoints moved up to Client classes
+    """
+    for parent_entity_id in get_belongs(access_token, api_host, entity_type, entity_id):
         yield lookup(access_token, api_host, entity_type, parent_entity_id)
 
 
