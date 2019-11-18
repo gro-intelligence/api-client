@@ -297,8 +297,7 @@
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        entity_type : string</span>
-<span class="sd">            &#39;items&#39;, &#39;metrics&#39;, or &#39;regions&#39;</span>
+<span class="sd">        entity_type : {&#39;metrics&#39;, &#39;items&#39;, &#39;regions&#39;}</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -307,7 +306,7 @@
 <span class="sd">            Example::</span>
 
 <span class="sd">                [ { &#39;id&#39;: 0, &#39;contains&#39;: [1, 2, 3], &#39;name&#39;: &#39;World&#39;, &#39;level&#39;: 1},</span>
-<span class="sd">                { &#39;id&#39;: 1, &#39;contains&#39;: [4, 5, 6], &#39;name&#39;: &#39;Asia&#39;, &#39;level&#39;: 2},</span>
+<span class="sd">                  { &#39;id&#39;: 1, &#39;contains&#39;: [4, 5, 6], &#39;name&#39;: &#39;Asia&#39;, &#39;level&#39;: 2},</span>
 <span class="sd">                ... ]</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -340,7 +339,7 @@
 <span class="sd">                    &#39;item_id&#39;: 274, &#39;item_name&#39;: &#39;Corn&#39;,</span>
 <span class="sd">                    &#39;region_id&#39;: 1215, &#39;region_name&#39;: &#39;United States&#39;,</span>
 <span class="sd">                    &#39;source_id&#39;: 15, &#39;source_name&#39;: &#39;USDA GATS&#39; },</span>
-<span class="sd">                { ... },</span>
+<span class="sd">                  { ... },</span>
 <span class="sd">                ... ]</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -353,10 +352,7 @@
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        access_token : string</span>
-<span class="sd">        api_host : string</span>
-<span class="sd">        entity_type : string</span>
-<span class="sd">            &#39;items&#39;, &#39;metrics&#39;, &#39;regions&#39;, &#39;units&#39;, &#39;frequencies&#39;, or &#39;sources&#39;</span>
+<span class="sd">        entity_type : { &#39;metrics&#39;, &#39;items&#39;, &#39;regions&#39;, &#39;frequencies&#39;, &#39;sources&#39;, &#39;units&#39; }</span>
 <span class="sd">        entity_id : int</span>
 
 <span class="sd">        Returns</span>
@@ -366,10 +362,10 @@
 <span class="sd">            Example::</span>
 
 <span class="sd">                { &#39;id&#39;: 274,</span>
-<span class="sd">                &#39;contains&#39;: [779, 780, ...]</span>
-<span class="sd">                &#39;name&#39;: &#39;Corn&#39;,</span>
-<span class="sd">                &#39;definition&#39;: (&#39;The seeds of the widely cultivated corn plant &lt;i&gt;Zea mays&lt;/i&gt;, which&#39;</span>
-<span class="sd">                            &#39; is one of the world\&#39;s most popular grains.&#39;) }</span>
+<span class="sd">                  &#39;contains&#39;: [779, 780, ...]</span>
+<span class="sd">                  &#39;name&#39;: &#39;Corn&#39;,</span>
+<span class="sd">                  &#39;definition&#39;: &#39;The seeds of the widely cultivated corn plant &lt;i&gt;Zea mays&lt;/i&gt;,&#39;</span>
+<span class="sd">                                &#39; which is one of the world\&#39;s most popular grains.&#39; }</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">lib</span><span class="o">.</span><span class="n">lookup</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_host</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">,</span> <span class="n">entity_id</span><span class="p">)</span>
@@ -385,8 +381,6 @@
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        access_token : string</span>
-<span class="sd">        api_host : string</span>
 <span class="sd">        metric_id : integer, optional</span>
 <span class="sd">        item_id : integer, optional</span>
 <span class="sd">        region_id : integer, optional</span>
@@ -401,12 +395,13 @@
 <span class="sd">            Example::</span>
 
 <span class="sd">                [{ &#39;metric_id&#39;: 2020032, &#39;metric_name&#39;: &#39;Seed Use&#39;,</span>
-<span class="sd">                &#39;item_id&#39;: 274, &#39;item_name&#39;: &#39;Corn&#39;,</span>
-<span class="sd">                &#39;region_id&#39;: 1215, &#39;region_name&#39;: &#39;United States&#39;,</span>
-<span class="sd">                &#39;source_id&#39;: 24, &#39;source_name&#39;: &#39;USDA FEEDGRAINS&#39;,</span>
-<span class="sd">                &#39;frequency_id&#39;: 7,</span>
-<span class="sd">                &#39;start_date&#39;: &#39;1975-03-01T00:00:00.000Z&#39;, &#39;end_date&#39;: &#39;2018-05-31T00:00:00.000Z&#39;</span>
-<span class="sd">                }, { ... }, ... ]</span>
+<span class="sd">                   &#39;item_id&#39;: 274, &#39;item_name&#39;: &#39;Corn&#39;,</span>
+<span class="sd">                   &#39;region_id&#39;: 1215, &#39;region_name&#39;: &#39;United States&#39;,</span>
+<span class="sd">                   &#39;source_id&#39;: 24, &#39;source_name&#39;: &#39;USDA FEEDGRAINS&#39;,</span>
+<span class="sd">                   &#39;frequency_id&#39;: 7,</span>
+<span class="sd">                   &#39;start_date&#39;: &#39;1975-03-01T00:00:00.000Z&#39;,</span>
+<span class="sd">                   &#39;end_date&#39;: &#39;2018-05-31T00:00:00.000Z&#39;</span>
+<span class="sd">                 }, { ... }, ... ]</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">lib</span><span class="o">.</span><span class="n">get_data_series</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_host</span><span class="p">,</span> <span class="o">**</span><span class="n">selection</span><span class="p">)</span>
@@ -419,10 +414,7 @@
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        access_token : string</span>
-<span class="sd">        api_host : string</span>
-<span class="sd">        entity_type : string</span>
-<span class="sd">            One of: &#39;metrics&#39;, &#39;items&#39;, &#39;regions&#39;, or &#39;sources&#39;</span>
+<span class="sd">        entity_type : { &#39;metrics&#39;, &#39;items&#39;, &#39;regions&#39;, &#39;sources&#39; }</span>
 <span class="sd">        search_terms : string</span>
 
 <span class="sd">        Returns</span>
@@ -438,7 +430,7 @@
                           <span class="n">entity_type</span><span class="p">,</span> <span class="n">search_terms</span><span class="p">)</span>
 
 
-    <span class="k">def</span> <span class="nf">search_and_lookup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">,</span> <span class="n">search_terms</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">search_and_lookup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">,</span> <span class="n">search_terms</span><span class="p">,</span> <span class="n">num_results</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Search for the given search terms and look up their details.</span>
 
 <span class="sd">        For each result, yield a dict of the entity and it&#39;s properties:</span>
@@ -450,28 +442,29 @@
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        access_token : string</span>
-<span class="sd">        api_host : string</span>
-<span class="sd">        entity_type : string</span>
-<span class="sd">            One of: &#39;metrics&#39;, &#39;items&#39;, &#39;regions&#39;, or &#39;sources&#39;</span>
+<span class="sd">        entity_type : { &#39;metrics&#39;, &#39;items&#39;, &#39;regions&#39;, &#39;sources&#39; }</span>
 <span class="sd">        search_terms : string</span>
 <span class="sd">        num_results: int</span>
-<span class="sd">            Maximum number of results to return</span>
+<span class="sd">            Maximum number of results to return. Defaults to 10.</span>
 
 <span class="sd">        Yields</span>
 <span class="sd">        ------</span>
 <span class="sd">        dict</span>
-<span class="sd">            Result from search() passed to lookup() to get additional details. For example::</span>
+<span class="sd">            Result from search() passed to lookup() to get additional details.</span>
+<span class="sd">            </span>
+<span class="sd">            Example::</span>
 
-<span class="sd">                { &#39;id&#39;: 274, &#39;contains&#39;: [779, 780, ...] &#39;name&#39;: &#39;Corn&#39;,</span>
-<span class="sd">                &#39;definition&#39;: &#39;The seeds of the widely cultivated...&#39; }</span>
+<span class="sd">                { &#39;id&#39;: 274,</span>
+<span class="sd">                  &#39;contains&#39;: [779, 780, ...],</span>
+<span class="sd">                  &#39;name&#39;: &#39;Corn&#39;,</span>
+<span class="sd">                  &#39;definition&#39;: &#39;The seeds of the widely cultivated...&#39; }</span>
 
 <span class="sd">            See output of lookup(). Note that as with search(), the first result is</span>
 <span class="sd">            the best match for the given search term(s).</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">lib</span><span class="o">.</span><span class="n">search_and_lookup</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_host</span><span class="p">,</span>
-                                     <span class="n">entity_type</span><span class="p">,</span> <span class="n">search_terms</span><span class="p">)</span>
+                                     <span class="n">entity_type</span><span class="p">,</span> <span class="n">search_terms</span><span class="p">,</span> <span class="n">num_results</span><span class="p">)</span>
 
 
     <span class="k">def</span> <span class="nf">lookup_belongs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">,</span> <span class="n">entity_id</span><span class="p">):</span>
@@ -479,11 +472,8 @@
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        access_token : string</span>
-<span class="sd">        api_host : string</span>
-<span class="sd">        entity_type : string</span>
-<span class="sd">            One of: &#39;metrics&#39;, &#39;items&#39;, or &#39;regions&#39;</span>
-<span class="sd">        entity_id : integer</span>
+<span class="sd">        entity_type : { &#39;metrics&#39;, &#39;items&#39;, &#39;regions&#39; }</span>
+<span class="sd">        entity_id : int</span>
 
 <span class="sd">        Yields</span>
 <span class="sd">        ------</span>
@@ -511,8 +501,6 @@
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        access_token : string</span>
-<span class="sd">        api_host : string</span>
 <span class="sd">        region_id : integer</span>
 
 <span class="sd">        Returns</span>
@@ -531,8 +519,6 @@
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        access_token : string</span>
-<span class="sd">        api_host : string</span>
 <span class="sd">        region_id : integer</span>
 
 <span class="sd">        Returns</span>
@@ -558,8 +544,6 @@
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        access_token : string</span>
-<span class="sd">        api_host : string</span>
 <span class="sd">        region_id : integer</span>
 <span class="sd">        descendant_level : integer</span>
 <span class="sd">            The region level of interest. See REGION_LEVELS constant.</span>
