@@ -399,8 +399,25 @@ the best match for the given search term(s).</p>
 <dl class="method">
 <dt id="api.client.gro_client.GroClient.search_for_entity">
 <code class="descclassname">GroClient.</code><code class="descname">search_for_entity</code><span class="sig-paren">(</span><em>entity_type</em>, <em>keywords</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/gro_client.html#GroClient.search_for_entity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.gro_client.GroClient.search_for_entity" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the first result of entity_type (which is items, metrics or
-regions) that matches the given keywords.</p>
+<dd><p>Returns the first result of entity_type that matches the given keywords.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>entity_type</strong> (<em>{ 'metric'</em><em>, </em><em>'item'</em><em>, </em><em>'region'</em><em>, </em><em>'source' }</em>) &#8211; </li>
+<li><strong>keywords</strong> (<em>string</em>) &#8211; </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The id of the first search result</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">integer</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -515,16 +532,14 @@ that does not have data.</li>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>region_id</strong> (<em>integer</em>) &#8211; </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><ul>
-<li><em>a geojson object e.g.</em></li>
-<li><strong>{ &#8216;type&#8217;</strong> (<em>&#8216;GeometryCollection&#8217;,</em>) &#8211;<dl class="docutils">
-<dt>&#8216;geometries&#8217;: [{&#8216;type&#8217;: &#8216;MultiPolygon&#8217;,</dt>
-<dd>&#8216;coordinates&#8217;: [[[[-38.394, -4.225], ...]]]}, ...]}</dd>
-</dl>
-</li>
-<li><em>or None if not found.</em></li>
-</ul>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Example:<div class="highlight-default"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;GeometryCollection&#39;</span><span class="p">,</span>
+<span class="s1">&#39;geometries&#39;</span><span class="p">:</span> <span class="p">[{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;MultiPolygon&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;coordinates&#39;</span><span class="p">:</span> <span class="p">[[[[</span><span class="o">-</span><span class="mf">38.394</span><span class="p">,</span> <span class="o">-</span><span class="mf">4.225</span><span class="p">],</span> <span class="o">...</span><span class="p">]]]},</span> <span class="o">...</span><span class="p">]}</span>
+</pre></div>
+</div>
 </td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">a geojson object or None</td>
 </tr>
 </tbody>
 </table>
@@ -543,6 +558,8 @@ that does not have data.</li>
 <li><strong>region_id</strong> (<em>integer</em>) &#8211; </li>
 <li><strong>descendant_level</strong> (<em>integer</em><em>, </em><em>optional</em>) &#8211; The region level of interest. See REGION_LEVELS constant. If not provided, get all
 descendants.</li>
+<li><strong>include_historical</strong> (<em>boolean</em><em>, </em><em>optional</em>) &#8211; True by default. If False is specified, regions that only exist in historical data
+(e.g. the Soviet Union) will be excluded.</li>
 </ul>
 </td>
 </tr>
@@ -574,7 +591,38 @@ descendants.</li>
 <dl class="method">
 <dt id="api.client.gro_client.GroClient.get_provinces">
 <code class="descclassname">GroClient.</code><code class="descname">get_provinces</code><span class="sig-paren">(</span><em>country_name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/gro_client.html#GroClient.get_provinces"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.gro_client.GroClient.get_provinces" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Given the name of a country, find its provinces.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>country_name</strong> (<em>string</em>) &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Example:<div class="highlight-default"><div class="highlight"><pre><span></span><span class="p">[{</span>
+    <span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="mi">13100</span><span class="p">,</span>
+    <span class="s1">&#39;contains&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">139839</span><span class="p">,</span> <span class="mi">139857</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span>
+    <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Wisconsin&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;level&#39;</span><span class="p">:</span> <span class="mi">4</span>
+<span class="p">}</span> <span class="p">,</span> <span class="p">{</span>
+    <span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="mi">13101</span><span class="p">,</span>
+    <span class="s1">&#39;contains&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">139891</span><span class="p">,</span> <span class="mi">139890</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span>
+    <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Wyoming&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;level&#39;</span><span class="p">:</span> <span class="mi">4</span>
+<span class="p">},</span> <span class="o">...</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>See output of lookup()</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">list of dicts</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><code class="xref py py-meth docutils literal"><span class="pre">get_descendant_regions()</span></code></p>
+</div>
+</dd></dl>
 
 </div>
 <div class="section" id="advanced-exploration">
@@ -623,20 +671,71 @@ descendants.</li>
 <p>Note you must have first called either add_data_series() or add_single_data_series() to save
 data series into the GroClient&#8217;s data_series_list. You can inspect the client&#8217;s saved list
 using get_data_series_list().</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The results to get_data_points() for all the saved series, appended together into a
+single dataframe.
+See <a class="reference external" href="https://github.com/gro-intelligence/api-client/wiki/Data-Point-Field-Definitions">https://github.com/gro-intelligence/api-client/wiki/Data-Point-Field-Definitions</a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">pandas.DataFrame</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="api.client.gro_client.GroClient.add_data_series">
 <code class="descclassname">GroClient.</code><code class="descname">add_data_series</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/gro_client.html#GroClient.add_data_series"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.gro_client.GroClient.add_data_series" title="Permalink to this definition">¶</a></dt>
-<dd><p>Search for entities matching the given names, find data series for
-the given combination, and add them to this objects list of
-series.</p>
+<dd><p>Adds the result of find_data_series() to the saved data series list.</p>
+<p>For use with get_df().</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>metric</strong> (<em>string</em><em>, </em><em>optional</em>) &#8211; </li>
+<li><strong>item</strong> (<em>string</em><em>, </em><em>optional</em>) &#8211; </li>
+<li><strong>region</strong> (<em>string</em><em>, </em><em>optional</em>) &#8211; </li>
+<li><strong>partner_region</strong> (<em>string</em><em>, </em><em>optional</em>) &#8211; </li>
+<li><strong>start_date</strong> (<em>string</em><em>, </em><em>optional</em>) &#8211; YYYY-MM-DD</li>
+<li><strong>end_date</strong> (<em>string</em><em>, </em><em>optional</em>) &#8211; YYYY-MM-DD</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">None</p>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><code class="xref py py-meth docutils literal"><span class="pre">get_df()</span></code>, <code class="xref py py-meth docutils literal"><span class="pre">add_single_data_series()</span></code>, <code class="xref py py-meth docutils literal"><span class="pre">find_data_series()</span></code></p>
+</div>
 </dd></dl>
 
 <dl class="method">
 <dt id="api.client.gro_client.GroClient.add_single_data_series">
 <code class="descclassname">GroClient.</code><code class="descname">add_single_data_series</code><span class="sig-paren">(</span><em>data_series</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/gro_client.html#GroClient.add_single_data_series"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.gro_client.GroClient.add_single_data_series" title="Permalink to this definition">¶</a></dt>
-<dd><p>Save a data series object to the GroClient&#8217;s data_series_list for use with get_df().</p>
+<dd><p>Save a data series object to the GroClient&#8217;s data_series_list.</p>
+<p>For use with get_df().</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>data_series</strong> (<em>dict</em>) &#8211; A single data_series object, as returned by get_data_series() or find_data_series().
+See <a class="reference external" href="https://github.com/gro-intelligence/api-client/wiki/Data-Series-Definition">https://github.com/gro-intelligence/api-client/wiki/Data-Series-Definition</a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -645,6 +744,16 @@ series.</p>
 <dd><p>Inspect the current list of saved data series contained in the GroClient.</p>
 <p>For use with get_df(). Add new data series to the list using add_data_series() and
 add_single_data_series().</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A list of data_series objects, as returned by get_data_series().</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">list of dicts</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </div>

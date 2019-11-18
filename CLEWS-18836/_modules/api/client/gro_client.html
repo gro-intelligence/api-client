@@ -337,6 +337,13 @@
 <span class="sd">        data series into the GroClient&#39;s data_series_list. You can inspect the client&#39;s saved list</span>
 <span class="sd">        using get_data_series_list().</span>
 
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        pandas.DataFrame</span>
+<span class="sd">            The results to get_data_points() for all the saved series, appended together into a</span>
+<span class="sd">            single dataframe.</span>
+<span class="sd">            See https://github.com/gro-intelligence/api-client/wiki/Data-Point-Field-Definitions</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_series_queue</span><span class="p">:</span>
             <span class="n">data_series</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_series_queue</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
@@ -426,12 +433,32 @@
 <span class="sd">        </span>
 <span class="sd">        For use with get_df(). Add new data series to the list using add_data_series() and</span>
 <span class="sd">        add_single_data_series().</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        list of dicts</span>
+<span class="sd">            A list of data_series objects, as returned by get_data_series().</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_data_series_list</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="GroClient.add_single_data_series"><a class="viewcode-back" href="../../../api.html#api.client.gro_client.GroClient.add_single_data_series">[docs]</a>    <span class="k">def</span> <span class="nf">add_single_data_series</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_series</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Save a data series object to the GroClient&#39;s data_series_list for use with get_df().&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Save a data series object to the GroClient&#39;s data_series_list.</span>
+<span class="sd">        </span>
+<span class="sd">        For use with get_df().</span>
+<span class="sd">        </span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        data_series : dict</span>
+<span class="sd">            A single data_series object, as returned by get_data_series() or find_data_series().</span>
+<span class="sd">            See https://github.com/gro-intelligence/api-client/wiki/Data-Series-Definition</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        None</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_data_series_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">data_series</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_data_series_queue</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">data_series</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Added </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">data_series</span><span class="p">))</span>
@@ -439,13 +466,29 @@
 
 
     <span class="k">def</span> <span class="nf">find_data_series</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Search for entities matching the given names, find data series for</span>
-<span class="sd">        the given combination.</span>
+        <span class="sd">&quot;&quot;&quot;Attempts to find a matching data series for a combination of entities by name.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        metric : string, optional</span>
+<span class="sd">        item : string, optional</span>
+<span class="sd">        region : string, optional</span>
+<span class="sd">        partner_region : string, optional</span>
+<span class="sd">        start_date : string, optional</span>
+<span class="sd">            YYYY-MM-DD</span>
+<span class="sd">        end_date : string, optional</span>
+<span class="sd">            YYYY-MM-DD</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        dict</span>
-<span class="sd">           A data series, same output format as lib.py get_data_series().</span>
+<span class="sd">           A single data series</span>
+
+<span class="sd">        See also</span>
+<span class="sd">        --------</span>
+<span class="sd">        get_data_series()</span>
+<span class="sd">        https://github.com/gro-intelligence/api-client/wiki/Data-Series-Definition</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">search_results</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">keys</span> <span class="o">=</span> <span class="p">[]</span>
@@ -481,21 +524,56 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Could not find any data series for </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
             <span class="n">kwargs</span><span class="p">))</span>
 
+
 <div class="viewcode-block" id="GroClient.add_data_series"><a class="viewcode-back" href="../../../api.html#api.client.gro_client.GroClient.add_data_series">[docs]</a>    <span class="k">def</span> <span class="nf">add_data_series</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Search for entities matching the given names, find data series for</span>
-<span class="sd">        the given combination, and add them to this objects list of</span>
-<span class="sd">        series.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Adds the result of find_data_series() to the saved data series list.</span>
+<span class="sd">        </span>
+<span class="sd">        For use with get_df().</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        metric : string, optional</span>
+<span class="sd">        item : string, optional</span>
+<span class="sd">        region : string, optional</span>
+<span class="sd">        partner_region : string, optional</span>
+<span class="sd">        start_date : string, optional</span>
+<span class="sd">            YYYY-MM-DD</span>
+<span class="sd">        end_date : string, optional</span>
+<span class="sd">            YYYY-MM-DD</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        None</span>
+
+<span class="sd">        See also</span>
+<span class="sd">        --------</span>
+<span class="sd">        get_df()</span>
+<span class="sd">        add_single_data_series()</span>
+<span class="sd">        find_data_series()</span>
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">the_data_series</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">find_data_series</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">the_data_series</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_single_data_series</span><span class="p">(</span><span class="n">the_data_series</span><span class="p">)</span>
         <span class="k">return</span></div>
 
+
     <span class="c1">###</span>
     <span class="c1"># Discovery shortcuts</span>
     <span class="c1">###</span>
 <div class="viewcode-block" id="GroClient.search_for_entity"><a class="viewcode-back" href="../../../api.html#api.client.gro_client.GroClient.search_for_entity">[docs]</a>    <span class="k">def</span> <span class="nf">search_for_entity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">,</span> <span class="n">keywords</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Returns the first result of entity_type (which is items, metrics or</span>
-<span class="sd">        regions) that matches the given keywords.</span>
+        <span class="sd">&quot;&quot;&quot;Returns the first result of entity_type that matches the given keywords.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        entity_type : { &#39;metric&#39;, &#39;item&#39;, &#39;region&#39;, &#39;source&#39; }</span>
+<span class="sd">        keywords : string</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        ----------</span>
+<span class="sd">        integer</span>
+<span class="sd">            The id of the first search result</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">results</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">entity_type</span><span class="p">,</span> <span class="n">keywords</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">results</span><span class="p">:</span>
@@ -503,13 +581,46 @@
                 <span class="nb">len</span><span class="p">(</span><span class="n">results</span><span class="p">),</span> <span class="n">entity_type</span><span class="p">,</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]))</span>
             <span class="k">return</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span></div>
 
+
 <div class="viewcode-block" id="GroClient.get_provinces"><a class="viewcode-back" href="../../../api.html#api.client.gro_client.GroClient.get_provinces">[docs]</a>    <span class="k">def</span> <span class="nf">get_provinces</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">country_name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Given the name of a country, find its provinces.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        country_name : string</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        ----------</span>
+<span class="sd">        list of dicts</span>
+
+<span class="sd">            Example::</span>
+
+<span class="sd">                [{</span>
+<span class="sd">                    &#39;id&#39;: 13100,</span>
+<span class="sd">                    &#39;contains&#39;: [139839, 139857, ...],</span>
+<span class="sd">                    &#39;name&#39;: &#39;Wisconsin&#39;,</span>
+<span class="sd">                    &#39;level&#39;: 4</span>
+<span class="sd">                } , {</span>
+<span class="sd">                    &#39;id&#39;: 13101,</span>
+<span class="sd">                    &#39;contains&#39;: [139891, 139890, ...],</span>
+<span class="sd">                    &#39;name&#39;: &#39;Wyoming&#39;,</span>
+<span class="sd">                    &#39;level&#39;: 4</span>
+<span class="sd">                }, ...]</span>
+
+<span class="sd">            See output of lookup()</span>
+
+<span class="sd">        See Also</span>
+<span class="sd">        --------</span>
+<span class="sd">        get_descendant_regions()</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">region</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">search_and_lookup</span><span class="p">(</span><span class="s1">&#39;regions&#39;</span><span class="p">,</span> <span class="n">country_name</span><span class="p">):</span>
             <span class="k">if</span> <span class="n">region</span><span class="p">[</span><span class="s1">&#39;level&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">lib</span><span class="o">.</span><span class="n">REGION_LEVELS</span><span class="p">[</span><span class="s1">&#39;country&#39;</span><span class="p">]:</span>
                 <span class="n">provinces</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_descendant_regions</span><span class="p">(</span><span class="n">region</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">],</span> <span class="n">lib</span><span class="o">.</span><span class="n">REGION_LEVELS</span><span class="p">[</span><span class="s1">&#39;province&#39;</span><span class="p">])</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Provinces of </span><span class="si">{}</span><span class="s2">: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">country_name</span><span class="p">,</span> <span class="n">provinces</span><span class="p">))</span>
                 <span class="k">return</span> <span class="n">provinces</span>
         <span class="k">return</span> <span class="kc">None</span></div>
+
 
     <span class="c1">###</span>
     <span class="c1"># Convenience methods that automatically fill in partial selections with random entities</span>
@@ -531,6 +642,7 @@
         <span class="n">selected_entities</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">entities</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">selected_entities</span>
 
+
     <span class="k">def</span> <span class="nf">pick_random_data_series</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">selected_entities</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Given a selection of tentities, pick a random available data series</span>
 <span class="sd">        the given selection of entities.</span>
@@ -542,6 +654,7 @@
         <span class="n">selected_data_series</span> <span class="o">=</span> <span class="n">data_series_list</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">data_series_list</span><span class="p">)</span><span class="o">*</span><span class="n">random</span><span class="p">())]</span>
         <span class="k">return</span> <span class="n">selected_data_series</span>
 
+
     <span class="c1"># TODO: rename function to &quot;write_...&quot; rather than &quot;print_...&quot;</span>
     <span class="k">def</span> <span class="nf">print_one_data_series</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_series</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Output a data series to a CSV file.&quot;&quot;&quot;</span>
@@ -552,6 +665,7 @@
             <span class="n">writer</span><span class="o">.</span><span class="n">writerow</span><span class="p">([</span><span class="n">point</span><span class="p">[</span><span class="s1">&#39;start_date&#39;</span><span class="p">],</span> <span class="n">point</span><span class="p">[</span><span class="s1">&#39;end_date&#39;</span><span class="p">],</span>
                              <span class="n">point</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="n">point</span><span class="p">[</span><span class="s1">&#39;input_unit_scale&#39;</span><span class="p">],</span>
                              <span class="bp">self</span><span class="o">.</span><span class="n">lookup_unit_abbreviation</span><span class="p">(</span><span class="n">point</span><span class="p">[</span><span class="s1">&#39;input_unit_id&#39;</span><span class="p">])])</span>
+
 
     <span class="k">def</span> <span class="nf">convert_unit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">point</span><span class="p">,</span> <span class="n">target_unit_id</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Convert the data point from one unit to another unit.</span>
