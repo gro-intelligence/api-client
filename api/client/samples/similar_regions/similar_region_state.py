@@ -6,8 +6,7 @@ import numpy as np
 import os
 
 import api.client.lib
-#from api.client.samples.similar_regions import transform
-from . import transform
+from api.client.samples.similar_regions import transform
 
 CACHE_PATH = "similar_region_state_cache"
 # How much to weight the lowest weight feature.
@@ -30,7 +29,6 @@ class SimilarRegionState(object):
             self.data_dir = CACHE_PATH
         else:
             self.data_dir = tempfile.gettempdir()
-            
 
         self.region_properties = region_properties
         self.num_regions = len(regions_to_compare)
@@ -47,7 +45,7 @@ class SimilarRegionState(object):
         structure = [(name, 'd', p["properties"]["num_features"]) for name, p in
                      region_properties.items()]
         
-        # Numpy gives "future deprication" warning about structured type specs of the form
+        # Numpy gives "future deprecation" warning about structured type specs of the form
         # (name,'d',1), i.e. where type is really just a single integer
         # Change such cases into (name,'d')
         structure = [item if item[2] != 1 else (item[0], item[1]) for item in structure]
@@ -74,7 +72,7 @@ class SimilarRegionState(object):
         self._generate_weight_vector()
 
         self.load(no_download)
-        # No modification to the cache if we did not even tried to download anything
+        # No modification to the cache if we did not even try to download anything
         if not no_download:
             self.save()
 
@@ -169,17 +167,22 @@ class SimilarRegionState(object):
 
     def _generate_weight_vector(self):
         # generate weight vector (with decreasing weights if enabled)
-        # iterating over the dictionary is fine as we don't allow it to be modified during runtime.
-        # Distance between points is p=2 weighted Minkowski distance, i.e. dist(x,y) = sqrt(\sum [w_i(x_i - y_i)]^2)
-        # so sqrt of user-provided weight is taken BEFORE individual property is scaled by its weight as it is assumed
-        # user wants dist^2 = \sum w_user_i*(x_i - y_i)^2 (note user weight is NOT squared)
+        # iterating over the dictionary is fine as we don't allow it
+        # to be modified during runtime.  Distance between points is
+        # p=2 weighted Minkowski distance, i.e. dist(x,y) = sqrt(\sum
+        # [w_i(x_i - y_i)]^2) so sqrt of user-provided weight is taken
+        # BEFORE individual property is scaled by its weight as it is
+        # assumed user wants dist^2 = \sum w_user_i*(x_i - y_i)^2
+        # (note user weight is NOT squared)
         #
-        # Alternatively - do not rescale properties, just specify 'wminkowski' metrics for BallTree constructor
+        # Alternatively - do not rescale properties, just specify
+        # 'wminkowski' metrics for BallTree constructor
         progress_idx = 0
         for properties in self.region_properties.values():
             num_features = properties["properties"]["num_features"]
-            # User-provided weight is uniformly spread over num_features
-            # (sum will be less for F-transformed properties if weight_slope is requested
+            # User-provided weight is uniformly spread over
+            # num_features (sum will be less for F-transformed
+            # properties if weight_slope is requested
             weight_per_feature = (float(properties["properties"]["weight"])/num_features)**0.5
             if properties["properties"]["type"] == "timeseries_fourier" and properties["properties"]["weight_slope"]:
                 slope_vector = np.arange(1.0, LOWEST_PERCENTAGE_WEIGHT_FEATURE,

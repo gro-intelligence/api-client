@@ -85,8 +85,6 @@ class SimilarRegion(object):
         # list as an index to preserve dimensionality of returned data
         x = self.state.data_standardized[self.state.mapping[region_id], :]
         x = x.reshape(1, -1)
-        #assert number_of_regions <= self.state.num_regions, "number_of_regions must be smaller than or equal to total " \
-        #                                                    "number of regions in the comparison"
         neighbour_dists, neighbour_idxs = self.ball.query(x, k = min(number_of_regions, self.state.num_regions))
 
         # get the individual distances 
