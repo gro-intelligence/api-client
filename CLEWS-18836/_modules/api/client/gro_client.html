@@ -301,12 +301,12 @@
 <span class="n">API_HOST</span> <span class="o">=</span> <span class="s1">&#39;api.gro-intelligence.com&#39;</span>
 <span class="n">OUTPUT_FILENAME</span> <span class="o">=</span> <span class="s1">&#39;gro_client_output.csv&#39;</span>
 
+
 <span class="n">DATA_POINTS_UNIQUE_COLS</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;item_id&#39;</span><span class="p">,</span> <span class="s1">&#39;metric_id&#39;</span><span class="p">,</span>
                            <span class="s1">&#39;region_id&#39;</span><span class="p">,</span> <span class="s1">&#39;partner_region_id&#39;</span><span class="p">,</span>
                            <span class="s1">&#39;frequency_id&#39;</span><span class="p">,</span> <span class="s1">&#39;source_id&#39;</span><span class="p">,</span>
                            <span class="s1">&#39;reporting_date&#39;</span><span class="p">,</span> <span class="s1">&#39;start_date&#39;</span><span class="p">,</span> <span class="s1">&#39;end_date&#39;</span><span class="p">]</span>
 
-<span class="n">REGION_LEVELS</span> <span class="o">=</span> <span class="n">lib</span><span class="o">.</span><span class="n">REGION_LEVELS</span>
 
 <span class="k">class</span> <span class="nc">GroClient</span><span class="p">(</span><span class="n">Client</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;An extension of the Client class with extra convenience methods for some common operations.</span>
@@ -616,8 +616,8 @@
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">region</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">search_and_lookup</span><span class="p">(</span><span class="s1">&#39;regions&#39;</span><span class="p">,</span> <span class="n">country_name</span><span class="p">):</span>
-            <span class="k">if</span> <span class="n">region</span><span class="p">[</span><span class="s1">&#39;level&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">REGION_LEVELS</span><span class="p">[</span><span class="s1">&#39;country&#39;</span><span class="p">]:</span>
-                <span class="n">provinces</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_descendant_regions</span><span class="p">(</span><span class="n">region</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">],</span> <span class="n">REGION_LEVELS</span><span class="p">[</span><span class="s1">&#39;province&#39;</span><span class="p">])</span>
+            <span class="k">if</span> <span class="n">region</span><span class="p">[</span><span class="s1">&#39;level&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">lib</span><span class="o">.</span><span class="n">REGION_LEVELS</span><span class="p">[</span><span class="s1">&#39;country&#39;</span><span class="p">]:</span>
+                <span class="n">provinces</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_descendant_regions</span><span class="p">(</span><span class="n">region</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">],</span> <span class="n">lib</span><span class="o">.</span><span class="n">REGION_LEVELS</span><span class="p">[</span><span class="s1">&#39;province&#39;</span><span class="p">])</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Provinces of </span><span class="si">{}</span><span class="s2">: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">country_name</span><span class="p">,</span> <span class="n">provinces</span><span class="p">))</span>
                 <span class="k">return</span> <span class="n">provinces</span>
         <span class="k">return</span> <span class="kc">None</span></div>
