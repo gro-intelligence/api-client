@@ -433,12 +433,7 @@
     <span class="k">def</span> <span class="nf">search_and_lookup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">,</span> <span class="n">search_terms</span><span class="p">,</span> <span class="n">num_results</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Search for the given search terms and look up their details.</span>
 
-<span class="sd">        For each result, yield a dict of the entity and it&#39;s properties:</span>
-<span class="sd">        { &#39;id&#39;: &lt;integer id of entity, unique within this entity type&gt;,</span>
-<span class="sd">            &#39;name&#39;:    &lt;string canonical name&gt;</span>
-<span class="sd">            &#39;contains&#39;: &lt;array of ids of entities that are contained in this one&gt;,</span>
-<span class="sd">            ....</span>
-<span class="sd">            &lt;other properties&gt; }</span>
+<span class="sd">        For each result, yield a dict of the entity and it&#39;s properties.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -493,6 +488,21 @@
                                   <span class="n">entity_type</span><span class="p">,</span> <span class="n">entity_id</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">rank_series_by_source</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">series_list</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Given a list of series selections, for each unique combination excluding source, expand</span>
+<span class="sd">        to all available sources and return them in ranked order. The order corresponds to how well</span>
+<span class="sd">        that source covers the selection (metrics, items, regions, and time range and frequency).</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        series_list : list of dicts</span>
+<span class="sd">            See the output of get_data_series().</span>
+
+<span class="sd">        Yields</span>
+<span class="sd">        ------</span>
+<span class="sd">        dict</span>
+<span class="sd">            The input series_list, expanded out to each possible source, ordered by coverage.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">lib</span><span class="o">.</span><span class="n">rank_series_by_source</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_host</span><span class="p">,</span>
                                          <span class="n">series_list</span><span class="p">)</span>
 
