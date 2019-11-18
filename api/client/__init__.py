@@ -200,9 +200,9 @@ class Client(object):
             'North America.' The format of which matches the output of lookup()::
 
                 { 'id': 15,
-                'contains': [ 1008, 1009, 1012, 1215, ... ],
-                'name': 'North America',
-                'level': 2 }
+                  'contains': [ 1008, 1009, 1012, 1215, ... ],
+                  'name': 'North America',
+                  'level': 2 }
 
         """
         return lib.lookup_belongs(self.access_token, self.api_host, entity_type, entity_id)
