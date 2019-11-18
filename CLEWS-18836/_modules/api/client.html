@@ -525,28 +525,24 @@
 <span class="sd">        -------</span>
 <span class="sd">        a geojson object e.g.</span>
 <span class="sd">        { &#39;type&#39;: &#39;GeometryCollection&#39;,</span>
-<span class="sd">        &#39;geometries&#39;: [{&#39;type&#39;: &#39;MultiPolygon&#39;,</span>
-<span class="sd">                        &#39;coordinates&#39;: [[[[-38.394, -4.225], ...]]]}, ...]}</span>
+<span class="sd">          &#39;geometries&#39;: [{&#39;type&#39;: &#39;MultiPolygon&#39;,</span>
+<span class="sd">                          &#39;coordinates&#39;: [[[[-38.394, -4.225], ...]]]}, ...]}</span>
 <span class="sd">        or None if not found.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">lib</span><span class="o">.</span><span class="n">get_geojson</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_host</span><span class="p">,</span> <span class="n">region_id</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">get_descendant_regions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">region_id</span><span class="p">,</span> <span class="n">descendant_level</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Look up details of regions of the given level contained by a region.</span>
 
-<span class="sd">        Given any region by id, recursively get all the descendant regions</span>
-<span class="sd">        that are of the specified level.</span>
+    <span class="k">def</span> <span class="nf">get_descendant_regions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">region_id</span><span class="p">,</span> <span class="n">descendant_level</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">include_historical</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Look up details of all regions of the given level contained by a region.</span>
 
-<span class="sd">        This takes advantage of the assumption that region graph is</span>
-<span class="sd">        acyclic. This will only traverse ordered region levels (strictly</span>
-<span class="sd">        increasing region level id) and thus skips non-administrative region</span>
-<span class="sd">        levels.</span>
+<span class="sd">        Given any region by id, get all the descendant regions that are of the specified level.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        region_id : integer</span>
-<span class="sd">        descendant_level : integer</span>
-<span class="sd">            The region level of interest. See REGION_LEVELS constant.</span>
+<span class="sd">        descendant_level : integer, optional</span>
+<span class="sd">            The region level of interest. See REGION_LEVELS constant. If not provided, get all</span>
+<span class="sd">            descendants.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -570,7 +566,7 @@
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">lib</span><span class="o">.</span><span class="n">get_descendant_regions</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_host</span><span class="p">,</span>
-                                          <span class="n">region_id</span><span class="p">,</span> <span class="n">descendant_level</span><span class="p">)</span>
+                                          <span class="n">region_id</span><span class="p">,</span> <span class="n">descendant_level</span><span class="p">,</span> <span class="n">include_historical</span><span class="p">)</span>
 </pre></div>
 
            </div>
