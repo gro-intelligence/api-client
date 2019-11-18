@@ -135,7 +135,6 @@ class GroClient(Client):
                 }, ...]
 
         """
-
         data_points = super(GroClient, self).get_data_points(**selections)
         # Apply unit conversion if a unit is specified
         if 'unit_id' in selections:
