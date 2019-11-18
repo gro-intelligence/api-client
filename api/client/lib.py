@@ -157,6 +157,9 @@ def get_data(url, headers, params=None, logger=None):
         if data.status_code == 200:
             logger.debug('OK', extra=log_record)
             return data
+        if data.status_code == 204:
+            logger.warning('No Content', extra=log_record)
+            return data
         retry_count += 1
         log_record['tag'] = 'failed_gro_api_request'
         if retry_count < cfg.MAX_RETRIES:
@@ -170,9 +173,9 @@ def get_data(url, headers, params=None, logger=None):
         elif data.status_code in [404, 401, 500]:
             break
         else:
-            logger.error(data.text, extra=log_record)
-    raise Exception('Giving up on {} after {} tries. Error is: {}.'.format(
-        url, retry_count, data.text))
+            logger.error('{}'.format(data), extra=log_record)
+    raise Exception('Giving up on {} after {} tries: {}.'.format(
+        url, retry_count, data))
 
 
 @memoize(maxsize=None)
@@ -244,6 +247,8 @@ def get_params_from_selection(**selection):
     partner_region_id : integer, optional
     source_id : integer, optional
     frequency_id : integer, optional
+    start_date: string, optional
+    end_date: string, optional
 
     Returns
     -------
@@ -254,7 +259,7 @@ def get_params_from_selection(**selection):
     params = {}
     for key, value in list(selection.items()):
         if key in ('region_id', 'partner_region_id', 'item_id', 'metric_id',
-                   'source_id', 'frequency_id'):
+                   'source_id', 'frequency_id', 'start_date', 'end_date'):
             params[snake_to_camel(key)] = value
     return params
 
@@ -326,21 +331,26 @@ def get_data_call_params(**selection):
 
 
 def get_data_series(access_token, api_host, **selection):
+    logger = get_default_logger()
     url = '/'.join(['https:', '', api_host, 'v2/data_series/list'])
     headers = {'authorization': 'Bearer ' + access_token}
     params = get_params_from_selection(**selection)
     resp = get_data(url, headers, params)
     try:
-        return resp.json()['data']
+        response = resp.json()['data']
+        if any((series.get('metadata', {}).get('includes_historical_region', False)) for series in response):
+            logger.warning('Some of the regions in your data call are historical, with boundaries that may be outdated. The regions may have overlapping values with current regions')
+        return response
     except KeyError:
         raise Exception(resp.text)
 
 
 def rank_series_by_source(access_token, api_host, series_list):
-    """Given a list of series, return them in source-ranked order.
-
-    If there are multiple sources for the same selection, the prefered source
-    comes first. Differences other than source_id are not affected.
+    """Given a list of series selections, for each unique combination
+    excluding source, expand to all available sources and return them
+    in ranked order.  The orders corresponds to how well that source
+    covers the selection (items, metrics, regions, and time range and
+    frequency).
 
     Parameters
     ----------
@@ -352,29 +362,36 @@ def rank_series_by_source(access_token, api_host, series_list):
     Yields
     ------
     dict
-        The input series_list but reordered by source rank
+        The input series_list X each possible source, ordered by coverage
 
     """
     # We sort the internal tuple representations of the dictionaries because
     # otherwise when we call set() we end up with duplicates if iteritems()
     # returns a different order for the same dictionary. See test case.
     selections_sorted = set(tuple(sorted(
-        [k_v for k_v in iter(list(single_series.items())) if k_v[0] !=
-            'source_id'],
+        [k_v for k_v in iter(list(single_series.items()))
+         if k_v[0] not in ('source_id', 'source_name')],
         key=lambda x: x[0])) for single_series in series_list)
+
+    def make_key(key):
+        if key not in ('startDate', 'endDate'):
+            return key + 's'
+        return key
 
     for series in map(dict, selections_sorted):
         url = '/'.join(['https:', '', api_host, 'v2/available/sources'])
         headers = {'authorization': 'Bearer ' + access_token}
-        params = dict((k + 's', v) for k, v in iter(list(
+        params = dict((make_key(k), v) for k, v in iter(list(
             get_params_from_selection(**series).items())))
-        source_ids = get_data(url, headers, params).json()
+        try:
+            source_ids = get_data(url, headers, params).json()
+        except ValueError:
+            continue  # empty response
         for source_id in source_ids:
             # Make a copy to avoid passing the same reference each time.
             series_with_source = dict(series)
             series_with_source['source_id'] = source_id
             yield series_with_source
-
 
 def format_crop_calendar_response(resp):
     """Make cropcalendar output a format similar to get_data_points().
@@ -608,11 +625,13 @@ def get_descendant_regions(access_token, api_host, region_id, descendant_level):
     region = lookup(access_token, api_host, 'regions', region_id)
     for member_id in region['contains']:
         member = lookup(access_token, api_host, 'regions', member_id)
-        if descendant_level == member['level']:
+        if (not include_historical and member['historical']):
+            pass
+        elif descendant_level == member['level']:
             descendants.append(member)
         elif member['level'] < descendant_level:
             descendants += get_descendant_regions(
-                access_token, api_host, member_id, descendant_level)
+                access_token, api_host, member_id, descendant_level, include_historical)
     return descendants
 
 
