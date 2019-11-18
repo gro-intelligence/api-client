@@ -306,6 +306,7 @@
                            <span class="s1">&#39;frequency_id&#39;</span><span class="p">,</span> <span class="s1">&#39;source_id&#39;</span><span class="p">,</span>
                            <span class="s1">&#39;reporting_date&#39;</span><span class="p">,</span> <span class="s1">&#39;start_date&#39;</span><span class="p">,</span> <span class="s1">&#39;end_date&#39;</span><span class="p">]</span>
 
+<span class="n">REGION_LEVELS</span> <span class="o">=</span> <span class="n">lib</span><span class="o">.</span><span class="n">REGION_LEVELS</span>
 
 <span class="k">class</span> <span class="nc">GroClient</span><span class="p">(</span><span class="n">Client</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;An extension of the Client class with extra convenience methods for some common operations.</span>
@@ -403,19 +404,19 @@
 <span class="sd">        -------</span>
 <span class="sd">        list of dicts</span>
 
-<span class="sd">            Example::</span>
+<span class="sd">            Example ::</span>
 
 <span class="sd">                [ {</span>
-<span class="sd">                    &quot;start_date&quot;: &quot;2000-01-01T00:00:00.000Z&quot;,</span>
-<span class="sd">                    &quot;end_date&quot;: &quot;2000-12-31T00:00:00.000Z&quot;,</span>
-<span class="sd">                    &quot;value&quot;: 251854000,</span>
-<span class="sd">                    &quot;input_unit_id&quot;: 14,</span>
-<span class="sd">                    &quot;input_unit_scale&quot;: 1,</span>
-<span class="sd">                    &quot;metric_id&quot;: 860032,</span>
-<span class="sd">                    &quot;item_id&quot;: 274,</span>
-<span class="sd">                    &quot;region_id&quot;: 1215,</span>
-<span class="sd">                    &quot;frequency_id&quot;: 9,</span>
-<span class="sd">                    &quot;unit_id&quot;: 14</span>
+<span class="sd">                    &#39;start_date&#39;: &#39;2000-01-01T00:00:00.000Z&#39;,</span>
+<span class="sd">                    &#39;end_date&#39;: &#39;2000-12-31T00:00:00.000Z&#39;,</span>
+<span class="sd">                    &#39;value&#39;: 251854000,</span>
+<span class="sd">                    &#39;input_unit_id&#39;: 14,</span>
+<span class="sd">                    &#39;input_unit_scale&#39;: 1,</span>
+<span class="sd">                    &#39;metric_id&#39;: 860032,</span>
+<span class="sd">                    &#39;item_id&#39;: 274,</span>
+<span class="sd">                    &#39;region_id&#39;: 1215,</span>
+<span class="sd">                    &#39;frequency_id&#39;: 9,</span>
+<span class="sd">                    &#39;unit_id&#39;: 14</span>
 <span class="sd">                }, ...]</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -615,8 +616,8 @@
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">region</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">search_and_lookup</span><span class="p">(</span><span class="s1">&#39;regions&#39;</span><span class="p">,</span> <span class="n">country_name</span><span class="p">):</span>
-            <span class="k">if</span> <span class="n">region</span><span class="p">[</span><span class="s1">&#39;level&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">lib</span><span class="o">.</span><span class="n">REGION_LEVELS</span><span class="p">[</span><span class="s1">&#39;country&#39;</span><span class="p">]:</span>
-                <span class="n">provinces</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_descendant_regions</span><span class="p">(</span><span class="n">region</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">],</span> <span class="n">lib</span><span class="o">.</span><span class="n">REGION_LEVELS</span><span class="p">[</span><span class="s1">&#39;province&#39;</span><span class="p">])</span>
+            <span class="k">if</span> <span class="n">region</span><span class="p">[</span><span class="s1">&#39;level&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">REGION_LEVELS</span><span class="p">[</span><span class="s1">&#39;country&#39;</span><span class="p">]:</span>
+                <span class="n">provinces</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_descendant_regions</span><span class="p">(</span><span class="n">region</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">],</span> <span class="n">REGION_LEVELS</span><span class="p">[</span><span class="s1">&#39;province&#39;</span><span class="p">])</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Provinces of </span><span class="si">{}</span><span class="s2">: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">country_name</span><span class="p">,</span> <span class="n">provinces</span><span class="p">))</span>
                 <span class="k">return</span> <span class="n">provinces</span>
         <span class="k">return</span> <span class="kc">None</span></div>
@@ -626,9 +627,8 @@
     <span class="c1"># Convenience methods that automatically fill in partial selections with random entities</span>
     <span class="c1">###</span>
     <span class="k">def</span> <span class="nf">pick_random_entities</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Pick a random item that has some data associated with it, and a</span>
-<span class="sd">        random metric and region pair for that item with data</span>
-<span class="sd">        available.</span>
+        <span class="sd">&quot;&quot;&quot;Pick a random item that has some data associated with it, and a random metric and region</span>
+<span class="sd">        pair for that item with data available.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">item_list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_available</span><span class="p">(</span><span class="s1">&#39;items&#39;</span><span class="p">)</span>
         <span class="n">num</span> <span class="o">=</span> <span class="mi">0</span>
@@ -644,8 +644,8 @@
 
 
     <span class="k">def</span> <span class="nf">pick_random_data_series</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">selected_entities</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Given a selection of tentities, pick a random available data series</span>
-<span class="sd">        the given selection of entities.</span>
+        <span class="sd">&quot;&quot;&quot;Given a selection of tentities, pick a random available data series the given selection</span>
+<span class="sd">        of entities.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">data_series_list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_data_series</span><span class="p">(</span><span class="o">**</span><span class="n">selected_entities</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">data_series_list</span><span class="p">:</span>
@@ -681,7 +681,11 @@
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        dict</span>
-<span class="sd">            { value: float, unit_id: integer, ... }</span>
+<span class="sd">            </span>
+<span class="sd">            Example ::</span>
+
+<span class="sd">                { value: 14.2, unit_id: 4 }</span>
+
 <span class="sd">            unit_id is changed to the target, and value is converted to use the</span>
 <span class="sd">            new unit_id. Other properties are unchanged.</span>
 
