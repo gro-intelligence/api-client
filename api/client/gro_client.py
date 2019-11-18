@@ -21,6 +21,7 @@ DATA_POINTS_UNIQUE_COLS = ['item_id', 'metric_id',
                            'frequency_id', 'source_id',
                            'reporting_date', 'start_date', 'end_date']
 
+REGION_LEVELS = lib.REGION_LEVELS
 
 class GroClient(Client):
     """An extension of the Client class with extra convenience methods for some common operations.
@@ -118,19 +119,19 @@ class GroClient(Client):
         -------
         list of dicts
 
-            Example::
+            Example ::
 
                 [ {
-                    "start_date": "2000-01-01T00:00:00.000Z",
-                    "end_date": "2000-12-31T00:00:00.000Z",
-                    "value": 251854000,
-                    "input_unit_id": 14,
-                    "input_unit_scale": 1,
-                    "metric_id": 860032,
-                    "item_id": 274,
-                    "region_id": 1215,
-                    "frequency_id": 9,
-                    "unit_id": 14
+                    'start_date': '2000-01-01T00:00:00.000Z',
+                    'end_date': '2000-12-31T00:00:00.000Z',
+                    'value': 251854000,
+                    'input_unit_id': 14,
+                    'input_unit_scale': 1,
+                    'metric_id': 860032,
+                    'item_id': 274,
+                    'region_id': 1215,
+                    'frequency_id': 9,
+                    'unit_id': 14
                 }, ...]
 
         """
@@ -330,8 +331,8 @@ class GroClient(Client):
 
         """
         for region in self.search_and_lookup('regions', country_name):
-            if region['level'] == lib.REGION_LEVELS['country']:
-                provinces = self.get_descendant_regions(region['id'], lib.REGION_LEVELS['province'])
+            if region['level'] == REGION_LEVELS['country']:
+                provinces = self.get_descendant_regions(region['id'], REGION_LEVELS['province'])
                 self._logger.debug("Provinces of {}: {}".format(country_name, provinces))
                 return provinces
         return None
@@ -341,9 +342,8 @@ class GroClient(Client):
     # Convenience methods that automatically fill in partial selections with random entities
     ###
     def pick_random_entities(self):
-        """Pick a random item that has some data associated with it, and a
-        random metric and region pair for that item with data
-        available.
+        """Pick a random item that has some data associated with it, and a random metric and region
+        pair for that item with data available.
         """
         item_list = self.get_available('items')
         num = 0
@@ -359,8 +359,8 @@ class GroClient(Client):
 
 
     def pick_random_data_series(self, selected_entities):
-        """Given a selection of tentities, pick a random available data series
-        the given selection of entities.
+        """Given a selection of tentities, pick a random available data series the given selection
+        of entities.
         """
         data_series_list = self.get_data_series(**selected_entities)
         if not data_series_list:
@@ -396,7 +396,11 @@ class GroClient(Client):
         Returns
         -------
         dict
-            { value: float, unit_id: integer, ... }
+            
+            Example ::
+
+                { value: 14.2, unit_id: 4 }
+
             unit_id is changed to the target, and value is converted to use the
             new unit_id. Other properties are unchanged.
 
