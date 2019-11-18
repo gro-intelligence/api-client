@@ -242,28 +242,24 @@ class Client(object):
         -------
         a geojson object e.g.
         { 'type': 'GeometryCollection',
-        'geometries': [{'type': 'MultiPolygon',
-                        'coordinates': [[[[-38.394, -4.225], ...]]]}, ...]}
+          'geometries': [{'type': 'MultiPolygon',
+                          'coordinates': [[[[-38.394, -4.225], ...]]]}, ...]}
         or None if not found.
         """
         return lib.get_geojson(self.access_token, self.api_host, region_id)
 
-    def get_descendant_regions(self, region_id, descendant_level=None):
-        """Look up details of regions of the given level contained by a region.
 
-        Given any region by id, recursively get all the descendant regions
-        that are of the specified level.
+    def get_descendant_regions(self, region_id, descendant_level=None, include_historical=True):
+        """Look up details of all regions of the given level contained by a region.
 
-        This takes advantage of the assumption that region graph is
-        acyclic. This will only traverse ordered region levels (strictly
-        increasing region level id) and thus skips non-administrative region
-        levels.
+        Given any region by id, get all the descendant regions that are of the specified level.
 
         Parameters
         ----------
         region_id : integer
-        descendant_level : integer
-            The region level of interest. See REGION_LEVELS constant.
+        descendant_level : integer, optional
+            The region level of interest. See REGION_LEVELS constant. If not provided, get all
+            descendants.
 
         Returns
         -------
@@ -287,4 +283,4 @@ class Client(object):
 
         """
         return lib.get_descendant_regions(self.access_token, self.api_host,
-                                          region_id, descendant_level)
+                                          region_id, descendant_level, include_historical)
