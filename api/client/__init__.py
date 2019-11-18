@@ -240,11 +240,14 @@ class Client(object):
 
         Returns
         -------
-        a geojson object e.g.
-        { 'type': 'GeometryCollection',
-          'geometries': [{'type': 'MultiPolygon',
-                          'coordinates': [[[[-38.394, -4.225], ...]]]}, ...]}
-        or None if not found.
+        a geojson object or None
+        
+            Example::
+
+                { 'type': 'GeometryCollection',
+                'geometries': [{'type': 'MultiPolygon',
+                                'coordinates': [[[[-38.394, -4.225], ...]]]}, ...]}
+
         """
         return lib.get_geojson(self.access_token, self.api_host, region_id)
 
@@ -260,6 +263,9 @@ class Client(object):
         descendant_level : integer, optional
             The region level of interest. See REGION_LEVELS constant. If not provided, get all
             descendants.
+        include_historical : boolean, optional
+            True by default. If False is specified, regions that only exist in historical data
+            (e.g. the Soviet Union) will be excluded.
 
         Returns
         -------
