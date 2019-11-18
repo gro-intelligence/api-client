@@ -285,12 +285,12 @@
 <span class="kn">from</span> <span class="nn">api.client</span> <span class="k">import</span> <span class="n">lib</span>
 
 <span class="k">class</span> <span class="nc">Client</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-
     <span class="sd">&quot;&quot;&quot;API client with stateful authentication for lib functions.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">api_host</span><span class="p">,</span> <span class="n">access_token</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">api_host</span> <span class="o">=</span> <span class="n">api_host</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">access_token</span> <span class="o">=</span> <span class="n">access_token</span>
+
 
     <span class="k">def</span> <span class="nf">get_available</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;List the first 5000 available entities of the given type.</span>
@@ -311,6 +311,7 @@
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">lib</span><span class="o">.</span><span class="n">get_available</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_host</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">)</span>
+
 
     <span class="k">def</span> <span class="nf">list_available</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">selected_entities</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;List available entities given some selected entities.</span>
@@ -344,6 +345,7 @@
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">lib</span><span class="o">.</span><span class="n">list_available</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_host</span><span class="p">,</span> <span class="n">selected_entities</span><span class="p">)</span>
+
 
     <span class="k">def</span> <span class="nf">lookup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">,</span> <span class="n">entity_id</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Retrieve details about a given id of type entity_type.</span>
@@ -406,8 +408,10 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">lib</span><span class="o">.</span><span class="n">get_data_series</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_host</span><span class="p">,</span> <span class="o">**</span><span class="n">selection</span><span class="p">)</span>
 
+
     <span class="k">def</span> <span class="nf">get_data_points</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">selection</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">lib</span><span class="o">.</span><span class="n">get_data_points</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_host</span><span class="p">,</span> <span class="o">**</span><span class="n">selection</span><span class="p">)</span>
+
 
     <span class="k">def</span> <span class="nf">search</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">,</span> <span class="n">search_terms</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Search for the given search term. Better matches appear first.</span>
@@ -479,13 +483,13 @@
 <span class="sd">            &#39;North America.&#39; The format of which matches the output of lookup()::</span>
 
 <span class="sd">                { &#39;id&#39;: 15,</span>
-<span class="sd">                &#39;contains&#39;: [ 1008, 1009, 1012, 1215, ... ],</span>
-<span class="sd">                &#39;name&#39;: &#39;North America&#39;,</span>
-<span class="sd">                &#39;level&#39;: 2 }</span>
+<span class="sd">                  &#39;contains&#39;: [ 1008, 1009, 1012, 1215, ... ],</span>
+<span class="sd">                  &#39;name&#39;: &#39;North America&#39;,</span>
+<span class="sd">                  &#39;level&#39;: 2 }</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">lib</span><span class="o">.</span><span class="n">lookup_belongs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_host</span><span class="p">,</span>
-                                  <span class="n">entity_type</span><span class="p">,</span> <span class="n">entity_id</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">lib</span><span class="o">.</span><span class="n">lookup_belongs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_host</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">,</span> <span class="n">entity_id</span><span class="p">)</span>
+
 
     <span class="k">def</span> <span class="nf">rank_series_by_source</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">series_list</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Given a list of series selections, for each unique combination excluding source, expand</span>
@@ -506,6 +510,7 @@
         <span class="k">return</span> <span class="n">lib</span><span class="o">.</span><span class="n">rank_series_by_source</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_host</span><span class="p">,</span>
                                          <span class="n">series_list</span><span class="p">)</span>
 
+
     <span class="k">def</span> <span class="nf">get_geo_centre</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">region_id</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Given a region ID, return the geographic centre in degrees lat/lon.</span>
 
@@ -523,6 +528,7 @@
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">lib</span><span class="o">.</span><span class="n">get_geo_centre</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_host</span><span class="p">,</span> <span class="n">region_id</span><span class="p">)</span>
+
 
     <span class="k">def</span> <span class="nf">get_geojson</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">region_id</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Given a region ID, return a geojson shape information</span>
