@@ -362,13 +362,7 @@
 <dt id="api.client.gro_client.GroClient.search_and_lookup">
 <code class="descclassname">GroClient.</code><code class="descname">search_and_lookup</code><span class="sig-paren">(</span><em>entity_type</em>, <em>search_terms</em>, <em>num_results=10</em><span class="sig-paren">)</span><a class="headerlink" href="#api.client.gro_client.GroClient.search_and_lookup" title="Permalink to this definition">¶</a></dt>
 <dd><p>Search for the given search terms and look up their details.</p>
-<p>For each result, yield a dict of the entity and it&#8217;s properties:
-{ &#8216;id&#8217;: &lt;integer id of entity, unique within this entity type&gt;,</p>
-<blockquote>
-<div>&#8216;name&#8217;:    &lt;string canonical name&gt;
-&#8216;contains&#8217;: &lt;array of ids of entities that are contained in this one&gt;,
-....
-&lt;other properties&gt; }</div></blockquote>
+<p>For each result, yield a dict of the entity and it&#8217;s properties.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -659,7 +653,20 @@ descendants.</li>
 <dl class="method">
 <dt id="api.client.gro_client.GroClient.rank_series_by_source">
 <code class="descclassname">GroClient.</code><code class="descname">rank_series_by_source</code><span class="sig-paren">(</span><em>series_list</em><span class="sig-paren">)</span><a class="headerlink" href="#api.client.gro_client.GroClient.rank_series_by_source" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Given a list of series selections, for each unique combination excluding source, expand
+to all available sources and return them in ranked order. The order corresponds to how well
+that source covers the selection (metrics, items, regions, and time range and frequency).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>series_list</strong> (<em>list of dicts</em>) &#8211; See the output of get_data_series().</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Yields:</th><td class="field-body"><em>dict</em> &#8211; The input series_list, expanded out to each possible source, ordered by coverage.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 </div>
 <div class="section" id="pandas-utils">
