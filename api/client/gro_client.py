@@ -52,6 +52,13 @@ class GroClient(Client):
         data series into the GroClient's data_series_list. You can inspect the client's saved list
         using get_data_series_list().
 
+        Returns
+        -------
+        pandas.DataFrame
+            The results to get_data_points() for all the saved series, appended together into a
+            single dataframe.
+            See https://github.com/gro-intelligence/api-client/wiki/Data-Point-Field-Definitions
+
         """
         while self._data_series_queue:
             data_series = self._data_series_queue.pop()
@@ -141,12 +148,32 @@ class GroClient(Client):
         
         For use with get_df(). Add new data series to the list using add_data_series() and
         add_single_data_series().
+
+        Returns
+        -------
+        list of dicts
+            A list of data_series objects, as returned by get_data_series().
+
         """
         return list(self._data_series_list)
 
 
     def add_single_data_series(self, data_series):
-        """Save a data series object to the GroClient's data_series_list for use with get_df()."""
+        """Save a data series object to the GroClient's data_series_list.
+        
+        For use with get_df().
+        
+        Parameters
+        ----------
+        data_series : dict
+            A single data_series object, as returned by get_data_series() or find_data_series().
+            See https://github.com/gro-intelligence/api-client/wiki/Data-Series-Definition
+
+        Returns
+        -------
+        None
+
+        """
         self._data_series_list.append(data_series)
         self._data_series_queue.append(data_series)
         self._logger.info("Added {}".format(data_series))
@@ -154,13 +181,29 @@ class GroClient(Client):
 
 
     def find_data_series(self, **kwargs):
-        """Search for entities matching the given names, find data series for
-        the given combination.
+        """Attempts to find a matching data series for a combination of entities by name.
+
+        Parameters
+        ----------
+        metric : string, optional
+        item : string, optional
+        region : string, optional
+        partner_region : string, optional
+        start_date : string, optional
+            YYYY-MM-DD
+        end_date : string, optional
+            YYYY-MM-DD
 
         Returns
         -------
         dict
-           A data series, same output format as lib.py get_data_series().
+           A single data series
+
+        See also
+        --------
+        get_data_series()
+        https://github.com/gro-intelligence/api-client/wiki/Data-Series-Definition
+
         """
         search_results = []
         keys = []
@@ -196,21 +239,56 @@ class GroClient(Client):
         self.get_logger().warning("Could not find any data series for {}".format(
             kwargs))
 
+
     def add_data_series(self, **kwargs):
-        """Search for entities matching the given names, find data series for
-        the given combination, and add them to this objects list of
-        series."""
+        """Adds the result of find_data_series() to the saved data series list.
+        
+        For use with get_df().
+
+        Parameters
+        ----------
+        metric : string, optional
+        item : string, optional
+        region : string, optional
+        partner_region : string, optional
+        start_date : string, optional
+            YYYY-MM-DD
+        end_date : string, optional
+            YYYY-MM-DD
+
+        Returns
+        -------
+        None
+
+        See also
+        --------
+        get_df()
+        add_single_data_series()
+        find_data_series()
+        
+        """
         the_data_series = self.find_data_series(**kwargs)
         if the_data_series:
             self.add_single_data_series(the_data_series)
         return
 
+
     ###
     # Discovery shortcuts
     ###
     def search_for_entity(self, entity_type, keywords):
-        """Returns the first result of entity_type (which is items, metrics or
-        regions) that matches the given keywords.
+        """Returns the first result of entity_type that matches the given keywords.
+
+        Parameters
+        ----------
+        entity_type : { 'metric', 'item', 'region', 'source' }
+        keywords : string
+
+        Returns
+        ----------
+        integer
+            The id of the first search result
+
         """
         results = self.search(entity_type, keywords)
         for result in results:
@@ -218,13 +296,46 @@ class GroClient(Client):
                 len(results), entity_type, result['id']))
             return result['id']
 
+
     def get_provinces(self, country_name):
+        """Given the name of a country, find its provinces.
+
+        Parameters
+        ----------
+        country_name : string
+
+        Returns
+        ----------
+        list of dicts
+
+            Example::
+
+                [{
+                    'id': 13100,
+                    'contains': [139839, 139857, ...],
+                    'name': 'Wisconsin',
+                    'level': 4
+                } , {
+                    'id': 13101,
+                    'contains': [139891, 139890, ...],
+                    'name': 'Wyoming',
+                    'level': 4
+                }, ...]
+
+            See output of lookup()
+
+        See Also
+        --------
+        get_descendant_regions()
+
+        """
         for region in self.search_and_lookup('regions', country_name):
             if region['level'] == lib.REGION_LEVELS['country']:
                 provinces = self.get_descendant_regions(region['id'], lib.REGION_LEVELS['province'])
                 self._logger.debug("Provinces of {}: {}".format(country_name, provinces))
                 return provinces
         return None
+
 
     ###
     # Convenience methods that automatically fill in partial selections with random entities
@@ -246,6 +357,7 @@ class GroClient(Client):
         selected_entities.update(entities)
         return selected_entities
 
+
     def pick_random_data_series(self, selected_entities):
         """Given a selection of tentities, pick a random available data series
         the given selection of entities.
@@ -257,6 +369,7 @@ class GroClient(Client):
         selected_data_series = data_series_list[int(len(data_series_list)*random())]
         return selected_data_series
 
+
     # TODO: rename function to "write_..." rather than "print_..."
     def print_one_data_series(self, data_series, filename):
         """Output a data series to a CSV file."""
@@ -267,6 +380,7 @@ class GroClient(Client):
             writer.writerow([point['start_date'], point['end_date'],
                              point['value'] * point['input_unit_scale'],
                              self.lookup_unit_abbreviation(point['input_unit_id'])])
+
 
     def convert_unit(self, point, target_unit_id):
         """Convert the data point from one unit to another unit.
