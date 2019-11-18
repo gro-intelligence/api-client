@@ -16,12 +16,12 @@ from api.client import cfg, lib, Client
 API_HOST = 'api.gro-intelligence.com'
 OUTPUT_FILENAME = 'gro_client_output.csv'
 
+
 DATA_POINTS_UNIQUE_COLS = ['item_id', 'metric_id',
                            'region_id', 'partner_region_id',
                            'frequency_id', 'source_id',
                            'reporting_date', 'start_date', 'end_date']
 
-REGION_LEVELS = lib.REGION_LEVELS
 
 class GroClient(Client):
     """An extension of the Client class with extra convenience methods for some common operations.
@@ -331,8 +331,8 @@ class GroClient(Client):
 
         """
         for region in self.search_and_lookup('regions', country_name):
-            if region['level'] == REGION_LEVELS['country']:
-                provinces = self.get_descendant_regions(region['id'], REGION_LEVELS['province'])
+            if region['level'] == lib.REGION_LEVELS['country']:
+                provinces = self.get_descendant_regions(region['id'], lib.REGION_LEVELS['province'])
                 self._logger.debug("Provinces of {}: {}".format(country_name, provinces))
                 return provinces
         return None
