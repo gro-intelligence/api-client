@@ -346,25 +346,6 @@ def get_data_series(access_token, api_host, **selection):
 
 
 def rank_series_by_source(access_token, api_host, series_list):
-    """Given a list of series selections, for each unique combination
-    excluding source, expand to all available sources and return them
-    in ranked order.  The orders corresponds to how well that source
-    covers the selection (items, metrics, regions, and time range and
-    frequency).
-
-    Parameters
-    ----------
-    access_token : string
-    api_host : api_host
-    series_list : list of dicts
-        See output of get_data_series()
-
-    Yields
-    ------
-    dict
-        The input series_list X each possible source, ordered by coverage
-
-    """
     # We sort the internal tuple representations of the dictionaries because
     # otherwise when we call set() we end up with duplicates if iteritems()
     # returns a different order for the same dictionary. See test case.
