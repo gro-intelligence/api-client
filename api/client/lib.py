@@ -18,8 +18,6 @@ try:
 except ImportError:
     from backports.functools_lru_cache import lru_cache as memoize
 
-CROP_CALENDAR_METRIC_ID = 2260063
-
 REGION_LEVELS = {
     'world': 1,
     'continent': 2,
@@ -341,35 +339,6 @@ def get_params_from_selection(**selection):
     return params
 
 
-def get_crop_calendar_params(**selection):
-    """Construct http request params from dict of entity selections.
-
-    For use with get_crop_calendar_data_points()
-
-    >>> get_crop_calendar_params(
-    ...     metric_id=123, item_id=456, region_id=14
-    ... ) == { 'itemId': 456, 'regionId': 14 }
-    True
-
-    Parameters
-    ----------
-    item_id : integer
-    region_id : integer
-
-    Returns
-    -------
-    dict
-        selections with valid keys converted to camelcase and invalid ones
-        filtered out
-
-    """
-    params = {}
-    for key, value in list(selection.items()):
-        if key in ('region_id', 'item_id'):
-            params[snake_to_camel(key)] = value
-    return params
-
-
 def get_data_call_params(**selection):
     """Construct http request params from dict of entity selections.
 
@@ -500,141 +469,6 @@ def rank_series_by_source(access_token, api_host, series_list):
             series_with_source['source_id'] = source_id
             yield series_with_source
 
-def format_crop_calendar_response(resp):
-    """Make cropcalendar output a format similar to get_data_points().
-
-    >>> format_crop_calendar_response([{
-    ...     'metricId': 2260063,
-    ...     'itemId': 274,
-    ...     'regionId': 13051,
-    ...     'sourceId': 5,
-    ...     'frequencyId': 15,
-    ...     'data': [{
-    ...         'sageItem': 'Corn',
-    ...         'plantingStartDate': '2000-03-04',
-    ...         'plantingEndDate': '2000-05-17',
-    ...         'harvestingStartDate': '2000-07-20',
-    ...         'harvestingEndDate': '2000-11-01',
-    ...         'multiYear': False
-    ...     }]
-    ... }]) == [{
-    ...     'metric_id': 2260063,
-    ...     'item_id': 274,
-    ...     'region_id': 13051,
-    ...     'frequency_id': 15,
-    ...     'source_id': 5,
-    ...     'start_date': '2000-03-04',
-    ...     'end_date': '2000-05-17',
-    ...     'value': 'planting',
-    ...     'input_unit_id': None,
-    ...     'input_unit_scale': None,
-    ...     'reporting_date': None
-    ... }, {
-    ...     'metric_id': 2260063,
-    ...     'item_id': 274,
-    ...     'region_id': 13051,
-    ...     'frequency_id': 15,
-    ...     'source_id': 5,
-    ...     'start_date': '2000-07-20',
-    ...     'end_date': '2000-11-01',
-    ...     'value': 'harvesting',
-    ...     'input_unit_id': None,
-    ...     'input_unit_scale': None,
-    ...     'reporting_date': None
-    ... }]
-    True
-
-    Parameters
-    ----------
-    resp : list of dicts
-        The output from /v2/cropcalendar/data. See doctest
-
-    Returns
-    -------
-    points : list of dicts
-        The input ``resp`` dicts with keys modified to match the get_data_points
-        output keys. Splits each point with plantingStartDate, plantingEndDate,
-        harvestingStartDate, and harvestingEndDate into two points with start
-        and end date where the value is the state of the crop as a string.
-
-    """
-    points = []
-    for point in resp:
-        # A single point may have multiple data entries if there are multiple
-        # harvests
-        for dataEntry in point['data']:
-            # Some start/end dates can be undefined (ex: {regionId: 12314,
-            # itemId: 95} - Wheat in Alta, Russia). Those are returned as empty
-            # strings, so here I am checking for that and replacing those cases
-            # with Nones. Also, in some cases both start AND end are undefined,
-            # in which case I am excluding the data point entirely.
-            if (dataEntry['plantingStartDate'] != '' or
-                    dataEntry['plantingEndDate'] != ''):
-                points.append({
-                    'metric_id': point['metricId'],
-                    'item_id': point['itemId'],
-                    'region_id': point['regionId'],
-                    'frequency_id': point['frequencyId'],
-                    'source_id': point['sourceId'],
-                    'start_date': (dataEntry['plantingStartDate']
-                                   if dataEntry['plantingStartDate'] != ''
-                                   else None),
-                    'end_date': (dataEntry['plantingEndDate']
-                                 if dataEntry['plantingEndDate'] != ''
-                                 else None),
-                    'value': 'planting',
-                    'input_unit_id': None,
-                    'input_unit_scale': None,
-                    'reporting_date': None
-                })
-            if (dataEntry['harvestingStartDate'] != '' or
-                    dataEntry['harvestingEndDate'] != ''):
-                points.append({
-                    'metric_id': point['metricId'],
-                    'item_id': point['itemId'],
-                    'region_id': point['regionId'],
-                    'frequency_id': point['frequencyId'],
-                    'source_id': point['sourceId'],
-                    'start_date': (dataEntry['harvestingStartDate']
-                                   if dataEntry['harvestingStartDate'] != ''
-                                   else None),
-                    'end_date': (dataEntry['harvestingEndDate']
-                                 if dataEntry['harvestingEndDate'] != ''
-                                 else None),
-                    'value': 'harvesting',
-                    'input_unit_id': None,
-                    'input_unit_scale': None,
-                    'reporting_date': None
-                })
-    return points
-
-
-def get_crop_calendar_data_points(access_token, api_host, **selection):
-    """Get crop calendar data.
-
-    Has different input/output from the regular /v2/data call, so this
-    normalizes the interface and output format to make compatible
-    get_data_points().
-
-    Parameters
-    ----------
-    access_token : string
-    api_host : string
-    selection : dict
-        See get_crop_calendar_params() input
-
-    Returns
-    -------
-    list of dicts
-        See format_crop_calendar_response() output
-
-    """
-    headers = {'authorization': 'Bearer ' + access_token}
-    url = '/'.join(['https:', '', api_host, 'v2/cropcalendar/data'])
-    params = get_crop_calendar_params(**selection)
-    resp = get_data(url, headers, params)
-    return format_crop_calendar_response(resp.json())
-
 
 def get_data_points(access_token, api_host, **selection):
     """Get all the data points for a given selection.
@@ -685,10 +519,6 @@ def get_data_points(access_token, api_host, **selection):
             }, ...]
 
     """
-    if(selection['metric_id'] == CROP_CALENDAR_METRIC_ID):
-        return get_crop_calendar_data_points(access_token, api_host,
-                                             **selection)
-
     headers = {'authorization': 'Bearer ' + access_token}
     url = '/'.join(['https:', '', api_host, 'v2/data'])
     params = get_data_call_params(**selection)
