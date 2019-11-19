@@ -872,7 +872,7 @@ def get_geojson(access_token, api_host, region_id):
 
 
 def get_descendant_regions(access_token, api_host, region_id,
-                           descendant_level, include_historical=True):
+                           descendant_level=False, include_historical=True):
     """Look up details of regions of the given level contained by a region.
 
     Given any region by id, recursively get all the descendant regions
