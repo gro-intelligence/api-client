@@ -452,6 +452,25 @@ def get_data_series(access_token, api_host, **selection):
         raise Exception(resp.text)
 
 
+def get_source_ranking(access_token, api_host, series):
+    """Given a series, return a list of ranked sources.
+
+    :param access_token: API access token.
+    :param api_host: API host.
+    :param series: Series to calculate source raking for.
+    :return: List of sources that match the series parameters, sorted by rank.
+    """
+    def make_key(key):
+        if key not in ('startDate', 'endDate'):
+            return key + 's'
+        return key
+    params = dict((make_key(k), v) for k, v in iter(list(
+        get_params_from_selection(**series).items())))
+    url = '/'.join(['https:', '', api_host, 'v2/available/sources'])
+    headers = {'authorization': 'Bearer ' + access_token}
+    return get_data(url, headers, params).json()
+
+
 def rank_series_by_source(access_token, api_host, series_list):
     """Given a list of series selections, for each unique combination
     excluding source, expand to all available sources and return them
@@ -480,18 +499,9 @@ def rank_series_by_source(access_token, api_host, series_list):
          if k_v[0] not in ('source_id', 'source_name')],
         key=lambda x: x[0])) for single_series in series_list)
 
-    def make_key(key):
-        if key not in ('startDate', 'endDate'):
-            return key + 's'
-        return key
-
     for series in map(dict, selections_sorted):
-        url = '/'.join(['https:', '', api_host, 'v2/available/sources'])
-        headers = {'authorization': 'Bearer ' + access_token}
-        params = dict((make_key(k), v) for k, v in iter(list(
-            get_params_from_selection(**series).items())))
         try:
-            source_ids = get_data(url, headers, params).json()
+            source_ids = get_source_ranking(access_token, api_host, series)
         except ValueError:
             continue  # empty response
         for source_id in source_ids:
@@ -922,7 +932,7 @@ def get_descendant_regions(access_token, api_host, region_id,
             pass
         elif descendant_level == member['level']:
             descendants.append(member)
-        elif member['level'] < descendant_level:
+        if not descendant_level or member['level'] < descendant_level:
             descendants += get_descendant_regions(
                 access_token, api_host, member_id, descendant_level, include_historical)
     return descendants
