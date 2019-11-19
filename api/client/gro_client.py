@@ -154,6 +154,7 @@ class GroClient(Client):
         for the_data_series in self.find_data_series(**kwargs):
             self.add_single_data_series(the_data_series)
             return
+        return
 
     ###
     # Discovery shortcuts
