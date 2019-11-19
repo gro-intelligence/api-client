@@ -195,7 +195,6 @@ class SimilarRegionState(object):
 
     def _standardize(self):
         self._logger.info("Standardizing data matrix...")
-        #self._generate_weight_vector()
 
         rows_to_keep = ~np.any(self.data_mask_nonstruc, axis=1)
         # Remove any rows that are missing....
