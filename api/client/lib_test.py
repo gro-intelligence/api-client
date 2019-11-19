@@ -6,8 +6,6 @@ from api.client import lib
 MOCK_HOST = "pytest.groclient.url"
 MOCK_TOKEN = "pytest.groclient.token"
 
-# TODO: Handle cases like the crop-calendar logic.
-
 def initialize_requests_mocker_and_get_mock_data(mock_requests_get, mock_data={"data": [{"name": "obj1"}, {"name": "obj2"}, {"name": "obj3"}]}):
     mock_requests_get.return_value.json.return_value = mock_data
     mock_requests_get.return_value.status_code = 200
