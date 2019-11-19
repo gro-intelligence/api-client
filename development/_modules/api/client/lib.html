@@ -994,7 +994,7 @@
 
 
 <div class="viewcode-block" id="get_descendant_regions"><a class="viewcode-back" href="../../../api.html#api.client.lib.get_descendant_regions">[docs]</a><span class="k">def</span> <span class="nf">get_descendant_regions</span><span class="p">(</span><span class="n">access_token</span><span class="p">,</span> <span class="n">api_host</span><span class="p">,</span> <span class="n">region_id</span><span class="p">,</span>
-                           <span class="n">descendant_level</span><span class="p">,</span> <span class="n">include_historical</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+                           <span class="n">descendant_level</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">include_historical</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Look up details of regions of the given level contained by a region.</span>
 
 <span class="sd">    Given any region by id, recursively get all the descendant regions</span>
@@ -1041,8 +1041,8 @@
     <span class="k">for</span> <span class="n">member_id</span> <span class="ow">in</span> <span class="n">region</span><span class="p">[</span><span class="s1">&#39;contains&#39;</span><span class="p">]:</span>
         <span class="n">member</span> <span class="o">=</span> <span class="n">lookup</span><span class="p">(</span><span class="n">access_token</span><span class="p">,</span> <span class="n">api_host</span><span class="p">,</span> <span class="s1">&#39;regions&#39;</span><span class="p">,</span> <span class="n">member_id</span><span class="p">)</span>
         <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">include_historical</span> <span class="ow">and</span> <span class="n">member</span><span class="p">[</span><span class="s1">&#39;historical&#39;</span><span class="p">]):</span>
-            <span class="k">pass</span>
-        <span class="k">elif</span> <span class="n">descendant_level</span> <span class="o">==</span> <span class="n">member</span><span class="p">[</span><span class="s1">&#39;level&#39;</span><span class="p">]:</span>
+            <span class="k">continue</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">descendant_level</span> <span class="ow">or</span> <span class="n">descendant_level</span> <span class="o">==</span> <span class="n">member</span><span class="p">[</span><span class="s1">&#39;level&#39;</span><span class="p">]:</span>
             <span class="n">descendants</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">member</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">descendant_level</span> <span class="ow">or</span> <span class="n">member</span><span class="p">[</span><span class="s1">&#39;level&#39;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">descendant_level</span><span class="p">:</span>
             <span class="n">descendants</span> <span class="o">+=</span> <span class="n">get_descendant_regions</span><span class="p">(</span>
