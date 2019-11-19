@@ -41,6 +41,9 @@ class GroClient(Client):
         self._data_series_queue = []  # added but not loaded in data frame
         self._data_frame = None
 
+    def get_logger(self):
+        return self._logger
+
     ###
     # Finding, indexing and loading multiple data series into a data frame
     ###
