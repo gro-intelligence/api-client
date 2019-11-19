@@ -296,10 +296,10 @@
 <span class="kn">from</span> <span class="nn">tornado.httpclient</span> <span class="k">import</span> <span class="n">AsyncHTTPClient</span><span class="p">,</span> <span class="n">HTTPRequest</span><span class="p">,</span> <span class="n">HTTPClientError</span>
 <span class="kn">from</span> <span class="nn">tornado.ioloop</span> <span class="k">import</span> <span class="n">IOLoop</span>
 <span class="kn">from</span> <span class="nn">tornado.queues</span> <span class="k">import</span> <span class="n">Queue</span>
-<span class="kn">from</span> <span class="nn">api.client</span> <span class="k">import</span> <span class="n">cfg</span><span class="p">,</span> <span class="n">lib</span><span class="p">,</span> <span class="n">Client</span>
+<span class="kn">from</span> <span class="nn">api.client</span> <span class="k">import</span> <span class="n">cfg</span><span class="p">,</span> <span class="n">lib</span>
+<span class="kn">from</span> <span class="nn">api.client.gro_client</span> <span class="k">import</span> <span class="n">GroClient</span>
 
-
-<div class="viewcode-block" id="BatchClient"><a class="viewcode-back" href="../../../api.html#api.client.batch_client.BatchClient">[docs]</a><span class="k">class</span> <span class="nc">BatchClient</span><span class="p">(</span><span class="n">Client</span><span class="p">):</span>
+<div class="viewcode-block" id="BatchClient"><a class="viewcode-back" href="../../../api.html#api.client.batch_client.BatchClient">[docs]</a><span class="k">class</span> <span class="nc">BatchClient</span><span class="p">(</span><span class="n">GroClient</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;API client with support for batch asynchronous queries.&quot;&quot;&quot;</span>
 
     <span class="n">_logger</span> <span class="o">=</span> <span class="kc">None</span>
@@ -375,6 +375,17 @@
     <span class="k">def</span> <span class="nf">batch_async_get_data_points</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">batched_args</span><span class="p">,</span> <span class="n">output_list</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                                     <span class="n">map_result</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">batch_async_queue</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_data_points</span><span class="p">,</span> <span class="n">batched_args</span><span class="p">,</span>
+                                      <span class="n">output_list</span><span class="p">,</span> <span class="n">map_result</span><span class="p">)</span>
+
+    <span class="nd">@gen</span><span class="o">.</span><span class="n">coroutine</span>
+<div class="viewcode-block" id="BatchClient.async_rank_series_by_source"><a class="viewcode-back" href="../../../api.html#api.client.batch_client.BatchClient.async_rank_series_by_source">[docs]</a>    <span class="k">def</span> <span class="nf">async_rank_series_by_source</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">selection</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get all sources, in ranked order, for a given selection.&quot;&quot;&quot;</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">BatchClient</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">rank_series_by_source</span><span class="p">(</span><span class="o">**</span><span class="n">selection</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="n">gen</span><span class="o">.</span><span class="n">Return</span><span class="p">([</span><span class="n">r</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">response</span><span class="p">])</span></div>
+
+    <span class="k">def</span> <span class="nf">batch_async_rank_series_by_source</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">batched_args</span><span class="p">,</span>
+                                       <span class="n">output_list</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">map_result</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">batch_async_queue</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">async_rank_series_by_source</span><span class="p">,</span> <span class="n">batched_args</span><span class="p">,</span>
                                       <span class="n">output_list</span><span class="p">,</span> <span class="n">map_result</span><span class="p">)</span>
 
 <div class="viewcode-block" id="BatchClient.batch_async_queue"><a class="viewcode-back" href="../../../api.html#api.client.batch_client.BatchClient.batch_async_queue">[docs]</a>    <span class="k">def</span> <span class="nf">batch_async_queue</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">,</span> <span class="n">batched_args</span><span class="p">,</span> <span class="n">output_list</span><span class="p">,</span> <span class="n">map_result</span><span class="p">):</span>
@@ -487,11 +498,7 @@
             <dd><a href="../../../../CLEWS-20278/index.html">CLEWS-20278</a></dd>
             <dd><a href="../../../../CLEWS-20906/index.html">CLEWS-20906</a></dd>
             <dd><a href="../../../../CLEWS-21846/index.html">CLEWS-21846</a></dd>
-            <dd><a href="../../../../CLEWS-22325/index.html">CLEWS-22325</a></dd>
             <dd><a href="../../../../CLEWS-22341/index.html">CLEWS-22341</a></dd>
-            <dd><a href="../../../../JGrinst-patch-1/index.html">JGrinst-patch-1</a></dd>
-            <dd><a href="../../../../brazil-soybeans-broken-link/index.html">brazil-soybeans-broken-link</a></dd>
-            <dd><a href="../../../../crop_model_gdd/index.html">crop_model_gdd</a></dd>
             <dd><a href="../../../../crop_model_gdd_impl/index.html">crop_model_gdd_impl</a></dd>
             <dd><a href="../../../../descendants/index.html">descendants</a></dd>
             <dd><a href="batch_client.html">development</a></dd>
@@ -499,9 +506,6 @@
             <dd><a href="../../../../find_data_series/index.html">find_data_series</a></dd>
             <dd><a href="../../../../get_region_id_given_lat_lon/index.html">get_region_id_given_lat_lon</a></dd>
             <dd><a href="../../../../musenlin-gro-patch-1/index.html">musenlin-gro-patch-1</a></dd>
-            <dd><a href="../../../../prevent_plant_rewrite/index.html">prevent_plant_rewrite</a></dd>
-            <dd><a href="../../../../similar_region_caching_fix/index.html">similar_region_caching_fix</a></dd>
-            <dd><a href="../../../../update-soil-water-availibility-metric-id/index.html">update-soil-water-availibility-metric-id</a></dd>
         </dl>
     </div>
 </div>
