@@ -302,69 +302,6 @@
 exposed in this module. Helper functions or shims or derivative functionality
 should appear in the client classes rather than here.</p>
 <dl class="function">
-<dt id="api.client.lib.format_crop_calendar_response">
-<code class="descclassname">api.client.lib.</code><code class="descname">format_crop_calendar_response</code><span class="sig-paren">(</span><em>resp</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/lib.html#format_crop_calendar_response"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.lib.format_crop_calendar_response" title="Permalink to this definition">¶</a></dt>
-<dd><p>Make cropcalendar output a format similar to get_data_points().</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">format_crop_calendar_response</span><span class="p">([{</span>
-<span class="gp">... </span>    <span class="s1">&#39;metricId&#39;</span><span class="p">:</span> <span class="mi">2260063</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="s1">&#39;itemId&#39;</span><span class="p">:</span> <span class="mi">274</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="s1">&#39;regionId&#39;</span><span class="p">:</span> <span class="mi">13051</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="s1">&#39;sourceId&#39;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="s1">&#39;frequencyId&#39;</span><span class="p">:</span> <span class="mi">15</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="p">[{</span>
-<span class="gp">... </span>        <span class="s1">&#39;sageItem&#39;</span><span class="p">:</span> <span class="s1">&#39;Corn&#39;</span><span class="p">,</span>
-<span class="gp">... </span>        <span class="s1">&#39;plantingStartDate&#39;</span><span class="p">:</span> <span class="s1">&#39;2000-03-04&#39;</span><span class="p">,</span>
-<span class="gp">... </span>        <span class="s1">&#39;plantingEndDate&#39;</span><span class="p">:</span> <span class="s1">&#39;2000-05-17&#39;</span><span class="p">,</span>
-<span class="gp">... </span>        <span class="s1">&#39;harvestingStartDate&#39;</span><span class="p">:</span> <span class="s1">&#39;2000-07-20&#39;</span><span class="p">,</span>
-<span class="gp">... </span>        <span class="s1">&#39;harvestingEndDate&#39;</span><span class="p">:</span> <span class="s1">&#39;2000-11-01&#39;</span><span class="p">,</span>
-<span class="gp">... </span>        <span class="s1">&#39;multiYear&#39;</span><span class="p">:</span> <span class="kc">False</span>
-<span class="gp">... </span>    <span class="p">}]</span>
-<span class="gp">... </span><span class="p">}])</span> <span class="o">==</span> <span class="p">[{</span>
-<span class="gp">... </span>    <span class="s1">&#39;metric_id&#39;</span><span class="p">:</span> <span class="mi">2260063</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="s1">&#39;item_id&#39;</span><span class="p">:</span> <span class="mi">274</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="s1">&#39;region_id&#39;</span><span class="p">:</span> <span class="mi">13051</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="s1">&#39;frequency_id&#39;</span><span class="p">:</span> <span class="mi">15</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="s1">&#39;source_id&#39;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="s1">&#39;start_date&#39;</span><span class="p">:</span> <span class="s1">&#39;2000-03-04&#39;</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="s1">&#39;end_date&#39;</span><span class="p">:</span> <span class="s1">&#39;2000-05-17&#39;</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="s1">&#39;planting&#39;</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="s1">&#39;input_unit_id&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="s1">&#39;input_unit_scale&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="s1">&#39;reporting_date&#39;</span><span class="p">:</span> <span class="kc">None</span>
-<span class="gp">... </span><span class="p">},</span> <span class="p">{</span>
-<span class="gp">... </span>    <span class="s1">&#39;metric_id&#39;</span><span class="p">:</span> <span class="mi">2260063</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="s1">&#39;item_id&#39;</span><span class="p">:</span> <span class="mi">274</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="s1">&#39;region_id&#39;</span><span class="p">:</span> <span class="mi">13051</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="s1">&#39;frequency_id&#39;</span><span class="p">:</span> <span class="mi">15</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="s1">&#39;source_id&#39;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="s1">&#39;start_date&#39;</span><span class="p">:</span> <span class="s1">&#39;2000-07-20&#39;</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="s1">&#39;end_date&#39;</span><span class="p">:</span> <span class="s1">&#39;2000-11-01&#39;</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="s1">&#39;harvesting&#39;</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="s1">&#39;input_unit_id&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="s1">&#39;input_unit_scale&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="s1">&#39;reporting_date&#39;</span><span class="p">:</span> <span class="kc">None</span>
-<span class="gp">... </span><span class="p">}]</span>
-<span class="go">True</span>
-</pre></div>
-</div>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>resp</strong> (<em>list of dicts</em>) &#8211; The output from /v2/cropcalendar/data. See doctest</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>points</strong> &#8211; The input <code class="docutils literal"><span class="pre">resp</span></code> dicts with keys modified to match the get_data_points
-output keys. Splits each point with plantingStartDate, plantingEndDate,
-harvestingStartDate, and harvestingEndDate into two points with start
-and end date where the value is the state of the crop as a string.</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">list of dicts</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
 <dt id="api.client.lib.get_access_token">
 <code class="descclassname">api.client.lib.</code><code class="descname">get_access_token</code><span class="sig-paren">(</span><em>api_host</em>, <em>user_email</em>, <em>user_password</em>, <em>logger=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/lib.html#get_access_token"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.lib.get_access_token" title="Permalink to this definition">¶</a></dt>
 <dd><p>Request an access token.</p>
@@ -418,66 +355,6 @@ Otherwise get_default_logger() will be used.</li>
 </td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list of dicts</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="api.client.lib.get_crop_calendar_data_points">
-<code class="descclassname">api.client.lib.</code><code class="descname">get_crop_calendar_data_points</code><span class="sig-paren">(</span><em>access_token</em>, <em>api_host</em>, <em>**selection</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/lib.html#get_crop_calendar_data_points"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.lib.get_crop_calendar_data_points" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get crop calendar data.</p>
-<p>Has different input/output from the regular /v2/data call, so this
-normalizes the interface and output format to make compatible
-get_data_points().</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>access_token</strong> (<em>string</em>) &#8211; </li>
-<li><strong>api_host</strong> (<em>string</em>) &#8211; </li>
-<li><strong>selection</strong> (<em>dict</em>) &#8211; See get_crop_calendar_params() input</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">See format_crop_calendar_response() output</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list of dicts</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="api.client.lib.get_crop_calendar_params">
-<code class="descclassname">api.client.lib.</code><code class="descname">get_crop_calendar_params</code><span class="sig-paren">(</span><em>**selection</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/lib.html#get_crop_calendar_params"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.lib.get_crop_calendar_params" title="Permalink to this definition">¶</a></dt>
-<dd><p>Construct http request params from dict of entity selections.</p>
-<p>For use with get_crop_calendar_data_points()</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">get_crop_calendar_params</span><span class="p">(</span>
-<span class="gp">... </span>    <span class="n">metric_id</span><span class="o">=</span><span class="mi">123</span><span class="p">,</span> <span class="n">item_id</span><span class="o">=</span><span class="mi">456</span><span class="p">,</span> <span class="n">region_id</span><span class="o">=</span><span class="mi">14</span>
-<span class="gp">... </span><span class="p">)</span> <span class="o">==</span> <span class="p">{</span> <span class="s1">&#39;itemId&#39;</span><span class="p">:</span> <span class="mi">456</span><span class="p">,</span> <span class="s1">&#39;regionId&#39;</span><span class="p">:</span> <span class="mi">14</span> <span class="p">}</span>
-<span class="go">True</span>
-</pre></div>
-</div>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>item_id</strong> (<em>integer</em>) &#8211; </li>
-<li><strong>region_id</strong> (<em>integer</em>) &#8211; </li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">selections with valid keys converted to camelcase and invalid ones
-filtered out</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">dict</p>
 </td>
 </tr>
 </tbody>
@@ -665,7 +542,7 @@ that does not have data.</li>
 
 <dl class="function">
 <dt id="api.client.lib.get_descendant_regions">
-<code class="descclassname">api.client.lib.</code><code class="descname">get_descendant_regions</code><span class="sig-paren">(</span><em>access_token</em>, <em>api_host</em>, <em>region_id</em>, <em>descendant_level</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/lib.html#get_descendant_regions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.lib.get_descendant_regions" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">api.client.lib.</code><code class="descname">get_descendant_regions</code><span class="sig-paren">(</span><em>access_token</em>, <em>api_host</em>, <em>region_id</em>, <em>descendant_level=False</em>, <em>include_historical=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/lib.html#get_descendant_regions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.lib.get_descendant_regions" title="Permalink to this definition">¶</a></dt>
 <dd><p>Look up details of regions of the given level contained by a region.</p>
 <p>Given any region by id, recursively get all the descendant regions
 that are of the specified level.</p>
@@ -682,6 +559,7 @@ levels.</p>
 <li><strong>api_host</strong> (<em>string</em>) &#8211; </li>
 <li><strong>region_id</strong> (<em>integer</em>) &#8211; </li>
 <li><strong>descendant_level</strong> (<em>integer</em>) &#8211; The region level of interest. See REGION_LEVELS constant.</li>
+<li><strong>include_historical</strong> (<em>boolean</em>) &#8211; option to include historical regions</li>
 </ul>
 </td>
 </tr>
@@ -805,6 +683,28 @@ levels.</p>
 </td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">dict</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="api.client.lib.get_source_ranking">
+<code class="descclassname">api.client.lib.</code><code class="descname">get_source_ranking</code><span class="sig-paren">(</span><em>access_token</em>, <em>api_host</em>, <em>series</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/lib.html#get_source_ranking"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.lib.get_source_ranking" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given a series, return a list of ranked sources.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>access_token</strong> &#8211; API access token.</li>
+<li><strong>api_host</strong> &#8211; API host.</li>
+<li><strong>series</strong> &#8211; Series to calculate source raking for.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">List of sources that match the series parameters, sorted by rank.</p>
 </td>
 </tr>
 </tbody>
@@ -1303,6 +1203,12 @@ could be from one or more weather stations and/or satellite.</p>
 <em class="property">class </em><code class="descclassname">api.client.batch_client.</code><code class="descname">BatchClient</code><span class="sig-paren">(</span><em>api_host</em>, <em>access_token</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/batch_client.html#BatchClient"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.batch_client.BatchClient" title="Permalink to this definition">¶</a></dt>
 <dd><p>API client with support for batch asynchronous queries.</p>
 <dl class="method">
+<dt id="api.client.batch_client.BatchClient.async_rank_series_by_source">
+<code class="descname">async_rank_series_by_source</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/batch_client.html#BatchClient.async_rank_series_by_source"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.batch_client.BatchClient.async_rank_series_by_source" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get all sources, in ranked order, for a given selection.</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="api.client.batch_client.BatchClient.batch_async_queue">
 <code class="descname">batch_async_queue</code><span class="sig-paren">(</span><em>func</em>, <em>batched_args</em>, <em>output_list</em>, <em>map_result</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/batch_client.html#BatchClient.batch_async_queue"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.batch_client.BatchClient.batch_async_queue" title="Permalink to this definition">¶</a></dt>
 <dd><p>Asynchronously call func.</p>
@@ -1406,7 +1312,6 @@ partner_region_id. Additional arguments are allowed and ignored.</p>
             <dd><a href="../descendants/api.html">descendants</a></dd>
             <dd><a href="../development/api.html">development</a></dd>
             <dd><a href="../docs-reorg/api.html">docs-reorg</a></dd>
-            <dd><a href="../find_data_series/api.html">find_data_series</a></dd>
             <dd><a href="../get_region_id_given_lat_lon/api.html">get_region_id_given_lat_lon</a></dd>
             <dd><a href="../musenlin-gro-patch-1/api.html">musenlin-gro-patch-1</a></dd>
             <dd><a href="../prevented_plant/api.html">prevented_plant</a></dd>

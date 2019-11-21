@@ -303,8 +303,6 @@
 <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
     <span class="kn">from</span> <span class="nn">backports.functools_lru_cache</span> <span class="k">import</span> <span class="n">lru_cache</span> <span class="k">as</span> <span class="n">memoize</span>
 
-<span class="n">CROP_CALENDAR_METRIC_ID</span> <span class="o">=</span> <span class="mi">2260063</span>
-
 <span class="n">REGION_LEVELS</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s1">&#39;world&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
     <span class="s1">&#39;continent&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
@@ -626,35 +624,6 @@
     <span class="k">return</span> <span class="n">params</span></div>
 
 
-<div class="viewcode-block" id="get_crop_calendar_params"><a class="viewcode-back" href="../../../api.html#api.client.lib.get_crop_calendar_params">[docs]</a><span class="k">def</span> <span class="nf">get_crop_calendar_params</span><span class="p">(</span><span class="o">**</span><span class="n">selection</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Construct http request params from dict of entity selections.</span>
-
-<span class="sd">    For use with get_crop_calendar_data_points()</span>
-
-<span class="sd">    &gt;&gt;&gt; get_crop_calendar_params(</span>
-<span class="sd">    ...     metric_id=123, item_id=456, region_id=14</span>
-<span class="sd">    ... ) == { &#39;itemId&#39;: 456, &#39;regionId&#39;: 14 }</span>
-<span class="sd">    True</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    item_id : integer</span>
-<span class="sd">    region_id : integer</span>
-
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    dict</span>
-<span class="sd">        selections with valid keys converted to camelcase and invalid ones</span>
-<span class="sd">        filtered out</span>
-
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">params</span> <span class="o">=</span> <span class="p">{}</span>
-    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">selection</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>
-        <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;region_id&#39;</span><span class="p">,</span> <span class="s1">&#39;item_id&#39;</span><span class="p">):</span>
-            <span class="n">params</span><span class="p">[</span><span class="n">snake_to_camel</span><span class="p">(</span><span class="n">key</span><span class="p">)]</span> <span class="o">=</span> <span class="n">value</span>
-    <span class="k">return</span> <span class="n">params</span></div>
-
-
 <div class="viewcode-block" id="get_data_call_params"><a class="viewcode-back" href="../../../api.html#api.client.lib.get_data_call_params">[docs]</a><span class="k">def</span> <span class="nf">get_data_call_params</span><span class="p">(</span><span class="o">**</span><span class="n">selection</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Construct http request params from dict of entity selections.</span>
 
@@ -723,14 +692,37 @@
 <span class="sd">            }, { ... }, ... ]</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">logger</span> <span class="o">=</span> <span class="n">get_default_logger</span><span class="p">()</span>
     <span class="n">url</span> <span class="o">=</span> <span class="s1">&#39;/&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s1">&#39;https:&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">api_host</span><span class="p">,</span> <span class="s1">&#39;v2/data_series/list&#39;</span><span class="p">])</span>
     <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;authorization&#39;</span><span class="p">:</span> <span class="s1">&#39;Bearer &#39;</span> <span class="o">+</span> <span class="n">access_token</span><span class="p">}</span>
     <span class="n">params</span> <span class="o">=</span> <span class="n">get_params_from_selection</span><span class="p">(</span><span class="o">**</span><span class="n">selection</span><span class="p">)</span>
     <span class="n">resp</span> <span class="o">=</span> <span class="n">get_data</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
     <span class="k">try</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">resp</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s1">&#39;data&#39;</span><span class="p">]</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">resp</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s1">&#39;data&#39;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="nb">any</span><span class="p">((</span><span class="n">series</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;metadata&#39;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;includes_historical_region&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">))</span> <span class="k">for</span> <span class="n">series</span> <span class="ow">in</span> <span class="n">response</span><span class="p">):</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;Some of the regions in your data call are historical, with boundaries that may be outdated. The regions may have overlapping values with current regions&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">response</span>
     <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="n">resp</span><span class="o">.</span><span class="n">text</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_source_ranking"><a class="viewcode-back" href="../../../api.html#api.client.lib.get_source_ranking">[docs]</a><span class="k">def</span> <span class="nf">get_source_ranking</span><span class="p">(</span><span class="n">access_token</span><span class="p">,</span> <span class="n">api_host</span><span class="p">,</span> <span class="n">series</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Given a series, return a list of ranked sources.</span>
+
+<span class="sd">    :param access_token: API access token.</span>
+<span class="sd">    :param api_host: API host.</span>
+<span class="sd">    :param series: Series to calculate source raking for.</span>
+<span class="sd">    :return: List of sources that match the series parameters, sorted by rank.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">make_key</span><span class="p">(</span><span class="n">key</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;startDate&#39;</span><span class="p">,</span> <span class="s1">&#39;endDate&#39;</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">key</span> <span class="o">+</span> <span class="s1">&#39;s&#39;</span>
+        <span class="k">return</span> <span class="n">key</span>
+    <span class="n">params</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">((</span><span class="n">make_key</span><span class="p">(</span><span class="n">k</span><span class="p">),</span> <span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">iter</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span>
+        <span class="n">get_params_from_selection</span><span class="p">(</span><span class="o">**</span><span class="n">series</span><span class="p">)</span><span class="o">.</span><span class="n">items</span><span class="p">())))</span>
+    <span class="n">url</span> <span class="o">=</span> <span class="s1">&#39;/&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s1">&#39;https:&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">api_host</span><span class="p">,</span> <span class="s1">&#39;v2/available/sources&#39;</span><span class="p">])</span>
+    <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;authorization&#39;</span><span class="p">:</span> <span class="s1">&#39;Bearer &#39;</span> <span class="o">+</span> <span class="n">access_token</span><span class="p">}</span>
+    <span class="k">return</span> <span class="n">get_data</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span><span class="o">.</span><span class="n">json</span><span class="p">()</span></div>
 
 
 <div class="viewcode-block" id="rank_series_by_source"><a class="viewcode-back" href="../../../api.html#api.client.lib.rank_series_by_source">[docs]</a><span class="k">def</span> <span class="nf">rank_series_by_source</span><span class="p">(</span><span class="n">access_token</span><span class="p">,</span> <span class="n">api_host</span><span class="p">,</span> <span class="n">series_list</span><span class="p">):</span>
@@ -761,18 +753,9 @@
          <span class="k">if</span> <span class="n">k_v</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;source_id&#39;</span><span class="p">,</span> <span class="s1">&#39;source_name&#39;</span><span class="p">)],</span>
         <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span> <span class="k">for</span> <span class="n">single_series</span> <span class="ow">in</span> <span class="n">series_list</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">make_key</span><span class="p">(</span><span class="n">key</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;startDate&#39;</span><span class="p">,</span> <span class="s1">&#39;endDate&#39;</span><span class="p">):</span>
-            <span class="k">return</span> <span class="n">key</span> <span class="o">+</span> <span class="s1">&#39;s&#39;</span>
-        <span class="k">return</span> <span class="n">key</span>
-
     <span class="k">for</span> <span class="n">series</span> <span class="ow">in</span> <span class="nb">map</span><span class="p">(</span><span class="nb">dict</span><span class="p">,</span> <span class="n">selections_sorted</span><span class="p">):</span>
-        <span class="n">url</span> <span class="o">=</span> <span class="s1">&#39;/&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s1">&#39;https:&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">api_host</span><span class="p">,</span> <span class="s1">&#39;v2/available/sources&#39;</span><span class="p">])</span>
-        <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;authorization&#39;</span><span class="p">:</span> <span class="s1">&#39;Bearer &#39;</span> <span class="o">+</span> <span class="n">access_token</span><span class="p">}</span>
-        <span class="n">params</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">((</span><span class="n">make_key</span><span class="p">(</span><span class="n">k</span><span class="p">),</span> <span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">iter</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span>
-            <span class="n">get_params_from_selection</span><span class="p">(</span><span class="o">**</span><span class="n">series</span><span class="p">)</span><span class="o">.</span><span class="n">items</span><span class="p">())))</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="n">source_ids</span> <span class="o">=</span> <span class="n">get_data</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+            <span class="n">source_ids</span> <span class="o">=</span> <span class="n">get_source_ranking</span><span class="p">(</span><span class="n">access_token</span><span class="p">,</span> <span class="n">api_host</span><span class="p">,</span> <span class="n">series</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
             <span class="k">continue</span>  <span class="c1"># empty response</span>
         <span class="k">for</span> <span class="n">source_id</span> <span class="ow">in</span> <span class="n">source_ids</span><span class="p">:</span>
@@ -780,141 +763,6 @@
             <span class="n">series_with_source</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">series</span><span class="p">)</span>
             <span class="n">series_with_source</span><span class="p">[</span><span class="s1">&#39;source_id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">source_id</span>
             <span class="k">yield</span> <span class="n">series_with_source</span></div>
-
-<div class="viewcode-block" id="format_crop_calendar_response"><a class="viewcode-back" href="../../../api.html#api.client.lib.format_crop_calendar_response">[docs]</a><span class="k">def</span> <span class="nf">format_crop_calendar_response</span><span class="p">(</span><span class="n">resp</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Make cropcalendar output a format similar to get_data_points().</span>
-
-<span class="sd">    &gt;&gt;&gt; format_crop_calendar_response([{</span>
-<span class="sd">    ...     &#39;metricId&#39;: 2260063,</span>
-<span class="sd">    ...     &#39;itemId&#39;: 274,</span>
-<span class="sd">    ...     &#39;regionId&#39;: 13051,</span>
-<span class="sd">    ...     &#39;sourceId&#39;: 5,</span>
-<span class="sd">    ...     &#39;frequencyId&#39;: 15,</span>
-<span class="sd">    ...     &#39;data&#39;: [{</span>
-<span class="sd">    ...         &#39;sageItem&#39;: &#39;Corn&#39;,</span>
-<span class="sd">    ...         &#39;plantingStartDate&#39;: &#39;2000-03-04&#39;,</span>
-<span class="sd">    ...         &#39;plantingEndDate&#39;: &#39;2000-05-17&#39;,</span>
-<span class="sd">    ...         &#39;harvestingStartDate&#39;: &#39;2000-07-20&#39;,</span>
-<span class="sd">    ...         &#39;harvestingEndDate&#39;: &#39;2000-11-01&#39;,</span>
-<span class="sd">    ...         &#39;multiYear&#39;: False</span>
-<span class="sd">    ...     }]</span>
-<span class="sd">    ... }]) == [{</span>
-<span class="sd">    ...     &#39;metric_id&#39;: 2260063,</span>
-<span class="sd">    ...     &#39;item_id&#39;: 274,</span>
-<span class="sd">    ...     &#39;region_id&#39;: 13051,</span>
-<span class="sd">    ...     &#39;frequency_id&#39;: 15,</span>
-<span class="sd">    ...     &#39;source_id&#39;: 5,</span>
-<span class="sd">    ...     &#39;start_date&#39;: &#39;2000-03-04&#39;,</span>
-<span class="sd">    ...     &#39;end_date&#39;: &#39;2000-05-17&#39;,</span>
-<span class="sd">    ...     &#39;value&#39;: &#39;planting&#39;,</span>
-<span class="sd">    ...     &#39;input_unit_id&#39;: None,</span>
-<span class="sd">    ...     &#39;input_unit_scale&#39;: None,</span>
-<span class="sd">    ...     &#39;reporting_date&#39;: None</span>
-<span class="sd">    ... }, {</span>
-<span class="sd">    ...     &#39;metric_id&#39;: 2260063,</span>
-<span class="sd">    ...     &#39;item_id&#39;: 274,</span>
-<span class="sd">    ...     &#39;region_id&#39;: 13051,</span>
-<span class="sd">    ...     &#39;frequency_id&#39;: 15,</span>
-<span class="sd">    ...     &#39;source_id&#39;: 5,</span>
-<span class="sd">    ...     &#39;start_date&#39;: &#39;2000-07-20&#39;,</span>
-<span class="sd">    ...     &#39;end_date&#39;: &#39;2000-11-01&#39;,</span>
-<span class="sd">    ...     &#39;value&#39;: &#39;harvesting&#39;,</span>
-<span class="sd">    ...     &#39;input_unit_id&#39;: None,</span>
-<span class="sd">    ...     &#39;input_unit_scale&#39;: None,</span>
-<span class="sd">    ...     &#39;reporting_date&#39;: None</span>
-<span class="sd">    ... }]</span>
-<span class="sd">    True</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    resp : list of dicts</span>
-<span class="sd">        The output from /v2/cropcalendar/data. See doctest</span>
-
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    points : list of dicts</span>
-<span class="sd">        The input ``resp`` dicts with keys modified to match the get_data_points</span>
-<span class="sd">        output keys. Splits each point with plantingStartDate, plantingEndDate,</span>
-<span class="sd">        harvestingStartDate, and harvestingEndDate into two points with start</span>
-<span class="sd">        and end date where the value is the state of the crop as a string.</span>
-
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">points</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">point</span> <span class="ow">in</span> <span class="n">resp</span><span class="p">:</span>
-        <span class="c1"># A single point may have multiple data entries if there are multiple</span>
-        <span class="c1"># harvests</span>
-        <span class="k">for</span> <span class="n">dataEntry</span> <span class="ow">in</span> <span class="n">point</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">]:</span>
-            <span class="c1"># Some start/end dates can be undefined (ex: {regionId: 12314,</span>
-            <span class="c1"># itemId: 95} - Wheat in Alta, Russia). Those are returned as empty</span>
-            <span class="c1"># strings, so here I am checking for that and replacing those cases</span>
-            <span class="c1"># with Nones. Also, in some cases both start AND end are undefined,</span>
-            <span class="c1"># in which case I am excluding the data point entirely.</span>
-            <span class="k">if</span> <span class="p">(</span><span class="n">dataEntry</span><span class="p">[</span><span class="s1">&#39;plantingStartDate&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span> <span class="ow">or</span>
-                    <span class="n">dataEntry</span><span class="p">[</span><span class="s1">&#39;plantingEndDate&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span><span class="p">):</span>
-                <span class="n">points</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
-                    <span class="s1">&#39;metric_id&#39;</span><span class="p">:</span> <span class="n">point</span><span class="p">[</span><span class="s1">&#39;metricId&#39;</span><span class="p">],</span>
-                    <span class="s1">&#39;item_id&#39;</span><span class="p">:</span> <span class="n">point</span><span class="p">[</span><span class="s1">&#39;itemId&#39;</span><span class="p">],</span>
-                    <span class="s1">&#39;region_id&#39;</span><span class="p">:</span> <span class="n">point</span><span class="p">[</span><span class="s1">&#39;regionId&#39;</span><span class="p">],</span>
-                    <span class="s1">&#39;frequency_id&#39;</span><span class="p">:</span> <span class="n">point</span><span class="p">[</span><span class="s1">&#39;frequencyId&#39;</span><span class="p">],</span>
-                    <span class="s1">&#39;source_id&#39;</span><span class="p">:</span> <span class="n">point</span><span class="p">[</span><span class="s1">&#39;sourceId&#39;</span><span class="p">],</span>
-                    <span class="s1">&#39;start_date&#39;</span><span class="p">:</span> <span class="p">(</span><span class="n">dataEntry</span><span class="p">[</span><span class="s1">&#39;plantingStartDate&#39;</span><span class="p">]</span>
-                                   <span class="k">if</span> <span class="n">dataEntry</span><span class="p">[</span><span class="s1">&#39;plantingStartDate&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span>
-                                   <span class="k">else</span> <span class="kc">None</span><span class="p">),</span>
-                    <span class="s1">&#39;end_date&#39;</span><span class="p">:</span> <span class="p">(</span><span class="n">dataEntry</span><span class="p">[</span><span class="s1">&#39;plantingEndDate&#39;</span><span class="p">]</span>
-                                 <span class="k">if</span> <span class="n">dataEntry</span><span class="p">[</span><span class="s1">&#39;plantingEndDate&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span>
-                                 <span class="k">else</span> <span class="kc">None</span><span class="p">),</span>
-                    <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="s1">&#39;planting&#39;</span><span class="p">,</span>
-                    <span class="s1">&#39;input_unit_id&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
-                    <span class="s1">&#39;input_unit_scale&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
-                    <span class="s1">&#39;reporting_date&#39;</span><span class="p">:</span> <span class="kc">None</span>
-                <span class="p">})</span>
-            <span class="k">if</span> <span class="p">(</span><span class="n">dataEntry</span><span class="p">[</span><span class="s1">&#39;harvestingStartDate&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span> <span class="ow">or</span>
-                    <span class="n">dataEntry</span><span class="p">[</span><span class="s1">&#39;harvestingEndDate&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span><span class="p">):</span>
-                <span class="n">points</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
-                    <span class="s1">&#39;metric_id&#39;</span><span class="p">:</span> <span class="n">point</span><span class="p">[</span><span class="s1">&#39;metricId&#39;</span><span class="p">],</span>
-                    <span class="s1">&#39;item_id&#39;</span><span class="p">:</span> <span class="n">point</span><span class="p">[</span><span class="s1">&#39;itemId&#39;</span><span class="p">],</span>
-                    <span class="s1">&#39;region_id&#39;</span><span class="p">:</span> <span class="n">point</span><span class="p">[</span><span class="s1">&#39;regionId&#39;</span><span class="p">],</span>
-                    <span class="s1">&#39;frequency_id&#39;</span><span class="p">:</span> <span class="n">point</span><span class="p">[</span><span class="s1">&#39;frequencyId&#39;</span><span class="p">],</span>
-                    <span class="s1">&#39;source_id&#39;</span><span class="p">:</span> <span class="n">point</span><span class="p">[</span><span class="s1">&#39;sourceId&#39;</span><span class="p">],</span>
-                    <span class="s1">&#39;start_date&#39;</span><span class="p">:</span> <span class="p">(</span><span class="n">dataEntry</span><span class="p">[</span><span class="s1">&#39;harvestingStartDate&#39;</span><span class="p">]</span>
-                                   <span class="k">if</span> <span class="n">dataEntry</span><span class="p">[</span><span class="s1">&#39;harvestingStartDate&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span>
-                                   <span class="k">else</span> <span class="kc">None</span><span class="p">),</span>
-                    <span class="s1">&#39;end_date&#39;</span><span class="p">:</span> <span class="p">(</span><span class="n">dataEntry</span><span class="p">[</span><span class="s1">&#39;harvestingEndDate&#39;</span><span class="p">]</span>
-                                 <span class="k">if</span> <span class="n">dataEntry</span><span class="p">[</span><span class="s1">&#39;harvestingEndDate&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span>
-                                 <span class="k">else</span> <span class="kc">None</span><span class="p">),</span>
-                    <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="s1">&#39;harvesting&#39;</span><span class="p">,</span>
-                    <span class="s1">&#39;input_unit_id&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
-                    <span class="s1">&#39;input_unit_scale&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
-                    <span class="s1">&#39;reporting_date&#39;</span><span class="p">:</span> <span class="kc">None</span>
-                <span class="p">})</span>
-    <span class="k">return</span> <span class="n">points</span></div>
-
-
-<div class="viewcode-block" id="get_crop_calendar_data_points"><a class="viewcode-back" href="../../../api.html#api.client.lib.get_crop_calendar_data_points">[docs]</a><span class="k">def</span> <span class="nf">get_crop_calendar_data_points</span><span class="p">(</span><span class="n">access_token</span><span class="p">,</span> <span class="n">api_host</span><span class="p">,</span> <span class="o">**</span><span class="n">selection</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Get crop calendar data.</span>
-
-<span class="sd">    Has different input/output from the regular /v2/data call, so this</span>
-<span class="sd">    normalizes the interface and output format to make compatible</span>
-<span class="sd">    get_data_points().</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    access_token : string</span>
-<span class="sd">    api_host : string</span>
-<span class="sd">    selection : dict</span>
-<span class="sd">        See get_crop_calendar_params() input</span>
-
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    list of dicts</span>
-<span class="sd">        See format_crop_calendar_response() output</span>
-
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;authorization&#39;</span><span class="p">:</span> <span class="s1">&#39;Bearer &#39;</span> <span class="o">+</span> <span class="n">access_token</span><span class="p">}</span>
-    <span class="n">url</span> <span class="o">=</span> <span class="s1">&#39;/&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s1">&#39;https:&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">api_host</span><span class="p">,</span> <span class="s1">&#39;v2/cropcalendar/data&#39;</span><span class="p">])</span>
-    <span class="n">params</span> <span class="o">=</span> <span class="n">get_crop_calendar_params</span><span class="p">(</span><span class="o">**</span><span class="n">selection</span><span class="p">)</span>
-    <span class="n">resp</span> <span class="o">=</span> <span class="n">get_data</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">format_crop_calendar_response</span><span class="p">(</span><span class="n">resp</span><span class="o">.</span><span class="n">json</span><span class="p">())</span></div>
 
 
 <div class="viewcode-block" id="get_data_points"><a class="viewcode-back" href="../../../api.html#api.client.lib.get_data_points">[docs]</a><span class="k">def</span> <span class="nf">get_data_points</span><span class="p">(</span><span class="n">access_token</span><span class="p">,</span> <span class="n">api_host</span><span class="p">,</span> <span class="o">**</span><span class="n">selection</span><span class="p">):</span>
@@ -966,10 +814,6 @@
 <span class="sd">            }, ...]</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span><span class="p">(</span><span class="n">selection</span><span class="p">[</span><span class="s1">&#39;metric_id&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">CROP_CALENDAR_METRIC_ID</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">get_crop_calendar_data_points</span><span class="p">(</span><span class="n">access_token</span><span class="p">,</span> <span class="n">api_host</span><span class="p">,</span>
-                                             <span class="o">**</span><span class="n">selection</span><span class="p">)</span>
-
     <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;authorization&#39;</span><span class="p">:</span> <span class="s1">&#39;Bearer &#39;</span> <span class="o">+</span> <span class="n">access_token</span><span class="p">}</span>
     <span class="n">url</span> <span class="o">=</span> <span class="s1">&#39;/&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s1">&#39;https:&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">api_host</span><span class="p">,</span> <span class="s1">&#39;v2/data&#39;</span><span class="p">])</span>
     <span class="n">params</span> <span class="o">=</span> <span class="n">get_data_call_params</span><span class="p">(</span><span class="o">**</span><span class="n">selection</span><span class="p">)</span>
@@ -1153,7 +997,7 @@
 
 
 <div class="viewcode-block" id="get_descendant_regions"><a class="viewcode-back" href="../../../api.html#api.client.lib.get_descendant_regions">[docs]</a><span class="k">def</span> <span class="nf">get_descendant_regions</span><span class="p">(</span><span class="n">access_token</span><span class="p">,</span> <span class="n">api_host</span><span class="p">,</span> <span class="n">region_id</span><span class="p">,</span>
-                           <span class="n">descendant_level</span><span class="p">):</span>
+                           <span class="n">descendant_level</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">include_historical</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Look up details of regions of the given level contained by a region.</span>
 
 <span class="sd">    Given any region by id, recursively get all the descendant regions</span>
@@ -1171,6 +1015,8 @@
 <span class="sd">    region_id : integer</span>
 <span class="sd">    descendant_level : integer</span>
 <span class="sd">        The region level of interest. See REGION_LEVELS constant.</span>
+<span class="sd">    include_historical : boolean</span>
+<span class="sd">        option to include historical regions</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -1197,11 +1043,13 @@
     <span class="n">region</span> <span class="o">=</span> <span class="n">lookup</span><span class="p">(</span><span class="n">access_token</span><span class="p">,</span> <span class="n">api_host</span><span class="p">,</span> <span class="s1">&#39;regions&#39;</span><span class="p">,</span> <span class="n">region_id</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">member_id</span> <span class="ow">in</span> <span class="n">region</span><span class="p">[</span><span class="s1">&#39;contains&#39;</span><span class="p">]:</span>
         <span class="n">member</span> <span class="o">=</span> <span class="n">lookup</span><span class="p">(</span><span class="n">access_token</span><span class="p">,</span> <span class="n">api_host</span><span class="p">,</span> <span class="s1">&#39;regions&#39;</span><span class="p">,</span> <span class="n">member_id</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">descendant_level</span> <span class="o">==</span> <span class="n">member</span><span class="p">[</span><span class="s1">&#39;level&#39;</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">include_historical</span> <span class="ow">and</span> <span class="n">member</span><span class="p">[</span><span class="s1">&#39;historical&#39;</span><span class="p">]):</span>
+            <span class="k">continue</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">descendant_level</span> <span class="ow">or</span> <span class="n">descendant_level</span> <span class="o">==</span> <span class="n">member</span><span class="p">[</span><span class="s1">&#39;level&#39;</span><span class="p">]:</span>
             <span class="n">descendants</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">member</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">member</span><span class="p">[</span><span class="s1">&#39;level&#39;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">descendant_level</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">descendant_level</span> <span class="ow">or</span> <span class="n">member</span><span class="p">[</span><span class="s1">&#39;level&#39;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">descendant_level</span><span class="p">:</span>
             <span class="n">descendants</span> <span class="o">+=</span> <span class="n">get_descendant_regions</span><span class="p">(</span>
-                <span class="n">access_token</span><span class="p">,</span> <span class="n">api_host</span><span class="p">,</span> <span class="n">member_id</span><span class="p">,</span> <span class="n">descendant_level</span><span class="p">)</span>
+                <span class="n">access_token</span><span class="p">,</span> <span class="n">api_host</span><span class="p">,</span> <span class="n">member_id</span><span class="p">,</span> <span class="n">descendant_level</span><span class="p">,</span> <span class="n">include_historical</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">descendants</span></div>
 
 
@@ -1264,7 +1112,6 @@
             <dd><a href="../../../../descendants/index.html">descendants</a></dd>
             <dd><a href="../../../../development/index.html">development</a></dd>
             <dd><a href="../../../../docs-reorg/index.html">docs-reorg</a></dd>
-            <dd><a href="../../../../find_data_series/index.html">find_data_series</a></dd>
             <dd><a href="../../../../get_region_id_given_lat_lon/index.html">get_region_id_given_lat_lon</a></dd>
             <dd><a href="../../../../musenlin-gro-patch-1/index.html">musenlin-gro-patch-1</a></dd>
             <dd><a href="../../../../prevented_plant/index.html">prevented_plant</a></dd>
