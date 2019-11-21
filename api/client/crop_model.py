@@ -123,7 +123,7 @@ class CropModel(GroClient):
             self.add_single_data_series(tmin)
             break
         df = self.get_df()
-        if not df:
+        if df is None or df.empty:
             raise Exception("Insufficient data for GDD in region {}".format(
                 region_name))
         # For each day we want (t_min + t_max)/2, or more generally,
