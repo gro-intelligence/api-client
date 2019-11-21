@@ -408,7 +408,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">add_single_data_series</span><span class="p">(</span><span class="n">tmin</span><span class="p">)</span>
             <span class="k">break</span>
         <span class="n">df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_df</span><span class="p">()</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">df</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">df</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">df</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Insufficient data for GDD in region </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                 <span class="n">region_name</span><span class="p">))</span>
         <span class="c1"># For each day we want (t_min + t_max)/2, or more generally,</span>
