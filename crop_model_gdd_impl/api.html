@@ -1142,6 +1142,12 @@ the value of the weighting series represented by that region.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="api.client.crop_model.CropModel.compute_gdd">
+<code class="descname">compute_gdd</code><span class="sig-paren">(</span><em>tmin_series</em>, <em>tmax_series</em>, <em>base_temperature</em>, <em>start_date</em>, <em>end_date</em>, <em>min_temporal_coverage=0.5</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/crop_model.html#CropModel.compute_gdd"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.crop_model.CropModel.compute_gdd" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute Growing Degree Days value from specific data series.</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="api.client.crop_model.CropModel.compute_weights">
 <code class="descname">compute_weights</code><span class="sig-paren">(</span><em>crop_name</em>, <em>metric_name</em>, <em>regions</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/crop_model.html#CropModel.compute_weights"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.crop_model.CropModel.compute_weights" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add the weighting data series to this model. Compute the weights,
@@ -1152,7 +1158,7 @@ corresponding to the regions.</p>
 
 <dl class="method">
 <dt id="api.client.crop_model.CropModel.growing_degree_days">
-<code class="descname">growing_degree_days</code><span class="sig-paren">(</span><em>region_name</em>, <em>base_temperature</em>, <em>start_date</em>, <em>end_date</em>, <em>min_temporal_coverage=0.5</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/crop_model.html#CropModel.growing_degree_days"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.crop_model.CropModel.growing_degree_days" title="Permalink to this definition">¶</a></dt>
+<code class="descname">growing_degree_days</code><span class="sig-paren">(</span><em>region_name</em>, <em>base_temperature</em>, <em>start_date</em>, <em>end_date</em>, <em>min_temporal_coverage</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/crop_model.html#CropModel.growing_degree_days"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.crop_model.CropModel.growing_degree_days" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get Growing Degree Days (GDD) for a region.</p>
 <p>Growing degree days (GDD) are a weather-based indicator that
 allows for assessing crop phenology and crop development,
