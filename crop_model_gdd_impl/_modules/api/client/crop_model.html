@@ -312,7 +312,7 @@
                 <span class="k">break</span>
         <span class="c1"># Compute the average over time for reach region</span>
         <span class="n">df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_df</span><span class="p">()</span>
-        
+
         <span class="k">def</span> <span class="nf">mapper</span><span class="p">(</span><span class="n">region</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">df</span><span class="p">[(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;item_id&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">entities</span><span class="p">[</span><span class="s1">&#39;item_id&#39;</span><span class="p">])</span> <span class="o">&amp;</span> \
                       <span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;metric_id&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">entities</span><span class="p">[</span><span class="s1">&#39;metric_id&#39;</span><span class="p">])</span> <span class="o">&amp;</span> \
@@ -356,9 +356,34 @@
             <span class="n">series_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">series</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">pandas</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">series_list</span><span class="p">)</span></div>
 
+<div class="viewcode-block" id="CropModel.compute_gdd"><a class="viewcode-back" href="../../../api.html#api.client.crop_model.CropModel.compute_gdd">[docs]</a>    <span class="k">def</span> <span class="nf">compute_gdd</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tmin_series</span><span class="p">,</span> <span class="n">tmax_series</span><span class="p">,</span> <span class="n">base_temperature</span><span class="p">,</span>
+                    <span class="n">start_date</span><span class="p">,</span> <span class="n">end_date</span><span class="p">,</span> <span class="n">min_temporal_coverage</span><span class="o">=</span><span class="mf">0.5</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Compute Growing Degree Days value from specific data series.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_single_data_series</span><span class="p">(</span><span class="n">tmin_series</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_single_data_series</span><span class="p">(</span><span class="n">tmax_series</span><span class="p">)</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_df</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">df</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">df</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Insufficient data for GDD in region </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">region_name</span><span class="p">))</span>
+        <span class="c1"># For each day we want (t_min + t_max)/2, or more generally,</span>
+        <span class="c1"># the average temperature for that day.</span>
+        <span class="n">tmean</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[(</span><span class="n">df</span><span class="o">.</span><span class="n">item_id</span> <span class="o">==</span> <span class="n">tmax_series</span><span class="p">[</span><span class="s1">&#39;item_id&#39;</span><span class="p">])</span> <span class="o">|</span> \
+                       <span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">item_id</span> <span class="o">==</span> <span class="n">tmin_series</span><span class="p">[</span><span class="s1">&#39;item_id&#39;</span><span class="p">])]</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span>
+                           <span class="p">[</span><span class="s1">&#39;region_id&#39;</span><span class="p">,</span> <span class="s1">&#39;metric_id&#39;</span><span class="p">,</span> <span class="s1">&#39;frequency_id&#39;</span><span class="p">,</span>
+                            <span class="s1">&#39;start_date&#39;</span><span class="p">,</span> <span class="s1">&#39;end_date&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+        <span class="n">duration</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">end_date</span><span class="p">,</span> <span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1">&#39;</span><span class="p">)</span> <span class="o">-</span> \
+                   <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">start_date</span><span class="p">,</span> <span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">coverage_threshold</span> <span class="o">=</span> <span class="n">min_temporal_coverage</span> <span class="o">*</span> <span class="n">duration</span><span class="o">.</span><span class="n">days</span>
+        <span class="k">if</span> <span class="n">tmean</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">size</span> <span class="o">&lt;</span> <span class="n">coverage_threshold</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Insufficient temporal coverage for GDD, &quot;</span> <span class="o">+</span> \
+                            <span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> &lt; </span><span class="si">{}</span><span class="s2"> data points available&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                                <span class="n">tmean</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="n">coverage_threshold</span><span class="p">))</span>
+        <span class="n">gdd_values</span> <span class="o">=</span> <span class="n">tmean</span><span class="o">.</span><span class="n">value</span> <span class="o">-</span> <span class="n">base_temperature</span>
+        <span class="c1"># TODO: group by freq and normalize in case not daily</span>
+        <span class="k">return</span> <span class="n">gdd_values</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="CropModel.growing_degree_days"><a class="viewcode-back" href="../../../api.html#api.client.crop_model.CropModel.growing_degree_days">[docs]</a>    <span class="k">def</span> <span class="nf">growing_degree_days</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">region_name</span><span class="p">,</span> <span class="n">base_temperature</span><span class="p">,</span>
-                            <span class="n">start_date</span><span class="p">,</span> <span class="n">end_date</span><span class="p">,</span> <span class="n">min_temporal_coverage</span><span class="o">=</span><span class="mf">0.5</span><span class="p">):</span>
+                            <span class="n">start_date</span><span class="p">,</span> <span class="n">end_date</span><span class="p">,</span> <span class="n">min_temporal_coverage</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Get Growing Degree Days (GDD) for a region.</span>
 
 <span class="sd">        Growing degree days (GDD) are a weather-based indicator that</span>
@@ -381,7 +406,7 @@
 <span class="sd">        The region can be any region of the Gro regions, from a point</span>
 <span class="sd">        location to a district, province etc. This will use the best</span>
 <span class="sd">        available data series for T_max and T_min for the given region</span>
-<span class="sd">        and time period, using &quot;find_data_series&quot;. </span>
+<span class="sd">        and time period, using &quot;find_data_series&quot;.</span>
 
 <span class="sd">        In the simplest case, if the given region is a weather station</span>
 <span class="sd">        location which has data for the time period, then that will be</span>
@@ -397,36 +422,19 @@
 <span class="sd">        min_temporal_coverage: float, optional</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">for</span> <span class="n">tmax</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">find_data_series</span><span class="p">(</span>
-                <span class="n">item</span><span class="o">=</span><span class="s1">&#39;Temperature max&#39;</span><span class="p">,</span> <span class="n">metric</span><span class="o">=</span><span class="s1">&#39;Temperature&#39;</span><span class="p">,</span>
-                <span class="n">region</span><span class="o">=</span><span class="n">region_name</span><span class="p">,</span> <span class="n">start_date</span><span class="o">=</span><span class="n">start_date</span><span class="p">,</span> <span class="n">end_date</span><span class="o">=</span><span class="n">end_date</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">add_single_data_series</span><span class="p">(</span><span class="n">tmax</span><span class="p">)</span>
-            <span class="k">break</span>
-        <span class="k">for</span> <span class="n">tmin</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">find_data_series</span><span class="p">(</span>
-                <span class="n">item</span><span class="o">=</span><span class="s1">&#39;Temperature min&#39;</span><span class="p">,</span> <span class="n">metric</span><span class="o">=</span><span class="s1">&#39;Temperature&#39;</span><span class="p">,</span>
-                <span class="n">region</span><span class="o">=</span><span class="n">region_name</span><span class="p">,</span> <span class="n">start_date</span><span class="o">=</span><span class="n">start_date</span><span class="p">,</span> <span class="n">end_date</span><span class="o">=</span><span class="n">end_date</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">add_single_data_series</span><span class="p">(</span><span class="n">tmin</span><span class="p">)</span>
-            <span class="k">break</span>
-        <span class="n">df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_df</span><span class="p">()</span>
-        <span class="k">if</span> <span class="n">df</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">df</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Insufficient data for GDD in region </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                <span class="n">region_name</span><span class="p">))</span>
-        <span class="c1"># For each day we want (t_min + t_max)/2, or more generally,</span>
-        <span class="c1"># the average temperature for that day.</span>
-        <span class="n">tmean</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[(</span><span class="n">df</span><span class="o">.</span><span class="n">item_id</span> <span class="o">==</span> <span class="n">tmax</span><span class="p">[</span><span class="s1">&#39;item_id&#39;</span><span class="p">])</span> <span class="o">|</span> \
-                       <span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">item_id</span> <span class="o">==</span> <span class="n">tmin</span><span class="p">[</span><span class="s1">&#39;item_id&#39;</span><span class="p">])]</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span>
-                           <span class="p">[</span><span class="s1">&#39;region_id&#39;</span><span class="p">,</span> <span class="s1">&#39;metric_id&#39;</span><span class="p">,</span> <span class="s1">&#39;frequency_id&#39;</span><span class="p">,</span>
-                            <span class="s1">&#39;start_date&#39;</span><span class="p">,</span> <span class="s1">&#39;end_date&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
-        <span class="n">duration</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">end_date</span><span class="p">,</span> <span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1">&#39;</span><span class="p">)</span> <span class="o">-</span> \
-                   <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">start_date</span><span class="p">,</span> <span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1">&#39;</span><span class="p">)</span>
-        <span class="n">coverage_threshold</span> <span class="o">=</span> <span class="n">min_temporal_coverage</span> <span class="o">*</span> <span class="n">duration</span><span class="o">.</span><span class="n">days</span>
-        <span class="k">if</span> <span class="n">tmean</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">size</span> <span class="o">&lt;</span> <span class="n">coverage_threshold</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Insufficient temporal coverage for GDD, &quot;</span> <span class="o">+</span> \
-                            <span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> &lt; </span><span class="si">{}</span><span class="s2"> data points available&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                                <span class="n">tmean</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="n">coverage_threshold</span><span class="p">))</span>
-        <span class="n">gdd_values</span> <span class="o">=</span> <span class="n">tmean</span><span class="o">.</span><span class="n">value</span> <span class="o">-</span> <span class="n">base_temperature</span>
-        <span class="c1"># TODO: group by freq and normalize in case not daily</span>
-        <span class="k">return</span> <span class="n">gdd_values</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span></div></div>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">tmin_series</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">find_data_series</span><span class="p">(</span>
+                <span class="n">item</span><span class="o">=</span><span class="s1">&#39;Temperature min&#39;</span><span class="p">,</span> <span class="n">metric</span><span class="o">=</span><span class="s1">&#39;Temperature&#39;</span><span class="p">,</span> <span class="n">region</span><span class="o">=</span><span class="n">region_name</span><span class="p">,</span>
+                <span class="n">start_date</span><span class="o">=</span><span class="n">start_date</span><span class="p">,</span> <span class="n">end_date</span><span class="o">=</span><span class="n">end_date</span><span class="p">)</span><span class="o">.</span><span class="n">next</span><span class="p">()</span>
+            <span class="n">tmax_series</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">find_data_series</span><span class="p">(</span>
+                <span class="n">item</span><span class="o">=</span><span class="s1">&#39;Temperature max&#39;</span><span class="p">,</span> <span class="n">metric</span><span class="o">=</span><span class="s1">&#39;Temperature&#39;</span><span class="p">,</span> <span class="n">region</span><span class="o">=</span><span class="n">region_name</span><span class="p">,</span>
+                <span class="n">start_date</span><span class="o">=</span><span class="n">start_date</span><span class="p">,</span> <span class="n">end_date</span><span class="o">=</span><span class="n">end_date</span><span class="p">)</span><span class="o">.</span><span class="n">next</span><span class="p">()</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_gdd</span><span class="p">(</span><span class="n">tmin_series</span><span class="p">,</span> <span class="n">tmax_series</span><span class="p">,</span> <span class="n">base_temperature</span><span class="p">,</span>
+                                    <span class="n">start_date</span><span class="p">,</span> <span class="n">end_date</span><span class="p">,</span> <span class="n">min_temporal_coverage</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">StopIteration</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
+                <span class="s2">&quot;Can&#39;t find data series to compute GDD in region </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">region_name</span><span class="p">))</span></div></div>
 </pre></div>
 
            </div>
