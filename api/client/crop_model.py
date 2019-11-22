@@ -27,7 +27,7 @@ class CropModel(GroClient):
                 break
         # Compute the average over time for reach region
         df = self.get_df()
-        
+
         def mapper(region):
             return df[(df['item_id'] == entities['item_id']) & \
                       (df['metric_id'] == entities['metric_id']) & \
@@ -71,9 +71,34 @@ class CropModel(GroClient):
             series_list.append(series)
         return pandas.concat(series_list)
 
+    def compute_gdd(self, tmin_series, tmax_series, base_temperature,
+                    start_date, end_date, min_temporal_coverage=0.5):
+        """Compute Growing Degree Days value from specific data series."""
+        self.add_single_data_series(tmin_series)
+        self.add_single_data_series(tmax_series)
+        df = self.get_df()
+        if df is None or df.empty:
+            raise Exception("Insufficient data for GDD in region {}".format(
+                region_name))
+        # For each day we want (t_min + t_max)/2, or more generally,
+        # the average temperature for that day.
+        tmean = df.loc[(df.item_id == tmax_series['item_id']) | \
+                       (df.item_id == tmin_series['item_id'])].groupby(
+                           ['region_id', 'metric_id', 'frequency_id',
+                            'start_date', 'end_date']).mean()
+        duration = datetime.strptime(end_date, '%Y-%m-%d') - \
+                   datetime.strptime(start_date, '%Y-%m-%d')
+        coverage_threshold = min_temporal_coverage * duration.days
+        if tmean.value.size < coverage_threshold:
+            raise Exception("Insufficient temporal coverage for GDD, " + \
+                            "{} < {} data points available".format(
+                                tmean.value.size, coverage_threshold))
+        gdd_values = tmean.value - base_temperature
+        # TODO: group by freq and normalize in case not daily
+        return gdd_values.sum()
 
     def growing_degree_days(self, region_name, base_temperature,
-                            start_date, end_date, min_temporal_coverage=0.5):
+                            start_date, end_date, min_temporal_coverage):
         """Get Growing Degree Days (GDD) for a region.
 
         Growing degree days (GDD) are a weather-based indicator that
@@ -96,7 +121,7 @@ class CropModel(GroClient):
         The region can be any region of the Gro regions, from a point
         location to a district, province etc. This will use the best
         available data series for T_max and T_min for the given region
-        and time period, using "find_data_series". 
+        and time period, using "find_data_series".
 
         In the simplest case, if the given region is a weather station
         location which has data for the time period, then that will be
@@ -112,33 +137,16 @@ class CropModel(GroClient):
         min_temporal_coverage: float, optional
 
         """
-        for tmax in self.find_data_series(
-                item='Temperature max', metric='Temperature',
-                region=region_name, start_date=start_date, end_date=end_date):
-            self.add_single_data_series(tmax)
-            break
-        for tmin in self.find_data_series(
-                item='Temperature min', metric='Temperature',
-                region=region_name, start_date=start_date, end_date=end_date):
-            self.add_single_data_series(tmin)
-            break
-        df = self.get_df()
-        if df is None or df.empty:
-            raise Exception("Insufficient data for GDD in region {}".format(
-                region_name))
-        # For each day we want (t_min + t_max)/2, or more generally,
-        # the average temperature for that day.
-        tmean = df.loc[(df.item_id == tmax['item_id']) | \
-                       (df.item_id == tmin['item_id'])].groupby(
-                           ['region_id', 'metric_id', 'frequency_id',
-                            'start_date', 'end_date']).mean()
-        duration = datetime.strptime(end_date, '%Y-%m-%d') - \
-                   datetime.strptime(start_date, '%Y-%m-%d')
-        coverage_threshold = min_temporal_coverage * duration.days
-        if tmean.value.size < coverage_threshold:
-            raise Exception("Insufficient temporal coverage for GDD, " + \
-                            "{} < {} data points available".format(
-                                tmean.value.size, coverage_threshold))
-        gdd_values = tmean.value - base_temperature
-        # TODO: group by freq and normalize in case not daily
-        return gdd_values.sum()
+        try:
+            tmin_series = self.find_data_series(
+                item='Temperature min', metric='Temperature', region=region_name,
+                start_date=start_date, end_date=end_date).next()
+            tmax_series = self.find_data_series(
+                item='Temperature max', metric='Temperature', region=region_name,
+                start_date=start_date, end_date=end_date).next()
+            return self.compute_gdd(tmin_series, tmax_series, base_temperature,
+                                    start_date, end_date, min_temporal_coverage)
+        except StopIteration:
+            raise Exception(
+                "Can't find data series to compute GDD in region {}".format(
+                    region_name))
