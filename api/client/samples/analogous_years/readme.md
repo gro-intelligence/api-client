@@ -32,8 +32,8 @@ in terms of
 
 in the US Corn Belt (region_id=100000100) with equal weights given to rainfall and temperature
 (by default), we will run the following code in the command line: 
-`python run_analogous_years.py --m 2100031 2540047 --item_id 2039 3457 --region_id 100000100
- --source_id 35 26 --frequency_id 1 1 --groapi_token <Enter GroAccessToken>
+`python run_analogous_years.py --metric_ids 2100031 2540047 --item_ids 2039 3457 --region_id 100000100
+ --source_ids 35 26 --frequency_ids 1 1 --groapi_token <Enter GroAccessToken>
  --initial_date 2016-02-02 --final_date 2016-02-10`
 
 `frequency_id`: 1 give us daily values and in absence of daily values, the application up-samples to daily 
@@ -64,12 +64,11 @@ rank computation, along with the weight that the user wants to give for the ENSO
 The weight of ENSO index is set to 1 by default.
 
 A more detailed example with all the options may look like:
-`python run_analogous_years.py --m 2100031 2540047 --item_id 2039 3457 --region_id 100000100
- --source_id 35 26 --frequency_id 1 1 --weights 1 1 --groapi_token <Enter GroAccessToken> 
- --initial_date 2016-02-02 --final_date 2016-02-10 --location <location of your directory here>
- --report False --methods cumulative euclidean ts-features dtw --ENSO --ENSO_weight 0.5 
- --all_ranks`
-
+`python run_analogous_years.py --metric_ids 2100031 2540047 --item_ids 2039 3457 
+ --region_id 100000100 --source_ids 35 26 --frequency_ids 1 1 --weights 1 1 
+ --groapi_token <Enter GroAccessToken> --initial_date 2019-01-01 --final_date 2019-11-10 
+ --location <location of your directory here> --report False 
+ --methods cumulative euclidean ts-features dtw --ENSO --ENSO-weight 0.5 --all_ranks`
 
 Note: `initial_date` and `final_date` must be strings in YYYY-MM-DD format.
 

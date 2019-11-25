@@ -11,14 +11,10 @@ import numpy as np
 import pandas as pd
 from scipy.misc import comb
 
-from gro_utils import log_utils
-
-from experimental.analogous_years.lib import \
+from . import \
     distance_matrix, \
     feature_extractions, \
     get_transform_data
-
-logger = log_utils.get_logger()
 
 
 def time_series(client, entity, initial_date, final_date):
@@ -30,6 +26,7 @@ def time_series(client, entity, initial_date, final_date):
     :param initial_date: 'YYYY-MM-DD'
     :return: A dataframe with data from the relevant dates
     """
+    logger = client.get_logger()
     data = get_transform_data.get_data(client, **entity)
     consolidated_data = get_transform_data.combine_subregions(data)
     try:
@@ -157,7 +154,7 @@ def combined_items_final_ranks(client, entities_weights, initial_date, final_dat
     return display
 
 
-def save_to_csv(dataframe, output_dir, file_name, report, all_ranks):
+def save_to_csv(dataframe, output_dir, file_name, report, all_ranks, logger):
     """ save the dataframe into csv file called <output_dir>/ranks_csv/ranks.csv """
     folder_path = os.path.join(output_dir, './ranks_csv', file_name)
     if not os.path.exists(folder_path):
