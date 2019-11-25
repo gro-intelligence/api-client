@@ -4,7 +4,7 @@ import pandas as pd
 from pandas.util.testing import assert_frame_equal
 import pytest
 
-from experimental.analogous_years.lib import get_transform_data
+from . import get_transform_data
 
 
 def create_test_data():

@@ -5,7 +5,7 @@ import pytest
 from scipy.spatial.distance import euclidean
 from sklearn.preprocessing import MaxAbsScaler
 
-from samples.analogous_years.lib import distance_matrix
+from . import distance_matrix
 
 
 # TODO: test_dtw_dist_matrix

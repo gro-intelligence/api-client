@@ -4,12 +4,8 @@ from functools import partial
 import os
 
 from api.client.gro_client import GroClient
-from gro_utils import log_utils
 
-from experimental.analogous_years.lib import final_ranks_computation
-
-
-logger = log_utils.get_logger()
+from lib import final_ranks_computation
 
 
 def str2bool(v):
@@ -41,6 +37,7 @@ def list_length_validator(list1, list2):
 
 
 def check_if_exists(entity_type, entity_value, client):
+    logger = client.get_logger()
     try:
         client.lookup(entity_type, entity_value)
         return entity_value
@@ -97,6 +94,7 @@ def main():
     methods_list = args.methods
     access_token = args.groapi_token
     client = GroClient(API_HOST, access_token)
+    logger = client.get_logger()
     checking = partial(check_if_exists, client=client)
 
     metric_id_list = args.metric_ids
@@ -158,7 +156,7 @@ def main():
     result = final_ranks_computation.save_to_csv(
         final_ranks_computation.combined_items_final_ranks(
             client, entities_weights, initial_date, final_date, methods_list, args.all_ranks),
-        output_dir, file_name, report, args.all_ranks)
+        output_dir, file_name, report, args.all_ranks, logger)
     return result
 
 
