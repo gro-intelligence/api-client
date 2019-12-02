@@ -41,6 +41,9 @@ class GroClient(Client):
         self._data_series_queue = []  # added but not loaded in data frame
         self._data_frame = None
 
+    def get_logger(self):
+        return self._logger
+
     ###
     # Finding, indexing and loading multiple data series into a data frame
     ###
@@ -99,10 +102,15 @@ class GroClient(Client):
         self._logger.info("Added {}".format(data_series))
         return
 
-    def add_data_series(self, **kwargs):
+    def find_data_series(self, **kwargs):
         """Search for entities matching the given names, find data series for
-        the given combination, and add them to this objects list of
-        series."""
+        the given combination.
+
+        Returns
+        -------
+        dict
+           A data series, same output format as lib.py get_data_series().
+        """
         search_results = []
         keys = []
         if kwargs.get('item'):
@@ -121,14 +129,32 @@ class GroClient(Client):
             search_results.append(
                 self.search('regions', kwargs['partner_region'])[:cfg.MAX_RESULT_COMBINATION_DEPTH])
             keys.append('partner_region_id')
+        all_data_series = []
         for comb in itertools.product(*search_results):
             entities = dict(list(zip(keys, [entity['id'] for entity in comb])))
             data_series_list = self.get_data_series(**entities)
             self._logger.debug("Found {} distinct data series for {}".format(
                 len(data_series_list), entities))
-            for data_series in self.rank_series_by_source(data_series_list):
-                self.add_single_data_series(data_series)
-                return
+            # temporal coverage affects ranking so add time range if specified.
+            for data_series in data_series_list:
+                if kwargs.get('start_date'):
+                    data_series['start_date'] = kwargs['start_date']
+                if kwargs.get('end_date'):
+                    data_series['end_date'] = kwargs['end_date']
+            all_data_series += data_series_list
+        self._logger.warning("Found {} distinct data series total for {}".format(
+            len(all_data_series), kwargs))
+        for data_series in self.rank_series_by_source(all_data_series):
+            yield data_series
+
+    def add_data_series(self, **kwargs):
+        """Search for entities matching the given names, find data series for
+        the given combination, and add them to this objects list of
+        series."""
+        for the_data_series in self.find_data_series(**kwargs):
+            self.add_single_data_series(the_data_series)
+            return
+        return
 
     ###
     # Discovery shortcuts
@@ -228,7 +254,7 @@ class GroClient(Client):
             raise Exception(
                 'unit_id {} is not convertible'.format(target_unit_id)
             )
-        if point.get('value') is not None:        
+        if point.get('value') is not None:
             value_in_base_unit = (
                 point['value'] * from_convert_factor.get('factor')
             ) + from_convert_factor.get('offset', 0)

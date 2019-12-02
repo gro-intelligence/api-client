@@ -8,7 +8,6 @@ import os
 import api.client.lib
 from api.client.samples.similar_regions import transform
 
-
 CACHE_PATH = "similar_region_state_cache"
 # How much to weight the lowest weight feature.
 # The features (coefficients for FFT) per metric will be weighted from 1.0 to LOWEST_PERCENTAGE_WEIGHT_FEATURE
@@ -45,6 +44,12 @@ class SimilarRegionState(object):
         # Data stores and views of this data
         structure = [(name, 'd', p["properties"]["num_features"]) for name, p in
                      region_properties.items()]
+        
+        # Numpy gives "future deprecation" warning about structured type specs of the form
+        # (name,'d',1), i.e. where type is really just a single integer
+        # Change such cases into (name,'d')
+        structure = [item if item[2] != 1 else (item[0], item[1]) for item in structure]
+        
         structure_bool = [(name, bool) for name, p in
                      region_properties.items()]
         self.data = np.ma.zeros(self.num_regions, dtype=structure)
@@ -54,7 +59,7 @@ class SimilarRegionState(object):
         self._logger.debug("structure of missing array entries is {}".format(structure_bool))
 
         # Boolean array representing any data we haven't yet downloaded.
-        # True if data for that (metric, region) has been fetched into the data array.
+        # True if data for that (metric, region) has NOT been fetched into the data array.
         self.missing = np.full(self.num_regions, True, dtype=structure_bool)
 
         self._create_views()
@@ -64,9 +69,12 @@ class SimilarRegionState(object):
 
         # Weights of each metric
         self.weight_vector = np.ones(self.tot_num_features, dtype='d')
+        self._generate_weight_vector()
 
         self.load(no_download)
-        self.save()
+        # No modification to the cache if we did not even try to download anything
+        if not no_download:
+            self.save()
 
     def _create_views(self):
         self.data_nonstruc = self.data.view(
@@ -77,16 +85,42 @@ class SimilarRegionState(object):
     def save(self):
         """
         Cache the current state to disk.
+        This is called AFTER _standardize which means
+        all missing data already squeezed out of self.data, self.missing, and self.inverse_mapping
+        Safe to simply augment cache with these if not already present
         :return: True if succeeded.
         """
         self._logger.info("Starting caching of downloaded data.")
+        
         for name in self.region_properties:
-            with open(os.path.join(self.data_dir, "{}.nbz".format(name)), 'wb') as f:
+            path = os.path.join(self.data_dir, "{}.nbz".format(name))
+            if os.path.isfile(path):
+                # we already have a cache => add new regions to it
+                with open(path, 'rb') as f:
+                    variables = np.load(f)
+                    uncached_regions = set(self.inverse_mapping) - set(variables["inverse_mapping"])
+                    if uncached_regions:
+                        uncached_regions_idx = np.array([self.mapping[idx] for idx in uncached_regions])
+                        full_data = np.append(variables["data"], self.data[name][uncached_regions_idx].data, axis=0)
+                        full_mask = np.append(variables["mask"], self.data[name][uncached_regions_idx].mask, axis=0)
+                        full_missing = np.append(variables["missing"], self.missing[name][uncached_regions_idx], axis=0)
+                        full_inverse_mapping = np.append(variables["inverse_mapping"], self.inverse_mapping[uncached_regions_idx], axis=0)
+                    else:
+                        # no modifications to chache needed
+                        continue
+            else:
+                # just cache entire (newly downloaded) dataset ...
+                full_data = self.data[name].data
+                full_mask = self.data[name].mask
+                full_missing = self.missing[name]
+                full_inverse_mapping = self.inverse_mapping
+                
+            with open(path, 'wb') as f:
                 np.savez(f,
-                         data=self.data[name].data,
-                         mask=self.data[name].mask,
-                         missing=self.missing[name],
-                         inverse_mapping=self.inverse_mapping)
+                         data=full_data, #self.data[name].data,
+                         mask=full_mask, #self.data[name].mask,
+                         missing=full_missing, #self.missing[name],
+                         inverse_mapping=full_inverse_mapping) #self.inverse_mapping)
         self._logger.info("Done caching of downloaded data.")
         return
 
@@ -104,16 +138,24 @@ class SimilarRegionState(object):
                 with open(path, 'rb') as f:
                     variables = np.load(f)
                     mutual_regions = set(variables["inverse_mapping"]) & set(self.inverse_mapping)
-                    mutual_regions_mapping = np.array([self.mapping[idx] for idx in mutual_regions])
-                    old_mapping = {region_idx:idx
-                                   for (idx,region_idx) in enumerate(variables["inverse_mapping"])}
-                    mutual_regions_old_mapping = [old_mapping[idx] for idx in mutual_regions]
-                    self.data[name][mutual_regions_mapping] = variables["data"][mutual_regions_old_mapping]
-                    mutual_regions_masked = variables["mask"][mutual_regions_old_mapping]
-                    self.data[name][mutual_regions_mapping][mutual_regions_masked] = np.ma.masked
-                    mutual_regions_missing = variables["missing"][mutual_regions_old_mapping]
-                    self.missing[name][mutual_regions_mapping] = False
-                    self.missing[name][mutual_regions_mapping[mutual_regions_missing]] = True
+                    if mutual_regions:
+                        # indexes of cached regions of interest in current data 
+                        mutual_regions_mapping = np.array([self.mapping[idx] for idx in mutual_regions])
+                        old_mapping = {region_idx:idx
+                                       for (idx,region_idx) in enumerate(variables["inverse_mapping"])}
+                        # indexes of cached regions of interest in cached data
+                        mutual_regions_old_mapping = [old_mapping[idx] for idx in mutual_regions]
+                        # copy from cached data to new data
+                        self.data[name][mutual_regions_mapping] = variables["data"][mutual_regions_old_mapping]
+                    
+                        mutual_regions_masked = variables["mask"][mutual_regions_old_mapping]
+                        self.data[name][mutual_regions_mapping][mutual_regions_masked] = np.ma.masked
+                    
+                        # cached regions of interest have data (missing=False) UNLESS
+                        # they are marked as True in 'missing'
+                        self.missing[name][mutual_regions_mapping] = False
+                        mutual_regions_missing = variables["missing"][mutual_regions_old_mapping]
+                        self.missing[name][mutual_regions_mapping[mutual_regions_missing]] = True
                 self._logger.info("Loaded {} cached regions for property {}".format(len(mutual_regions), name))
             # Fill in the missing data if any e.g. in case the cache
             # was created with a subset of current regions_to_compare
@@ -125,10 +167,22 @@ class SimilarRegionState(object):
 
     def _generate_weight_vector(self):
         # generate weight vector (with decreasing weights if enabled)
-        # iterating over the dictionary is fine as we don't allow it to be modified during runtime.
+        # iterating over the dictionary is fine as we don't allow it
+        # to be modified during runtime.  Distance between points is
+        # p=2 weighted Minkowski distance, i.e. dist(x,y) = sqrt(\sum
+        # [w_i(x_i - y_i)]^2) so sqrt of user-provided weight is taken
+        # BEFORE individual property is scaled by its weight as it is
+        # assumed user wants dist^2 = \sum w_user_i*(x_i - y_i)^2
+        # (note user weight is NOT squared)
+        #
+        # Alternatively - do not rescale properties, just specify
+        # 'wminkowski' metrics for BallTree constructor
         progress_idx = 0
         for properties in self.region_properties.values():
             num_features = properties["properties"]["num_features"]
+            # User-provided weight is uniformly spread over
+            # num_features (sum will be less for F-transformed
+            # properties if weight_slope is requested
             weight_per_feature = (float(properties["properties"]["weight"])/num_features)**0.5
             if properties["properties"]["type"] == "timeseries_fourier" and properties["properties"]["weight_slope"]:
                 slope_vector = np.arange(1.0, LOWEST_PERCENTAGE_WEIGHT_FEATURE,
@@ -141,7 +195,6 @@ class SimilarRegionState(object):
 
     def _standardize(self):
         self._logger.info("Standardizing data matrix...")
-        self._generate_weight_vector()
 
         rows_to_keep = ~np.any(self.data_mask_nonstruc, axis=1)
         # Remove any rows that are missing....
@@ -192,7 +245,7 @@ class SimilarRegionState(object):
             period_length_days = self.client.lookup('frequencies', query["frequency_id"])['periodLength']['days']
             end_date = datetime.strptime(data_series["end_date"], '%Y-%m-%dT%H:%M:%S.%fZ')
             num_of_points = (end_date - start_date).days / period_length_days
-            self._logger.info("length of data series is {} days".format(num_of_points))
+            self._logger.info("length of data series is {} periodLengths (per frequency_id)".format(num_of_points))
             longest_period_feature_period = props["properties"]["longest_period_feature_period"]
             start_idx = math.floor(num_of_points / float(longest_period_feature_period))
             self._logger.info("first coef index will be {}".format(start_idx))
@@ -232,7 +285,7 @@ class SimilarRegionState(object):
                         self.data[property_name][data_table_idx] = np.ma.masked
                     else:
                         self.data[property_name][data_table_idx] = response[0]["value"]
-                # Mark this as downloaded.
+            # Mark this as downloaded.
             self.missing[property_name][data_table_idx] = False
 
         self._logger.info("Getting data series for {} regions for property {}".format(len(queries), property_name))
