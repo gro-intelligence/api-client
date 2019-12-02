@@ -46,8 +46,8 @@ def test_combine_subregions_with_subregion():
                                        'value': [2.39664378851418,
                                                  2.28192643351167,
                                                  0.13002748115958]})
-    # The data type of the date must be 'datetime64[ns]'
-    expected_subregion['end_date'] = pd.to_datetime(expected_subregion['end_date'])
+    # The data type of the date must be 'datetime64[ns, UTC]'
+    expected_subregion['end_date'] = pd.to_datetime(expected_subregion['end_date'], utc=True)
     # The order of the columns after applying consolidation function is the following
     expected_subregion = expected_subregion[['value', 'end_date']]
     # The dataframes index columns is same as 'end_date' column
@@ -71,12 +71,12 @@ def test_combine_subregions_with_nosubregion():
                                          'value': [0.13002748115958,
                                                    1.17640700229636,
                                                    2.39664378851418]})
-    # The data type of the date must be 'datetime64[ns]'
+    # The data type of the date must be 'datetime64[ns, UTC]'
     expected_nosubregion.index = expected_nosubregion['end_date']
-    expected_nosubregion['end_date'] = pd.to_datetime(expected_nosubregion['end_date'])
-    expected_nosubregion.index = pd.to_datetime(expected_nosubregion.index)
+    expected_nosubregion['end_date'] = pd.to_datetime(expected_nosubregion['end_date'], utc=True)
+    expected_nosubregion.index = pd.to_datetime(expected_nosubregion.index, utc=True)
     expected_nosubregion = expected_nosubregion.resample('D').pad()
-    expected_nosubregion['end_date'] = expected_nosubregion.index
+    expected_nosubregion['end_date'] = pd.to_datetime(expected_nosubregion.index, utc=True)
     assert_frame_equal(get_transform_data.combine_subregions(test_data_nosubregion),
                        expected_nosubregion)
 
@@ -208,7 +208,7 @@ def test_loop_start_dates():
     test_max_date = pd.to_datetime('2019-08-31T00:00:00.000Z')
     invalid_initial_date = '2016-12-31'
     invalid_final_date = '2017-12-01'
-    expected = {'initial_date': pd.to_datetime('2017-12-31'),
-                'final_date': pd.to_datetime('2018-12-01')}
+    expected = {'initial_date': pd.to_datetime('2017-12-31', utc=True),
+                'final_date': pd.to_datetime('2018-12-01', utc=True)}
     assert get_transform_data.loop_start_dates(
         test_max_date, invalid_initial_date, invalid_final_date) == expected

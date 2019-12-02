@@ -6,6 +6,7 @@ This library contains utilities for
 
 from dateutil.parser import parse
 from dateutil.relativedelta import relativedelta
+from dateutil.tz import *
 import pandas as pd
 
 
@@ -64,8 +65,11 @@ def loop_start_dates(max_date, initial_date, final_date):
     :param final_date: string 'YYYY-MM-DD'
     :return: dictionary with datetime objects as values
     """
+    tz_info = max_date.tzinfo
     initial_date = parse(initial_date)
+    initial_date = initial_date.replace(tzinfo=tz_info)
     final_date = parse(final_date)
+    final_date = final_date.replace(tzinfo=tz_info)
     if initial_date >= final_date:
         raise ValueError('Initial date {} is not prior to final date {}. '
                          'Change and try again'.format(initial_date, final_date))
