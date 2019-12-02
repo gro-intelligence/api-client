@@ -4,3 +4,4 @@ geopandas
 ipython
 scikit-learn
 jupyter
+descartes
