@@ -10,10 +10,33 @@ from api.client.gro_client import GroClient
 class CropModel(GroClient):
 
     def compute_weights(self, crop_name, metric_name, regions):
-        """Add the weighting data series to this model. Compute the weights,
-        which is the mean value for each region in regions, normalized
-        to add up to 1.0 across regions. Returns a list of weights
-        corresponding to the regions.
+        """Compute a vector of 'weights' that can be used for crop-weighted
+        average across regions.
+
+        For each region, the weight of is the mean value over time, of
+        the given metric for the given crop, normalized so the sum
+        across all regions is 1.0.
+
+        For example: say we have a ```region_list = [{'id': 1, 'name':
+        'Province1'}, {'id': 2, 'name': 'Province2'}]```. This could
+        be a list returned by client.search_and_lookup() or
+        client.get_descendant_regions for example.  Now say
+        ```model.compute_weights('soybeans', 'land cover area',
+        region_list)``` returns ```[0.6, 0.4]```, that means Province1
+        has 60% and province2 has 40% of the total area planted across
+        the two regions, when averaged across all time.
+
+        Parameters
+        ----------
+        crop_name: string, required
+        metric_name: string, required
+        regions: list of dicts, each entry is a region with id and name
+
+        Returns
+        -------
+        list of float
+           weights corresponding to the regions.
+
         """
         # Get the weighting series
         entities = {
@@ -42,10 +65,36 @@ class CropModel(GroClient):
     def compute_crop_weighted_series(self,
                                      weighting_crop_name, weighting_metric_name,
                                      item_name, metric_name, regions):
-        """Add the data series for the given item_name and metric_name to this
-        model. Compute the weighted version of the series for each
-        region in regions. The weight of a region is the fraction of
-        the value of the weighting series represented by that region.
+        """Compute the 'crop-weighted average' of the series for the given
+        item and metric, across regions. The weight of a region is the
+        fraction of the value of the weighting series represented by
+        that region as explained in compute_weights().
+
+        For example: say we have a ```region_list = [{'id': 1, 'name':
+        'Province1'}, {'id': 2, 'name': 'Province2'}]```. This could
+        be a list returned by client.search_and_lookup() or
+        client.get_descendant_regions for example.  Now
+        ```model.compute_crop_weighted_series('soybeans', 'land cover
+        area', 'vegetation ndvi', 'vegetation indices index',
+        region_list)``` will return a dataframe where the NDVI of each
+        province is multiplied by the fraction of total soybeans
+        area is accounted for by that province. Thus taking the sum
+        across provinces will give a crop weighted average of NDVI.
+
+        Parameters
+        ----------
+        weighting_crop_name: string, required
+        weighting_metric_name: string, required
+        item_name: string, required
+        metric_name: string, required
+        regions: list of dicts, each entry is a region with id and name
+
+        Returns
+        -------
+        DataFrame containing the data series for the given item_name,
+        metric_name, for each region in regions, with values adjusted
+        by the crop weight for that region.
+
         """
         weights = self.compute_weights(weighting_crop_name, weighting_metric_name,
                                        regions)
