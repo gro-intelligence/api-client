@@ -70,6 +70,52 @@ class GroClient(Client):
                 self._data_frame = self._data_frame.merge(tmp, how='outer')
         return self._data_frame
 
+    def GDH_header(self, selection):
+        entity_type = {'item_id': 'items',
+                       'metric_id': 'metrics',
+                       'region_id': 'regions',
+                       'source_id': 'sources',
+                       'frequency_id': 'frequencies'}
+        header_lines = [entity_key.split('_')[0] + '\t' + \
+                        self.lookup(entity_type[entity_key], entity_id)['name']
+                        for entity_key, entity_id in selection.items()]
+        for header_line in header_lines:
+            yield header_line
+
+    def GDH(self, selection_ids, header=False):
+        """Wrapper for get_data_points with alternative input and output style.
+
+        The selection of data series to retrieve is encoded in a
+        string of the form
+        <metric_id>-<item_id>-<region_id>-<source_id>-<frequency_id>
+
+        For example, client.GDH(“860032-274-1231-14-9”) will get the
+        data points for Production of Corn in China from PS&D at an
+        annual frequency, e.g.
+        for csv_row in client.GDH("860032-274-1231-14-9"):
+            print csv_row
+
+        Parameters:
+        ----------
+        selection_ids: string, required.
+        header: boolean, optional
+
+        Yields:
+        ------
+        A sequence of CSV string rows with date \t value. If header is
+        specified, the output is preceded by a TSV header which lists
+        the entity types and names.
+
+        """
+        entity_keys = ['metric_id', 'item_id', 'region_id', 'source_id', 'frequency_id']
+        entity_ids = [int(x) for x in selection_ids_string.split('-')]
+        selection = dict(zip(entity_keys, entity_ids))
+        if header:
+            for line in self.GDH_header(selection):
+                yield line
+        for point in self.get_data_points(**selection):
+            yield point['end_date'], point['value']
+
     def get_data_points(self, **selections):
         """Extend the Client's get_data_points method to add unit conversion.
 
