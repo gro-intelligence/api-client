@@ -101,7 +101,7 @@ class GroClient(Client):
         string of the form
         <metric_id>-<item_id>-<region_id>-<source_id>-<frequency_id>
 
-        For example, client.GDH(“860032-274-1231-14-9”) will get the
+        For example, client.GDH("860032-274-1231-14-9") will get the
         data points for Production of Corn in China from PS&D at an
         annual frequency, e.g.
         for csv_row in client.GDH("860032-274-1231-14-9"):
@@ -114,19 +114,20 @@ class GroClient(Client):
 
         Yields:
         ------
-        A sequence of CSV string rows with date \t value. If header is
+        A sequence of CSV string rows with <date>,<value>. If header is
         specified, the output is preceded by a TSV header which lists
         the entity types and names.
 
         """
-        entity_keys = ['metric_id', 'item_id', 'region_id', 'source_id', 'frequency_id']
-        entity_ids = [int(x) for x in selection_ids_string.split('-')]
+        entity_keys = ['metric_id', 'item_id', 'region_id', 'source_id',
+                       'frequency_id']
+        entity_ids = [int(x) for x in selection_ids.split('-')]
         selection = dict(zip(entity_keys, entity_ids))
         if header:
             for line in self.GDH_header(selection):
                 yield line
         for point in self.get_data_points(**selection):
-            yield point['end_date'], point['value']
+            yield '{},{}'.format(point['end_date'], point['value'])
 
     def get_data_points(self, **selections):
         """Get all the data points for a given selection.
