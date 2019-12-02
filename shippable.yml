@@ -11,7 +11,7 @@ build:
     - mkdir -p shippable/testresults
     - mkdir -p shippable/codecoverage
     # Run test and code coverage and output results to the right folder
-    - pytest --junitxml=shippable/testresults/nosetests.xml
+    - pytest --junitxml=shippable/testresults/nosetests.xml --doctest-modules
     - pytest --cov=api --cov-report=xml:shippable/codecoverage/coverage.xml
   post_ci:
     # Only build docs on the Python 2.7 run. It is unnecessary to run on both 2.x and 3.x - one or
