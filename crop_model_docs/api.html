@@ -1236,9 +1236,8 @@ regions) that matches the given keywords.</p>
 <dd><dl class="method">
 <dt id="api.client.crop_model.CropModel.compute_crop_weighted_series">
 <code class="descname">compute_crop_weighted_series</code><span class="sig-paren">(</span><em>weighting_crop_name</em>, <em>weighting_metric_name</em>, <em>item_name</em>, <em>metric_name</em>, <em>regions</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/crop_model.html#CropModel.compute_crop_weighted_series"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.crop_model.CropModel.compute_crop_weighted_series" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compute the &#8216;crop-weighted average&#8217; of the series for the given
-item and metric, across regions. The weight of a region is the
-fraction of the value of the weighting series represented by
+<dd><p>Compute the &#8216;crop-weighted average&#8217; of the given item and metric&#8217;s series across regions.</p>
+<p>The weight of a region is the fraction of the value of the weighting series represented by
 that region as explained in compute_weights().</p>
 <p>For example: say we have a <code class="docutils literal"><span class="pre">`region_list</span> <span class="pre">=</span> <span class="pre">[{'id':</span> <span class="pre">1,</span> <span class="pre">'name':</span>
 <span class="pre">'Province1'},</span> <span class="pre">{'id':</span> <span class="pre">2,</span> <span class="pre">'name':</span> <span class="pre">'Province2'}]`</span></code>. This could
@@ -1255,20 +1254,20 @@ across provinces will give a crop weighted average of NDVI.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>weighting_crop_name</strong> (<em>string</em><em>, </em><em>required</em>) &#8211; </li>
-<li><strong>weighting_metric_name</strong> (<em>string</em><em>, </em><em>required</em>) &#8211; </li>
-<li><strong>item_name</strong> (<em>string</em><em>, </em><em>required</em>) &#8211; </li>
-<li><strong>metric_name</strong> (<em>string</em><em>, </em><em>required</em>) &#8211; </li>
-<li><strong>regions</strong> (<em>list of dicts</em><em>, </em><em>each entry is a region with id and name</em>) &#8211; </li>
+<li><strong>weighting_crop_name</strong> (<em>string</em>) &#8211; </li>
+<li><strong>weighting_metric_name</strong> (<em>string</em>) &#8211; </li>
+<li><strong>item_name</strong> (<em>string</em>) &#8211; </li>
+<li><strong>metric_name</strong> (<em>string</em>) &#8211; </li>
+<li><strong>regions</strong> (<em>list of dicts</em>) &#8211; Each entry is a region with id and name</li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul class="simple">
-<li><em>DataFrame containing the data series for the given item_name,</em></li>
-<li><em>metric_name, for each region in regions, with values adjusted</em></li>
-<li><em>by the crop weight for that region.</em></li>
-</ul>
-</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">contains the data series for the given item_name, metric_name,
+for each region in regions, with values adjusted
+by the crop weight for that region.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">pandas.DataFrame</p>
 </td>
 </tr>
 </tbody>
@@ -1278,15 +1277,14 @@ across provinces will give a crop weighted average of NDVI.</p>
 <dl class="method">
 <dt id="api.client.crop_model.CropModel.compute_weights">
 <code class="descname">compute_weights</code><span class="sig-paren">(</span><em>crop_name</em>, <em>metric_name</em>, <em>regions</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/crop_model.html#CropModel.compute_weights"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.crop_model.CropModel.compute_weights" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compute a vector of &#8216;weights&#8217; that can be used for crop-weighted
-average across regions.</p>
+<dd><p>Compute a vector of &#8216;weights&#8217; that can be used for crop-weighted average across regions.</p>
 <p>For each region, the weight of is the mean value over time, of
 the given metric for the given crop, normalized so the sum
 across all regions is 1.0.</p>
 <p>For example: say we have a <code class="docutils literal"><span class="pre">`region_list</span> <span class="pre">=</span> <span class="pre">[{'id':</span> <span class="pre">1,</span> <span class="pre">'name':</span>
 <span class="pre">'Province1'},</span> <span class="pre">{'id':</span> <span class="pre">2,</span> <span class="pre">'name':</span> <span class="pre">'Province2'}]`</span></code>. This could
 be a list returned by client.search_and_lookup() or
-client.get_descendant_regions for example.  Now say
+client.get_descendant_regions() for example.  Now say
 <code class="docutils literal"><span class="pre">`model.compute_weights('soybeans',</span> <span class="pre">'land</span> <span class="pre">cover</span> <span class="pre">area',</span>
 <span class="pre">region_list)`</span></code> returns <code class="docutils literal"><span class="pre">`[0.6,</span> <span class="pre">0.4]`</span></code>, that means Province1
 has 60% and province2 has 40% of the total area planted across
@@ -1296,16 +1294,16 @@ the two regions, when averaged across all time.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>crop_name</strong> (<em>string</em><em>, </em><em>required</em>) &#8211; </li>
-<li><strong>metric_name</strong> (<em>string</em><em>, </em><em>required</em>) &#8211; </li>
-<li><strong>regions</strong> (<em>list of dicts</em><em>, </em><em>each entry is a region with id and name</em>) &#8211; </li>
+<li><strong>crop_name</strong> (<em>string</em>) &#8211; </li>
+<li><strong>metric_name</strong> (<em>string</em>) &#8211; </li>
+<li><strong>regions</strong> (<em>list of dicts</em>) &#8211; Each entry is a region with id and name</li>
 </ul>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">weights corresponding to the regions.</p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list of float</p>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list of floats</p>
 </td>
 </tr>
 </tbody>
