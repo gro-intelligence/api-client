@@ -188,26 +188,6 @@ def get_data(url, headers, params=None, logger=None):
 
 @memoize(maxsize=None)
 def get_available(access_token, api_host, entity_type):
-    """List the first 5000 available entities of the given type.
-
-    Parameters
-    ----------
-    access_token : string
-    api_host : string
-    entity_type : string
-        'items', 'metrics', or 'regions'
-
-    Returns
-    -------
-    data : list of dicts
-
-        Example::
-
-            [ { 'id': 0, 'contains': [1, 2, 3], 'name': 'World', 'level': 1},
-            { 'id': 1, 'contains': [4, 5, 6], 'name': 'Asia', 'level': 2},
-            ... ]
-
-    """
     url = '/'.join(['https:', '', api_host, 'v2', entity_type])
     headers = {'authorization': 'Bearer ' + access_token}
     resp = get_data(url, headers)
@@ -215,38 +195,6 @@ def get_available(access_token, api_host, entity_type):
 
 
 def list_available(access_token, api_host, selected_entities):
-    """List available entities given some selected entities.
-
-    Given one or more selections, return entities combinations that have
-    data for the given selections.
-
-    Parameters
-    ----------
-    access_token : string
-    api_host : string
-    selected_entities : dict
-
-        Example::
-
-            { 'metric_id': 123, 'item_id': 456, 'source_id': 7 }
-
-        Keys may include: metric_id, item_id, region_id, partner_region_id,
-        source_id, frequency_id
-
-    Returns
-    -------
-    list of dicts
-
-        Example::
-
-            [ { 'metric_id': 11078, 'metric_name': 'Export Value (currency)',
-                'item_id': 274, 'item_name': 'Corn',
-                'region_id': 1215, 'region_name': 'United States',
-                'source_id': 15, 'source_name': 'USDA GATS' },
-            { ... },
-            ... ]
-
-    """
     url = '/'.join(['https:', '', api_host, 'v2/entities/list'])
     headers = {'authorization': 'Bearer ' + access_token}
     params = dict([(snake_to_camel(key), value)
@@ -260,31 +208,6 @@ def list_available(access_token, api_host, selected_entities):
 
 @memoize(maxsize=None)
 def lookup(access_token, api_host, entity_type, entity_id):
-    """Retrieve details about a given id of type entity_type.
-
-    https://github.com/gro-intelligence/api-client/wiki/Entities-Definition
-
-    Parameters
-    ----------
-    access_token : string
-    api_host : string
-    entity_type : string
-        'items', 'metrics', 'regions', 'units', 'frequencies', or 'sources'
-    entity_id : int
-
-    Returns
-    -------
-    dict
-
-        Example::
-
-            { 'id': 274,
-              'contains': [779, 780, ...]
-              'name': 'Corn',
-              'definition': ('The seeds of the widely cultivated corn plant <i>Zea mays</i>, which'
-                           ' is one of the world\'s most popular grains.') }
-
-    """
     url = '/'.join(['https:', '', api_host, 'v2', entity_type, str(entity_id)])
     headers = {'authorization': 'Bearer ' + access_token}
     resp = get_data(url, headers)
@@ -388,36 +311,6 @@ def get_data_call_params(**selection):
 
 
 def get_data_series(access_token, api_host, **selection):
-    """Get available data series for the given selections.
-
-    https://github.com/gro-intelligence/api-client/wiki/Data-Series-Definition
-
-    Parameters
-    ----------
-    access_token : string
-    api_host : string
-    metric_id : integer, optional
-    item_id : integer, optional
-    region_id : integer, optional
-    partner_region_id : integer, optional
-    source_id : integer, optional
-    frequency_id : integer, optional
-
-    Returns
-    -------
-    list of dicts
-
-        Example::
-
-            [{ 'metric_id': 2020032, 'metric_name': 'Seed Use',
-               'item_id': 274, 'item_name': 'Corn',
-               'region_id': 1215, 'region_name': 'United States',
-               'source_id': 24, 'source_name': 'USDA FEEDGRAINS',
-               'frequency_id': 7,
-               'start_date': '1975-03-01T00:00:00.000Z', 'end_date': '2018-05-31T00:00:00.000Z'
-            }, { ... }, ... ]
-
-    """
     logger = get_default_logger()
     url = '/'.join(['https:', '', api_host, 'v2/data_series/list'])
     headers = {'authorization': 'Bearer ' + access_token}
@@ -455,25 +348,6 @@ def get_source_ranking(access_token, api_host, series):
 
 
 def rank_series_by_source(access_token, api_host, series_list):
-    """Given a list of series selections, for each unique combination
-    excluding source, expand to all available sources and return them
-    in ranked order.  The orders corresponds to how well that source
-    covers the selection (items, metrics, regions, and time range and
-    frequency).
-
-    Parameters
-    ----------
-    access_token : string
-    api_host : api_host
-    series_list : list of dicts
-        See output of get_data_series()
-
-    Yields
-    ------
-    dict
-        The input series_list X each possible source, ordered by coverage
-
-    """
     # We sort the internal tuple representations of the dictionaries because
     # otherwise when we call set() we end up with duplicates if iteritems()
     # returns a different order for the same dictionary. See test case.
@@ -527,54 +401,6 @@ def format_list_of_series(series_list):
 
 
 def get_data_points(access_token, api_host, **selection):
-    """Get all the data points for a given selection.
-
-    https://github.com/gro-intelligence/api-client/wiki/Data-Point-Definition
-
-    Parameters
-    ----------
-    access_token : string
-    api_host : string
-    metric_id : integer
-    item_id : integer
-    region_id : integer
-    partner_region_id : integer
-    source_id : integer
-    frequency_id : integer
-    start_date : string, optional
-        all points with start dates equal to or after this date
-    end_date : string, optional
-        all points with end dates equal to or after this date
-    show_revisions : boolean, optional
-        False by default, meaning only the latest value for each period. If true, will return all
-        values for a given period, differentiated by the `reporting_date` field.
-    insert_null : boolean, optional
-        False by default. If True, will include a data point with a None value for each period
-        that does not have data.
-    at_time : string, optional
-        Estimate what data would have been available via Gro at a given time in the past. See
-        /api/client/samples/at-time-query-examples.ipynb for more details.
-
-    Returns
-    -------
-    list of dicts
-
-        Example::
-
-            [ {
-                "start_date": "2000-01-01T00:00:00.000Z",
-                "end_date": "2000-12-31T00:00:00.000Z",
-                "value": 251854000,
-                "input_unit_id": 14,
-                "input_unit_scale": 1,
-                "metric_id": 860032,
-                "item_id": 274,
-                "region_id": 1215,
-                "frequency_id": 9,
-                "unit_id": 14
-            }, ...]
-
-    """
     headers = {'authorization': 'Bearer ' + access_token}
     url = '/'.join(['https:', '', api_host, 'v2/data'])
     params = get_data_call_params(**selection)
@@ -610,25 +436,6 @@ def universal_search(access_token, api_host, search_terms):
 
 @memoize(maxsize=None)
 def search(access_token, api_host, entity_type, search_terms):
-    """Search for the given search term. Better matches appear first.
-
-    Parameters
-    ----------
-    access_token : string
-    api_host : string
-    entity_type : string
-        One of: 'metrics', 'items', 'regions', or 'sources'
-    search_terms : string
-
-    Returns
-    -------
-    list of dicts
-
-        Example::
-
-            [{'id': 5604}, {'id': 10204}, {'id': 10210}, ....]
-
-    """
     url = '/'.join(['https:', '', api_host, 'v2/search', entity_type])
     headers = {'authorization': 'Bearer ' + access_token}
     resp = get_data(url, headers, {'q': search_terms})
@@ -636,93 +443,21 @@ def search(access_token, api_host, entity_type, search_terms):
 
 
 def search_and_lookup(access_token, api_host, entity_type, search_terms, num_results=10):
-    """Search for the given search terms and look up their details.
-
-    For each result, yield a dict of the entity and it's properties:
-    { 'id': <integer id of entity, unique within this entity type>,
-        'name':    <string canonical name>
-        'contains': <array of ids of entities that are contained in this one>,
-        ....
-        <other properties> }
-
-    Parameters
-    ----------
-    access_token : string
-    api_host : string
-    entity_type : string
-        One of: 'metrics', 'items', 'regions', or 'sources'
-    search_terms : string
-    num_results: int
-        Maximum number of results to return
-
-    Yields
-    ------
-    dict
-        Result from search() passed to lookup() to get additional details. For example::
-
-            { 'id': 274, 'contains': [779, 780, ...] 'name': 'Corn',
-            'definition': 'The seeds of the widely cultivated...' }
-
-        See output of lookup(). Note that as with search(), the first result is
-        the best match for the given search term(s).
-
-    """
     search_results = search(access_token, api_host, entity_type, search_terms)
     for result in search_results[:num_results]:
         yield lookup(access_token, api_host, entity_type, result['id'])
 
 
 def lookup_belongs(access_token, api_host, entity_type, entity_id):
-    """Look up details of entities containing the given entity.
-
-    Parameters
-    ----------
-    access_token : string
-    api_host : string
-    entity_type : string
-        One of: 'metrics', 'items', or 'regions'
-    entity_id : integer
-
-    Yields
-    ------
-    dict
-        Result of lookup() on each entity the given entity belongs to.
-
-        For example: For the region 'United States', one yielded result will be for
-        'North America.' The format of which matches the output of lookup()::
-
-            { 'id': 15,
-              'contains': [ 1008, 1009, 1012, 1215, ... ],
-              'name': 'North America',
-              'level': 2 }
-
-    """
     url = '/'.join(['https:', '', api_host, 'v2', entity_type, 'belongs-to'])
     params = {'ids': str(entity_id)}
     headers = {'authorization': 'Bearer ' + access_token}
-    resp = get_data(url, headers, params)
-    for parent_entity_id in resp.json().get('data').get(str(entity_id), []):
+    parents = get_data(url, headers, params).json().get('data').get(str(entity_id), [])
+    for parent_entity_id in parents:
         yield lookup(access_token, api_host, entity_type, parent_entity_id)
 
 
 def get_geo_centre(access_token, api_host, region_id):
-    """Given a region ID, return the geographic centre in degrees lat/lon.
-
-    Parameters
-    ----------
-    access_token : string
-    api_host : string
-    region_id : integer
-
-    Returns
-    -------
-    list of dicts
-
-        Example::
-
-            [{ 'centre': [ 45.7228, -112.996 ], 'regionId': 1215, 'regionName': 'United States' }]
-
-    """
     url = '/'.join(['https:', '', api_host, 'v2/geocentres?regionIds=' +
                     str(region_id)])
     headers = {'authorization': 'Bearer ' + access_token}
@@ -732,22 +467,6 @@ def get_geo_centre(access_token, api_host, region_id):
 
 @memoize(maxsize=None)
 def get_geojson(access_token, api_host, region_id):
-    """Given a region ID, return a geojson shape information
-
-    Parameters
-    ----------
-    access_token : string
-    api_host : string
-    region_id : integer
-
-    Returns
-    -------
-    a geojson object e.g.
-    { 'type': 'GeometryCollection',
-      'geometries': [{'type': 'MultiPolygon',
-                      'coordinates': [[[[-38.394, -4.225], ...]]]}, ...]}
-    or None if not found.
-    """
     url = '/'.join(['https:', '', api_host, 'v2/geocentres?includeGeojson=True&regionIds=' +
                     str(region_id)])
     headers = {'authorization': 'Bearer ' + access_token}
@@ -759,47 +478,6 @@ def get_geojson(access_token, api_host, region_id):
 
 def get_descendant_regions(access_token, api_host, region_id,
                            descendant_level=False, include_historical=True):
-    """Look up details of regions of the given level contained by a region.
-
-    Given any region by id, recursively get all the descendant regions
-    that are of the specified level.
-
-    This takes advantage of the assumption that region graph is
-    acyclic. This will only traverse ordered region levels (strictly
-    increasing region level id) and thus skips non-administrative region
-    levels.
-
-    Parameters
-    ----------
-    access_token : string
-    api_host : string
-    region_id : integer
-    descendant_level : integer
-        The region level of interest. See REGION_LEVELS constant.
-    include_historical : boolean
-        option to include historical regions
-
-    Returns
-    -------
-    list of dicts
-
-        Example::
-
-            [{
-                'id': 13100,
-                'contains': [139839, 139857, ...],
-                'name': 'Wisconsin',
-                'level': 4
-            } , {
-                'id': 13101,
-                'contains': [139891, 139890, ...],
-                'name': 'Wyoming',
-                'level': 4
-            }, ...]
-
-        See output of lookup()
-
-    """
     descendants = []
     region = lookup(access_token, api_host, 'regions', region_id)
     for member_id in region['contains']:
