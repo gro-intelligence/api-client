@@ -164,11 +164,11 @@
 <p class="caption"><span class="caption-text">Reference</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="api.html">API Reference</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="api.html#module-api.client.lib">lib</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api.html#client">Client</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api.html#groclient">GroClient</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api.html#crop-model">Crop Model</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api.html#batch-client">Batch Client</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#basic-exploration">Basic Exploration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#data-retrieval">Data Retrieval</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#geographic">Geographic</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#advanced-exploration">Advanced Exploration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#pandas-utils">Pandas Utils</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="faq.html">FAQ</a><ul>
@@ -277,15 +277,10 @@
 
 <div class="genindex-jumpbox">
  <a href="#A"><strong>A</strong></a>
- | <a href="#B"><strong>B</strong></a>
- | <a href="#C"><strong>C</strong></a>
- | <a href="#F"><strong>F</strong></a>
  | <a href="#G"><strong>G</strong></a>
  | <a href="#L"><strong>L</strong></a>
- | <a href="#P"><strong>P</strong></a>
  | <a href="#R"><strong>R</strong></a>
  | <a href="#S"><strong>S</strong></a>
- | <a href="#U"><strong>U</strong></a>
  
 </div>
 <h2 id="A">A</h2>
@@ -295,47 +290,7 @@
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api.html#module-api.client.lib">api.client.lib (module)</a>
-</li>
-      <li><a href="api.html#api.client.batch_client.BatchClient.async_rank_series_by_source">async_rank_series_by_source() (api.client.batch_client.BatchClient method)</a>
-</li>
-  </ul></td>
-</tr></table>
-
-<h2 id="B">B</h2>
-<table style="width: 100%" class="indextable genindextable"><tr>
-  <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api.html#api.client.batch_client.BatchClient.batch_async_queue">batch_async_queue() (api.client.batch_client.BatchClient method)</a>
-</li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api.html#api.client.batch_client.BatchClient">BatchClient (class in api.client.batch_client)</a>
-</li>
-  </ul></td>
-</tr></table>
-
-<h2 id="C">C</h2>
-<table style="width: 100%" class="indextable genindextable"><tr>
-  <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api.html#api.client.Client">Client (class in api.client)</a>
-</li>
-      <li><a href="api.html#api.client.crop_model.CropModel.compute_crop_weighted_series">compute_crop_weighted_series() (api.client.crop_model.CropModel method)</a>
-</li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api.html#api.client.crop_model.CropModel.compute_weights">compute_weights() (api.client.crop_model.CropModel method)</a>
-</li>
-      <li><a href="api.html#api.client.gro_client.GroClient.convert_unit">convert_unit() (api.client.gro_client.GroClient method)</a>
-</li>
-      <li><a href="api.html#api.client.crop_model.CropModel">CropModel (class in api.client.crop_model)</a>
-</li>
-  </ul></td>
-</tr></table>
-
-<h2 id="F">F</h2>
-<table style="width: 100%" class="indextable genindextable"><tr>
-  <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api.html#api.client.gro_client.GroClient.find_data_series">find_data_series() (api.client.gro_client.GroClient method)</a>
+      <li><a href="api.html#api.client.gro_client.GroClient.add_single_data_series">add_single_data_series() (api.client.gro_client.GroClient method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -343,45 +298,21 @@
 <h2 id="G">G</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api.html#api.client.lib.get_access_token">get_access_token() (in module api.client.lib)</a>
+      <li><a href="api.html#api.client.gro_client.GroClient.get_data_points">get_data_points() (api.client.gro_client.GroClient method)</a>
 </li>
-      <li><a href="api.html#api.client.lib.get_available">get_available() (in module api.client.lib)</a>
+      <li><a href="api.html#api.client.gro_client.GroClient.get_data_series">get_data_series() (api.client.gro_client.GroClient method)</a>
 </li>
-      <li><a href="api.html#api.client.batch_client.BatchClient.get_data">get_data() (api.client.batch_client.BatchClient method)</a>
-
-      <ul>
-        <li><a href="api.html#api.client.lib.get_data">(in module api.client.lib)</a>
+      <li><a href="api.html#api.client.gro_client.GroClient.get_data_series_list">get_data_series_list() (api.client.gro_client.GroClient method)</a>
 </li>
-      </ul></li>
-      <li><a href="api.html#api.client.lib.get_data_call_params">get_data_call_params() (in module api.client.lib)</a>
-</li>
-      <li><a href="api.html#api.client.batch_client.BatchClient.get_data_points">get_data_points() (api.client.batch_client.BatchClient method)</a>
-
-      <ul>
-        <li><a href="api.html#api.client.gro_client.GroClient.get_data_points">(api.client.gro_client.GroClient method)</a>
-</li>
-        <li><a href="api.html#api.client.lib.get_data_points">(in module api.client.lib)</a>
-</li>
-      </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api.html#api.client.lib.get_data_series">get_data_series() (in module api.client.lib)</a>
-</li>
-      <li><a href="api.html#api.client.lib.get_default_logger">get_default_logger() (in module api.client.lib)</a>
-</li>
-      <li><a href="api.html#api.client.lib.get_descendant_regions">get_descendant_regions() (in module api.client.lib)</a>
+      <li><a href="api.html#api.client.gro_client.GroClient.get_descendant_regions">get_descendant_regions() (api.client.gro_client.GroClient method)</a>
 </li>
       <li><a href="api.html#api.client.gro_client.GroClient.get_df">get_df() (api.client.gro_client.GroClient method)</a>
 </li>
-      <li><a href="api.html#api.client.lib.get_geo_centre">get_geo_centre() (in module api.client.lib)</a>
+      <li><a href="api.html#api.client.gro_client.GroClient.get_geojson">get_geojson() (api.client.gro_client.GroClient method)</a>
 </li>
-      <li><a href="api.html#api.client.lib.get_geojson">get_geojson() (in module api.client.lib)</a>
-</li>
-      <li><a href="api.html#api.client.lib.get_params_from_selection">get_params_from_selection() (in module api.client.lib)</a>
-</li>
-      <li><a href="api.html#api.client.lib.get_source_ranking">get_source_ranking() (in module api.client.lib)</a>
-</li>
-      <li><a href="api.html#api.client.gro_client.GroClient">GroClient (class in api.client.gro_client)</a>
+      <li><a href="api.html#api.client.gro_client.GroClient.get_provinces">get_provinces() (api.client.gro_client.GroClient method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -389,27 +320,11 @@
 <h2 id="L">L</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api.html#api.client.lib.list_available">list_available() (in module api.client.lib)</a>
+      <li><a href="api.html#api.client.gro_client.GroClient.lookup">lookup() (api.client.gro_client.GroClient method)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api.html#api.client.lib.lookup">lookup() (in module api.client.lib)</a>
-</li>
-      <li><a href="api.html#api.client.lib.lookup_belongs">lookup_belongs() (in module api.client.lib)</a>
-</li>
-  </ul></td>
-</tr></table>
-
-<h2 id="P">P</h2>
-<table style="width: 100%" class="indextable genindextable"><tr>
-  <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api.html#api.client.gro_client.GroClient.pick_random_data_series">pick_random_data_series() (api.client.gro_client.GroClient method)</a>
-</li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api.html#api.client.gro_client.GroClient.pick_random_entities">pick_random_entities() (api.client.gro_client.GroClient method)</a>
-</li>
-      <li><a href="api.html#api.client.gro_client.GroClient.print_one_data_series">print_one_data_series() (api.client.gro_client.GroClient method)</a>
+      <li><a href="api.html#api.client.gro_client.GroClient.lookup_belongs">lookup_belongs() (api.client.gro_client.GroClient method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -417,11 +332,7 @@
 <h2 id="R">R</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api.html#api.client.lib.rank_series_by_source">rank_series_by_source() (in module api.client.lib)</a>
-</li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api.html#api.client.lib.redirect">redirect() (in module api.client.lib)</a>
+      <li><a href="api.html#api.client.gro_client.GroClient.rank_series_by_source">rank_series_by_source() (api.client.gro_client.GroClient method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -429,23 +340,13 @@
 <h2 id="S">S</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api.html#api.client.lib.search">search() (in module api.client.lib)</a>
-</li>
-      <li><a href="api.html#api.client.lib.search_and_lookup">search_and_lookup() (in module api.client.lib)</a>
+      <li><a href="api.html#api.client.gro_client.GroClient.search">search() (api.client.gro_client.GroClient method)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api.html#api.client.gro_client.GroClient.search_and_lookup">search_and_lookup() (api.client.gro_client.GroClient method)</a>
+</li>
       <li><a href="api.html#api.client.gro_client.GroClient.search_for_entity">search_for_entity() (api.client.gro_client.GroClient method)</a>
-</li>
-      <li><a href="api.html#api.client.lib.snake_to_camel">snake_to_camel() (in module api.client.lib)</a>
-</li>
-  </ul></td>
-</tr></table>
-
-<h2 id="U">U</h2>
-<table style="width: 100%" class="indextable genindextable"><tr>
-  <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api.html#api.client.lib.universal_search">universal_search() (in module api.client.lib)</a>
 </li>
   </ul></td>
 </tr></table>
