@@ -9,7 +9,7 @@ import os
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-from scipy.misc import comb
+from scipy.special import comb
 
 from . import \
     distance_matrix, \
