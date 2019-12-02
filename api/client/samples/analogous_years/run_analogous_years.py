@@ -117,7 +117,7 @@ def main():
                   'source_id': checking('sources', source_id_list[i]),
                   'frequency_id': checking('frequencies', frequency_id_list[i])}
         dates = client.get_data_points(**entity)
-        if len(dates) == 0:
+        if len(dates) == 0 or ('start_date' not in dates[0]):
             msg = "No data found for the following gro-entity - {}".format(entity)
             raise argparse.ArgumentTypeError(msg)
         else:
