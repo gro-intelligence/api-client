@@ -36,9 +36,10 @@ SERIES_TYPES_SINGULAR = EXPANDABLE_TYPES_SINGULAR + ['frequency', 'source']
 LOOKUP_TYPES_SINGULAR = SERIES_TYPES_SINGULAR + ['unit']
 SERIES_TYPES_ID_SINGULAR = [type_singular+'_id' for type_singular in SERIES_TYPES_SINGULAR]
 LOOKUP_TYPES_PLURAL = [
-    'frequencies' if type_singular=='frequency' else type_singular+'s'
+    'frequencies' if type_singular == 'frequency' else type_singular+'s'
     for type_singular in LOOKUP_TYPES_SINGULAR
 ]
+
 
 def get_default_logger():
     """Get a logging object using the default log level set in cfg.
@@ -342,7 +343,7 @@ def get_params_from_selection(**selection):
     """
     params = {}
     for key, value in list(selection.items()):
-        if key in SERIES_TYPES_ID_SINGULAR+('start_date', 'end_date'):
+        if key in SERIES_TYPES_ID_SINGULAR+['start_date', 'end_date']:
             params[snake_to_camel(key)] = value
     return params
 
@@ -377,7 +378,7 @@ def get_data_call_params(**selection):
         selections with valid keys converted to camelcase and invalid ones filtered out
 
     """
-    
+
     params = get_params_from_selection(**selection)
     for key, value in list(selection.items()):
         if key in ('start_date', 'end_date', 'show_revisions', 'insert_null', 'at_time'):
@@ -424,8 +425,11 @@ def get_data_series(access_token, api_host, **selection):
     resp = get_data(url, headers, params)
     try:
         response = resp.json()['data']
-        if any((series.get('metadata', {}).get('includes_historical_region', False)) for series in response):
-            logger.warning('Some of the regions in your data call are historical, with boundaries that may be outdated. The regions may have overlapping values with current regions')
+        if any((series.get('metadata', {}).get('includes_historical_region', False))
+               for series in response):
+            logger.warning('Some of the regions in your data call are historical, with boundaries '
+                           'that may be outdated. The regions may have overlapping values with '
+                           'current regions')
         return response
     except KeyError:
         raise Exception(resp.text)
@@ -491,6 +495,12 @@ def rank_series_by_source(access_token, api_host, series_list):
 
 
 def format_list_of_series(series_list):
+    """Convert list_of_series format from API back into the familiar single_series output format
+    
+    >>> format_list_of_series([{ 'series': {}, 'data': [['2001-01-01', '2001-12-31', 123]] }])
+    [{'start_date': '2001-01-01', 'end_date': '2001-12-31', value: 123, reporting_date: None, metric_id: None, item_id: None, region_id: None, partner_region_id: None, frequency_id: None, source_id: None, unit_id: None, belongs_to: {}}]
+    
+    """
     if(isinstance(series_list, list)):
         output = []
         for series in series_list:
@@ -500,17 +510,16 @@ def format_list_of_series(series_list):
                         'start_date': point[0],
                         'end_date': point[1],
                         'value': point[2],
-                        'metric_id': series['series']['metricId'],
-                        'item_id': series['series']['itemId'],
-                        'region_id': series['series']['regionId'],
+                        'reporting_date': point[3] if len(point) > 3 else None,
+                        'metric_id': series['series'].get('metricId', None),
+                        'item_id': series['series'].get('itemId', None),
+                        'region_id': series['series'].get('regionId', None),
                         'partner_region_id': series['series'].get('partnerRegionId', 0),
-                        'frequency_id': series['series']['frequencyId'],
-                        'source_id': series['series']['sourceId'],
-                        'unit_id': series['series']['inputUnitId'],
-                        'belongs_to': series['series']['belongsTo']
+                        'frequency_id': series['series'].get('frequencyId', None),
+                        'source_id': series['series'].get('sourceId', None),
+                        'unit_id': series['series'].get('inputUnitId', None),
+                        'belongs_to': series['series'].get('belongsTo', {})
                     }
-                    if(len(point) > 3):
-                        single_series_point['reporting_date'] = point[3]
                     output.append(single_series_point)
         return output
     # If the output is an error or None or something else that's not a list, just propagate
