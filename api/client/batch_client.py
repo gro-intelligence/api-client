@@ -14,10 +14,10 @@ from tornado.escape import json_decode
 from tornado.httpclient import AsyncHTTPClient, HTTPRequest, HTTPClientError
 from tornado.ioloop import IOLoop
 from tornado.queues import Queue
-from api.client import cfg, lib, Client
+from api.client import cfg, lib
+from api.client.gro_client import GroClient
 
-
-class BatchClient(Client):
+class BatchClient(GroClient):
     """API client with support for batch asynchronous queries."""
 
     _logger = None
@@ -93,6 +93,17 @@ class BatchClient(Client):
     def batch_async_get_data_points(self, batched_args, output_list=None,
                                     map_result=None):
         return self.batch_async_queue(self.get_data_points, batched_args,
+                                      output_list, map_result)
+
+    @gen.coroutine
+    def async_rank_series_by_source(self, **selection):
+        """Get all sources, in ranked order, for a given selection."""
+        response = super(BatchClient, self).rank_series_by_source(**selection)
+        raise gen.Return([r for r in response])
+
+    def batch_async_rank_series_by_source(self, batched_args,
+                                       output_list=None, map_result=None):
+        return self.batch_async_queue(self.async_rank_series_by_source, batched_args,
                                       output_list, map_result)
 
     def batch_async_queue(self, func, batched_args, output_list, map_result):
