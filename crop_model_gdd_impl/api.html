@@ -1135,10 +1135,43 @@ regions) that matches the given keywords.</p>
 <dd><dl class="method">
 <dt id="api.client.crop_model.CropModel.compute_crop_weighted_series">
 <code class="descname">compute_crop_weighted_series</code><span class="sig-paren">(</span><em>weighting_crop_name</em>, <em>weighting_metric_name</em>, <em>item_name</em>, <em>metric_name</em>, <em>regions</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/crop_model.html#CropModel.compute_crop_weighted_series"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.crop_model.CropModel.compute_crop_weighted_series" title="Permalink to this definition">¶</a></dt>
-<dd><p>Add the data series for the given item_name and metric_name to this
-model. Compute the weighted version of the series for each
-region in regions. The weight of a region is the fraction of
-the value of the weighting series represented by that region.</p>
+<dd><p>Compute the &#8216;crop-weighted average&#8217; of the series for the given
+item and metric, across regions. The weight of a region is the
+fraction of the value of the weighting series represented by
+that region as explained in compute_weights().</p>
+<p>For example: say we have a <code class="docutils literal"><span class="pre">`region_list</span> <span class="pre">=</span> <span class="pre">[{'id':</span> <span class="pre">1,</span> <span class="pre">'name':</span>
+<span class="pre">'Province1'},</span> <span class="pre">{'id':</span> <span class="pre">2,</span> <span class="pre">'name':</span> <span class="pre">'Province2'}]`</span></code>. This could
+be a list returned by client.search_and_lookup() or
+client.get_descendant_regions for example.  Now
+<code class="docutils literal"><span class="pre">`model.compute_crop_weighted_series('soybeans',</span> <span class="pre">'land</span> <span class="pre">cover</span>
+<span class="pre">area',</span> <span class="pre">'vegetation</span> <span class="pre">ndvi',</span> <span class="pre">'vegetation</span> <span class="pre">indices</span> <span class="pre">index',</span>
+<span class="pre">region_list)`</span></code> will return a dataframe where the NDVI of each
+province is multiplied by the fraction of total soybeans
+area is accounted for by that province. Thus taking the sum
+across provinces will give a crop weighted average of NDVI.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>weighting_crop_name</strong> (<em>string</em><em>, </em><em>required</em>) &#8211; </li>
+<li><strong>weighting_metric_name</strong> (<em>string</em><em>, </em><em>required</em>) &#8211; </li>
+<li><strong>item_name</strong> (<em>string</em><em>, </em><em>required</em>) &#8211; </li>
+<li><strong>metric_name</strong> (<em>string</em><em>, </em><em>required</em>) &#8211; </li>
+<li><strong>regions</strong> (<em>list of dicts</em><em>, </em><em>each entry is a region with id and name</em>) &#8211; </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul class="simple">
+<li><em>DataFrame containing the data series for the given item_name,</em></li>
+<li><em>metric_name, for each region in regions, with values adjusted</em></li>
+<li><em>by the crop weight for that region.</em></li>
+</ul>
+</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -1150,10 +1183,38 @@ the value of the weighting series represented by that region.</p>
 <dl class="method">
 <dt id="api.client.crop_model.CropModel.compute_weights">
 <code class="descname">compute_weights</code><span class="sig-paren">(</span><em>crop_name</em>, <em>metric_name</em>, <em>regions</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/crop_model.html#CropModel.compute_weights"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.crop_model.CropModel.compute_weights" title="Permalink to this definition">¶</a></dt>
-<dd><p>Add the weighting data series to this model. Compute the weights,
-which is the mean value for each region in regions, normalized
-to add up to 1.0 across regions. Returns a list of weights
-corresponding to the regions.</p>
+<dd><p>Compute a vector of &#8216;weights&#8217; that can be used for crop-weighted
+average across regions.</p>
+<p>For each region, the weight of is the mean value over time, of
+the given metric for the given crop, normalized so the sum
+across all regions is 1.0.</p>
+<p>For example: say we have a <code class="docutils literal"><span class="pre">`region_list</span> <span class="pre">=</span> <span class="pre">[{'id':</span> <span class="pre">1,</span> <span class="pre">'name':</span>
+<span class="pre">'Province1'},</span> <span class="pre">{'id':</span> <span class="pre">2,</span> <span class="pre">'name':</span> <span class="pre">'Province2'}]`</span></code>. This could
+be a list returned by client.search_and_lookup() or
+client.get_descendant_regions for example.  Now say
+<code class="docutils literal"><span class="pre">`model.compute_weights('soybeans',</span> <span class="pre">'land</span> <span class="pre">cover</span> <span class="pre">area',</span>
+<span class="pre">region_list)`</span></code> returns <code class="docutils literal"><span class="pre">`[0.6,</span> <span class="pre">0.4]`</span></code>, that means Province1
+has 60% and province2 has 40% of the total area planted across
+the two regions, when averaged across all time.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>crop_name</strong> (<em>string</em><em>, </em><em>required</em>) &#8211; </li>
+<li><strong>metric_name</strong> (<em>string</em><em>, </em><em>required</em>) &#8211; </li>
+<li><strong>regions</strong> (<em>list of dicts</em><em>, </em><em>each entry is a region with id and name</em>) &#8211; </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">weights corresponding to the regions.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list of float</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -1308,6 +1369,7 @@ partner_region_id. Additional arguments are allowed and ignored.</p>
         </dl>
         <dl>
             <dt>Branches</dt>
+            <dd><a href="../CLEWS-14263-Part2-analogous_years/api.html">CLEWS-14263-Part2-analogous_years</a></dd>
             <dd><a href="../CLEWS-15762/api.html">CLEWS-15762</a></dd>
             <dd><a href="../CLEWS-15766/api.html">CLEWS-15766</a></dd>
             <dd><a href="../CLEWS-18836/api.html">CLEWS-18836</a></dd>

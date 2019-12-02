@@ -202,17 +202,17 @@
 <span class="c1"># Python3 support</span>
 <span class="k">try</span><span class="p">:</span>
     <span class="c1"># Python3</span>
-    <span class="kn">from</span> <span class="nn">urllib.parse</span> <span class="k">import</span> <span class="n">urlencode</span>
+    <span class="kn">from</span> <span class="nn">urllib.parse</span> <span class="kn">import</span> <span class="n">urlencode</span>
 <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
     <span class="c1"># Python2</span>
-    <span class="kn">from</span> <span class="nn">urllib</span> <span class="k">import</span> <span class="n">urlencode</span>
+    <span class="kn">from</span> <span class="nn">urllib</span> <span class="kn">import</span> <span class="n">urlencode</span>
 
-<span class="kn">from</span> <span class="nn">tornado</span> <span class="k">import</span> <span class="n">gen</span>
-<span class="kn">from</span> <span class="nn">tornado.escape</span> <span class="k">import</span> <span class="n">json_decode</span>
-<span class="kn">from</span> <span class="nn">tornado.httpclient</span> <span class="k">import</span> <span class="n">AsyncHTTPClient</span><span class="p">,</span> <span class="n">HTTPRequest</span><span class="p">,</span> <span class="n">HTTPError</span>
-<span class="kn">from</span> <span class="nn">tornado.ioloop</span> <span class="k">import</span> <span class="n">IOLoop</span>
-<span class="kn">from</span> <span class="nn">tornado.queues</span> <span class="k">import</span> <span class="n">Queue</span>
-<span class="kn">from</span> <span class="nn">api.client</span> <span class="k">import</span> <span class="n">cfg</span><span class="p">,</span> <span class="n">lib</span><span class="p">,</span> <span class="n">Client</span>
+<span class="kn">from</span> <span class="nn">tornado</span> <span class="kn">import</span> <span class="n">gen</span>
+<span class="kn">from</span> <span class="nn">tornado.escape</span> <span class="kn">import</span> <span class="n">json_decode</span>
+<span class="kn">from</span> <span class="nn">tornado.httpclient</span> <span class="kn">import</span> <span class="n">AsyncHTTPClient</span><span class="p">,</span> <span class="n">HTTPRequest</span><span class="p">,</span> <span class="n">HTTPError</span>
+<span class="kn">from</span> <span class="nn">tornado.ioloop</span> <span class="kn">import</span> <span class="n">IOLoop</span>
+<span class="kn">from</span> <span class="nn">tornado.queues</span> <span class="kn">import</span> <span class="n">Queue</span>
+<span class="kn">from</span> <span class="nn">api.client</span> <span class="kn">import</span> <span class="n">cfg</span><span class="p">,</span> <span class="n">lib</span><span class="p">,</span> <span class="n">Client</span>
 
 
 <div class="viewcode-block" id="BatchClient"><a class="viewcode-back" href="../../../api.html#api.client.batch_client.BatchClient">[docs]</a><span class="k">class</span> <span class="nc">BatchClient</span><span class="p">(</span><span class="n">Client</span><span class="p">):</span>
@@ -221,7 +221,7 @@
     <span class="n">_logger</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">_http_client</span> <span class="o">=</span> <span class="kc">None</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">api_host</span><span class="p">,</span> <span class="n">access_token</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">api_host</span><span class="p">,</span> <span class="n">access_token</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">BatchClient</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">api_host</span><span class="p">,</span> <span class="n">access_token</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span> <span class="o">=</span> <span class="n">lib</span><span class="o">.</span><span class="n">get_default_logger</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_http_client</span> <span class="o">=</span> <span class="n">AsyncHTTPClient</span><span class="p">()</span>
@@ -389,6 +389,7 @@
         </dl>
         <dl>
             <dt>Branches</dt>
+            <dd><a href="../../../../CLEWS-14263-Part2-analogous_years/index.html">CLEWS-14263-Part2-analogous_years</a></dd>
             <dd><a href="batch_client.html">CLEWS-15762</a></dd>
             <dd><a href="../../../../CLEWS-15766/index.html">CLEWS-15766</a></dd>
             <dd><a href="../../../../CLEWS-18836/index.html">CLEWS-18836</a></dd>
