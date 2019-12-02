@@ -10,8 +10,10 @@ build:
     # Create folders for test and code coverage
     - mkdir -p shippable/testresults
     - mkdir -p shippable/codecoverage
+    # Run lib doctests TODO: consolidate with pytest http://doc.pytest.org/en/latest/doctest.html
+    - python api/client/lib.py -v
     # Run test and code coverage and output results to the right folder
-    - pytest --junitxml=shippable/testresults/nosetests.xml --doctest-modules
+    - pytest --junitxml=shippable/testresults/nosetests.xml
     - pytest --cov=api --cov-report=xml:shippable/codecoverage/coverage.xml
   post_ci:
     # Only build docs on the Python 2.7 run. It is unnecessary to run on both 2.x and 3.x - one or
