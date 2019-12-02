@@ -104,8 +104,8 @@ def redirect(old_params, migration):
     >>> redirect(
     ...     {'metricId': 14, 'sourceId': 2, 'itemId': 145},
     ...     {'old_metric_id': 14, 'new_metric_id': 15, 'source_id': 2}
-    ... )
-    {'metricId': 15, 'sourceId': 2, 'itemId': 145}
+    ... ) == {'metricId': 15, 'sourceId': 2, 'itemId': 145}
+    True
 
     Parameters
     ----------
@@ -276,8 +276,10 @@ def get_data_call_params(**selection):
 
     For use with get_data_points().
 
-    >>> get_data_call_params(metric_id=123, start_date='2012-01-01', unit_id=14)
-    {'metricId': 123, 'startDate': '2012-01-01', 'responseType': 'list_of_series'}
+    >>> get_data_call_params(metric_id=123, start_date='2012-01-01', unit_id=14) == {
+    ...     'metricId': 123, 'startDate': '2012-01-01', 'responseType': 'list_of_series'
+    ... }
+    True
 
     Parameters
     ----------
@@ -369,8 +371,12 @@ def rank_series_by_source(access_token, api_host, series_list):
 def format_list_of_series(series_list):
     """Convert list_of_series format from API back into the familiar single_series output format
 
-    >>> format_list_of_series([{ 'series': {}, 'data': [['2001-01-01', '2001-12-31', 123]] }])
-    [{'start_date': '2001-01-01', 'end_date': '2001-12-31', 'value': 123, 'reporting_date': None, 'metric_id': None, 'item_id': None, 'region_id': None, 'partner_region_id': 0, 'frequency_id': None, 'source_id': None, 'unit_id': None, 'belongs_to': {}}]
+    >>> format_list_of_series([{ 'series': {}, 'data': [['2001-01-01', '2001-12-31', 123]] }]) == [
+    ...   { 'start_date': '2001-01-01', 'end_date': '2001-12-31', 'value': 123,
+    ...     'reporting_date': None, 'metric_id': None, 'item_id': None, 'region_id': None,
+    ...     'partner_region_id': 0, 'frequency_id': None, 'source_id': None, 'unit_id': None,
+    ...     'belongs_to': {} } ]
+    True
 
     """
     if(isinstance(series_list, list)):
@@ -389,7 +395,7 @@ def format_list_of_series(series_list):
                         'partner_region_id': series['series'].get('partnerRegionId', 0),
                         'frequency_id': series['series'].get('frequencyId', None),
                         'source_id': series['series'].get('sourceId', None),
-                        'unit_id': series['series'].get('inputUnitId', None),
+                        'unit_id': series['series'].get('unitId', None),
                         'belongs_to': series['series'].get('belongsTo', {})
                     }
                     output.append(single_series_point)
