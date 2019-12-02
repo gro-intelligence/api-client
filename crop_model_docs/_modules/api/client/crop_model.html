@@ -294,8 +294,7 @@
 
 <div class="viewcode-block" id="CropModel"><a class="viewcode-back" href="../../../api.html#api.client.crop_model.CropModel">[docs]</a><span class="k">class</span> <span class="nc">CropModel</span><span class="p">(</span><span class="n">GroClient</span><span class="p">):</span>
 <div class="viewcode-block" id="CropModel.compute_weights"><a class="viewcode-back" href="../../../api.html#api.client.crop_model.CropModel.compute_weights">[docs]</a>    <span class="k">def</span> <span class="nf">compute_weights</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">crop_name</span><span class="p">,</span> <span class="n">metric_name</span><span class="p">,</span> <span class="n">regions</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Compute a vector of &#39;weights&#39; that can be used for crop-weighted</span>
-<span class="sd">        average across regions.</span>
+        <span class="sd">&quot;&quot;&quot;Compute a vector of &#39;weights&#39; that can be used for crop-weighted average across regions.</span>
 
 <span class="sd">        For each region, the weight of is the mean value over time, of</span>
 <span class="sd">        the given metric for the given crop, normalized so the sum</span>
@@ -304,7 +303,7 @@
 <span class="sd">        For example: say we have a ```region_list = [{&#39;id&#39;: 1, &#39;name&#39;:</span>
 <span class="sd">        &#39;Province1&#39;}, {&#39;id&#39;: 2, &#39;name&#39;: &#39;Province2&#39;}]```. This could</span>
 <span class="sd">        be a list returned by client.search_and_lookup() or</span>
-<span class="sd">        client.get_descendant_regions for example.  Now say</span>
+<span class="sd">        client.get_descendant_regions() for example.  Now say</span>
 <span class="sd">        ```model.compute_weights(&#39;soybeans&#39;, &#39;land cover area&#39;,</span>
 <span class="sd">        region_list)``` returns ```[0.6, 0.4]```, that means Province1</span>
 <span class="sd">        has 60% and province2 has 40% of the total area planted across</span>
@@ -312,13 +311,14 @@
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        crop_name: string, required</span>
-<span class="sd">        metric_name: string, required</span>
-<span class="sd">        regions: list of dicts, each entry is a region with id and name</span>
+<span class="sd">        crop_name : string</span>
+<span class="sd">        metric_name : string</span>
+<span class="sd">        regions : list of dicts</span>
+<span class="sd">            Each entry is a region with id and name</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        list of float</span>
+<span class="sd">        list of floats</span>
 <span class="sd">           weights corresponding to the regions.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -334,10 +334,10 @@
                 <span class="k">break</span>
         <span class="c1"># Compute the average over time for reach region</span>
         <span class="n">df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_df</span><span class="p">()</span>
-        
+
         <span class="k">def</span> <span class="nf">mapper</span><span class="p">(</span><span class="n">region</span><span class="p">):</span>
-            <span class="k">return</span> <span class="n">df</span><span class="p">[(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;item_id&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">entities</span><span class="p">[</span><span class="s1">&#39;item_id&#39;</span><span class="p">])</span> <span class="o">&amp;</span> \
-                      <span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;metric_id&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">entities</span><span class="p">[</span><span class="s1">&#39;metric_id&#39;</span><span class="p">])</span> <span class="o">&amp;</span> \
+            <span class="k">return</span> <span class="n">df</span><span class="p">[(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;item_id&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">entities</span><span class="p">[</span><span class="s1">&#39;item_id&#39;</span><span class="p">])</span> <span class="o">&amp;</span>
+                      <span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;metric_id&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">entities</span><span class="p">[</span><span class="s1">&#39;metric_id&#39;</span><span class="p">])</span> <span class="o">&amp;</span>
                       <span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;region_id&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">region</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">])][</span><span class="s1">&#39;value&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">skipna</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="n">means</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">mapper</span><span class="p">,</span> <span class="n">regions</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Means = </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
@@ -346,12 +346,11 @@
         <span class="n">total</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">fsum</span><span class="p">([</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">means</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">math</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">x</span><span class="p">)])</span>
         <span class="k">return</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">mean</span><span class="p">)</span><span class="o">/</span><span class="n">total</span> <span class="k">for</span> <span class="n">mean</span> <span class="ow">in</span> <span class="n">means</span><span class="p">]</span></div>
 
-<div class="viewcode-block" id="CropModel.compute_crop_weighted_series"><a class="viewcode-back" href="../../../api.html#api.client.crop_model.CropModel.compute_crop_weighted_series">[docs]</a>    <span class="k">def</span> <span class="nf">compute_crop_weighted_series</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
-                                     <span class="n">weighting_crop_name</span><span class="p">,</span> <span class="n">weighting_metric_name</span><span class="p">,</span>
+<div class="viewcode-block" id="CropModel.compute_crop_weighted_series"><a class="viewcode-back" href="../../../api.html#api.client.crop_model.CropModel.compute_crop_weighted_series">[docs]</a>    <span class="k">def</span> <span class="nf">compute_crop_weighted_series</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">weighting_crop_name</span><span class="p">,</span> <span class="n">weighting_metric_name</span><span class="p">,</span>
                                      <span class="n">item_name</span><span class="p">,</span> <span class="n">metric_name</span><span class="p">,</span> <span class="n">regions</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Compute the &#39;crop-weighted average&#39; of the series for the given</span>
-<span class="sd">        item and metric, across regions. The weight of a region is the</span>
-<span class="sd">        fraction of the value of the weighting series represented by</span>
+        <span class="sd">&quot;&quot;&quot;Compute the &#39;crop-weighted average&#39; of the given item and metric&#39;s series across regions.</span>
+
+<span class="sd">        The weight of a region is the fraction of the value of the weighting series represented by</span>
 <span class="sd">        that region as explained in compute_weights().</span>
 
 <span class="sd">        For example: say we have a ```region_list = [{&#39;id&#39;: 1, &#39;name&#39;:</span>
@@ -367,17 +366,19 @@
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        weighting_crop_name: string, required</span>
-<span class="sd">        weighting_metric_name: string, required</span>
-<span class="sd">        item_name: string, required</span>
-<span class="sd">        metric_name: string, required</span>
-<span class="sd">        regions: list of dicts, each entry is a region with id and name</span>
+<span class="sd">        weighting_crop_name : string</span>
+<span class="sd">        weighting_metric_name : string</span>
+<span class="sd">        item_name : string</span>
+<span class="sd">        metric_name : string</span>
+<span class="sd">        regions : list of dicts</span>
+<span class="sd">            Each entry is a region with id and name</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        DataFrame containing the data series for the given item_name,</span>
-<span class="sd">        metric_name, for each region in regions, with values adjusted</span>
-<span class="sd">        by the crop weight for that region.</span>
+<span class="sd">        pandas.DataFrame</span>
+<span class="sd">            contains the data series for the given item_name, metric_name,</span>
+<span class="sd">            for each region in regions, with values adjusted</span>
+<span class="sd">            by the crop weight for that region.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">weights</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_weights</span><span class="p">(</span><span class="n">weighting_crop_name</span><span class="p">,</span> <span class="n">weighting_metric_name</span><span class="p">,</span>
@@ -396,8 +397,8 @@
         <span class="k">for</span> <span class="p">(</span><span class="n">region</span><span class="p">,</span> <span class="n">weight</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">regions</span><span class="p">,</span> <span class="n">weights</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">u</span><span class="s1">&#39;Computing </span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1"> x </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                 <span class="n">item_name</span><span class="p">,</span> <span class="n">metric_name</span><span class="p">,</span>  <span class="n">region</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">],</span> <span class="n">weight</span><span class="p">))</span>
-            <span class="n">series</span> <span class="o">=</span> <span class="n">df</span><span class="p">[(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;item_id&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">entities</span><span class="p">[</span><span class="s1">&#39;item_id&#39;</span><span class="p">])</span> <span class="o">&amp;</span> \
-                        <span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;metric_id&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">entities</span><span class="p">[</span><span class="s1">&#39;metric_id&#39;</span><span class="p">])</span> <span class="o">&amp;</span> \
+            <span class="n">series</span> <span class="o">=</span> <span class="n">df</span><span class="p">[(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;item_id&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">entities</span><span class="p">[</span><span class="s1">&#39;item_id&#39;</span><span class="p">])</span> <span class="o">&amp;</span>
+                        <span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;metric_id&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">entities</span><span class="p">[</span><span class="s1">&#39;metric_id&#39;</span><span class="p">])</span> <span class="o">&amp;</span>
                         <span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;region_id&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">region</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">])]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
             <span class="n">series</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="s1">&#39;value&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">series</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">]</span><span class="o">*</span><span class="n">weight</span>
             <span class="c1"># TODO: change metric to reflect it is weighted in this copy</span>
