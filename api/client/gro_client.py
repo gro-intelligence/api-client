@@ -257,7 +257,7 @@ class GroClient(Client):
         current_region_level = self.lookup('regions', parent_region_ids[0])['level']
         if output_region_level == current_region_level:
             return parent_region_ids
-        lat_lon_df = pd.DataFrame(lat_lon_tuples, columns=['latitude', 'longitude'])
+        lat_lon_df = pandas.DataFrame(lat_lon_tuples, columns=['latitude', 'longitude'])
         points_geometry = [Point(xy) for xy in zip(lat_lon_df['longitude'], lat_lon_df['latitude'])]
         lat_lon_df = gpd.GeoDataFrame(lat_lon_df[['latitude', 'longitude']],
             geometry=points_geometry, crs={'init': u'epsg:4326'})
