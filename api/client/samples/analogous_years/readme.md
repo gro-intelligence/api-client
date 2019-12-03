@@ -15,7 +15,7 @@ Here, the program can calculate ranks based on 2 primary approaches -
     1. Distance between cumulative sums. 
     2. Distance between more features extracted from time series. 
     
-    Note: For the purpose of this package we have used tsfresh package to 
+    Note: For the purpose of this package we have used `tsfresh` package to 
     extract data from time series. 
 2. Point wise differences: 
     1. Euclidean distance between stacked time periods. 
