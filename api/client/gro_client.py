@@ -238,7 +238,7 @@ class GroClient(Client):
         point['unit_id'] = target_unit_id
         return point
 
-    def get_region_info_given_lat_lon(self, lat_lon_df, output_region_level):
+    def get_region_info_given_lat_lon(self, lat_lon_tuples, output_region_level, parent_region_ids=[0]):
     """Look up region_ids of the given level that contains each pair of latitude and longitude resembling spatial points.
         Start from the continent level, find the continent_ids containing the given points' latitude and longitude
         Then find corresponding country ids that contain these points, province ids and district ids.
@@ -246,27 +246,23 @@ class GroClient(Client):
 
         Parameters
         ----------
-        lat_lon_df: data frame with column names latitude, longitude and possibly region_id column
+        lat_lon_df: list of (latitude, longitude) tuples, note that it's latitude first, longitude second
         output_region_level : integer
             The region level of interest. See REGION_LEVELS constant.
-
+        parent_region_ids: list of integer, region_ids that are known to contain the input lat, lon
         Returns
         -------
-        Geopandas Spatial Point data frame with column names of region ids
+        list of region ids corresponding to the input list of tuples
     """
-        assert 'latitude' in lat_lon_df.columns
-        assert 'longitude' in lat_lon_df.columns
-        parent_region_id = [0] if not 'region_id' in lat_lon_df.columns else lat_lon_df['region_id'].unique()
-        current_region_level = self.lookup('regions', parent_region_id[0])['level']
+        current_region_level = self.lookup('regions', parent_region_ids[0])['level']
         if output_region_level == current_region_level:
-            return lat_lon_df
-        if not 'geometry' in lat_lon_df:
-            points_geometry = [Point(xy) for xy in zip(lat_lon_df['longitude'], lat_lon_df['latitude'])]
-            lat_lon_df = gpd.GeoDataFrame(lat_lon_df[['latitude', 'longitude']],
-                geometry=points_geometry, crs={'init': u'epsg:4326'})
-        
+            return parent_region_ids
+        lat_lon_df = pd.DataFrame(lat_lon_tuples, columns=['latitude', 'longitude'])
+        points_geometry = [Point(xy) for xy in zip(lat_lon_df['longitude'], lat_lon_df['latitude'])]
+        lat_lon_df = gpd.GeoDataFrame(lat_lon_df[['latitude', 'longitude']],
+            geometry=points_geometry, crs={'init': u'epsg:4326'})
         sub_level_df_list = list()
-        for parent in parent_region_id:
+        for parent in parent_region_ids:
             sub_region_ids = self.get_descendant_regions(parent, current_region_level + 1)
             sub_level_df_list.append(pandas.DataFrame({
                 'region_id': sub_region_ids,
@@ -274,7 +270,8 @@ class GroClient(Client):
                 }))
         all_sub_regions = gpd.GeoDataFrame(pandas.concat(sub_level_df_list, ignore_index=True), crs={'init': u'epsg:4326'})
         points_with_region_id = gpd.sjoin(lat_lon_df, sub_regions, how="left", op='intersects')
-        return self.get_region_info_given_lat_lon(points_with_region_id, output_region_level)
+        return self.get_region_info_given_lat_lon(zip(points_with_region_id['latitude'], points_with_region_id['longitude']), 
+            output_region_level, points_with_region_id['region_id'].unique())
 
 
 """Basic Gro API command line interface.
