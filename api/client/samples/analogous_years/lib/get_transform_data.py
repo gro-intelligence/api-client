@@ -6,7 +6,6 @@ This library contains utilities for
 
 from dateutil.parser import parse
 from dateutil.relativedelta import relativedelta
-from dateutil.tz import *
 import pandas as pd
 
 
