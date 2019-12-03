@@ -13,9 +13,9 @@ client.get_data_points(**{
     'frequency_id': 9
 })
 ```
-The above query has completed fields for `metric_id`, `item_id`, `region_id`, `source_id`, and `frequency_id`. However, `get_data_points()` can also accept fields to further narrow your data series of interest: `partner_region_id` (used only in series that represent a flow between two places), `start_date`, `end_date`, [`show_revisions`](#show-revisions), [`insert_null`](https://gro-intelligence.github.io/api-client/development/api.html#api.client.lib.get_data_points), and [`at_time`](https://gro-intelligence.github.io/api-client/development/api.html#api.client.lib.get_data_points).
+The above query has completed fields for `metric_id`, `item_id`, `region_id`, `source_id`, and `frequency_id`. However, `get_data_points()` can also accept fields to further narrow your data series of interest: `partner_region_id` (used only in series that represent a flow between two places), `start_date`, `end_date`, [`show_revisions`](#show-revisions), [`insert_null`](https://developers.gro-intelligence.com/development/api.html#api.client.gro_client.GroClient.get_data_points), and [`at_time`](https://developers.gro-intelligence.com/development/api.html#api.client.gro_client.GroClient.get_data_points).
 
-Note that limiting the specificity of your selection can greatly increase the time it takes for a response to be returned.
+Making your query more specific will speed up your query by limiting the amount of data requested.
 
 ## Get Data frame
 Data frames are a popular format for viewing data responses, and our `gro_client` library offers you the ability to view your data series in a data frame. If you've imported the library into your file, as follows:
