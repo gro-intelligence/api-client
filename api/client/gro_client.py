@@ -239,21 +239,21 @@ class GroClient(Client):
         return point
 
     def get_region_info_given_lat_lon(self, lat_lon_tuples, output_region_level, parent_region_ids=[0]):
-    """Look up region_ids of the given level that contains each pair of latitude and longitude resembling spatial points.
-        Start from the continent level, find the continent_ids containing the given points' latitude and longitude
-        Then find corresponding country ids that contain these points, province ids and district ids.
-        The depth of spatial granuarity returned depends on the output_region_level argument.
+        """Look up region_ids of the given level that contains each pair of latitude and longitude resembling spatial points.
+            Start from the continent level, find the continent_ids containing the given points' latitude and longitude
+            Then find corresponding country ids that contain these points, province ids and district ids.
+            The depth of spatial granuarity returned depends on the output_region_level argument.
 
-        Parameters
-        ----------
-        lat_lon_df: list of (latitude, longitude) tuples, note that it's latitude first, longitude second
-        output_region_level : integer
-            The region level of interest. See REGION_LEVELS constant.
-        parent_region_ids: list of integer, region_ids that are known to contain the input lat, lon
-        Returns
-        -------
-        list of region ids corresponding to the input list of tuples
-    """
+            Parameters
+            ----------
+            lat_lon_df: list of (latitude, longitude) tuples, note that it's latitude first, longitude second
+            output_region_level : integer
+                The region level of interest. See REGION_LEVELS constant.
+            parent_region_ids: list of integer, region_ids that are known to contain the input lat, lon
+            Returns
+            -------
+            list of region ids corresponding to the input list of tuples
+        """
         current_region_level = self.lookup('regions', parent_region_ids[0])['level']
         if output_region_level == current_region_level:
             return parent_region_ids
