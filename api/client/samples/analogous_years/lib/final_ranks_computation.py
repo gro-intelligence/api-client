@@ -6,6 +6,8 @@ This library contains utilities for
 from functools import reduce
 import os
 
+import matplotlib
+matplotlib.use('agg')
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
