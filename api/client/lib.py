@@ -423,12 +423,12 @@ def get_geo_centre(access_token, api_host, region_id):
 @memoize(maxsize=None)
 def get_geojson(access_token, api_host, region_id):
     url = '/'.join(['https:', '', api_host, 'v2/geocentres?includeGeojson=True&regionIds=' +
-                    id_str])
+                    str(region_id)])
     headers = {'authorization': 'Bearer ' + access_token}
     resp = get_data(url, headers).json()['data']
     if len(resp) == 1:
         return json.loads(resp[0]['geojson'])
-    return [json.loads(region['geojson']) for region in resp] 
+    return [json.loads(region['geojson']) for region in resp]
     return None
 
 def get_descendant_regions(access_token, api_host, region_id,
