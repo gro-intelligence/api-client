@@ -41,6 +41,9 @@ def feature_scaling(dataframe):
     :param dataframe: A pandas dataframe
     :return: A pandas dataframe
     """
+    # Replace infinities by nulls to finally drop them
+    dataframe = dataframe.replace([np.inf, -np.inf], np.nan)
+    dataframe = rm_const_cols(dataframe)
     scaler = StandardScaler()
     return scaler.fit_transform(dataframe)
 
