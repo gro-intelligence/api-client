@@ -22,6 +22,12 @@ DATA_POINTS_UNIQUE_COLS = ['item_id', 'metric_id',
                            'frequency_id', 'source_id',
                            'reporting_date', 'start_date', 'end_date']
 
+ENTITY_KEY_TO_TYPE = {'item_id': 'items',
+                      'metric_id': 'metrics',
+                      'region_id': 'regions',
+                      'partner_region_id': 'regions',
+                      'source_id': 'sources',
+                      'frequency_id': 'frequencies'}
 
 class GroClient(Client):
     """An extension of the Client class with extra convenience methods for some common operations.
@@ -112,12 +118,18 @@ class GroClient(Client):
         selection = dict(zip(entity_keys, entity_ids))
         self.add_single_data_series(selection)
         df = self.get_df()
-        series = df[(df['item_id'] == selection['item_id']) &
-                    (df['metric_id'] == selection['metric_id']) &
-                    (df['region_id'] == selection['region_id']) &
-                    (df['frequency_id'] == selection['frequency_id'])].copy()
+        # Subset the dataframe and fill in names
+        pairs = self.get_names_for_selection(selection)
+        cols = pandas.MultiIndex.from_tuples([tuple(pair[1] for pair in pairs)],
+                                             names=tuple(pair[0] for pair in pairs))
+        series = pandas.DataFrame(
+            data = df[(df['item_id'] == selection['item_id']) &
+                      (df['metric_id'] == selection['metric_id']) &
+                      (df['region_id'] == selection['region_id']) &
+                      (df['frequency_id'] == selection['frequency_id'])]['value'].values,
+            columns = cols,
+            index = df['end_date'])
         return series
-
 
     def get_data_points(self, **selections):
         """Get all the data points for a given selection.
@@ -374,6 +386,24 @@ class GroClient(Client):
                 return provinces
         return None
 
+    def get_names_for_selection(self, selection):
+        """Convert a selection into entity names.
+
+        Parameters:
+        -----------
+        data_series : dict
+            A single data_series object, as returned by get_data_series() or find_data_series().
+            See https://github.com/gro-intelligence/api-client/wiki/Data-Series-Definition
+
+        Returns:
+        --------
+        list of pairs of strings
+            [('item', 'Corn'), ('region', 'China') ...]
+
+        """
+        return [(entity_key.split('_')[0],
+                 self.lookup(ENTITY_KEY_TO_TYPE[entity_key], entity_id)['name'])
+                for entity_key, entity_id in selection.items()]
 
     ###
     # Convenience methods that automatically fill in partial selections with random entities
