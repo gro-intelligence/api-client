@@ -333,7 +333,7 @@
 
 <div class="viewcode-block" id="GroClient.get_df"><a class="viewcode-back" href="../../../api.html#api.client.gro_client.GroClient.get_df">[docs]</a>    <span class="k">def</span> <span class="nf">get_df</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Call get_data_points() for each saved data series and return as a combined dataframe.</span>
-<span class="sd">        </span>
+
 <span class="sd">        Note you must have first called either add_data_series() or add_single_data_series() to save</span>
 <span class="sd">        data series into the GroClient&#39;s data_series_list. You can inspect the client&#39;s saved list</span>
 <span class="sd">        using get_data_series_list().</span>
@@ -367,23 +367,11 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">_data_frame</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_frame</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">tmp</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s1">&#39;outer&#39;</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_frame</span></div>
 
-    <span class="k">def</span> <span class="nf">GDH_header</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">selection</span><span class="p">):</span>
-        <span class="n">entity_type</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;item_id&#39;</span><span class="p">:</span> <span class="s1">&#39;items&#39;</span><span class="p">,</span>
-                       <span class="s1">&#39;metric_id&#39;</span><span class="p">:</span> <span class="s1">&#39;metrics&#39;</span><span class="p">,</span>
-                       <span class="s1">&#39;region_id&#39;</span><span class="p">:</span> <span class="s1">&#39;regions&#39;</span><span class="p">,</span>
-                       <span class="s1">&#39;source_id&#39;</span><span class="p">:</span> <span class="s1">&#39;sources&#39;</span><span class="p">,</span>
-                       <span class="s1">&#39;frequency_id&#39;</span><span class="p">:</span> <span class="s1">&#39;frequencies&#39;</span><span class="p">}</span>
-        <span class="n">header_lines</span> <span class="o">=</span> <span class="p">[</span><span class="n">entity_key</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span> <span class="o">+</span> \
-                        <span class="bp">self</span><span class="o">.</span><span class="n">lookup</span><span class="p">(</span><span class="n">entity_type</span><span class="p">[</span><span class="n">entity_key</span><span class="p">],</span> <span class="n">entity_id</span><span class="p">)[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span>
-                        <span class="k">for</span> <span class="n">entity_key</span><span class="p">,</span> <span class="n">entity_id</span> <span class="ow">in</span> <span class="n">selection</span><span class="o">.</span><span class="n">items</span><span class="p">()]</span>
-        <span class="k">for</span> <span class="n">header_line</span> <span class="ow">in</span> <span class="n">header_lines</span><span class="p">:</span>
-            <span class="k">yield</span> <span class="n">header_line</span>
-
-    <span class="k">def</span> <span class="nf">GDH</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">selection_ids</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">GDH</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gdh_selection</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Wrapper for get_data_points with alternative input and output style.</span>
 
 <span class="sd">        The selection of data series to retrieve is encoded in a</span>
-<span class="sd">        string of the form</span>
+<span class="sd">        &#39;gdh_seletion&#39; string of the form</span>
 <span class="sd">        &lt;metric_id&gt;-&lt;item_id&gt;-&lt;region_id&gt;-&lt;source_id&gt;-&lt;frequency_id&gt;</span>
 
 <span class="sd">        For example, client.GDH(&quot;860032-274-1231-14-9&quot;) will get the</span>
@@ -394,25 +382,27 @@
 
 <span class="sd">        Parameters:</span>
 <span class="sd">        ----------</span>
-<span class="sd">        selection_ids: string, required.</span>
-<span class="sd">        header: boolean, optional</span>
+<span class="sd">        gdh_selection: string</span>
 
-<span class="sd">        Yields:</span>
+<span class="sd">        Returns:</span>
 <span class="sd">        ------</span>
-<span class="sd">        A sequence of CSV string rows with &lt;date&gt;,&lt;value&gt;. If header is</span>
-<span class="sd">        specified, the output is preceded by a TSV header which lists</span>
-<span class="sd">        the entity types and names.</span>
+<span class="sd">        DataFrame</span>
+
+<span class="sd">            subset of the main DataFrame get_df() with only the requested series.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">entity_keys</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;metric_id&#39;</span><span class="p">,</span> <span class="s1">&#39;item_id&#39;</span><span class="p">,</span> <span class="s1">&#39;region_id&#39;</span><span class="p">,</span> <span class="s1">&#39;source_id&#39;</span><span class="p">,</span>
                        <span class="s1">&#39;frequency_id&#39;</span><span class="p">]</span>
-        <span class="n">entity_ids</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">selection_ids</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">)]</span>
+        <span class="n">entity_ids</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">gdh_selection</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">)]</span>
         <span class="n">selection</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">entity_keys</span><span class="p">,</span> <span class="n">entity_ids</span><span class="p">))</span>
-        <span class="k">if</span> <span class="n">header</span><span class="p">:</span>
-            <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">GDH_header</span><span class="p">(</span><span class="n">selection</span><span class="p">):</span>
-                <span class="k">yield</span> <span class="n">line</span>
-        <span class="k">for</span> <span class="n">point</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_data_points</span><span class="p">(</span><span class="o">**</span><span class="n">selection</span><span class="p">):</span>
-            <span class="k">yield</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">,</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">point</span><span class="p">[</span><span class="s1">&#39;end_date&#39;</span><span class="p">],</span> <span class="n">point</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_single_data_series</span><span class="p">(</span><span class="n">selection</span><span class="p">)</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_df</span><span class="p">()</span>
+        <span class="n">series</span> <span class="o">=</span> <span class="n">df</span><span class="p">[(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;item_id&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">selection</span><span class="p">[</span><span class="s1">&#39;item_id&#39;</span><span class="p">])</span> <span class="o">&amp;</span>
+                    <span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;metric_id&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">selection</span><span class="p">[</span><span class="s1">&#39;metric_id&#39;</span><span class="p">])</span> <span class="o">&amp;</span>
+                    <span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;region_id&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">selection</span><span class="p">[</span><span class="s1">&#39;region_id&#39;</span><span class="p">])</span> <span class="o">&amp;</span>
+                    <span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;frequency_id&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">selection</span><span class="p">[</span><span class="s1">&#39;frequency_id&#39;</span><span class="p">])]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">series</span>
+
 
 <div class="viewcode-block" id="GroClient.get_data_points"><a class="viewcode-back" href="../../../api.html#api.client.gro_client.GroClient.get_data_points">[docs]</a>    <span class="k">def</span> <span class="nf">get_data_points</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">selections</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Get all the data points for a given selection.</span>
@@ -476,7 +466,7 @@
 
 <div class="viewcode-block" id="GroClient.get_data_series_list"><a class="viewcode-back" href="../../../api.html#api.client.gro_client.GroClient.get_data_series_list">[docs]</a>    <span class="k">def</span> <span class="nf">get_data_series_list</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Inspect the current list of saved data series contained in the GroClient.</span>
-<span class="sd">        </span>
+
 <span class="sd">        For use with get_df(). Add new data series to the list using add_data_series() and</span>
 <span class="sd">        add_single_data_series().</span>
 
@@ -491,9 +481,9 @@
 
 <div class="viewcode-block" id="GroClient.add_single_data_series"><a class="viewcode-back" href="../../../api.html#api.client.gro_client.GroClient.add_single_data_series">[docs]</a>    <span class="k">def</span> <span class="nf">add_single_data_series</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_series</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Save a data series object to the GroClient&#39;s data_series_list.</span>
-<span class="sd">        </span>
+
 <span class="sd">        For use with get_df().</span>
-<span class="sd">        </span>
+
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        data_series : dict</span>
@@ -575,7 +565,7 @@
 
 <div class="viewcode-block" id="GroClient.add_data_series"><a class="viewcode-back" href="../../../api.html#api.client.gro_client.GroClient.add_data_series">[docs]</a>    <span class="k">def</span> <span class="nf">add_data_series</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Adds the top result of find_data_series() to the saved data series list.</span>
-<span class="sd">        </span>
+
 <span class="sd">        For use with get_df().</span>
 
 <span class="sd">        Parameters</span>
@@ -598,7 +588,7 @@
 <span class="sd">        get_df()</span>
 <span class="sd">        add_single_data_series()</span>
 <span class="sd">        find_data_series()</span>
-<span class="sd">        </span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">the_data_series</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">find_data_series</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_single_data_series</span><span class="p">(</span><span class="n">the_data_series</span><span class="p">)</span>
@@ -728,7 +718,7 @@
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        dict</span>
-<span class="sd">            </span>
+
 <span class="sd">            Example ::</span>
 
 <span class="sd">                { value: 14.2, unit_id: 4 }</span>
