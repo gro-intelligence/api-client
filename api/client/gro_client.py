@@ -261,16 +261,23 @@ class GroClient(Client):
         points_geometry = [Point(xy) for xy in zip(lat_lon_df['longitude'], lat_lon_df['latitude'])]
         lat_lon_df = gpd.GeoDataFrame(lat_lon_df[['latitude', 'longitude']],
             geometry=points_geometry, crs={'init': u'epsg:4326'})
-        sub_level_df_list = list()
+        sub_level_list = list()
         for parent in parent_region_ids:
-            sub_region_ids = self.get_descendant_regions(parent, current_region_level + 1)
-            sub_level_df_list.append(pandas.DataFrame({
-                'region_id': sub_region_ids,
-                'geometry': [shape(g['geometries'][0]) for g in self.get_geojson(sub_region_ids)]
-                }))
-        all_sub_regions = gpd.GeoDataFrame(pandas.concat(sub_level_df_list, ignore_index=True), crs={'init': u'epsg:4326'})
-        points_with_region_id = gpd.sjoin(lat_lon_df, sub_regions, how="left", op='intersects')
-        return self.get_region_info_given_lat_lon(zip(points_with_region_id['latitude'], points_with_region_id['longitude']), 
+            sub_region_list = self.get_descendant_regions(parent, current_region_level + 1)
+            sub_region_ids = [item['id'] for item in sub_region_list]
+            print(self.get_geojson(sub_region_ids[0])['geometries'][0].keys())
+            for an_id in sub_region_ids:
+                temp_geometry = self.get_geojson(an_id)
+                if 'geometries' in temp_geometry.keys():
+                    sub_level_list.append((an_id, shape(temp_geometry['geometries'][0])))
+                else:
+                    print(an_id)
+        sub_level_df = pandas.DataFrame(sub_level_list, columns=['region_id', 'geometry'])
+        print(sub_level_df)
+        all_sub_regions = gpd.GeoDataFrame(sub_level_df, crs={'init': u'epsg:4326'})
+        points_with_region_id = gpd.sjoin(lat_lon_df, all_sub_regions, how="left", op='intersects')
+        print(points_with_region_id)
+        return self.get_region_info_given_lat_lon(lat_lon_tuples, 
             output_region_level, points_with_region_id['region_id'].unique())
 
 

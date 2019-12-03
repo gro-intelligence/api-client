@@ -837,8 +837,9 @@ def get_geojson(access_token, api_host, region_id):
                       'coordinates': [[[[-38.394, -4.225], ...]]]}, ...]}
     or None if not found.
     """
+    id_str = str(region_id) if isinstance(region_id, int) else '[{}]'.format(','.join([str(s) for s in region_id]))
     url = '/'.join(['https:', '', api_host, 'v2/geocentres?includeGeojson=True&regionIds=' +
-                    str(region_id)])
+                    id_str])
     headers = {'authorization': 'Bearer ' + access_token}
     resp = get_data(url, headers).json()['data']
     if len(resp) == 1:
