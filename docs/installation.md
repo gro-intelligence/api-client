@@ -13,3 +13,8 @@ Note: to find the location where Gro packages have been installed you can use th
 ```
 pip show gro
 ```
+To ensure that you have the latest client version with newest features, you can use the following command.
+
+```
+pip install --upgrade git+https://github.com/gro-intelligence/api-client.git
+```
