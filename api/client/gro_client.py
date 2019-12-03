@@ -48,7 +48,7 @@ class GroClient(Client):
 
     def get_df(self):
         """Call get_data_points() for each saved data series and return as a combined dataframe.
-        
+
         Note you must have first called either add_data_series() or add_single_data_series() to save
         data series into the GroClient's data_series_list. You can inspect the client's saved list
         using get_data_series_list().
@@ -82,23 +82,11 @@ class GroClient(Client):
                 self._data_frame = self._data_frame.merge(tmp, how='outer')
         return self._data_frame
 
-    def GDH_header(self, selection):
-        entity_type = {'item_id': 'items',
-                       'metric_id': 'metrics',
-                       'region_id': 'regions',
-                       'source_id': 'sources',
-                       'frequency_id': 'frequencies'}
-        header_lines = [entity_key.split('_')[0] + '\t' + \
-                        self.lookup(entity_type[entity_key], entity_id)['name']
-                        for entity_key, entity_id in selection.items()]
-        for header_line in header_lines:
-            yield header_line
-
-    def GDH(self, selection_ids, header=False):
+    def GDH(self, gdh_selection):
         """Wrapper for get_data_points with alternative input and output style.
 
         The selection of data series to retrieve is encoded in a
-        string of the form
+        'gdh_seletion' string of the form
         <metric_id>-<item_id>-<region_id>-<source_id>-<frequency_id>
 
         For example, client.GDH("860032-274-1231-14-9") will get the
@@ -109,25 +97,27 @@ class GroClient(Client):
 
         Parameters:
         ----------
-        selection_ids: string, required.
-        header: boolean, optional
+        gdh_selection: string
 
-        Yields:
+        Returns:
         ------
-        A sequence of CSV string rows with <date>,<value>. If header is
-        specified, the output is preceded by a TSV header which lists
-        the entity types and names.
+        DataFrame
+
+            subset of the main DataFrame get_df() with only the requested series.
 
         """
         entity_keys = ['metric_id', 'item_id', 'region_id', 'source_id',
                        'frequency_id']
-        entity_ids = [int(x) for x in selection_ids.split('-')]
+        entity_ids = [int(x) for x in gdh_selection.split('-')]
         selection = dict(zip(entity_keys, entity_ids))
-        if header:
-            for line in self.GDH_header(selection):
-                yield line
-        for point in self.get_data_points(**selection):
-            yield '{},{}'.format(point['end_date'], point['value'])
+        self.add_single_data_series(selection)
+        df = self.get_df()
+        series = df[(df['item_id'] == selection['item_id']) &
+                    (df['metric_id'] == selection['metric_id']) &
+                    (df['region_id'] == selection['region_id']) &
+                    (df['frequency_id'] == selection['frequency_id'])].copy()
+        return series
+
 
     def get_data_points(self, **selections):
         """Get all the data points for a given selection.
@@ -191,7 +181,7 @@ class GroClient(Client):
 
     def get_data_series_list(self):
         """Inspect the current list of saved data series contained in the GroClient.
-        
+
         For use with get_df(). Add new data series to the list using add_data_series() and
         add_single_data_series().
 
@@ -206,9 +196,9 @@ class GroClient(Client):
 
     def add_single_data_series(self, data_series):
         """Save a data series object to the GroClient's data_series_list.
-        
+
         For use with get_df().
-        
+
         Parameters
         ----------
         data_series : dict
@@ -290,7 +280,7 @@ class GroClient(Client):
 
     def add_data_series(self, **kwargs):
         """Adds the top result of find_data_series() to the saved data series list.
-        
+
         For use with get_df().
 
         Parameters
@@ -313,7 +303,7 @@ class GroClient(Client):
         get_df()
         add_single_data_series()
         find_data_series()
-        
+
         """
         for the_data_series in self.find_data_series(**kwargs):
             self.add_single_data_series(the_data_series)
@@ -443,7 +433,7 @@ class GroClient(Client):
         Returns
         -------
         dict
-            
+
             Example ::
 
                 { value: 14.2, unit_id: 4 }
