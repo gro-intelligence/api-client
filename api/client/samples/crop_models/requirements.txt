@@ -1,0 +1,10 @@
+descartes
+geopandas
+ipython
+jupyter
+matplotlib
+numpy
+pandas
+scikit-learn
+seaborn
+statsmodels
