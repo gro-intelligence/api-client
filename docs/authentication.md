@@ -69,23 +69,17 @@ To regenerate your authentication token, open the API tab in your Account menu a
 
 If you don't want to enter a password or token each time, you can save the token as an environment variable. In some of the sample code, it is assumed that you have the token saved to your environment variables as `GROAPI_TOKEN`.
 
-Please consult your OS or IDE documentation for the most accurate and up-to-date information on how to set environment variables, e.g. setting environment variables in [Windows Powershell](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_environment_variables?view=powershell-6) or [Mac OS X/Linux](https://apple.stackexchange.com/questions/106778/how-do-i-set-environment-variables-on-os-x) or [Anaconda](https://anaconda-project.readthedocs.io/en/latest/user-guide/tasks/work-with-variables.html). As a quick guide, the following steps should work:
+Please consult your OS or IDE documentation for the most accurate and up-to-date information on how to set environment variables. The links below should provide some guidance on how to do this for your preferred environment. 
 
 ### For Windows 10:
-1. Click on start menu and search for "environment variables." Click on "Edit the system environment variables" option.
-2. In the "Advanced" tab, select the "Environment Variables..." button.
-3. Under the first section called "User variables for &lt;username&gt;," and click on the "New" button.
-4. Enter the information as follows:
-  
-  Variable name: `GROAPI_TOKEN`
-  
-  Variable value: `<insert your Gro API Token here>`
+For Anaconda, please refer to [Anaconda's Documentation](https://anaconda-project.readthedocs.io/en/latest/user-guide/tasks/work-with-variables.html)
 
-5. Click OK
+If you are using Windows Powershell, you can refer to [Windows' Documentation](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_environment_variables?view=powershell-6) or  .
 
-Your environment variable should now be saved. You will likely need to close an re-open your IDE for the IDE to recognize the change. Whenever you run code that includes the code `os.environ['GROAPI_TOKEN']` it should automatically pull in your API Token.
 
 ### For Mac:
+You can find official instructions for setting environment variables from [Apple's Stack Exchange](https://apple.stackexchange.com/questions/106778/how-do-i-set-environment-variables-on-os-x), or as quick guide you can follow these steps:
+
 1. Open up your terminal and type `open ~/.bash_profile`
 2. Add the following line: `export GROAPI_TOKEN="YOUR TOKEN HERE"`
 3. Save the file and close any shells you have open. The environment variable should be available next time you open a shell.
