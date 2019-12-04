@@ -30,6 +30,7 @@ def test_feature_scaling():
             expected_df[column] = expected_df[column] / std
         else:
             expected_df[column] = 0.0
+    expected_df = feature_extractions.rm_const_cols(expected_df)
     assert_almost_equal(feature_extractions.feature_scaling(create_test_data()),
                         np.array(expected_df))
 
