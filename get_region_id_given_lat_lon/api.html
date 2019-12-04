@@ -45,7 +45,8 @@
   <link rel="stylesheet" href="_static/banner.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="prev" title="Setting Up Your Environment" href="setting-up-your-environment.html" /> 
+    <link rel="next" title="FAQ" href="faq.html" />
+    <link rel="prev" title="Gro Data: Key Concepts" href="gro-data-key-concepts.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -96,7 +97,12 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="setting-up-your-environment.html">Setting Up Your Environment</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="setting-up-your-environment.html#system-prerequisites">System Prerequisites</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="setting-up-your-environment.html#python">Python</a></li>
+<li class="toctree-l3"><a class="reference internal" href="setting-up-your-environment.html#macos-and-linux">MacOS and Linux</a></li>
+<li class="toctree-l3"><a class="reference internal" href="setting-up-your-environment.html#windows">Windows</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="setting-up-your-environment.html#anaconda">Anaconda</a></li>
+<li class="toctree-l4"><a class="reference internal" href="setting-up-your-environment.html#non-anaconda">Non-Anaconda</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="setting-up-your-environment.html#installing-gro-packages">Installing Gro Packages</a></li>
 </ul>
 </li>
@@ -108,20 +114,101 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="setting-up-your-environment.html#expiring-regenerating-tokens">Expiring/Regenerating Tokens</a></li>
-<li class="toctree-l3"><a class="reference internal" href="setting-up-your-environment.html#saving-your-token-as-an-environment-variable">Saving your token as an environment variable</a></li>
+<li class="toctree-l3"><a class="reference internal" href="setting-up-your-environment.html#saving-your-token-as-an-environment-variable">Saving your token as an environment variable</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="setting-up-your-environment.html#for-windows-10">For Windows 10:</a></li>
+<li class="toctree-l4"><a class="reference internal" href="setting-up-your-environment.html#for-mac">For Mac:</a></li>
 </ul>
 </li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="getting-started.html">Getting Started</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="getting-started.html#examples">Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting-started.html#discovering-data">Discovering Data</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="getting-started.html#code-snippets">Code snippets</a></li>
+<li class="toctree-l3"><a class="reference internal" href="getting-started.html#search">Search</a></li>
+<li class="toctree-l3"><a class="reference internal" href="getting-started.html#get-data-series">Get data series</a></li>
+<li class="toctree-l3"><a class="reference internal" href="getting-started.html#lookup-contains">Lookup contains</a></li>
+<li class="toctree-l3"><a class="reference internal" href="getting-started.html#get-descendants">Get descendants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="getting-started.html#lookup-belongs">Lookup belongs</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="getting-started.html#retrieving-data">Retrieving Data</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="getting-started.html#get-data-points">Get data points</a></li>
+<li class="toctree-l3"><a class="reference internal" href="getting-started.html#data-frame">Data frame</a></li>
+<li class="toctree-l3"><a class="reference internal" href="getting-started.html#show-revisions">Show revisions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="getting-started.html#understanding-data-responses">Understanding Data Responses</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="getting-started.html#look-up">Look up</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="gro-data-key-concepts.html">Gro Data Key Concepts</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="gro-data-key-concepts.html#gro-ontology">Gro Ontology</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="gro-data-key-concepts.html#entity-fields">Entity fields</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gro-data-key-concepts.html#entity-relationships-contains">Entity Relationships: Contains</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gro-data-key-concepts.html#special-properties-for-regions">Special Properties for Regions</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="gro-data-key-concepts.html#level"><code class="docutils literal"><span class="pre">level</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gro-data-key-concepts.html#latitude-and-longitude"><code class="docutils literal"><span class="pre">latitude</span></code> and <code class="docutils literal"><span class="pre">longitude</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="gro-data-key-concepts.html#data-series-definition">Data Series Definition</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gro-data-key-concepts.html#data-point-definition">Data Point Definition</a></li>
 </ul>
 </li>
 </ul>
 <p class="caption"><span class="caption-text">Reference</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">API Reference</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#module-api.client.lib">lib</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#client">Client</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#groclient">GroClient</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#crop-model">Crop Model</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#batch-client">Batch Client</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#basic-exploration">Basic Exploration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#data-retrieval">Data Retrieval</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#geographic">Geographic</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#advanced-exploration">Advanced Exploration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#pandas-utils">Pandas Utils</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="faq.html">FAQ</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="faq.html#exploring-what-s-available">Exploring What&#8216;s Available</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="faq.html#q-why-is-it-that-when-i-use-client-search-to-find-metrics-items-regions-i-m-interested-in-sometimes-client-get-data-series-doesn-t-have-any-data-for-those-metrics-items-regions">Q: Why is it that when I use client.search() to find metrics/items/regions I&#8216;m interested in, sometimes client.get_data_series() doesn&#8216;t have any data for those metrics/items/regions?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="faq.html#q-what-does-sourcelag-mean-when-i-use-client-lookup-to-inspect-a-source-s-details">Q: What does &#8216;sourceLag&#8216; mean when I use client.lookup() to inspect a source&#8216;s details?</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="faq.html#data-retrieval">Data Retrieval</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="faq.html#q-i-specified-an-end-date-when-calling-get-data-points-but-i-am-getting-points-with-other-end-dates">Q: I specified an end_date when calling get_data_points(), but I am getting points with other end_dates:</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="faq.html#account">Account</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="faq.html#q-i-tried-using-my-gro-username-and-login-but-am-getting-a-401-unauthorized-error">Q: I tried using my Gro username and login but am getting a 401 Unauthorized error</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="faq.html#gro-models">Gro Models</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="faq.html#q-do-your-predictive-models-only-run-during-the-crop-season">Q: Do your predictive models only run during the crop season?</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="other.html">Other</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="other.html#gro-crop-masks">Gro Crop Masks</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="other.html#introduction">Introduction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="other.html#methodology">Methodology</a></li>
+<li class="toctree-l3"><a class="reference internal" href="other.html#us-corn">US Corn</a></li>
+<li class="toctree-l3"><a class="reference internal" href="other.html#us-soy">US Soy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="other.html#argentina-soy">Argentina Soy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="other.html#india-wheat">India Wheat</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="other.html#gro-yield-model-backtest-data">Gro Yield Model Backtest Data</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="other.html#id1">Introduction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="other.html#file-formats">File Formats</a></li>
+<li class="toctree-l3"><a class="reference internal" href="other.html#download-the-data-by-model">Download the Data by Model</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="other.html#radio-frequency-interference-effects-on-smos">Radio Frequency Interference Effects On SMOS</a></li>
 </ul>
 </li>
 </ul>
@@ -185,8 +272,10 @@
   
   <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
       
+        <a href="faq.html" class="btn btn-neutral float-right" title="FAQ" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
-        <a href="setting-up-your-environment.html" class="btn btn-neutral float-left" title="Setting Up Your Environment" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+        <a href="gro-data-key-concepts.html" class="btn btn-neutral float-left" title="Gro Data: Key Concepts" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
   </div>
   
@@ -206,865 +295,20 @@
     <p class="scv-banner scv-sphinx_rtd_theme"><a href="../development/api.html"><b>Warning:</b> This document is for the development version of Gro API Client. The main version is development.</a></p>
 <div class="section" id="api-reference">
 <h1>API Reference<a class="headerlink" href="#api-reference" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="module-api.client.lib">
-<span id="lib"></span><h2>lib<a class="headerlink" href="#module-api.client.lib" title="Permalink to this headline">¶</a></h2>
-<p>Base module for making API requests.</p>
-<p>Client, GroClient, CropModel, and BatchClient all build on top of endpoints
-exposed in this module. Helper functions or shims or derivative functionality
-should appear in the client classes rather than here.</p>
-<dl class="function">
-<dt id="api.client.lib.format_crop_calendar_response">
-<code class="descclassname">api.client.lib.</code><code class="descname">format_crop_calendar_response</code><span class="sig-paren">(</span><em>resp</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/lib.html#format_crop_calendar_response"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.lib.format_crop_calendar_response" title="Permalink to this definition">¶</a></dt>
-<dd><p>Make cropcalendar output a format similar to get_data_points().</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">format_crop_calendar_response</span><span class="p">([{</span>
-<span class="gp">... </span>    <span class="s1">&#39;metricId&#39;</span><span class="p">:</span> <span class="mi">2260063</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="s1">&#39;itemId&#39;</span><span class="p">:</span> <span class="mi">274</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="s1">&#39;regionId&#39;</span><span class="p">:</span> <span class="mi">13051</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="s1">&#39;sourceId&#39;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="s1">&#39;frequencyId&#39;</span><span class="p">:</span> <span class="mi">15</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="p">[{</span>
-<span class="gp">... </span>        <span class="s1">&#39;sageItem&#39;</span><span class="p">:</span> <span class="s1">&#39;Corn&#39;</span><span class="p">,</span>
-<span class="gp">... </span>        <span class="s1">&#39;plantingStartDate&#39;</span><span class="p">:</span> <span class="s1">&#39;2000-03-04&#39;</span><span class="p">,</span>
-<span class="gp">... </span>        <span class="s1">&#39;plantingEndDate&#39;</span><span class="p">:</span> <span class="s1">&#39;2000-05-17&#39;</span><span class="p">,</span>
-<span class="gp">... </span>        <span class="s1">&#39;harvestingStartDate&#39;</span><span class="p">:</span> <span class="s1">&#39;2000-07-20&#39;</span><span class="p">,</span>
-<span class="gp">... </span>        <span class="s1">&#39;harvestingEndDate&#39;</span><span class="p">:</span> <span class="s1">&#39;2000-11-01&#39;</span><span class="p">,</span>
-<span class="gp">... </span>        <span class="s1">&#39;multiYear&#39;</span><span class="p">:</span> <span class="kc">False</span>
-<span class="gp">... </span>    <span class="p">}]</span>
-<span class="gp">... </span><span class="p">}])</span> <span class="o">==</span> <span class="p">[{</span>
-<span class="gp">... </span>    <span class="s1">&#39;metric_id&#39;</span><span class="p">:</span> <span class="mi">2260063</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="s1">&#39;item_id&#39;</span><span class="p">:</span> <span class="mi">274</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="s1">&#39;region_id&#39;</span><span class="p">:</span> <span class="mi">13051</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="s1">&#39;frequency_id&#39;</span><span class="p">:</span> <span class="mi">15</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="s1">&#39;source_id&#39;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="s1">&#39;start_date&#39;</span><span class="p">:</span> <span class="s1">&#39;2000-03-04&#39;</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="s1">&#39;end_date&#39;</span><span class="p">:</span> <span class="s1">&#39;2000-05-17&#39;</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="s1">&#39;planting&#39;</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="s1">&#39;input_unit_id&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="s1">&#39;input_unit_scale&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="s1">&#39;reporting_date&#39;</span><span class="p">:</span> <span class="kc">None</span>
-<span class="gp">... </span><span class="p">},</span> <span class="p">{</span>
-<span class="gp">... </span>    <span class="s1">&#39;metric_id&#39;</span><span class="p">:</span> <span class="mi">2260063</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="s1">&#39;item_id&#39;</span><span class="p">:</span> <span class="mi">274</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="s1">&#39;region_id&#39;</span><span class="p">:</span> <span class="mi">13051</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="s1">&#39;frequency_id&#39;</span><span class="p">:</span> <span class="mi">15</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="s1">&#39;source_id&#39;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="s1">&#39;start_date&#39;</span><span class="p">:</span> <span class="s1">&#39;2000-07-20&#39;</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="s1">&#39;end_date&#39;</span><span class="p">:</span> <span class="s1">&#39;2000-11-01&#39;</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="s1">&#39;harvesting&#39;</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="s1">&#39;input_unit_id&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="s1">&#39;input_unit_scale&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="s1">&#39;reporting_date&#39;</span><span class="p">:</span> <span class="kc">None</span>
-<span class="gp">... </span><span class="p">}]</span>
-<span class="go">True</span>
-</pre></div>
+<div class="section" id="basic-exploration">
+<h2>Basic Exploration<a class="headerlink" href="#basic-exploration" title="Permalink to this headline">¶</a></h2>
 </div>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>resp</strong> (<em>list of dicts</em>) &#8211; The output from /v2/cropcalendar/data. See doctest</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>points</strong> &#8211; The input <code class="docutils literal"><span class="pre">resp</span></code> dicts with keys modified to match the get_data_points
-output keys. Splits each point with plantingStartDate, plantingEndDate,
-harvestingStartDate, and harvestingEndDate into two points with start
-and end date where the value is the state of the crop as a string.</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">list of dicts</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="api.client.lib.get_access_token">
-<code class="descclassname">api.client.lib.</code><code class="descname">get_access_token</code><span class="sig-paren">(</span><em>api_host</em>, <em>user_email</em>, <em>user_password</em>, <em>logger=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/lib.html#get_access_token"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.lib.get_access_token" title="Permalink to this definition">¶</a></dt>
-<dd><p>Request an access token.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>api_host</strong> (<em>string</em>) &#8211; The API host&#8217;s url, excluding &#8216;<a class="reference external" href="https://">https://</a>&#8216;
-ex. &#8216;api.gro-intelligence.com&#8217;</li>
-<li><strong>user_email</strong> (<em>string</em>) &#8211; Email address associated with user&#8217;s Gro account</li>
-<li><strong>user_password</strong> (<em>string</em>) &#8211; Password for user&#8217;s Gro account</li>
-<li><strong>logger</strong> (<em>logging.Logger</em>) &#8211; Alternative logger object if wanting to use a non-default one.
-Otherwise get_default_logger() will be used.</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>accessToken</strong></p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">string</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="api.client.lib.get_available">
-<code class="descclassname">api.client.lib.</code><code class="descname">get_available</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwds</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/lib.html#get_available"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.lib.get_available" title="Permalink to this definition">¶</a></dt>
-<dd><p>List the first 5000 available entities of the given type.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>access_token</strong> (<em>string</em>) &#8211; </li>
-<li><strong>api_host</strong> (<em>string</em>) &#8211; </li>
-<li><strong>entity_type</strong> (<em>string</em>) &#8211; &#8216;items&#8217;, &#8216;metrics&#8217;, or &#8216;regions&#8217;</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><p><strong>data</strong> &#8211;</p>
-<p>Example:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="p">[</span> <span class="p">{</span> <span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;contains&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;World&#39;</span><span class="p">,</span> <span class="s1">&#39;level&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">},</span>
-<span class="p">{</span> <span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;contains&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">],</span> <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Asia&#39;</span><span class="p">,</span> <span class="s1">&#39;level&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">},</span>
-<span class="o">...</span> <span class="p">]</span>
-</pre></div>
+<div class="section" id="data-retrieval">
+<h2>Data Retrieval<a class="headerlink" href="#data-retrieval" title="Permalink to this headline">¶</a></h2>
 </div>
-</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list of dicts</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="api.client.lib.get_crop_calendar_data_points">
-<code class="descclassname">api.client.lib.</code><code class="descname">get_crop_calendar_data_points</code><span class="sig-paren">(</span><em>access_token</em>, <em>api_host</em>, <em>**selection</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/lib.html#get_crop_calendar_data_points"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.lib.get_crop_calendar_data_points" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get crop calendar data.</p>
-<p>Has different input/output from the regular /v2/data call, so this
-normalizes the interface and output format to make compatible
-get_data_points().</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>access_token</strong> (<em>string</em>) &#8211; </li>
-<li><strong>api_host</strong> (<em>string</em>) &#8211; </li>
-<li><strong>selection</strong> (<em>dict</em>) &#8211; See get_crop_calendar_params() input</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">See format_crop_calendar_response() output</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list of dicts</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="api.client.lib.get_crop_calendar_params">
-<code class="descclassname">api.client.lib.</code><code class="descname">get_crop_calendar_params</code><span class="sig-paren">(</span><em>**selection</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/lib.html#get_crop_calendar_params"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.lib.get_crop_calendar_params" title="Permalink to this definition">¶</a></dt>
-<dd><p>Construct http request params from dict of entity selections.</p>
-<p>For use with get_crop_calendar_data_points()</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">get_crop_calendar_params</span><span class="p">(</span>
-<span class="gp">... </span>    <span class="n">metric_id</span><span class="o">=</span><span class="mi">123</span><span class="p">,</span> <span class="n">item_id</span><span class="o">=</span><span class="mi">456</span><span class="p">,</span> <span class="n">region_id</span><span class="o">=</span><span class="mi">14</span>
-<span class="gp">... </span><span class="p">)</span> <span class="o">==</span> <span class="p">{</span> <span class="s1">&#39;itemId&#39;</span><span class="p">:</span> <span class="mi">456</span><span class="p">,</span> <span class="s1">&#39;regionId&#39;</span><span class="p">:</span> <span class="mi">14</span> <span class="p">}</span>
-<span class="go">True</span>
-</pre></div>
+<div class="section" id="geographic">
+<h2>Geographic<a class="headerlink" href="#geographic" title="Permalink to this headline">¶</a></h2>
 </div>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>item_id</strong> (<em>integer</em>) &#8211; </li>
-<li><strong>region_id</strong> (<em>integer</em>) &#8211; </li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">selections with valid keys converted to camelcase and invalid ones
-filtered out</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">dict</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="api.client.lib.get_data">
-<code class="descclassname">api.client.lib.</code><code class="descname">get_data</code><span class="sig-paren">(</span><em>url</em>, <em>headers</em>, <em>params=None</em>, <em>logger=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/lib.html#get_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.lib.get_data" title="Permalink to this definition">¶</a></dt>
-<dd><p>General &#8216;make api request&#8217; function.</p>
-<p>Assigns headers and builds in retries and logging.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>url</strong> (<em>string</em>) &#8211; </li>
-<li><strong>headers</strong> (<em>dict</em>) &#8211; </li>
-<li><strong>params</strong> (<em>dict</em>) &#8211; </li>
-<li><strong>logger</strong> (<em>logging.Logger</em>) &#8211; </li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>data</strong></p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list or dict</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="api.client.lib.get_data_call_params">
-<code class="descclassname">api.client.lib.</code><code class="descname">get_data_call_params</code><span class="sig-paren">(</span><em>**selection</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/lib.html#get_data_call_params"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.lib.get_data_call_params" title="Permalink to this definition">¶</a></dt>
-<dd><p>Construct http request params from dict of entity selections.</p>
-<p>For use with get_data_points().</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">get_data_call_params</span><span class="p">(</span>
-<span class="gp">... </span>    <span class="n">metric_id</span><span class="o">=</span><span class="mi">123</span><span class="p">,</span> <span class="n">start_date</span><span class="o">=</span><span class="s1">&#39;2012-01-01&#39;</span><span class="p">,</span> <span class="n">unit_id</span><span class="o">=</span><span class="mi">14</span>
-<span class="gp">... </span><span class="p">)</span> <span class="o">==</span> <span class="p">{</span><span class="s1">&#39;startDate&#39;</span><span class="p">:</span> <span class="s1">&#39;2012-01-01&#39;</span><span class="p">,</span> <span class="s1">&#39;metricId&#39;</span><span class="p">:</span> <span class="mi">123</span><span class="p">}</span>
-<span class="go">True</span>
-</pre></div>
+<div class="section" id="advanced-exploration">
+<h2>Advanced Exploration<a class="headerlink" href="#advanced-exploration" title="Permalink to this headline">¶</a></h2>
 </div>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>metric_id</strong> (<em>integer</em>) &#8211; </li>
-<li><strong>item_id</strong> (<em>integer</em>) &#8211; </li>
-<li><strong>region_id</strong> (<em>integer</em>) &#8211; </li>
-<li><strong>partner_region_id</strong> (<em>integer</em>) &#8211; </li>
-<li><strong>source_id</strong> (<em>integer</em>) &#8211; </li>
-<li><strong>frequency_id</strong> (<em>integer</em>) &#8211; </li>
-<li><strong>start_date</strong> (<em>string</em><em>, </em><em>optional</em>) &#8211; </li>
-<li><strong>end_date</strong> (<em>string</em><em>, </em><em>optional</em>) &#8211; </li>
-<li><strong>show_revisions</strong> (<em>boolean</em><em>, </em><em>optional</em>) &#8211; </li>
-<li><strong>insert_null</strong> (<em>boolean</em><em>, </em><em>optional</em>) &#8211; </li>
-<li><strong>at_time</strong> (<em>string</em><em>, </em><em>optional</em>) &#8211; </li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">selections with valid keys converted to camelcase and invalid ones filtered out</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">dict</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="api.client.lib.get_data_points">
-<code class="descclassname">api.client.lib.</code><code class="descname">get_data_points</code><span class="sig-paren">(</span><em>access_token</em>, <em>api_host</em>, <em>**selection</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/lib.html#get_data_points"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.lib.get_data_points" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get all the data points for a given selection.</p>
-<p><a class="reference external" href="https://github.com/gro-intelligence/api-client/wiki/Data-Point-Definition">https://github.com/gro-intelligence/api-client/wiki/Data-Point-Definition</a></p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>access_token</strong> (<em>string</em>) &#8211; </li>
-<li><strong>api_host</strong> (<em>string</em>) &#8211; </li>
-<li><strong>metric_id</strong> (<em>integer</em>) &#8211; </li>
-<li><strong>item_id</strong> (<em>integer</em>) &#8211; </li>
-<li><strong>region_id</strong> (<em>integer</em>) &#8211; </li>
-<li><strong>partner_region_id</strong> (<em>integer</em>) &#8211; </li>
-<li><strong>source_id</strong> (<em>integer</em>) &#8211; </li>
-<li><strong>frequency_id</strong> (<em>integer</em>) &#8211; </li>
-<li><strong>start_date</strong> (<em>string</em><em>, </em><em>optional</em>) &#8211; all points with start dates equal to or after this date</li>
-<li><strong>end_date</strong> (<em>string</em><em>, </em><em>optional</em>) &#8211; all points with end dates equal to or after this date</li>
-<li><strong>show_revisions</strong> (<em>boolean</em><em>, </em><em>optional</em>) &#8211; False by default, meaning only the latest value for each period. If true, will return all
-values for a given period, differentiated by the <cite>reporting_date</cite> field.</li>
-<li><strong>insert_null</strong> (<em>boolean</em><em>, </em><em>optional</em>) &#8211; False by default. If True, will include a data point with a None value for each period
-that does not have data.</li>
-<li><strong>at_time</strong> (<em>string</em><em>, </em><em>optional</em>) &#8211; Estimate what data would have been available via Gro at a given time in the past. See
-/api/client/samples/at-time-query-examples.ipynb for more details.</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><p>Example:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="p">[</span> <span class="p">{</span>
-    <span class="s2">&quot;start_date&quot;</span><span class="p">:</span> <span class="s2">&quot;2000-01-01T00:00:00.000Z&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;end_date&quot;</span><span class="p">:</span> <span class="s2">&quot;2000-12-31T00:00:00.000Z&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="mi">251854000</span><span class="p">,</span>
-    <span class="s2">&quot;input_unit_id&quot;</span><span class="p">:</span> <span class="mi">14</span><span class="p">,</span>
-    <span class="s2">&quot;input_unit_scale&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-    <span class="s2">&quot;metric_id&quot;</span><span class="p">:</span> <span class="mi">860032</span><span class="p">,</span>
-    <span class="s2">&quot;item_id&quot;</span><span class="p">:</span> <span class="mi">274</span><span class="p">,</span>
-    <span class="s2">&quot;region_id&quot;</span><span class="p">:</span> <span class="mi">1215</span><span class="p">,</span>
-    <span class="s2">&quot;frequency_id&quot;</span><span class="p">:</span> <span class="mi">9</span><span class="p">,</span>
-    <span class="s2">&quot;unit_id&quot;</span><span class="p">:</span> <span class="mi">14</span>
-<span class="p">},</span> <span class="o">...</span><span class="p">]</span>
-</pre></div>
-</div>
-</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list of dicts</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="api.client.lib.get_data_series">
-<code class="descclassname">api.client.lib.</code><code class="descname">get_data_series</code><span class="sig-paren">(</span><em>access_token</em>, <em>api_host</em>, <em>**selection</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/lib.html#get_data_series"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.lib.get_data_series" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get available data series for the given selections.</p>
-<p><a class="reference external" href="https://github.com/gro-intelligence/api-client/wiki/Data-Series-Definition">https://github.com/gro-intelligence/api-client/wiki/Data-Series-Definition</a></p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>access_token</strong> (<em>string</em>) &#8211; </li>
-<li><strong>api_host</strong> (<em>string</em>) &#8211; </li>
-<li><strong>metric_id</strong> (<em>integer</em><em>, </em><em>optional</em>) &#8211; </li>
-<li><strong>item_id</strong> (<em>integer</em><em>, </em><em>optional</em>) &#8211; </li>
-<li><strong>region_id</strong> (<em>integer</em><em>, </em><em>optional</em>) &#8211; </li>
-<li><strong>partner_region_id</strong> (<em>integer</em><em>, </em><em>optional</em>) &#8211; </li>
-<li><strong>source_id</strong> (<em>integer</em><em>, </em><em>optional</em>) &#8211; </li>
-<li><strong>frequency_id</strong> (<em>integer</em><em>, </em><em>optional</em>) &#8211; </li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><p>Example:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="p">[{</span> <span class="s1">&#39;metric_id&#39;</span><span class="p">:</span> <span class="mi">2020032</span><span class="p">,</span> <span class="s1">&#39;metric_name&#39;</span><span class="p">:</span> <span class="s1">&#39;Seed Use&#39;</span><span class="p">,</span>
-   <span class="s1">&#39;item_id&#39;</span><span class="p">:</span> <span class="mi">274</span><span class="p">,</span> <span class="s1">&#39;item_name&#39;</span><span class="p">:</span> <span class="s1">&#39;Corn&#39;</span><span class="p">,</span>
-   <span class="s1">&#39;region_id&#39;</span><span class="p">:</span> <span class="mi">1215</span><span class="p">,</span> <span class="s1">&#39;region_name&#39;</span><span class="p">:</span> <span class="s1">&#39;United States&#39;</span><span class="p">,</span>
-   <span class="s1">&#39;source_id&#39;</span><span class="p">:</span> <span class="mi">24</span><span class="p">,</span> <span class="s1">&#39;source_name&#39;</span><span class="p">:</span> <span class="s1">&#39;USDA FEEDGRAINS&#39;</span><span class="p">,</span>
-   <span class="s1">&#39;frequency_id&#39;</span><span class="p">:</span> <span class="mi">7</span><span class="p">,</span>
-   <span class="s1">&#39;start_date&#39;</span><span class="p">:</span> <span class="s1">&#39;1975-03-01T00:00:00.000Z&#39;</span><span class="p">,</span> <span class="s1">&#39;end_date&#39;</span><span class="p">:</span> <span class="s1">&#39;2018-05-31T00:00:00.000Z&#39;</span>
-<span class="p">},</span> <span class="p">{</span> <span class="o">...</span> <span class="p">},</span> <span class="o">...</span> <span class="p">]</span>
-</pre></div>
-</div>
-</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list of dicts</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="api.client.lib.get_default_logger">
-<code class="descclassname">api.client.lib.</code><code class="descname">get_default_logger</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/lib.html#get_default_logger"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.lib.get_default_logger" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get a logging object using the default log level set in cfg.</p>
-<p><a class="reference external" href="https://docs.python.org/3/library/logging.html">https://docs.python.org/3/library/logging.html</a></p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><strong>logger</strong></td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">logging.Logger</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="api.client.lib.get_descendant_regions">
-<code class="descclassname">api.client.lib.</code><code class="descname">get_descendant_regions</code><span class="sig-paren">(</span><em>access_token</em>, <em>api_host</em>, <em>region_id</em>, <em>descendant_level</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/lib.html#get_descendant_regions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.lib.get_descendant_regions" title="Permalink to this definition">¶</a></dt>
-<dd><p>Look up details of regions of the given level contained by a region.</p>
-<p>Given any region by id, recursively get all the descendant regions
-that are of the specified level.</p>
-<p>This takes advantage of the assumption that region graph is
-acyclic. This will only traverse ordered region levels (strictly
-increasing region level id) and thus skips non-administrative region
-levels.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>access_token</strong> (<em>string</em>) &#8211; </li>
-<li><strong>api_host</strong> (<em>string</em>) &#8211; </li>
-<li><strong>region_id</strong> (<em>integer</em>) &#8211; </li>
-<li><strong>descendant_level</strong> (<em>integer</em>) &#8211; The region level of interest. See REGION_LEVELS constant.</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><p>Example:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="p">[{</span>
-    <span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="mi">13100</span><span class="p">,</span>
-    <span class="s1">&#39;contains&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">139839</span><span class="p">,</span> <span class="mi">139857</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span>
-    <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Wisconsin&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;level&#39;</span><span class="p">:</span> <span class="mi">4</span>
-<span class="p">}</span> <span class="p">,</span> <span class="p">{</span>
-    <span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="mi">13101</span><span class="p">,</span>
-    <span class="s1">&#39;contains&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">139891</span><span class="p">,</span> <span class="mi">139890</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span>
-    <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Wyoming&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;level&#39;</span><span class="p">:</span> <span class="mi">4</span>
-<span class="p">},</span> <span class="o">...</span><span class="p">]</span>
-</pre></div>
-</div>
-<p>See output of lookup()</p>
-</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list of dicts</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="api.client.lib.get_geo_centre">
-<code class="descclassname">api.client.lib.</code><code class="descname">get_geo_centre</code><span class="sig-paren">(</span><em>access_token</em>, <em>api_host</em>, <em>region_id</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/lib.html#get_geo_centre"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.lib.get_geo_centre" title="Permalink to this definition">¶</a></dt>
-<dd><p>Given a region ID, return the geographic centre in degrees lat/lon.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>access_token</strong> (<em>string</em>) &#8211; </li>
-<li><strong>api_host</strong> (<em>string</em>) &#8211; </li>
-<li><strong>region_id</strong> (<em>integer</em>) &#8211; </li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><p>Example:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="p">[{</span> <span class="s1">&#39;centre&#39;</span><span class="p">:</span> <span class="p">[</span> <span class="mf">45.7228</span><span class="p">,</span> <span class="o">-</span><span class="mf">112.996</span> <span class="p">],</span> <span class="s1">&#39;regionId&#39;</span><span class="p">:</span> <span class="mi">1215</span><span class="p">,</span> <span class="s1">&#39;regionName&#39;</span><span class="p">:</span> <span class="s1">&#39;United States&#39;</span> <span class="p">}]</span>
-</pre></div>
-</div>
-</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list of dicts</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="api.client.lib.get_geojson">
-<code class="descclassname">api.client.lib.</code><code class="descname">get_geojson</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwds</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/lib.html#get_geojson"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.lib.get_geojson" title="Permalink to this definition">¶</a></dt>
-<dd><p>Given a region ID, return a geojson shape information</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>access_token</strong> (<em>string</em>) &#8211; </li>
-<li><strong>api_host</strong> (<em>string</em>) &#8211; </li>
-<li><strong>region_id</strong> (<em>integer</em><em> or </em><em>list of integer</em>) &#8211; </li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul>
-<li><p class="first"><em>a geojson object e.g.</em></p>
-</li>
-<li><p class="first"><strong>{ &#8216;type&#8217;</strong> (<em>&#8216;GeometryCollection&#8217;,</em>) &#8211;</p>
-<dl class="docutils">
-<dt>&#8216;geometries&#8217;: [{&#8216;type&#8217;: &#8216;MultiPolygon&#8217;,</dt>
-<dd><p class="first last">&#8216;coordinates&#8217;: [[[[-38.394, -4.225], ...]]]}, ...]}</p>
-</dd>
-</dl>
-</li>
-<li><p class="first"><em>or None if not found.</em></p>
-</li>
-</ul>
-</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="api.client.lib.get_params_from_selection">
-<code class="descclassname">api.client.lib.</code><code class="descname">get_params_from_selection</code><span class="sig-paren">(</span><em>**selection</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/lib.html#get_params_from_selection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.lib.get_params_from_selection" title="Permalink to this definition">¶</a></dt>
-<dd><p>Construct http request params from dict of entity selections.</p>
-<p>For use with get_data_series() and rank_series_by_source().</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">get_params_from_selection</span><span class="p">(</span>
-<span class="gp">... </span>    <span class="n">metric_id</span><span class="o">=</span><span class="mi">123</span><span class="p">,</span> <span class="n">item_id</span><span class="o">=</span><span class="mi">456</span><span class="p">,</span> <span class="n">unit_id</span><span class="o">=</span><span class="mi">14</span>
-<span class="gp">... </span><span class="p">)</span> <span class="o">==</span> <span class="p">{</span> <span class="s1">&#39;itemId&#39;</span><span class="p">:</span> <span class="mi">456</span><span class="p">,</span> <span class="s1">&#39;metricId&#39;</span><span class="p">:</span> <span class="mi">123</span> <span class="p">}</span>
-<span class="go">True</span>
-</pre></div>
-</div>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>metric_id</strong> (<em>integer</em><em>, </em><em>optional</em>) &#8211; </li>
-<li><strong>item_id</strong> (<em>integer</em><em>, </em><em>optional</em>) &#8211; </li>
-<li><strong>region_id</strong> (<em>integer</em><em>, </em><em>optional</em>) &#8211; </li>
-<li><strong>partner_region_id</strong> (<em>integer</em><em>, </em><em>optional</em>) &#8211; </li>
-<li><strong>source_id</strong> (<em>integer</em><em>, </em><em>optional</em>) &#8211; </li>
-<li><strong>frequency_id</strong> (<em>integer</em><em>, </em><em>optional</em>) &#8211; </li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">selections with valid keys converted to camelcase and invalid ones filtered out</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">dict</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="api.client.lib.list_available">
-<code class="descclassname">api.client.lib.</code><code class="descname">list_available</code><span class="sig-paren">(</span><em>access_token</em>, <em>api_host</em>, <em>selected_entities</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/lib.html#list_available"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.lib.list_available" title="Permalink to this definition">¶</a></dt>
-<dd><p>List available entities given some selected entities.</p>
-<p>Given one or more selections, return entities combinations that have
-data for the given selections.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>access_token</strong> (<em>string</em>) &#8211; </li>
-<li><strong>api_host</strong> (<em>string</em>) &#8211; </li>
-<li><strong>selected_entities</strong> (<em>dict</em>) &#8211; <p>Example:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s1">&#39;metric_id&#39;</span><span class="p">:</span> <span class="mi">123</span><span class="p">,</span> <span class="s1">&#39;item_id&#39;</span><span class="p">:</span> <span class="mi">456</span><span class="p">,</span> <span class="s1">&#39;source_id&#39;</span><span class="p">:</span> <span class="mi">7</span> <span class="p">}</span>
-</pre></div>
-</div>
-<p>Keys may include: metric_id, item_id, region_id, partner_region_id,
-source_id, frequency_id</p>
-</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><p>Example:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="p">[</span> <span class="p">{</span> <span class="s1">&#39;metric_id&#39;</span><span class="p">:</span> <span class="mi">11078</span><span class="p">,</span> <span class="s1">&#39;metric_name&#39;</span><span class="p">:</span> <span class="s1">&#39;Export Value (currency)&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;item_id&#39;</span><span class="p">:</span> <span class="mi">274</span><span class="p">,</span> <span class="s1">&#39;item_name&#39;</span><span class="p">:</span> <span class="s1">&#39;Corn&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;region_id&#39;</span><span class="p">:</span> <span class="mi">1215</span><span class="p">,</span> <span class="s1">&#39;region_name&#39;</span><span class="p">:</span> <span class="s1">&#39;United States&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;source_id&#39;</span><span class="p">:</span> <span class="mi">15</span><span class="p">,</span> <span class="s1">&#39;source_name&#39;</span><span class="p">:</span> <span class="s1">&#39;USDA GATS&#39;</span> <span class="p">},</span>
-<span class="p">{</span> <span class="o">...</span> <span class="p">},</span>
-<span class="o">...</span> <span class="p">]</span>
-</pre></div>
-</div>
-</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list of dicts</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="api.client.lib.lookup">
-<code class="descclassname">api.client.lib.</code><code class="descname">lookup</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwds</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/lib.html#lookup"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.lib.lookup" title="Permalink to this definition">¶</a></dt>
-<dd><p>Retrieve details about a given id of type entity_type.</p>
-<p><a class="reference external" href="https://github.com/gro-intelligence/api-client/wiki/Entities-Definition">https://github.com/gro-intelligence/api-client/wiki/Entities-Definition</a></p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>access_token</strong> (<em>string</em>) &#8211; </li>
-<li><strong>api_host</strong> (<em>string</em>) &#8211; </li>
-<li><strong>entity_type</strong> (<em>string</em>) &#8211; &#8216;items&#8217;, &#8216;metrics&#8217;, &#8216;regions&#8217;, &#8216;units&#8217;, &#8216;frequencies&#8217;, or &#8216;sources&#8217;</li>
-<li><strong>entity_id</strong> (<em>int</em>) &#8211; </li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><p>Example:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="mi">274</span><span class="p">,</span>
-  <span class="s1">&#39;contains&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">779</span><span class="p">,</span> <span class="mi">780</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span>
-  <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Corn&#39;</span><span class="p">,</span>
-  <span class="s1">&#39;definition&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;The seeds of the widely cultivated corn plant &lt;i&gt;Zea mays&lt;/i&gt;, which&#39;</span>
-               <span class="s1">&#39; is one of the world&#39;</span><span class="n">s</span> <span class="n">most</span> <span class="n">popular</span> <span class="n">grains</span><span class="o">.</span><span class="s1">&#39;) }</span>
-</pre></div>
-</div>
-</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">dict</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="api.client.lib.lookup_belongs">
-<code class="descclassname">api.client.lib.</code><code class="descname">lookup_belongs</code><span class="sig-paren">(</span><em>access_token</em>, <em>api_host</em>, <em>entity_type</em>, <em>entity_id</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/lib.html#lookup_belongs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.lib.lookup_belongs" title="Permalink to this definition">¶</a></dt>
-<dd><p>Look up details of entities containing the given entity.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>access_token</strong> (<em>string</em>) &#8211; </li>
-<li><strong>api_host</strong> (<em>string</em>) &#8211; </li>
-<li><strong>entity_type</strong> (<em>string</em>) &#8211; One of: &#8216;metrics&#8217;, &#8216;items&#8217;, or &#8216;regions&#8217;</li>
-<li><strong>entity_id</strong> (<em>integer</em>) &#8211; </li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Yields:</th><td class="field-body"><p class="first"><em>dict</em> &#8211; Result of lookup() on each entity the given entity belongs to.</p>
-<p>For example: For the region &#8216;United States&#8217;, one yielded result will be for
-&#8216;North America.&#8217; The format of which matches the output of lookup():</p>
-<div class="last highlight-default"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="mi">15</span><span class="p">,</span>
-  <span class="s1">&#39;contains&#39;</span><span class="p">:</span> <span class="p">[</span> <span class="mi">1008</span><span class="p">,</span> <span class="mi">1009</span><span class="p">,</span> <span class="mi">1012</span><span class="p">,</span> <span class="mi">1215</span><span class="p">,</span> <span class="o">...</span> <span class="p">],</span>
-  <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;North America&#39;</span><span class="p">,</span>
-  <span class="s1">&#39;level&#39;</span><span class="p">:</span> <span class="mi">2</span> <span class="p">}</span>
-</pre></div>
-</div>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="api.client.lib.rank_series_by_source">
-<code class="descclassname">api.client.lib.</code><code class="descname">rank_series_by_source</code><span class="sig-paren">(</span><em>access_token</em>, <em>api_host</em>, <em>series_list</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/lib.html#rank_series_by_source"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.lib.rank_series_by_source" title="Permalink to this definition">¶</a></dt>
-<dd><p>Given a list of series, return them in source-ranked order.</p>
-<p>If there are multiple sources for the same selection, the prefered source
-comes first. Differences other than source_id are not affected.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>access_token</strong> (<em>string</em>) &#8211; </li>
-<li><strong>api_host</strong> (<em>api_host</em>) &#8211; </li>
-<li><strong>series_list</strong> (<em>list of dicts</em>) &#8211; See output of get_data_series()</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Yields:</th><td class="field-body"><p class="first last"><em>dict</em> &#8211; The input series_list but reordered by source rank</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="api.client.lib.redirect">
-<code class="descclassname">api.client.lib.</code><code class="descname">redirect</code><span class="sig-paren">(</span><em>params</em>, <em>migration</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/lib.html#redirect"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.lib.redirect" title="Permalink to this definition">¶</a></dt>
-<dd><p>Update query parameters to follow a redirection response from the API.</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">redirect</span><span class="p">(</span>
-<span class="gp">... </span>    <span class="p">{</span><span class="s1">&#39;metricId&#39;</span><span class="p">:</span> <span class="mi">14</span><span class="p">,</span> <span class="s1">&#39;sourceId&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;itemId&#39;</span><span class="p">:</span> <span class="mi">145</span><span class="p">},</span>
-<span class="gp">... </span>    <span class="p">{</span><span class="s1">&#39;old_metric_id&#39;</span><span class="p">:</span> <span class="mi">14</span><span class="p">,</span> <span class="s1">&#39;new_metric_id&#39;</span><span class="p">:</span> <span class="mi">15</span><span class="p">,</span> <span class="s1">&#39;source_id&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">}</span>
-<span class="gp">... </span><span class="p">)</span> <span class="o">==</span> <span class="p">{</span><span class="s1">&#39;sourceId&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;itemId&#39;</span><span class="p">:</span> <span class="mi">145</span><span class="p">,</span> <span class="s1">&#39;metricId&#39;</span><span class="p">:</span> <span class="mi">15</span><span class="p">}</span>
-<span class="go">True</span>
-</pre></div>
-</div>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>params</strong> (<em>dict</em>) &#8211; The original parameters provided to the API request</li>
-<li><strong>migration</strong> (<em>dict</em>) &#8211; The body of the 301 response indicating which of the inputs have been
-migrated and what values they have been migrated to</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>params</strong> &#8211; The mutated params object with values replaced according to the
-redirection instructions provided by the API</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">dict</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="api.client.lib.search">
-<code class="descclassname">api.client.lib.</code><code class="descname">search</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwds</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/lib.html#search"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.lib.search" title="Permalink to this definition">¶</a></dt>
-<dd><p>Search for the given search term. Better matches appear first.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>access_token</strong> (<em>string</em>) &#8211; </li>
-<li><strong>api_host</strong> (<em>string</em>) &#8211; </li>
-<li><strong>entity_type</strong> (<em>string</em>) &#8211; One of: &#8216;metrics&#8217;, &#8216;items&#8217;, &#8216;regions&#8217;, or &#8216;sources&#8217;</li>
-<li><strong>search_terms</strong> (<em>string</em>) &#8211; </li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><p>Example:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="p">[{</span><span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="mi">5604</span><span class="p">},</span> <span class="p">{</span><span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="mi">10204</span><span class="p">},</span> <span class="p">{</span><span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="mi">10210</span><span class="p">},</span> <span class="o">....</span><span class="p">]</span>
-</pre></div>
-</div>
-</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list of dicts</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="api.client.lib.search_and_lookup">
-<code class="descclassname">api.client.lib.</code><code class="descname">search_and_lookup</code><span class="sig-paren">(</span><em>access_token</em>, <em>api_host</em>, <em>entity_type</em>, <em>search_terms</em>, <em>num_results=10</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/lib.html#search_and_lookup"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.lib.search_and_lookup" title="Permalink to this definition">¶</a></dt>
-<dd><p>Search for the given search terms and look up their details.</p>
-<p>For each result, yield a dict of the entity and it&#8217;s properties:
-{ &#8216;id&#8217;: &lt;integer id of entity, unique within this entity type&gt;,</p>
-<blockquote>
-<div>&#8216;name&#8217;:    &lt;string canonical name&gt;
-&#8216;contains&#8217;: &lt;array of ids of entities that are contained in this one&gt;,
-....
-&lt;other properties&gt; }</div></blockquote>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>access_token</strong> (<em>string</em>) &#8211; </li>
-<li><strong>api_host</strong> (<em>string</em>) &#8211; </li>
-<li><strong>entity_type</strong> (<em>string</em>) &#8211; One of: &#8216;metrics&#8217;, &#8216;items&#8217;, &#8216;regions&#8217;, or &#8216;sources&#8217;</li>
-<li><strong>search_terms</strong> (<em>string</em>) &#8211; </li>
-<li><strong>num_results</strong> (<em>int</em>) &#8211; Maximum number of results to return</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Yields:</th><td class="field-body"><p class="first"><em>dict</em> &#8211;</p>
-<p>Result from search() passed to lookup() to get additional details. For example:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="mi">274</span><span class="p">,</span> <span class="s1">&#39;contains&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">779</span><span class="p">,</span> <span class="mi">780</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Corn&#39;</span><span class="p">,</span>
-<span class="s1">&#39;definition&#39;</span><span class="p">:</span> <span class="s1">&#39;The seeds of the widely cultivated...&#39;</span> <span class="p">}</span>
-</pre></div>
-</div>
-<p class="last">See output of lookup(). Note that as with search(), the first result is
-the best match for the given search term(s).</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="api.client.lib.snake_to_camel">
-<code class="descclassname">api.client.lib.</code><code class="descname">snake_to_camel</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwds</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/lib.html#snake_to_camel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.lib.snake_to_camel" title="Permalink to this definition">¶</a></dt>
-<dd><p>Convert a string from snake_case to camelCase.</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">snake_to_camel</span><span class="p">(</span><span class="s1">&#39;hello_world&#39;</span><span class="p">)</span>
-<span class="go">&#39;helloWorld&#39;</span>
-</pre></div>
-</div>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>term</strong> (<em>string</em>) &#8211; </td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"></td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">string</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="api.client.lib.universal_search">
-<code class="descclassname">api.client.lib.</code><code class="descname">universal_search</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwds</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/lib.html#universal_search"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.lib.universal_search" title="Permalink to this definition">¶</a></dt>
-<dd><p>Search across all entity types for the given terms.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>access_token</strong> (<em>string</em>) &#8211; </li>
-<li><strong>api_host</strong> (<em>string</em>) &#8211; </li>
-<li><strong>search_terms</strong> (<em>string</em>) &#8211; </li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><p>Example:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="p">[[</span><span class="mi">5604</span><span class="p">,</span> <span class="s1">&#39;item&#39;</span><span class="p">],</span> <span class="p">[</span><span class="mi">10204</span><span class="p">,</span> <span class="s1">&#39;item&#39;</span><span class="p">],</span> <span class="p">[</span><span class="mi">410032</span><span class="p">,</span> <span class="s1">&#39;metric&#39;</span><span class="p">],</span> <span class="o">....</span><span class="p">]</span>
-</pre></div>
-</div>
-</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list of [id, entity_type] pairs</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-</div>
-<div class="section" id="client">
-<h2>Client<a class="headerlink" href="#client" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
-<dt id="api.client.Client">
-<em class="property">class </em><code class="descclassname">api.client.</code><code class="descname">Client</code><span class="sig-paren">(</span><em>api_host</em>, <em>access_token</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client.html#Client"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.Client" title="Permalink to this definition">¶</a></dt>
-<dd><p>API client with stateful authentication for lib functions.</p>
-</dd></dl>
-
-</div>
-<div class="section" id="groclient">
-<h2>GroClient<a class="headerlink" href="#groclient" title="Permalink to this headline">¶</a></h2>
-</div>
-<div class="section" id="crop-model">
-<h2>Crop Model<a class="headerlink" href="#crop-model" title="Permalink to this headline">¶</a></h2>
-</div>
-<div class="section" id="batch-client">
-<h2>Batch Client<a class="headerlink" href="#batch-client" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
-<dt id="api.client.batch_client.BatchClient">
-<em class="property">class </em><code class="descclassname">api.client.batch_client.</code><code class="descname">BatchClient</code><span class="sig-paren">(</span><em>api_host</em>, <em>access_token</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/batch_client.html#BatchClient"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.batch_client.BatchClient" title="Permalink to this definition">¶</a></dt>
-<dd><p>API client with support for batch asynchronous queries.</p>
-<dl class="method">
-<dt id="api.client.batch_client.BatchClient.batch_async_queue">
-<code class="descname">batch_async_queue</code><span class="sig-paren">(</span><em>func</em>, <em>batched_args</em>, <em>output_list</em>, <em>map_result</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/batch_client.html#BatchClient.batch_async_queue"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.batch_client.BatchClient.batch_async_queue" title="Permalink to this definition">¶</a></dt>
-<dd><p>Asynchronously call func.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>func</strong> &#8211; function to be called on each member of batched_args</li>
-<li><strong>batched_args</strong> &#8211; list of keyword arguments dictionaries, one for</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-<p>each call to func
-:param output_list:
-:param map_result:
-:return:</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="api.client.batch_client.BatchClient.get_data">
-<code class="descname">get_data</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/batch_client.html#BatchClient.get_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.batch_client.BatchClient.get_data" title="Permalink to this definition">¶</a></dt>
-<dd><p>General &#8216;make api request&#8217; function.</p>
-<p>Assigns headers and builds in retries and logging.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="api.client.batch_client.BatchClient.get_data_points">
-<code class="descname">get_data_points</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/batch_client.html#BatchClient.get_data_points"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.batch_client.BatchClient.get_data_points" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get all the data points for a given selection, which is some or all
-of: item_id, metric_id, region_id, frequency_id, source_id,
-partner_region_id. Additional arguments are allowed and ignored.</p>
-</dd></dl>
-
-</dd></dl>
-
+<div class="section" id="pandas-utils">
+<h2>Pandas Utils<a class="headerlink" href="#pandas-utils" title="Permalink to this headline">¶</a></h2>
 </div>
 </div>
 
@@ -1076,8 +320,10 @@ partner_region_id. Additional arguments are allowed and ignored.</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
+        <a href="faq.html" class="btn btn-neutral float-right" title="FAQ" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
-        <a href="setting-up-your-environment.html" class="btn btn-neutral float-left" title="Setting Up Your Environment" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+        <a href="gro-data-key-concepts.html" class="btn btn-neutral float-left" title="Gro Data: Key Concepts" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
