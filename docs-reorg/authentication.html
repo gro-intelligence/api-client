@@ -357,24 +357,15 @@ Once you have API access enabled for your account, you may retrieve your token i
 <div class="section" id="saving-your-token-as-an-environment-variable">
 <h2>Saving your token as an environment variable<a class="headerlink" href="#saving-your-token-as-an-environment-variable" title="Permalink to this headline">¶</a></h2>
 <p>If you don&#8216;t want to enter a password or token each time, you can save the token as an environment variable. In some of the sample code, it is assumed that you have the token saved to your environment variables as <code class="docutils literal"><span class="pre">GROAPI_TOKEN</span></code>.</p>
-<p>Please consult your OS or IDE documentation for the most accurate and up-to-date information on how to set environment variables, e.g. setting environment variables in <a class="reference external" href="https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_environment_variables?view=powershell-6">Windows Powershell</a> or <a class="reference external" href="https://apple.stackexchange.com/questions/106778/how-do-i-set-environment-variables-on-os-x">Mac OS X/Linux</a> or <a class="reference external" href="https://anaconda-project.readthedocs.io/en/latest/user-guide/tasks/work-with-variables.html">Anaconda</a>. As a quick guide, the following steps should work:</p>
+<p>Please consult your OS or IDE documentation for the most accurate and up-to-date information on how to set environment variables. The links below should provide some guidance on how to do this for your preferred environment.</p>
 <div class="section" id="for-windows-10">
 <h3>For Windows 10:<a class="headerlink" href="#for-windows-10" title="Permalink to this headline">¶</a></h3>
-<ol class="simple">
-<li>Click on start menu and search for &#8220;environment variables.&#8220; Click on &#8220;Edit the system environment variables&#8220; option.</li>
-<li>In the &#8220;Advanced&#8220; tab, select the &#8220;Environment Variables...&#8220; button.</li>
-<li>Under the first section called &#8220;User variables for &lt;username&gt;,&#8220; and click on the &#8220;New&#8220; button.</li>
-<li>Enter the information as follows:</li>
-</ol>
-<p>Variable name: <code class="docutils literal"><span class="pre">GROAPI_TOKEN</span></code></p>
-<p>Variable value: <code class="docutils literal"><span class="pre">&lt;insert</span> <span class="pre">your</span> <span class="pre">Gro</span> <span class="pre">API</span> <span class="pre">Token</span> <span class="pre">here&gt;</span></code></p>
-<ol class="simple">
-<li>Click OK</li>
-</ol>
-<p>Your environment variable should now be saved. You will likely need to close an re-open your IDE for the IDE to recognize the change. Whenever you run code that includes the code <code class="docutils literal"><span class="pre">os.environ['GROAPI_TOKEN']</span></code> it should automatically pull in your API Token.</p>
+<p>For Anaconda, please refer to <a class="reference external" href="https://anaconda-project.readthedocs.io/en/latest/user-guide/tasks/work-with-variables.html">Anaconda&#8216;s Documentation</a></p>
+<p>If you are using Windows Powershell, you can refer to <a class="reference external" href="https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_environment_variables?view=powershell-6">Windows&#8216; Documentation</a> or  .</p>
 </div>
 <div class="section" id="for-mac">
 <h3>For Mac:<a class="headerlink" href="#for-mac" title="Permalink to this headline">¶</a></h3>
+<p>You can find official instructions for setting environment variables from <a class="reference external" href="https://apple.stackexchange.com/questions/106778/how-do-i-set-environment-variables-on-os-x">Apple&#8216;s Stack Exchange</a>, or as quick guide you can follow these steps:</p>
 <ol class="simple">
 <li>Open up your terminal and type <code class="docutils literal"><span class="pre">open</span> <span class="pre">~/.bash_profile</span></code></li>
 <li>Add the following line: <code class="docutils literal"><span class="pre">export</span> <span class="pre">GROAPI_TOKEN=&quot;YOUR</span> <span class="pre">TOKEN</span> <span class="pre">HERE&quot;</span></code></li>
