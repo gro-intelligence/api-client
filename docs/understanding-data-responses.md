@@ -14,8 +14,7 @@ returns:
  'contains': [],
  'definition': 'The quantity of an item which has been consumed within a given country or region. Data generally refers to consumption as including any form of disappearance, such as waste, loss, and human consumption.',
  'id': 1480032,
- 'name': 'Domestic Consumption (mass)',
- 'rankingScore': 1}
+ 'name': 'Domestic Consumption (mass)'}
  ```
  
 ```client.lookup('units', '10')```
@@ -23,7 +22,6 @@ returns:
 ```py
 {'abbreviation': 'kg',
  'baseConvFactor': {'factor': 1},
- 'baseUnit': True,
  'convType': 0,
  'id': 10,
  'name': 'kilogram',
