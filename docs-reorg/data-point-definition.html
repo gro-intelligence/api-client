@@ -307,18 +307,16 @@
 <div class="section" id="data-point-definition">
 <h1>Data Point Definition<a class="headerlink" href="#data-point-definition" title="Permalink to this headline">¶</a></h1>
 <p>Gro defines a &#8220;data point&#8220; as a discrete result produced by our API. When using the <code class="docutils literal"><span class="pre">get_data_points()</span></code> function, you are returned an array of points, each of which is a Python dictionary object that looks something like:</p>
-<div class="highlight-py"><div class="highlight"><pre><span></span><span class="p">{</span>
-  <span class="sa">u</span><span class="s1">&#39;input_unit_scale&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-  <span class="sa">u</span><span class="s1">&#39;region_id&#39;</span><span class="p">:</span> <span class="mi">1038</span><span class="p">,</span>
-  <span class="sa">u</span><span class="s1">&#39;end_date&#39;</span><span class="p">:</span> <span class="sa">u</span><span class="s1">&#39;2000-12-31T00:00:00.000Z&#39;</span><span class="p">,</span>
-  <span class="sa">u</span><span class="s1">&#39;input_unit_id&#39;</span><span class="p">:</span> <span class="mi">17</span><span class="p">,</span>
-  <span class="sa">u</span><span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="mf">0.2623</span><span class="p">,</span>
-  <span class="sa">u</span><span class="s1">&#39;frequency_id&#39;</span><span class="p">:</span> <span class="mi">9</span><span class="p">,</span>
-  <span class="sa">u</span><span class="s1">&#39;item_id&#39;</span><span class="p">:</span> <span class="mi">5187</span><span class="p">,</span>
-  <span class="sa">u</span><span class="s1">&#39;reporting_date&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
-  <span class="sa">u</span><span class="s1">&#39;start_date&#39;</span><span class="p">:</span> <span class="sa">u</span><span class="s1">&#39;2000-01-01T00:00:00.000Z&#39;</span><span class="p">,</span>
-  <span class="sa">u</span><span class="s1">&#39;metric_id&#39;</span><span class="p">:</span> <span class="mi">5590032</span>
-<span class="p">}</span>
+<div class="highlight-py"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;end_date&#39;</span><span class="p">:</span> <span class="s1">&#39;2013-02-04T00:00:00.000Z&#39;</span><span class="p">,</span>
+  <span class="s1">&#39;frequency_id&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+  <span class="s1">&#39;input_unit_id&#39;</span><span class="p">:</span> <span class="mi">851</span><span class="p">,</span>
+  <span class="s1">&#39;input_unit_scale&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+  <span class="s1">&#39;item_id&#39;</span><span class="p">:</span> <span class="mi">7382</span><span class="p">,</span>
+  <span class="s1">&#39;metric_id&#39;</span><span class="p">:</span> <span class="mi">15531082</span><span class="p">,</span>
+  <span class="s1">&#39;region_id&#39;</span><span class="p">:</span> <span class="mi">138295</span><span class="p">,</span>
+  <span class="s1">&#39;start_date&#39;</span><span class="p">:</span> <span class="s1">&#39;2013-02-04T00:00:00.000Z&#39;</span><span class="p">,</span>
+  <span class="s1">&#39;unit_id&#39;</span><span class="p">:</span> <span class="mi">851</span><span class="p">,</span>
+  <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="mf">0.131714797651</span><span class="p">}</span>
 </pre></div>
 </div>
 <p>For example, if you requested NDVI for Bureau county, Illinois, for a particular 8-day time period, the Gro API would yield a single response that would count as a single data point. Even though the value is computed from tens of thousands of underlying pixels, the API response counts as a single point because we are returning the value at the county (aka district) level.</p>
@@ -327,9 +325,9 @@
 <ul class="simple">
 <li><code class="docutils literal"><span class="pre">start_date</span></code>: beginning of the period this point represents</li>
 <li><code class="docutils literal"><span class="pre">end_date</span></code>: end of the period this point represents</li>
-<li><code class="docutils literal"><span class="pre">reporting_date</span></code>: date the source reported this value (only included when source provides reporting date)</li>
 <li><code class="docutils literal"><span class="pre">value</span></code>: the value, typically a number. In some cases, the value may be non-numeric. E.g., when the metric is Crop Calendar, a value of &#8220;planting,&#8220; represents the fact that the planting period is from <code class="docutils literal"><span class="pre">start_date</span></code> to <code class="docutils literal"><span class="pre">end_date</span></code>.</li>
 <li><code class="docutils literal"><span class="pre">unit_id</span></code>: this is a Gro unit id you can look up the name/abbreviation/etc. of using the <code class="docutils literal"><span class="pre">client.lookup('units',</span> <span class="pre">unit_id)</span></code> function. There&#8216;s also a helper function of which you can see an example in the <a class="reference external" href="https://github.com/gro-intelligence/api-client/blob/9c2c17642980b5415b8a8167a28276b77e34915c/api/client/samples/quick_start.py#L30">quickstart</a> for getting just the abbreviation from the unit id, <code class="docutils literal"><span class="pre">client.lookup_unit_abbreviation(point['unit_id'])</span></code>, which is the common case you probably want</li>
+<li><code class="docutils literal"><span class="pre">reporting_date</span></code>: date the source reported this value (only included when source provides reporting date)</li>
 <li><code class="docutils literal"><span class="pre">metric_id</span></code>: unique id for the metric (i.e. &#8220;Export Value (currency)&#8220;) you selected - get more details (name, definition, ...) using <code class="docutils literal"><span class="pre">client.lookup('metrics',</span> <span class="pre">metric_id)</span></code></li>
 <li><code class="docutils literal"><span class="pre">item_id</span></code>: unique id for the item (i.e., &#8220;Corn&#8220;) you selected - get more details (name, definition, ...) using <code class="docutils literal"><span class="pre">client.lookup('items',</span> <span class="pre">item_id)</span></code></li>
 <li><code class="docutils literal"><span class="pre">region_id</span></code>: unique id for the region (i.e., &#8220;United States&#8220;) you selected - get more details (name, administrative level, ...) using <code class="docutils literal"><span class="pre">client.lookup('regions',</span> <span class="pre">region_id)</span></code></li>
