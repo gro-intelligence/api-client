@@ -211,6 +211,7 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#radio-frequency-interference-effects-on-smos">Radio Frequency Interference Effects On SMOS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#trmm-and-gpm-spatial-extents">TRMM and GPM spatial extents</a></li>
 </ul>
 </li>
 </ul>
@@ -426,6 +427,13 @@ Listed below are Gro&#8216;s existing models. Each available link will lead you 
 <div class="section" id="radio-frequency-interference-effects-on-smos">
 <h2>Radio Frequency Interference Effects On SMOS<a class="headerlink" href="#radio-frequency-interference-effects-on-smos" title="Permalink to this headline">¶</a></h2>
 <p>The attached document details the effect that Radio Frequency Interference (RFI) has on the soil moisture source <a class="reference external" href="https://app.gro-intelligence.com/#/dictionary/sources/43">SMOS</a>: <a class="reference external" href="https://github.com/gro-intelligence/api-client/wiki/radio-frequency-interference-smos.pdf">radio-frequency-interference-smos.pdf</a></p>
+</div>
+<div class="section" id="trmm-and-gpm-spatial-extents">
+<h2>TRMM and GPM spatial extents<a class="headerlink" href="#trmm-and-gpm-spatial-extents" title="Permalink to this headline">¶</a></h2>
+<p>Spatial extent for geospatial sources is the geographic region that is covered by that source. For the rainfall sources in Gro, it is important to know that the spatial extent is limited by their sources due to coverage limitations of the satellite platforms.</p>
+<p>For <a class="reference external" href="https://app.gro-intelligence.com/dictionary/sources/35">TRMM (3B42RT)</a>, the spatial extent of the data is 50° north to 50° south (red bounding box below) due to the satellite’s coverage and the mission’s focus on tropical regions. While for <a class="reference external" href="https://app.gro-intelligence.com/dictionary/sources/126">GPM (3IMERGDL)</a>, the spatial extent of the data is 90° north to 90° south, however the “complete” version of the data only extends from 60° north to 60° south (blue bounding box below). This is because the “complete” version masks out observed passive microwave estimates over snowy/icy surfaces, so outside the latitude in the blue bounding box, where IR estimates are not available, precipitation estimates over non-snowy/icy surfaces are recorded as missing (1). This means that while Gro uses the 90° north to 90° south dataset, periodically data outside the 60° north to 60° south bounding box will not be reported.</p>
+<p><img alt="spatial-extent-trmm-gpm" src="_images/spatial-extent-trmm-gpm.jpg" /></p>
+<p>(1) Huffman, G. J., Bolvin, D. T., &amp; Nelkin, E. J. (2015). Integrated Multi-satellite Retrievals for GPM (IMERG) technical documentation. NASA/GSFC Code, 612(47), 2019.</p>
 </div>
 </div>
 
