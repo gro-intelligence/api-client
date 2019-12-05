@@ -1,7 +1,7 @@
 # Understanding Data Responses
 
 ## Look up
-If it is ever unclear what an id number represents, you can use `lookup` to get all the information you'd need. `lookup` works for any of the [data series selection entities](./data-series-definition): `items`, `metrics`, `regions`, `frequencies`, `sources` and also `input_unit_id`. For example:
+If it is ever unclear what an id number represents, you can use `lookup` to get all the information you'd need. `lookup` works for any of the [data series selection entities](./data-series-definition): `items`, `metrics`, `regions`, `frequencies`, `sources` and also `units`. For example:
 ```client.lookup('frequencies','7')```
 returns:
 ```{'abbrev': None, 'id': 7, 'name': 'quarterly', 'periodLength': {'months': 3}}```
