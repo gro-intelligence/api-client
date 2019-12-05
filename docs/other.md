@@ -116,3 +116,12 @@ NOTE: Our "beta" models have run for less than one full season. At this stage, e
 
 ## Radio Frequency Interference Effects On SMOS
 The attached document details the effect that Radio Frequency Interference (RFI) has on the soil moisture source [SMOS](https://app.gro-intelligence.com/#/dictionary/sources/43): [radio-frequency-interference-smos.pdf](https://github.com/gro-intelligence/api-client/wiki/radio-frequency-interference-smos.pdf)
+
+## TRMM and GPM spatial extents
+Spatial extent for geospatial sources is the geographic region that is covered by that source. For the rainfall sources in Gro, it is important to know that the spatial extent is limited by their sources due to coverage limitations of the satellite platforms.
+
+For [TRMM (3B42RT)](https://app.gro-intelligence.com/dictionary/sources/35), the spatial extent of the data is 50° north to 50° south (red bounding box below) due to the satellite’s coverage and the mission’s focus on tropical regions. While for [GPM (3IMERGDL)](https://app.gro-intelligence.com/dictionary/sources/126), the spatial extent of the data is 90° north to 90° south, however the “complete” version of the data only extends from 60° north to 60° south (blue bounding box below). This is because the “complete” version masks out observed passive microwave estimates over snowy/icy surfaces, so outside the latitude in the blue bounding box, where IR estimates are not available, precipitation estimates over non-snowy/icy surfaces are recorded as missing (1). This means that while Gro uses the 90° north to 90° south dataset, periodically data outside the 60° north to 60° south bounding box will not be reported.
+
+![spatial-extent-trmm-gpm](./_images/spatial-extent-trmm-gpm.jpg)
+
+(1) Huffman, G. J., Bolvin, D. T., & Nelkin, E. J. (2015). Integrated Multi-satellite Retrievals for GPM (IMERG) technical documentation. NASA/GSFC Code, 612(47), 2019.
