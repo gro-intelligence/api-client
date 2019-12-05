@@ -13,7 +13,25 @@ Source lag is defined as the worst normal case scenario in regards to how long a
 ### Q: I specified an end_date when calling get_data_points(), but I am getting points with other end_dates:
 start_date and end_date behave as ranges. Specifying end_date is interpreted as "all points with an end date prior to this date" and start_date is "all points with a start_date later than this date." Both can be specified to narrow down the range.
 
+## Data Coverage
+
+### Q: Why is there no satellite rainfall data in northern latitudes sometimes?
+This is determined by the spatial extent of the satellites. For more information see [TRMM/GPM spatial extent](./other.html#TRMM-and-GPM-spatial-extents). Note that this limitation is only for satellite data. Rainfall data from ground-based weather stations is also available in Gro, see [NOAA/NCDC GHCN](https://app.gro-intelligence.com/dictionary/sources/22).
+
+### Q: Why are there some gaps in the soil moisture data?
+Radio Frequency Interferences (RFI) can limit the quality of remotely sensed data in some regions. For more information see [Radio Frequency Interference Effects On SMOS](./other.html#radio-frequency-interference-effects-on-smos).
+
 ## Account
+
+### Q: How do I verify connectivity with Gro API?
+To check your basic connectivity, e.g. whether your corporate firewall allows access to Gro API servers, you can using a Gro API client function that doesn't require authentication, such as lookup(). For example:
+```
+from  api.client import lib
+lib.lookup('', 'api.gro-intelligence.com', 'items', 1)
+```
+### Q: How do I get authenticated access to Gro API?
+You must get an [authentication token](./authentication.html#retrieving-a-token) from your Gro account.
+
 ### Q: I tried using my Gro username and login but am getting a 401 Unauthorized error
 A Gro account gives you access to the web application at app.gro-intelligence.com. API access is sold as an add-on product you need to be activated for. To learn more about getting an API account, contact our sales team using the link at gro-intelligence.com/products/gro-api
 
