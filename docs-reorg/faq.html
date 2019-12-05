@@ -185,7 +185,14 @@
 <li class="toctree-l3"><a class="reference internal" href="#q-i-specified-an-end-date-when-calling-get-data-points-but-i-am-getting-points-with-other-end-dates">Q: I specified an end_date when calling get_data_points(), but I am getting points with other end_dates:</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="#data-coverage">Data Coverage</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#q-why-is-there-no-satellite-rainfall-data-in-northern-latitudes-sometimes">Q: Why is there no satellite rainfall data in northern latitudes sometimes?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#q-why-are-there-some-gaps-in-the-soil-moisture-data">Q: Why are there some gaps in the soil moisture data?</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="#account">Account</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#q-how-do-i-verify-connectivity-with-gro-api">Q: How do I verify connectivity with Gro API?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#q-how-do-i-get-authenticated-access-to-gro-api">Q: How do I get authenticated access to Gro API?</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#q-i-tried-using-my-gro-username-and-login-but-am-getting-a-401-unauthorized-error">Q: I tried using my Gro username and login but am getting a 401 Unauthorized error</a></li>
 </ul>
 </li>
@@ -317,8 +324,31 @@
 <p>start_date and end_date behave as ranges. Specifying end_date is interpreted as &#8220;all points with an end date prior to this date&#8220; and start_date is &#8220;all points with a start_date later than this date.&#8220; Both can be specified to narrow down the range.</p>
 </div>
 </div>
+<div class="section" id="data-coverage">
+<h2>Data Coverage<a class="headerlink" href="#data-coverage" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="q-why-is-there-no-satellite-rainfall-data-in-northern-latitudes-sometimes">
+<h3>Q: Why is there no satellite rainfall data in northern latitudes sometimes?<a class="headerlink" href="#q-why-is-there-no-satellite-rainfall-data-in-northern-latitudes-sometimes" title="Permalink to this headline">¶</a></h3>
+<p>This is determined by the spatial extent of the satellites. For more information see <a class="reference external" href="./other.html#TRMM-and-GPM-spatial-extents">TRMM/GPM spatial extent</a>. Note that this limitation is only for satellite data. Rainfall data from ground-based weather stations is also available in Gro, see <a class="reference external" href="https://app.gro-intelligence.com/dictionary/sources/22">NOAA/NCDC GHCN</a>.</p>
+</div>
+<div class="section" id="q-why-are-there-some-gaps-in-the-soil-moisture-data">
+<h3>Q: Why are there some gaps in the soil moisture data?<a class="headerlink" href="#q-why-are-there-some-gaps-in-the-soil-moisture-data" title="Permalink to this headline">¶</a></h3>
+<p>Radio Frequency Interferences (RFI) can limit the quality of remotely sensed data in some regions. For more information see <a class="reference external" href="./other.html#radio-frequency-interference-effects-on-smos">Radio Frequency Interference Effects On SMOS</a>.</p>
+</div>
+</div>
 <div class="section" id="account">
 <h2>Account<a class="headerlink" href="#account" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="q-how-do-i-verify-connectivity-with-gro-api">
+<h3>Q: How do I verify connectivity with Gro API?<a class="headerlink" href="#q-how-do-i-verify-connectivity-with-gro-api" title="Permalink to this headline">¶</a></h3>
+<p>To check your basic connectivity, e.g. whether your corporate firewall allows access to Gro API servers, you can using a Gro API client function that doesn&#8216;t require authentication, such as lookup(). For example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span>  <span class="nn">api.client</span> <span class="kn">import</span> <span class="n">lib</span>
+<span class="n">lib</span><span class="o">.</span><span class="n">lookup</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;api.gro-intelligence.com&#39;</span><span class="p">,</span> <span class="s1">&#39;items&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="q-how-do-i-get-authenticated-access-to-gro-api">
+<h3>Q: How do I get authenticated access to Gro API?<a class="headerlink" href="#q-how-do-i-get-authenticated-access-to-gro-api" title="Permalink to this headline">¶</a></h3>
+<p>You must get an <a class="reference external" href="./authentication.html#retrieving-a-token">authentication token</a> from your Gro account.</p>
+</div>
 <div class="section" id="q-i-tried-using-my-gro-username-and-login-but-am-getting-a-401-unauthorized-error">
 <h3>Q: I tried using my Gro username and login but am getting a 401 Unauthorized error<a class="headerlink" href="#q-i-tried-using-my-gro-username-and-login-but-am-getting-a-401-unauthorized-error" title="Permalink to this headline">¶</a></h3>
 <p>A Gro account gives you access to the web application at app.gro-intelligence.com. API access is sold as an add-on product you need to be activated for. To learn more about getting an API account, contact our sales team using the link at gro-intelligence.com/products/gro-api</p>
