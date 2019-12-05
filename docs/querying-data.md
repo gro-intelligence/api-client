@@ -18,7 +18,7 @@ The above query has completed fields for `metric_id`, `item_id`, `region_id`, `s
 Making your query more specific will speed up your query by limiting the amount of data requested.
 
 ## Get Data frame
-Data frames are a popular format for viewing data responses, and our `gro_client` library offers you the ability to view your data series in a data frame. If you've imported the library into your file, as follows:
+Data frames are a popular format for viewing data responses, and our `GroClient` class offers you the ability to view your data series in a data frame. If you've imported the library into your file, as follows:
 ```py
 from api.client.gro_client import GroClient
 ```
@@ -48,7 +48,7 @@ client.get_data_points(**{
     'region_id': 1010, 
     'source_id': 14, 
     'frequency_id': 9, 
-    'start_date': '2017-01-01T00:00:00.000Z'
+    'start_date': '2017-01-01'
 })
 ``` 
 But the USDA begins forecasting the yield well before harvest time, and will continue to update its estimate for many months after the harvest is over. In order to see how the forecasts and estimates for each year have changed, you can include the `show_revisions` field as follows:
@@ -60,7 +60,7 @@ client.get_data_points(**{
     'region_id': 1010, 
     'source_id': 14, 
     'frequency_id': 9, 
-    'start_date': '2017-01-01T00:00:00.000Z', 
+    'start_date': '2017-01-01', 
     'show_revisions': True
 })
 ```
