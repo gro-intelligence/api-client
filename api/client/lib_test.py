@@ -195,16 +195,16 @@ def test_rank_series_by_source(mock_requests_get):
     mock_requests_get.return_value.json.return_value = mock_return
     mock_requests_get.return_value.status_code = 200
 
-    # Ordering of the dict should not matter
-    a = {"region_id": 13474, "abc": 123, "def": 123, "ghe": 123, "fij": 123, "item_id": 3457, "metric_id": 2540047, "source_id": 26}
+    a = {"region_id": 13474, "abc": 123, "def": 123, "ghe": 123, "fij": 123, "item_id": 3457, "metric_id": 2540047}
     a.pop("abc")
     a.pop("def")
     a.pop("ghe")
     a.pop("fij")
 
-    b = {"item_id": 3457, "region_id": 13474, "metric_id": 2540047, "source_id": 26}
+    b = {"item_id": 1457, "region_id": 13474, "metric_id": 2540047}
 
     c = list(lib.rank_series_by_source(MOCK_TOKEN, MOCK_HOST, [a,b]))
-    assert(len(c) == 3)
+    # for each series selection a, b, we should get a ranking with 3 series
+    assert(len(c) == 6)
 
     assert mock_return == [x["source_id"] for x in c]
