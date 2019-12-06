@@ -336,6 +336,9 @@ def get_source_ranking(access_token, api_host, series):
 def rank_series_by_source(access_token, api_host, series_list):
     for series in series_list:
         try:
+            # Remove source if selected, to consider all sources.
+            series.pop('source_name', None)
+            series.pop('source_id', None)
             source_ids = get_source_ranking(access_token, api_host, series)
         except ValueError:
             continue  # empty response

@@ -191,19 +191,23 @@ def test_get_source_ranking(mock_requests_get):
 
 @mock.patch('requests.get')
 def test_rank_series_by_source(mock_requests_get):
-    mock_return = ["data1", "data2", "data3"]
+    # for each series selection, mock ranking of 3 source ids
+    mock_return = [11, 22, 33]
     mock_requests_get.return_value.json.return_value = mock_return
     mock_requests_get.return_value.status_code = 200
 
-    a = {"region_id": 13474, "abc": 123, "def": 123, "ghe": 123, "fij": 123, "item_id": 3457, "metric_id": 2540047}
+    a = {"region_id": 13474, "abc": 123, "def": 123, "ghe": 123, "fij": 123,
+         "item_id": 3457, "metric_id": 2540047,
+         "source_id": 123, "source_name": "dontcare"}
     a.pop("abc")
     a.pop("def")
     a.pop("ghe")
     a.pop("fij")
 
     b = {"item_id": 1457, "region_id": 13474, "metric_id": 2540047}
-
     c = list(lib.rank_series_by_source(MOCK_TOKEN, MOCK_HOST, [a,b]))
-    # for each series selection a, b, we should get a ranking with 3 series
+
     assert(len(c) == 6)
+    for x in c:
+        assert "source_name" not in x
     assert mock_return + mock_return == [x["source_id"] for x in c]
