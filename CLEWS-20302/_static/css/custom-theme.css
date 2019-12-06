@@ -269,6 +269,6 @@ footer a {
 }
 
 /* hide branches from version switcher */
-.rst-other-versions:last-child {
+.rst-other-versions dl:last-child {
     display: none;
 }
