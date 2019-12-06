@@ -4,7 +4,7 @@ import pandas as pd
 from pandas.util.testing import assert_frame_equal
 import pytest
 
-from . import get_transform_data
+from experimental.analogous_years.lib import get_transform_data
 
 
 def create_test_data():
@@ -40,14 +40,18 @@ def test_combine_subregions_with_subregion():
     test_data = pd.DataFrame(create_test_data())
     test_data['end_date'] = pd.to_datetime(test_data['end_date'])
     test_data_subregion = test_data[['end_date', 'value']]
-    expected_subregion = pd.DataFrame({'end_date': ['2000-03-01',
-                                                    '2005-08-28',
-                                                    '2019-07-31'],
+    expected_subregion = pd.DataFrame({'end_date': ['2000-03-01T00:00:00.000Z',
+                                                    '2005-08-28T00:00:00.000Z',
+                                                    '2019-07-31T00:00:00.000Z'],
                                        'value': [2.39664378851418,
                                                  2.28192643351167,
                                                  0.13002748115958]})
-    # The data type of the date must be 'datetime64[ns, UTC]'
-    expected_subregion['end_date'] = pd.to_datetime(expected_subregion['end_date'], utc=True)
+    utc_tz = False
+    if pd.to_datetime(expected_subregion['end_date'][0]).tzinfo:
+        utc_tz = True
+    # Depending on the version of pandas, the data type of the datetime object
+    # can vary between 'datetime64[ns, UTC]' and 'datetime64[ns]'
+    expected_subregion['end_date'] = pd.to_datetime(expected_subregion['end_date'], utc=utc_tz)
     # The order of the columns after applying consolidation function is the following
     expected_subregion = expected_subregion[['value', 'end_date']]
     # The dataframes index columns is same as 'end_date' column
@@ -65,18 +69,22 @@ def test_combine_subregions_with_nosubregion():
     test_data['end_date'] = pd.to_datetime(test_data['end_date'])
     test_data_subregion = test_data[['end_date', 'value']]
     test_data_nosubregion = test_data_subregion.drop(test_data_subregion.index[-1])
-    expected_nosubregion = pd.DataFrame({'end_date': ['2019-07-31',
-                                                      '2005-08-28',
-                                                      '2000-03-01'],
+    expected_nosubregion = pd.DataFrame({'end_date': ['2019-07-31T00:00:00.000Z',
+                                                      '2005-08-28T00:00:00.000Z',
+                                                      '2000-03-01T00:00:00.000Z'],
                                          'value': [0.13002748115958,
                                                    1.17640700229636,
                                                    2.39664378851418]})
-    # The data type of the date must be 'datetime64[ns, UTC]'
+    utc_tz = False
+    if pd.to_datetime(expected_nosubregion['end_date'][0]).tzinfo:
+        utc_tz = True
+    # Depending on the version of pandas, the data type of the datetime object
+    # can vary between 'datetime64[ns, UTC]' and 'datetime64[ns]'
     expected_nosubregion.index = expected_nosubregion['end_date']
-    expected_nosubregion['end_date'] = pd.to_datetime(expected_nosubregion['end_date'], utc=True)
-    expected_nosubregion.index = pd.to_datetime(expected_nosubregion.index, utc=True)
+    expected_nosubregion['end_date'] = pd.to_datetime(expected_nosubregion['end_date'], utc=utc_tz)
+    expected_nosubregion.index = pd.to_datetime(expected_nosubregion.index, utc=utc_tz)
     expected_nosubregion = expected_nosubregion.resample('D').pad()
-    expected_nosubregion['end_date'] = pd.to_datetime(expected_nosubregion.index, utc=True)
+    expected_nosubregion['end_date'] = pd.to_datetime(expected_nosubregion.index, utc=utc_tz)
     assert_frame_equal(get_transform_data.combine_subregions(test_data_nosubregion),
                        expected_nosubregion)
 
@@ -208,7 +216,12 @@ def test_loop_start_dates():
     test_max_date = pd.to_datetime('2019-08-31T00:00:00.000Z')
     invalid_initial_date = '2016-12-31'
     invalid_final_date = '2017-12-01'
-    expected = {'initial_date': pd.to_datetime('2017-12-31', utc=True),
-                'final_date': pd.to_datetime('2018-12-01', utc=True)}
+    # Depending on the version of pandas, the data type of the datetime object
+    # can vary between 'datetime64[ns, UTC]' and 'datetime64[ns]'
+    utc_tz = False
+    if test_max_date.tzinfo:
+        utc_tz = True
+    expected = {'initial_date': pd.to_datetime('2017-12-31', utc=utc_tz),
+                'final_date': pd.to_datetime('2018-12-01', utc=utc_tz)}
     assert get_transform_data.loop_start_dates(
         test_max_date, invalid_initial_date, invalid_final_date) == expected
