@@ -77,7 +77,7 @@ If you are using Windows Powershell, you can refer to [Windows' Documentation](h
 
 ### For Mac and Linux
 
-You can find official instructions for setting environment variables from [Apple's Stack Exchange](https://apple.stackexchange.com/questions/106778/how-do-i-set-environment-variables-on-os-x), or as quick guide you can follow these steps:
+For MacOS, you can find official instructions for setting environment variables on [Apple's website](https://support.apple.com/guide/terminal/use-environment-variables-apd382cc5fa-4f58-4449-b20a-41c53c006f8f/mac). The same instructions also apply to Linux. Note that with MacOS Catalina, Apple changed its default shell from bash to zsh, which affects where you set the variable. As a quick overview see the steps below:
 
 1. Open your terminal and type `echo $SHELL` to determine what shell you are using.
 2. If the result is `/bin/bash` then run `open ~/.bashrc`. If the result is `/bin/zsh`, then run `open ~/.zshrc`. If you are using another shell, please reference your shell-specific documentation.
