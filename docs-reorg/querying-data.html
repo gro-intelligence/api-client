@@ -329,8 +329,8 @@
 <span class="n">client</span><span class="o">.</span><span class="n">get_data_points</span><span class="p">(</span><span class="o">**</span><span class="p">{</span>
     <span class="s1">&#39;metric_id&#39;</span><span class="p">:</span> <span class="mi">570001</span><span class="p">,</span>
     <span class="s1">&#39;item_id&#39;</span><span class="p">:</span> <span class="mi">95</span><span class="p">,</span>
-    <span class="s1">&#39;region_id&#39;</span><span class="p">:</span> <span class="mi">1094</span><span class="p">,</span> 
-    <span class="s1">&#39;source_id&#39;</span><span class="p">:</span> <span class="mi">14</span><span class="p">,</span> 
+    <span class="s1">&#39;region_id&#39;</span><span class="p">:</span> <span class="mi">1094</span><span class="p">,</span>
+    <span class="s1">&#39;source_id&#39;</span><span class="p">:</span> <span class="mi">14</span><span class="p">,</span>
     <span class="s1">&#39;frequency_id&#39;</span><span class="p">:</span> <span class="mi">9</span>
 <span class="p">})</span>
 </pre></div>
@@ -348,10 +348,10 @@
 <p><code class="docutils literal"><span class="pre">get_df()</span></code> is a stateful method, so you must first save the series into your client object. You can do this with the <code class="docutils literal"><span class="pre">add_single_data_series()</span></code> method.</p>
 <p>The following code will return Wheat - Area Harvested (area) - India (USDA PS&amp;D) in a data frame.</p>
 <div class="highlight-py"><div class="highlight"><pre><span></span><span class="n">client</span><span class="o">.</span><span class="n">add_single_data_series</span><span class="p">({</span>
-     <span class="s1">&#39;metric_id&#39;</span><span class="p">:</span> <span class="mi">570001</span><span class="p">,</span> 
+     <span class="s1">&#39;metric_id&#39;</span><span class="p">:</span> <span class="mi">570001</span><span class="p">,</span>
      <span class="s1">&#39;item_id&#39;</span><span class="p">:</span> <span class="mi">95</span><span class="p">,</span>
-     <span class="s1">&#39;region_id&#39;</span><span class="p">:</span> <span class="mi">1094</span><span class="p">,</span> 
-     <span class="s1">&#39;source_id&#39;</span><span class="p">:</span> <span class="mi">14</span><span class="p">,</span> 
+     <span class="s1">&#39;region_id&#39;</span><span class="p">:</span> <span class="mi">1094</span><span class="p">,</span>
+     <span class="s1">&#39;source_id&#39;</span><span class="p">:</span> <span class="mi">14</span><span class="p">,</span>
      <span class="s1">&#39;frequency_id&#39;</span><span class="p">:</span> <span class="mi">9</span>
 <span class="p">})</span>
 <span class="n">client</span><span class="o">.</span><span class="n">get_df</span><span class="p">()</span>
@@ -363,11 +363,11 @@
 <p>Sometimes looking at the most recent data point doesn&#8216;t tell you the whole story. You may want to see if there have been any revisions to data, especially if the data is a forecast value. This standard <code class="docutils literal"><span class="pre">get_data_points</span></code> query will return the annual values for soybean yield in Argentina since 2017:</p>
 <div class="highlight-py"><div class="highlight"><pre><span></span><span class="c1"># Soybeans - Yield (mass/area) - Argentina (USDA PS&amp;D)</span>
 <span class="n">client</span><span class="o">.</span><span class="n">get_data_points</span><span class="p">(</span><span class="o">**</span><span class="p">{</span>
-    <span class="s1">&#39;metric_id&#39;</span><span class="p">:</span> <span class="mi">170037</span><span class="p">,</span> 
-    <span class="s1">&#39;item_id&#39;</span><span class="p">:</span> <span class="mi">270</span><span class="p">,</span> 
-    <span class="s1">&#39;region_id&#39;</span><span class="p">:</span> <span class="mi">1010</span><span class="p">,</span> 
-    <span class="s1">&#39;source_id&#39;</span><span class="p">:</span> <span class="mi">14</span><span class="p">,</span> 
-    <span class="s1">&#39;frequency_id&#39;</span><span class="p">:</span> <span class="mi">9</span><span class="p">,</span> 
+    <span class="s1">&#39;metric_id&#39;</span><span class="p">:</span> <span class="mi">170037</span><span class="p">,</span>
+    <span class="s1">&#39;item_id&#39;</span><span class="p">:</span> <span class="mi">270</span><span class="p">,</span>
+    <span class="s1">&#39;region_id&#39;</span><span class="p">:</span> <span class="mi">1010</span><span class="p">,</span>
+    <span class="s1">&#39;source_id&#39;</span><span class="p">:</span> <span class="mi">14</span><span class="p">,</span>
+    <span class="s1">&#39;frequency_id&#39;</span><span class="p">:</span> <span class="mi">9</span><span class="p">,</span>
     <span class="s1">&#39;start_date&#39;</span><span class="p">:</span> <span class="s1">&#39;2017-01-01&#39;</span>
 <span class="p">})</span>
 </pre></div>
@@ -375,12 +375,12 @@
 <p>But the USDA begins forecasting the yield well before harvest time, and will continue to update its estimate for many months after the harvest is over. In order to see how the forecasts and estimates for each year have changed, you can include the <code class="docutils literal"><span class="pre">show_revisions</span></code> field as follows:</p>
 <div class="highlight-py"><div class="highlight"><pre><span></span><span class="c1"># Soybeans - Yield (mass/area) - Argentina (USDA PS&amp;D)</span>
 <span class="n">client</span><span class="o">.</span><span class="n">get_data_points</span><span class="p">(</span><span class="o">**</span><span class="p">{</span>
-    <span class="s1">&#39;metric_id&#39;</span><span class="p">:</span> <span class="mi">170037</span><span class="p">,</span> 
-    <span class="s1">&#39;item_id&#39;</span><span class="p">:</span> <span class="mi">270</span><span class="p">,</span> 
-    <span class="s1">&#39;region_id&#39;</span><span class="p">:</span> <span class="mi">1010</span><span class="p">,</span> 
-    <span class="s1">&#39;source_id&#39;</span><span class="p">:</span> <span class="mi">14</span><span class="p">,</span> 
-    <span class="s1">&#39;frequency_id&#39;</span><span class="p">:</span> <span class="mi">9</span><span class="p">,</span> 
-    <span class="s1">&#39;start_date&#39;</span><span class="p">:</span> <span class="s1">&#39;2017-01-01&#39;</span><span class="p">,</span> 
+    <span class="s1">&#39;metric_id&#39;</span><span class="p">:</span> <span class="mi">170037</span><span class="p">,</span>
+    <span class="s1">&#39;item_id&#39;</span><span class="p">:</span> <span class="mi">270</span><span class="p">,</span>
+    <span class="s1">&#39;region_id&#39;</span><span class="p">:</span> <span class="mi">1010</span><span class="p">,</span>
+    <span class="s1">&#39;source_id&#39;</span><span class="p">:</span> <span class="mi">14</span><span class="p">,</span>
+    <span class="s1">&#39;frequency_id&#39;</span><span class="p">:</span> <span class="mi">9</span><span class="p">,</span>
+    <span class="s1">&#39;start_date&#39;</span><span class="p">:</span> <span class="s1">&#39;2017-01-01&#39;</span><span class="p">,</span>
     <span class="s1">&#39;show_revisions&#39;</span><span class="p">:</span> <span class="kc">True</span>
 <span class="p">})</span>
 </pre></div>
