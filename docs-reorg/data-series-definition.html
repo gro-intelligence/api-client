@@ -114,8 +114,8 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="authentication.html#expiring-regenerating-tokens">Expiring/Regenerating Tokens</a></li>
 <li class="toctree-l2"><a class="reference internal" href="authentication.html#saving-your-token-as-an-environment-variable">Saving your token as an environment variable</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="authentication.html#for-windows-10">For Windows 10:</a></li>
-<li class="toctree-l3"><a class="reference internal" href="authentication.html#for-mac">For Mac:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="authentication.html#for-windows-10">For Windows 10</a></li>
+<li class="toctree-l3"><a class="reference internal" href="authentication.html#for-mac-and-linux">For Mac and Linux</a></li>
 </ul>
 </li>
 </ul>
@@ -319,15 +319,15 @@
 <p>Gro defines a &#8220;data series&#8220; as a series of data points over time.
 Each data series is defined by a unique selection of:</p>
 <ul class="simple">
-<li><code class="docutils literal"><span class="pre">item</span></code></li>
 <li><code class="docutils literal"><span class="pre">metric</span></code></li>
+<li><code class="docutils literal"><span class="pre">item</span></code></li>
 <li><code class="docutils literal"><span class="pre">region</span></code></li>
 <li><code class="docutils literal"><span class="pre">partner_region</span></code> (optional)</li>
 <li><code class="docutils literal"><span class="pre">frequency</span></code></li>
 <li><code class="docutils literal"><span class="pre">source</span></code></li>
 </ul>
 <p>For example, if you select <code class="docutils literal"><span class="pre">item=Wheat</span></code>, <code class="docutils literal"><span class="pre">metric=Production</span> <span class="pre">Quantity</span> <span class="pre">(mass)</span></code>, <code class="docutils literal"><span class="pre">region=India</span></code>, <code class="docutils literal"><span class="pre">frequency=Annual</span></code>, <code class="docutils literal"><span class="pre">source=FAO</span></code>, that would be one data series. Partner_region is optional and used only in series that represent a flow between two places, e.g. if the metric is exports, the region would be the exporter and the partner_region would be the importer.</p>
-<p>To get all the available data series for a given selection of entities, use the <code class="docutils literal"><span class="pre">get_data_series</span></code> function as described in the <a class="reference external" href="./searching-data.html#get-data-series">Searching Data</a> pf the Using The API Client section.</p>
+<p>To get all the available data series for a given selection of entities, use the <code class="docutils literal"><span class="pre">get_data_series</span></code> function as described in the <a class="reference external" href="./searching-data.html#get-data-series">Searching Data</a> section.</p>
 </div>
 
 

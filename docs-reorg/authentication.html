@@ -114,8 +114,8 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#expiring-regenerating-tokens">Expiring/Regenerating Tokens</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#saving-your-token-as-an-environment-variable">Saving your token as an environment variable</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#for-windows-10">For Windows 10:</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#for-mac">For Mac:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#for-windows-10">For Windows 10</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#for-mac-and-linux">For Mac and Linux</a></li>
 </ul>
 </li>
 </ul>
@@ -329,7 +329,7 @@ Once you have API access enabled for your account, you may retrieve your token i
 <div class="section" id="option-1-using-the-web-app-recommended">
 <h3>Option 1: Using the Web App (Recommended)<a class="headerlink" href="#option-1-using-the-web-app-recommended" title="Permalink to this headline">¶</a></h3>
 <ol class="simple">
-<li>Log in to your Gro account at <a class="reference external" href="http://app.gro-intelligence.com">http://app.gro-intelligence.com</a> and open your Account menu using the button on the bottom left of the Gro dashboard (see image below).
+<li>Log in to your Gro account at <a class="reference external" href="https://app.gro-intelligence.com">https://app.gro-intelligence.com</a> and open your Account menu using the button on the bottom left of the Gro dashboard (see image below).
 <img alt="user-profile-annotated.png" src="_images/user-profile-annotated.png" /></li>
 <li>In the Account menu, select the API tab (see below).
 <img alt="profile-tab-annotated.png" src="_images/profile-tab-annotated.png" /></li>
@@ -377,16 +377,17 @@ Once you have API access enabled for your account, you may retrieve your token i
 <p>If you don&#8216;t want to enter a password or token each time, you can save the token as an environment variable. In some of the sample code, it is assumed that you have the token saved to your environment variables as <code class="docutils literal"><span class="pre">GROAPI_TOKEN</span></code>.</p>
 <p>Please consult your OS or IDE documentation for the most accurate and up-to-date information on how to set environment variables. The links below should provide some guidance on how to do this for your preferred environment.</p>
 <div class="section" id="for-windows-10">
-<h3>For Windows 10:<a class="headerlink" href="#for-windows-10" title="Permalink to this headline">¶</a></h3>
-<p>For Anaconda, please refer to <a class="reference external" href="https://anaconda-project.readthedocs.io/en/latest/user-guide/tasks/work-with-variables.html">Anaconda&#8216;s Documentation</a></p>
-<p>If you are using Windows Powershell, you can refer to <a class="reference external" href="https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_environment_variables?view=powershell-6">Windows&#8216; Documentation</a> or  .</p>
+<h3>For Windows 10<a class="headerlink" href="#for-windows-10" title="Permalink to this headline">¶</a></h3>
+<p>For Anaconda, please refer to <a class="reference external" href="https://anaconda-project.readthedocs.io/en/latest/user-guide/tasks/work-with-variables.html">Anaconda&#8216;s Documentation</a>.</p>
+<p>If you are using Windows Powershell, you can refer to <a class="reference external" href="https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_environment_variables?view=powershell-6">Windows&#8216; Documentation</a>.</p>
 </div>
-<div class="section" id="for-mac">
-<h3>For Mac:<a class="headerlink" href="#for-mac" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="for-mac-and-linux">
+<h3>For Mac and Linux<a class="headerlink" href="#for-mac-and-linux" title="Permalink to this headline">¶</a></h3>
 <p>You can find official instructions for setting environment variables from <a class="reference external" href="https://apple.stackexchange.com/questions/106778/how-do-i-set-environment-variables-on-os-x">Apple&#8216;s Stack Exchange</a>, or as quick guide you can follow these steps:</p>
 <ol class="simple">
-<li>Open up your terminal and type <code class="docutils literal"><span class="pre">open</span> <span class="pre">~/.bash_profile</span></code></li>
-<li>Add the following line: <code class="docutils literal"><span class="pre">export</span> <span class="pre">GROAPI_TOKEN=&quot;YOUR</span> <span class="pre">TOKEN</span> <span class="pre">HERE&quot;</span></code></li>
+<li>Open your terminal and type <code class="docutils literal"><span class="pre">echo</span> <span class="pre">$SHELL</span></code> to determine what shell you are using.</li>
+<li>If the result is <code class="docutils literal"><span class="pre">/bin/bash</span></code> then run <code class="docutils literal"><span class="pre">open</span> <span class="pre">~/.bashrc</span></code>. If the result is <code class="docutils literal"><span class="pre">/bin/zsh</span></code>, then run <code class="docutils literal"><span class="pre">open</span> <span class="pre">~/.zshrc</span></code>. If you are using another shell, please reference your shell-specific documentation.</li>
+<li>In that file, add the following line: <code class="docutils literal"><span class="pre">export</span> <span class="pre">GROAPI_TOKEN=&quot;YOUR</span> <span class="pre">TOKEN</span> <span class="pre">HERE&quot;</span></code></li>
 <li>Save the file and close any shells you have open. The environment variable should be available next time you open a shell.</li>
 </ol>
 </div>
