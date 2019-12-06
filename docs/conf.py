@@ -12,6 +12,7 @@
 #
 import os
 import sys
+import re
 sys.path.insert(0, os.path.abspath('..'))
 
 
@@ -78,3 +79,10 @@ master_doc = 'index'
 scv_grm_exclude = ('README.md', '.gitignore', '.nojekyll', 'CNAME')
 scv_show_banner = True
 scv_banner_main_ref = 'development'
+
+# still build other branches, but hide the version selectors in _static/css/custom-theme.css.
+# Uncomment this line to stop building them altogether:
+# scv_whitelist_branches = ('development',)
+
+# Omit versions before docs style was finalized
+scv_whitelist_tags = (re.compile(r'^(?!.*(v1.40.0|v1.40.1|v1.40.2|v1.40.3|v1.40.4|v1.40.5)).*$'),)
