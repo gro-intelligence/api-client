@@ -25,6 +25,7 @@ With the Gro API Client, you have the power to:
     :caption: Using the API Client
     :maxdepth: 1
 
+    API Reference <api>
     Searching Data <searching-data>
     Querying Data <querying-data>
     Understanding Data Responses <understanding-data-responses>
@@ -41,7 +42,6 @@ With the Gro API Client, you have the power to:
     :caption: Additional Resources
     :maxdepth: 1
 
-    API Reference <api>
     FAQ <faq>
     Other <other>
 
