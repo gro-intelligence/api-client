@@ -87,13 +87,123 @@ class BatchClient(GroClient):
         headers = {'authorization': 'Bearer ' + self.access_token}
         url = '/'.join(['https:', '', self.api_host, 'v2/data'])
         params = lib.get_data_call_params(**selection)
-        resp = yield self.get_data(url, headers, params)
+        resp = yield lib.format_list_of_series(self.get_data(url, headers, params))
         raise gen.Return(json_decode(resp))
 
-    def batch_async_get_data_points(self, batched_args, output_list=None,
-                                    map_result=None):
-        return self.batch_async_queue(self.get_data_points, batched_args,
-                                      output_list, map_result)
+    def batch_async_get_data_points(self, batched_args, output_list=None, map_result=None):
+        def group_on(list_of_objs, attr):
+
+            def get_hash_keys(list_of_objs, to_exclude):
+                """Get all keys in the given objects, excluding one.
+
+                Parameters
+                ----------
+                list_of_objs : list of dicts
+
+                to_exclude : string
+                    a key to exclude from each dict in list_of_objs
+
+                Returns
+                -------
+                list of dicts
+
+                Example
+                -------
+                >>> get_hash_keys([{'a': 1, 'b': 2, 'c': 3}, {'a': 2, 'b': 3, 'c': 5}], 'b')
+                ['a', 'c']
+
+                """
+                return [elem for elem in list_of_objs[0].keys() if elem != to_exclude]
+
+            def hash_obj(obj, ordered_keys, delimiter='.'):
+                """Concatenate an object's values together, delimited by periods.
+
+                Parameters
+                ----------
+                obj : dict
+                    The object to be hashed
+                ordered_keys : list of strings
+                    The keys to get values for to include in the hash
+                delimiter : str, optional
+
+                Returns
+                -------
+                str
+
+                Example
+                -------
+                >>> hash_obj([{'a': 1, 'b': 2, 'c': 3}, ['c', 'a'])
+                '3.1'
+
+                """
+                return delimiter.join([obj[key] for key in ordered_keys])
+
+            def set_attr(obj, key, value):
+                """Chainable property assignment.
+
+                Parameters
+                ----------
+                obj : dict
+                key : str
+                value : any
+
+                Returns
+                -------
+                dict
+                    The given obj, with key assigned to value
+
+                """
+                obj[key] = value
+                return obj
+
+            grouped_objs = {}
+            ordered_keys = get_hash_keys(list_of_objs, attr)
+            for obj in list_of_objs:
+                hash_key = hash_obj(obj, ordered_keys)
+                if hash_key not in grouped_objs:
+                    grouped_objs[hash_key] = set_attr(obj, attr, set([obj[attr]]))
+                else:
+                    grouped_objs[hash_key][attr].add(obj[attr])
+            return [set_attr(grouped_obj, attr, list(grouped_obj[attr]))
+                    for grouped_obj in grouped_objs].values()
+
+        def split_large_requests(list_of_requests, attr, max_list_size=2000):
+            split_requests = []
+            for request in list_of_requests:
+                if len(request[attr]) > max_list_size:
+                    num_splits = math.ceil(len(request[attr]) / float(max_list_size))
+                    for i in range(num_splits):
+                        split_attr = request[max_list_size*i:max_list_size*(i+1)]
+                        split_request = copy(request)
+                        split_request[attr] = split_attr
+                        split_requests.append(split_request)
+                else:
+                    split_requests.append(request)
+            return split_requests
+
+        def spread_requests(list_of_requests, attr):
+            optimal_request_num = (cfg.MAX_QUERIES_PER_SECOND *
+                                   math.ceil(len(list_of_requests)
+                                             / float(cfg.MAX_QUERIES_PER_SECOND)))
+            while(len(list_of_requests) < optimal_request_num):
+                largest_request = max([len(request[attr]) for request in list_of_requests])
+                largest_request_size = len(sorted_requests[0])
+                sorted_requests = sort_requests_by_size(sorted_requests[1:] + [
+                    sorted_requests[0][:largest_request_size/2],
+                    sorted_requests[0][largest_request_size/2:]
+                ])
+
+        grouped_on_items = group_on(batched_args, 'item_id')
+        grouped_on_regions = group_on(batched_args, 'region_id')
+
+        if len(grouped_on_items) < len(grouped_on_regions):
+            batched_requests = split_large_requests(grouped_on_items, 'item_id')
+            return self.batch_async_queue(self.get_data_points, batched_requests, output_list,
+                                          map_result)
+        batched_requests = split_large_requests(grouped_on_items, 'region_id')
+        return self.batch_async_queue(self.get_data_points, batched_requests, output_list,
+                                      map_result)
+       
 
     @gen.coroutine
     def async_rank_series_by_source(self, **selection):
@@ -102,7 +212,7 @@ class BatchClient(GroClient):
         raise gen.Return([r for r in response])
 
     def batch_async_rank_series_by_source(self, batched_args,
-                                       output_list=None, map_result=None):
+                                          output_list=None, map_result=None):
         return self.batch_async_queue(self.async_rank_series_by_source, batched_args,
                                       output_list, map_result)
 
