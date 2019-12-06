@@ -346,18 +346,23 @@
 </pre></div>
 </div>
 <p>IDs are unique within a particular entity type, i.e., there&#8216;s only one item with id = 270.</p>
-<p>The above information can be retrieved using the <code class="docutils literal"><span class="pre">client.lookup</span></code> function:
-<code class="docutils literal"><span class="pre">client.lookup('items',</span> <span class="pre">270)</span></code></p>
+<p>The above information can be retrieved using the <code class="docutils literal"><span class="pre">client.lookup</span></code> function:</p>
+<div class="highlight-py"><div class="highlight"><pre><span></span><span class="n">client</span><span class="o">.</span><span class="n">lookup</span><span class="p">(</span><span class="s1">&#39;items&#39;</span><span class="p">,</span> <span class="mi">270</span><span class="p">)</span>
+</pre></div>
+</div>
 <p><a class="reference external" href="./understanding-data-responses#look-up">See this Getting Started section for help on finding entities by name or by id.</a></p>
 </div>
 <div class="section" id="entity-relationships-contains">
 <h2>Entity Relationships: Contains<a class="headerlink" href="#entity-relationships-contains" title="Permalink to this headline">¶</a></h2>
 <p>Items, metrics, and regions have a property called <code class="docutils literal"><span class="pre">contains</span></code>, which is an array of the other entities that it contains, or that belong to it. For example, the item &#8220;Cereals&#8220; contains the items &#8220;Wheat,&#8220; &#8220;Corn,&#8220; etc.</p>
-<p>Variations of the <code class="docutils literal"><span class="pre">client.lookup(type,</span> <span class="pre">id)</span></code> function can help you understand what a given entity contains or belongs to. For example:
-<code class="docutils literal"><span class="pre">client.lookup('items',</span> <span class="pre">10009)['contains']</span></code>
-Will return a list of items that are contained within the item &#8220;Cereals&#8220; (item_id: 10009).</p>
-<p><code class="docutils literal"><span class="pre">client.lookup_belongs('regions',</span> <span class="pre">13055)</span></code>
-Will return a list of regions to which &#8220;California&#8220; (region_id: 13055) belongs.</p>
+<p>Variations of the <code class="docutils literal"><span class="pre">client.lookup(type,</span> <span class="pre">id)</span></code> function can help you understand what a given entity contains or belongs to. For example, the following will return a list of items that are contained within the item &#8220;Cereals&#8220; (item_id: 10009):</p>
+<div class="highlight-py"><div class="highlight"><pre><span></span><span class="n">client</span><span class="o">.</span><span class="n">lookup</span><span class="p">(</span><span class="s1">&#39;items&#39;</span><span class="p">,</span> <span class="mi">10009</span><span class="p">)[</span><span class="s1">&#39;contains&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>And, in the opposite direction, the following will return a list of regions &#8220;California&#8220; (region_id: 13055) belongs to.</p>
+<div class="highlight-py"><div class="highlight"><pre><span></span><span class="n">client</span><span class="o">.</span><span class="n">lookup_belongs</span><span class="p">(</span><span class="s1">&#39;regions&#39;</span><span class="p">,</span> <span class="mi">13055</span><span class="p">)</span>
+</pre></div>
+</div>
 <p><a class="reference external" href="./searching-data.html#lookup-contains">See this Getting Started section for navigation of relationships between entities.</a></p>
 </div>
 <div class="section" id="special-properties-for-regions">
