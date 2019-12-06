@@ -142,7 +142,7 @@ class CropModel(GroClient):
             raise Exception("Insufficient temporal coverage for GDD, " + \
                             "{} < {} data points available".format(
                                 tmean.value.size, coverage_threshold))
-        gdd_values = tmean.value - base_temperature
+        gdd_values = tmean.value.apply(lambda x: max(x - base_temperature, 0))
         # TODO: group by freq and normalize in case not daily
         return gdd_values.sum()
 
@@ -153,9 +153,9 @@ class CropModel(GroClient):
         Growing degree days (GDD) are a weather-based indicator that
         allows for assessing crop phenology and crop development,
         based on heat accumulation. GDD for one day is defined as
-        [T_mean - T_base], where T_mean is the average temperature of
-        that day if available. Typically T_mean is approximated as
-        (T_max + T_min)/2.
+        max(T_mean - T_base, 0), where T_mean is the average
+        temperature of that day if available. Typically T_mean is
+        approximated as (T_max + T_min)/2.
 
         The GDD over a longer time interval is the sum of the GDD over
         all days in the interval. Days where the data is missing
