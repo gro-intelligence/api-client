@@ -1,16 +1,17 @@
 # Data Point Definition
+
 Gro defines a "data point" as a discrete result produced by our API. When using the `get_data_points()` function, you are returned an array of points, each of which is a Python dictionary object that looks something like:
+
 ```py
-{'end_date': '2013-02-04T00:00:00.000Z',
-  'frequency_id': 1,
-  'input_unit_id': 851,
-  'input_unit_scale': 1,
-  'item_id': 7382,
-  'metric_id': 15531082,
-  'region_id': 138295,
-  'start_date': '2013-02-04T00:00:00.000Z',
+{ 'start_date': '2013-02-04T00:00:00.000Z',
+  'end_date': '2013-02-04T00:00:00.000Z',
+  'value': 0.131714797651,
   'unit_id': 851,
-  'value': 0.131714797651}
+  'reporting_date': None,
+  'metric_id': 15531082,
+  'item_id': 7382,
+  'region_id': 138295,
+  'frequency_id': 1 }
 ```
 
 For example, if you requested NDVI for Bureau county, Illinois, for a particular 8-day time period, the Gro API would yield a single response that would count as a single data point. Even though the value is computed from tens of thousands of underlying pixels, the API response counts as a single point because we are returning the value at the county (aka district) level.

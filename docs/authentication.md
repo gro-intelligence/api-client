@@ -1,6 +1,6 @@
 # Authentication
 
-To work with the Gro API, you need an authentication token. This token needs to be sent along with every request made to the API. This is typically done by using one of the included Client classes (`Client`, `GroClient`, `BatchClient`, or `CropModel`): you provide your access token when creating the object, and then every API request made thereafter automatically includes the token. 
+To work with the Gro API, you need an authentication token. This token needs to be sent along with every request made to the API. This is typically done by using one of the included Client classes (`Client`, `GroClient`, `BatchClient`, or `CropModel`): you provide your access token when creating the object, and then every API request made thereafter automatically includes the token.
 
 ## Retrieving a token
 
@@ -13,14 +13,12 @@ Once you have API access enabled for your account, you may retrieve your token i
 
 ### Option 1: Using the Web App (Recommended)
 
-1. Log in to your Gro account at <http://app.gro-intelligence.com> and open your Account menu using the button on the bottom left of the Gro dashboard (see image below).
-![user-profile-annotated.png](./_images/user-profile-annotated.png)
-
+1. Log in to your Gro account at <https://app.gro-intelligence.com> and open your Account menu using the button on the bottom left of the Gro dashboard (see image below).
+    ![user-profile-annotated.png](./_images/user-profile-annotated.png)
 2. In the Account menu, select the API tab (see below).
-![profile-tab-annotated.png](./_images/profile-tab-annotated.png)
-
+    ![profile-tab-annotated.png](./_images/profile-tab-annotated.png)
 3. Select the text of the token and copy it to your clipboard, or use the "Copy to clipboard" button (see below).
-![api-tab-annotated.png](./_images/api-tab-annotated.png)
+    ![api-tab-annotated.png](./_images/api-tab-annotated.png)
 
 ### Option 2: Using the gro_client Command Line Interface
 
@@ -69,17 +67,19 @@ To regenerate your authentication token, open the API tab in your Account menu a
 
 If you don't want to enter a password or token each time, you can save the token as an environment variable. In some of the sample code, it is assumed that you have the token saved to your environment variables as `GROAPI_TOKEN`.
 
-Please consult your OS or IDE documentation for the most accurate and up-to-date information on how to set environment variables. The links below should provide some guidance on how to do this for your preferred environment. 
+Please consult your OS or IDE documentation for the most accurate and up-to-date information on how to set environment variables. The links below should provide some guidance on how to do this for your preferred environment.
 
-### For Windows 10:
-For Anaconda, please refer to [Anaconda's Documentation](https://anaconda-project.readthedocs.io/en/latest/user-guide/tasks/work-with-variables.html)
+### For Windows 10
 
-If you are using Windows Powershell, you can refer to [Windows' Documentation](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_environment_variables?view=powershell-6) or  .
+For Anaconda, please refer to [Anaconda's Documentation](https://anaconda-project.readthedocs.io/en/latest/user-guide/tasks/work-with-variables.html).
 
+If you are using Windows Powershell, you can refer to [Windows' Documentation](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_environment_variables?view=powershell-6).
 
-### For Mac:
+### For Mac
+
 You can find official instructions for setting environment variables from [Apple's Stack Exchange](https://apple.stackexchange.com/questions/106778/how-do-i-set-environment-variables-on-os-x), or as quick guide you can follow these steps:
 
-1. Open up your terminal and type `open ~/.bash_profile`
-2. Add the following line: `export GROAPI_TOKEN="YOUR TOKEN HERE"`
-3. Save the file and close any shells you have open. The environment variable should be available next time you open a shell.
+1. Open your terminal and type `echo $SHELL` to determine what shell you are using.
+2. If the result is `/bin/bash` then run `open ~/.bashrc`. If the result is `/bin/zsh`, then run `open ~/.zshrc`. If you are using another shell, please reference your shell-specific documentation.
+3. In that file, add the following line: `export GROAPI_TOKEN="YOUR TOKEN HERE"`
+4. Save the file and close any shells you have open. The environment variable should be available next time you open a shell.
