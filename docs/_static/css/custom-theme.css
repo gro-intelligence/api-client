@@ -267,3 +267,8 @@ footer a {
 #text {
     display: none;
 }
+
+/* hide branches from version switcher */
+.rst-other-versions:last-child {
+    display: none;
+}
