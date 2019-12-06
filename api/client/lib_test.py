@@ -206,5 +206,4 @@ def test_rank_series_by_source(mock_requests_get):
     c = list(lib.rank_series_by_source(MOCK_TOKEN, MOCK_HOST, [a,b]))
     # for each series selection a, b, we should get a ranking with 3 series
     assert(len(c) == 6)
-
-    assert mock_return == [x["source_id"] for x in c]
+    assert mock_return + mock_return == [x["source_id"] for x in c]
