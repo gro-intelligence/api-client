@@ -25,7 +25,10 @@ Each specific entity will have an `id`, `name`, and various other properties. Fo
 IDs are unique within a particular entity type, i.e., there's only one item with id = 270.
 
 The above information can be retrieved using the `client.lookup` function:
-```client.lookup('items', 270)```
+
+```py
+client.lookup('items', 270)
+```
 
 [See this Getting Started section for help on finding entities by name or by id.](./understanding-data-responses#look-up)
 
@@ -33,12 +36,17 @@ The above information can be retrieved using the `client.lookup` function:
 
 Items, metrics, and regions have a property called `contains`, which is an array of the other entities that it contains, or that belong to it. For example, the item "Cereals" contains the items "Wheat," "Corn," etc.
 
-Variations of the `client.lookup(type, id)` function can help you understand what a given entity contains or belongs to. For example:
-```client.lookup('items', 10009)['contains']```
-Will return a list of items that are contained within the item "Cereals" (item_id: 10009).
+Variations of the `client.lookup(type, id)` function can help you understand what a given entity contains or belongs to. For example, the following will return a list of items that are contained within the item "Cereals" (item_id: 10009):
 
-```client.lookup_belongs('regions', 13055)```
-Will return a list of regions to which "California" (region_id: 13055) belongs.
+```py
+client.lookup('items', 10009)['contains']
+```
+
+And, in the opposite direction, the following will return a list of regions "California" (region_id: 13055) belongs to.
+
+```py
+client.lookup_belongs('regions', 13055)
+```
 
 [See this Getting Started section for navigation of relationships between entities.](./searching-data.html#lookup-contains)
 
