@@ -121,7 +121,12 @@
 </ul>
 </li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Quickstart Examples</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#get-started-in-120-seconds">Get Started in 120 Seconds</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#get-started-in-120-seconds">Get Started in 120 Seconds</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#step-1-get-your-api-token">Step 1: Get your API token</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#step-2-run-the-code-in-a-notebook">Step 2: Run the code in a notebook</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#step-3-bonus-round">Step 3: Bonus Round</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="#quickstart-py">Quickstart.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#brazil-soybeans">Brazil Soybeans</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#gro-client-tool">gro_client tool</a></li>
@@ -310,52 +315,66 @@
 <div class="section" id="get-started-in-120-seconds">
 <h2>Get Started in 120 Seconds<a class="headerlink" href="#get-started-in-120-seconds" title="Permalink to this headline">¶</a></h2>
 <p>If you have a Google account, or if you already have <a class="reference external" href="https://jupyter.readthedocs.io/en/latest/install.html">Jupyter Notebook</a> and python installed, and a Gro API token, you can start pulling Gro data via our API client within 120 seconds.</p>
-<p><strong>Step 1: Get your API token</strong></p>
-<ol class="simple">
-<li>Login to your Gro web app account at <a class="reference external" href="app.gro-intelligence.com">app.gro-intelligence.com</a></li>
-<li>Open the Account button in the bottom left corner of the app.
-<img alt="account-button" src="_images/account-button.PNG" /></li>
-<li>Navigate to the API tab.
-<img alt="account-api-section" src="_images/account-api-section.PNG" /></li>
-<li>Copy your token.</li>
+<div class="section" id="step-1-get-your-api-token">
+<h3>Step 1: Get your API token<a class="headerlink" href="#step-1-get-your-api-token" title="Permalink to this headline">¶</a></h3>
+<ol>
+<li><p class="first">Login to your Gro web app account at <a class="reference external" href="app.gro-intelligence.com">app.gro-intelligence.com</a></p>
+</li>
+<li><p class="first">Open the Account button in the bottom left corner of the app.</p>
+<p><img alt="account-button" src="_images/account-button.PNG" /></p>
+</li>
+<li><p class="first">Navigate to the API tab.</p>
+<p><img alt="account-api-section" src="_images/account-api-section.PNG" /></p>
+</li>
+<li><p class="first">Copy your token.</p>
+</li>
 </ol>
-<p><strong>Step 2: Run the code in a notebook</strong></p>
-<ol class="simple">
-<li>Navigate to <a class="reference external" href="https://colab.research.google.com/">Google Colab</a>, or launch Jupyter Notebook from your command line with the command <code class="docutils literal"><span class="pre">jupyter</span> <span class="pre">notebook</span></code>.</li>
-<li>Copy the below code and paste it into the first cell.</li>
-</ol>
-<div class="highlight-default"><div class="highlight"><pre><span></span>!pip install git+https://github.com/gro-intelligence/api-client.git
+</div>
+<div class="section" id="step-2-run-the-code-in-a-notebook">
+<h3>Step 2: Run the code in a notebook<a class="headerlink" href="#step-2-run-the-code-in-a-notebook" title="Permalink to this headline">¶</a></h3>
+<ol>
+<li><p class="first">Navigate to <a class="reference external" href="https://colab.research.google.com/">Google Colab</a>, or launch Jupyter Notebook from your command line with the command <code class="docutils literal"><span class="pre">jupyter</span> <span class="pre">notebook</span></code>.</p>
+</li>
+<li><p class="first">Copy the below code and paste it into the first cell.</p>
+<div class="highlight-py"><div class="highlight"><pre><span></span>!pip install git+https://github.com/gro-intelligence/api-client.git
 </pre></div>
 </div>
 <p>Then click the &#8220;Run Cell&#8220; button to the left of the cell.
-In Colab, it will look like this:
-<img alt="colab-run-button" src="_images/colab-run-button.PNG" />
-In Jupyter Notebook, it looks like this:
-<img alt="jupyter-run-button" src="_images/jupyter-run-button.PNG" />
-3. Add another cell with the &#8220;+ Code&#8220; button, then copy the below code and paste it into the second cell.</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">api.client.gro_client</span> <span class="kn">import</span> <span class="n">GroClient</span>
-
-<span class="n">API_HOST</span> <span class="o">=</span> <span class="s1">&#39;api.gro-intelligence.com&#39;</span>
-<span class="n">ACCESS_TOKEN</span> <span class="o">=</span> <span class="s1">&#39;YOUR_TOKEN&#39;</span>
-<span class="n">client</span> <span class="o">=</span> <span class="n">GroClient</span><span class="p">(</span><span class="n">API_HOST</span><span class="p">,</span> <span class="n">ACCESS_TOKEN</span><span class="p">)</span>
+In Colab, it will look like this:</p>
+<p><img alt="colab-run-button" src="_images/colab-run-button.PNG" /></p>
+<p>In Jupyter Notebook, it looks like this:
+<img alt="jupyter-run-button" src="_images/jupyter-run-button.PNG" /></p>
+</li>
+<li><p class="first">Add another cell with the &#8220;+ Code&#8220; button, then copy the below code and paste it into the second cell.</p>
+<div class="highlight-py"><div class="highlight"><pre><span></span>from api.client.gro_client import GroClient
+API_HOST = &#39;api.gro-intelligence.com&#39;
+ACCESS_TOKEN = &#39;YOUR_TOKEN&#39;
+client = GroClient(API_HOST, ACCESS_TOKEN)```
 </pre></div>
 </div>
-<p>Replace the text YOUR_TOKEN with the token you copied from step one. Then click the &#8220;Run Cell&#8220; button to the left of the cell.
-4. Add one more cell with the &#8220;+ Code&#8220; button, then copy the below code and paste it into the third cell.</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1"># Rice, milled - Area Harvested (area) - Kenya (USDA PS&amp;D)</span>
-<span class="n">client</span><span class="o">.</span><span class="n">get_data_points</span><span class="p">(</span><span class="o">**</span><span class="p">{</span>
-	<span class="s1">&#39;metric_id&#39;</span><span class="p">:</span> <span class="mi">570001</span><span class="p">,</span> 
-	<span class="s1">&#39;item_id&#39;</span><span class="p">:</span> <span class="mi">392</span><span class="p">,</span> 
-	<span class="s1">&#39;region_id&#39;</span><span class="p">:</span> <span class="mi">1107</span><span class="p">,</span> 
-	<span class="s1">&#39;source_id&#39;</span><span class="p">:</span> <span class="mi">14</span><span class="p">,</span> 
-	<span class="s1">&#39;frequency_id&#39;</span><span class="p">:</span> <span class="mi">9</span>
-<span class="p">})</span>
+</li>
+<li><p class="first">Replace the text YOUR_TOKEN with the token you copied from step one. Then click the &#8220;Run Cell&#8220; button to the left of the cell.</p>
+</li>
+<li><p class="first">Add one more cell with the &#8220;+ Code&#8220; button, then copy the below code and paste it into the third cell.</p>
+<div class="highlight-py"><div class="highlight"><pre><span></span># Rice, milled - Area Harvested (area) - Kenya (USDA PS&amp;D)
+client.get_data_points(**{
+&#39;metric_id&#39;: 570001,
+&#39;item_id&#39;: 392,
+&#39;region_id&#39;: 1107,
+&#39;source_id&#39;: 14,
+&#39;frequency_id&#39;: 9
+})```
 </pre></div>
 </div>
-<p>Click the &#8220;Run Cell&#8220; button to the left of the cell, and that&#8216;s it! You should now see the data in the response.</p>
-<p><strong>Step 3: Bonus Round</strong></p>
+</li>
+<li><p class="first">Click the &#8220;Run Cell&#8220; button to the left of the cell, and that&#8216;s it! You should now see the data in the response.</p>
+</li>
+</ol>
+</div>
+<div class="section" id="step-3-bonus-round">
+<h3>Step 3: Bonus Round<a class="headerlink" href="#step-3-bonus-round" title="Permalink to this headline">¶</a></h3>
 <ol class="simple">
-<li>Go to the Gro <a class="reference external" href="app.gro-intelligence.com">web app</a> and choose a chart that you like.</li>
+<li>Go to the Gro <a class="reference external" href="https://app.gro-intelligence.com">web app</a> and choose a chart that you like.</li>
 <li>Click the dropdown arrow in the top right of the chart.
 <img alt="chart-dropdown" src="_images/chart-dropdown.PNG" /></li>
 <li>Click Export, and then click API Client Code Snippets.
@@ -366,6 +385,7 @@ In Jupyter Notebook, it looks like this:
 <li>Click the &#8220;Run Cell&#8220; button to the left of the call. Congrats! You&#8216;ve just discovered data in the web app and then pulled it via the API client.
 <img alt="snippet-response" src="_images/snippet-response.PNG" /></li>
 </ol>
+</div>
 </div>
 <div class="section" id="quickstart-py">
 <h2>Quickstart.py<a class="headerlink" href="#quickstart-py" title="Permalink to this headline">¶</a></h2>
