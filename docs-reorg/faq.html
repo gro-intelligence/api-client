@@ -315,7 +315,7 @@
 <h2>Exploring What&#8216;s Available<a class="headerlink" href="#exploring-what-s-available" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="q-why-is-it-that-when-i-use-client-search-to-find-metrics-items-regions-i-m-interested-in-sometimes-client-get-data-series-doesn-t-have-any-data-for-those-metrics-items-regions">
 <h3>Q: Why is it that when I use client.search() to find metrics/items/regions I&#8216;m interested in, sometimes client.get_data_series() doesn&#8216;t have any data for those metrics/items/regions?<a class="headerlink" href="#q-why-is-it-that-when-i-use-client-search-to-find-metrics-items-regions-i-m-interested-in-sometimes-client-get-data-series-doesn-t-have-any-data-for-those-metrics-items-regions" title="Permalink to this headline">¶</a></h3>
-<p><code class="docutils literal"><span class="pre">client.search()</span></code> provides a way to search across everything we have identified and defined in our ontology. Sometimes data doesn&#8216;t exist for a particular result for a number of reasons, most commonly because we may have defined new entries in preparation for an incoming source which is undergoing testing. <code class="docutils literal"><span class="pre">client.get_data_series()</span></code> will tell you what data is actually available. You can intersect the results from those two functions to find things programmatically, or you can use the web application at &lt;app.gro-intelligence.com&gt; to explore what data is available, intersected already.</p>
+<p><code class="docutils literal"><span class="pre">client.search()</span></code> provides a way to search across everything we have identified and defined in our ontology. Sometimes data doesn&#8216;t exist for a particular result for a number of reasons, most commonly because we may have defined new entries in preparation for an incoming source which is undergoing testing. <code class="docutils literal"><span class="pre">client.get_data_series()</span></code> will tell you what data is actually available. You can intersect the results from those two functions to find things programmatically, or you can use the web application at <a class="reference external" href="https://app.gro-intelligence.com">https://app.gro-intelligence.com</a> to explore what data is available, intersected already.</p>
 </div>
 <div class="section" id="q-what-does-sourcelag-mean-when-i-use-client-lookup-to-inspect-a-source-s-details">
 <h3>Q: What does &#8216;sourceLag&#8216; mean when I use client.lookup() to inspect a source&#8216;s details?<a class="headerlink" href="#q-what-does-sourcelag-mean-when-i-use-client-lookup-to-inspect-a-source-s-details" title="Permalink to this headline">¶</a></h3>
@@ -333,11 +333,11 @@
 <h2>Data Coverage<a class="headerlink" href="#data-coverage" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="q-why-is-there-no-satellite-rainfall-data-in-northern-latitudes-sometimes">
 <h3>Q: Why is there no satellite rainfall data in northern latitudes sometimes?<a class="headerlink" href="#q-why-is-there-no-satellite-rainfall-data-in-northern-latitudes-sometimes" title="Permalink to this headline">¶</a></h3>
-<p>This is determined by the spatial extent of the satellites. For more information see <a class="reference external" href="./other.html#TRMM-and-GPM-spatial-extents">TRMM/GPM spatial extent</a>. Note that this limitation is only for satellite data. Rainfall data from ground-based weather stations is also available in Gro, see <a class="reference external" href="https://app.gro-intelligence.com/dictionary/sources/22">NOAA/NCDC GHCN</a>.</p>
+<p>This is determined by the spatial extent of the satellites. For more information see <a class="reference external" href="other#trmm-and-gpm-spatial-extents">TRMM/GPM spatial extent</a>. Note that this limitation is only for satellite data. Rainfall data from ground-based weather stations is also available in Gro, see <a class="reference external" href="https://app.gro-intelligence.com/dictionary/sources/22">NOAA/NCDC GHCN</a>.</p>
 </div>
 <div class="section" id="q-why-are-there-some-gaps-in-the-soil-moisture-data">
 <h3>Q: Why are there some gaps in the soil moisture data?<a class="headerlink" href="#q-why-are-there-some-gaps-in-the-soil-moisture-data" title="Permalink to this headline">¶</a></h3>
-<p>Radio Frequency Interferences (RFI) can limit the quality of remotely sensed data in some regions. For more information see <a class="reference external" href="./other.html#radio-frequency-interference-effects-on-smos">Radio Frequency Interference Effects On SMOS</a>.</p>
+<p>Radio Frequency Interferences (RFI) can limit the quality of remotely sensed data in some regions. For more information see <a class="reference external" href="other#radio-frequency-interference-effects-on-smos">Radio Frequency Interference Effects On SMOS</a>.</p>
 </div>
 </div>
 <div class="section" id="account">
@@ -345,14 +345,14 @@
 <div class="section" id="q-how-do-i-verify-connectivity-with-gro-api">
 <h3>Q: How do I verify connectivity with Gro API?<a class="headerlink" href="#q-how-do-i-verify-connectivity-with-gro-api" title="Permalink to this headline">¶</a></h3>
 <p>To check your basic connectivity, e.g. whether your corporate firewall allows access to Gro API servers, you can using a Gro API client function that doesn&#8216;t require authentication, such as lookup(). For example:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span>  <span class="nn">api.client</span> <span class="kn">import</span> <span class="n">lib</span>
+<div class="highlight-py"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">api.client.lib</span> <span class="kn">import</span> <span class="n">lib</span>
 <span class="n">lib</span><span class="o">.</span><span class="n">lookup</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;api.gro-intelligence.com&#39;</span><span class="p">,</span> <span class="s1">&#39;items&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="section" id="q-how-do-i-get-authenticated-access-to-gro-api">
 <h3>Q: How do I get authenticated access to Gro API?<a class="headerlink" href="#q-how-do-i-get-authenticated-access-to-gro-api" title="Permalink to this headline">¶</a></h3>
-<p>You must get an <a class="reference external" href="./authentication.html#retrieving-a-token">authentication token</a> from your Gro account.</p>
+<p>You must get an <a class="reference external" href="authentication#retrieving-a-token">authentication token</a> from your Gro account.</p>
 </div>
 <div class="section" id="q-i-tried-using-my-gro-username-and-login-but-am-getting-a-401-unauthorized-error">
 <h3>Q: I tried using my Gro username and login but am getting a 401 Unauthorized error<a class="headerlink" href="#q-i-tried-using-my-gro-username-and-login-but-am-getting-a-401-unauthorized-error" title="Permalink to this headline">¶</a></h3>
