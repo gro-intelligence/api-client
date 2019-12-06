@@ -44,9 +44,3 @@ With the Gro API Client, you have the power to:
 
     FAQ <faq>
     Other <other>
-
-.. toctree::
-    :caption: Advanced
-    :maxdepth: 1
-
-    Productionization Recommendations
