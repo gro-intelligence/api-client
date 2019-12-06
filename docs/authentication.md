@@ -75,7 +75,7 @@ For Anaconda, please refer to [Anaconda's Documentation](https://anaconda-projec
 
 If you are using Windows Powershell, you can refer to [Windows' Documentation](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_environment_variables?view=powershell-6).
 
-### For Mac
+### For Mac and Linux
 
 You can find official instructions for setting environment variables from [Apple's Stack Exchange](https://apple.stackexchange.com/questions/106778/how-do-i-set-environment-variables-on-os-x), or as quick guide you can follow these steps:
 
