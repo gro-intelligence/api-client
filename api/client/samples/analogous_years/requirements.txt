@@ -4,7 +4,8 @@ cufflinks
 dateparser
 dtw==1.3.3
 numpy
-pandas>=0.20.3,!=0.24.* # pandas dropna is buggy in 0.24.0, see https://github.com/blue-yonder/tsfresh/issues/485 and https://github.com/pandas-dev/pandas/issues/25087
+pandas>=0.25.* # pandas dropna is buggy in 0.24.0, see https://github.com/blue-yonder/tsfresh/issues/485 and https://github.com/pandas-dev/pandas/issues/25087
+# and date-time handling is different between 0.23.* and 0.25.*
 plotly
 scikit-learn
 scipy
