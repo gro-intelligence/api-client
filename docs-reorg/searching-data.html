@@ -164,7 +164,12 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="understanding-data-responses.html">Understanding Data Responses</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="understanding-data-responses.html#look-up">Look up</a></li>
+<li class="toctree-l2"><a class="reference internal" href="understanding-data-responses.html#look-up">Look up</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="understanding-data-responses.html#metrics">Metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="understanding-data-responses.html#frequencies">Frequencies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="understanding-data-responses.html#units">Units</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -324,13 +329,13 @@
 <p>To derive the insights you want from Gro&#8216;s data, you will first want to find the data you&#8216;re interested in. Below you will find some of the most useful tips on how to discover the data of greatest value to you.</p>
 <div class="section" id="code-snippets">
 <h2>Code snippets<a class="headerlink" href="#code-snippets" title="Permalink to this headline">¶</a></h2>
-<p>Users may find that the Gro API is at its most powerful when used in conjunction with the Gro web application. The web app provides the most convenient format for selecting the data series that is of most interest to you. In our Add Data Series window, you can select entities of interest, and then other entities for which no data is available based on your selection will be filtered out from the remaining options. For example, after selecting the item &#8220;Corn&#8220; only metrics and regions that have data for &#8216;Corn&#8216; will remain selectable.
-<img alt="add-data-series-example.png" src="_images/add-data-series-example.PNG" /></p>
+<p>Users may find that the Gro API is at its most powerful when used in conjunction with the Gro web application. The web app provides the most convenient format for selecting the data series that is of most interest to you. In our Add Data Series window, you can select entities of interest, and then other entities for which no data is available based on your selection will be filtered out from the remaining options. For example, after selecting the item &#8220;Corn&#8220; only metrics and regions that have data for &#8216;Corn&#8216; will remain selectable.</p>
+<p><img alt="add-data-series-example.png" src="_images/add-data-series-example.PNG" /></p>
 <p>Once you have created a chart with data that you want, you can take advantage of our Code Snippets feature to pull that data into your API client code.</p>
-<p>Simply click on the Chart Dropdown Button, then select Export and API Client Code Snippets.
-<img alt="code-snippet-dropdown.png" src="_images/code-snippet-dropdown.PNG" /></p>
-<p>Every unique data series from your chart will now be available in a client.get_data_points function for easy copying and pasting into your code or command line.
-<img alt="code-snippet-copy-code.png" src="_images/code-snippet-copy-code.PNG" /></p>
+<p>Simply click on the Chart Dropdown Button, then select Export and API Client Code Snippets.</p>
+<p><img alt="code-snippet-dropdown.png" src="_images/code-snippet-dropdown.PNG" /></p>
+<p>Every unique data series from your chart will now be available in a client.get_data_points function for easy copying and pasting into your code or command line.</p>
+<p><img alt="code-snippet-copy-code.png" src="_images/code-snippet-copy-code.PNG" /></p>
 <p>For charts that have multiple data series, you have the option to Select all unique data series, or to select the individual series that are of greatest interest to you.
 <img alt="code-snippet-select-all.png" src="_images/code-snippet-select-all.PNG" /></p>
 </div>
@@ -339,7 +344,7 @@
 <p>As described in the <a class="reference internal" href="data-series-definition.html"><span class="doc">Data Series Definition</span></a> page, a data series in Gro is a unique combination of the entities: item, metric, region, partner_region (optional), frequency, and source. To find the specific entity you would like to retrieve data for, you can use a variety of search methods. For example, <a class="reference external" href="./api#api.client.gro_client.GroClient.search"><code class="docutils literal"><span class="pre">client.search()</span></code></a> will return a list of IDs that match your search term. If you want to understand the differences between various search results, you may find the <a class="reference external" href="./api#api.client.gro_client.GroClient.search_and_lookup"><code class="docutils literal"><span class="pre">client.search_and_lookup()</span></code></a> method more helpful.</p>
 <p><code class="docutils literal"><span class="pre">client.search_and_lookup('items','Corn')</span></code> will yield a list of all items that contain &#8220;corn&#8220; in their name, along with supporting information like id, name, and ids of other items contained by a given item.</p>
 <p>Note: the above query will return a <a class="reference external" href="https://wiki.python.org/moin/Generators">generator</a> object. Running a query like the one below will print every result:</p>
-<div class="highlight-py"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">client</span><span class="o">.</span><span class="n">search_and_lookup</span><span class="p">(</span><span class="s1">&#39;items&#39;</span><span class="p">,</span><span class="s1">&#39;corn&#39;</span><span class="p">):</span> 
+<div class="highlight-py"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">client</span><span class="o">.</span><span class="n">search_and_lookup</span><span class="p">(</span><span class="s1">&#39;items&#39;</span><span class="p">,</span><span class="s1">&#39;corn&#39;</span><span class="p">):</span>
   <span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -354,7 +359,7 @@
 <div class="section" id="lookup-contains">
 <h2>Lookup contains<a class="headerlink" href="#lookup-contains" title="Permalink to this headline">¶</a></h2>
 <p>Our ontology is defined in terms of a graph, with metrics/items/regions containing others. In each case, you can see the <code class="docutils literal"><span class="pre">'contains'</span></code> property in the output of <code class="docutils literal"><span class="pre">client.lookup(type,</span> <span class="pre">id)</span></code>. For example:</p>
-<div class="highlight-py"><div class="highlight"><pre><span></span><span class="n">client</span><span class="o">.</span><span class="n">lookup</span><span class="p">(</span><span class="s1">&#39;items&#39;</span><span class="p">,</span> <span class="mi">10009</span><span class="p">)[</span><span class="s1">&#39;contains&#39;</span><span class="p">]</span> 
+<div class="highlight-py"><div class="highlight"><pre><span></span><span class="n">client</span><span class="o">.</span><span class="n">lookup</span><span class="p">(</span><span class="s1">&#39;items&#39;</span><span class="p">,</span> <span class="mi">10009</span><span class="p">)[</span><span class="s1">&#39;contains&#39;</span><span class="p">]</span>
 </pre></div>
 </div>
 <p>will return a list of items ids for items that are cereals (item_id = 10009): <code class="docutils literal"><span class="pre">[...,</span> <span class="pre">274,</span> <span class="pre">422,</span> <span class="pre">...]</span></code>. Once you have those ids, you can use the <code class="docutils literal"><span class="pre">client.lookup()</span></code> function on each one to find more info, like their names, e.g.: <code class="docutils literal"><span class="pre">client.lookup('items',</span> <span class="pre">274)['name']</span></code> will return <code class="docutils literal"><span class="pre">Corn</span></code>.</p>
