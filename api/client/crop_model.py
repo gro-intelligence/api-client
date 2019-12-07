@@ -136,6 +136,10 @@ class CropModel(GroClient):
                             'start_date', 'end_date']).mean()
         duration = datetime.strptime(end_date, '%Y-%m-%d') - \
                    datetime.strptime(start_date, '%Y-%m-%d')
+        if duration.days > 366:
+            self.get_logger().warning(
+                'GDD time range is more than 1 year {} - {}.'.format(
+                    start_date, end_date))
         coverage_threshold = min_temporal_coverage * duration.days
         if tmean.value.size < coverage_threshold:
             raise Exception(
