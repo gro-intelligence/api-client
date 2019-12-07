@@ -170,19 +170,19 @@ class CropModel(GroClient):
         The region can be any region of the Gro regions, from a point
         location to a district, province etc. This will use the best
         available data series for T_max and T_min for the given region
-        and time period, using "find_data_series".
-
-        In the simplest case, if the given region is a weather station
-        location which has data for the time period, then that will be
-        used. If it's a district or other region, the underlying data
-        could be from one or more weather stations and/or satellite.
+        and time period, using "find_data_series". In the simplest
+        case, if the given region is a weather station location which
+        has data for the time period, then that will be used. If it's
+        a district or other region, the underlying data could be from
+        one or more weather stations and/or satellite.  To by-pass the
+        search for available series, use compute_gdd() directly.
 
         Parameters
         ----------
-        region_name: string, required
-        base_temperature: number, required
-        start_date: '%Y-%m-%d' string, required
-        end_date: '%Y-%m-%d' string, required
+        region_name: string
+        base_temperature: number
+        start_date: '%Y-%m-%d' string
+        end_date: '%Y-%m-%d' string
         min_temporal_coverage: float, optional
 
         """
