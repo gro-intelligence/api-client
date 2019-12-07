@@ -121,14 +121,13 @@ class CropModel(GroClient):
         return pandas.concat(series_list)
 
     def compute_gdd(self, tmin_series, tmax_series, base_temperature,
-                    start_date, end_date, min_temporal_coverage=0.5):
+                    start_date, end_date, min_temporal_coverage):
         """Compute Growing Degree Days value from specific data series."""
         self.add_single_data_series(tmin_series)
         self.add_single_data_series(tmax_series)
         df = self.get_df()
         if df is None or df.empty:
-            raise Exception("Insufficient data for GDD in region {}".format(
-                region_name))
+            raise Exception("Insufficient data for GDD")
         # For each day we want (t_min + t_max)/2, or more generally,
         # the average temperature for that day.
         tmean = df.loc[(df.item_id == tmax_series['item_id']) | \
@@ -139,15 +138,16 @@ class CropModel(GroClient):
                    datetime.strptime(start_date, '%Y-%m-%d')
         coverage_threshold = min_temporal_coverage * duration.days
         if tmean.value.size < coverage_threshold:
-            raise Exception("Insufficient temporal coverage for GDD, " + \
-                            "{} < {} data points available".format(
-                                tmean.value.size, coverage_threshold))
+            raise Exception(
+                "Insufficient coverage for GDD, {} < {} data points. ".format(
+                    tmean.value.size, coverage_threshold) + 
+                "min_temporal_coverage is {}.".format(min_temporal_coverage))
         gdd_values = tmean.value.apply(lambda x: max(x - base_temperature, 0))
         # TODO: group by freq and normalize in case not daily
         return gdd_values.sum()
 
     def growing_degree_days(self, region_name, base_temperature,
-                            start_date, end_date, min_temporal_coverage):
+                            start_date, end_date, min_temporal_coverage=1.0):
         """Get Growing Degree Days (GDD) for a region.
 
         Growing degree days (GDD) are a weather-based indicator that
