@@ -1238,20 +1238,21 @@ region of interest.</p>
 <p>The region can be any region of the Gro regions, from a point
 location to a district, province etc. This will use the best
 available data series for T_max and T_min for the given region
-and time period, using &#8220;find_data_series&#8221;.</p>
-<p>In the simplest case, if the given region is a weather station
-location which has data for the time period, then that will be
-used. If it&#8217;s a district or other region, the underlying data
-could be from one or more weather stations and/or satellite.</p>
+and time period, using &#8220;find_data_series&#8221;. In the simplest
+case, if the given region is a weather station location which
+has data for the time period, then that will be used. If it&#8217;s
+a district or other region, the underlying data could be from
+one or more weather stations and/or satellite.  To by-pass the
+search for available series, use compute_gdd() directly.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>region_name</strong> (<em>string</em><em>, </em><em>required</em>) &#8211; </li>
-<li><strong>base_temperature</strong> (<em>number</em><em>, </em><em>required</em>) &#8211; </li>
-<li><strong>start_date</strong> (<em>'%Y-%m-%d' string</em><em>, </em><em>required</em>) &#8211; </li>
-<li><strong>end_date</strong> (<em>'%Y-%m-%d' string</em><em>, </em><em>required</em>) &#8211; </li>
+<li><strong>region_name</strong> (<em>string</em>) &#8211; </li>
+<li><strong>base_temperature</strong> (<em>number</em>) &#8211; </li>
+<li><strong>start_date</strong> (<em>'%Y-%m-%d' string</em>) &#8211; </li>
+<li><strong>end_date</strong> (<em>'%Y-%m-%d' string</em>) &#8211; </li>
 <li><strong>min_temporal_coverage</strong> (<em>float</em><em>, </em><em>optional</em>) &#8211; </li>
 </ul>
 </td>
