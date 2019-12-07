@@ -455,19 +455,19 @@
 <span class="sd">        The region can be any region of the Gro regions, from a point</span>
 <span class="sd">        location to a district, province etc. This will use the best</span>
 <span class="sd">        available data series for T_max and T_min for the given region</span>
-<span class="sd">        and time period, using &quot;find_data_series&quot;.</span>
-
-<span class="sd">        In the simplest case, if the given region is a weather station</span>
-<span class="sd">        location which has data for the time period, then that will be</span>
-<span class="sd">        used. If it&#39;s a district or other region, the underlying data</span>
-<span class="sd">        could be from one or more weather stations and/or satellite.</span>
+<span class="sd">        and time period, using &quot;find_data_series&quot;. In the simplest</span>
+<span class="sd">        case, if the given region is a weather station location which</span>
+<span class="sd">        has data for the time period, then that will be used. If it&#39;s</span>
+<span class="sd">        a district or other region, the underlying data could be from</span>
+<span class="sd">        one or more weather stations and/or satellite.  To by-pass the</span>
+<span class="sd">        search for available series, use compute_gdd() directly.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        region_name: string, required</span>
-<span class="sd">        base_temperature: number, required</span>
-<span class="sd">        start_date: &#39;%Y-%m-%d&#39; string, required</span>
-<span class="sd">        end_date: &#39;%Y-%m-%d&#39; string, required</span>
+<span class="sd">        region_name: string</span>
+<span class="sd">        base_temperature: number</span>
+<span class="sd">        start_date: &#39;%Y-%m-%d&#39; string</span>
+<span class="sd">        end_date: &#39;%Y-%m-%d&#39; string</span>
 <span class="sd">        min_temporal_coverage: float, optional</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
