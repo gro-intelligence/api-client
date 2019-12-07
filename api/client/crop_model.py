@@ -20,7 +20,7 @@ class CropModel(GroClient):
         For example: say we have a ```region_list = [{'id': 1, 'name':
         'Province1'}, {'id': 2, 'name': 'Province2'}]```. This could
         be a list returned by client.search_and_lookup() or
-        client.get_descendant_regions for example.  Now say
+        client.get_descendant_regions() for example.  Now say
         ```model.compute_weights('soybeans', 'land cover area',
         region_list)``` returns ```[0.6, 0.4]```, that means Province1
         has 60% and province2 has 40% of the total area planted across
@@ -28,13 +28,14 @@ class CropModel(GroClient):
 
         Parameters
         ----------
-        crop_name: string, required
-        metric_name: string, required
-        regions: list of dicts, each entry is a region with id and name
+        crop_name : string
+        metric_name : string
+        regions : list of dicts
+            Each entry is a region with id and name
 
         Returns
         -------
-        list of float
+        list of floats
            weights corresponding to the regions.
 
         """
@@ -52,8 +53,8 @@ class CropModel(GroClient):
         df = self.get_df()
 
         def mapper(region):
-            return df[(df['item_id'] == entities['item_id']) & \
-                      (df['metric_id'] == entities['metric_id']) & \
+            return df[(df['item_id'] == entities['item_id']) &
+                      (df['metric_id'] == entities['metric_id']) &
                       (df['region_id'] == region['id'])]['value'].mean(skipna=True)
         means = list(map(mapper, regions))
         self._logger.debug('Means = {}'.format(
@@ -62,8 +63,7 @@ class CropModel(GroClient):
         total = math.fsum([x for x in means if not math.isnan(x)])
         return [float(mean)/total for mean in means]
 
-    def compute_crop_weighted_series(self,
-                                     weighting_crop_name, weighting_metric_name,
+    def compute_crop_weighted_series(self, weighting_crop_name, weighting_metric_name,
                                      item_name, metric_name, regions):
         """Compute the 'crop-weighted average' of the series for the given
         item and metric, across regions. The weight of a region is the
@@ -83,17 +83,19 @@ class CropModel(GroClient):
 
         Parameters
         ----------
-        weighting_crop_name: string, required
-        weighting_metric_name: string, required
-        item_name: string, required
-        metric_name: string, required
-        regions: list of dicts, each entry is a region with id and name
+        weighting_crop_name : string
+        weighting_metric_name : string
+        item_name : string
+        metric_name : string
+        regions : list of dicts
+            Each entry is a region with id and name
 
         Returns
         -------
-        DataFrame containing the data series for the given item_name,
-        metric_name, for each region in regions, with values adjusted
-        by the crop weight for that region.
+        pandas.DataFrame
+            contains the data series for the given item_name, metric_name,
+            for each region in regions, with values adjusted
+            by the crop weight for that region.
 
         """
         weights = self.compute_weights(weighting_crop_name, weighting_metric_name,
@@ -112,8 +114,8 @@ class CropModel(GroClient):
         for (region, weight) in zip(regions, weights):
             self._logger.info(u'Computing {}_{}_{} x {}'.format(
                 item_name, metric_name,  region['name'], weight))
-            series = df[(df['item_id'] == entities['item_id']) & \
-                        (df['metric_id'] == entities['metric_id']) & \
+            series = df[(df['item_id'] == entities['item_id']) &
+                        (df['metric_id'] == entities['metric_id']) &
                         (df['region_id'] == region['id'])].copy()
             series.loc[:, 'value'] = series['value']*weight
             # TODO: change metric to reflect it is weighted in this copy
