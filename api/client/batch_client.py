@@ -87,7 +87,7 @@ class BatchClient(GroClient):
         headers = {'authorization': 'Bearer ' + self.access_token}
         url = '/'.join(['https:', '', self.api_host, 'v2/data'])
         params = lib.get_data_call_params(**selection)
-        resp = yield self.get_data(url, headers, params)
+        resp = yield lib.format_list_of_series(self.get_data(url, headers, params))
         raise gen.Return(json_decode(resp))
 
     def batch_async_get_data_points(self, batched_args, output_list=None,
