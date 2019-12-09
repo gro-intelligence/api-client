@@ -5,8 +5,6 @@ API Reference
 Basic Exploration
 *****************
 
-.. automethod:: api.client.gro_client.GroClient.find_data_series
-
 .. automethod:: api.client.gro_client.GroClient.lookup
 
 .. automethod:: api.client.gro_client.GroClient.search
@@ -16,6 +14,8 @@ Basic Exploration
 .. automethod:: api.client.gro_client.GroClient.search_for_entity
 
 .. automethod:: api.client.gro_client.GroClient.get_data_series
+
+.. automethod:: api.client.gro_client.GroClient.find_data_series
 
 **************
 Data Retrieval
