@@ -6,7 +6,14 @@ from api.client import lib
 MOCK_HOST = "pytest.groclient.url"
 MOCK_TOKEN = "pytest.groclient.token"
 
-def initialize_requests_mocker_and_get_mock_data(mock_requests_get, mock_data={"data": [{"name": "obj1"}, {"name": "obj2"}, {"name": "obj3"}]}):
+
+def initialize_requests_mocker_and_get_mock_data(mock_requests_get, mock_data={
+    "data": [
+        {"name": "obj1"},
+        {"name": "obj2"},
+        {"name": "obj3"}
+    ]}
+):
     mock_requests_get.return_value.json.return_value = mock_data
     mock_requests_get.return_value.status_code = 200
     return mock_data
@@ -108,14 +115,32 @@ def test_get_data_series(mock_requests_get):
 
 @mock.patch('requests.get')
 def test_get_data_points(mock_requests_get):
-    mock_data = ["obj1", "obj2", "obj3"]
-    mock_data = initialize_requests_mocker_and_get_mock_data(mock_requests_get, mock_data=mock_data)
+    list_of_series_format_data = [{
+        'series': {},
+        'data': [['2000-01-01', '2000-12-31', 1]]
+    }]
+    single_series_format_data = [{
+        'start_date': '2000-01-01',
+        'end_date': '2000-12-31',
+        'value': 1,
+        'unit_id': None,
+        'reporting_date': None,
+        'metric_id': None,
+        'item_id': None,
+        'region_id': None,
+        'partner_region_id': 0,
+        'frequency_id': None,
+        'source_id': None,
+        'belongs_to': {}
+    }]
+    mock_data = initialize_requests_mocker_and_get_mock_data(mock_requests_get,
+                                                             mock_data=list_of_series_format_data)
 
     # Test data
     selection_dict = {"item_id": 123, "metric_id": 456, "region_id": 789,
                       "frequency_id": 101112, "source_id": 131415, "partner_region_id": 161718}
 
-    assert lib.get_data_points(MOCK_TOKEN, MOCK_HOST, **selection_dict) == mock_data
+    assert lib.get_data_points(MOCK_TOKEN, MOCK_HOST, **selection_dict) == single_series_format_data
 
     # Make sure that call now exists in the mock call stack
     assert [mock.call('https://pytest.groclient.url/v2/data',
