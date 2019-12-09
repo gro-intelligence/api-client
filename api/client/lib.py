@@ -9,6 +9,7 @@ from builtins import map
 from builtins import str
 from api.client import cfg
 import json
+import re
 import logging
 import requests
 import time
@@ -30,15 +31,80 @@ REGION_LEVELS = {
     'coordinate': 9
 }
 
+"""Core ontology types, which can be navigated via a graph:"""
 GRAPH_TYPES_SINGULAR = ['metric', 'item', 'region']
+"""partner_region is just another type of 'region' so graph concepts also apply to it:"""
 EXPANDABLE_TYPES_SINGULAR = GRAPH_TYPES_SINGULAR + ['partner_region']
+"""frequency and source are part of the unique key for a data series but have no graph:"""
 SERIES_TYPES_SINGULAR = EXPANDABLE_TYPES_SINGULAR + ['frequency', 'source']
+"""units are not part of the unique key for a data series, but lookup can get info about them:"""
 LOOKUP_TYPES_SINGULAR = SERIES_TYPES_SINGULAR + ['unit']
-SERIES_TYPES_ID_SINGULAR = [type_singular+'_id' for type_singular in SERIES_TYPES_SINGULAR]
-LOOKUP_TYPES_PLURAL = [
-    'frequencies' if type_singular == 'frequency' else type_singular+'s'
-    for type_singular in LOOKUP_TYPES_SINGULAR
-]
+"""Series types (without unit) in type_id format, i.e. 'metric_id':"""
+SERIES_TYPES_SINGULAR_ID = [type_singular+'_id' for type_singular in SERIES_TYPES_SINGULAR]
+
+
+@memoize(maxsize=None)
+def snake_to_camel(term):
+    """Convert a string from snake_case to camelCase.
+
+    >>> snake_to_camel('hello_world')
+    'helloWorld'
+
+    Parameters
+    ----------
+    term : string
+
+    Returns
+    -------
+    string
+
+    """
+    camel = term.split('_')
+    return ''.join(camel[:1] + list([x[0].upper()+x[1:] for x in camel[1:]]))
+
+
+@memoize(maxsize=None)
+def camel_to_snake(term):
+    """Convert a string from camelCase to snake_case.
+
+    >>> camel_to_snake('partnerRegionId')
+    'partner_region_id'
+
+    >>> camel_to_snake('partner_region_id')
+    'partner_region_id'
+
+    Parameters
+    ----------
+    term : string
+        A camelCase string
+
+    Returns
+    -------
+    string
+        A new snake_case string
+
+    """
+    return re.sub('([a-z0-9])([A-Z])', r'\1_\2', re.sub('(.)([A-Z][a-z]+)', r'\1_\2', term)).lower()
+
+
+def camel_to_snake_dict(obj):
+    """Convert a dictionary's keys from camelCase to snake_case.
+
+    >>> camel_to_snake_dict({'belongsTo': {'metricId': 4}})
+    {'belongs_to': {'metricId': 4}}
+
+    Parameters
+    ----------
+    term : dict
+        A dictionary with camelCase keys
+
+    Returns
+    -------
+    dict
+        A new dictionary with snake_case keys
+
+    """
+    return dict((camel_to_snake(key), value) for key, value in obj.items())
 
 
 def get_default_logger():
@@ -188,6 +254,7 @@ def get_data(url, headers, params=None, logger=None):
 
 @memoize(maxsize=None)
 def get_available(access_token, api_host, entity_type):
+    """See Client.get_available()."""
     url = '/'.join(['https:', '', api_host, 'v2', entity_type])
     headers = {'authorization': 'Bearer ' + access_token}
     resp = get_data(url, headers)
@@ -195,6 +262,7 @@ def get_available(access_token, api_host, entity_type):
 
 
 def list_available(access_token, api_host, selected_entities):
+    """See Client.list_available()."""
     url = '/'.join(['https:', '', api_host, 'v2/entities/list'])
     headers = {'authorization': 'Bearer ' + access_token}
     params = dict([(snake_to_camel(key), value)
@@ -208,6 +276,7 @@ def list_available(access_token, api_host, selected_entities):
 
 @memoize(maxsize=None)
 def lookup(access_token, api_host, entity_type, entity_id):
+    """See Client.lookup()."""
     url = '/'.join(['https:', '', api_host, 'v2', entity_type, str(entity_id)])
     headers = {'authorization': 'Bearer ' + access_token}
     resp = get_data(url, headers)
@@ -215,26 +284,6 @@ def lookup(access_token, api_host, entity_type, entity_id):
         return resp.json()['data']
     except KeyError:
         raise Exception(resp.text)
-
-
-@memoize(maxsize=None)
-def snake_to_camel(term):
-    """Convert a string from snake_case to camelCase.
-
-    >>> snake_to_camel('hello_world')
-    'helloWorld'
-
-    Parameters
-    ----------
-    term : string
-
-    Returns
-    -------
-    string
-
-    """
-    camel = term.split('_')
-    return ''.join(camel[:1] + list([x[0].upper()+x[1:] for x in camel[1:]]))
 
 
 def get_params_from_selection(**selection):
@@ -266,7 +315,7 @@ def get_params_from_selection(**selection):
     """
     params = {}
     for key, value in list(selection.items()):
-        if key in SERIES_TYPES_ID_SINGULAR+['start_date', 'end_date']:
+        if key in SERIES_TYPES_SINGULAR_ID+['start_date', 'end_date']:
             params[snake_to_camel(key)] = value
     return params
 
@@ -311,6 +360,7 @@ def get_data_call_params(**selection):
 
 
 def get_data_series(access_token, api_host, **selection):
+    """See Client.get_data_series()."""
     logger = get_default_logger()
     url = '/'.join(['https:', '', api_host, 'v2/data_series/list'])
     headers = {'authorization': 'Bearer ' + access_token}
@@ -331,10 +381,18 @@ def get_data_series(access_token, api_host, **selection):
 def get_source_ranking(access_token, api_host, series):
     """Given a series, return a list of ranked sources.
 
-    :param access_token: API access token.
-    :param api_host: API host.
-    :param series: Series to calculate source raking for.
-    :return: List of sources that match the series parameters, sorted by rank.
+    Parameters
+    ----------
+    access_token : string
+    api_host : string
+    series : dict
+        Series to calculate source raking for.
+
+    Returns
+    -------
+    List of dicts
+        sources that match the series parameters, sorted by rank.
+
     """
     def make_key(key):
         if key not in ('startDate', 'endDate'):
@@ -348,11 +406,16 @@ def get_source_ranking(access_token, api_host, series):
 
 
 def rank_series_by_source(access_token, api_host, series_list):
-    for series in series_list:
+    # We sort the internal tuple representations of the dictionaries because
+    # otherwise when we call set() we end up with duplicates if iteritems()
+    # returns a different order for the same dictionary. See test case.
+    selections_sorted = set(tuple(sorted(
+        [k_v for k_v in iter(list(single_series.items()))
+         if k_v[0] not in ('source_id', 'source_name')],
+        key=lambda x: x[0])) for single_series in series_list)
+
+    for series in map(dict, selections_sorted):
         try:
-            # Remove source if selected, to consider all sources.
-            series.pop('source_name', None)
-            series.pop('source_id', None)
             source_ids = get_source_ranking(access_token, api_host, series)
         except ValueError:
             continue  # empty response
@@ -364,42 +427,67 @@ def rank_series_by_source(access_token, api_host, series_list):
 
 
 def format_list_of_series(series_list):
-    """Convert list_of_series format from API back into the familiar single_series output format
+    """Convert list_of_series format from API back into the familiar single_series output format.
 
-    >>> format_list_of_series([{ 'series': {}, 'data': [['2001-01-01', '2001-12-31', 123]] }]) == [
-    ...   { 'start_date': '2001-01-01', 'end_date': '2001-12-31', 'value': 123,
-    ...     'reporting_date': None, 'metric_id': None, 'item_id': None, 'region_id': None,
-    ...     'partner_region_id': 0, 'frequency_id': None, 'source_id': None, 'unit_id': None,
-    ...     'belongs_to': {} } ]
+    >>> format_list_of_series([{
+    ...     'series': { 'metricId': 1, 'itemId': 2, 'regionId': 3, 'belongsTo': { 'itemId': 22 } },
+    ...     'data': [
+    ...         ['2001-01-01', '2001-12-31', 123]
+    ...     ]
+    ... }]) == [
+    ...   { 'start_date': '2001-01-01',
+    ...     'end_date': '2001-12-31',
+    ...     'value': 123,
+    ...     'unit_id': None,
+    ...     'reporting_date': None,
+    ...     'metric_id': 1,
+    ...     'item_id': 2,
+    ...     'region_id': 3,
+    ...     'partner_region_id': 0,
+    ...     'frequency_id': None,
+    ...     'source_id': None,
+    ...     'belongs_to': { 'item_id': 22 }
+    ... } ]
     True
 
     """
-    if(isinstance(series_list, list)):
-        output = []
-        for series in series_list:
-            if(isinstance(series, dict) and isinstance(series.get('data', []), list)):
-                for point in series.get('data', []):
-                    single_series_point = {
-                        'start_date': point[0],
-                        'end_date': point[1],
-                        'value': point[2],
-                        'reporting_date': point[3] if len(point) > 3 else None,
-                        'metric_id': series['series'].get('metricId', None),
-                        'item_id': series['series'].get('itemId', None),
-                        'region_id': series['series'].get('regionId', None),
-                        'partner_region_id': series['series'].get('partnerRegionId', 0),
-                        'frequency_id': series['series'].get('frequencyId', None),
-                        'source_id': series['series'].get('sourceId', None),
-                        'unit_id': series['series'].get('unitId', None),
-                        'belongs_to': series['series'].get('belongsTo', {})
-                    }
-                    output.append(single_series_point)
-        return output
-    # If the output is an error or None or something else that's not a list, just propagate
-    return series_list
+    if not isinstance(series_list, list):
+        # If the output is an error or None or something else that's not a list, just propagate
+        return series_list
+    output = []
+    for series in series_list:
+        if not (isinstance(series, dict) and isinstance(series.get('data', []), list)):
+            continue
+        # All the belongsTo keys are in camelCase. Convert them to snake_case.
+        # Only need to do this once per series, so do this outside of the list
+        # comprehension and save to a variable to avoid duplicate work:
+        belongs_to = camel_to_snake_dict(series.get('series', {}).get('belongsTo', {}))
+        output += [{
+            'start_date': point[0],
+            'end_date': point[1],
+            'value': point[2],
+            # list_of_series has unit_id in the series attributes currently. Does
+            # not allow for mixed units in the same series
+            'unit_id': series['series'].get('unitId', None),
+            # If a point does not have reporting_date, use None
+            'reporting_date': point[3] if len(point) > 3 else None,
+            # Series attributes:
+            'metric_id': series['series'].get('metricId', None),
+            'item_id': series['series'].get('itemId', None),
+            'region_id': series['series'].get('regionId', None),
+            'partner_region_id': series['series'].get('partnerRegionId', 0),
+            'frequency_id': series['series'].get('frequencyId', None),
+            'source_id': series['series'].get('sourceId', None),
+            # belongs_to is consistent with the series the user requested. So if an
+            # expansion happened on the server side, the user can reconstruct what
+            # results came from which request.
+            'belongs_to': belongs_to
+        } for point in series.get('data', [])]
+    return output
 
 
 def get_data_points(access_token, api_host, **selection):
+    """See GroClient.get_data_points()."""
     headers = {'authorization': 'Bearer ' + access_token}
     url = '/'.join(['https:', '', api_host, 'v2/data'])
     params = get_data_call_params(**selection)
@@ -435,6 +523,7 @@ def universal_search(access_token, api_host, search_terms):
 
 @memoize(maxsize=None)
 def search(access_token, api_host, entity_type, search_terms):
+    """See Client.search()."""
     url = '/'.join(['https:', '', api_host, 'v2/search', entity_type])
     headers = {'authorization': 'Bearer ' + access_token}
     resp = get_data(url, headers, {'q': search_terms})
@@ -442,12 +531,14 @@ def search(access_token, api_host, entity_type, search_terms):
 
 
 def search_and_lookup(access_token, api_host, entity_type, search_terms, num_results=10):
+    """See Client.search_and_lookup()."""
     search_results = search(access_token, api_host, entity_type, search_terms)
     for result in search_results[:num_results]:
         yield lookup(access_token, api_host, entity_type, result['id'])
 
 
 def lookup_belongs(access_token, api_host, entity_type, entity_id):
+    """See Client.lookup_belongs()."""
     url = '/'.join(['https:', '', api_host, 'v2', entity_type, 'belongs-to'])
     params = {'ids': str(entity_id)}
     headers = {'authorization': 'Bearer ' + access_token}
@@ -457,6 +548,7 @@ def lookup_belongs(access_token, api_host, entity_type, entity_id):
 
 
 def get_geo_centre(access_token, api_host, region_id):
+    """See Client.get_geo_centre()."""
     url = '/'.join(['https:', '', api_host, 'v2/geocentres?regionIds=' +
                     str(region_id)])
     headers = {'authorization': 'Bearer ' + access_token}
@@ -466,6 +558,7 @@ def get_geo_centre(access_token, api_host, region_id):
 
 @memoize(maxsize=None)
 def get_geojson(access_token, api_host, region_id):
+    """See Client.get_geojson()."""
     url = '/'.join(['https:', '', api_host, 'v2/geocentres?includeGeojson=True&regionIds=' +
                     str(region_id)])
     headers = {'authorization': 'Bearer ' + access_token}
@@ -477,6 +570,7 @@ def get_geojson(access_token, api_host, region_id):
 
 def get_descendant_regions(access_token, api_host, region_id,
                            descendant_level=False, include_historical=True):
+    """See Client.get_descendant_regions()."""
     descendants = []
     region = lookup(access_token, api_host, 'regions', region_id)
     for member_id in region['contains']:
