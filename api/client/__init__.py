@@ -67,7 +67,7 @@ class Client(object):
     def lookup(self, entity_type, entity_id):
         """Retrieve details about a given id of type entity_type.
 
-        https://github.com/gro-intelligence/api-client/wiki/Entities-Definition
+        https://developers.gro-intelligence.com/gro-ontology.html
 
         Parameters
         ----------
@@ -96,7 +96,7 @@ class Client(object):
     def get_data_series(self, **selection):
         """Get available data series for the given selections.
 
-        https://github.com/gro-intelligence/api-client/wiki/Data-Series-Definition
+        https://developers.gro-intelligence.com/data-series-definition.html
 
         Parameters
         ----------
