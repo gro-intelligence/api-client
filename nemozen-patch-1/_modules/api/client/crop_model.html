@@ -332,12 +332,12 @@
 <span class="sd">        the given metric for the given crop, normalized so the sum</span>
 <span class="sd">        across all regions is 1.0.</span>
 
-<span class="sd">        For example: say we have a ```region_list = [{&#39;id&#39;: 1, &#39;name&#39;:</span>
-<span class="sd">        &#39;Province1&#39;}, {&#39;id&#39;: 2, &#39;name&#39;: &#39;Province2&#39;}]```. This could</span>
+<span class="sd">        For example: say we have a `region_list = [{&#39;id&#39;: 1, &#39;name&#39;:</span>
+<span class="sd">        &#39;Province1&#39;}, {&#39;id&#39;: 2, &#39;name&#39;: &#39;Province2&#39;}]`. This could</span>
 <span class="sd">        be a list returned by client.search_and_lookup() or</span>
 <span class="sd">        client.get_descendant_regions() for example.  Now say</span>
-<span class="sd">        ```model.compute_weights(&#39;soybeans&#39;, &#39;land cover area&#39;,</span>
-<span class="sd">        region_list)``` returns ```[0.6, 0.4]```, that means Province1</span>
+<span class="sd">        `model.compute_weights(&#39;soybeans&#39;, &#39;land cover area&#39;,</span>
+<span class="sd">        region_list)` returns `[0.6, 0.4]`, that means Province1</span>
 <span class="sd">        has 60% and province2 has 40% of the total area planted across</span>
 <span class="sd">        the two regions, when averaged across all time.</span>
 
@@ -385,13 +385,13 @@
 <span class="sd">        The weight of a region is the fraction of the value of the weighting series represented by</span>
 <span class="sd">        that region as explained in compute_weights().</span>
 
-<span class="sd">        For example: say we have a ```region_list = [{&#39;id&#39;: 1, &#39;name&#39;:</span>
-<span class="sd">        &#39;Province1&#39;}, {&#39;id&#39;: 2, &#39;name&#39;: &#39;Province2&#39;}]```. This could</span>
+<span class="sd">        For example: say we have a `region_list = [{&#39;id&#39;: 1, &#39;name&#39;:</span>
+<span class="sd">        &#39;Province1&#39;}, {&#39;id&#39;: 2, &#39;name&#39;: &#39;Province2&#39;}]`. This could</span>
 <span class="sd">        be a list returned by client.search_and_lookup() or</span>
 <span class="sd">        client.get_descendant_regions for example.  Now</span>
-<span class="sd">        ```model.compute_crop_weighted_series(&#39;soybeans&#39;, &#39;land cover</span>
+<span class="sd">        `model.compute_crop_weighted_series(&#39;soybeans&#39;, &#39;land cover</span>
 <span class="sd">        area&#39;, &#39;vegetation ndvi&#39;, &#39;vegetation indices index&#39;,</span>
-<span class="sd">        region_list)``` will return a dataframe where the NDVI of each</span>
+<span class="sd">        region_list)` will return a dataframe where the NDVI of each</span>
 <span class="sd">        province is multiplied by the fraction of total soybeans</span>
 <span class="sd">        area is accounted for by that province. Thus taking the sum</span>
 <span class="sd">        across provinces will give a crop weighted average of NDVI.</span>
