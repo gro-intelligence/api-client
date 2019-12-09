@@ -193,6 +193,8 @@ class GroClient(Client):
 
              {u'metric_id': 15610005, u'region_id': 1215, u'end_date': u'2022-12-31T00:00:00.000Z', u'item_name': u'Corn', u'partner_region_name': u'World', u'frequency_id': 15, 'source_id': 81, u'partner_region_id': 0, u'item_id': 274, u'metric_name': u'Futures Open Interest', u'start_date': u'1972-03-01T00:00:00.000Z', u'region_name': u'United States'}
 
+        See https://developers.gro-intelligence.com/data-series-definition.html 
+        
         This method uses search() to find entities by name and
         get_data_series() to find available data series for all
         possible combinations of the entities, and
