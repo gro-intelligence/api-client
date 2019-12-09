@@ -8,7 +8,7 @@ If you have a Google account, or if you already have [Jupyter Notebook](https://
 
 ### Step 1: Get your API token
 
-1. Login to your Gro web app account at [app.gro-intelligence.com](app.gro-intelligence.com)
+1. Login to your Gro web app account at <https://app.gro-intelligence.com>
 2. Open the Account button in the bottom left corner of the app.
 
    ![account-button](./_images/account-button.PNG)

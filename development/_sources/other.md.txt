@@ -2,7 +2,7 @@
 
 ## Gro Crop Masks
 
-Gro's proprietary high resolution crop masks are currently used in the [Gro yield models](https://gro-intelligence.com/products/gro-analytics). These have proven very successful i.e. more accurate for yield modeling than the best available alternatives. Gro does not plan on developing a yield model for every crop or region in the world, so our models will always be limited to the regions and crops where we can help push the envelope. Our crop masks are not yet directly available to users in the Gro web app and the API, but will be very soon!
+Gro's proprietary high resolution crop masks are currently used in the [Gro yield models](https://gro-intelligence.com/gro-models). These have proven very successful i.e. more accurate for yield modeling than the best available alternatives. Gro does not plan on developing a yield model for every crop or region in the world, so our models will always be limited to the regions and crops where we can help push the envelope. Our crop masks are not yet directly available to users in the Gro web app and the API, but will be very soon!
 
 ### Methodology
 
@@ -85,7 +85,7 @@ In-season masks:
 
 ## Gro Yield Model Backtest Data
 
-[Gro yield models](https://gro-intelligence.com/products/gro-analytics) provide live forecasts for crops in different regions around the world. To supplement our in-depth papers on the models, we provide backtesting data for model evaluation and comparisons.
+[Gro yield models](https://gro-intelligence.com/gro-models) provide live forecasts for crops in different regions around the world. To supplement our in-depth papers on the models, we provide backtesting data for model evaluation and comparisons.
 
 ### File Formats
 
