@@ -182,6 +182,8 @@ class GroClient(Client):
 
     def find_data_series(self, **kwargs):
         """Attempts to find a matching data series for a combination of entities by name.
+        
+        See https://github.com/gro-intelligence/api-client/wiki/Data-Series-Definition
 
         Parameters
         ----------
@@ -202,7 +204,6 @@ class GroClient(Client):
         See also
         --------
         get_data_series()
-        `Data Series Definition <https://github.com/gro-intelligence/api-client/wiki/Data-Series-Definition/>`_
 
         """
         search_results = []
