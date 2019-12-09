@@ -330,53 +330,6 @@
 <div class="section" id="basic-exploration">
 <h2>Basic Exploration<a class="headerlink" href="#basic-exploration" title="Permalink to this headline">¶</a></h2>
 <dl class="method">
-<dt id="api.client.gro_client.GroClient.find_data_series">
-<code class="descclassname">GroClient.</code><code class="descname">find_data_series</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/gro_client.html#GroClient.find_data_series"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.gro_client.GroClient.find_data_series" title="Permalink to this definition">¶</a></dt>
-<dd><p>Find the best possible  data series matching a combination of entities specified by name.</p>
-<p>Example:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="nb">next</span><span class="p">(</span><span class="n">client</span><span class="o">.</span><span class="n">find_data_series</span><span class="p">(</span><span class="n">item</span><span class="o">=</span><span class="s2">&quot;Corn&quot;</span><span class="p">,</span>
-                             <span class="n">metric</span><span class="o">=</span><span class="s2">&quot;Futures Open Interest&quot;</span><span class="p">,</span>
-                             <span class="n">region</span><span class="o">=</span><span class="s2">&quot;United States of America&quot;</span><span class="p">))</span>
-</pre></div>
-</div>
-<p>will yield:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="p">{</span><span class="sa">u</span><span class="s1">&#39;metric_id&#39;</span><span class="p">:</span> <span class="mi">15610005</span><span class="p">,</span> <span class="sa">u</span><span class="s1">&#39;region_id&#39;</span><span class="p">:</span> <span class="mi">1215</span><span class="p">,</span> <span class="sa">u</span><span class="s1">&#39;end_date&#39;</span><span class="p">:</span> <span class="sa">u</span><span class="s1">&#39;2022-12-31T00:00:00.000Z&#39;</span><span class="p">,</span> <span class="sa">u</span><span class="s1">&#39;item_name&#39;</span><span class="p">:</span> <span class="sa">u</span><span class="s1">&#39;Corn&#39;</span><span class="p">,</span> <span class="sa">u</span><span class="s1">&#39;partner_region_name&#39;</span><span class="p">:</span> <span class="sa">u</span><span class="s1">&#39;World&#39;</span><span class="p">,</span> <span class="sa">u</span><span class="s1">&#39;frequency_id&#39;</span><span class="p">:</span> <span class="mi">15</span><span class="p">,</span> <span class="s1">&#39;source_id&#39;</span><span class="p">:</span> <span class="mi">81</span><span class="p">,</span> <span class="sa">u</span><span class="s1">&#39;partner_region_id&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="sa">u</span><span class="s1">&#39;item_id&#39;</span><span class="p">:</span> <span class="mi">274</span><span class="p">,</span> <span class="sa">u</span><span class="s1">&#39;metric_name&#39;</span><span class="p">:</span> <span class="sa">u</span><span class="s1">&#39;Futures Open Interest&#39;</span><span class="p">,</span> <span class="sa">u</span><span class="s1">&#39;start_date&#39;</span><span class="p">:</span> <span class="sa">u</span><span class="s1">&#39;1972-03-01T00:00:00.000Z&#39;</span><span class="p">,</span> <span class="sa">u</span><span class="s1">&#39;region_name&#39;</span><span class="p">:</span> <span class="sa">u</span><span class="s1">&#39;United States&#39;</span><span class="p">}</span>
-</pre></div>
-</div>
-<p>This method uses search() to find entities by name and
-get_data_series() to find available data series for all
-possible combinations of the entities, and
-rank_series_by_source.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>metric</strong> (<em>string</em><em>, </em><em>optional</em>) &#8211; </li>
-<li><strong>item</strong> (<em>string</em><em>, </em><em>optional</em>) &#8211; </li>
-<li><strong>region</strong> (<em>string</em><em>, </em><em>optional</em>) &#8211; </li>
-<li><strong>partner_region</strong> (<em>string</em><em>, </em><em>optional</em>) &#8211; </li>
-<li><strong>start_date</strong> (<em>string</em><em>, </em><em>optional</em>) &#8211; YYYY-MM-DD</li>
-<li><strong>end_date</strong> (<em>string</em><em>, </em><em>optional</em>) &#8211; YYYY-MM-DD</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Yields:</th><td class="field-body"><p class="first last"><em>dict</em> &#8211; A sequence of data series matching the input selections, in quality rank order.</p>
-</td>
-</tr>
-</tbody>
-</table>
-<div class="admonition seealso">
-<p class="first admonition-title">See also</p>
-<p><code class="xref py py-meth docutils literal"><span class="pre">get_data_series()</span></code></p>
-<dl class="last docutils">
-<dt><code class="xref py py-meth docutils literal"><span class="pre">https()</span></code></dt>
-<dd>//developers.gro-intelligence.com/data-series-definition.html</dd>
-</dl>
-</div>
-</dd></dl>
-
-<dl class="method">
 <dt id="api.client.gro_client.GroClient.lookup">
 <code class="descclassname">GroClient.</code><code class="descname">lookup</code><span class="sig-paren">(</span><em>entity_type</em>, <em>entity_id</em><span class="sig-paren">)</span><a class="headerlink" href="#api.client.gro_client.GroClient.lookup" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieve details about a given id of type entity_type.</p>
@@ -531,6 +484,53 @@ the best match for the given search term(s).</p>
 </tr>
 </tbody>
 </table>
+</dd></dl>
+
+<dl class="method">
+<dt id="api.client.gro_client.GroClient.find_data_series">
+<code class="descclassname">GroClient.</code><code class="descname">find_data_series</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/gro_client.html#GroClient.find_data_series"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.gro_client.GroClient.find_data_series" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find the best possible  data series matching a combination of entities specified by name.</p>
+<p>Example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="nb">next</span><span class="p">(</span><span class="n">client</span><span class="o">.</span><span class="n">find_data_series</span><span class="p">(</span><span class="n">item</span><span class="o">=</span><span class="s2">&quot;Corn&quot;</span><span class="p">,</span>
+                             <span class="n">metric</span><span class="o">=</span><span class="s2">&quot;Futures Open Interest&quot;</span><span class="p">,</span>
+                             <span class="n">region</span><span class="o">=</span><span class="s2">&quot;United States of America&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>will yield:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="p">{</span><span class="sa">u</span><span class="s1">&#39;metric_id&#39;</span><span class="p">:</span> <span class="mi">15610005</span><span class="p">,</span> <span class="sa">u</span><span class="s1">&#39;region_id&#39;</span><span class="p">:</span> <span class="mi">1215</span><span class="p">,</span> <span class="sa">u</span><span class="s1">&#39;end_date&#39;</span><span class="p">:</span> <span class="sa">u</span><span class="s1">&#39;2022-12-31T00:00:00.000Z&#39;</span><span class="p">,</span> <span class="sa">u</span><span class="s1">&#39;item_name&#39;</span><span class="p">:</span> <span class="sa">u</span><span class="s1">&#39;Corn&#39;</span><span class="p">,</span> <span class="sa">u</span><span class="s1">&#39;partner_region_name&#39;</span><span class="p">:</span> <span class="sa">u</span><span class="s1">&#39;World&#39;</span><span class="p">,</span> <span class="sa">u</span><span class="s1">&#39;frequency_id&#39;</span><span class="p">:</span> <span class="mi">15</span><span class="p">,</span> <span class="s1">&#39;source_id&#39;</span><span class="p">:</span> <span class="mi">81</span><span class="p">,</span> <span class="sa">u</span><span class="s1">&#39;partner_region_id&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="sa">u</span><span class="s1">&#39;item_id&#39;</span><span class="p">:</span> <span class="mi">274</span><span class="p">,</span> <span class="sa">u</span><span class="s1">&#39;metric_name&#39;</span><span class="p">:</span> <span class="sa">u</span><span class="s1">&#39;Futures Open Interest&#39;</span><span class="p">,</span> <span class="sa">u</span><span class="s1">&#39;start_date&#39;</span><span class="p">:</span> <span class="sa">u</span><span class="s1">&#39;1972-03-01T00:00:00.000Z&#39;</span><span class="p">,</span> <span class="sa">u</span><span class="s1">&#39;region_name&#39;</span><span class="p">:</span> <span class="sa">u</span><span class="s1">&#39;United States&#39;</span><span class="p">}</span>
+</pre></div>
+</div>
+<p>This method uses search() to find entities by name and
+get_data_series() to find available data series for all
+possible combinations of the entities, and
+rank_series_by_source.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>metric</strong> (<em>string</em><em>, </em><em>optional</em>) &#8211; </li>
+<li><strong>item</strong> (<em>string</em><em>, </em><em>optional</em>) &#8211; </li>
+<li><strong>region</strong> (<em>string</em><em>, </em><em>optional</em>) &#8211; </li>
+<li><strong>partner_region</strong> (<em>string</em><em>, </em><em>optional</em>) &#8211; </li>
+<li><strong>start_date</strong> (<em>string</em><em>, </em><em>optional</em>) &#8211; YYYY-MM-DD</li>
+<li><strong>end_date</strong> (<em>string</em><em>, </em><em>optional</em>) &#8211; YYYY-MM-DD</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Yields:</th><td class="field-body"><p class="first last"><em>dict</em> &#8211; A sequence of data series matching the input selections, in quality rank order.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p><code class="xref py py-meth docutils literal"><span class="pre">get_data_series()</span></code></p>
+<dl class="last docutils">
+<dt><code class="xref py py-meth docutils literal"><span class="pre">https()</span></code></dt>
+<dd>//developers.gro-intelligence.com/data-series-definition.html</dd>
+</dl>
+</div>
 </dd></dl>
 
 </div>
