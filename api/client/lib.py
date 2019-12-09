@@ -406,16 +406,11 @@ def get_source_ranking(access_token, api_host, series):
 
 
 def rank_series_by_source(access_token, api_host, series_list):
-    # We sort the internal tuple representations of the dictionaries because
-    # otherwise when we call set() we end up with duplicates if iteritems()
-    # returns a different order for the same dictionary. See test case.
-    selections_sorted = set(tuple(sorted(
-        [k_v for k_v in iter(list(single_series.items()))
-         if k_v[0] not in ('source_id', 'source_name')],
-        key=lambda x: x[0])) for single_series in series_list)
-
-    for series in map(dict, selections_sorted):
+    """See Client.rank_series_by_source()."""
+    for series in series_list:
         try:
+            series.pop('source_name', None)	
+            series.pop('source_id', None)
             source_ids = get_source_ranking(access_token, api_host, series)
         except ValueError:
             continue  # empty response
