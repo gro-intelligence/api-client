@@ -334,9 +334,9 @@
 <code class="descclassname">GroClient.</code><code class="descname">find_data_series</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/gro_client.html#GroClient.find_data_series"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.gro_client.GroClient.find_data_series" title="Permalink to this definition">¶</a></dt>
 <dd><p>Find the best possible  data series matching a combination of entities specified by name.</p>
 <p>Example:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">client</span><span class="o">.</span><span class="n">find_data_series</span><span class="p">(</span><span class="n">item</span><span class="o">=</span><span class="s2">&quot;Corn&quot;</span><span class="p">,</span>
-                        <span class="n">metric</span><span class="o">=</span><span class="s2">&quot;Futures Open Interest&quot;</span><span class="p">,</span>
-                        <span class="n">region</span><span class="o">=</span><span class="s2">&quot;United States of America&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">next</span><span class="p">()</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="nb">next</span><span class="p">(</span><span class="n">client</span><span class="o">.</span><span class="n">find_data_series</span><span class="p">(</span><span class="n">item</span><span class="o">=</span><span class="s2">&quot;Corn&quot;</span><span class="p">,</span>
+                             <span class="n">metric</span><span class="o">=</span><span class="s2">&quot;Futures Open Interest&quot;</span><span class="p">,</span>
+                             <span class="n">region</span><span class="o">=</span><span class="s2">&quot;United States of America&quot;</span><span class="p">))</span>
 </pre></div>
 </div>
 <p>will yield:</p>
