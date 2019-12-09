@@ -58,7 +58,7 @@ class GroClient(Client):
         pandas.DataFrame
             The results to get_data_points() for all the saved series, appended together into a
             single dataframe.
-            See https://github.com/gro-intelligence/api-client/wiki/Data-Point-Field-Definitions
+            See https://developers.gro-intelligence.com/data-point-definition.html
 
         """
         while self._data_series_queue:
@@ -86,7 +86,7 @@ class GroClient(Client):
     def get_data_points(self, **selections):
         """Get all the data points for a given selection.
 
-        https://github.com/gro-intelligence/api-client/wiki/Data-Point-Definition
+        https://developers.gro-intelligence.com/data-point-definition.html
 
         Parameters
         ----------
@@ -167,7 +167,7 @@ class GroClient(Client):
         ----------
         data_series : dict
             A single data_series object, as returned by get_data_series() or find_data_series().
-            See https://github.com/gro-intelligence/api-client/wiki/Data-Series-Definition
+            See https://developers.gro-intelligence.com/data-series-definition.html
 
         Returns
         -------
@@ -217,6 +217,7 @@ class GroClient(Client):
         See also
         --------
         get_data_series()
+        https://developers.gro-intelligence.com/data-series-definition.html
 
         """
         search_results = []
