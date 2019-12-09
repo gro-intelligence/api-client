@@ -185,9 +185,9 @@ class GroClient(Client):
 
         Example::
 
-            client.find_data_series(item="Corn",
-                                    metric="Futures Open Interest",
-                                    region="United States of America").next()
+            next(client.find_data_series(item="Corn",
+                                         metric="Futures Open Interest",
+                                         region="United States of America"))
 
         will yield::
 
