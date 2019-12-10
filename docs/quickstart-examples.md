@@ -39,7 +39,8 @@ If you have a Google account, or if you already have [Jupyter Notebook](https://
     from api.client.gro_client import GroClient
     API_HOST = 'api.gro-intelligence.com'
     ACCESS_TOKEN = 'YOUR_TOKEN'
-    client = GroClient(API_HOST, ACCESS_TOKEN)```
+    client = GroClient(API_HOST, ACCESS_TOKEN)
+    ```
 
 4. Replace the text YOUR_TOKEN with the token you copied from step one. Then click the "Run Cell" button to the left of the cell.
 5. Add one more cell with the "+ Code" button, then copy the below code and paste it into the third cell.
@@ -52,7 +53,8 @@ If you have a Google account, or if you already have [Jupyter Notebook](https://
     'region_id': 1107,
     'source_id': 14,
     'frequency_id': 9
-    })```
+    })
+    ```
 
 6. Click the "Run Cell" button to the left of the cell, and that's it! You should now see the data in the response.
 
