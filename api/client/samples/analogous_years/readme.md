@@ -34,7 +34,7 @@ according to the composite ranking in terms of
 
 in the US Corn Belt (region_id=100000100) with equal weights given to rainfall and temperature
 (by default), we will run the following code in the command line: 
-`python run_analogous_years.py -m 2100031 2540047 -i 2039 3457 -r 100000100 -s 35 26 
+`python run_analogous_years.py -m 2100031 2540047 -i 2039 3457 -r 100000100 -s 35 26 -f 1 1 
 --initial_date 2019-04-01 --final_date 2019-10-31`
 
 Note:
