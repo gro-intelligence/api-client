@@ -37,10 +37,10 @@ If you have a Google account, or if you already have [Jupyter Notebook](https://
 
     ```py
     from api.client.gro_client import GroClient
-    client = GroClient('api.gro-intelligence.com', <YOUR_GROAPI_ACCESS_TOKEN>)
+    client = GroClient('api.gro-intelligence.com', <YOUR_TOKEN>)
     ```
 
-4. Replace the text YOUR_TOKEN with the token you copied from step one. Then click the "Run Cell" button to the left of the cell.
+4. Replace the text <YOUR_TOKEN> with the token you copied from step one, in quotes. Then click the "Run Cell" button to the left of the cell.
 5. Add one more cell with the "+ Code" button, then copy the below code and paste it into the third cell.
 
     ```py
