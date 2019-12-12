@@ -432,12 +432,12 @@
 <span class="sd">                }</span>
 <span class="sd">            }]</span>
 
-<span class="sd">        Note: you can pass the output of :meth:`api.client.gro_client.GroClient.get_data_series` into</span>
-<span class="sd">        :meth:`api.client.gro_client.GroClient.get_data_points` to check what series exist for some selections and then</span>
+<span class="sd">        Note: you can pass the output of :meth:`get_data_series` into</span>
+<span class="sd">        :meth:`get_data_points` to check what series exist for some selections and then</span>
 <span class="sd">        retrieve the data points for those series. See /api/client/samples/quickstart.py for an</span>
 <span class="sd">        example of this.</span>
 
-<span class="sd">        :meth:`api.client.gro_client.GroClient.get_data_points` also allows passing a list of ids for metric_id,</span>
+<span class="sd">        :meth:`get_data_points` also allows passing a list of ids for metric_id,</span>
 <span class="sd">        item_id, and/or region_id to get multiple series in a single request. This can be faster if</span>
 <span class="sd">        requesting many series.</span>
 
@@ -527,8 +527,8 @@
 <div class="viewcode-block" id="GroClient.get_data_series_list"><a class="viewcode-back" href="../../../api.html#api.client.gro_client.GroClient.get_data_series_list">[docs]</a>    <span class="k">def</span> <span class="nf">get_data_series_list</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Inspect the current list of saved data series contained in the GroClient.</span>
 
-<span class="sd">        For use with :meth:`api.client.gro_client.GroClient.get_df`. Add new data series to the list using</span>
-<span class="sd">        :meth:`api.client.gro_client.GroClient.add_data_series` and :meth:`api.client.gro_client.GroClient.add_single_data_series`.</span>
+<span class="sd">        For use with :meth:`get_df`. Add new data series to the list using</span>
+<span class="sd">        :meth:`add_data_series` and :meth:`add_single_data_series`.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
