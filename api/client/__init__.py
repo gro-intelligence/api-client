@@ -166,7 +166,7 @@ class Client(object):
         Yields
         ------
         dict
-            Result from search() passed to lookup() to get additional details.
+            Result from :meth:`search()` passed to :meth:`lookup()` to get additional details.
             
             Example::
 
@@ -175,7 +175,7 @@ class Client(object):
                   'name': 'Corn',
                   'definition': 'The seeds of the widely cultivated...' }
 
-            See output of lookup(). Note that as with search(), the first result is
+            See output of :meth:`lookup()`. Note that as with :meth:`search()`, the first result is
             the best match for the given search term(s).
 
         """
@@ -197,7 +197,7 @@ class Client(object):
             Result of lookup() on each entity the given entity belongs to.
 
             For example: For the region 'United States', one yielded result will be for
-            'North America.' The format of which matches the output of lookup()::
+            'North America.' The format of which matches the output of :meth:`lookup()`::
 
                 { 'id': 15,
                   'contains': [ 1008, 1009, 1012, 1215, ... ],
@@ -301,7 +301,7 @@ class Client(object):
                     'level': 4
                 }, ...]
 
-            See output of lookup()
+            See output of :meth:`lookup()`
 
         """
         return lib.get_descendant_regions(self.access_token, self.api_host,
