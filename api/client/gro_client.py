@@ -287,7 +287,7 @@ class GroClient(Client):
 
         See also
         --------
-        ~.get_data_series
+        :meth:`~.get_data_series`
 
         """
         search_results = []
@@ -349,9 +349,9 @@ class GroClient(Client):
 
         See also
         --------
-        ~.get_df
-        ~.add_single_data_series
-        ~.find_data_series
+        :meth:`~.get_df`
+        :meth:`~.add_single_data_series`
+        :meth:`~.find_data_series`
         
         """
         for the_data_series in self.find_data_series(**kwargs):
@@ -413,7 +413,7 @@ class GroClient(Client):
 
         See Also
         --------
-        ~.get_descendant_regions
+        :meth:`~.get_descendant_regions`
 
         """
         for region in self.search_and_lookup('regions', country_name):
