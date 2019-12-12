@@ -47,17 +47,18 @@ class GroClient(Client):
 
 
     def get_df(self):
-        """Call get_data_points() for each saved data series and return as a combined dataframe.
+        """Call :meth:`~.get_data_points` for each saved data series and return as a combined
+        dataframe.
         
-        Note you must have first called either add_data_series() or add_single_data_series() to save
-        data series into the GroClient's data_series_list. You can inspect the client's saved list
-        using get_data_series_list().
+        Note you must have first called either :meth:`~.add_data_series` or
+        :meth:`~.add_single_data_series` to save data series into the GroClient's data_series_list.
+        You can inspect the client's saved list using :meth:`~.get_data_series_list`.
 
         Returns
         -------
         pandas.DataFrame
-            The results to get_data_points() for all the saved series, appended together into a
-            single dataframe.
+            The results to :meth:`~.get_data_points` for all the saved series, appended together
+            into a single dataframe.
             See https://developers.gro-intelligence.com/data-point-definition.html
 
         """
@@ -115,14 +116,13 @@ class GroClient(Client):
                 }
             }]
 
-        Note: you can pass the output of :meth:`~.get_data_series` into
-        :meth:`~.GroClient.get_data_points` to check what series exist for some selections and then
-        retrieve the data points for those series. See /api/client/samples/quickstart.py for an
-        example of this.
+        Note: you can pass the output of :meth:`~.get_data_series` into :meth:`~.get_data_points`
+        to check what series exist for some selections and then retrieve the data points for those
+        series. See /api/client/samples/quickstart.py for an example of this.
 
-        :meth:`get_data_points` also allows passing a list of ids for metric_id,
-        item_id, and/or region_id to get multiple series in a single request. This can be faster if
-        requesting many series.
+        :meth:`~.get_data_points` also allows passing a list of ids for metric_id, item_id, and/or
+        region_id to get multiple series in a single request. This can be faster if requesting many
+        series.
 
         For example::
 
@@ -210,13 +210,13 @@ class GroClient(Client):
     def get_data_series_list(self):
         """Inspect the current list of saved data series contained in the GroClient.
 
-        For use with :meth:`get_df`. Add new data series to the list using
-        :meth:`add_data_series` and :meth:`add_single_data_series`.
+        For use with :meth:`~.get_df`. Add new data series to the list using
+        :meth:`~.add_data_series` and :meth:`~.add_single_data_series`.
 
         Returns
         -------
         list of dicts
-            A list of data_series objects, as returned by get_data_series().
+            A list of data_series objects, as returned by :meth:`~.get_data_series`.
 
         """
         return list(self._data_series_list)
@@ -225,12 +225,13 @@ class GroClient(Client):
     def add_single_data_series(self, data_series):
         """Save a data series object to the GroClient's data_series_list.
         
-        For use with get_df().
+        For use with :meth:`~.get_df`.
         
         Parameters
         ----------
         data_series : dict
-            A single data_series object, as returned by get_data_series() or find_data_series().
+            A single data_series object, as returned by :meth:`~.get_data_series` or
+            :meth:`~.find_data_series`.
             See https://developers.gro-intelligence.com/data-series-definition.html
 
         Returns
@@ -264,10 +265,9 @@ class GroClient(Client):
 
         See https://developers.gro-intelligence.com/data-series-definition.html
 
-        This method uses search() to find entities by name and
-        get_data_series() to find available data series for all
-        possible combinations of the entities, and
-        rank_series_by_source.
+        This method uses :meth:`~.search` to find entities by name and :meth:`~.get_data_series` to
+        find available data series for all possible combinations of the entities, and
+        :meth:`~.rank_series_by_source`.
 
         Parameters
         ----------
@@ -287,7 +287,7 @@ class GroClient(Client):
 
         See also
         --------
-        get_data_series()
+        ~.get_data_series
 
         """
         search_results = []
@@ -328,9 +328,9 @@ class GroClient(Client):
 
 
     def add_data_series(self, **kwargs):
-        """Adds the top result of find_data_series() to the saved data series list.
-        
-        For use with get_df().
+        """Adds the top result of :meth:`~.find_data_series` to the saved data series list.
+
+        For use with :meth:`~.get_df`.
 
         Parameters
         ----------
@@ -349,9 +349,9 @@ class GroClient(Client):
 
         See also
         --------
-        get_df()
-        add_single_data_series()
-        find_data_series()
+        ~.get_df
+        ~.add_single_data_series
+        ~.find_data_series
         
         """
         for the_data_series in self.find_data_series(**kwargs):
@@ -409,11 +409,11 @@ class GroClient(Client):
                     'level': 4
                 }, ...]
 
-            See output of lookup()
+            See output of :meth:`~.lookup`
 
         See Also
         --------
-        get_descendant_regions()
+        ~.get_descendant_regions
 
         """
         for region in self.search_and_lookup('regions', country_name):
@@ -520,7 +520,9 @@ class GroClient(Client):
 
 """Basic Gro API command line interface.
 
-Note that results are chosen randomly from matching selections, and so results are not deterministic. This tool is useful for simple queries, but anything more complex should be done using the provided Python packages.
+Note that results are chosen randomly from matching selections, and so results are not
+deterministic. This tool is useful for simple queries, but anything more complex should be done
+using the provided Python packages.
 
 Usage examples:
     gro_client --item=soybeans  --region=brazil --partner_region china --metric export
