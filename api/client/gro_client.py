@@ -41,10 +41,8 @@ class GroClient(Client):
         self._data_series_queue = []  # added but not loaded in data frame
         self._data_frame = None
 
-
     def get_logger(self):
         return self._logger
-
 
     def get_df(self):
         """Call :meth:`~.get_data_points` for each saved data series and return as a combined
@@ -78,7 +76,8 @@ class GroClient(Client):
                 tmp.reporting_date = pandas.to_datetime(tmp.reporting_date)
             if self._data_frame is None:
                 self._data_frame = tmp
-                self._data_frame.set_index([col for col in DATA_POINTS_UNIQUE_COLS if col in tmp.columns])
+                self._data_frame.set_index([col for col in DATA_POINTS_UNIQUE_COLS
+                                            if col in tmp.columns])
             else:
                 self._data_frame = self._data_frame.merge(tmp, how='outer')
         return self._data_frame
@@ -118,7 +117,7 @@ class GroClient(Client):
 
         Note: you can pass the output of :meth:`~.get_data_series` into :meth:`~.get_data_points`
         to check what series exist for some selections and then retrieve the data points for those
-        series. See /api/client/samples/quickstart.py for an example of this.
+        series. See :sample:`quick_start.py` for an example of this.
 
         :meth:`~.get_data_points` also allows passing a list of ids for metric_id, item_id, and/or
         region_id to get multiple series in a single request. This can be faster if requesting many
@@ -192,7 +191,7 @@ class GroClient(Client):
             that does not have data.
         at_time : string, optional
             Estimate what data would have been available via Gro at a given time in the past. See
-            /api/client/samples/at-time-query-examples.ipynb for more details.
+            :sample:`at-time-query-examples.ipynb` for more details.
 
         Returns
         -------
@@ -221,7 +220,6 @@ class GroClient(Client):
         """
         return list(self._data_series_list)
 
-
     def add_single_data_series(self, data_series):
         """Save a data series object to the GroClient's data_series_list.
         
@@ -243,7 +241,6 @@ class GroClient(Client):
         self._data_series_queue.append(data_series)
         self._logger.info("Added {}".format(data_series))
         return
-
 
     def find_data_series(self, **kwargs):
         """Find the best possible  data series matching a combination of entities specified by name.
@@ -326,7 +323,6 @@ class GroClient(Client):
         for data_series in self.rank_series_by_source(all_data_series):
             yield data_series
 
-
     def add_data_series(self, **kwargs):
         """Adds the top result of :meth:`~.find_data_series` to the saved data series list.
 
@@ -359,7 +355,6 @@ class GroClient(Client):
             return
         return
 
-
     ###
     # Discovery shortcuts
     ###
@@ -382,7 +377,6 @@ class GroClient(Client):
             self._logger.debug("First result, out of {} {}: {}".format(
                 len(results), entity_type, result['id']))
             return result['id']
-
 
     def get_provinces(self, country_name):
         """Given the name of a country, find its provinces.
@@ -423,7 +417,6 @@ class GroClient(Client):
                 return provinces
         return None
 
-
     ###
     # Convenience methods that automatically fill in partial selections with random entities
     ###
@@ -443,7 +436,6 @@ class GroClient(Client):
         selected_entities.update(entities)
         return selected_entities
 
-
     def pick_random_data_series(self, selected_entities):
         """Given a selection of tentities, pick a random available data series the given selection
         of entities.
@@ -455,7 +447,6 @@ class GroClient(Client):
         selected_data_series = data_series_list[int(len(data_series_list)*random())]
         return selected_data_series
 
-
     # TODO: rename function to "write_..." rather than "print_..."
     def print_one_data_series(self, data_series, filename):
         """Output a data series to a CSV file."""
@@ -466,7 +457,6 @@ class GroClient(Client):
             writer.writerow([point['start_date'], point['end_date'],
                              point['value'] * point['input_unit_scale'],
                              self.lookup_unit_abbreviation(point['input_unit_id'])])
-
 
     def convert_unit(self, point, target_unit_id):
         """Convert the data point from one unit to another unit.
@@ -518,19 +508,19 @@ class GroClient(Client):
         return point
 
 
-"""Basic Gro API command line interface.
-
-Note that results are chosen randomly from matching selections, and so results are not
-deterministic. This tool is useful for simple queries, but anything more complex should be done
-using the provided Python packages.
-
-Usage examples:
-    gro_client --item=soybeans  --region=brazil --partner_region china --metric export
-    gro_client --item=sesame --region=ethiopia
-    gro_client --user_email=john.doe@example.com  --print_token
-For more information use --help
-"""
 def main():
+    """Basic Gro API command line interface.
+
+    Note that results are chosen randomly from matching selections, and so results are not
+    deterministic. This tool is useful for simple queries, but anything more complex should be done
+    using the provided Python packages.
+
+    Usage examples:
+        gro_client --item=soybeans  --region=brazil --partner_region china --metric export
+        gro_client --item=sesame --region=ethiopia
+        gro_client --user_email=john.doe@example.com  --print_token
+    For more information use --help
+    """
     parser = argparse.ArgumentParser(description="Gro API command line interface")
     parser.add_argument("--user_email")
     parser.add_argument("--user_password")
@@ -567,7 +557,8 @@ def main():
     if args.region:
         selected_entities['region_id'] = client.search_for_entity('regions', args.region)
     if args.partner_region:
-        selected_entities['partner_region_id'] = client.search_for_entity('regions', args.partner_region)
+        selected_entities['partner_region_id'] = client.search_for_entity('regions',
+                                                                          args.partner_region)
     if not selected_entities:
         selected_entities = client.pick_random_entities()
 

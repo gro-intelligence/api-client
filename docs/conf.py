@@ -31,10 +31,11 @@ author = 'Gro Intelligence'
 # ones.
 extensions = [
     'sphinx.ext.autodoc',
-    'sphinx.ext.doctest',
     'sphinx.ext.coverage',
-    'sphinx.ext.viewcode',
+    'sphinx.ext.doctest',
+    'sphinx.ext.extlinks',
     'sphinx.ext.napoleon',
+    'sphinx.ext.viewcode',
     'recommonmark'
 ]
 
@@ -67,6 +68,14 @@ html_theme_options = {
 }
 
 html_style = 'css/custom-theme.css'
+
+# https://www.sphinx-doc.org/en/master/usage/extensions/extlinks.html
+extlinks = {
+    'sample': (
+        'https://github.com/gro-intelligence/api-client/tree/development/api/client/samples/%s',
+        'sample '
+    )
+}
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
