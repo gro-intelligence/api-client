@@ -408,7 +408,7 @@
 
 <span class="sd">            client.get_data_points(**{&#39;metric_id&#39;: 860032,</span>
 <span class="sd">                                      &#39;item_id&#39;: 274,</span>
-<span class="sd">                                      &#39;region_id&#39;: 1215,</span>
+<span class="sd">                                      &#39;region_id&#39;: [1215,1216],</span>
 <span class="sd">                                      &#39;frequency_id&#39;: 9,</span>
 <span class="sd">                                      &#39;source_id&#39;: 2,</span>
 <span class="sd">                                      &#39;start_date&#39;: &#39;2017-01-01&#39;,</span>
@@ -435,6 +435,49 @@
 <span class="sd">        Note: you can pass the output of `get_data_series()` into `get_data_points()` in order to</span>
 <span class="sd">        programmatically check what series exist for some selections and then retrieve the data</span>
 <span class="sd">        points for those series. See /api/client/samples/quickstart.py for an example of this.</span>
+
+<span class="sd">        get_data_points also allows passing a list of ids for metric_id, item_id, and/or region_id</span>
+<span class="sd">        to get multiple series in a single request. This can be faster if requesting many series.</span>
+
+<span class="sd">        For example::</span>
+
+<span class="sd">            client.get_data_points(**{&#39;metric_id&#39;: 860032,</span>
+<span class="sd">                                      &#39;item_id&#39;: 274,</span>
+<span class="sd">                                      &#39;region_id&#39;: [1215,1216],</span>
+<span class="sd">                                      &#39;frequency_id&#39;: 9,</span>
+<span class="sd">                                      &#39;source_id&#39;: 2,</span>
+<span class="sd">                                      &#39;start_date&#39;: &#39;2017-01-01&#39;,</span>
+<span class="sd">                                      &#39;end_date&#39;: &#39;2017-12-31&#39;,</span>
+<span class="sd">                                      &#39;unit_id&#39;: 15})</span>
+<span class="sd">        Returns::</span>
+
+<span class="sd">            [{  &#39;start_date&#39;: &#39;2017-01-01T00:00:00.000Z&#39;,</span>
+<span class="sd">                &#39;end_date&#39;: &#39;2017-12-31T00:00:00.000Z&#39;,</span>
+<span class="sd">                &#39;value&#39;: 408913833.8019222, &#39;unit_id&#39;: 15,</span>
+<span class="sd">                &#39;reporting_date&#39;: None,</span>
+<span class="sd">                &#39;metric_id&#39;: 860032, &#39;item_id&#39;: 274, &#39;region_id&#39;: 1215,</span>
+<span class="sd">                &#39;partner_region_id&#39;: 0, &#39;frequency_id&#39;: 9, &#39;source_id&#39;: 2,</span>
+<span class="sd">                &#39;belongs_to&#39;: {</span>
+<span class="sd">                    &#39;metric_id&#39;: 860032,</span>
+<span class="sd">                    &#39;item_id&#39;: 274,</span>
+<span class="sd">                    &#39;region_id&#39;: 1215,</span>
+<span class="sd">                    &#39;frequency_id&#39;: 9,</span>
+<span class="sd">                    &#39;source_id&#39;: 2</span>
+<span class="sd">                }</span>
+<span class="sd">            }, { &#39;start_date&#39;: &#39;2017-01-01T00:00:00.000Z&#39;,</span>
+<span class="sd">                 &#39;end_date&#39;: &#39;2017-12-31T00:00:00.000Z&#39;,</span>
+<span class="sd">                 &#39;value&#39;: 340614.19507563586, &#39;unit_id&#39;: 15,</span>
+<span class="sd">                 &#39;reporting_date&#39;: None,</span>
+<span class="sd">                 &#39;metric_id&#39;: 860032, &#39;item_id&#39;: 274, &#39;region_id&#39;: 1216,</span>
+<span class="sd">                 &#39;partner_region_id&#39;: 0, &#39;frequency_id&#39;: 9, &#39;source_id&#39;: 2,</span>
+<span class="sd">                 &#39;belongs_to&#39;: {</span>
+<span class="sd">                    &#39;metric_id&#39;: 860032,</span>
+<span class="sd">                    &#39;item_id&#39;: 274,</span>
+<span class="sd">                    &#39;region_id&#39;: 1216,</span>
+<span class="sd">                    &#39;frequency_id&#39;: 9,</span>
+<span class="sd">                    &#39;source_id&#39;: 2</span>
+<span class="sd">                 }</span>
+<span class="sd">            }]</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>

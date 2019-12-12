@@ -546,7 +546,7 @@ rank_series_by_source.</p>
 <p>Example:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">client</span><span class="o">.</span><span class="n">get_data_points</span><span class="p">(</span><span class="o">**</span><span class="p">{</span><span class="s1">&#39;metric_id&#39;</span><span class="p">:</span> <span class="mi">860032</span><span class="p">,</span>
                           <span class="s1">&#39;item_id&#39;</span><span class="p">:</span> <span class="mi">274</span><span class="p">,</span>
-                          <span class="s1">&#39;region_id&#39;</span><span class="p">:</span> <span class="mi">1215</span><span class="p">,</span>
+                          <span class="s1">&#39;region_id&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1215</span><span class="p">,</span><span class="mi">1216</span><span class="p">],</span>
                           <span class="s1">&#39;frequency_id&#39;</span><span class="p">:</span> <span class="mi">9</span><span class="p">,</span>
                           <span class="s1">&#39;source_id&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
                           <span class="s1">&#39;start_date&#39;</span><span class="p">:</span> <span class="s1">&#39;2017-01-01&#39;</span><span class="p">,</span>
@@ -574,6 +574,49 @@ rank_series_by_source.</p>
 <p>Note: you can pass the output of <cite>get_data_series()</cite> into <cite>get_data_points()</cite> in order to
 programmatically check what series exist for some selections and then retrieve the data
 points for those series. See /api/client/samples/quickstart.py for an example of this.</p>
+<p>get_data_points also allows passing a list of ids for metric_id, item_id, and/or region_id
+to get multiple series in a single request. This can be faster if requesting many series.</p>
+<p>For example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">client</span><span class="o">.</span><span class="n">get_data_points</span><span class="p">(</span><span class="o">**</span><span class="p">{</span><span class="s1">&#39;metric_id&#39;</span><span class="p">:</span> <span class="mi">860032</span><span class="p">,</span>
+                          <span class="s1">&#39;item_id&#39;</span><span class="p">:</span> <span class="mi">274</span><span class="p">,</span>
+                          <span class="s1">&#39;region_id&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1215</span><span class="p">,</span><span class="mi">1216</span><span class="p">],</span>
+                          <span class="s1">&#39;frequency_id&#39;</span><span class="p">:</span> <span class="mi">9</span><span class="p">,</span>
+                          <span class="s1">&#39;source_id&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+                          <span class="s1">&#39;start_date&#39;</span><span class="p">:</span> <span class="s1">&#39;2017-01-01&#39;</span><span class="p">,</span>
+                          <span class="s1">&#39;end_date&#39;</span><span class="p">:</span> <span class="s1">&#39;2017-12-31&#39;</span><span class="p">,</span>
+                          <span class="s1">&#39;unit_id&#39;</span><span class="p">:</span> <span class="mi">15</span><span class="p">})</span>
+</pre></div>
+</div>
+<p>Returns:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="p">[{</span>  <span class="s1">&#39;start_date&#39;</span><span class="p">:</span> <span class="s1">&#39;2017-01-01T00:00:00.000Z&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;end_date&#39;</span><span class="p">:</span> <span class="s1">&#39;2017-12-31T00:00:00.000Z&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="mf">408913833.8019222</span><span class="p">,</span> <span class="s1">&#39;unit_id&#39;</span><span class="p">:</span> <span class="mi">15</span><span class="p">,</span>
+    <span class="s1">&#39;reporting_date&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="s1">&#39;metric_id&#39;</span><span class="p">:</span> <span class="mi">860032</span><span class="p">,</span> <span class="s1">&#39;item_id&#39;</span><span class="p">:</span> <span class="mi">274</span><span class="p">,</span> <span class="s1">&#39;region_id&#39;</span><span class="p">:</span> <span class="mi">1215</span><span class="p">,</span>
+    <span class="s1">&#39;partner_region_id&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;frequency_id&#39;</span><span class="p">:</span> <span class="mi">9</span><span class="p">,</span> <span class="s1">&#39;source_id&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+    <span class="s1">&#39;belongs_to&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s1">&#39;metric_id&#39;</span><span class="p">:</span> <span class="mi">860032</span><span class="p">,</span>
+        <span class="s1">&#39;item_id&#39;</span><span class="p">:</span> <span class="mi">274</span><span class="p">,</span>
+        <span class="s1">&#39;region_id&#39;</span><span class="p">:</span> <span class="mi">1215</span><span class="p">,</span>
+        <span class="s1">&#39;frequency_id&#39;</span><span class="p">:</span> <span class="mi">9</span><span class="p">,</span>
+        <span class="s1">&#39;source_id&#39;</span><span class="p">:</span> <span class="mi">2</span>
+    <span class="p">}</span>
+<span class="p">},</span> <span class="p">{</span> <span class="s1">&#39;start_date&#39;</span><span class="p">:</span> <span class="s1">&#39;2017-01-01T00:00:00.000Z&#39;</span><span class="p">,</span>
+     <span class="s1">&#39;end_date&#39;</span><span class="p">:</span> <span class="s1">&#39;2017-12-31T00:00:00.000Z&#39;</span><span class="p">,</span>
+     <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="mf">340614.19507563586</span><span class="p">,</span> <span class="s1">&#39;unit_id&#39;</span><span class="p">:</span> <span class="mi">15</span><span class="p">,</span>
+     <span class="s1">&#39;reporting_date&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+     <span class="s1">&#39;metric_id&#39;</span><span class="p">:</span> <span class="mi">860032</span><span class="p">,</span> <span class="s1">&#39;item_id&#39;</span><span class="p">:</span> <span class="mi">274</span><span class="p">,</span> <span class="s1">&#39;region_id&#39;</span><span class="p">:</span> <span class="mi">1216</span><span class="p">,</span>
+     <span class="s1">&#39;partner_region_id&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;frequency_id&#39;</span><span class="p">:</span> <span class="mi">9</span><span class="p">,</span> <span class="s1">&#39;source_id&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+     <span class="s1">&#39;belongs_to&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s1">&#39;metric_id&#39;</span><span class="p">:</span> <span class="mi">860032</span><span class="p">,</span>
+        <span class="s1">&#39;item_id&#39;</span><span class="p">:</span> <span class="mi">274</span><span class="p">,</span>
+        <span class="s1">&#39;region_id&#39;</span><span class="p">:</span> <span class="mi">1216</span><span class="p">,</span>
+        <span class="s1">&#39;frequency_id&#39;</span><span class="p">:</span> <span class="mi">9</span><span class="p">,</span>
+        <span class="s1">&#39;source_id&#39;</span><span class="p">:</span> <span class="mi">2</span>
+     <span class="p">}</span>
+<span class="p">}]</span>
+</pre></div>
+</div>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
