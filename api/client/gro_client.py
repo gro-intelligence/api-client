@@ -91,7 +91,7 @@ class GroClient(Client):
 
             client.get_data_points(**{'metric_id': 860032,
                                       'item_id': 274,
-                                      'region_id': [1215,1216],
+                                      'region_id': 1215,
                                       'frequency_id': 9,
                                       'source_id': 2,
                                       'start_date': '2017-01-01',
