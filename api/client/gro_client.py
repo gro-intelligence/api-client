@@ -91,7 +91,7 @@ class GroClient(Client):
 
             client.get_data_points(**{'metric_id': 860032,
                                       'item_id': 274,
-                                      'region_id': 1215,
+                                      'region_id': [1215,1216],
                                       'frequency_id': 9,
                                       'source_id': 2,
                                       'start_date': '2017-01-01',
@@ -118,6 +118,49 @@ class GroClient(Client):
         Note: you can pass the output of `get_data_series()` into `get_data_points()` in order to
         programmatically check what series exist for some selections and then retrieve the data
         points for those series. See /api/client/samples/quickstart.py for an example of this.
+
+        get_data_points also allows passing a list of ids for metric_id, item_id, and/or region_id
+        to get multiple series in a single request. This can be faster if requesting many series.
+
+        For example::
+
+            client.get_data_points(**{'metric_id': 860032,
+                                      'item_id': 274,
+                                      'region_id': [1215,1216],
+                                      'frequency_id': 9,
+                                      'source_id': 2,
+                                      'start_date': '2017-01-01',
+                                      'end_date': '2017-12-31',
+                                      'unit_id': 15})
+        Returns::
+
+            [{  'start_date': '2017-01-01T00:00:00.000Z',
+                'end_date': '2017-12-31T00:00:00.000Z',
+                'value': 408913833.8019222, 'unit_id': 15,
+                'reporting_date': None,
+                'metric_id': 860032, 'item_id': 274, 'region_id': 1215,
+                'partner_region_id': 0, 'frequency_id': 9, 'source_id': 2,
+                'belongs_to': {
+                    'metric_id': 860032,
+                    'item_id': 274,
+                    'region_id': 1215,
+                    'frequency_id': 9,
+                    'source_id': 2
+                }
+            }, { 'start_date': '2017-01-01T00:00:00.000Z',
+                 'end_date': '2017-12-31T00:00:00.000Z',
+                 'value': 340614.19507563586, 'unit_id': 15,
+                 'reporting_date': None,
+                 'metric_id': 860032, 'item_id': 274, 'region_id': 1216,
+                 'partner_region_id': 0, 'frequency_id': 9, 'source_id': 2,
+                 'belongs_to': {
+                    'metric_id': 860032,
+                    'item_id': 274,
+                    'region_id': 1216,
+                    'frequency_id': 9,
+                    'source_id': 2
+                 }
+            }]
 
         Parameters
         ----------
