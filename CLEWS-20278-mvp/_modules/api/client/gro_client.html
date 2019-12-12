@@ -364,17 +364,18 @@
 
 
 <div class="viewcode-block" id="GroClient.get_df"><a class="viewcode-back" href="../../../api.html#api.client.gro_client.GroClient.get_df">[docs]</a>    <span class="k">def</span> <span class="nf">get_df</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Call get_data_points() for each saved data series and return as a combined dataframe.</span>
+        <span class="sd">&quot;&quot;&quot;Call :meth:`~.get_data_points` for each saved data series and return as a combined</span>
+<span class="sd">        dataframe.</span>
 <span class="sd">        </span>
-<span class="sd">        Note you must have first called either add_data_series() or add_single_data_series() to save</span>
-<span class="sd">        data series into the GroClient&#39;s data_series_list. You can inspect the client&#39;s saved list</span>
-<span class="sd">        using get_data_series_list().</span>
+<span class="sd">        Note you must have first called either :meth:`~.add_data_series` or</span>
+<span class="sd">        :meth:`~.add_single_data_series` to save data series into the GroClient&#39;s data_series_list.</span>
+<span class="sd">        You can inspect the client&#39;s saved list using :meth:`~.get_data_series_list`.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        pandas.DataFrame</span>
-<span class="sd">            The results to get_data_points() for all the saved series, appended together into a</span>
-<span class="sd">            single dataframe.</span>
+<span class="sd">            The results to :meth:`~.get_data_points` for all the saved series, appended together</span>
+<span class="sd">            into a single dataframe.</span>
 <span class="sd">            See https://developers.gro-intelligence.com/data-point-definition.html</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -432,14 +433,13 @@
 <span class="sd">                }</span>
 <span class="sd">            }]</span>
 
-<span class="sd">        Note: you can pass the output of :meth:`~.get_data_series` into</span>
-<span class="sd">        :meth:`~.GroClient.get_data_points` to check what series exist for some selections and then</span>
-<span class="sd">        retrieve the data points for those series. See /api/client/samples/quickstart.py for an</span>
-<span class="sd">        example of this.</span>
+<span class="sd">        Note: you can pass the output of :meth:`~.get_data_series` into :meth:`~.get_data_points`</span>
+<span class="sd">        to check what series exist for some selections and then retrieve the data points for those</span>
+<span class="sd">        series. See /api/client/samples/quickstart.py for an example of this.</span>
 
-<span class="sd">        :meth:`get_data_points` also allows passing a list of ids for metric_id,</span>
-<span class="sd">        item_id, and/or region_id to get multiple series in a single request. This can be faster if</span>
-<span class="sd">        requesting many series.</span>
+<span class="sd">        :meth:`~.get_data_points` also allows passing a list of ids for metric_id, item_id, and/or</span>
+<span class="sd">        region_id to get multiple series in a single request. This can be faster if requesting many</span>
+<span class="sd">        series.</span>
 
 <span class="sd">        For example::</span>
 
@@ -527,13 +527,13 @@
 <div class="viewcode-block" id="GroClient.get_data_series_list"><a class="viewcode-back" href="../../../api.html#api.client.gro_client.GroClient.get_data_series_list">[docs]</a>    <span class="k">def</span> <span class="nf">get_data_series_list</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Inspect the current list of saved data series contained in the GroClient.</span>
 
-<span class="sd">        For use with :meth:`get_df`. Add new data series to the list using</span>
-<span class="sd">        :meth:`add_data_series` and :meth:`add_single_data_series`.</span>
+<span class="sd">        For use with :meth:`~.get_df`. Add new data series to the list using</span>
+<span class="sd">        :meth:`~.add_data_series` and :meth:`~.add_single_data_series`.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        list of dicts</span>
-<span class="sd">            A list of data_series objects, as returned by get_data_series().</span>
+<span class="sd">            A list of data_series objects, as returned by :meth:`~.get_data_series`.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_data_series_list</span><span class="p">)</span></div>
@@ -542,12 +542,13 @@
 <div class="viewcode-block" id="GroClient.add_single_data_series"><a class="viewcode-back" href="../../../api.html#api.client.gro_client.GroClient.add_single_data_series">[docs]</a>    <span class="k">def</span> <span class="nf">add_single_data_series</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_series</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Save a data series object to the GroClient&#39;s data_series_list.</span>
 <span class="sd">        </span>
-<span class="sd">        For use with get_df().</span>
+<span class="sd">        For use with :meth:`~.get_df`.</span>
 <span class="sd">        </span>
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        data_series : dict</span>
-<span class="sd">            A single data_series object, as returned by get_data_series() or find_data_series().</span>
+<span class="sd">            A single data_series object, as returned by :meth:`~.get_data_series` or</span>
+<span class="sd">            :meth:`~.find_data_series`.</span>
 <span class="sd">            See https://developers.gro-intelligence.com/data-series-definition.html</span>
 
 <span class="sd">        Returns</span>
@@ -581,10 +582,9 @@
 
 <span class="sd">        See https://developers.gro-intelligence.com/data-series-definition.html</span>
 
-<span class="sd">        This method uses search() to find entities by name and</span>
-<span class="sd">        get_data_series() to find available data series for all</span>
-<span class="sd">        possible combinations of the entities, and</span>
-<span class="sd">        rank_series_by_source.</span>
+<span class="sd">        This method uses :meth:`~.search` to find entities by name and :meth:`~.get_data_series` to</span>
+<span class="sd">        find available data series for all possible combinations of the entities, and</span>
+<span class="sd">        :meth:`~.rank_series_by_source`.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -604,7 +604,7 @@
 
 <span class="sd">        See also</span>
 <span class="sd">        --------</span>
-<span class="sd">        get_data_series()</span>
+<span class="sd">        ~.get_data_series</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">search_results</span> <span class="o">=</span> <span class="p">[]</span>
@@ -645,9 +645,9 @@
 
 
 <div class="viewcode-block" id="GroClient.add_data_series"><a class="viewcode-back" href="../../../api.html#api.client.gro_client.GroClient.add_data_series">[docs]</a>    <span class="k">def</span> <span class="nf">add_data_series</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Adds the top result of find_data_series() to the saved data series list.</span>
-<span class="sd">        </span>
-<span class="sd">        For use with get_df().</span>
+        <span class="sd">&quot;&quot;&quot;Adds the top result of :meth:`~.find_data_series` to the saved data series list.</span>
+
+<span class="sd">        For use with :meth:`~.get_df`.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -666,9 +666,9 @@
 
 <span class="sd">        See also</span>
 <span class="sd">        --------</span>
-<span class="sd">        get_df()</span>
-<span class="sd">        add_single_data_series()</span>
-<span class="sd">        find_data_series()</span>
+<span class="sd">        ~.get_df</span>
+<span class="sd">        ~.add_single_data_series</span>
+<span class="sd">        ~.find_data_series</span>
 <span class="sd">        </span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">the_data_series</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">find_data_series</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
@@ -726,11 +726,11 @@
 <span class="sd">                    &#39;level&#39;: 4</span>
 <span class="sd">                }, ...]</span>
 
-<span class="sd">            See output of lookup()</span>
+<span class="sd">            See output of :meth:`~.lookup`</span>
 
 <span class="sd">        See Also</span>
 <span class="sd">        --------</span>
-<span class="sd">        get_descendant_regions()</span>
+<span class="sd">        ~.get_descendant_regions</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">region</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">search_and_lookup</span><span class="p">(</span><span class="s1">&#39;regions&#39;</span><span class="p">,</span> <span class="n">country_name</span><span class="p">):</span>
@@ -837,7 +837,9 @@
 
 <span class="sd">&quot;&quot;&quot;Basic Gro API command line interface.</span>
 
-<span class="sd">Note that results are chosen randomly from matching selections, and so results are not deterministic. This tool is useful for simple queries, but anything more complex should be done using the provided Python packages.</span>
+<span class="sd">Note that results are chosen randomly from matching selections, and so results are not</span>
+<span class="sd">deterministic. This tool is useful for simple queries, but anything more complex should be done</span>
+<span class="sd">using the provided Python packages.</span>
 
 <span class="sd">Usage examples:</span>
 <span class="sd">    gro_client --item=soybeans  --region=brazil --partner_region china --metric export</span>
