@@ -212,7 +212,7 @@ def get_data(url, headers, params=None, logger=None):
             new_params = redirect(params, data.json()['data'][0])
             logger.warning('Redirecting {} to {}'.format(params, new_params), extra=log_record)
             params = new_params
-        elif data.status_code in [404, 401, 500]:
+        elif data.status_code in [400, 401, 404, 500]:
             break
         else:
             logger.error('{}'.format(data), extra=log_record)
@@ -455,6 +455,11 @@ def format_list_of_series(series_list):
 
 
 def get_data_points(access_token, api_host, **selection):
+    assert 'metric_id' in selection, 'metric_id is required'
+    assert 'item_id' in selection, 'item_id is required'
+    assert 'region_id' in selection, 'region_id is required'
+    assert 'source_id' in selection, 'source_id is required'
+    assert 'frequency_id' in selection, 'frequency_id is required'
     headers = {'authorization': 'Bearer ' + access_token}
     url = '/'.join(['https:', '', api_host, 'v2/data'])
     params = get_data_call_params(**selection)

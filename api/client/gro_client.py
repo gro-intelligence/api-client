@@ -82,18 +82,52 @@ class GroClient(Client):
                 self._data_frame = self._data_frame.merge(tmp, how='outer')
         return self._data_frame
 
-
     def get_data_points(self, **selections):
         """Get all the data points for a given selection.
 
         https://developers.gro-intelligence.com/data-point-definition.html
 
+        Example::
+
+            client.get_data_points(**{'metric_id': 860032,
+                                      'item_id': 274,
+                                      'region_id': 1215,
+                                      'frequency_id': 9,
+                                      'source_id': 2,
+                                      'start_date': '2017-01-01',
+                                      'end_date': '2017-12-31',
+                                      'unit_id': 15})
+
+        Returns::
+
+            [{  'start_date': '2017-01-01T00:00:00.000Z',
+                'end_date': '2017-12-31T00:00:00.000Z',
+                'value': 408913833.8019222, 'unit_id': 15,
+                'reporting_date': None,
+                'metric_id': 860032, 'item_id': 274, 'region_id': 1215,
+                'partner_region_id': 0, 'frequency_id': 9, 'source_id': 2,
+                'belongs_to': {
+                    'metric_id': 860032,
+                    'item_id': 274,
+                    'region_id': 1215,
+                    'frequency_id': 9,
+                    'source_id': 2
+                }
+            }]
+
+        Note: you can pass the output of `get_data_series()` into `get_data_points()` in order to
+        programmatically check what series exist for some selections and then retrieve the data
+        points for those series. See /api/client/samples/quickstart.py for an example of this.
+
         Parameters
         ----------
-        metric_id : integer
-        item_id : integer
-        region_id : integer
-        partner_region_id : integer, optional
+        metric_id : integer or list of integers
+            How something is measured. e.g. "Export Value" or "Area Harvested"
+        item_id : integer or list of integers
+            What is being measured. e.g. "Corn" or "Rainfall"
+        region_id : integer or list of integers
+            Where something is being measured e.g. "United States Corn Belt" or "China"
+        partner_region_id : integer or list of integers, optional
             partner_region refers to an interaction between two regions, like trade or
             transportation. For example, for an Export metric, the "region" would be the exporter
             and the "partner_region" would be the importer. For most series, this can be excluded
@@ -102,12 +136,12 @@ class GroClient(Client):
         frequency_id : integer
         unit_id : integer, optional
         start_date : string, optional
-            all points with start dates equal to or after this date
+            All points with start dates equal to or after this date
         end_date : string, optional
-            all points with end dates equal to or after this date
+            All points with end dates equal to or after this date
         show_revisions : boolean, optional
-            False by default, meaning only the latest value for each period. If true, will return all
-            values for a given period, differentiated by the `reporting_date` field.
+            False by default, meaning only the latest value for each period. If true, will return
+            all values for a given period, differentiated by the `reporting_date` field.
         insert_null : boolean, optional
             False by default. If True, will include a data point with a None value for each period
             that does not have data.
@@ -138,10 +172,10 @@ class GroClient(Client):
         data_points = super(GroClient, self).get_data_points(**selections)
         # Apply unit conversion if a unit is specified
         if 'unit_id' in selections:
-            return list(map(functools.partial(self.convert_unit, target_unit_id=selections['unit_id']), data_points))
+            return list(map(functools.partial(self.convert_unit,
+                                              target_unit_id=selections['unit_id']), data_points))
         # Return data points in input units if not unit is specified
         return data_points
-
 
     def get_data_series_list(self):
         """Inspect the current list of saved data series contained in the GroClient.
@@ -191,10 +225,15 @@ class GroClient(Client):
 
         will yield::
 
-             {u'metric_id': 15610005, u'region_id': 1215, u'end_date': u'2022-12-31T00:00:00.000Z', u'item_name': u'Corn', u'partner_region_name': u'World', u'frequency_id': 15, 'source_id': 81, u'partner_region_id': 0, u'item_id': 274, u'metric_name': u'Futures Open Interest', u'start_date': u'1972-03-01T00:00:00.000Z', u'region_name': u'United States'}
+            { 'metric_id': 15610005, 'metric_name': 'Futures Open Interest',
+              'item_id': 274, 'item_name': 'Corn',
+              'region_id': 1215, 'region_name': 'United States',
+              'partner_region_id': 0, 'partner_region_name': 'World',
+              'frequency_id': 15, 'source_id': 81,
+              'start_date': '1972-03-01T00:00:00.000Z', 'end_date': '2022-12-31T00:00:00.000Z' }
 
-        See https://developers.gro-intelligence.com/data-series-definition.html 
-        
+        See https://developers.gro-intelligence.com/data-series-definition.html
+
         This method uses search() to find entities by name and
         get_data_series() to find available data series for all
         possible combinations of the entities, and
