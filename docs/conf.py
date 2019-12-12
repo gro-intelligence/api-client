@@ -72,8 +72,7 @@ html_style = 'css/custom-theme.css'
 # https://www.sphinx-doc.org/en/master/usage/extensions/extlinks.html
 extlinks = {
     'sample': (
-        'https://github.com/gro-intelligence/api-client/tree/development/api/client/samples/%s',
-        'sample '
+        'https://github.com/gro-intelligence/api-client/tree/development/api/client/samples/%s', ''
     )
 }
 
