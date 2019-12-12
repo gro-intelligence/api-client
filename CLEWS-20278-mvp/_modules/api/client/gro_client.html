@@ -358,10 +358,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_data_series_queue</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># added but not loaded in data frame</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_data_frame</span> <span class="o">=</span> <span class="kc">None</span>
 
-
     <span class="k">def</span> <span class="nf">get_logger</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span>
-
 
 <div class="viewcode-block" id="GroClient.get_df"><a class="viewcode-back" href="../../../api.html#api.client.gro_client.GroClient.get_df">[docs]</a>    <span class="k">def</span> <span class="nf">get_df</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Call :meth:`~.get_data_points` for each saved data series and return as a combined</span>
@@ -395,7 +393,8 @@
                 <span class="n">tmp</span><span class="o">.</span><span class="n">reporting_date</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">tmp</span><span class="o">.</span><span class="n">reporting_date</span><span class="p">)</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_frame</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_data_frame</span> <span class="o">=</span> <span class="n">tmp</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_data_frame</span><span class="o">.</span><span class="n">set_index</span><span class="p">([</span><span class="n">col</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">DATA_POINTS_UNIQUE_COLS</span> <span class="k">if</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">tmp</span><span class="o">.</span><span class="n">columns</span><span class="p">])</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_data_frame</span><span class="o">.</span><span class="n">set_index</span><span class="p">([</span><span class="n">col</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">DATA_POINTS_UNIQUE_COLS</span>
+                                            <span class="k">if</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">tmp</span><span class="o">.</span><span class="n">columns</span><span class="p">])</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_data_frame</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_frame</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">tmp</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s1">&#39;outer&#39;</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_frame</span></div>
@@ -435,7 +434,7 @@
 
 <span class="sd">        Note: you can pass the output of :meth:`~.get_data_series` into :meth:`~.get_data_points`</span>
 <span class="sd">        to check what series exist for some selections and then retrieve the data points for those</span>
-<span class="sd">        series. See /api/client/samples/quickstart.py for an example of this.</span>
+<span class="sd">        series. See :sample:`quick_start.py` for an example of this.</span>
 
 <span class="sd">        :meth:`~.get_data_points` also allows passing a list of ids for metric_id, item_id, and/or</span>
 <span class="sd">        region_id to get multiple series in a single request. This can be faster if requesting many</span>
@@ -509,7 +508,7 @@
 <span class="sd">            that does not have data.</span>
 <span class="sd">        at_time : string, optional</span>
 <span class="sd">            Estimate what data would have been available via Gro at a given time in the past. See</span>
-<span class="sd">            /api/client/samples/at-time-query-examples.ipynb for more details.</span>
+<span class="sd">            :sample:`at-time-query-examples.ipynb` for more details.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -538,7 +537,6 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_data_series_list</span><span class="p">)</span></div>
 
-
 <div class="viewcode-block" id="GroClient.add_single_data_series"><a class="viewcode-back" href="../../../api.html#api.client.gro_client.GroClient.add_single_data_series">[docs]</a>    <span class="k">def</span> <span class="nf">add_single_data_series</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_series</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Save a data series object to the GroClient&#39;s data_series_list.</span>
 <span class="sd">        </span>
@@ -560,7 +558,6 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_data_series_queue</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">data_series</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Added </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">data_series</span><span class="p">))</span>
         <span class="k">return</span></div>
-
 
 <div class="viewcode-block" id="GroClient.find_data_series"><a class="viewcode-back" href="../../../api.html#api.client.gro_client.GroClient.find_data_series">[docs]</a>    <span class="k">def</span> <span class="nf">find_data_series</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Find the best possible  data series matching a combination of entities specified by name.</span>
@@ -643,7 +640,6 @@
         <span class="k">for</span> <span class="n">data_series</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">rank_series_by_source</span><span class="p">(</span><span class="n">all_data_series</span><span class="p">):</span>
             <span class="k">yield</span> <span class="n">data_series</span></div>
 
-
 <div class="viewcode-block" id="GroClient.add_data_series"><a class="viewcode-back" href="../../../api.html#api.client.gro_client.GroClient.add_data_series">[docs]</a>    <span class="k">def</span> <span class="nf">add_data_series</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Adds the top result of :meth:`~.find_data_series` to the saved data series list.</span>
 
@@ -676,7 +672,6 @@
             <span class="k">return</span>
         <span class="k">return</span></div>
 
-
     <span class="c1">###</span>
     <span class="c1"># Discovery shortcuts</span>
     <span class="c1">###</span>
@@ -699,7 +694,6 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;First result, out of </span><span class="si">{}</span><span class="s2"> </span><span class="si">{}</span><span class="s2">: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                 <span class="nb">len</span><span class="p">(</span><span class="n">results</span><span class="p">),</span> <span class="n">entity_type</span><span class="p">,</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]))</span>
             <span class="k">return</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span></div>
-
 
 <div class="viewcode-block" id="GroClient.get_provinces"><a class="viewcode-back" href="../../../api.html#api.client.gro_client.GroClient.get_provinces">[docs]</a>    <span class="k">def</span> <span class="nf">get_provinces</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">country_name</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Given the name of a country, find its provinces.</span>
@@ -740,7 +734,6 @@
                 <span class="k">return</span> <span class="n">provinces</span>
         <span class="k">return</span> <span class="kc">None</span></div>
 
-
     <span class="c1">###</span>
     <span class="c1"># Convenience methods that automatically fill in partial selections with random entities</span>
     <span class="c1">###</span>
@@ -760,7 +753,6 @@
         <span class="n">selected_entities</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">entities</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">selected_entities</span>
 
-
     <span class="k">def</span> <span class="nf">pick_random_data_series</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">selected_entities</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Given a selection of tentities, pick a random available data series the given selection</span>
 <span class="sd">        of entities.</span>
@@ -772,7 +764,6 @@
         <span class="n">selected_data_series</span> <span class="o">=</span> <span class="n">data_series_list</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">data_series_list</span><span class="p">)</span><span class="o">*</span><span class="n">random</span><span class="p">())]</span>
         <span class="k">return</span> <span class="n">selected_data_series</span>
 
-
     <span class="c1"># TODO: rename function to &quot;write_...&quot; rather than &quot;print_...&quot;</span>
     <span class="k">def</span> <span class="nf">print_one_data_series</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_series</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Output a data series to a CSV file.&quot;&quot;&quot;</span>
@@ -783,7 +774,6 @@
             <span class="n">writer</span><span class="o">.</span><span class="n">writerow</span><span class="p">([</span><span class="n">point</span><span class="p">[</span><span class="s1">&#39;start_date&#39;</span><span class="p">],</span> <span class="n">point</span><span class="p">[</span><span class="s1">&#39;end_date&#39;</span><span class="p">],</span>
                              <span class="n">point</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="n">point</span><span class="p">[</span><span class="s1">&#39;input_unit_scale&#39;</span><span class="p">],</span>
                              <span class="bp">self</span><span class="o">.</span><span class="n">lookup_unit_abbreviation</span><span class="p">(</span><span class="n">point</span><span class="p">[</span><span class="s1">&#39;input_unit_id&#39;</span><span class="p">])])</span>
-
 
     <span class="k">def</span> <span class="nf">convert_unit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">point</span><span class="p">,</span> <span class="n">target_unit_id</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Convert the data point from one unit to another unit.</span>
@@ -835,19 +825,19 @@
         <span class="k">return</span> <span class="n">point</span>
 
 
-<span class="sd">&quot;&quot;&quot;Basic Gro API command line interface.</span>
-
-<span class="sd">Note that results are chosen randomly from matching selections, and so results are not</span>
-<span class="sd">deterministic. This tool is useful for simple queries, but anything more complex should be done</span>
-<span class="sd">using the provided Python packages.</span>
-
-<span class="sd">Usage examples:</span>
-<span class="sd">    gro_client --item=soybeans  --region=brazil --partner_region china --metric export</span>
-<span class="sd">    gro_client --item=sesame --region=ethiopia</span>
-<span class="sd">    gro_client --user_email=john.doe@example.com  --print_token</span>
-<span class="sd">For more information use --help</span>
-<span class="sd">&quot;&quot;&quot;</span>
 <span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Basic Gro API command line interface.</span>
+
+<span class="sd">    Note that results are chosen randomly from matching selections, and so results are not</span>
+<span class="sd">    deterministic. This tool is useful for simple queries, but anything more complex should be done</span>
+<span class="sd">    using the provided Python packages.</span>
+
+<span class="sd">    Usage examples:</span>
+<span class="sd">        gro_client --item=soybeans  --region=brazil --partner_region china --metric export</span>
+<span class="sd">        gro_client --item=sesame --region=ethiopia</span>
+<span class="sd">        gro_client --user_email=john.doe@example.com  --print_token</span>
+<span class="sd">    For more information use --help</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;Gro API command line interface&quot;</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--user_email&quot;</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--user_password&quot;</span><span class="p">)</span>
@@ -884,7 +874,8 @@
     <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">region</span><span class="p">:</span>
         <span class="n">selected_entities</span><span class="p">[</span><span class="s1">&#39;region_id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">search_for_entity</span><span class="p">(</span><span class="s1">&#39;regions&#39;</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">region</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">partner_region</span><span class="p">:</span>
-        <span class="n">selected_entities</span><span class="p">[</span><span class="s1">&#39;partner_region_id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">search_for_entity</span><span class="p">(</span><span class="s1">&#39;regions&#39;</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">partner_region</span><span class="p">)</span>
+        <span class="n">selected_entities</span><span class="p">[</span><span class="s1">&#39;partner_region_id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">search_for_entity</span><span class="p">(</span><span class="s1">&#39;regions&#39;</span><span class="p">,</span>
+                                                                          <span class="n">args</span><span class="o">.</span><span class="n">partner_region</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">selected_entities</span><span class="p">:</span>
         <span class="n">selected_entities</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">pick_random_entities</span><span class="p">()</span>
 
