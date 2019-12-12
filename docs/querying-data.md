@@ -2,6 +2,15 @@
 
 Once you've identified the data you want, you'll want to start retrieving it and putting it to use. The following methods should help you get the data in the format that you want.
 
+All of the examples in this page refer to a client object, which can
+be initialized as follows:
+
+```py from api.client.gro_client import GroClient
+
+client = GroClient('api.gro-intelligence.com', '<YOUR_TOKEN>')
+```
+
+
 ## Get data points
 
 `get_data_points(**selection)` is the primary method for retrieving data. The [code snippets](./searching-data#code-snippets) feature covered earlier provides you with a fully completed `get_data_points()` query, such as:
@@ -24,10 +33,6 @@ Making your query more specific will speed up your query by limiting the amount 
 ## Get Data frame
 
 Data frames are a popular format for viewing data responses, and our `GroClient` class offers you the ability to view your data series in a data frame. If you've imported the library into your file, as follows:
-
-```py
-from api.client.gro_client import GroClient
-```
 
 Then you can use the `get_df()` method to return data in a data frame.
 
