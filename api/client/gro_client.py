@@ -115,8 +115,8 @@ class GroClient(Client):
                 }
             }]
 
-        Note: you can pass the output of :meth:`get_data_series` into
-        :meth:`get_data_points` to check what series exist for some selections and then
+        Note: you can pass the output of :meth:`self.get_data_series` into
+        :meth:`GroClient.get_data_points` to check what series exist for some selections and then
         retrieve the data points for those series. See /api/client/samples/quickstart.py for an
         example of this.
 
