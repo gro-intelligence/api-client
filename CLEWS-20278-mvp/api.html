@@ -572,7 +572,7 @@ find available data series for all possible combinations of the entities, and
 </div>
 <p>Note: you can pass the output of <a class="reference internal" href="#api.client.gro_client.GroClient.get_data_series" title="api.client.gro_client.GroClient.get_data_series"><code class="xref py py-meth docutils literal"><span class="pre">get_data_series()</span></code></a> into <a class="reference internal" href="#api.client.gro_client.GroClient.get_data_points" title="api.client.gro_client.GroClient.get_data_points"><code class="xref py py-meth docutils literal"><span class="pre">get_data_points()</span></code></a>
 to check what series exist for some selections and then retrieve the data points for those
-series. See /api/client/samples/quickstart.py for an example of this.</p>
+series. See <a class="reference external" href="https://github.com/gro-intelligence/api-client/tree/development/api/client/samples/quick_start.py">sample quick_start.py</a> for an example of this.</p>
 <p><a class="reference internal" href="#api.client.gro_client.GroClient.get_data_points" title="api.client.gro_client.GroClient.get_data_points"><code class="xref py py-meth docutils literal"><span class="pre">get_data_points()</span></code></a> also allows passing a list of ids for metric_id, item_id, and/or
 region_id to get multiple series in a single request. This can be faster if requesting many
 series.</p>
@@ -639,7 +639,7 @@ all values for a given period, differentiated by the <cite>reporting_date</cite>
 <li><strong>insert_null</strong> (<em>boolean</em><em>, </em><em>optional</em>) &#8211; False by default. If True, will include a data point with a None value for each period
 that does not have data.</li>
 <li><strong>at_time</strong> (<em>string</em><em>, </em><em>optional</em>) &#8211; Estimate what data would have been available via Gro at a given time in the past. See
-/api/client/samples/at-time-query-examples.ipynb for more details.</li>
+<a class="reference external" href="https://github.com/gro-intelligence/api-client/tree/development/api/client/samples/at-time-query-examples.ipynb">sample at-time-query-examples.ipynb</a> for more details.</li>
 </ul>
 </td>
 </tr>
