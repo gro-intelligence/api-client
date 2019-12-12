@@ -357,8 +357,7 @@ frames</a>
 are a popular format for processing large amounts of data. The
 <code class="docutils literal"><span class="pre">GroClient</span></code> class&#8216; <code class="docutils literal"><span class="pre">get_df()</span></code> method offers you the ability to access
 multiple data series in a single data frame. This approach is
-convenient modeling or analysis on combinations of many different data
-series.</p>
+convenient for modeling or analysis using many different data series.</p>
 <p><code class="docutils literal"><span class="pre">get_df()</span></code> is a stateful method, so you must first save one or more
 series into your client object.</p>
 <p>The easiest way to do that is to use <code class="docutils literal"><span class="pre">add_data_series()</span></code>, e.g.:</p>
@@ -388,8 +387,7 @@ are ranked see
 <p>Alternately, if you want to directly control the series selection, you
 can simply take a selection for example via <a class="reference external" href="./searching-data#code-snippets">code
 snippets</a>, or using
-[<code class="docutils literal"><span class="pre">find_data_series</span></code>]
-(https://developers.gro-intelligence.com/api.html#api.client.gro_client.GroClient.find_data_series),
+<a class="reference external" href="https://developers.gro-intelligence.com/api.html#api.client.gro_client.GroClient.find_data_series"><code class="docutils literal"><span class="pre">find_data_series</span></code></a>,
 and then add that specific series directly with the
 <code class="docutils literal"><span class="pre">add_single_data_series()</span></code> method, e.g.:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">client</span><span class="o">.</span><span class="n">add_single_data_series</span><span class="p">({</span>
@@ -412,12 +410,12 @@ and then add that specific series directly with the
 </pre></div>
 </div>
 <p>Note that in the second example, we choose to get the first series
-from <code class="docutils literal"><span class="pre">source_id=14</span></code> which is <a class="reference external" href="https://app.gro-intelligence.com/dictionary/sources/14">USDA
-PS&amp;D</a>, which
-tends to have longer historical record, and the second series from
-source with <code class="docutils literal"><span class="pre">source_id=50</span></code>
-<a class="reference external" href="https://app.gro-intelligence.com/dictionary/sources/50">IDAC</a>, which
-is more up to date.</p>
+from the source with id 14 which is <a class="reference external" href="https://app.gro-intelligence.com/dictionary/sources/14">USDA
+PS&amp;D</a>, and the
+second series from source with id 50, which is
+<a class="reference external" href="https://app.gro-intelligence.com/dictionary/sources/50">IDAC</a>. The
+two sources may differ in historical time range and how far back the
+time series goes or how up-to-date the time series is.</p>
 </div>
 <div class="section" id="show-revisions">
 <h2>Show revisions<a class="headerlink" href="#show-revisions" title="Permalink to this headline">¶</a></h2>
