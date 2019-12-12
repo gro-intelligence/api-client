@@ -153,21 +153,6 @@ class GroClient(Client):
         -------
         list of dicts
 
-            Example ::
-
-                [ {
-                    'start_date': '2000-01-01T00:00:00.000Z',
-                    'end_date': '2000-12-31T00:00:00.000Z',
-                    'value': 251854000,
-                    'input_unit_id': 14,
-                    'input_unit_scale': 1,
-                    'metric_id': 860032,
-                    'item_id': 274,
-                    'region_id': 1215,
-                    'frequency_id': 9,
-                    'unit_id': 14
-                }, ...]
-
         """
         data_points = super(GroClient, self).get_data_points(**selections)
         # Apply unit conversion if a unit is specified
