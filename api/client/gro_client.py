@@ -181,7 +181,24 @@ class GroClient(Client):
 
 
     def find_data_series(self, **kwargs):
-        """Attempts to find a matching data series for a combination of entities by name.
+        """Find the best possible  data series matching a combination of entities specified by name.
+
+        Example::
+
+            next(client.find_data_series(item="Corn",
+                                         metric="Futures Open Interest",
+                                         region="United States of America"))
+
+        will yield::
+
+             {u'metric_id': 15610005, u'region_id': 1215, u'end_date': u'2022-12-31T00:00:00.000Z', u'item_name': u'Corn', u'partner_region_name': u'World', u'frequency_id': 15, 'source_id': 81, u'partner_region_id': 0, u'item_id': 274, u'metric_name': u'Futures Open Interest', u'start_date': u'1972-03-01T00:00:00.000Z', u'region_name': u'United States'}
+
+        See https://developers.gro-intelligence.com/data-series-definition.html 
+        
+        This method uses search() to find entities by name and
+        get_data_series() to find available data series for all
+        possible combinations of the entities, and
+        rank_series_by_source.
 
         Parameters
         ----------
@@ -194,15 +211,14 @@ class GroClient(Client):
         end_date : string, optional
             YYYY-MM-DD
 
-        Returns
-        -------
+        Yields
+        ------
         dict
-           A single data series
+           A sequence of data series matching the input selections, in quality rank order.
 
         See also
         --------
         get_data_series()
-        https://developers.gro-intelligence.com/data-series-definition.html
 
         """
         search_results = []
