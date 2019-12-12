@@ -144,6 +144,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../api.html#geographic">Geographic</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../api.html#advanced-exploration">Advanced Exploration</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../api.html#pandas-utils">Pandas Utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api.html#crop-modeling">Crop Modeling</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../searching-data.html">Searching Data</a><ul>
@@ -493,8 +494,25 @@
         <span class="k">return</span></div>
 
 
-    <span class="k">def</span> <span class="nf">find_data_series</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Attempts to find a matching data series for a combination of entities by name.</span>
+<div class="viewcode-block" id="GroClient.find_data_series"><a class="viewcode-back" href="../../../api.html#api.client.gro_client.GroClient.find_data_series">[docs]</a>    <span class="k">def</span> <span class="nf">find_data_series</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Find the best possible  data series matching a combination of entities specified by name.</span>
+
+<span class="sd">        Example::</span>
+
+<span class="sd">            next(client.find_data_series(item=&quot;Corn&quot;,</span>
+<span class="sd">                                         metric=&quot;Futures Open Interest&quot;,</span>
+<span class="sd">                                         region=&quot;United States of America&quot;))</span>
+
+<span class="sd">        will yield::</span>
+
+<span class="sd">             {u&#39;metric_id&#39;: 15610005, u&#39;region_id&#39;: 1215, u&#39;end_date&#39;: u&#39;2022-12-31T00:00:00.000Z&#39;, u&#39;item_name&#39;: u&#39;Corn&#39;, u&#39;partner_region_name&#39;: u&#39;World&#39;, u&#39;frequency_id&#39;: 15, &#39;source_id&#39;: 81, u&#39;partner_region_id&#39;: 0, u&#39;item_id&#39;: 274, u&#39;metric_name&#39;: u&#39;Futures Open Interest&#39;, u&#39;start_date&#39;: u&#39;1972-03-01T00:00:00.000Z&#39;, u&#39;region_name&#39;: u&#39;United States&#39;}</span>
+
+<span class="sd">        See https://developers.gro-intelligence.com/data-series-definition.html </span>
+<span class="sd">        </span>
+<span class="sd">        This method uses search() to find entities by name and</span>
+<span class="sd">        get_data_series() to find available data series for all</span>
+<span class="sd">        possible combinations of the entities, and</span>
+<span class="sd">        rank_series_by_source.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -507,15 +525,14 @@
 <span class="sd">        end_date : string, optional</span>
 <span class="sd">            YYYY-MM-DD</span>
 
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
+<span class="sd">        Yields</span>
+<span class="sd">        ------</span>
 <span class="sd">        dict</span>
-<span class="sd">           A single data series</span>
+<span class="sd">           A sequence of data series matching the input selections, in quality rank order.</span>
 
 <span class="sd">        See also</span>
 <span class="sd">        --------</span>
 <span class="sd">        get_data_series()</span>
-<span class="sd">        https://developers.gro-intelligence.com/data-series-definition.html</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">search_results</span> <span class="o">=</span> <span class="p">[]</span>
@@ -552,7 +569,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Found </span><span class="si">{}</span><span class="s2"> distinct data series total for </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
             <span class="nb">len</span><span class="p">(</span><span class="n">all_data_series</span><span class="p">),</span> <span class="n">kwargs</span><span class="p">))</span>
         <span class="k">for</span> <span class="n">data_series</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">rank_series_by_source</span><span class="p">(</span><span class="n">all_data_series</span><span class="p">):</span>
-            <span class="k">yield</span> <span class="n">data_series</span>
+            <span class="k">yield</span> <span class="n">data_series</span></div>
 
 
 <div class="viewcode-block" id="GroClient.add_data_series"><a class="viewcode-back" href="../../../api.html#api.client.gro_client.GroClient.add_data_series">[docs]</a>    <span class="k">def</span> <span class="nf">add_data_series</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
