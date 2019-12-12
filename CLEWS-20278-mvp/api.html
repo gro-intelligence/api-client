@@ -146,6 +146,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#geographic">Geographic</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#advanced-exploration">Advanced Exploration</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#pandas-utils">Pandas Utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#crop-modeling">Crop Modeling</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="searching-data.html">Searching Data</a><ul>
@@ -485,6 +486,50 @@ the best match for the given search term(s).</p>
 </table>
 </dd></dl>
 
+<dl class="method">
+<dt id="api.client.gro_client.GroClient.find_data_series">
+<code class="descclassname">GroClient.</code><code class="descname">find_data_series</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/gro_client.html#GroClient.find_data_series"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.gro_client.GroClient.find_data_series" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find the best possible  data series matching a combination of entities specified by name.</p>
+<p>Example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="nb">next</span><span class="p">(</span><span class="n">client</span><span class="o">.</span><span class="n">find_data_series</span><span class="p">(</span><span class="n">item</span><span class="o">=</span><span class="s2">&quot;Corn&quot;</span><span class="p">,</span>
+                             <span class="n">metric</span><span class="o">=</span><span class="s2">&quot;Futures Open Interest&quot;</span><span class="p">,</span>
+                             <span class="n">region</span><span class="o">=</span><span class="s2">&quot;United States of America&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>will yield:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="p">{</span><span class="sa">u</span><span class="s1">&#39;metric_id&#39;</span><span class="p">:</span> <span class="mi">15610005</span><span class="p">,</span> <span class="sa">u</span><span class="s1">&#39;region_id&#39;</span><span class="p">:</span> <span class="mi">1215</span><span class="p">,</span> <span class="sa">u</span><span class="s1">&#39;end_date&#39;</span><span class="p">:</span> <span class="sa">u</span><span class="s1">&#39;2022-12-31T00:00:00.000Z&#39;</span><span class="p">,</span> <span class="sa">u</span><span class="s1">&#39;item_name&#39;</span><span class="p">:</span> <span class="sa">u</span><span class="s1">&#39;Corn&#39;</span><span class="p">,</span> <span class="sa">u</span><span class="s1">&#39;partner_region_name&#39;</span><span class="p">:</span> <span class="sa">u</span><span class="s1">&#39;World&#39;</span><span class="p">,</span> <span class="sa">u</span><span class="s1">&#39;frequency_id&#39;</span><span class="p">:</span> <span class="mi">15</span><span class="p">,</span> <span class="s1">&#39;source_id&#39;</span><span class="p">:</span> <span class="mi">81</span><span class="p">,</span> <span class="sa">u</span><span class="s1">&#39;partner_region_id&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="sa">u</span><span class="s1">&#39;item_id&#39;</span><span class="p">:</span> <span class="mi">274</span><span class="p">,</span> <span class="sa">u</span><span class="s1">&#39;metric_name&#39;</span><span class="p">:</span> <span class="sa">u</span><span class="s1">&#39;Futures Open Interest&#39;</span><span class="p">,</span> <span class="sa">u</span><span class="s1">&#39;start_date&#39;</span><span class="p">:</span> <span class="sa">u</span><span class="s1">&#39;1972-03-01T00:00:00.000Z&#39;</span><span class="p">,</span> <span class="sa">u</span><span class="s1">&#39;region_name&#39;</span><span class="p">:</span> <span class="sa">u</span><span class="s1">&#39;United States&#39;</span><span class="p">}</span>
+</pre></div>
+</div>
+<p>See <a class="reference external" href="https://developers.gro-intelligence.com/data-series-definition.html">https://developers.gro-intelligence.com/data-series-definition.html</a></p>
+<p>This method uses search() to find entities by name and
+get_data_series() to find available data series for all
+possible combinations of the entities, and
+rank_series_by_source.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>metric</strong> (<em>string</em><em>, </em><em>optional</em>) &#8211; </li>
+<li><strong>item</strong> (<em>string</em><em>, </em><em>optional</em>) &#8211; </li>
+<li><strong>region</strong> (<em>string</em><em>, </em><em>optional</em>) &#8211; </li>
+<li><strong>partner_region</strong> (<em>string</em><em>, </em><em>optional</em>) &#8211; </li>
+<li><strong>start_date</strong> (<em>string</em><em>, </em><em>optional</em>) &#8211; YYYY-MM-DD</li>
+<li><strong>end_date</strong> (<em>string</em><em>, </em><em>optional</em>) &#8211; YYYY-MM-DD</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Yields:</th><td class="field-body"><p class="first last"><em>dict</em> &#8211; A sequence of data series matching the input selections, in quality rank order.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><code class="xref py py-meth docutils literal"><span class="pre">get_data_series()</span></code></p>
+</div>
+</dd></dl>
+
 </div>
 <div class="section" id="data-retrieval">
 <h2>Data Retrieval<a class="headerlink" href="#data-retrieval" title="Permalink to this headline">¶</a></h2>
@@ -789,6 +834,86 @@ add_single_data_series().</p>
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A list of data_series objects, as returned by get_data_series().</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">list of dicts</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="crop-modeling">
+<h2>Crop Modeling<a class="headerlink" href="#crop-modeling" title="Permalink to this headline">¶</a></h2>
+<dl class="method">
+<dt id="api.client.crop_model.CropModel.compute_weights">
+<code class="descclassname">CropModel.</code><code class="descname">compute_weights</code><span class="sig-paren">(</span><em>crop_name</em>, <em>metric_name</em>, <em>regions</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/crop_model.html#CropModel.compute_weights"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.crop_model.CropModel.compute_weights" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute a vector of &#8216;weights&#8217; that can be used for crop-weighted average across regions.</p>
+<p>For each region, the weight of is the mean value over time, of
+the given metric for the given crop, normalized so the sum
+across all regions is 1.0.</p>
+<p>For example: say we have a <cite>region_list = [{&#8216;id&#8217;: 1, &#8216;name&#8217;:
+&#8216;Province1&#8217;}, {&#8216;id&#8217;: 2, &#8216;name&#8217;: &#8216;Province2&#8217;}]</cite>. This could
+be a list returned by client.search_and_lookup() or
+client.get_descendant_regions() for example.  Now say
+<cite>model.compute_weights(&#8216;soybeans&#8217;, &#8216;land cover area&#8217;,
+region_list)</cite> returns <cite>[0.6, 0.4]</cite>, that means Province1
+has 60% and province2 has 40% of the total area planted across
+the two regions, when averaged across all time.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>crop_name</strong> (<em>string</em>) &#8211; </li>
+<li><strong>metric_name</strong> (<em>string</em>) &#8211; </li>
+<li><strong>regions</strong> (<em>list of dicts</em>) &#8211; Each entry is a region with id and name</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">weights corresponding to the regions.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list of floats</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="api.client.crop_model.CropModel.compute_crop_weighted_series">
+<code class="descclassname">CropModel.</code><code class="descname">compute_crop_weighted_series</code><span class="sig-paren">(</span><em>weighting_crop_name</em>, <em>weighting_metric_name</em>, <em>item_name</em>, <em>metric_name</em>, <em>regions</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/crop_model.html#CropModel.compute_crop_weighted_series"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.crop_model.CropModel.compute_crop_weighted_series" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the &#8216;crop-weighted average&#8217; of the given item and metric&#8217;s series across regions.</p>
+<p>The weight of a region is the fraction of the value of the weighting series represented by
+that region as explained in compute_weights().</p>
+<p>For example: say we have a <cite>region_list = [{&#8216;id&#8217;: 1, &#8216;name&#8217;:
+&#8216;Province1&#8217;}, {&#8216;id&#8217;: 2, &#8216;name&#8217;: &#8216;Province2&#8217;}]</cite>. This could
+be a list returned by client.search_and_lookup() or
+client.get_descendant_regions for example.  Now
+<cite>model.compute_crop_weighted_series(&#8216;soybeans&#8217;, &#8216;land cover
+area&#8217;, &#8216;vegetation ndvi&#8217;, &#8216;vegetation indices index&#8217;,
+region_list)</cite> will return a dataframe where the NDVI of each
+province is multiplied by the fraction of total soybeans
+area is accounted for by that province. Thus taking the sum
+across provinces will give a crop weighted average of NDVI.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>weighting_crop_name</strong> (<em>string</em>) &#8211; </li>
+<li><strong>weighting_metric_name</strong> (<em>string</em>) &#8211; </li>
+<li><strong>item_name</strong> (<em>string</em>) &#8211; </li>
+<li><strong>metric_name</strong> (<em>string</em>) &#8211; </li>
+<li><strong>regions</strong> (<em>list of dicts</em>) &#8211; Each entry is a region with id and name</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">contains the data series for the given item_name, metric_name,
+for each region in regions, with values adjusted
+by the crop weight for that region.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">pandas.DataFrame</p>
+</td>
 </tr>
 </tbody>
 </table>
