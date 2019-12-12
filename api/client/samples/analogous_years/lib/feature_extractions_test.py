@@ -4,7 +4,7 @@ import pandas as pd
 from pandas.util.testing import assert_frame_equal
 import pytest
 
-from . import feature_extractions
+from api.client.samples.analogous_years.lib import feature_extractions
 
 
 def create_test_data():

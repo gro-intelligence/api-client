@@ -1,7 +1,8 @@
 import pandas as pd
 from pandas.util.testing import assert_frame_equal
 
-from .final_ranks_computation import combined_methods_distances
+from api.client.samples.analogous_years.lib.final_ranks_computation import \
+    combined_methods_distances
 
 
 def data_combined_methods():
