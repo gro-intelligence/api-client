@@ -65,6 +65,8 @@ class GroClient(Client):
             data_series = self._data_series_queue.pop()
             tmp = pandas.DataFrame(
                 data=self.get_data_points(**data_series))
+            if tmp.empty:
+                continue
             # get_data_points response doesn't include the
             # source_id. We add it as a column, in case we have
             # several selections series which differ only by source id.
