@@ -37,8 +37,7 @@ frames](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFr
 are a popular format for processing large amounts of data. The
 `GroClient` class' `get_df()` method offers you the ability to access
 multiple data series in a single data frame. This approach is
-convenient modeling or analysis on combinations of many different data
-series.
+convenient for modeling or analysis using many different data series.
 
 `get_df()` is a stateful method, so you must first save one or more
 series into your client object.
@@ -73,8 +72,7 @@ are ranked see
 Alternately, if you want to directly control the series selection, you
 can simply take a selection for example via [code
 snippets](./searching-data#code-snippets), or using
-[`find_data_series`]
-(https://developers.gro-intelligence.com/api.html#api.client.gro_client.GroClient.find_data_series),
+[`find_data_series`](https://developers.gro-intelligence.com/api.html#api.client.gro_client.GroClient.find_data_series),
 and then add that specific series directly with the
 `add_single_data_series()` method, e.g.:
 
@@ -99,12 +97,12 @@ df = client.get_df()
 ```
 
 Note that in the second example, we choose to get the first series
-from `source_id=14` which is [USDA
-PS&D](https://app.gro-intelligence.com/dictionary/sources/14), which
-tends to have longer historical record, and the second series from
-source with `source_id=50`
-[IDAC](https://app.gro-intelligence.com/dictionary/sources/50), which
-is more up to date.
+from the source with id 14 which is [USDA
+PS&D](https://app.gro-intelligence.com/dictionary/sources/14), and the
+second series from source with id 50, which is
+[IDAC](https://app.gro-intelligence.com/dictionary/sources/50). The
+two sources may differ in historical time range and how far back the
+time series goes or how up-to-date the time series is.
 
 
 ## Show revisions
