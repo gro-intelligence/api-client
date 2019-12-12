@@ -13,7 +13,7 @@ client = GroClient('api.gro-intelligence.com', '<YOUR_TOKEN>')
 
 ## Get data points
 
-`get_data_points(**selection)` is the primary method for retrieving data. The [code snippets](./searching-data#code-snippets) feature covered earlier provides you with a fully completed `get_data_points()` query, such as:
+`get_data_points(**selection)` is the most basic method for retrieving data. The [code snippets](./searching-data#code-snippets) feature covered earlier provides you with a fully completed `get_data_points()` query, such as:
 
 ```py
 # Wheat - Area Harvested (area) - India (USDA PS&D)
@@ -30,17 +30,55 @@ The above query has completed fields for `metric_id`, `item_id`, `region_id`, `s
 
 Making your query more specific will speed up your query by limiting the amount of data requested.
 
-## Get Data frame
+## Get data frame
 
-Data frames are a popular format for viewing data responses, and our `GroClient` class offers you the ability to view your data series in a data frame. If you've imported the library into your file, as follows:
+[Pandas data
+frames](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html)
+are a popular format for processing large amounts of data. The
+`GroClient` class' `get_df()` method offers you the ability to access
+multiple data series in a single data frame. This approach is
+convenient modeling or analysis on combinations of many different data
+series.
 
-Then you can use the `get_df()` method to return data in a data frame.
+`get_df()` is a stateful method, so you must first save one or more
+series into your client object.
 
-`get_df()` is a stateful method, so you must first save the series into your client object. You can do this with the `add_single_data_series()` method.
+The easiest way to do that is to use `add_data_series()`, e.g.:
 
-The following code will return Wheat - Area Harvested (area) - India (USDA PS&D) in a data frame.
+```
+client.add_data_series(**{
+    'metric': 'area harvested',
+    'item': 'wheat',
+    'region': 'India'
+})
 
-```py
+client.add_data_series(**{
+    'metric': 'production quantity',
+    'item': 'wheat',
+    'region': 'India'
+})
+
+df = client.get_df()
+```
+
+Note that `add_data_series()` combines searching for combinations of
+entities by name, finding the best possible data series for that
+combination, and adding it to the client. In the above example, each
+`add_data_series()` call finds several possible series (5 series for
+area harvested and 6 for production quantity respectively), and adds
+the highest ranked one for each.  For more information on how series
+are ranked see
+[`rank_series_by_source`](https://developers.gro-intelligence.com/api.html#api.client.gro_client.GroClient.rank_series_by_source).
+
+Alternately, if you want to directly control the series selection, you
+can simply take a selection for example via [code
+snippets](./searching-data#code-snippets), or using
+[`find_data_series`]
+(https://developers.gro-intelligence.com/api.html#api.client.gro_client.GroClient.find_data_series),
+and then add that specific series directly with the
+`add_single_data_series()` method, e.g.:
+
+```
 client.add_single_data_series({
      'metric_id': 570001,
      'item_id': 95,
@@ -48,8 +86,26 @@ client.add_single_data_series({
      'source_id': 14,
      'frequency_id': 9
 })
-client.get_df()
+
+client.add_single_data_series({
+     'metric_id': 860032,
+     'item_id': 95,
+     'region_id': 1094,
+     'source_id': 50
+     'frequency_id': 9,
+})
+
+df = client.get_df()
 ```
+
+Note that in the second example, we choose to get the first series
+from `source_id=14` which is [USDA
+PS&D](https://app.gro-intelligence.com/dictionary/sources/14), which
+tends to have longer historical record, and the second series from
+source with `source_id=50`
+[IDAC](https://app.gro-intelligence.com/dictionary/sources/50), which
+is more up to date.
+
 
 ## Show revisions
 
