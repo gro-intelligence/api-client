@@ -406,7 +406,7 @@
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Yields:</th><td class="field-body"><p class="first"><em>dict</em> &#8211; Result from <code class="xref py py-meth docutils literal"><span class="pre">search()</span></code> passed to <code class="xref py py-meth docutils literal"><span class="pre">lookup()</span></code> to get additional details.</p>
+<tr class="field-even field"><th class="field-name">Yields:</th><td class="field-body"><p class="first"><em>dict</em> &#8211; Result from <a class="reference internal" href="#api.client.gro_client.GroClient.search" title="api.client.gro_client.GroClient.search"><code class="xref py py-meth docutils literal"><span class="pre">search()</span></code></a> passed to <a class="reference internal" href="#api.client.gro_client.GroClient.lookup" title="api.client.gro_client.GroClient.lookup"><code class="xref py py-meth docutils literal"><span class="pre">lookup()</span></code></a> to get additional details.</p>
 <p>Example:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="mi">274</span><span class="p">,</span>
   <span class="s1">&#39;contains&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">779</span><span class="p">,</span> <span class="mi">780</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span>
@@ -414,7 +414,7 @@
   <span class="s1">&#39;definition&#39;</span><span class="p">:</span> <span class="s1">&#39;The seeds of the widely cultivated...&#39;</span> <span class="p">}</span>
 </pre></div>
 </div>
-<p class="last">See output of <code class="xref py py-meth docutils literal"><span class="pre">lookup()</span></code>. Note that as with <code class="xref py py-meth docutils literal"><span class="pre">search()</span></code>, the first result is
+<p class="last">See output of <a class="reference internal" href="#api.client.gro_client.GroClient.lookup" title="api.client.gro_client.GroClient.lookup"><code class="xref py py-meth docutils literal"><span class="pre">lookup()</span></code></a>. Note that as with <a class="reference internal" href="#api.client.gro_client.GroClient.search" title="api.client.gro_client.GroClient.search"><code class="xref py py-meth docutils literal"><span class="pre">search()</span></code></a>, the first result is
 the best match for the given search term(s).</p>
 </td>
 </tr>
@@ -506,10 +506,9 @@ the best match for the given search term(s).</p>
 </pre></div>
 </div>
 <p>See <a class="reference external" href="https://developers.gro-intelligence.com/data-series-definition.html">https://developers.gro-intelligence.com/data-series-definition.html</a></p>
-<p>This method uses search() to find entities by name and
-get_data_series() to find available data series for all
-possible combinations of the entities, and
-rank_series_by_source.</p>
+<p>This method uses <a class="reference internal" href="#api.client.gro_client.GroClient.search" title="api.client.gro_client.GroClient.search"><code class="xref py py-meth docutils literal"><span class="pre">search()</span></code></a> to find entities by name and <a class="reference internal" href="#api.client.gro_client.GroClient.get_data_series" title="api.client.gro_client.GroClient.get_data_series"><code class="xref py py-meth docutils literal"><span class="pre">get_data_series()</span></code></a> to
+find available data series for all possible combinations of the entities, and
+<a class="reference internal" href="#api.client.gro_client.GroClient.rank_series_by_source" title="api.client.gro_client.GroClient.rank_series_by_source"><code class="xref py py-meth docutils literal"><span class="pre">rank_series_by_source()</span></code></a>.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -531,7 +530,7 @@ rank_series_by_source.</p>
 </table>
 <div class="admonition seealso">
 <p class="first admonition-title">See also</p>
-<p class="last"><code class="xref py py-meth docutils literal"><span class="pre">get_data_series()</span></code></p>
+<p class="last">~.get_data_series</p>
 </div>
 </dd></dl>
 
@@ -571,13 +570,12 @@ rank_series_by_source.</p>
 <span class="p">}]</span>
 </pre></div>
 </div>
-<p>Note: you can pass the output of <a class="reference internal" href="#api.client.gro_client.GroClient.get_data_series" title="api.client.gro_client.GroClient.get_data_series"><code class="xref py py-meth docutils literal"><span class="pre">get_data_series()</span></code></a> into
-<a class="reference internal" href="#api.client.gro_client.GroClient.get_data_points" title="api.client.gro_client.GroClient.get_data_points"><code class="xref py py-meth docutils literal"><span class="pre">get_data_points()</span></code></a> to check what series exist for some selections and then
-retrieve the data points for those series. See /api/client/samples/quickstart.py for an
-example of this.</p>
-<p><code class="xref py py-meth docutils literal"><span class="pre">get_data_points()</span></code> also allows passing a list of ids for metric_id,
-item_id, and/or region_id to get multiple series in a single request. This can be faster if
-requesting many series.</p>
+<p>Note: you can pass the output of <a class="reference internal" href="#api.client.gro_client.GroClient.get_data_series" title="api.client.gro_client.GroClient.get_data_series"><code class="xref py py-meth docutils literal"><span class="pre">get_data_series()</span></code></a> into <a class="reference internal" href="#api.client.gro_client.GroClient.get_data_points" title="api.client.gro_client.GroClient.get_data_points"><code class="xref py py-meth docutils literal"><span class="pre">get_data_points()</span></code></a>
+to check what series exist for some selections and then retrieve the data points for those
+series. See /api/client/samples/quickstart.py for an example of this.</p>
+<p><a class="reference internal" href="#api.client.gro_client.GroClient.get_data_points" title="api.client.gro_client.GroClient.get_data_points"><code class="xref py py-meth docutils literal"><span class="pre">get_data_points()</span></code></a> also allows passing a list of ids for metric_id, item_id, and/or
+region_id to get multiple series in a single request. This can be faster if requesting many
+series.</p>
 <p>For example:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">client</span><span class="o">.</span><span class="n">get_data_points</span><span class="p">(</span><span class="o">**</span><span class="p">{</span><span class="s1">&#39;metric_id&#39;</span><span class="p">:</span> <span class="mi">860032</span><span class="p">,</span>
                           <span class="s1">&#39;item_id&#39;</span><span class="p">:</span> <span class="mi">274</span><span class="p">,</span>
@@ -713,7 +711,7 @@ descendants.</li>
 <span class="p">},</span> <span class="o">...</span><span class="p">]</span>
 </pre></div>
 </div>
-<p>See output of <code class="xref py py-meth docutils literal"><span class="pre">lookup()</span></code></p>
+<p>See output of <a class="reference internal" href="#api.client.gro_client.GroClient.lookup" title="api.client.gro_client.GroClient.lookup"><code class="xref py py-meth docutils literal"><span class="pre">lookup()</span></code></a></p>
 </p>
 </td>
 </tr>
@@ -747,7 +745,7 @@ descendants.</li>
 <span class="p">},</span> <span class="o">...</span><span class="p">]</span>
 </pre></div>
 </div>
-<p>See output of lookup()</p>
+<p>See output of <a class="reference internal" href="#api.client.gro_client.GroClient.lookup" title="api.client.gro_client.GroClient.lookup"><code class="xref py py-meth docutils literal"><span class="pre">lookup()</span></code></a></p>
 </td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">list of dicts</td>
@@ -756,7 +754,7 @@ descendants.</li>
 </table>
 <div class="admonition seealso">
 <p class="first admonition-title">See also</p>
-<p class="last"><code class="xref py py-meth docutils literal"><span class="pre">get_descendant_regions()</span></code></p>
+<p class="last">~.get_descendant_regions</p>
 </div>
 </dd></dl>
 
@@ -777,9 +775,9 @@ descendants.</li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Yields:</th><td class="field-body"><p class="first"><em>dict</em> &#8211; Result of lookup() on each entity the given entity belongs to.</p>
+<tr class="field-even field"><th class="field-name">Yields:</th><td class="field-body"><p class="first"><em>dict</em> &#8211; Result of <a class="reference internal" href="#api.client.gro_client.GroClient.lookup" title="api.client.gro_client.GroClient.lookup"><code class="xref py py-meth docutils literal"><span class="pre">lookup()</span></code></a> on each entity the given entity belongs to.</p>
 <p>For example: For the region &#8216;United States&#8217;, one yielded result will be for
-&#8216;North America.&#8217; The format of which matches the output of <code class="xref py py-meth docutils literal"><span class="pre">lookup()</span></code>:</p>
+&#8216;North America.&#8217; The format of which matches the output of <a class="reference internal" href="#api.client.gro_client.GroClient.lookup" title="api.client.gro_client.GroClient.lookup"><code class="xref py py-meth docutils literal"><span class="pre">lookup()</span></code></a>:</p>
 <div class="last highlight-default"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="mi">15</span><span class="p">,</span>
   <span class="s1">&#39;contains&#39;</span><span class="p">:</span> <span class="p">[</span> <span class="mi">1008</span><span class="p">,</span> <span class="mi">1009</span><span class="p">,</span> <span class="mi">1012</span><span class="p">,</span> <span class="mi">1215</span><span class="p">,</span> <span class="o">...</span> <span class="p">],</span>
   <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;North America&#39;</span><span class="p">,</span>
@@ -802,7 +800,7 @@ that source covers the selection (metrics, items, regions, and time range and fr
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>series_list</strong> (<em>list of dicts</em>) &#8211; See the output of get_data_series().</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>series_list</strong> (<em>list of dicts</em>) &#8211; See the output of <a class="reference internal" href="#api.client.gro_client.GroClient.get_data_series" title="api.client.gro_client.GroClient.get_data_series"><code class="xref py py-meth docutils literal"><span class="pre">get_data_series()</span></code></a>.</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Yields:</th><td class="field-body"><em>dict</em> &#8211; The input series_list, expanded out to each possible source, ordered by coverage.</td>
 </tr>
@@ -816,16 +814,17 @@ that source covers the selection (metrics, items, regions, and time range and fr
 <dl class="method">
 <dt id="api.client.gro_client.GroClient.get_df">
 <code class="descclassname">GroClient.</code><code class="descname">get_df</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/gro_client.html#GroClient.get_df"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.gro_client.GroClient.get_df" title="Permalink to this definition">¶</a></dt>
-<dd><p>Call get_data_points() for each saved data series and return as a combined dataframe.</p>
-<p>Note you must have first called either add_data_series() or add_single_data_series() to save
-data series into the GroClient&#8217;s data_series_list. You can inspect the client&#8217;s saved list
-using get_data_series_list().</p>
+<dd><p>Call <a class="reference internal" href="#api.client.gro_client.GroClient.get_data_points" title="api.client.gro_client.GroClient.get_data_points"><code class="xref py py-meth docutils literal"><span class="pre">get_data_points()</span></code></a> for each saved data series and return as a combined
+dataframe.</p>
+<p>Note you must have first called either <a class="reference internal" href="#api.client.gro_client.GroClient.add_data_series" title="api.client.gro_client.GroClient.add_data_series"><code class="xref py py-meth docutils literal"><span class="pre">add_data_series()</span></code></a> or
+<a class="reference internal" href="#api.client.gro_client.GroClient.add_single_data_series" title="api.client.gro_client.GroClient.add_single_data_series"><code class="xref py py-meth docutils literal"><span class="pre">add_single_data_series()</span></code></a> to save data series into the GroClient&#8217;s data_series_list.
+You can inspect the client&#8217;s saved list using <a class="reference internal" href="#api.client.gro_client.GroClient.get_data_series_list" title="api.client.gro_client.GroClient.get_data_series_list"><code class="xref py py-meth docutils literal"><span class="pre">get_data_series_list()</span></code></a>.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The results to get_data_points() for all the saved series, appended together into a
-single dataframe.
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The results to <a class="reference internal" href="#api.client.gro_client.GroClient.get_data_points" title="api.client.gro_client.GroClient.get_data_points"><code class="xref py py-meth docutils literal"><span class="pre">get_data_points()</span></code></a> for all the saved series, appended together
+into a single dataframe.
 See <a class="reference external" href="https://developers.gro-intelligence.com/data-point-definition.html">https://developers.gro-intelligence.com/data-point-definition.html</a></td>
 </tr>
 <tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">pandas.DataFrame</td>
@@ -837,8 +836,8 @@ See <a class="reference external" href="https://developers.gro-intelligence.com/
 <dl class="method">
 <dt id="api.client.gro_client.GroClient.add_data_series">
 <code class="descclassname">GroClient.</code><code class="descname">add_data_series</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/gro_client.html#GroClient.add_data_series"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.gro_client.GroClient.add_data_series" title="Permalink to this definition">¶</a></dt>
-<dd><p>Adds the top result of find_data_series() to the saved data series list.</p>
-<p>For use with get_df().</p>
+<dd><p>Adds the top result of <a class="reference internal" href="#api.client.gro_client.GroClient.find_data_series" title="api.client.gro_client.GroClient.find_data_series"><code class="xref py py-meth docutils literal"><span class="pre">find_data_series()</span></code></a> to the saved data series list.</p>
+<p>For use with <a class="reference internal" href="#api.client.gro_client.GroClient.get_df" title="api.client.gro_client.GroClient.get_df"><code class="xref py py-meth docutils literal"><span class="pre">get_df()</span></code></a>.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -863,7 +862,9 @@ See <a class="reference external" href="https://developers.gro-intelligence.com/
 </table>
 <div class="admonition seealso">
 <p class="first admonition-title">See also</p>
-<p class="last"><code class="xref py py-meth docutils literal"><span class="pre">get_df()</span></code>, <code class="xref py py-meth docutils literal"><span class="pre">add_single_data_series()</span></code>, <code class="xref py py-meth docutils literal"><span class="pre">find_data_series()</span></code></p>
+<p class="last">~.get_df
+~.add_single_data_series
+~.find_data_series</p>
 </div>
 </dd></dl>
 
@@ -871,12 +872,13 @@ See <a class="reference external" href="https://developers.gro-intelligence.com/
 <dt id="api.client.gro_client.GroClient.add_single_data_series">
 <code class="descclassname">GroClient.</code><code class="descname">add_single_data_series</code><span class="sig-paren">(</span><em>data_series</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/gro_client.html#GroClient.add_single_data_series"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.gro_client.GroClient.add_single_data_series" title="Permalink to this definition">¶</a></dt>
 <dd><p>Save a data series object to the GroClient&#8217;s data_series_list.</p>
-<p>For use with get_df().</p>
+<p>For use with <a class="reference internal" href="#api.client.gro_client.GroClient.get_df" title="api.client.gro_client.GroClient.get_df"><code class="xref py py-meth docutils literal"><span class="pre">get_df()</span></code></a>.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>data_series</strong> (<em>dict</em>) &#8211; A single data_series object, as returned by get_data_series() or find_data_series().
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>data_series</strong> (<em>dict</em>) &#8211; A single data_series object, as returned by <a class="reference internal" href="#api.client.gro_client.GroClient.get_data_series" title="api.client.gro_client.GroClient.get_data_series"><code class="xref py py-meth docutils literal"><span class="pre">get_data_series()</span></code></a> or
+<a class="reference internal" href="#api.client.gro_client.GroClient.find_data_series" title="api.client.gro_client.GroClient.find_data_series"><code class="xref py py-meth docutils literal"><span class="pre">find_data_series()</span></code></a>.
 See <a class="reference external" href="https://developers.gro-intelligence.com/data-series-definition.html">https://developers.gro-intelligence.com/data-series-definition.html</a></td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"></td>
@@ -891,13 +893,13 @@ See <a class="reference external" href="https://developers.gro-intelligence.com/
 <dt id="api.client.gro_client.GroClient.get_data_series_list">
 <code class="descclassname">GroClient.</code><code class="descname">get_data_series_list</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/gro_client.html#GroClient.get_data_series_list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.gro_client.GroClient.get_data_series_list" title="Permalink to this definition">¶</a></dt>
 <dd><p>Inspect the current list of saved data series contained in the GroClient.</p>
-<p>For use with <code class="xref py py-meth docutils literal"><span class="pre">get_df()</span></code>. Add new data series to the list using
-<code class="xref py py-meth docutils literal"><span class="pre">add_data_series()</span></code> and <code class="xref py py-meth docutils literal"><span class="pre">add_single_data_series()</span></code>.</p>
+<p>For use with <a class="reference internal" href="#api.client.gro_client.GroClient.get_df" title="api.client.gro_client.GroClient.get_df"><code class="xref py py-meth docutils literal"><span class="pre">get_df()</span></code></a>. Add new data series to the list using
+<a class="reference internal" href="#api.client.gro_client.GroClient.add_data_series" title="api.client.gro_client.GroClient.add_data_series"><code class="xref py py-meth docutils literal"><span class="pre">add_data_series()</span></code></a> and <a class="reference internal" href="#api.client.gro_client.GroClient.add_single_data_series" title="api.client.gro_client.GroClient.add_single_data_series"><code class="xref py py-meth docutils literal"><span class="pre">add_single_data_series()</span></code></a>.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A list of data_series objects, as returned by get_data_series().</td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A list of data_series objects, as returned by <a class="reference internal" href="#api.client.gro_client.GroClient.get_data_series" title="api.client.gro_client.GroClient.get_data_series"><code class="xref py py-meth docutils literal"><span class="pre">get_data_series()</span></code></a>.</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">list of dicts</td>
 </tr>
