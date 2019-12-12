@@ -219,7 +219,6 @@ class GroClient(Client):
         See also
         --------
         get_data_series()
-        https://developers.gro-intelligence.com/data-series-definition.html
 
         """
         search_results = []
