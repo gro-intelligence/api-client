@@ -115,12 +115,12 @@ class GroClient(Client):
                 }
             }]
 
-        Note: you can pass the output of :meth:`api.client.gro_client.GroClient.get_data_series` into
-        :meth:`api.client.gro_client.GroClient.get_data_points` to check what series exist for some selections and then
+        Note: you can pass the output of :meth:`get_data_series` into
+        :meth:`get_data_points` to check what series exist for some selections and then
         retrieve the data points for those series. See /api/client/samples/quickstart.py for an
         example of this.
 
-        :meth:`api.client.gro_client.GroClient.get_data_points` also allows passing a list of ids for metric_id,
+        :meth:`get_data_points` also allows passing a list of ids for metric_id,
         item_id, and/or region_id to get multiple series in a single request. This can be faster if
         requesting many series.
 
@@ -210,8 +210,8 @@ class GroClient(Client):
     def get_data_series_list(self):
         """Inspect the current list of saved data series contained in the GroClient.
 
-        For use with :meth:`api.client.gro_client.GroClient.get_df`. Add new data series to the list using
-        :meth:`api.client.gro_client.GroClient.add_data_series` and :meth:`api.client.gro_client.GroClient.add_single_data_series`.
+        For use with :meth:`get_df`. Add new data series to the list using
+        :meth:`add_data_series` and :meth:`add_single_data_series`.
 
         Returns
         -------
