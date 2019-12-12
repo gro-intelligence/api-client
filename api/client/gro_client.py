@@ -39,7 +39,7 @@ class GroClient(Client):
         self._logger = lib.get_default_logger()
         self._data_series_list = []  # all that have been added
         self._data_series_queue = []  # added but not loaded in data frame
-        self._data_frame = None
+        self._data_frame = pandas.DataFrame()
 
 
     def get_logger(self):
@@ -63,8 +63,7 @@ class GroClient(Client):
         """
         while self._data_series_queue:
             data_series = self._data_series_queue.pop()
-            tmp = pandas.DataFrame(
-                data=self.get_data_points(**data_series))
+            tmp = pandas.DataFrame(data=self.get_data_points(**data_series))
             if tmp.empty:
                 continue
             # get_data_points response doesn't include the
@@ -77,7 +76,7 @@ class GroClient(Client):
                 tmp.start_date = pandas.to_datetime(tmp.start_date)
             if 'reporting_date' in tmp.columns:
                 tmp.reporting_date = pandas.to_datetime(tmp.reporting_date)
-            if self._data_frame is None:
+            if self._data_frame.empty:
                 self._data_frame = tmp
                 self._data_frame.set_index([col for col in DATA_POINTS_UNIQUE_COLS if col in tmp.columns])
             else:
