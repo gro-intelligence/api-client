@@ -13,7 +13,7 @@ import numpy as np
 import pandas as pd
 from scipy.special import comb
 
-from . import \
+from api.client.samples.analogous_years.lib import \
     distance_matrix, \
     feature_extractions, \
     get_transform_data
