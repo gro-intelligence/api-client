@@ -481,7 +481,7 @@
 <span class="sd">        Yields</span>
 <span class="sd">        ------</span>
 <span class="sd">        dict</span>
-<span class="sd">            Result from search() passed to lookup() to get additional details.</span>
+<span class="sd">            Result from :meth:`search()` passed to :meth:`lookup()` to get additional details.</span>
 <span class="sd">            </span>
 <span class="sd">            Example::</span>
 
@@ -490,7 +490,7 @@
 <span class="sd">                  &#39;name&#39;: &#39;Corn&#39;,</span>
 <span class="sd">                  &#39;definition&#39;: &#39;The seeds of the widely cultivated...&#39; }</span>
 
-<span class="sd">            See output of lookup(). Note that as with search(), the first result is</span>
+<span class="sd">            See output of :meth:`lookup()`. Note that as with :meth:`search()`, the first result is</span>
 <span class="sd">            the best match for the given search term(s).</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -512,7 +512,7 @@
 <span class="sd">            Result of lookup() on each entity the given entity belongs to.</span>
 
 <span class="sd">            For example: For the region &#39;United States&#39;, one yielded result will be for</span>
-<span class="sd">            &#39;North America.&#39; The format of which matches the output of lookup()::</span>
+<span class="sd">            &#39;North America.&#39; The format of which matches the output of :meth:`lookup()`::</span>
 
 <span class="sd">                { &#39;id&#39;: 15,</span>
 <span class="sd">                  &#39;contains&#39;: [ 1008, 1009, 1012, 1215, ... ],</span>
@@ -616,7 +616,7 @@
 <span class="sd">                    &#39;level&#39;: 4</span>
 <span class="sd">                }, ...]</span>
 
-<span class="sd">            See output of lookup()</span>
+<span class="sd">            See output of :meth:`lookup()`</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">lib</span><span class="o">.</span><span class="n">get_descendant_regions</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_host</span><span class="p">,</span>
