@@ -313,7 +313,7 @@ def get_data_call_params(**selection):
 
     >>> get_data_call_params(
     ...     metric_id=123, start_date='2012-01-01', unit_id=14
-    ... ) == {'startDate': '2012-01-01', 'metricId': 123}
+    ... ) == {'startDate': '2012-01-01', 'metricId': 123, 'responseType': 'list_of_series'}
     True
 
     Parameters
@@ -398,24 +398,55 @@ def list_of_series_to_single_series(series_list):
     """Convert list_of_series format from API back into the familiar single_series output format.
 
     >>> list_of_series_to_single_series([{
-    ...     'series': { 'metricId': 1, 'itemId': 2, 'regionId': 3, 'belongsTo': { 'itemId': 22 } },
+    ...     'series': { 'metricId': 1, 'itemId': 2, 'regionId': 3, 'unitId': 4, 'inputUnitId': 5,
+    ...                 'belongsTo': { 'itemId': 22 }
+    ...     },
     ...     'data': [
-    ...         ['2001-01-01', '2001-12-31', 123]
+    ...         ['2001-01-01', '2001-12-31', 123],
+    ...         ['2002-01-01', '2002-12-31', 123, '2012-01-01'],
+    ...         ['2003-01-01', '2003-12-31', 123, None, {}]
     ...     ]
     ... }]) == [
     ...   { 'start_date': '2001-01-01',
     ...     'end_date': '2001-12-31',
     ...     'value': 123,
-    ...     'unit_id': None,
+    ...     'unit_id': 4,
+    ...     'input_unit_id': 4,
+    ...     'input_unit_scale': 1,
     ...     'reporting_date': None,
     ...     'metric_id': 1,
     ...     'item_id': 2,
     ...     'region_id': 3,
     ...     'partner_region_id': 0,
     ...     'frequency_id': None,
-    ...     'source_id': None,
-    ...     'belongs_to': { 'item_id': 22 }
-    ... } ]
+    ...     'belongs_to': { 'item_id': 22 } },
+    ...   { 'start_date': '2002-01-01',
+    ...     'end_date': '2002-12-31',
+    ...     'value': 123,
+    ...     'unit_id': 4,
+    ...     'input_unit_id': 4,
+    ...     'input_unit_scale': 1,
+    ...     'reporting_date': '2012-01-01',
+    ...     'metric_id': 1,
+    ...     'item_id': 2,
+    ...     'region_id': 3,
+    ...     'partner_region_id': 0,
+    ...     'frequency_id': None,
+    ...     'belongs_to': { 'item_id': 22 } },
+    ...   { 'start_date': '2003-01-01',
+    ...     'end_date': '2003-12-31',
+    ...     'value': 123,
+    ...     'unit_id': 4,
+    ...     'input_unit_id': 4,
+    ...     'input_unit_scale': 1,
+    ...     'reporting_date': None,
+    ...     'metric_id': 1,
+    ...     'item_id': 2,
+    ...     'region_id': 3,
+    ...     'partner_region_id': 0,
+    ...     'frequency_id': None,
+    ...     'belongs_to': { 'item_id': 22 } }
+    ... ]
     True
 
     """
@@ -449,7 +480,7 @@ def list_of_series_to_single_series(series_list):
             'region_id': series['series'].get('regionId', None),
             'partner_region_id': series['series'].get('partnerRegionId', 0),
             'frequency_id': series['series'].get('frequencyId', None),
-            'source_id': series['series'].get('sourceId', None),
+            # 'source_id': series['series'].get('sourceId', None), TODO: add source to output
             # belongs_to is consistent with the series the user requested. So if an
             # expansion happened on the server side, the user can reconstruct what
             # results came from which request.

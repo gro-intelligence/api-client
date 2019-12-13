@@ -132,6 +132,8 @@ def test_get_data_points(mock_requests_get):
         'end_date': '2000-12-31',
         'value': 1,
         'unit_id': None,
+        'input_unit_id': None,
+        'input_unit_scale': 1,
         'reporting_date': None,
         'metric_id': None,
         'item_id': None,
