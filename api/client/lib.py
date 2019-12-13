@@ -394,10 +394,10 @@ def rank_series_by_source(access_token, api_host, series_list):
             yield series_with_source
 
 
-def format_list_of_series(series_list):
+def list_of_series_to_single_series(series_list):
     """Convert list_of_series format from API back into the familiar single_series output format.
 
-    >>> format_list_of_series([{
+    >>> list_of_series_to_single_series([{
     ...     'series': { 'metricId': 1, 'itemId': 2, 'regionId': 3, 'belongsTo': { 'itemId': 22 } },
     ...     'data': [
     ...         ['2001-01-01', '2001-12-31', 123]
@@ -464,7 +464,7 @@ def get_data_points(access_token, api_host, **selection):
     url = '/'.join(['https:', '', api_host, 'v2/data'])
     params = get_data_call_params(**selection)
     resp = get_data(url, headers, params)
-    return format_list_of_series(resp.json())
+    return list_of_series_to_single_series(resp.json())
 
 
 @memoize(maxsize=None)
