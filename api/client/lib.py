@@ -437,6 +437,10 @@ def list_of_series_to_single_series(series_list):
             # list_of_series has unit_id in the series attributes currently. Does
             # not allow for mixed units in the same series
             'unit_id': series['series'].get('unitId', None),
+            # input_unit_id and input_unit_scale are deprecated but provided for backwards
+            # compatibility. unit_id should be used instead.
+            'input_unit_id': series['series'].get('unitId', None),
+            'input_unit_scale': 1,
             # If a point does not have reporting_date, use None
             'reporting_date': point[3] if len(point) > 3 else None,
             # Series attributes:

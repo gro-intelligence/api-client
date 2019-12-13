@@ -454,9 +454,11 @@ class GroClient(Client):
         self._logger.info("Outputing to file: {}".format(filename))
         writer = unicodecsv.writer(open(filename, 'wb'))
         for point in self.get_data_points(**data_series):
-            writer.writerow([point['start_date'], point['end_date'],
-                             point['value'] * point['input_unit_scale'],
-                             self.lookup_unit_abbreviation(point['input_unit_id'])])
+            print(point)
+            writer.writerow([point['start_date'],
+                             point['end_date'],
+                             point['value'],
+                             self.lookup_unit_abbreviation(point['unit_id'])])
 
     def convert_unit(self, point, target_unit_id):
         """Convert the data point from one unit to another unit.

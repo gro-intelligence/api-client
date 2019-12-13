@@ -29,7 +29,7 @@ def main():
                 point['start_date'],
                 point['end_date'],
                 point['value'],
-                client.lookup_unit_abbreviation(point['input_unit_id'])
+                client.lookup_unit_abbreviation(point['unit_id'])
             ])
 
 
