@@ -7,6 +7,7 @@ from functools import reduce
 import os
 
 import matplotlib
+
 matplotlib.use('agg')
 import matplotlib.pyplot as plt
 import numpy as np
@@ -17,6 +18,16 @@ from api.client.samples.analogous_years.lib import \
     distance_matrix, \
     feature_extractions, \
     get_transform_data
+
+
+def enso_data(start_date):
+    enso_entity = {'metric_id': 15851977,
+                   'item_id': 13495,
+                   'region_id': 0,
+                   'source_id': 124,
+                   'start_date': start_date,
+                   'frequency_id': 6}
+    return enso_entity
 
 
 def time_series(client, entity, initial_date, final_date):
@@ -111,8 +122,8 @@ def combined_methods_distances(dictionary_of_df):
     return rank_df
 
 
-def combined_items_final_ranks(client, entities_weights, initial_date, final_date, methods_list,
-                               all_ranks):
+def combined_items_final_ranks(client, entities, initial_date, final_date, methods_list,
+                               all_ranks, weights=None, enso=None, enso_weight=None):
     """
     Use L^2 distance function to combine weighted distances from multiple gro-entities
     and return the rank
@@ -125,18 +136,27 @@ def combined_items_final_ranks(client, entities_weights, initial_date, final_dat
     :return: A dataframe containing integer values (ranks)
     """
     combined_items_distances = None
-    for entity_weight in entities_weights:
-        gro_item = client.lookup('items', entity_weight['item_id'])['name']
-        weight = entity_weight.pop('weight')
+    start_date = entities[0]['start_date']
+    if not weights:
+        weights = [1] * len(entities)
+    if enso:
+        entities.append(enso_data(start_date))
+        if enso_weight:
+            weights.append(enso_weight)
+        else:
+            weights.append(1)
+    for i in range(len(entities)):
+        gro_item = client.lookup('items', entities[i]['item_id'])['name']
+        # weight = entity_weight.pop('weight')
         combined_methods_distances_df = combined_methods_distances(
             ranked_df_dictionary(
-                client, entity_weight, initial_date,
+                client, entities[i], initial_date,
                 final_date, gro_item, methods_list))
         numpy_combined_methods_distances = combined_methods_distances_df.values
         if combined_items_distances is None:
             combined_items_distances = np.zeros(numpy_combined_methods_distances.shape)
         combined_items_distances = combined_items_distances + np.power(
-            weight * numpy_combined_methods_distances, 2)
+            weights[i] * numpy_combined_methods_distances, 2)
     combined_items_distances = pd.DataFrame(np.sqrt(combined_items_distances),
                                             index=combined_methods_distances_df.index,
                                             columns=combined_methods_distances_df.columns)
