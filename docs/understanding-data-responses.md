@@ -51,4 +51,4 @@ returns:
   'namePlural': 'kilograms' }
  ```
 
-You can also get this information by going to the URL of the dictionary entry for individual entities in the Gro ontology, e.g. <https://app.gro-intelligence.com/#/dictionary/items/270> or <https://app.gro-intelligence.com/#/dictionary/regions/1309>.
+You can also get this information by going to the URL of the dictionary entry for individual entities in the Gro ontology, e.g. <https://app.gro-intelligence.com/dictionary/items/270> or <https://app.gro-intelligence.com/dictionary/regions/1094>.

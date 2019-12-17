@@ -39,7 +39,7 @@ class GroClient(Client):
         self._logger = lib.get_default_logger()
         self._data_series_list = []  # all that have been added
         self._data_series_queue = []  # added but not loaded in data frame
-        self._data_frame = None
+        self._data_frame = pandas.DataFrame()
 
 
     def get_logger(self):
@@ -58,13 +58,14 @@ class GroClient(Client):
         pandas.DataFrame
             The results to get_data_points() for all the saved series, appended together into a
             single dataframe.
-            See https://github.com/gro-intelligence/api-client/wiki/Data-Point-Field-Definitions
+            See https://developers.gro-intelligence.com/data-point-definition.html
 
         """
         while self._data_series_queue:
             data_series = self._data_series_queue.pop()
-            tmp = pandas.DataFrame(
-                data=self.get_data_points(**data_series))
+            tmp = pandas.DataFrame(data=self.get_data_points(**data_series))
+            if tmp.empty:
+                continue
             # get_data_points response doesn't include the
             # source_id. We add it as a column, in case we have
             # several selections series which differ only by source id.
@@ -75,7 +76,7 @@ class GroClient(Client):
                 tmp.start_date = pandas.to_datetime(tmp.start_date)
             if 'reporting_date' in tmp.columns:
                 tmp.reporting_date = pandas.to_datetime(tmp.reporting_date)
-            if self._data_frame is None:
+            if self._data_frame.empty:
                 self._data_frame = tmp
                 self._data_frame.set_index([col for col in DATA_POINTS_UNIQUE_COLS if col in tmp.columns])
             else:
@@ -86,7 +87,7 @@ class GroClient(Client):
     def get_data_points(self, **selections):
         """Get all the data points for a given selection.
 
-        https://github.com/gro-intelligence/api-client/wiki/Data-Point-Definition
+        https://developers.gro-intelligence.com/data-point-definition.html
 
         Parameters
         ----------
@@ -167,7 +168,7 @@ class GroClient(Client):
         ----------
         data_series : dict
             A single data_series object, as returned by get_data_series() or find_data_series().
-            See https://github.com/gro-intelligence/api-client/wiki/Data-Series-Definition
+            See https://developers.gro-intelligence.com/data-series-definition.html
 
         Returns
         -------
@@ -181,7 +182,24 @@ class GroClient(Client):
 
 
     def find_data_series(self, **kwargs):
-        """Attempts to find a matching data series for a combination of entities by name.
+        """Find the best possible  data series matching a combination of entities specified by name.
+
+        Example::
+
+            next(client.find_data_series(item="Corn",
+                                         metric="Futures Open Interest",
+                                         region="United States of America"))
+
+        will yield::
+
+             {u'metric_id': 15610005, u'region_id': 1215, u'end_date': u'2022-12-31T00:00:00.000Z', u'item_name': u'Corn', u'partner_region_name': u'World', u'frequency_id': 15, 'source_id': 81, u'partner_region_id': 0, u'item_id': 274, u'metric_name': u'Futures Open Interest', u'start_date': u'1972-03-01T00:00:00.000Z', u'region_name': u'United States'}
+
+        See https://developers.gro-intelligence.com/data-series-definition.html 
+        
+        This method uses search() to find entities by name and
+        get_data_series() to find available data series for all
+        possible combinations of the entities, and
+        rank_series_by_source.
 
         Parameters
         ----------
@@ -194,15 +212,14 @@ class GroClient(Client):
         end_date : string, optional
             YYYY-MM-DD
 
-        Returns
-        -------
+        Yields
+        ------
         dict
-           A single data series
+           A sequence of data series matching the input selections, in quality rank order.
 
         See also
         --------
         get_data_series()
-        https://github.com/gro-intelligence/api-client/wiki/Data-Series-Definition
 
         """
         search_results = []
