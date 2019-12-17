@@ -490,11 +490,6 @@ def list_of_series_to_single_series(series_list):
 
 
 def get_data_points(access_token, api_host, **selection):
-    assert 'metric_id' in selection, 'metric_id is required'
-    assert 'item_id' in selection, 'item_id is required'
-    assert 'region_id' in selection, 'region_id is required'
-    assert 'source_id' in selection, 'source_id is required'
-    assert 'frequency_id' in selection, 'frequency_id is required'
     headers = {'authorization': 'Bearer ' + access_token}
     url = '/'.join(['https:', '', api_host, 'v2/data'])
     params = get_data_call_params(**selection)
