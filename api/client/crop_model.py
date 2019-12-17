@@ -1,15 +1,17 @@
 from __future__ import division
 from builtins import map
 from builtins import zip
-import pandas
+from datetime import datetime
 import math
-
+import pandas
 from api.client.gro_client import GroClient
 
 
 class CropModel(GroClient):
+
     def compute_weights(self, crop_name, metric_name, regions):
-        """Compute a vector of 'weights' that can be used for crop-weighted average across regions.
+        """Compute a vector of 'weights' that can be used for crop-weighted
+        average across regions.
 
         For each region, the weight of is the mean value over time, of
         the given metric for the given crop, normalized so the sum
@@ -63,9 +65,9 @@ class CropModel(GroClient):
 
     def compute_crop_weighted_series(self, weighting_crop_name, weighting_metric_name,
                                      item_name, metric_name, regions):
-        """Compute the 'crop-weighted average' of the given item and metric's series across regions.
-
-        The weight of a region is the fraction of the value of the weighting series represented by
+        """Compute the 'crop-weighted average' of the series for the given
+        item and metric, across regions. The weight of a region is the
+        fraction of the value of the weighting series represented by
         that region as explained in compute_weights().
 
         For example: say we have a `region_list = [{'id': 1, 'name':
@@ -119,3 +121,94 @@ class CropModel(GroClient):
             # TODO: change metric to reflect it is weighted in this copy
             series_list.append(series)
         return pandas.concat(series_list)
+
+    def compute_gdd(self, tmin_series, tmax_series, base_temperature,
+                    start_date, end_date, min_temporal_coverage,
+                    upper_temperature_cap):
+        """Compute Growing Degree Days value from specific data series."""
+        self.add_single_data_series(tmin_series)
+        self.add_single_data_series(tmax_series)
+        df = self.get_df()
+        if df is None or df.empty:
+            raise Exception("Insufficient data for GDD")
+        # For each day we want (t_min + t_max)/2, or more generally,
+        # the average temperature for that day.
+        tmean = df.loc[(df.item_id == tmax_series['item_id']) | \
+                       (df.item_id == tmin_series['item_id'])].groupby(
+                           ['region_id', 'metric_id', 'frequency_id',
+                            'start_date', 'end_date']).mean()
+        duration = datetime.strptime(end_date, '%Y-%m-%d') - \
+                   datetime.strptime(start_date, '%Y-%m-%d')
+        if duration.days > 366:
+            self.get_logger().warning(
+                'GDD time range is more than 1 year {} - {}.'.format(
+                    start_date, end_date))
+        coverage_threshold = min_temporal_coverage * duration.days
+        if tmean.value.size < coverage_threshold:
+            raise Exception(
+                "Insufficient coverage for GDD, {} < {} data points. ".format(
+                    tmean.value.size, coverage_threshold) + 
+                "min_temporal_coverage is {}.".format(min_temporal_coverage))
+        gdd_values = tmean.value.apply(
+            lambda x: max(min(x, upper_temperature_cap) - base_temperature, 0))
+        # TODO: group by freq and normalize in case not daily
+        # TODO: add unit conversions in case future sources are in different units
+        return gdd_values.sum()
+
+    def growing_degree_days(self, region_name, base_temperature,
+                            start_date, end_date, min_temporal_coverage=1.0,
+                            upper_temperature_cap=float("Infinity")):
+        """Get Growing Degree Days (GDD) for a region.
+
+        Growing degree days (GDD) are a weather-based indicator that
+        allows for assessing crop phenology and crop development,
+        based on heat accumulation. GDD for one day is defined as
+        max(T_mean - T_base, 0), where T_mean is the average
+        temperature of that day if available. Typically T_mean is
+        approximated as (T_max + T_min)/2. If upper_temperature_cap is
+        specified, T_mean is capped to not exceed that value.
+
+        The GDD over a longer time interval is the sum of the GDD over
+        all days in the interval. Days where the data is missing
+        contribute 0 GDDs, i.e. are treated as if T_mean = T_base.
+        Use the temporal coverage threshold to avoid computing GDD
+        with too little data.
+
+        The threshold and the base temperature should be carefuly
+        selected based on fundamental understanding of the crops and
+        region of interest.
+
+        The region can be any region of the Gro regions, from a point
+        location to a district, province etc. This will use the best
+        available data series for T_max and T_min for the given region
+        and time period, using "find_data_series". In the simplest
+        case, if the given region is a weather station location which
+        has data for the time period, then that will be used. If it's
+        a district or other region, the underlying data could be from
+        one or more weather stations and/or satellite.  To by-pass the
+        search for available series, use compute_gdd() directly.
+
+        Parameters
+        ----------
+        region_name: string
+        base_temperature: number
+        start_date: '%Y-%m-%d' string
+        end_date: '%Y-%m-%d' string
+        min_temporal_coverage: float, optional
+        upper_temperature_cap: float, optional
+
+        """
+        try:
+            tmin_series = self.find_data_series(
+                item='Temperature min', metric='Temperature', region=region_name,
+                start_date=start_date, end_date=end_date).next()
+            tmax_series = self.find_data_series(
+                item='Temperature max', metric='Temperature', region=region_name,
+                start_date=start_date, end_date=end_date).next()
+            return self.compute_gdd(tmin_series, tmax_series, base_temperature,
+                                    start_date, end_date, min_temporal_coverage,
+                                    upper_temperature_cap)
+        except StopIteration:
+            raise Exception(
+                "Can't find data series to compute GDD in region {}".format(
+                    region_name))
