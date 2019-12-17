@@ -17,12 +17,12 @@ class CropModel(GroClient):
         the given metric for the given crop, normalized so the sum
         across all regions is 1.0.
 
-        For example: say we have a ```region_list = [{'id': 1, 'name':
-        'Province1'}, {'id': 2, 'name': 'Province2'}]```. This could
+        For example: say we have a `region_list = [{'id': 1, 'name':
+        'Province1'}, {'id': 2, 'name': 'Province2'}]`. This could
         be a list returned by client.search_and_lookup() or
         client.get_descendant_regions() for example.  Now say
-        ```model.compute_weights('soybeans', 'land cover area',
-        region_list)``` returns ```[0.6, 0.4]```, that means Province1
+        `model.compute_weights('soybeans', 'land cover area',
+        region_list)` returns `[0.6, 0.4]`, that means Province1
         has 60% and province2 has 40% of the total area planted across
         the two regions, when averaged across all time.
 
@@ -70,13 +70,13 @@ class CropModel(GroClient):
         fraction of the value of the weighting series represented by
         that region as explained in compute_weights().
 
-        For example: say we have a ```region_list = [{'id': 1, 'name':
-        'Province1'}, {'id': 2, 'name': 'Province2'}]```. This could
+        For example: say we have a `region_list = [{'id': 1, 'name':
+        'Province1'}, {'id': 2, 'name': 'Province2'}]`. This could
         be a list returned by client.search_and_lookup() or
         client.get_descendant_regions for example.  Now
-        ```model.compute_crop_weighted_series('soybeans', 'land cover
+        `model.compute_crop_weighted_series('soybeans', 'land cover
         area', 'vegetation ndvi', 'vegetation indices index',
-        region_list)``` will return a dataframe where the NDVI of each
+        region_list)` will return a dataframe where the NDVI of each
         province is multiplied by the fraction of total soybeans
         area is accounted for by that province. Thus taking the sum
         across provinces will give a crop weighted average of NDVI.
