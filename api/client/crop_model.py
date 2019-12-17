@@ -11,7 +11,7 @@ class CropModel(GroClient):
 
     def compute_weights(self, crop_name, metric_name, regions):
         """Compute a vector of 'weights' that can be used for crop-weighted
-        average across regions.
+        average across regions, as in compute_crop_weighted_series().
 
         For each region, the weight of is the mean value over time, of
         the given metric for the given crop, normalized so the sum
@@ -37,6 +37,11 @@ class CropModel(GroClient):
         -------
         list of floats
            weights corresponding to the regions.
+
+
+        See also
+        --------
+        compute_crop_weighted_series()
 
         """
         # Get the weighting series
@@ -125,7 +130,14 @@ class CropModel(GroClient):
     def compute_gdd(self, tmin_series, tmax_series, base_temperature,
                     start_date, end_date, min_temporal_coverage,
                     upper_temperature_cap):
-        """Compute Growing Degree Days value from specific data series."""
+        """Compute Growing Degree Days value from specific data series.
+
+        This function performs the low-level computation used in growing_degree_days().
+
+        See also
+        --------
+        growing_degree_days()
+        """
         self.add_single_data_series(tmin_series)
         self.add_single_data_series(tmax_series)
         df = self.get_df()
