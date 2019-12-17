@@ -842,7 +842,8 @@ add_single_data_series().</p>
 <dl class="method">
 <dt id="api.client.crop_model.CropModel.compute_weights">
 <code class="descclassname">CropModel.</code><code class="descname">compute_weights</code><span class="sig-paren">(</span><em>crop_name</em>, <em>metric_name</em>, <em>regions</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/crop_model.html#CropModel.compute_weights"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.crop_model.CropModel.compute_weights" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compute a vector of &#8216;weights&#8217; that can be used for crop-weighted average across regions.</p>
+<dd><p>Compute a vector of &#8216;weights&#8217; that can be used for crop-weighted
+average across regions.</p>
 <p>For each region, the weight of is the mean value over time, of
 the given metric for the given crop, normalized so the sum
 across all regions is 1.0.</p>
@@ -878,8 +879,9 @@ the two regions, when averaged across all time.</p>
 <dl class="method">
 <dt id="api.client.crop_model.CropModel.compute_crop_weighted_series">
 <code class="descclassname">CropModel.</code><code class="descname">compute_crop_weighted_series</code><span class="sig-paren">(</span><em>weighting_crop_name</em>, <em>weighting_metric_name</em>, <em>item_name</em>, <em>metric_name</em>, <em>regions</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/crop_model.html#CropModel.compute_crop_weighted_series"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.crop_model.CropModel.compute_crop_weighted_series" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compute the &#8216;crop-weighted average&#8217; of the given item and metric&#8217;s series across regions.</p>
-<p>The weight of a region is the fraction of the value of the weighting series represented by
+<dd><p>Compute the &#8216;crop-weighted average&#8217; of the series for the given
+item and metric, across regions. The weight of a region is the
+fraction of the value of the weighting series represented by
 that region as explained in compute_weights().</p>
 <p>For example: say we have a <cite>region_list = [{&#8216;id&#8217;: 1, &#8216;name&#8217;:
 &#8216;Province1&#8217;}, {&#8216;id&#8217;: 2, &#8216;name&#8217;: &#8216;Province2&#8217;}]</cite>. This could
@@ -972,8 +974,6 @@ by the crop weight for that region.</p>
             <dd><a href="CLEWS-20278-mvp/api.html">CLEWS-20278-mvp</a></dd>
             <dd><a href="CLEWS-21846/api.html">CLEWS-21846</a></dd>
             <dd><a href="CLEWS-22288/api.html">CLEWS-22288</a></dd>
-            <dd><a href="clews18123/api.html">clews18123</a></dd>
-            <dd><a href="crop_model_gdd_impl/api.html">crop_model_gdd_impl</a></dd>
             <dd><a href="development/api.html">development</a></dd>
             <dd><a href="fix-docs-links/api.html">fix-docs-links</a></dd>
             <dd><a href="gdh/api.html">gdh</a></dd>
