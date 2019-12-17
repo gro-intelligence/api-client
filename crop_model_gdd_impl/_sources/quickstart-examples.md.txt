@@ -8,7 +8,7 @@ If you have a Google account, or if you already have [Jupyter Notebook](https://
 
 ### Step 1: Get your API token
 
-1. Login to your Gro web app account at [app.gro-intelligence.com](app.gro-intelligence.com)
+1. Login to your Gro web app account at <https://app.gro-intelligence.com>
 2. Open the Account button in the bottom left corner of the app.
 
    ![account-button](./_images/account-button.PNG)
@@ -37,11 +37,10 @@ If you have a Google account, or if you already have [Jupyter Notebook](https://
 
     ```py
     from api.client.gro_client import GroClient
-    API_HOST = 'api.gro-intelligence.com'
-    ACCESS_TOKEN = 'YOUR_TOKEN'
-    client = GroClient(API_HOST, ACCESS_TOKEN)```
+    client = GroClient('api.gro-intelligence.com', '<YOUR_TOKEN>')
+    ```
 
-4. Replace the text YOUR_TOKEN with the token you copied from step one. Then click the "Run Cell" button to the left of the cell.
+4. Replace the text <YOUR_TOKEN> with the token you copied from step one. Then click the "Run Cell" button to the left of the cell.
 5. Add one more cell with the "+ Code" button, then copy the below code and paste it into the third cell.
 
     ```py
@@ -52,7 +51,8 @@ If you have a Google account, or if you already have [Jupyter Notebook](https://
     'region_id': 1107,
     'source_id': 14,
     'frequency_id': 9
-    })```
+    })
+    ```
 
 6. Click the "Run Cell" button to the left of the cell, and that's it! You should now see the data in the response.
 

@@ -146,6 +146,7 @@
 <li class="toctree-l2"><a class="reference internal" href="api.html#geographic">Geographic</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api.html#advanced-exploration">Advanced Exploration</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api.html#pandas-utils">Pandas Utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#crop-modeling">Crop Modeling</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="searching-data.html">Searching Data</a><ul>
@@ -159,7 +160,7 @@
 </li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Querying Data</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#get-data-points">Get data points</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#get-data-frame">Get Data frame</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#get-data-frame">Get data frame</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#show-revisions">Show revisions</a></li>
 </ul>
 </li>
@@ -327,9 +328,15 @@
 <div class="section" id="querying-data">
 <h1>Querying Data<a class="headerlink" href="#querying-data" title="Permalink to this headline">¶</a></h1>
 <p>Once you&#8216;ve identified the data you want, you&#8216;ll want to start retrieving it and putting it to use. The following methods should help you get the data in the format that you want.</p>
+<p>All of the examples in this page refer to a client object, which can
+be initialized as follows:</p>
+<div class="highlight-py from api.client.gro_client import GroClient"><div class="highlight"><pre><span></span>
+client = GroClient(&#39;api.gro-intelligence.com&#39;, &#39;&lt;YOUR_TOKEN&gt;&#39;)
+</pre></div>
+</div>
 <div class="section" id="get-data-points">
 <h2>Get data points<a class="headerlink" href="#get-data-points" title="Permalink to this headline">¶</a></h2>
-<p><code class="docutils literal"><span class="pre">get_data_points(**selection)</span></code> is the primary method for retrieving data. The <a class="reference external" href="./searching-data#code-snippets">code snippets</a> feature covered earlier provides you with a fully completed <code class="docutils literal"><span class="pre">get_data_points()</span></code> query, such as:</p>
+<p><code class="docutils literal"><span class="pre">get_data_points(**selection)</span></code> is the most basic method for retrieving data. The <a class="reference external" href="./searching-data#code-snippets">code snippets</a> feature covered earlier provides you with a fully completed <code class="docutils literal"><span class="pre">get_data_points()</span></code> query, such as:</p>
 <div class="highlight-py"><div class="highlight"><pre><span></span><span class="c1"># Wheat - Area Harvested (area) - India (USDA PS&amp;D)</span>
 <span class="n">client</span><span class="o">.</span><span class="n">get_data_points</span><span class="p">(</span><span class="o">**</span><span class="p">{</span>
     <span class="s1">&#39;metric_id&#39;</span><span class="p">:</span> <span class="mi">570001</span><span class="p">,</span>
@@ -344,24 +351,48 @@
 <p>Making your query more specific will speed up your query by limiting the amount of data requested.</p>
 </div>
 <div class="section" id="get-data-frame">
-<h2>Get Data frame<a class="headerlink" href="#get-data-frame" title="Permalink to this headline">¶</a></h2>
-<p>Data frames are a popular format for viewing data responses, and our <code class="docutils literal"><span class="pre">GroClient</span></code> class offers you the ability to view your data series in a data frame. If you&#8216;ve imported the library into your file, as follows:</p>
-<div class="highlight-py"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">api.client.gro_client</span> <span class="kn">import</span> <span class="n">GroClient</span>
+<h2>Get data frame<a class="headerlink" href="#get-data-frame" title="Permalink to this headline">¶</a></h2>
+<p><a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html">Pandas data frames</a> are a popular format for processing large amounts of data. The <code class="docutils literal"><span class="pre">GroClient</span></code> class&#8216; <code class="docutils literal"><span class="pre">get_df()</span></code> method offers you the ability to access multiple data series in a single data frame. This approach is convenient for modeling or analysis using many different data series.</p>
+<p><code class="docutils literal"><span class="pre">get_df()</span></code> is a stateful method, so you must first save one or more series into your client object.</p>
+<p>The easiest way to do that is to use <code class="docutils literal"><span class="pre">add_data_series()</span></code>, e.g.:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">client</span><span class="o">.</span><span class="n">add_data_series</span><span class="p">(</span><span class="o">**</span><span class="p">{</span>
+    <span class="s1">&#39;metric&#39;</span><span class="p">:</span> <span class="s1">&#39;area harvested&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;item&#39;</span><span class="p">:</span> <span class="s1">&#39;wheat&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;region&#39;</span><span class="p">:</span> <span class="s1">&#39;India&#39;</span>
+<span class="p">})</span>
+
+<span class="n">client</span><span class="o">.</span><span class="n">add_data_series</span><span class="p">(</span><span class="o">**</span><span class="p">{</span>
+    <span class="s1">&#39;metric&#39;</span><span class="p">:</span> <span class="s1">&#39;production quantity&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;item&#39;</span><span class="p">:</span> <span class="s1">&#39;wheat&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;region&#39;</span><span class="p">:</span> <span class="s1">&#39;India&#39;</span>
+<span class="p">})</span>
+
+<span class="n">df</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get_df</span><span class="p">()</span>
 </pre></div>
 </div>
-<p>Then you can use the <code class="docutils literal"><span class="pre">get_df()</span></code> method to return data in a data frame.</p>
-<p><code class="docutils literal"><span class="pre">get_df()</span></code> is a stateful method, so you must first save the series into your client object. You can do this with the <code class="docutils literal"><span class="pre">add_single_data_series()</span></code> method.</p>
-<p>The following code will return Wheat - Area Harvested (area) - India (USDA PS&amp;D) in a data frame.</p>
-<div class="highlight-py"><div class="highlight"><pre><span></span><span class="n">client</span><span class="o">.</span><span class="n">add_single_data_series</span><span class="p">({</span>
+<p>Note that <code class="docutils literal"><span class="pre">add_data_series()</span></code> combines searching for combinations of entities by name, finding the best possible data series for that combination, and adding it to the client. In the above example, each <code class="docutils literal"><span class="pre">add_data_series()</span></code> call finds several possible series (5 series for area harvested and 6 for production quantity respectively), and adds the highest ranked one for each.  For more information on how series are ranked see <a class="reference external" href="https://developers.gro-intelligence.com/api.html#api.client.gro_client.GroClient.rank_series_by_source"><code class="docutils literal"><span class="pre">rank_series_by_source</span></code></a>.</p>
+<p>If you want to directly control the series selection, you can also take a specific selection - discovered, perhaps, via <a class="reference external" href="./searching-data#code-snippets">code snippets</a>, or using <a class="reference external" href="https://developers.gro-intelligence.com/api.html#api.client.gro_client.GroClient.find_data_series"><code class="docutils literal"><span class="pre">find_data_series</span></code></a> - and then add that series directly with the
+<code class="docutils literal"><span class="pre">add_single_data_series()</span></code> method, e.g.:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">client</span><span class="o">.</span><span class="n">add_single_data_series</span><span class="p">({</span>
      <span class="s1">&#39;metric_id&#39;</span><span class="p">:</span> <span class="mi">570001</span><span class="p">,</span>
      <span class="s1">&#39;item_id&#39;</span><span class="p">:</span> <span class="mi">95</span><span class="p">,</span>
      <span class="s1">&#39;region_id&#39;</span><span class="p">:</span> <span class="mi">1094</span><span class="p">,</span>
      <span class="s1">&#39;source_id&#39;</span><span class="p">:</span> <span class="mi">14</span><span class="p">,</span>
      <span class="s1">&#39;frequency_id&#39;</span><span class="p">:</span> <span class="mi">9</span>
 <span class="p">})</span>
-<span class="n">client</span><span class="o">.</span><span class="n">get_df</span><span class="p">()</span>
+
+<span class="n">client</span><span class="o">.</span><span class="n">add_single_data_series</span><span class="p">({</span>
+     <span class="s1">&#39;metric_id&#39;</span><span class="p">:</span> <span class="mi">860032</span><span class="p">,</span>
+     <span class="s1">&#39;item_id&#39;</span><span class="p">:</span> <span class="mi">95</span><span class="p">,</span>
+     <span class="s1">&#39;region_id&#39;</span><span class="p">:</span> <span class="mi">1094</span><span class="p">,</span>
+     <span class="s1">&#39;source_id&#39;</span><span class="p">:</span> <span class="mi">50</span>
+     <span class="s1">&#39;frequency_id&#39;</span><span class="p">:</span> <span class="mi">9</span><span class="p">,</span>
+<span class="p">})</span>
+
+<span class="n">df</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get_df</span><span class="p">()</span>
 </pre></div>
 </div>
+<p>Note that in the second example, we choose to get the first series from the source with id 14 which is <a class="reference external" href="https://app.gro-intelligence.com/dictionary/sources/14">USDA PS&amp;D</a>, and the second series from source with id 50, which is <a class="reference external" href="https://app.gro-intelligence.com/dictionary/sources/50">IDAC</a>. The two sources may differ in historical time range or their data release schedule.</p>
 </div>
 <div class="section" id="show-revisions">
 <h2>Show revisions<a class="headerlink" href="#show-revisions" title="Permalink to this headline">¶</a></h2>

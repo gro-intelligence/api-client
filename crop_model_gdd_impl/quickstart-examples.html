@@ -146,6 +146,7 @@
 <li class="toctree-l2"><a class="reference internal" href="api.html#geographic">Geographic</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api.html#advanced-exploration">Advanced Exploration</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api.html#pandas-utils">Pandas Utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#crop-modeling">Crop Modeling</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="searching-data.html">Searching Data</a><ul>
@@ -159,7 +160,7 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="querying-data.html">Querying Data</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="querying-data.html#get-data-points">Get data points</a></li>
-<li class="toctree-l2"><a class="reference internal" href="querying-data.html#get-data-frame">Get Data frame</a></li>
+<li class="toctree-l2"><a class="reference internal" href="querying-data.html#get-data-frame">Get data frame</a></li>
 <li class="toctree-l2"><a class="reference internal" href="querying-data.html#show-revisions">Show revisions</a></li>
 </ul>
 </li>
@@ -333,7 +334,7 @@
 <div class="section" id="step-1-get-your-api-token">
 <h3>Step 1: Get your API token<a class="headerlink" href="#step-1-get-your-api-token" title="Permalink to this headline">¶</a></h3>
 <ol>
-<li><p class="first">Login to your Gro web app account at <a class="reference external" href="app.gro-intelligence.com">app.gro-intelligence.com</a></p>
+<li><p class="first">Login to your Gro web app account at <a class="reference external" href="https://app.gro-intelligence.com">https://app.gro-intelligence.com</a></p>
 </li>
 <li><p class="first">Open the Account button in the bottom left corner of the app.</p>
 <p><img alt="account-button" src="_images/account-button.PNG" /></p>
@@ -361,24 +362,22 @@ In Colab, it will look like this:</p>
 <img alt="jupyter-run-button" src="_images/jupyter-run-button.PNG" /></p>
 </li>
 <li><p class="first">Add another cell with the &#8220;+ Code&#8220; button, then copy the below code and paste it into the second cell.</p>
-<div class="highlight-py"><div class="highlight"><pre><span></span>from api.client.gro_client import GroClient
-API_HOST = &#39;api.gro-intelligence.com&#39;
-ACCESS_TOKEN = &#39;YOUR_TOKEN&#39;
-client = GroClient(API_HOST, ACCESS_TOKEN)```
+<div class="highlight-py"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">api.client.gro_client</span> <span class="kn">import</span> <span class="n">GroClient</span>
+<span class="n">client</span> <span class="o">=</span> <span class="n">GroClient</span><span class="p">(</span><span class="s1">&#39;api.gro-intelligence.com&#39;</span><span class="p">,</span> <span class="s1">&#39;&lt;YOUR_TOKEN&gt;&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </li>
-<li><p class="first">Replace the text YOUR_TOKEN with the token you copied from step one. Then click the &#8220;Run Cell&#8220; button to the left of the cell.</p>
+<li><p class="first">Replace the text &lt;YOUR_TOKEN&gt; with the token you copied from step one. Then click the &#8220;Run Cell&#8220; button to the left of the cell.</p>
 </li>
 <li><p class="first">Add one more cell with the &#8220;+ Code&#8220; button, then copy the below code and paste it into the third cell.</p>
-<div class="highlight-py"><div class="highlight"><pre><span></span># Rice, milled - Area Harvested (area) - Kenya (USDA PS&amp;D)
-client.get_data_points(**{
-&#39;metric_id&#39;: 570001,
-&#39;item_id&#39;: 392,
-&#39;region_id&#39;: 1107,
-&#39;source_id&#39;: 14,
-&#39;frequency_id&#39;: 9
-})```
+<div class="highlight-py"><div class="highlight"><pre><span></span><span class="c1"># Rice, milled - Area Harvested (area) - Kenya (USDA PS&amp;D)</span>
+<span class="n">client</span><span class="o">.</span><span class="n">get_data_points</span><span class="p">(</span><span class="o">**</span><span class="p">{</span>
+<span class="s1">&#39;metric_id&#39;</span><span class="p">:</span> <span class="mi">570001</span><span class="p">,</span>
+<span class="s1">&#39;item_id&#39;</span><span class="p">:</span> <span class="mi">392</span><span class="p">,</span>
+<span class="s1">&#39;region_id&#39;</span><span class="p">:</span> <span class="mi">1107</span><span class="p">,</span>
+<span class="s1">&#39;source_id&#39;</span><span class="p">:</span> <span class="mi">14</span><span class="p">,</span>
+<span class="s1">&#39;frequency_id&#39;</span><span class="p">:</span> <span class="mi">9</span>
+<span class="p">})</span>
 </pre></div>
 </div>
 </li>
