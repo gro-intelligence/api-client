@@ -107,7 +107,6 @@ def main():
 
     args = parser.parse_args()
     entities = []
-    item_name_list = []
     methods_list = args.methods
     access_token = args.groapi_token
     client = GroClient(API_HOST, access_token)
@@ -141,26 +140,17 @@ def main():
                          'source_id': source_id_list[i],
                          'frequency_id': frequency_id_list[i],
                          'start_date': start_date})
-        item_name = client.lookup('items', item_id_list[i])['name']
-        item_name_list.append(item_name)
-    if args.ENSO:
-        enso_name = client.lookup('items', 13495)['name']
-        item_name_list.append(enso_name)
-    complete_item_name = '_'.join(item_name_list)
 
     initial_date = args.initial_date
     final_date = args.final_date
     output_dir = args.output_dir
     report = args.report
-    region = client.lookup('regions', entities[0]['region_id'])['name']
-    file_name = region + '_' + complete_item_name + '_' + \
-                initial_date + '_' + final_date + '_ranks'
-    result = final_ranks_computation.save_to_csv(
-        final_ranks_computation.combined_items_final_ranks(
+    file_name_result = final_ranks_computation.combined_items_final_ranks(
             client, entities, initial_date, final_date,
-            methods_list, args.all_ranks, weights, args.ENSO, args.ENSO_weight),
-        output_dir, file_name, report, args.all_ranks, logger)
-    return result
+            methods_list, args.all_ranks, weights, args.ENSO, args.ENSO_weight)
+    store_result = final_ranks_computation.save_to_csv(
+        file_name_result, output_dir, report, args.all_ranks, logger)
+    return store_result
 
 
 if __name__ == '__main__':

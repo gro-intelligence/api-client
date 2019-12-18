@@ -30,6 +30,16 @@ def enso_data(start_date):
     return enso_entity
 
 
+def get_file_name(client, entity_list, initial_date, final_date):
+    key_words = [client.lookup('regions', entity_list[0]['region_id'])['name']]
+    for i in range(len(entity_list)):
+        key_words.append(client.lookup('items', entity_list[i]['item_id'])['name'])
+    key_words.append(initial_date)
+    key_words.append(final_date)
+    combined_name = '_'.join(key_words)
+    return combined_name
+
+
 def time_series(client, entity, initial_date, final_date):
     """
     retrieves a sub-time series of a time series associated with a gro entity
@@ -128,12 +138,17 @@ def combined_items_final_ranks(client, entities, initial_date, final_date, metho
     Use L^2 distance function to combine weighted distances from multiple gro-entities
     and return the rank
     :param client: Gro_client
-    :param entities_weights: A dictionary of gro entity and weight associated to the gro entity
+    :param entities:
     :param initial_date: A date in YYYY-MM-DD format
     :param final_date: A date in YYYY-MM-DD format
     :param methods_list: a sublist of ['cumulative', 'euclidean', 'ts-features', 'dtw']
     :param all_ranks: Boolean to determine if all ranks will be displayed or a composite rank
-    :return: A dataframe containing integer values (ranks)
+    :param weights:
+    :param enso:
+    :param enso_weight:
+    :return: A tuple (string, dataframe)
+    The string contains '_' separated region, item, date names
+    The dataframe contains integer values (ranks)
     """
     combined_items_distances = None
     start_date = entities[0]['start_date']
@@ -145,9 +160,9 @@ def combined_items_final_ranks(client, entities, initial_date, final_date, metho
             weights.append(enso_weight)
         else:
             weights.append(1)
+    file_name = get_file_name(client, entities, initial_date, final_date)
     for i in range(len(entities)):
         gro_item = client.lookup('items', entities[i]['item_id'])['name']
-        # weight = entity_weight.pop('weight')
         combined_methods_distances_df = combined_methods_distances(
             ranked_df_dictionary(
                 client, entities[i], initial_date,
@@ -173,11 +188,13 @@ def combined_items_final_ranks(client, entities, initial_date, final_date, metho
         display = combined_items_distances[ranks]
     else:
         display = combined_items_distances['composite_rank']
-    return display
+    return file_name, display
 
 
-def save_to_csv(dataframe, output_dir, file_name, report, all_ranks, logger):
+def save_to_csv(dataframe_file_name, output_dir, report, all_ranks, logger):
     """ save the dataframe into csv file called <output_dir>/ranks_csv/ranks.csv """
+    dataframe = dataframe_file_name[1]
+    file_name = dataframe_file_name[0]
     folder_path = os.path.join(output_dir, './ranks_csv', file_name)
     if not os.path.exists(folder_path):
         os.makedirs(folder_path)
