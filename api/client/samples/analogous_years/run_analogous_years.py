@@ -5,8 +5,8 @@ import os
 
 from api.client.gro_client import GroClient
 
-from api.client.samples.analogous_years.lib import final_ranks_computation
-# from lib import final_ranks_computation
+# from api.client.samples.analogous_years.lib import final_ranks_computation
+from lib import final_ranks_computation
 
 
 def str2bool(v):
@@ -46,22 +46,6 @@ def check_if_exists(entity_type, entity_value, client):
         message = "Gro-{}_id invalid: '{}'.".format(entity_type, entity_value)
         logger.warning(message)
         raise e
-
-
-def common_start_date(provided_start_date, entities, client):
-    # checking = partial(check_if_exists, client=client)
-    start_date_list = []
-    if provided_start_date:
-        start_date_list.append(provided_start_date)
-    for i in range(len(entities)):
-        dates = client.get_data_points(**entities[i])
-        if len(dates) == 0:
-            msg = "No data found for the following gro-entity - {}".format(entities[i])
-            raise argparse.ArgumentTypeError(msg)
-        else:
-            start_date_list.append(dates[0]['start_date'])
-    start_date = max(start_date_list)
-    return start_date
 
 
 def main():
@@ -104,7 +88,6 @@ def main():
     parser.add_argument('--all_ranks', action='store_true', help='Lets you see all the ranks'
                                                                  'as opposed to separate method'
                                                                  'ranks')
-
     args = parser.parse_args()
     entities = []
     methods_list = args.methods
@@ -112,7 +95,6 @@ def main():
     client = GroClient(API_HOST, access_token)
     logger = client.get_logger()
     checking = partial(check_if_exists, client=client)
-
     metric_id_list = args.metric_ids
     item_id_list = list_length_validator(metric_id_list, args.item_ids)
     region_id_list = args.region_id
@@ -126,30 +108,19 @@ def main():
                   'source_id': checking('sources', source_id_list[i]),
                   'frequency_id': checking('frequencies', frequency_id_list[i])}
         entities.append(entity)
-    start_date = common_start_date(args.start_date, entities, client)
-    entities = []
-    weights = None
-    if args.weights:
-        weights = args.weights
+    weights = args.weights
+    if weights:
         weights = list_length_validator(metric_id_list, weights)
-
-    for i in range(len(metric_id_list)):
-        entities.append({'metric_id': metric_id_list[i],
-                         'item_id': item_id_list[i],
-                         'region_id': region_id_list[0],
-                         'source_id': source_id_list[i],
-                         'frequency_id': frequency_id_list[i],
-                         'start_date': start_date})
-
     initial_date = args.initial_date
     final_date = args.final_date
     output_dir = args.output_dir
     report = args.report
-    file_name_result = final_ranks_computation.combined_items_final_ranks(
+    file_name, result = final_ranks_computation.combined_items_final_ranks(
             client, entities, initial_date, final_date,
-            methods_list, args.all_ranks, weights, args.ENSO, args.ENSO_weight)
+            methods_list, args.all_ranks, weights, args.ENSO, args.ENSO_weight,
+        args.start_date)
     store_result = final_ranks_computation.save_to_csv(
-        file_name_result, output_dir, report, args.all_ranks, logger)
+        (file_name, result), output_dir, report, args.all_ranks, logger)
     return store_result
 
 
