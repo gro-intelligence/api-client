@@ -1,0 +1,6 @@
+python3
+jupyter
+datetime
+pandas
+os
+re
