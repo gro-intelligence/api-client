@@ -20,6 +20,26 @@ from api.client.samples.analogous_years.lib import \
     get_transform_data
 
 
+def common_start_date(client, entities, provided_start_date=None):
+    # checking = partial(check_if_exists, client=client)
+    start_date_list = []
+    if provided_start_date:
+        start_date_list.append(provided_start_date)
+    for i in range(len(entities)):
+        dates = client.get_data_points(**entities[i])
+        if len(dates) == 0:
+            msg = "No data found for the following gro-entity - {}".format(entities[i])
+            raise Exception(msg)
+        else:
+            start_date_list.append(dates[0]['start_date'])
+    start_date = max(start_date_list)
+
+    for i in range(len(entities)):
+        entities[i]['start_date'] = start_date
+
+    return {'entities': entities, 'start_date': start_date}
+
+
 def enso_data(start_date):
     enso_entity = {'metric_id': 15851977,
                    'item_id': 13495,
@@ -133,7 +153,8 @@ def combined_methods_distances(dictionary_of_df):
 
 
 def combined_items_final_ranks(client, entities, initial_date, final_date, methods_list,
-                               all_ranks, weights=None, enso=None, enso_weight=None):
+                               all_ranks, weights=None, enso=None, enso_weight=None,
+                               provided_start_date=None):
     """
     Use L^2 distance function to combine weighted distances from multiple gro-entities
     and return the rank
@@ -151,7 +172,8 @@ def combined_items_final_ranks(client, entities, initial_date, final_date, metho
     The dataframe contains integer values (ranks)
     """
     combined_items_distances = None
-    start_date = entities[0]['start_date']
+    entities = common_start_date(client, entities, provided_start_date)['entities']
+    start_date = common_start_date(client, entities, provided_start_date)['start_date']
     if not weights:
         weights = [1] * len(entities)
     if enso:
@@ -185,10 +207,10 @@ def combined_items_final_ranks(client, entities, initial_date, final_date, metho
         ranks.append(column_new_name)
         combined_items_distances.sort_index(inplace=True)
     if all_ranks:
-        display = combined_items_distances[ranks]
+        display_dataframe = combined_items_distances[ranks]
     else:
-        display = combined_items_distances['composite_rank']
-    return file_name, display
+        display_dataframe = combined_items_distances['composite_rank']
+    return file_name, display_dataframe
 
 
 def save_to_csv(dataframe_file_name, output_dir, report, all_ranks, logger):
