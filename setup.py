@@ -18,7 +18,7 @@ with open("requirements-docs.txt", "r") as docs_requirements_file:
 
 setuptools.setup(
     name="gro",
-    version="1.40.5",
+    version="1.40.6",
     description="Python client library for accessing Gro Intelligence's "
                 "agricultural data platform",
     long_description=long_description,
