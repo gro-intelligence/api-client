@@ -455,7 +455,6 @@ class GroClient(Client):
         self._logger.info("Outputing to file: {}".format(filename))
         writer = unicodecsv.writer(open(filename, 'wb'))
         for point in self.get_data_points(**data_series):
-            print(point)
             writer.writerow([point['start_date'],
                              point['end_date'],
                              point['value'],
