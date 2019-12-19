@@ -328,7 +328,7 @@
 
 <div class="viewcode-block" id="CropModel.compute_weights"><a class="viewcode-back" href="../../../api.html#api.client.crop_model.CropModel.compute_weights">[docs]</a>    <span class="k">def</span> <span class="nf">compute_weights</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">crop_name</span><span class="p">,</span> <span class="n">metric_name</span><span class="p">,</span> <span class="n">regions</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Compute a vector of &#39;weights&#39; that can be used for crop-weighted</span>
-<span class="sd">        average across regions, as in :meth:`~.compute_crop_weighted_series()`.</span>
+<span class="sd">        average across regions, as in :meth:`~.compute_crop_weighted_series`.</span>
 
 <span class="sd">        For each region, the weight of is the mean value over time, of</span>
 <span class="sd">        the given metric for the given crop, normalized so the sum</span>
@@ -336,8 +336,8 @@
 
 <span class="sd">        For example: say we have a `region_list = [{&#39;id&#39;: 1, &#39;name&#39;:</span>
 <span class="sd">        &#39;Province1&#39;}, {&#39;id&#39;: 2, &#39;name&#39;: &#39;Province2&#39;}]`. This could</span>
-<span class="sd">        be a list returned by :meth:`~.client.search_and_lookup()` or</span>
-<span class="sd">        :meth:`~.client.get_descendant_regions()` for example.  Now say</span>
+<span class="sd">        be a list returned by :meth:`~.client.search_and_lookup` or</span>
+<span class="sd">        :meth:`~.client.get_descendant_regions` for example.  Now say</span>
 <span class="sd">        `model.compute_weights(&#39;soybeans&#39;, &#39;land cover area&#39;,</span>
 <span class="sd">        region_list)` returns `[0.6, 0.4]`, that means Province1</span>
 <span class="sd">        has 60% and province2 has 40% of the total area planted across</span>
@@ -358,7 +358,7 @@
 
 <span class="sd">        See also</span>
 <span class="sd">        --------</span>
-<span class="sd">        :meth:`~.compute_crop_weighted_series()`</span>
+<span class="sd">        :meth:`~.compute_crop_weighted_series`</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Get the weighting series</span>
@@ -390,11 +390,11 @@
         <span class="sd">&quot;&quot;&quot;Compute the &#39;crop-weighted average&#39; of the series for the given</span>
 <span class="sd">        item and metric, across regions. The weight of a region is the</span>
 <span class="sd">        fraction of the value of the weighting series represented by</span>
-<span class="sd">        that region as explained in :meth:`~.compute_weights()`.</span>
+<span class="sd">        that region as explained in :meth:`~.compute_weights`.</span>
 
 <span class="sd">        For example: say we have a `region_list = [{&#39;id&#39;: 1, &#39;name&#39;:</span>
 <span class="sd">        &#39;Province1&#39;}, {&#39;id&#39;: 2, &#39;name&#39;: &#39;Province2&#39;}]`. This could</span>
-<span class="sd">        be a list returned by :meth:`~.client.search_and_lookup()` or</span>
+<span class="sd">        be a list returned by :meth:`~.client.search_and_lookup` or</span>
 <span class="sd">        client.get_descendant_regions for example.  Now</span>
 <span class="sd">        `model.compute_crop_weighted_series(&#39;soybeans&#39;, &#39;land cover</span>
 <span class="sd">        area&#39;, &#39;vegetation ndvi&#39;, &#39;vegetation indices index&#39;,</span>
@@ -449,7 +449,7 @@
                     <span class="n">upper_temperature_cap</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Compute Growing Degree Days value from specific data series.</span>
 
-<span class="sd">        This function performs the low-level computation used in :meth:`~.growing_degree_days()`.</span>
+<span class="sd">        This function performs the low-level computation used in :meth:`~.growing_degree_days`.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -474,7 +474,7 @@
 
 <span class="sd">        See also</span>
 <span class="sd">        --------</span>
-<span class="sd">        :meth:`~.growing_degree_days()`</span>
+<span class="sd">        :meth:`~.growing_degree_days`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_single_data_series</span><span class="p">(</span><span class="n">tmin_series</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_single_data_series</span><span class="p">(</span><span class="n">tmax_series</span><span class="p">)</span>
@@ -536,7 +536,7 @@
 <span class="sd">        has data for the time period, then that will be used. If it&#39;s</span>
 <span class="sd">        a district or other region, the underlying data could be from</span>
 <span class="sd">        one or more weather stations and/or satellite.  To by-pass the</span>
-<span class="sd">        search for available series, use :meth:`~.compute_gdd()` directly.</span>
+<span class="sd">        search for available series, use :meth:`~.compute_gdd` directly.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
