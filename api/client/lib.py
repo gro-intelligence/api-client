@@ -394,7 +394,7 @@ def rank_series_by_source(access_token, api_host, series_list):
             yield series_with_source
 
 
-def list_of_series_to_single_series(series_list):
+def list_of_series_to_single_series(series_list, add_belongs_to=False):
     """Convert list_of_series format from API back into the familiar single_series output format.
 
     >>> list_of_series_to_single_series([{
@@ -461,31 +461,34 @@ def list_of_series_to_single_series(series_list):
         # Only need to do this once per series, so do this outside of the list
         # comprehension and save to a variable to avoid duplicate work:
         belongs_to = camel_to_snake_dict(series.get('series', {}).get('belongsTo', {}))
-        output += [{
-            'start_date': point[0],
-            'end_date': point[1],
-            'value': point[2],
-            # list_of_series has unit_id in the series attributes currently. Does
-            # not allow for mixed units in the same series
-            'unit_id': series['series'].get('unitId', None),
-            # input_unit_id and input_unit_scale are deprecated but provided for backwards
-            # compatibility. unit_id should be used instead.
-            'input_unit_id': series['series'].get('unitId', None),
-            'input_unit_scale': 1,
-            # If a point does not have reporting_date, use None
-            'reporting_date': point[3] if len(point) > 3 else None,
-            # Series attributes:
-            'metric_id': series['series'].get('metricId', None),
-            'item_id': series['series'].get('itemId', None),
-            'region_id': series['series'].get('regionId', None),
-            'partner_region_id': series['series'].get('partnerRegionId', 0),
-            'frequency_id': series['series'].get('frequencyId', None),
-            # 'source_id': series['series'].get('sourceId', None), TODO: add source to output
-            # belongs_to is consistent with the series the user requested. So if an
-            # expansion happened on the server side, the user can reconstruct what
-            # results came from which request.
-            'belongs_to': belongs_to
-        } for point in series.get('data', [])]
+        for point in series.get('data', []):
+            formatted_point = {
+                'start_date': point[0],
+                'end_date': point[1],
+                'value': point[2],
+                # list_of_series has unit_id in the series attributes currently. Does
+                # not allow for mixed units in the same series
+                'unit_id': series['series'].get('unitId', None),
+                # input_unit_id and input_unit_scale are deprecated but provided for backwards
+                # compatibility. unit_id should be used instead.
+                'input_unit_id': series['series'].get('unitId', None),
+                'input_unit_scale': 1,
+                # If a point does not have reporting_date, use None
+                'reporting_date': point[3] if len(point) > 3 else None,
+                # Series attributes:
+                'metric_id': series['series'].get('metricId', None),
+                'item_id': series['series'].get('itemId', None),
+                'region_id': series['series'].get('regionId', None),
+                'partner_region_id': series['series'].get('partnerRegionId', 0),
+                'frequency_id': series['series'].get('frequencyId', None)
+                # 'source_id': series['series'].get('sourceId', None), TODO: add source to output
+            }
+            if add_belongs_to:
+                # belongs_to is consistent with the series the user requested. So if an
+                # expansion happened on the server side, the user can reconstruct what
+                # results came from which request.
+                formatted_point['belongs_to': belongs_to]
+            output.append(formatted_point)
     return output
 
 
