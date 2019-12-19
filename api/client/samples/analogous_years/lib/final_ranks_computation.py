@@ -21,7 +21,7 @@ from api.client.samples.analogous_years.lib import \
 
 
 def common_start_date(client, entities, provided_start_date=None):
-    # checking = partial(check_if_exists, client=client)
+    logger = client.get_logger()
     start_date_list = []
     if provided_start_date:
         start_date_list.append(provided_start_date)
@@ -29,14 +29,13 @@ def common_start_date(client, entities, provided_start_date=None):
         dates = client.get_data_points(**entities[i])
         if len(dates) == 0:
             msg = "No data found for the following gro-entity - {}".format(entities[i])
-            raise Exception(msg)
+            logger.warning(msg)
+            raise Exception
         else:
             start_date_list.append(dates[0]['start_date'])
     start_date = max(start_date_list)
-
     for i in range(len(entities)):
         entities[i]['start_date'] = start_date
-
     return {'entities': entities, 'start_date': start_date}
 
 
@@ -171,6 +170,7 @@ def combined_items_final_ranks(client, entities, initial_date, final_date, metho
     The string contains '_' separated region, item, date names
     The dataframe contains integer values (ranks)
     """
+    logger = client.get_logger()
     combined_items_distances = None
     entities = common_start_date(client, entities, provided_start_date)['entities']
     start_date = common_start_date(client, entities, provided_start_date)['start_date']
@@ -210,6 +210,7 @@ def combined_items_final_ranks(client, entities, initial_date, final_date, metho
         display_dataframe = combined_items_distances[ranks]
     else:
         display_dataframe = combined_items_distances['composite_rank']
+    logger.info("\n Computing analogous years ranks for {} \n".format(file_name))
     return file_name, display_dataframe
 
 
@@ -243,5 +244,5 @@ def save_to_csv(dataframe_file_name, output_dir, report, all_ranks, logger):
         dataframe.corr(method='spearman').to_csv(correlation_matrix_path)
         logger.info("Saving correlation matrix csv file in {}".format(correlation_matrix_path))
     file_path = os.path.join(folder_path, file_name + '.csv')
-    logger.info("Saving ranks as csv file in {}".format(file_path))
+    logger.info("\n Saving ranks as csv file in {} \n".format(file_path))
     return dataframe.to_csv(file_path)
