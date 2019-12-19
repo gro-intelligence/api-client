@@ -114,7 +114,8 @@ def main():
                              args.source_ids, args.frequency_ids, client=client)
     file_name, result = final_ranks_computation.combined_items_final_ranks(
         client, entities, args.initial_date, args.final_date,
-        args.methods, args.all_ranks, weights=args.weights, enso=args.ENSO,
+        methods_list=args.methods, all_ranks=args.all_ranks,
+        weights=args.weights, enso=args.ENSO,
         enso_weight=args.ENSO_weight, provided_start_date=args.start_date)
     store_result = final_ranks_computation.save_to_csv(
         (file_name, result), args.output_dir, args.report, args.all_ranks, logger)
