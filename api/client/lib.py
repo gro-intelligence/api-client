@@ -9,6 +9,7 @@ from builtins import map
 from builtins import str
 from api.client import cfg
 import json
+import re
 import logging
 import requests
 import time
@@ -29,6 +30,49 @@ REGION_LEVELS = {
     'other': 8,
     'coordinate': 9
 }
+
+
+@memoize(maxsize=None)
+def camel_to_snake(term):
+    """Convert a string from camelCase to snake_case.
+
+    >>> camel_to_snake('partnerRegionId')
+    'partner_region_id'
+
+    >>> camel_to_snake('partner_region_id')
+    'partner_region_id'
+
+    Parameters
+    ----------
+    term : string
+        A camelCase string
+    Returns
+    -------
+    string
+        A new snake_case string
+
+    """
+    return re.sub('([a-z0-9])([A-Z])', r'\1_\2', re.sub('(.)([A-Z][a-z]+)', r'\1_\2', term)).lower()
+
+
+def camel_to_snake_dict(obj):
+    """Convert a dictionary's keys from camelCase to snake_case.
+
+    >>> camel_to_snake_dict({'belongsTo': {'metricId': 4}})
+    {'belongs_to': {'metricId': 4}}
+
+    Parameters
+    ----------
+    term : dict
+        A dictionary with camelCase keys
+
+    Returns
+    -------
+    dict
+        A new dictionary with snake_case keys
+
+    """
+    return dict((camel_to_snake(key), value) for key, value in obj.items())
 
 
 def get_default_logger():
@@ -168,7 +212,7 @@ def get_data(url, headers, params=None, logger=None):
             new_params = redirect(params, data.json()['data'][0])
             logger.warning('Redirecting {} to {}'.format(params, new_params), extra=log_record)
             params = new_params
-        elif data.status_code in [404, 401, 500]:
+        elif data.status_code in [400, 401, 404, 500]:
             break
         else:
             logger.error('{}'.format(data), extra=log_record)
@@ -269,7 +313,7 @@ def get_data_call_params(**selection):
 
     >>> get_data_call_params(
     ...     metric_id=123, start_date='2012-01-01', unit_id=14
-    ... ) == {'startDate': '2012-01-01', 'metricId': 123}
+    ... ) == {'startDate': '2012-01-01', 'metricId': 123, 'responseType': 'list_of_series'}
     True
 
     Parameters
@@ -296,6 +340,7 @@ def get_data_call_params(**selection):
     for key, value in list(selection.items()):
         if key in ('start_date', 'end_date', 'show_revisions', 'insert_null', 'at_time'):
             params[snake_to_camel(key)] = value
+    params['responseType'] = 'list_of_series'
     return params
 
 
@@ -349,12 +394,107 @@ def rank_series_by_source(access_token, api_host, series_list):
             yield series_with_source
 
 
+def list_of_series_to_single_series(series_list):
+    """Convert list_of_series format from API back into the familiar single_series output format.
+
+    >>> list_of_series_to_single_series([{
+    ...     'series': { 'metricId': 1, 'itemId': 2, 'regionId': 3, 'unitId': 4, 'inputUnitId': 5,
+    ...                 'belongsTo': { 'itemId': 22 }
+    ...     },
+    ...     'data': [
+    ...         ['2001-01-01', '2001-12-31', 123],
+    ...         ['2002-01-01', '2002-12-31', 123, '2012-01-01'],
+    ...         ['2003-01-01', '2003-12-31', 123, None, {}]
+    ...     ]
+    ... }]) == [
+    ...   { 'start_date': '2001-01-01',
+    ...     'end_date': '2001-12-31',
+    ...     'value': 123,
+    ...     'unit_id': 4,
+    ...     'input_unit_id': 4,
+    ...     'input_unit_scale': 1,
+    ...     'reporting_date': None,
+    ...     'metric_id': 1,
+    ...     'item_id': 2,
+    ...     'region_id': 3,
+    ...     'partner_region_id': 0,
+    ...     'frequency_id': None,
+    ...     'belongs_to': { 'item_id': 22 } },
+    ...   { 'start_date': '2002-01-01',
+    ...     'end_date': '2002-12-31',
+    ...     'value': 123,
+    ...     'unit_id': 4,
+    ...     'input_unit_id': 4,
+    ...     'input_unit_scale': 1,
+    ...     'reporting_date': '2012-01-01',
+    ...     'metric_id': 1,
+    ...     'item_id': 2,
+    ...     'region_id': 3,
+    ...     'partner_region_id': 0,
+    ...     'frequency_id': None,
+    ...     'belongs_to': { 'item_id': 22 } },
+    ...   { 'start_date': '2003-01-01',
+    ...     'end_date': '2003-12-31',
+    ...     'value': 123,
+    ...     'unit_id': 4,
+    ...     'input_unit_id': 4,
+    ...     'input_unit_scale': 1,
+    ...     'reporting_date': None,
+    ...     'metric_id': 1,
+    ...     'item_id': 2,
+    ...     'region_id': 3,
+    ...     'partner_region_id': 0,
+    ...     'frequency_id': None,
+    ...     'belongs_to': { 'item_id': 22 } }
+    ... ]
+    True
+
+    """
+    if not isinstance(series_list, list):
+        # If the output is an error or None or something else that's not a list, just propagate
+        return series_list
+    output = []
+    for series in series_list:
+        if not (isinstance(series, dict) and isinstance(series.get('data', []), list)):
+            continue
+        # All the belongsTo keys are in camelCase. Convert them to snake_case.
+        # Only need to do this once per series, so do this outside of the list
+        # comprehension and save to a variable to avoid duplicate work:
+        belongs_to = camel_to_snake_dict(series.get('series', {}).get('belongsTo', {}))
+        output += [{
+            'start_date': point[0],
+            'end_date': point[1],
+            'value': point[2],
+            # list_of_series has unit_id in the series attributes currently. Does
+            # not allow for mixed units in the same series
+            'unit_id': series['series'].get('unitId', None),
+            # input_unit_id and input_unit_scale are deprecated but provided for backwards
+            # compatibility. unit_id should be used instead.
+            'input_unit_id': series['series'].get('unitId', None),
+            'input_unit_scale': 1,
+            # If a point does not have reporting_date, use None
+            'reporting_date': point[3] if len(point) > 3 else None,
+            # Series attributes:
+            'metric_id': series['series'].get('metricId', None),
+            'item_id': series['series'].get('itemId', None),
+            'region_id': series['series'].get('regionId', None),
+            'partner_region_id': series['series'].get('partnerRegionId', 0),
+            'frequency_id': series['series'].get('frequencyId', None),
+            # 'source_id': series['series'].get('sourceId', None), TODO: add source to output
+            # belongs_to is consistent with the series the user requested. So if an
+            # expansion happened on the server side, the user can reconstruct what
+            # results came from which request.
+            'belongs_to': belongs_to
+        } for point in series.get('data', [])]
+    return output
+
+
 def get_data_points(access_token, api_host, **selection):
     headers = {'authorization': 'Bearer ' + access_token}
     url = '/'.join(['https:', '', api_host, 'v2/data'])
     params = get_data_call_params(**selection)
     resp = get_data(url, headers, params)
-    return resp.json()
+    return list_of_series_to_single_series(resp.json())
 
 
 @memoize(maxsize=None)
