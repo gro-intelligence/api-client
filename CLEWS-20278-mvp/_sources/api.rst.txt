@@ -60,3 +60,7 @@ Crop Modeling
 .. automethod:: api.client.crop_model.CropModel.compute_weights
 
 .. automethod:: api.client.crop_model.CropModel.compute_crop_weighted_series
+
+.. automethod:: api.client.crop_model.CropModel.compute_gdd
+
+.. automethod:: api.client.crop_model.CropModel.growing_degree_days
