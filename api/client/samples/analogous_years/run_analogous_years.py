@@ -5,8 +5,8 @@ import os
 
 from api.client.gro_client import GroClient
 
-# from api.client.samples.analogous_years.lib import final_ranks_computation
-from lib import final_ranks_computation
+from api.client.samples.analogous_years.lib import final_ranks_computation
+# from lib import final_ranks_computation
 
 
 def str2bool(v):
