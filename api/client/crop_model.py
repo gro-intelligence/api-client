@@ -11,7 +11,7 @@ class CropModel(GroClient):
 
     def compute_weights(self, crop_name, metric_name, regions):
         """Compute a vector of 'weights' that can be used for crop-weighted
-        average across regions, as in :meth:`~.compute_crop_weighted_series()`.
+        average across regions, as in :meth:`~.compute_crop_weighted_series`.
 
         For each region, the weight of is the mean value over time, of
         the given metric for the given crop, normalized so the sum
@@ -19,8 +19,8 @@ class CropModel(GroClient):
 
         For example: say we have a `region_list = [{'id': 1, 'name':
         'Province1'}, {'id': 2, 'name': 'Province2'}]`. This could
-        be a list returned by :meth:`~.client.search_and_lookup()` or
-        :meth:`~.client.get_descendant_regions()` for example.  Now say
+        be a list returned by :meth:`~.client.search_and_lookup` or
+        :meth:`~.client.get_descendant_regions` for example.  Now say
         `model.compute_weights('soybeans', 'land cover area',
         region_list)` returns `[0.6, 0.4]`, that means Province1
         has 60% and province2 has 40% of the total area planted across
@@ -41,7 +41,7 @@ class CropModel(GroClient):
 
         See also
         --------
-        :meth:`~.compute_crop_weighted_series()`
+        :meth:`~.compute_crop_weighted_series`
 
         """
         # Get the weighting series
@@ -73,11 +73,11 @@ class CropModel(GroClient):
         """Compute the 'crop-weighted average' of the series for the given
         item and metric, across regions. The weight of a region is the
         fraction of the value of the weighting series represented by
-        that region as explained in :meth:`~.compute_weights()`.
+        that region as explained in :meth:`~.compute_weights`.
 
         For example: say we have a `region_list = [{'id': 1, 'name':
         'Province1'}, {'id': 2, 'name': 'Province2'}]`. This could
-        be a list returned by :meth:`~.client.search_and_lookup()` or
+        be a list returned by :meth:`~.client.search_and_lookup` or
         client.get_descendant_regions for example.  Now
         `model.compute_crop_weighted_series('soybeans', 'land cover
         area', 'vegetation ndvi', 'vegetation indices index',
@@ -132,7 +132,7 @@ class CropModel(GroClient):
                     upper_temperature_cap):
         """Compute Growing Degree Days value from specific data series.
 
-        This function performs the low-level computation used in :meth:`~.growing_degree_days()`.
+        This function performs the low-level computation used in :meth:`~.growing_degree_days`.
 
         Parameters
         ----------
@@ -157,7 +157,7 @@ class CropModel(GroClient):
 
         See also
         --------
-        :meth:`~.growing_degree_days()`
+        :meth:`~.growing_degree_days`
         """
         self.add_single_data_series(tmin_series)
         self.add_single_data_series(tmax_series)
@@ -219,7 +219,7 @@ class CropModel(GroClient):
         has data for the time period, then that will be used. If it's
         a district or other region, the underlying data could be from
         one or more weather stations and/or satellite.  To by-pass the
-        search for available series, use :meth:`~.compute_gdd()` directly.
+        search for available series, use :meth:`~.compute_gdd` directly.
 
         Parameters
         ----------
