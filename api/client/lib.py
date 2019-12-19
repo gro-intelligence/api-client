@@ -487,7 +487,7 @@ def list_of_series_to_single_series(series_list, add_belongs_to=False):
                 # belongs_to is consistent with the series the user requested. So if an
                 # expansion happened on the server side, the user can reconstruct what
                 # results came from which request.
-                formatted_point['belongs_to': belongs_to]
+                formatted_point['belongs_to'] = belongs_to
             output.append(formatted_point)
     return output
 
