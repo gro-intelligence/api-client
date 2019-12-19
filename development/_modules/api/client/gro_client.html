@@ -355,23 +355,22 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_data_series_queue</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># added but not loaded in data frame</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_data_frame</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
 
-
     <span class="k">def</span> <span class="nf">get_logger</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span>
 
-
 <div class="viewcode-block" id="GroClient.get_df"><a class="viewcode-back" href="../../../api.html#api.client.gro_client.GroClient.get_df">[docs]</a>    <span class="k">def</span> <span class="nf">get_df</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Call get_data_points() for each saved data series and return as a combined dataframe.</span>
+        <span class="sd">&quot;&quot;&quot;Call :meth:`~.get_data_points` for each saved data series and return as a combined</span>
+<span class="sd">        dataframe.</span>
 <span class="sd">        </span>
-<span class="sd">        Note you must have first called either add_data_series() or add_single_data_series() to save</span>
-<span class="sd">        data series into the GroClient&#39;s data_series_list. You can inspect the client&#39;s saved list</span>
-<span class="sd">        using get_data_series_list().</span>
+<span class="sd">        Note you must have first called either :meth:`~.add_data_series` or</span>
+<span class="sd">        :meth:`~.add_single_data_series` to save data series into the GroClient&#39;s data_series_list.</span>
+<span class="sd">        You can inspect the client&#39;s saved list using :meth:`~.get_data_series_list`.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        pandas.DataFrame</span>
-<span class="sd">            The results to get_data_points() for all the saved series, appended together into a</span>
-<span class="sd">            single dataframe.</span>
+<span class="sd">            The results to :meth:`~.get_data_points` for all the saved series, appended together</span>
+<span class="sd">            into a single dataframe.</span>
 <span class="sd">            See https://developers.gro-intelligence.com/data-point-definition.html</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -392,23 +391,102 @@
                 <span class="n">tmp</span><span class="o">.</span><span class="n">reporting_date</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">tmp</span><span class="o">.</span><span class="n">reporting_date</span><span class="p">)</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_frame</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_data_frame</span> <span class="o">=</span> <span class="n">tmp</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_data_frame</span><span class="o">.</span><span class="n">set_index</span><span class="p">([</span><span class="n">col</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">DATA_POINTS_UNIQUE_COLS</span> <span class="k">if</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">tmp</span><span class="o">.</span><span class="n">columns</span><span class="p">])</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_data_frame</span><span class="o">.</span><span class="n">set_index</span><span class="p">([</span><span class="n">col</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">DATA_POINTS_UNIQUE_COLS</span>
+                                            <span class="k">if</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">tmp</span><span class="o">.</span><span class="n">columns</span><span class="p">])</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_data_frame</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_frame</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">tmp</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s1">&#39;outer&#39;</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_frame</span></div>
-
 
 <div class="viewcode-block" id="GroClient.get_data_points"><a class="viewcode-back" href="../../../api.html#api.client.gro_client.GroClient.get_data_points">[docs]</a>    <span class="k">def</span> <span class="nf">get_data_points</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">selections</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Get all the data points for a given selection.</span>
 
 <span class="sd">        https://developers.gro-intelligence.com/data-point-definition.html</span>
 
+<span class="sd">        Example::</span>
+
+<span class="sd">            client.get_data_points(**{&#39;metric_id&#39;: 860032,</span>
+<span class="sd">                                      &#39;item_id&#39;: 274,</span>
+<span class="sd">                                      &#39;region_id&#39;: 1215,</span>
+<span class="sd">                                      &#39;frequency_id&#39;: 9,</span>
+<span class="sd">                                      &#39;source_id&#39;: 2,</span>
+<span class="sd">                                      &#39;start_date&#39;: &#39;2017-01-01&#39;,</span>
+<span class="sd">                                      &#39;end_date&#39;: &#39;2017-12-31&#39;,</span>
+<span class="sd">                                      &#39;unit_id&#39;: 15})</span>
+
+<span class="sd">        Returns::</span>
+
+<span class="sd">            [{  &#39;start_date&#39;: &#39;2017-01-01T00:00:00.000Z&#39;,</span>
+<span class="sd">                &#39;end_date&#39;: &#39;2017-12-31T00:00:00.000Z&#39;,</span>
+<span class="sd">                &#39;value&#39;: 408913833.8019222, &#39;unit_id&#39;: 15,</span>
+<span class="sd">                &#39;reporting_date&#39;: None,</span>
+<span class="sd">                &#39;metric_id&#39;: 860032, &#39;item_id&#39;: 274, &#39;region_id&#39;: 1215,</span>
+<span class="sd">                &#39;partner_region_id&#39;: 0, &#39;frequency_id&#39;: 9, &#39;source_id&#39;: 2,</span>
+<span class="sd">                &#39;belongs_to&#39;: {</span>
+<span class="sd">                    &#39;metric_id&#39;: 860032,</span>
+<span class="sd">                    &#39;item_id&#39;: 274,</span>
+<span class="sd">                    &#39;region_id&#39;: 1215,</span>
+<span class="sd">                    &#39;frequency_id&#39;: 9,</span>
+<span class="sd">                    &#39;source_id&#39;: 2</span>
+<span class="sd">                }</span>
+<span class="sd">            }]</span>
+
+<span class="sd">        Note: you can pass the output of :meth:`~.get_data_series` into :meth:`~.get_data_points`</span>
+<span class="sd">        to check what series exist for some selections and then retrieve the data points for those</span>
+<span class="sd">        series. See :sample:`quick_start.py` for an example of this.</span>
+
+<span class="sd">        :meth:`~.get_data_points` also allows passing a list of ids for metric_id, item_id, and/or</span>
+<span class="sd">        region_id to get multiple series in a single request. This can be faster if requesting many</span>
+<span class="sd">        series.</span>
+
+<span class="sd">        For example::</span>
+
+<span class="sd">            client.get_data_points(**{&#39;metric_id&#39;: 860032,</span>
+<span class="sd">                                      &#39;item_id&#39;: 274,</span>
+<span class="sd">                                      &#39;region_id&#39;: [1215,1216],</span>
+<span class="sd">                                      &#39;frequency_id&#39;: 9,</span>
+<span class="sd">                                      &#39;source_id&#39;: 2,</span>
+<span class="sd">                                      &#39;start_date&#39;: &#39;2017-01-01&#39;,</span>
+<span class="sd">                                      &#39;end_date&#39;: &#39;2017-12-31&#39;,</span>
+<span class="sd">                                      &#39;unit_id&#39;: 15})</span>
+<span class="sd">        Returns::</span>
+
+<span class="sd">            [{  &#39;start_date&#39;: &#39;2017-01-01T00:00:00.000Z&#39;,</span>
+<span class="sd">                &#39;end_date&#39;: &#39;2017-12-31T00:00:00.000Z&#39;,</span>
+<span class="sd">                &#39;value&#39;: 408913833.8019222, &#39;unit_id&#39;: 15,</span>
+<span class="sd">                &#39;reporting_date&#39;: None,</span>
+<span class="sd">                &#39;metric_id&#39;: 860032, &#39;item_id&#39;: 274, &#39;region_id&#39;: 1215,</span>
+<span class="sd">                &#39;partner_region_id&#39;: 0, &#39;frequency_id&#39;: 9, &#39;source_id&#39;: 2,</span>
+<span class="sd">                &#39;belongs_to&#39;: {</span>
+<span class="sd">                    &#39;metric_id&#39;: 860032,</span>
+<span class="sd">                    &#39;item_id&#39;: 274,</span>
+<span class="sd">                    &#39;region_id&#39;: 1215,</span>
+<span class="sd">                    &#39;frequency_id&#39;: 9,</span>
+<span class="sd">                    &#39;source_id&#39;: 2</span>
+<span class="sd">                }</span>
+<span class="sd">            }, { &#39;start_date&#39;: &#39;2017-01-01T00:00:00.000Z&#39;,</span>
+<span class="sd">                 &#39;end_date&#39;: &#39;2017-12-31T00:00:00.000Z&#39;,</span>
+<span class="sd">                 &#39;value&#39;: 340614.19507563586, &#39;unit_id&#39;: 15,</span>
+<span class="sd">                 &#39;reporting_date&#39;: None,</span>
+<span class="sd">                 &#39;metric_id&#39;: 860032, &#39;item_id&#39;: 274, &#39;region_id&#39;: 1216,</span>
+<span class="sd">                 &#39;partner_region_id&#39;: 0, &#39;frequency_id&#39;: 9, &#39;source_id&#39;: 2,</span>
+<span class="sd">                 &#39;belongs_to&#39;: {</span>
+<span class="sd">                    &#39;metric_id&#39;: 860032,</span>
+<span class="sd">                    &#39;item_id&#39;: 274,</span>
+<span class="sd">                    &#39;region_id&#39;: 1216,</span>
+<span class="sd">                    &#39;frequency_id&#39;: 9,</span>
+<span class="sd">                    &#39;source_id&#39;: 2</span>
+<span class="sd">                 }</span>
+<span class="sd">            }]</span>
+
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        metric_id : integer</span>
-<span class="sd">        item_id : integer</span>
-<span class="sd">        region_id : integer</span>
-<span class="sd">        partner_region_id : integer, optional</span>
+<span class="sd">        metric_id : integer or list of integers</span>
+<span class="sd">            How something is measured. e.g. &quot;Export Value&quot; or &quot;Area Harvested&quot;</span>
+<span class="sd">        item_id : integer or list of integers</span>
+<span class="sd">            What is being measured. e.g. &quot;Corn&quot; or &quot;Rainfall&quot;</span>
+<span class="sd">        region_id : integer or list of integers</span>
+<span class="sd">            Where something is being measured e.g. &quot;United States Corn Belt&quot; or &quot;China&quot;</span>
+<span class="sd">        partner_region_id : integer or list of integers, optional</span>
 <span class="sd">            partner_region refers to an interaction between two regions, like trade or</span>
 <span class="sd">            transportation. For example, for an Export metric, the &quot;region&quot; would be the exporter</span>
 <span class="sd">            and the &quot;partner_region&quot; would be the importer. For most series, this can be excluded</span>
@@ -417,71 +495,56 @@
 <span class="sd">        frequency_id : integer</span>
 <span class="sd">        unit_id : integer, optional</span>
 <span class="sd">        start_date : string, optional</span>
-<span class="sd">            all points with start dates equal to or after this date</span>
+<span class="sd">            All points with start dates equal to or after this date</span>
 <span class="sd">        end_date : string, optional</span>
-<span class="sd">            all points with end dates equal to or after this date</span>
+<span class="sd">            All points with end dates equal to or after this date</span>
 <span class="sd">        show_revisions : boolean, optional</span>
-<span class="sd">            False by default, meaning only the latest value for each period. If true, will return all</span>
-<span class="sd">            values for a given period, differentiated by the `reporting_date` field.</span>
+<span class="sd">            False by default, meaning only the latest value for each period. If true, will return</span>
+<span class="sd">            all values for a given period, differentiated by the `reporting_date` field.</span>
 <span class="sd">        insert_null : boolean, optional</span>
 <span class="sd">            False by default. If True, will include a data point with a None value for each period</span>
 <span class="sd">            that does not have data.</span>
 <span class="sd">        at_time : string, optional</span>
 <span class="sd">            Estimate what data would have been available via Gro at a given time in the past. See</span>
-<span class="sd">            /api/client/samples/at-time-query-examples.ipynb for more details.</span>
+<span class="sd">            :sample:`at-time-query-examples.ipynb` for more details.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        list of dicts</span>
-
-<span class="sd">            Example ::</span>
-
-<span class="sd">                [ {</span>
-<span class="sd">                    &#39;start_date&#39;: &#39;2000-01-01T00:00:00.000Z&#39;,</span>
-<span class="sd">                    &#39;end_date&#39;: &#39;2000-12-31T00:00:00.000Z&#39;,</span>
-<span class="sd">                    &#39;value&#39;: 251854000,</span>
-<span class="sd">                    &#39;input_unit_id&#39;: 14,</span>
-<span class="sd">                    &#39;input_unit_scale&#39;: 1,</span>
-<span class="sd">                    &#39;metric_id&#39;: 860032,</span>
-<span class="sd">                    &#39;item_id&#39;: 274,</span>
-<span class="sd">                    &#39;region_id&#39;: 1215,</span>
-<span class="sd">                    &#39;frequency_id&#39;: 9,</span>
-<span class="sd">                    &#39;unit_id&#39;: 14</span>
-<span class="sd">                }, ...]</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">data_points</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">GroClient</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">get_data_points</span><span class="p">(</span><span class="o">**</span><span class="n">selections</span><span class="p">)</span>
         <span class="c1"># Apply unit conversion if a unit is specified</span>
         <span class="k">if</span> <span class="s1">&#39;unit_id&#39;</span> <span class="ow">in</span> <span class="n">selections</span><span class="p">:</span>
-            <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">functools</span><span class="o">.</span><span class="n">partial</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">convert_unit</span><span class="p">,</span> <span class="n">target_unit_id</span><span class="o">=</span><span class="n">selections</span><span class="p">[</span><span class="s1">&#39;unit_id&#39;</span><span class="p">]),</span> <span class="n">data_points</span><span class="p">))</span>
+            <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">functools</span><span class="o">.</span><span class="n">partial</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">convert_unit</span><span class="p">,</span>
+                                              <span class="n">target_unit_id</span><span class="o">=</span><span class="n">selections</span><span class="p">[</span><span class="s1">&#39;unit_id&#39;</span><span class="p">]),</span> <span class="n">data_points</span><span class="p">))</span>
         <span class="c1"># Return data points in input units if not unit is specified</span>
         <span class="k">return</span> <span class="n">data_points</span></div>
 
-
 <div class="viewcode-block" id="GroClient.get_data_series_list"><a class="viewcode-back" href="../../../api.html#api.client.gro_client.GroClient.get_data_series_list">[docs]</a>    <span class="k">def</span> <span class="nf">get_data_series_list</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Inspect the current list of saved data series contained in the GroClient.</span>
-<span class="sd">        </span>
-<span class="sd">        For use with get_df(). Add new data series to the list using add_data_series() and</span>
-<span class="sd">        add_single_data_series().</span>
+
+<span class="sd">        For use with :meth:`~.get_df`. Add new data series to the list using</span>
+<span class="sd">        :meth:`~.add_data_series` and :meth:`~.add_single_data_series`.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        list of dicts</span>
-<span class="sd">            A list of data_series objects, as returned by get_data_series().</span>
+<span class="sd">            A list of data_series objects, as returned by :meth:`~.get_data_series`.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_data_series_list</span><span class="p">)</span></div>
 
-
 <div class="viewcode-block" id="GroClient.add_single_data_series"><a class="viewcode-back" href="../../../api.html#api.client.gro_client.GroClient.add_single_data_series">[docs]</a>    <span class="k">def</span> <span class="nf">add_single_data_series</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_series</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Save a data series object to the GroClient&#39;s data_series_list.</span>
 <span class="sd">        </span>
-<span class="sd">        For use with get_df().</span>
+<span class="sd">        For use with :meth:`~.get_df`.</span>
 <span class="sd">        </span>
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        data_series : dict</span>
-<span class="sd">            A single data_series object, as returned by get_data_series() or find_data_series().</span>
+<span class="sd">            A single data_series object, as returned by :meth:`~.get_data_series` or</span>
+<span class="sd">            :meth:`~.find_data_series`.</span>
 <span class="sd">            See https://developers.gro-intelligence.com/data-series-definition.html</span>
 
 <span class="sd">        Returns</span>
@@ -494,7 +557,6 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Added </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">data_series</span><span class="p">))</span>
         <span class="k">return</span></div>
 
-
 <div class="viewcode-block" id="GroClient.find_data_series"><a class="viewcode-back" href="../../../api.html#api.client.gro_client.GroClient.find_data_series">[docs]</a>    <span class="k">def</span> <span class="nf">find_data_series</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Find the best possible  data series matching a combination of entities specified by name.</span>
 
@@ -506,14 +568,18 @@
 
 <span class="sd">        will yield::</span>
 
-<span class="sd">             {u&#39;metric_id&#39;: 15610005, u&#39;region_id&#39;: 1215, u&#39;end_date&#39;: u&#39;2022-12-31T00:00:00.000Z&#39;, u&#39;item_name&#39;: u&#39;Corn&#39;, u&#39;partner_region_name&#39;: u&#39;World&#39;, u&#39;frequency_id&#39;: 15, &#39;source_id&#39;: 81, u&#39;partner_region_id&#39;: 0, u&#39;item_id&#39;: 274, u&#39;metric_name&#39;: u&#39;Futures Open Interest&#39;, u&#39;start_date&#39;: u&#39;1972-03-01T00:00:00.000Z&#39;, u&#39;region_name&#39;: u&#39;United States&#39;}</span>
+<span class="sd">            { &#39;metric_id&#39;: 15610005, &#39;metric_name&#39;: &#39;Futures Open Interest&#39;,</span>
+<span class="sd">              &#39;item_id&#39;: 274, &#39;item_name&#39;: &#39;Corn&#39;,</span>
+<span class="sd">              &#39;region_id&#39;: 1215, &#39;region_name&#39;: &#39;United States&#39;,</span>
+<span class="sd">              &#39;partner_region_id&#39;: 0, &#39;partner_region_name&#39;: &#39;World&#39;,</span>
+<span class="sd">              &#39;frequency_id&#39;: 15, &#39;source_id&#39;: 81,</span>
+<span class="sd">              &#39;start_date&#39;: &#39;1972-03-01T00:00:00.000Z&#39;, &#39;end_date&#39;: &#39;2022-12-31T00:00:00.000Z&#39; }</span>
 
-<span class="sd">        See https://developers.gro-intelligence.com/data-series-definition.html </span>
-<span class="sd">        </span>
-<span class="sd">        This method uses search() to find entities by name and</span>
-<span class="sd">        get_data_series() to find available data series for all</span>
-<span class="sd">        possible combinations of the entities, and</span>
-<span class="sd">        rank_series_by_source.</span>
+<span class="sd">        See https://developers.gro-intelligence.com/data-series-definition.html</span>
+
+<span class="sd">        This method uses :meth:`~.search` to find entities by name and :meth:`~.get_data_series` to</span>
+<span class="sd">        find available data series for all possible combinations of the entities, and</span>
+<span class="sd">        :meth:`~.rank_series_by_source`.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -533,7 +599,7 @@
 
 <span class="sd">        See also</span>
 <span class="sd">        --------</span>
-<span class="sd">        get_data_series()</span>
+<span class="sd">        :meth:`~.get_data_series`</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">search_results</span> <span class="o">=</span> <span class="p">[]</span>
@@ -572,11 +638,10 @@
         <span class="k">for</span> <span class="n">data_series</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">rank_series_by_source</span><span class="p">(</span><span class="n">all_data_series</span><span class="p">):</span>
             <span class="k">yield</span> <span class="n">data_series</span></div>
 
-
 <div class="viewcode-block" id="GroClient.add_data_series"><a class="viewcode-back" href="../../../api.html#api.client.gro_client.GroClient.add_data_series">[docs]</a>    <span class="k">def</span> <span class="nf">add_data_series</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Adds the top result of find_data_series() to the saved data series list.</span>
-<span class="sd">        </span>
-<span class="sd">        For use with get_df().</span>
+        <span class="sd">&quot;&quot;&quot;Adds the top result of :meth:`~.find_data_series` to the saved data series list.</span>
+
+<span class="sd">        For use with :meth:`~.get_df`.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -595,16 +660,15 @@
 
 <span class="sd">        See also</span>
 <span class="sd">        --------</span>
-<span class="sd">        get_df()</span>
-<span class="sd">        add_single_data_series()</span>
-<span class="sd">        find_data_series()</span>
+<span class="sd">        :meth:`~.get_df`</span>
+<span class="sd">        :meth:`~.add_single_data_series`</span>
+<span class="sd">        :meth:`~.find_data_series`</span>
 <span class="sd">        </span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">the_data_series</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">find_data_series</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_single_data_series</span><span class="p">(</span><span class="n">the_data_series</span><span class="p">)</span>
             <span class="k">return</span>
         <span class="k">return</span></div>
-
 
     <span class="c1">###</span>
     <span class="c1"># Discovery shortcuts</span>
@@ -628,7 +692,6 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;First result, out of </span><span class="si">{}</span><span class="s2"> </span><span class="si">{}</span><span class="s2">: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                 <span class="nb">len</span><span class="p">(</span><span class="n">results</span><span class="p">),</span> <span class="n">entity_type</span><span class="p">,</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]))</span>
             <span class="k">return</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span></div>
-
 
 <div class="viewcode-block" id="GroClient.get_provinces"><a class="viewcode-back" href="../../../api.html#api.client.gro_client.GroClient.get_provinces">[docs]</a>    <span class="k">def</span> <span class="nf">get_provinces</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">country_name</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Given the name of a country, find its provinces.</span>
@@ -655,11 +718,11 @@
 <span class="sd">                    &#39;level&#39;: 4</span>
 <span class="sd">                }, ...]</span>
 
-<span class="sd">            See output of lookup()</span>
+<span class="sd">            See output of :meth:`~.lookup`</span>
 
 <span class="sd">        See Also</span>
 <span class="sd">        --------</span>
-<span class="sd">        get_descendant_regions()</span>
+<span class="sd">        :meth:`~.get_descendant_regions`</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">region</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">search_and_lookup</span><span class="p">(</span><span class="s1">&#39;regions&#39;</span><span class="p">,</span> <span class="n">country_name</span><span class="p">):</span>
@@ -668,7 +731,6 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Provinces of </span><span class="si">{}</span><span class="s2">: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">country_name</span><span class="p">,</span> <span class="n">provinces</span><span class="p">))</span>
                 <span class="k">return</span> <span class="n">provinces</span>
         <span class="k">return</span> <span class="kc">None</span></div>
-
 
     <span class="c1">###</span>
     <span class="c1"># Convenience methods that automatically fill in partial selections with random entities</span>
@@ -689,7 +751,6 @@
         <span class="n">selected_entities</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">entities</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">selected_entities</span>
 
-
     <span class="k">def</span> <span class="nf">pick_random_data_series</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">selected_entities</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Given a selection of tentities, pick a random available data series the given selection</span>
 <span class="sd">        of entities.</span>
@@ -701,7 +762,6 @@
         <span class="n">selected_data_series</span> <span class="o">=</span> <span class="n">data_series_list</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">data_series_list</span><span class="p">)</span><span class="o">*</span><span class="n">random</span><span class="p">())]</span>
         <span class="k">return</span> <span class="n">selected_data_series</span>
 
-
     <span class="c1"># TODO: rename function to &quot;write_...&quot; rather than &quot;print_...&quot;</span>
     <span class="k">def</span> <span class="nf">print_one_data_series</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_series</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Output a data series to a CSV file.&quot;&quot;&quot;</span>
@@ -709,10 +769,10 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Outputing to file: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">filename</span><span class="p">))</span>
         <span class="n">writer</span> <span class="o">=</span> <span class="n">unicodecsv</span><span class="o">.</span><span class="n">writer</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">))</span>
         <span class="k">for</span> <span class="n">point</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_data_points</span><span class="p">(</span><span class="o">**</span><span class="n">data_series</span><span class="p">):</span>
-            <span class="n">writer</span><span class="o">.</span><span class="n">writerow</span><span class="p">([</span><span class="n">point</span><span class="p">[</span><span class="s1">&#39;start_date&#39;</span><span class="p">],</span> <span class="n">point</span><span class="p">[</span><span class="s1">&#39;end_date&#39;</span><span class="p">],</span>
-                             <span class="n">point</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="n">point</span><span class="p">[</span><span class="s1">&#39;input_unit_scale&#39;</span><span class="p">],</span>
-                             <span class="bp">self</span><span class="o">.</span><span class="n">lookup_unit_abbreviation</span><span class="p">(</span><span class="n">point</span><span class="p">[</span><span class="s1">&#39;input_unit_id&#39;</span><span class="p">])])</span>
-
+            <span class="n">writer</span><span class="o">.</span><span class="n">writerow</span><span class="p">([</span><span class="n">point</span><span class="p">[</span><span class="s1">&#39;start_date&#39;</span><span class="p">],</span>
+                             <span class="n">point</span><span class="p">[</span><span class="s1">&#39;end_date&#39;</span><span class="p">],</span>
+                             <span class="n">point</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">],</span>
+                             <span class="bp">self</span><span class="o">.</span><span class="n">lookup_unit_abbreviation</span><span class="p">(</span><span class="n">point</span><span class="p">[</span><span class="s1">&#39;unit_id&#39;</span><span class="p">])])</span>
 
     <span class="k">def</span> <span class="nf">convert_unit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">point</span><span class="p">,</span> <span class="n">target_unit_id</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Convert the data point from one unit to another unit.</span>
@@ -764,17 +824,19 @@
         <span class="k">return</span> <span class="n">point</span>
 
 
-<span class="sd">&quot;&quot;&quot;Basic Gro API command line interface.</span>
-
-<span class="sd">Note that results are chosen randomly from matching selections, and so results are not deterministic. This tool is useful for simple queries, but anything more complex should be done using the provided Python packages.</span>
-
-<span class="sd">Usage examples:</span>
-<span class="sd">    gro_client --item=soybeans  --region=brazil --partner_region china --metric export</span>
-<span class="sd">    gro_client --item=sesame --region=ethiopia</span>
-<span class="sd">    gro_client --user_email=john.doe@example.com  --print_token</span>
-<span class="sd">For more information use --help</span>
-<span class="sd">&quot;&quot;&quot;</span>
 <span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Basic Gro API command line interface.</span>
+
+<span class="sd">    Note that results are chosen randomly from matching selections, and so results are not</span>
+<span class="sd">    deterministic. This tool is useful for simple queries, but anything more complex should be done</span>
+<span class="sd">    using the provided Python packages.</span>
+
+<span class="sd">    Usage examples:</span>
+<span class="sd">        gro_client --item=soybeans  --region=brazil --partner_region china --metric export</span>
+<span class="sd">        gro_client --item=sesame --region=ethiopia</span>
+<span class="sd">        gro_client --user_email=john.doe@example.com  --print_token</span>
+<span class="sd">    For more information use --help</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;Gro API command line interface&quot;</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--user_email&quot;</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--user_password&quot;</span><span class="p">)</span>
@@ -811,7 +873,8 @@
     <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">region</span><span class="p">:</span>
         <span class="n">selected_entities</span><span class="p">[</span><span class="s1">&#39;region_id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">search_for_entity</span><span class="p">(</span><span class="s1">&#39;regions&#39;</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">region</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">partner_region</span><span class="p">:</span>
-        <span class="n">selected_entities</span><span class="p">[</span><span class="s1">&#39;partner_region_id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">search_for_entity</span><span class="p">(</span><span class="s1">&#39;regions&#39;</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">partner_region</span><span class="p">)</span>
+        <span class="n">selected_entities</span><span class="p">[</span><span class="s1">&#39;partner_region_id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">search_for_entity</span><span class="p">(</span><span class="s1">&#39;regions&#39;</span><span class="p">,</span>
+                                                                          <span class="n">args</span><span class="o">.</span><span class="n">partner_region</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">selected_entities</span><span class="p">:</span>
         <span class="n">selected_entities</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">pick_random_entities</span><span class="p">()</span>
 
@@ -892,7 +955,6 @@
             <dd><a href="../../../../CLEWS-16955-units/index.html">CLEWS-16955-units</a></dd>
             <dd><a href="../../../../CLEWS-17015/index.html">CLEWS-17015</a></dd>
             <dd><a href="../../../../CLEWS-20278/index.html">CLEWS-20278</a></dd>
-            <dd><a href="../../../../CLEWS-20278-mvp/index.html">CLEWS-20278-mvp</a></dd>
             <dd><a href="../../../../CLEWS-21846/index.html">CLEWS-21846</a></dd>
             <dd><a href="../../../../CLEWS-22288/index.html">CLEWS-22288</a></dd>
             <dd><a href="../../../../anomaly_notebook/index.html">anomaly_notebook</a></dd>
