@@ -406,7 +406,7 @@ def list_of_series_to_single_series(series_list, add_belongs_to=False):
     ...         ['2002-01-01', '2002-12-31', 123, '2012-01-01'],
     ...         ['2003-01-01', '2003-12-31', 123, None, {}]
     ...     ]
-    ... }]) == [
+    ... }], True) == [
     ...   { 'start_date': '2001-01-01',
     ...     'end_date': '2001-12-31',
     ...     'value': 123,
