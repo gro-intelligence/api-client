@@ -141,7 +141,6 @@ def test_get_data_points(mock_requests_get):
         'partner_region_id': 0,
         'frequency_id': None,
         # 'source_id': None, TODO: add source to output
-        'belongs_to': {}
     }]
     initialize_requests_mocker_and_get_mock_data(mock_requests_get,
                                                  mock_data=list_of_series_format_data)
