@@ -843,14 +843,14 @@ add_single_data_series().</p>
 <dt id="api.client.crop_model.CropModel.compute_weights">
 <code class="descclassname">CropModel.</code><code class="descname">compute_weights</code><span class="sig-paren">(</span><em>crop_name</em>, <em>metric_name</em>, <em>regions</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/crop_model.html#CropModel.compute_weights"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.crop_model.CropModel.compute_weights" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute a vector of &#8216;weights&#8217; that can be used for crop-weighted
-average across regions.</p>
+average across regions, as in <a class="reference internal" href="#api.client.crop_model.CropModel.compute_crop_weighted_series" title="api.client.crop_model.CropModel.compute_crop_weighted_series"><code class="xref py py-meth docutils literal"><span class="pre">compute_crop_weighted_series()</span></code></a>.</p>
 <p>For each region, the weight of is the mean value over time, of
 the given metric for the given crop, normalized so the sum
 across all regions is 1.0.</p>
 <p>For example: say we have a <cite>region_list = [{&#8216;id&#8217;: 1, &#8216;name&#8217;:
 &#8216;Province1&#8217;}, {&#8216;id&#8217;: 2, &#8216;name&#8217;: &#8216;Province2&#8217;}]</cite>. This could
-be a list returned by client.search_and_lookup() or
-client.get_descendant_regions() for example.  Now say
+be a list returned by <code class="xref py py-meth docutils literal"><span class="pre">search_and_lookup()</span></code> or
+<code class="xref py py-meth docutils literal"><span class="pre">get_descendant_regions()</span></code> for example.  Now say
 <cite>model.compute_weights(&#8216;soybeans&#8217;, &#8216;land cover area&#8217;,
 region_list)</cite> returns <cite>[0.6, 0.4]</cite>, that means Province1
 has 60% and province2 has 40% of the total area planted across
@@ -874,6 +874,10 @@ the two regions, when averaged across all time.</p>
 </tr>
 </tbody>
 </table>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="#api.client.crop_model.CropModel.compute_crop_weighted_series" title="api.client.crop_model.CropModel.compute_crop_weighted_series"><code class="xref py py-meth docutils literal"><span class="pre">compute_crop_weighted_series()</span></code></a></p>
+</div>
 </dd></dl>
 
 <dl class="method">
@@ -882,10 +886,10 @@ the two regions, when averaged across all time.</p>
 <dd><p>Compute the &#8216;crop-weighted average&#8217; of the series for the given
 item and metric, across regions. The weight of a region is the
 fraction of the value of the weighting series represented by
-that region as explained in compute_weights().</p>
+that region as explained in <a class="reference internal" href="#api.client.crop_model.CropModel.compute_weights" title="api.client.crop_model.CropModel.compute_weights"><code class="xref py py-meth docutils literal"><span class="pre">compute_weights()</span></code></a>.</p>
 <p>For example: say we have a <cite>region_list = [{&#8216;id&#8217;: 1, &#8216;name&#8217;:
 &#8216;Province1&#8217;}, {&#8216;id&#8217;: 2, &#8216;name&#8217;: &#8216;Province2&#8217;}]</cite>. This could
-be a list returned by client.search_and_lookup() or
+be a list returned by <code class="xref py py-meth docutils literal"><span class="pre">search_and_lookup()</span></code> or
 client.get_descendant_regions for example.  Now
 <cite>model.compute_crop_weighted_series(&#8216;soybeans&#8217;, &#8216;land cover
 area&#8217;, &#8216;vegetation ndvi&#8217;, &#8216;vegetation indices index&#8217;,
@@ -912,6 +916,94 @@ by the crop weight for that region.</p>
 </td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">pandas.DataFrame</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="api.client.crop_model.CropModel.compute_gdd">
+<code class="descclassname">CropModel.</code><code class="descname">compute_gdd</code><span class="sig-paren">(</span><em>tmin_series</em>, <em>tmax_series</em>, <em>base_temperature</em>, <em>start_date</em>, <em>end_date</em>, <em>min_temporal_coverage</em>, <em>upper_temperature_cap</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/crop_model.html#CropModel.compute_gdd"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.crop_model.CropModel.compute_gdd" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute Growing Degree Days value from specific data series.</p>
+<p>This function performs the low-level computation used in <a class="reference internal" href="#api.client.crop_model.CropModel.growing_degree_days" title="api.client.crop_model.CropModel.growing_degree_days"><code class="xref py py-meth docutils literal"><span class="pre">growing_degree_days()</span></code></a>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>tmin_series</strong> (<em>dict</em>) &#8211; A data series object for min temperature
+e.g. {metric_id: 1, item_id: 2, region_id: 3, source_id: 4, frequency_id: 5}</li>
+<li><strong>tmax_series</strong> (<em>dict</em>) &#8211; A data series object for max temperature
+e.g. {metric_id: 1, item_id: 2, region_id: 3, source_id: 4, frequency_id: 5}</li>
+<li><strong>base_temperature</strong> (<em>number</em>) &#8211; </li>
+<li><strong>start_date</strong> (<em>string</em>) &#8211; YYYY-MM-DD date</li>
+<li><strong>end_date</strong> (<em>string</em>) &#8211; YYYY-MM-DD date</li>
+<li><strong>min_temporal_coverage</strong> (<em>float</em><em>, </em><em>optional</em>) &#8211; </li>
+<li><strong>upper_temperature_cap</strong> (<em>number</em><em>, </em><em>optional</em>) &#8211; </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The sum of the GDD over all days in the interval</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">number</p>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="#api.client.crop_model.CropModel.growing_degree_days" title="api.client.crop_model.CropModel.growing_degree_days"><code class="xref py py-meth docutils literal"><span class="pre">growing_degree_days()</span></code></a></p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="api.client.crop_model.CropModel.growing_degree_days">
+<code class="descclassname">CropModel.</code><code class="descname">growing_degree_days</code><span class="sig-paren">(</span><em>region_name</em>, <em>base_temperature</em>, <em>start_date</em>, <em>end_date</em>, <em>min_temporal_coverage=1.0</em>, <em>upper_temperature_cap=inf</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/crop_model.html#CropModel.growing_degree_days"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.crop_model.CropModel.growing_degree_days" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get Growing Degree Days (GDD) for a region.</p>
+<p>Growing degree days (GDD) are a weather-based indicator that
+allows for assessing crop phenology and crop development,
+based on heat accumulation. GDD for one day is defined as
+max(T_mean - T_base, 0), where T_mean is the average
+temperature of that day if available. Typically T_mean is
+approximated as (T_max + T_min)/2. If upper_temperature_cap is
+specified, T_mean is capped to not exceed that value.</p>
+<p>The GDD over a longer time interval is the sum of the GDD over
+all days in the interval. Days where the data is missing
+contribute 0 GDDs, i.e. are treated as if T_mean = T_base.
+Use the temporal coverage threshold to avoid computing GDD
+with too little data.</p>
+<p>The threshold and the base temperature should be carefuly
+selected based on fundamental understanding of the crops and
+region of interest.</p>
+<p>The region can be any region of the Gro regions, from a point
+location to a district, province etc. This will use the best
+available data series for T_max and T_min for the given region
+and time period, using &#8220;find_data_series&#8221;. In the simplest
+case, if the given region is a weather station location which
+has data for the time period, then that will be used. If it&#8217;s
+a district or other region, the underlying data could be from
+one or more weather stations and/or satellite.  To by-pass the
+search for available series, use <a class="reference internal" href="#api.client.crop_model.CropModel.compute_gdd" title="api.client.crop_model.CropModel.compute_gdd"><code class="xref py py-meth docutils literal"><span class="pre">compute_gdd()</span></code></a> directly.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>region_name</strong> (<em>string</em>) &#8211; </li>
+<li><strong>base_temperature</strong> (<em>number</em>) &#8211; </li>
+<li><strong>start_date</strong> (<em>string</em>) &#8211; YYYY-MM-DD date</li>
+<li><strong>end_date</strong> (<em>string</em>) &#8211; YYYY-MM-DD date</li>
+<li><strong>min_temporal_coverage</strong> (<em>float</em><em>, </em><em>optional</em>) &#8211; </li>
+<li><strong>upper_temperature_cap</strong> (<em>number</em><em>, </em><em>optional</em>) &#8211; </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The sum of the GDD over all days in the interval</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">number</p>
 </td>
 </tr>
 </tbody>
@@ -975,7 +1067,6 @@ by the crop weight for that region.</p>
             <dd><a href="CLEWS-21846/api.html">CLEWS-21846</a></dd>
             <dd><a href="CLEWS-22288/api.html">CLEWS-22288</a></dd>
             <dd><a href="anomaly_notebook/api.html">anomaly_notebook</a></dd>
-            <dd><a href="crop_model_gdd_impl/api.html">crop_model_gdd_impl</a></dd>
             <dd><a href="development/api.html">development</a></dd>
             <dd><a href="fix-docs-links/api.html">fix-docs-links</a></dd>
             <dd><a href="gdh/api.html">gdh</a></dd>
