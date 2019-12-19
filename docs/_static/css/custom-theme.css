@@ -268,6 +268,11 @@ footer a {
     display: none;
 }
 
+/* Make method links like :meth:`~.get_data_points` not tiny */
+code, .rst-content tt, .rst-content code {
+    font-size: 100% !important;
+}
+
 /* hide branches from version switcher */
 .rst-other-versions dl:last-child {
     display: none;
