@@ -69,6 +69,10 @@ def time_series(client, entity, initial_date, final_date):
     :return: A dataframe with data from the relevant dates
     """
     logger = client.get_logger()
+    properties = {'metric_id', 'item_id', 'region_id', 'source_id', 'frequency_id', 'start_date'}
+    for prop in entity:
+        if prop not in properties:
+            entity.pop(prop)
     data = get_transform_data.get_data(client, **entity)
     consolidated_data = get_transform_data.combine_subregions(data)
     try:
