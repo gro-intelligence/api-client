@@ -1,7 +1,8 @@
 # Analogous Years
-Users can find similarity based ranks between a time period and a list of time periods 
-given by the time period ± 1 year, ± 2 years, ..., ± N years using `Analogous Years` application.
-For rank computation a user must provide:
+The Analogous Years application enables users to compare events from a set period of time, 
+to those of the same date range in other years. The application will compute ranks of similarity 
+between the specified period, and the same period from previous or future years. Multiple different 
+inputs can be used in determining the ranks, but to compute these ranks, a user must provide::
 
 1. A time period determined by `initial_date` and `final_date` such that they are within a year of
 each other.
@@ -9,14 +10,14 @@ each other.
 
 ## Working Example Using Python
 To get started with `Analogous Years`, users have to install `Gro API Client`
-as detailed [here](https://github.com/gro-intelligence/api-client). 
+as detailed [here](https://developers.gro-intelligence.com/installation.html). 
 
-If the user wants to know which period of time is closest to the time period 
+If the user wants to know which period of time is is most similar to the time period 
 between 1<sup>st</sup> January 2019 and 31<sup>st</sup> October 2019 with respect to the
 following Gro-entities -
-1. Rainfall (metric_id=2100031, item_id=2039, source_id=35, frequency_id=1)
-2. Land Temperature (metric_id=2540047, item_id=3457, source_id=26, frequency_id=1)
-3. Soil moisture (metric_id=15531082, item_id=7382, source_id=43, frequency_id=1)
+1. Rainfall, TRMM (metric_id=2100031, item_id=2039, source_id=35, frequency_id=1)
+2. Land Temperature, MODIS (metric_id=2540047, item_id=3457, source_id=26, frequency_id=1)
+3. Soil moisture, SMOS (metric_id=15531082, item_id=7382, source_id=43, frequency_id=1)
 
 in the US Corn Belt (region_id=100000100) with equal weights given (by default) to 
 rainfall, temperature and soil moisture, users can use the following code in their python 
@@ -85,6 +86,7 @@ in the command line from the `/api-client/api/client/samples/analogous_years` di
 analogous_years $ python run_analogous_years.py -m 2100031 2540047 15531082 -i 2039 3457 7382 -r 100000100 -s 35 26 43 -f 1 1 1 --initial_date 2019-01-01 --final_date 2019-10-31
 ```
 The ranks will be saved as a csv file in the same directory.
+
 ## Appendix
 ### Methods of rank calculation
 The analogy score between two different time periods can be measured in multiple ways. 
