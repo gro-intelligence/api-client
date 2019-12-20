@@ -21,6 +21,7 @@ def str2bool(v):
 
 
 def valid_date(s):
+    """Checks if the provided dates are valid dates in YYYY-MM-DD format"""
     try:
         parse(s)
         return s
@@ -30,6 +31,8 @@ def valid_date(s):
 
 
 def list_length_validator(list1, list2):
+    """Checks if the 2nd list is of the same length as the first and returns the second list
+    on success"""
     if len(list1) != len(list2):
         msg = "Mismatch between the number of entries in {} and {}".format(list1, list2)
         raise argparse.ArgumentTypeError(msg)
@@ -38,6 +41,7 @@ def list_length_validator(list1, list2):
 
 
 def check_if_exists(entity_type, entity_value, client):
+    """Checks if the Gro-entity_id exists"""
     logger = client.get_logger()
     try:
         client.lookup(entity_type, entity_value)
@@ -118,7 +122,8 @@ def main():
         weights=args.weights, enso=args.ENSO,
         enso_weight=args.ENSO_weight, provided_start_date=args.start_date)
     store_result = final_ranks_computation.save_to_csv(
-        (file_name, result), args.output_dir, args.report, args.all_ranks, logger)
+        (file_name, result), logger, all_ranks=args.all_ranks, report=args.report,
+        output_dir=args.output_dir)
     return store_result
 
 

@@ -21,6 +21,7 @@ from api.client.samples.analogous_years.lib import \
 
 
 def common_start_date(client, entities, provided_start_date=None):
+    """Computes the earliest available start date from which all gro-entities have data"""
     logger = client.get_logger()
     start_date_list = []
     if provided_start_date:
@@ -50,6 +51,7 @@ def enso_data(start_date):
 
 
 def get_file_name(client, entity_list, initial_date, final_date):
+    """Combines region, items, and dates to return a string"""
     key_words = [client.lookup('regions', entity_list[0]['region_id'])['name']]
     for i in range(len(entity_list)):
         key_words.append(client.lookup('items', entity_list[i]['item_id'])['name'])
@@ -166,16 +168,17 @@ def combined_items_final_ranks(client, entities, initial_date, final_date,
     Use L^2 distance function to combine weighted distances from multiple gro-entities
     and return the rank
     :param client: Gro_client
-    :param entities:
+    :param entities: list of dictionaries containing gro entities
     :param initial_date: A date in YYYY-MM-DD format
     :param final_date: A date in YYYY-MM-DD format
     :param methods_list: a sublist of ['cumulative', 'euclidean', 'ts-features', 'dtw']
     :param all_ranks: Boolean to determine if all ranks will be displayed or a composite rank
-    :param weights:
-    :param enso:
-    :param enso_weight:
+    :param weights: Float determining the weight given to each entity
+    :param enso: Boolean to include ENSO
+    :param enso_weight: Float
+    :param provided_start_date: A string in YYYY-MM-DD format
     :return: A tuple (string, dataframe)
-    The string contains '_' separated region, item, date names
+    The string contains '_' separated region, item, date
     The dataframe contains integer values (ranks)
     """
     logger = client.get_logger()
@@ -222,7 +225,7 @@ def combined_items_final_ranks(client, entities, initial_date, final_date,
     return file_name, display_dataframe
 
 
-def save_to_csv(dataframe_file_name, output_dir, report, all_ranks, logger):
+def save_to_csv(dataframe_file_name, logger, all_ranks=None, report=True, output_dir=''):
     """ save the dataframe into csv file called <output_dir>/ranks_csv/ranks.csv """
     dataframe = dataframe_file_name[1]
     file_name = dataframe_file_name[0]
