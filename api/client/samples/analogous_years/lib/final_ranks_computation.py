@@ -160,10 +160,10 @@ def combined_methods_distances(dictionary_of_df):
     return rank_df
 
 
-def combined_items_final_ranks(client, entities, initial_date, final_date,
-                               methods_list=['euclidean', 'cumulative', 'ts-features'],
-                               all_ranks=None, weights=None, enso=None, enso_weight=None,
-                               provided_start_date=None):
+def analogous_years(client, entities, initial_date, final_date,
+                    methods_list=['euclidean', 'cumulative', 'ts-features'],
+                    all_ranks=None, weights=None, enso=None, enso_weight=None,
+                    provided_start_date=None):
     """
     Use L^2 distance function to combine weighted distances from multiple gro-entities
     and return the rank

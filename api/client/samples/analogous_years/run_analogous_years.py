@@ -6,7 +6,6 @@ import os
 from api.client.gro_client import GroClient
 
 from api.client.samples.analogous_years.lib import final_ranks_computation
-# from lib import final_ranks_computation
 
 
 def str2bool(v):
@@ -116,7 +115,7 @@ def main():
     logger = client.get_logger()
     entities = entities_list(args.region_id, args.item_ids, args.metric_ids,
                              args.source_ids, args.frequency_ids, client=client)
-    file_name, result = final_ranks_computation.combined_items_final_ranks(
+    file_name, result = final_ranks_computation.analogous_years(
         client, entities, args.initial_date, args.final_date,
         methods_list=args.methods, all_ranks=args.all_ranks,
         weights=args.weights, enso=args.ENSO,
