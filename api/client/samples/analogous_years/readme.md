@@ -75,7 +75,7 @@ final_date = '2019-10-31'
 
 # Output (Ranks)
 file_name, result = 
-        final_ranks_computation.combined_items_final_ranks(
+        final_ranks_computation.analogous_years(
         client, entities, initial_date, final_date)
 print(result)
 ```
@@ -143,7 +143,7 @@ compute ranks
 A more detailed example with all the options in python may look like:
 ```python
 # Output (Ranks)
-file_name, result = final_ranks_computation.combined_items_final_ranks(
+file_name, result = final_ranks_computation.analogous_years(
         client, entities, initial_date, final_date, 
         methods_list=[`cumulative, euclidean, ts-features, dtw`], 
         all_ranks=True, weights=[0.2, 0.3, 0.4], enso=True,
