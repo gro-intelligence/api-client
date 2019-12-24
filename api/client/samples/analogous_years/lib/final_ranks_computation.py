@@ -220,7 +220,7 @@ def analogous_years(client, entities, initial_date, final_date,
     if all_ranks:
         display_dataframe = combined_items_distances[ranks]
     else:
-        display_dataframe = combined_items_distances['composite_rank']
+        display_dataframe = combined_items_distances[['composite_rank']]
     logger.info("\n Computing analogous years ranks for {} \n".format(file_name))
     return file_name, display_dataframe
 
