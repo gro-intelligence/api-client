@@ -44,7 +44,7 @@ class GroClient(Client):
     def get_logger(self):
         return self._logger
 
-    def get_df(self):
+    def get_df(self, show_revisions=False):
         """Call :meth:`~.get_data_points` for each saved data series and return as a combined
         dataframe.
         
