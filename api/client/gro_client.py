@@ -62,6 +62,8 @@ class GroClient(Client):
         """
         while self._data_series_queue:
             data_series = self._data_series_queue.pop()
+            if show_revisions:
+                data_series['show_revisions'] = True
             self.add_points_to_df(1, data_series, self.get_data_points(**data_series))
         return self._data_frame
 
