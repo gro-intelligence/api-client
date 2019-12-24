@@ -31,7 +31,6 @@ def get_data(client, metric_id, item_id, region_id, source_id, frequency_id, sta
     if data['end_date'].iloc[0] > start_date:
         new_value = data['value'].iloc[0]
         new_row = pd.DataFrame({'end_date': [start_date], 'value': [new_value]})
-        print(new_row)
         data = pd.concat([new_row, data[:]]).reset_index(drop=True)
     return ffill_bfill_nulls(data)
 
