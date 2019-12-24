@@ -44,7 +44,7 @@ class GroClient(Client):
     def get_logger(self):
         return self._logger
 
-    def get_df(self):
+    def get_df(self, show_revisions=False):
         """Call :meth:`~.get_data_points` for each saved data series and return as a combined
         dataframe.
         
@@ -66,8 +66,6 @@ class GroClient(Client):
         return self._data_frame
 
     def add_points_to_df(self, index, data_series, data_points):
-        self.get_logger().info('{}: {} {} {} points'.format(
-            index, data_series, type(data_points), len(data_points)))
         tmp = pandas.DataFrame(data=data_points)
         if tmp.empty:
             return
