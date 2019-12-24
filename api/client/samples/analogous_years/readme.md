@@ -12,7 +12,7 @@ each other.
 To get started with `Analogous Years`, users have to install `Gro API Client`
 as detailed [here](https://developers.gro-intelligence.com/installation.html). 
 
-If the user wants to know which period of time is is most similar to the time period 
+If the user wants to know which period of time is most similar to the time period 
 between 1<sup>st</sup> January 2019 and 31<sup>st</sup> October 2019 with respect to the
 following Gro-entities -
 1. Rainfall, TRMM (metric_id=2100031, item_id=2039, source_id=35, frequency_id=1)
@@ -124,28 +124,32 @@ correlated with the `euclidean` ranks.
 2. All Ranks: Users have an option to generate separate individual ranks or composite rank
 based on their methods list. By default only the composite rank will be generated.
 
-3. Report: A correlation matrix as a csv file, together with a png file of pairwise scatter 
-plots between ranks, for selected methods, are generated and saved in the same folder where the ranks 
-in csv format is saved whenever users opt to generate multiple ranks.
-
-4. Location: The `.csv` files containing the ranks (and possibly reports) are by default saved in your 
-current directory unless a different location is stated.
-
-5. Multivariate El Niño Southern Oscillation (ENSO) index can also be included in the 
+3. Multivariate El Niño Southern Oscillation (ENSO) index can also be included in the 
 rank computation, along with the weight that the user wants to give for the ENSO index. 
 The weight of ENSO index is set to 1 by default.
 
-6. Start Date: Users have an option to include time periods after a specified date. By 
+4. Start Date: Users have an option to include time periods after a specified date. By 
 default the earliest date from which data is available for all entities will be used to 
 compute ranks
 
+### Report
+
+5. Report: A correlation matrix as a csv file, together with a png file of pairwise scatter 
+plots between ranks, for selected methods, are generated and saved in the same folder where the ranks 
+in csv format is saved whenever users opt to generate multiple ranks.
+
+6. Location: The `.csv` files containing the ranks (and possibly reports) are by default saved in your 
+current directory unless a different location is stated.
+
+
+
 ## Detailed Example
-A more detailed example with all the options in python may look like:
+A more detailed example with all the options (and generated reports) in python may look like:
 ```python
 # Output (Ranks)
 file_name, result = final_ranks_computation.analogous_years(
         client, entities, initial_date, final_date, 
-        methods_list=[`cumulative, euclidean, ts-features, dtw`], 
+        methods_list=['cumulative', 'euclidean', 'ts-features', 'dtw'], 
         all_ranks=True, weights=[0.2, 0.3, 0.4], enso=True,
         enso_weight=0.1, provided_start_date='2015-01-01')
 print(result)
