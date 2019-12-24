@@ -62,7 +62,7 @@ class GroClient(Client):
         """
         while self._data_series_queue:
             data_series = self._data_series_queue.pop()
-	    if show_revisions: 
+            if show_revisions: 
                data_series['show_revisions'] = True
             tmp = pandas.DataFrame(data=self.get_data_points(**data_series))
             if tmp.empty:
