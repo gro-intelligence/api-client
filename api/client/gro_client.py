@@ -62,28 +62,42 @@ class GroClient(Client):
         """
         while self._data_series_queue:
             data_series = self._data_series_queue.pop()
-            if show_revisions: 
-               data_series['show_revisions'] = True
-            tmp = pandas.DataFrame(data=self.get_data_points(**data_series))
-            if tmp.empty:
-                continue
-            # get_data_points response doesn't include the
-            # source_id. We add it as a column, in case we have
-            # several selections series which differ only by source id.
-            tmp['source_id'] = data_series['source_id']
-            if 'end_date' in tmp.columns:
-                tmp.end_date = pandas.to_datetime(tmp.end_date)
-            if 'start_date' in tmp.columns:
-                tmp.start_date = pandas.to_datetime(tmp.start_date)
-            if 'reporting_date' in tmp.columns:
-                tmp.reporting_date = pandas.to_datetime(tmp.reporting_date)
-            if self._data_frame.empty:
-                self._data_frame = tmp
-                self._data_frame.set_index([col for col in DATA_POINTS_UNIQUE_COLS
-                                            if col in tmp.columns])
-            else:
-                self._data_frame = self._data_frame.merge(tmp, how='outer')
+            if show_revisions:
+                data_series['show_revisions'] = True
+            self.add_points_to_df(
+                0, data_series, self.get_data_points(**data_series))
         return self._data_frame
+
+    def add_points_to_df(self, index, data_series, data_points):
+        """Internal function used by get_df to add individual series to the
+        frame.
+
+        Parameters:
+        -----------
+        index: unused
+        data_series: dict
+        data_points: list of dict
+
+        """
+        tmp = pandas.DataFrame(data=data_points)
+        if tmp.empty:
+            return
+        # get_data_points response doesn't include the
+        # source_id. We add it as a column, in case we have
+        # several selections series which differ only by source id.
+        tmp['source_id'] = data_series['source_id']
+        if 'end_date' in tmp.columns:
+            tmp.end_date = pandas.to_datetime(tmp.end_date)
+        if 'start_date' in tmp.columns:
+            tmp.start_date = pandas.to_datetime(tmp.start_date)
+        if 'reporting_date' in tmp.columns:
+            tmp.reporting_date = pandas.to_datetime(tmp.reporting_date)
+        if self._data_frame.empty:
+            self._data_frame = tmp
+            self._data_frame.set_index([col for col in DATA_POINTS_UNIQUE_COLS
+                                        if col in tmp.columns])
+        else:
+            self._data_frame = self._data_frame.merge(tmp, how='outer')
 
     def get_data_points(self, **selections):
         """Get all the data points for a given selection.
