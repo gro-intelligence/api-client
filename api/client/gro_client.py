@@ -44,7 +44,7 @@ class GroClient(Client):
     def get_logger(self):
         return self._logger
 
-    def get_df(self):
+    def get_df(self, show_revisions=False):
         """Call :meth:`~.get_data_points` for each saved data series and return as a combined
         dataframe.
         
@@ -62,6 +62,8 @@ class GroClient(Client):
         """
         while self._data_series_queue:
             data_series = self._data_series_queue.pop()
+            if show_revisions: 
+               data_series['show_revisions'] = True
             tmp = pandas.DataFrame(data=self.get_data_points(**data_series))
             if tmp.empty:
                 continue
