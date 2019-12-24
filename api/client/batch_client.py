@@ -94,8 +94,9 @@ class BatchClient(GroClient):
 
     def batch_async_get_data_points(self, batched_args, output_list=None,
                                     map_result=None):
-        return self.batch_async_queue(self.get_data_points, batched_args,
+        batch_async_series_list = self.batch_async_queue(self.get_data_points, batched_args,
                                       output_list, map_result)
+        return [lib.list_of_series_to_single_series(series_list) for series_list in batch_async_series_list]
 
     @gen.coroutine
     def async_rank_series_by_source(self, **selection):
