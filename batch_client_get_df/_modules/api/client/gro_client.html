@@ -381,10 +381,21 @@
             <span class="n">data_series</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_series_queue</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
             <span class="k">if</span> <span class="n">show_revisions</span><span class="p">:</span>
                 <span class="n">data_series</span><span class="p">[</span><span class="s1">&#39;show_revisions&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">add_points_to_df</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">data_series</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_data_points</span><span class="p">(</span><span class="o">**</span><span class="n">data_series</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_points_to_df</span><span class="p">(</span>
+                <span class="mi">0</span><span class="p">,</span> <span class="n">data_series</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_data_points</span><span class="p">(</span><span class="o">**</span><span class="n">data_series</span><span class="p">))</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_frame</span></div>
 
     <span class="k">def</span> <span class="nf">add_points_to_df</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="n">data_series</span><span class="p">,</span> <span class="n">data_points</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Internal function used by get_df to add individual series to the</span>
+<span class="sd">        frame.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">        -----------</span>
+<span class="sd">        index: unused</span>
+<span class="sd">        data_series: dict</span>
+<span class="sd">        data_points: list of dict</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">tmp</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">data_points</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">tmp</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
             <span class="k">return</span>
