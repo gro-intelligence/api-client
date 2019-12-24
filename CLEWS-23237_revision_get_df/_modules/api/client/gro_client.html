@@ -379,7 +379,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_series_queue</span><span class="p">:</span>
             <span class="n">data_series</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_series_queue</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
-	    <span class="k">if</span> <span class="n">show_revisions</span><span class="p">:</span> 
+            <span class="k">if</span> <span class="n">show_revisions</span><span class="p">:</span> 
                <span class="n">data_series</span><span class="p">[</span><span class="s1">&#39;show_revisions&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
             <span class="n">tmp</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">get_data_points</span><span class="p">(</span><span class="o">**</span><span class="n">data_series</span><span class="p">))</span>
             <span class="k">if</span> <span class="n">tmp</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
