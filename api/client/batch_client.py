@@ -79,6 +79,14 @@ class BatchClient(GroClient):
                         url, retry_count, e.response.error))
 
     @gen.coroutine
+    def get_data_points_generator(self, **selection):
+        headers = {'authorization': 'Bearer ' + self.access_token}
+        url = '/'.join(['https:', '', self.api_host, 'v2/data'])
+        params = lib.get_data_call_params(**selection)
+        resp = yield self.get_data(url, headers, params)
+        raise gen.Return(json_decode(resp))
+
+    @gen.coroutine
     def get_data_points(self, **selection):
         """Get all the data points for a given selection, which is some or all
         of: item_id, metric_id, region_id, frequency_id, source_id,
@@ -88,15 +96,16 @@ class BatchClient(GroClient):
         raise gen.Return(data_points)
 
     def get_df(self):
-        self.batch_async_get_data_points(
-            self._data_series_queue, [], self.add_points_to_df)
+        self.batch_async_queue(
+            self.get_data_points,  self._data_series_queue, [], self.add_points_to_df)
         return self._data_frame
 
     def batch_async_get_data_points(self, batched_args, output_list=None,
                                     map_result=None):
-        batch_async_series_list = self.batch_async_queue(self.get_data_points, batched_args,
-                                      output_list, map_result)
-        return [lib.list_of_series_to_single_series(series_list) for series_list in batch_async_series_list]
+        batch_async_series_list = self.batch_async_queue(
+            self.get_data_points_generator, batched_args, output_list, map_result)
+        return [lib.list_of_series_to_single_series(series_list)
+                for series_list in batch_async_series_list]
 
     @gen.coroutine
     def async_rank_series_by_source(self, **selection):
