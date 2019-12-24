@@ -84,11 +84,13 @@ class BatchClient(GroClient):
         of: item_id, metric_id, region_id, frequency_id, source_id,
         partner_region_id. Additional arguments are allowed and ignored.
         """
-        headers = {'authorization': 'Bearer ' + self.access_token}
-        url = '/'.join(['https:', '', self.api_host, 'v2/data'])
-        params = lib.get_data_call_params(**selection)
-        resp = yield lib.list_of_series_to_single_series(self.get_data(url, headers, params))
-        raise gen.Return(json_decode(resp))
+        data_points = super(BatchClient, self).get_data_points(**selection)
+        raise gen.Return(data_points)
+
+    def get_df(self):
+        self.batch_async_get_data_points(
+            self._data_series_queue, [], self.add_points_to_df)
+        return self._data_frame
 
     def batch_async_get_data_points(self, batched_args, output_list=None,
                                     map_result=None):
