@@ -20,13 +20,13 @@ def get_data(client, metric_id, item_id, region_id, source_id, frequency_id, sta
     :param start_date: start-date of the Gro data series
     :return: A dataframe with an 'end_date' and 'value' column
     """
-    data = client.get_data_points(**{'metric_id': metric_id,
-                                     'item_id': item_id,
-                                     'region_id': region_id,
-                                     'source_id': source_id,
-                                     'frequency_id': frequency_id,
-                                     'start_date': start_date})
-    data = pd.DataFrame(data)
+    data_series = {'metric_id': metric_id,
+                   'item_id': item_id,
+                   'region_id': region_id,
+                   'source_id': source_id,
+                   'frequency_id': frequency_id,
+                   'start_date': start_date}
+    data = pd.DataFrame(client.get_data_points(**data_series))
     data = data[['end_date', 'value']]
     if data['end_date'].iloc[0] > start_date:
         new_value = data['value'].iloc[0]

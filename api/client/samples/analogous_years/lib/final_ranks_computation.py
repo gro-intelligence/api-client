@@ -52,11 +52,14 @@ def enso_data(start_date):
 
 def get_file_name(client, data_series_list, initial_date, final_date):
     """Combines region, items, and dates to return a string"""
+    logger = client.get_logger()
     key_words = [client.lookup('regions', data_series_list[0]['region_id'])['name']]
     for i in range(len(data_series_list)):
         key_words.append(client.lookup('items', data_series_list[i]['item_id'])['name'])
     key_words.append(initial_date)
     key_words.append(final_date)
+    logger.info("\n Computing analogous years' ranks in {} with respect to {} between {} and {} \n".
+                format(key_words[0], key_words[1:-2], initial_date, final_date))
     combined_name = '_'.join(key_words)
     return combined_name
 
@@ -181,9 +184,9 @@ def analogous_years(client, data_series_list, initial_date, final_date,
     The string contains '_' separated region, item, date
     The dataframe contains integer values (ranks)
     """
-    logger = client.get_logger()
     combined_items_distances = None
-    data_series_list = common_start_date(client, data_series_list, provided_start_date)['data_series']
+    data_series_list = common_start_date(client, data_series_list, provided_start_date)[
+        'data_series']
     start_date = common_start_date(client, data_series_list, provided_start_date)['start_date']
     if not weights:
         weights = [1] * len(data_series_list)
@@ -193,7 +196,6 @@ def analogous_years(client, data_series_list, initial_date, final_date,
             weights.append(enso_weight)
         else:
             weights.append(1)
-    file_name = get_file_name(client, data_series_list, initial_date, final_date)
     for i in range(len(data_series_list)):
         gro_item = client.lookup('items', data_series_list[i]['item_id'])['name']
         combined_methods_distances_df = combined_methods_distances(
@@ -221,39 +223,42 @@ def analogous_years(client, data_series_list, initial_date, final_date,
         display_dataframe = combined_items_distances[ranks]
     else:
         display_dataframe = combined_items_distances[['composite_rank']]
-    logger.info("\n Computing analogous years ranks for {} \n".format(file_name))
-    return file_name, display_dataframe
+    return display_dataframe
 
 
-def save_to_csv(dataframe_file_name, logger, all_ranks=None, report=True, output_dir=''):
+def generate_correlation_scatterplots(client, dataframe, folder_name, output_dir=''):
+    logger = client.get_logger()
+    folder_path = os.path.join(output_dir, './ranks_csv', folder_name)
+    fig = plt.figure()
+    k = 0
+    rows = np.ceil(comb(len(list(dataframe.columns)), 2) / 2)
+    for i in range(len(dataframe.columns)):
+        for j in range(i + 1, len(dataframe.columns)):
+            k = k + 1
+            plt.subplot(rows, 2, k)
+            plt.subplots_adjust(left=None, bottom=None, right=None, top=None,
+                                wspace=0.8, hspace=0.8)
+            plt.plot(dataframe.columns[i],
+                     dataframe.columns[j],
+                     'b.',
+                     data=dataframe)
+            plt.xlabel(dataframe.columns[i].split('_')[0])
+            plt.ylabel(dataframe.columns[j].split('_')[0])
+    correlation_plot_path = os.path.join(folder_path, 'correlation_plot.png')
+    logger.info("Saving scatterplots in {}".format(correlation_plot_path))
+    return fig.savefig(correlation_plot_path)
+
+
+def generate_correlation_matrix(dataframe):
+    return dataframe.corr(method='spearman')
+
+
+def save_to_csv(client, dataframe, folder_name, file_name='', output_dir=''):
     """ save the dataframe into csv file called <output_dir>/ranks_csv/ranks.csv """
-    dataframe = dataframe_file_name[1]
-    file_name = dataframe_file_name[0]
-    folder_path = os.path.join(output_dir, './ranks_csv', file_name)
+    logger = client.get_logger()
+    folder_path = os.path.join(output_dir, './ranks_csv', folder_name)
     if not os.path.exists(folder_path):
         os.makedirs(folder_path)
-    if report and all_ranks:
-        fig = plt.figure()
-        k = 0
-        rows = np.ceil(comb(len(list(dataframe.columns)), 2) / 2)
-        for i in range(len(dataframe.columns)):
-            for j in range(i + 1, len(dataframe.columns)):
-                k = k + 1
-                plt.subplot(rows, 2, k)
-                plt.subplots_adjust(left=None, bottom=None, right=None, top=None,
-                                    wspace=0.8, hspace=0.8)
-                plt.plot(dataframe.columns[i],
-                         dataframe.columns[j],
-                         'b.',
-                         data=dataframe)
-                plt.xlabel(dataframe.columns[i].split('_')[0])
-                plt.ylabel(dataframe.columns[j].split('_')[0])
-        correlation_plot_path = os.path.join(folder_path, 'correlation_plot.png')
-        fig.savefig(correlation_plot_path)
-        logger.info("Saving correlation plot in {}".format(correlation_plot_path))
-        correlation_matrix_path = os.path.join(folder_path, 'correlation_matrix.csv')
-        dataframe.corr(method='spearman').to_csv(correlation_matrix_path)
-        logger.info("Saving correlation matrix csv file in {}".format(correlation_matrix_path))
-    file_path = os.path.join(folder_path, file_name + '.csv')
-    logger.info("\n Saving ranks as csv file in {} \n".format(file_path))
+    file_path = os.path.join(folder_path, file_name)
+    logger.info("\n Saving {} in {} \n".format(file_name, file_path))
     return dataframe.to_csv(file_path)

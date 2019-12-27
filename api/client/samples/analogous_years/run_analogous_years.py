@@ -83,7 +83,8 @@ def main():
                         help='specify the source_ids of the corresponding item-metric '
                              'separated by spaces')
     parser.add_argument('-f', '--frequency_ids', nargs='+', type=int, default=[1, 1],
-                        help='frequency_ids of the corresponding gro-data_series separated by spaces')
+                        help='frequency_ids of the corresponding gro-data_series separated by '
+                             'spaces')
     parser.add_argument('-w', '--weights', nargs='+', type=float,
                         help='weights corresponding to the data_series separated by spaces')
     parser.add_argument('--initial_date', required=True, type=valid_date,
@@ -115,15 +116,27 @@ def main():
     logger = client.get_logger()
     data_series_list = get_data_series_list(args.region_id, args.item_ids, args.metric_ids,
                                             args.source_ids, args.frequency_ids, client=client)
-    file_name, result = final_ranks_computation.analogous_years(
+    folder_name = final_ranks_computation.get_file_name(client, data_series_list,
+                                                        initial_date=args.initial_date,
+                                                        final_date=args.final_date)
+    result = final_ranks_computation.analogous_years(
         client, data_series_list, args.initial_date, args.final_date,
         methods_list=args.methods, all_ranks=args.all_ranks,
         weights=args.weights, enso=args.ENSO,
         enso_weight=args.ENSO_weight, provided_start_date=args.start_date)
-    store_result = final_ranks_computation.save_to_csv(
-        (file_name, result), logger, all_ranks=args.all_ranks, report=args.report,
-        output_dir=args.output_dir)
-    return store_result
+    final_ranks_computation.save_to_csv(client, result,
+                                        folder_name,
+                                        file_name='ranks.csv',
+                                        output_dir=args.output_dir)
+    if args.all_ranks and args.report:
+        correlation_matrix = final_ranks_computation.generate_correlation_matrix(result)
+        final_ranks_computation.save_to_csv(client, correlation_matrix,
+                                            folder_name,
+                                            file_name='correlation_matrix.csv',
+                                            output_dir=args.output_dir)
+        final_ranks_computation.generate_correlation_scatterplots(client, result, folder_name,
+                                                                  output_dir=args.output_dir)
+    return None
 
 
 if __name__ == '__main__':
