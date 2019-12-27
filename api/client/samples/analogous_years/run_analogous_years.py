@@ -51,23 +51,23 @@ def check_if_exists(entity_type, entity_value, client):
         raise e
 
 
-def entities_list(region_id_list, item_id_list, metric_id_list, source_id_list,
-                  frequency_id_list, client):
+def get_data_series_list(region_id_list, item_id_list, metric_id_list, source_id_list,
+                         frequency_id_list, client):
     # checking if the length of the list for metric_id, item_id, source_id and
     # frequency_id match
     item_id_list = list_length_validator(metric_id_list, item_id_list)
     source_id_list = list_length_validator(metric_id_list, source_id_list)
     frequency_id_list = list_length_validator(metric_id_list, frequency_id_list)
-    entities = []
+    data_series_list = []
     checking = partial(check_if_exists, client=client)
     for i in range(len(metric_id_list)):
-        entity = {'metric_id': checking('metrics', metric_id_list[i]),
-                  'item_id': checking('items', item_id_list[i]),
-                  'region_id': checking('regions', region_id_list[0]),
-                  'source_id': checking('sources', source_id_list[i]),
-                  'frequency_id': checking('frequencies', frequency_id_list[i])}
-        entities.append(entity)
-    return entities
+        data_series = {'metric_id': checking('metrics', metric_id_list[i]),
+                       'item_id': checking('items', item_id_list[i]),
+                       'region_id': checking('regions', region_id_list[0]),
+                       'source_id': checking('sources', source_id_list[i]),
+                       'frequency_id': checking('frequencies', frequency_id_list[i])}
+        data_series_list.append(data_series)
+    return data_series_list
 
 
 def main():
@@ -83,9 +83,9 @@ def main():
                         help='specify the source_ids of the corresponding item-metric '
                              'separated by spaces')
     parser.add_argument('-f', '--frequency_ids', nargs='+', type=int, default=[1, 1],
-                        help='frequency_ids of the corresponding gro-entities separated by spaces')
+                        help='frequency_ids of the corresponding gro-data_series separated by spaces')
     parser.add_argument('-w', '--weights', nargs='+', type=float,
-                        help='weights corresponding to the entities separated by spaces')
+                        help='weights corresponding to the data_series separated by spaces')
     parser.add_argument('--initial_date', required=True, type=valid_date,
                         help='Format YYYY-MM-DD')
     parser.add_argument('--final_date', required=True, type=valid_date,
@@ -113,10 +113,10 @@ def main():
     args = parser.parse_args()
     client = GroClient(API_HOST, args.groapi_token)
     logger = client.get_logger()
-    entities = entities_list(args.region_id, args.item_ids, args.metric_ids,
-                             args.source_ids, args.frequency_ids, client=client)
+    data_series_list = get_data_series_list(args.region_id, args.item_ids, args.metric_ids,
+                                            args.source_ids, args.frequency_ids, client=client)
     file_name, result = final_ranks_computation.analogous_years(
-        client, entities, args.initial_date, args.final_date,
+        client, data_series_list, args.initial_date, args.final_date,
         methods_list=args.methods, all_ranks=args.all_ranks,
         weights=args.weights, enso=args.ENSO,
         enso_weight=args.ENSO_weight, provided_start_date=args.start_date)
