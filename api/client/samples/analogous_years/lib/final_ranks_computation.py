@@ -6,13 +6,9 @@ This library contains utilities for
 from functools import reduce
 import os
 
-import matplotlib
-
-matplotlib.use('agg')
-import matplotlib.pyplot as plt
+import seaborn as sns
 import numpy as np
 import pandas as pd
-from scipy.special import comb
 
 from api.client.samples.analogous_years.lib import \
     distance_matrix, \
@@ -229,24 +225,11 @@ def analogous_years(client, data_series_list, initial_date, final_date,
 def generate_correlation_scatterplots(client, dataframe, folder_name, output_dir=''):
     logger = client.get_logger()
     folder_path = os.path.join(output_dir, './ranks_csv', folder_name)
-    fig = plt.figure()
-    k = 0
-    rows = np.ceil(comb(len(list(dataframe.columns)), 2) / 2)
-    for i in range(len(dataframe.columns)):
-        for j in range(i + 1, len(dataframe.columns)):
-            k = k + 1
-            plt.subplot(rows, 2, k)
-            plt.subplots_adjust(left=None, bottom=None, right=None, top=None,
-                                wspace=0.8, hspace=0.8)
-            plt.plot(dataframe.columns[i],
-                     dataframe.columns[j],
-                     'b.',
-                     data=dataframe)
-            plt.xlabel(dataframe.columns[i].split('_')[0])
-            plt.ylabel(dataframe.columns[j].split('_')[0])
+    sns.set(style="ticks")
+    sns_plot = sns.pairplot(dataframe, diag_kind=None)
     correlation_plot_path = os.path.join(folder_path, 'correlation_plot.png')
     logger.info("Saving scatterplots in {}".format(correlation_plot_path))
-    return fig.savefig(correlation_plot_path)
+    return sns_plot.savefig(correlation_plot_path)
 
 
 def generate_correlation_matrix(dataframe):
