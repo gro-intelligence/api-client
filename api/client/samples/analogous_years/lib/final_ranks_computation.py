@@ -7,11 +7,12 @@ from functools import reduce
 import os
 
 import matplotlib
-import numpy as np
-import pandas as pd
+matplotlib.use('agg')
 import seaborn as sns
 
-matplotlib.use('agg')
+import numpy as np
+import pandas as pd
+
 
 from api.client.samples.analogous_years.lib import \
     distance_matrix, \
