@@ -6,9 +6,12 @@ This library contains utilities for
 from functools import reduce
 import os
 
-import seaborn as sns
+import matplotlib
 import numpy as np
 import pandas as pd
+import seaborn as sns
+
+matplotlib.use('agg')
 
 from api.client.samples.analogous_years.lib import \
     distance_matrix, \
