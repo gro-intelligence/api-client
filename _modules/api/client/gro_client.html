@@ -358,7 +358,7 @@
     <span class="k">def</span> <span class="nf">get_logger</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span>
 
-<div class="viewcode-block" id="GroClient.get_df"><a class="viewcode-back" href="../../../api.html#api.client.gro_client.GroClient.get_df">[docs]</a>    <span class="k">def</span> <span class="nf">get_df</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="GroClient.get_df"><a class="viewcode-back" href="../../../api.html#api.client.gro_client.GroClient.get_df">[docs]</a>    <span class="k">def</span> <span class="nf">get_df</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">show_revisions</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Call :meth:`~.get_data_points` for each saved data series and return as a combined</span>
 <span class="sd">        dataframe.</span>
 <span class="sd">        </span>
@@ -376,26 +376,42 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_series_queue</span><span class="p">:</span>
             <span class="n">data_series</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_series_queue</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
-            <span class="n">tmp</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">get_data_points</span><span class="p">(</span><span class="o">**</span><span class="n">data_series</span><span class="p">))</span>
-            <span class="k">if</span> <span class="n">tmp</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
-                <span class="k">continue</span>
-            <span class="c1"># get_data_points response doesn&#39;t include the</span>
-            <span class="c1"># source_id. We add it as a column, in case we have</span>
-            <span class="c1"># several selections series which differ only by source id.</span>
-            <span class="n">tmp</span><span class="p">[</span><span class="s1">&#39;source_id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data_series</span><span class="p">[</span><span class="s1">&#39;source_id&#39;</span><span class="p">]</span>
-            <span class="k">if</span> <span class="s1">&#39;end_date&#39;</span> <span class="ow">in</span> <span class="n">tmp</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
-                <span class="n">tmp</span><span class="o">.</span><span class="n">end_date</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">tmp</span><span class="o">.</span><span class="n">end_date</span><span class="p">)</span>
-            <span class="k">if</span> <span class="s1">&#39;start_date&#39;</span> <span class="ow">in</span> <span class="n">tmp</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
-                <span class="n">tmp</span><span class="o">.</span><span class="n">start_date</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">tmp</span><span class="o">.</span><span class="n">start_date</span><span class="p">)</span>
-            <span class="k">if</span> <span class="s1">&#39;reporting_date&#39;</span> <span class="ow">in</span> <span class="n">tmp</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
-                <span class="n">tmp</span><span class="o">.</span><span class="n">reporting_date</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">tmp</span><span class="o">.</span><span class="n">reporting_date</span><span class="p">)</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_frame</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_data_frame</span> <span class="o">=</span> <span class="n">tmp</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_data_frame</span><span class="o">.</span><span class="n">set_index</span><span class="p">([</span><span class="n">col</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">DATA_POINTS_UNIQUE_COLS</span>
-                                            <span class="k">if</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">tmp</span><span class="o">.</span><span class="n">columns</span><span class="p">])</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_data_frame</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_frame</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">tmp</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s1">&#39;outer&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">show_revisions</span><span class="p">:</span>
+                <span class="n">data_series</span><span class="p">[</span><span class="s1">&#39;show_revisions&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_points_to_df</span><span class="p">(</span>
+                <span class="mi">0</span><span class="p">,</span> <span class="n">data_series</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_data_points</span><span class="p">(</span><span class="o">**</span><span class="n">data_series</span><span class="p">))</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_frame</span></div>
+
+    <span class="k">def</span> <span class="nf">add_points_to_df</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="n">data_series</span><span class="p">,</span> <span class="n">data_points</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Internal function used by get_df to add individual series to the</span>
+<span class="sd">        frame.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">        -----------</span>
+<span class="sd">        index: unused</span>
+<span class="sd">        data_series: dict</span>
+<span class="sd">        data_points: list of dict</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">tmp</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">data_points</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">tmp</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="c1"># get_data_points response doesn&#39;t include the</span>
+        <span class="c1"># source_id. We add it as a column, in case we have</span>
+        <span class="c1"># several selections series which differ only by source id.</span>
+        <span class="n">tmp</span><span class="p">[</span><span class="s1">&#39;source_id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data_series</span><span class="p">[</span><span class="s1">&#39;source_id&#39;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="s1">&#39;end_date&#39;</span> <span class="ow">in</span> <span class="n">tmp</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+            <span class="n">tmp</span><span class="o">.</span><span class="n">end_date</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">tmp</span><span class="o">.</span><span class="n">end_date</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s1">&#39;start_date&#39;</span> <span class="ow">in</span> <span class="n">tmp</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+            <span class="n">tmp</span><span class="o">.</span><span class="n">start_date</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">tmp</span><span class="o">.</span><span class="n">start_date</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s1">&#39;reporting_date&#39;</span> <span class="ow">in</span> <span class="n">tmp</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+            <span class="n">tmp</span><span class="o">.</span><span class="n">reporting_date</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">tmp</span><span class="o">.</span><span class="n">reporting_date</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_frame</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_data_frame</span> <span class="o">=</span> <span class="n">tmp</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_data_frame</span><span class="o">.</span><span class="n">set_index</span><span class="p">([</span><span class="n">col</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">DATA_POINTS_UNIQUE_COLS</span>
+                                        <span class="k">if</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">tmp</span><span class="o">.</span><span class="n">columns</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_data_frame</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_frame</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">tmp</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s1">&#39;outer&#39;</span><span class="p">)</span>
 
 <div class="viewcode-block" id="GroClient.get_data_points"><a class="viewcode-back" href="../../../api.html#api.client.gro_client.GroClient.get_data_points">[docs]</a>    <span class="k">def</span> <span class="nf">get_data_points</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">selections</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Get all the data points for a given selection.</span>
@@ -939,7 +955,7 @@
 <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
     <span class="rst-current-version" data-toggle="rst-current-version">
         <span class="fa fa-book"> Other Versions</span>
-        v: v1.56.1
+        v: development
         <span class="fa fa-caret-down"></span>
     </span>
     <div class="rst-other-versions">
@@ -947,7 +963,7 @@
             <dt>Tags</dt>
             <dd><a href="../../../v1.40.6/index.html">v1.40.6</a></dd>
             <dd><a href="../../../v1.56.0/index.html">v1.56.0</a></dd>
-            <dd><a href="../../../v1.56.1/_modules/api/client/gro_client.html">v1.56.1</a></dd>
+            <dd><a href="../../../v1.56.1/index.html">v1.56.1</a></dd>
         </dl>
         <dl>
             <dt>Branches</dt>
@@ -960,7 +976,7 @@
             <dd><a href="../../../CLEWS-22288/index.html">CLEWS-22288</a></dd>
             <dd><a href="../../../CLEWS-23237_revision_get_df/index.html">CLEWS-23237_revision_get_df</a></dd>
             <dd><a href="../../../anomaly_notebook/index.html">anomaly_notebook</a></dd>
-            <dd><a href="../../../development/index.html">development</a></dd>
+            <dd><a href="../../../development/_modules/api/client/gro_client.html">development</a></dd>
             <dd><a href="../../../docs-latest-tag/index.html">docs-latest-tag</a></dd>
             <dd><a href="../../../fix-docs-links/index.html">fix-docs-links</a></dd>
             <dd><a href="../../../gdh/index.html">gdh</a></dd>
