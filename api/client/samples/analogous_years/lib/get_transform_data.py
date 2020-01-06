@@ -26,8 +26,10 @@ def get_data(client, metric_id, item_id, region_id, source_id, frequency_id, sta
                    'source_id': source_id,
                    'frequency_id': frequency_id,
                    'start_date': start_date}
-    data = pd.DataFrame(client.get_data_points(**data_series))
+    client.add_single_data_series(data_series)
+    data = client.get_df()
     data = data[['end_date', 'value']]
+    start_date = pd.to_datetime(start_date)
     if data['end_date'].iloc[0] > start_date:
         new_value = data['value'].iloc[0]
         new_row = pd.DataFrame({'end_date': [start_date], 'value': [new_value]})

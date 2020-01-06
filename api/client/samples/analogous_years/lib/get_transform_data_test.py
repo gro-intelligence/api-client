@@ -27,12 +27,21 @@ def create_test_data():
                       2.39664378851418, 1.10551943121531]}
 
 
-@mock.patch('api.client.gro_client.GroClient.get_data_points', return_value=create_test_data())
-def test_get_data(test_data):
+def create_test_data_datetime():
+    data = pd.DataFrame(create_test_data())
+    data['end_date'] = pd.to_datetime(data['end_date'])
+    data['start_date'] = pd.to_datetime(data['start_date'])
+    return data
+
+
+@mock.patch('api.client.gro_client.GroClient.get_df', return_value=create_test_data_datetime())
+def test_get_data(test_data_1):
+    client = GroClient('mock_website', 'mock_access_token')
     expected = pd.DataFrame(create_test_data())
     expected = expected[['end_date', 'value']]
-    test_data = get_transform_data.get_data(GroClient, 'metric_id', 'item_id', 'region_id',
-                                            'source_id', 'frequency_id', 'start_date')
+    test_data = get_transform_data.get_data(client, 'metric_id', 'item_id', 'region_id',
+                                            'source_id', 'frequency_id', '2020-03-01T00:00:00.000Z')
+    expected['end_date'] = pd.to_datetime(expected['end_date'])
     assert_frame_equal(test_data, expected)
 
 
