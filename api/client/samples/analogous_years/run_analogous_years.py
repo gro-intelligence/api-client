@@ -113,7 +113,6 @@ def main():
                                                                  'ranks')
     args = parser.parse_args()
     client = GroClient(API_HOST, args.groapi_token)
-    logger = client.get_logger()
     data_series_list = get_data_series_list(args.region_id, args.item_ids, args.metric_ids,
                                             args.source_ids, args.frequency_ids, client=client)
     folder_name = final_ranks_computation.get_file_name(client, data_series_list,
