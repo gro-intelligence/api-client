@@ -59,7 +59,7 @@ def combine_subregions(df_sub_regions):
         df_consolidated_regions = df_sub_regions.groupby(['end_date'])[['value']].sum()
     df_consolidated_regions.index = pd.to_datetime(df_consolidated_regions.index)
     df_consolidated_regions = df_consolidated_regions.resample('D').pad()
-    df_consolidated_regions['end_date'] = df_consolidated_regions.index
+    df_consolidated_regions.loc[:, 'end_date'] = df_consolidated_regions.index
     return df_consolidated_regions
 
 
@@ -109,7 +109,7 @@ def extract_time_periods_by_dates(dataframe, initial_date, final_date):
     :param initial_date: 'YYYY-MM-DD'
     :return: A pandas dataframe
     """
-    dataframe['date'] = pd.to_datetime(dataframe['end_date'])
+    dataframe.loc[:, 'date'] = pd.to_datetime(dataframe['end_date'])
     max_date = dataframe['date'].max()
     min_date = dataframe['date'].min()
     loop_final_date = loop_start_dates(
@@ -120,12 +120,12 @@ def extract_time_periods_by_dates(dataframe, initial_date, final_date):
     while loop_initial_date >= min_date:
         temp_df = dataframe[(dataframe['date'] >= loop_initial_date) &
                             (dataframe['date'] <= loop_final_date)]
-        temp_df['period'] = dates_to_period_string(loop_initial_date, loop_final_date)
+        temp_df.loc[:, 'period'] = dates_to_period_string(loop_initial_date, loop_final_date)
         loop_initial_date = loop_initial_date + relativedelta(years=-1)
         loop_final_date = loop_final_date + relativedelta(years=-1)
         extracted_df_list.append(temp_df)
     extracted_df = pd.concat(extracted_df_list)
-    extracted_df['mm-dd'] = extracted_df['date'].dt.strftime("%m-%d")
+    extracted_df.loc[:, 'mm-dd'] = extracted_df['date'].dt.strftime("%m-%d")
     return extracted_df
 
 
