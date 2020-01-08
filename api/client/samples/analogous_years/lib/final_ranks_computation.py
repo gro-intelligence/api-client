@@ -210,12 +210,12 @@ def analogous_years(client, data_series_list, initial_date, final_date,
     combined_items_distances = pd.DataFrame(np.sqrt(combined_items_distances),
                                             index=combined_methods_distances_df.index,
                                             columns=combined_methods_distances_df.columns)
-    combined_items_distances['composite'] = combined_items_distances.sum(axis=1, skipna=True)
+    combined_items_distances.loc[:, 'composite'] = combined_items_distances.sum(axis=1, skipna=True)
     ranks = []
     for column_name in combined_items_distances.columns:
         combined_items_distances.sort_values(by=column_name, inplace=True)
         column_new_name = column_name.split('_')[0] + '_rank'
-        combined_items_distances[column_new_name] = \
+        combined_items_distances.loc[:, column_new_name] = \
             combined_items_distances.reset_index().index + 1
         ranks.append(column_new_name)
         combined_items_distances.sort_index(inplace=True)

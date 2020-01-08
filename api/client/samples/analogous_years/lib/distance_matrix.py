@@ -62,6 +62,6 @@ def scaled_labeled_method_distances(distance_matrix_df, initial_date, final_date
     column_name = initial_date + ' to ' + final_date
     ranked_periods_df = pd.DataFrame(distance_matrix_df[column_name])
     scaler = MaxAbsScaler()
-    ranked_periods_df[column_name] = scaler.fit_transform(ranked_periods_df[[column_name]])
+    ranked_periods_df.loc[:, column_name] = scaler.fit_transform(ranked_periods_df[[column_name]])
     ranked_periods_df.rename(columns={column_name: method}, inplace=True)
     return ranked_periods_df

@@ -29,8 +29,8 @@ def create_test_data():
 
 def create_test_data_datetime():
     data = pd.DataFrame(create_test_data())
-    data['end_date'] = pd.to_datetime(data['end_date'])
-    data['start_date'] = pd.to_datetime(data['start_date'])
+    data.loc[:, 'end_date'] = pd.to_datetime(data['end_date'])
+    data.loc[:, 'start_date'] = pd.to_datetime(data['start_date'])
     return data
 
 
@@ -40,14 +40,14 @@ def test_get_data(test_data_1):
     expected = pd.DataFrame(create_test_data())
     expected = expected[['end_date', 'value']]
     test_data = get_transform_data.get_data(client, 'metric_id', 'item_id', 'region_id',
-                                            'source_id', 'frequency_id', '2020-03-01T00:00:00.000Z')
-    expected['end_date'] = pd.to_datetime(expected['end_date'])
+                                           'source_id', 'frequency_id', '2020-03-01T00:00:00.000Z')
+    expected.loc[:, 'end_date'] = pd.to_datetime(expected['end_date'])
     assert_frame_equal(test_data, expected)
 
 
 def test_combine_subregions_with_subregion():
     test_data = pd.DataFrame(create_test_data())
-    test_data['end_date'] = pd.to_datetime(test_data['end_date'])
+    test_data.loc[:, 'end_date'] = pd.to_datetime(test_data['end_date'])
     test_data_subregion = test_data[['end_date', 'value']]
     expected_subregion = pd.DataFrame({'end_date': ['2000-03-01T00:00:00.000Z',
                                                     '2005-08-28T00:00:00.000Z',
@@ -60,7 +60,7 @@ def test_combine_subregions_with_subregion():
         utc_tz = True
     # Depending on the version of pandas, the data type of the datetime object
     # can vary between 'datetime64[ns, UTC]' and 'datetime64[ns]'
-    expected_subregion['end_date'] = pd.to_datetime(expected_subregion['end_date'], utc=utc_tz)
+    expected_subregion.loc[:, 'end_date'] = pd.to_datetime(expected_subregion['end_date'], utc=utc_tz)
     # The order of the columns after applying consolidation function is the following
     expected_subregion = expected_subregion[['value', 'end_date']]
     # The dataframes index columns is same as 'end_date' column
@@ -68,14 +68,14 @@ def test_combine_subregions_with_subregion():
     # Test the equality of frames
     # expected_subregion.index = pd.to_datetime(expected_subregion.index)
     expected_subregion = expected_subregion.resample('D').pad()
-    expected_subregion['end_date'] = expected_subregion.index
+    expected_subregion.loc[:, 'end_date'] = expected_subregion.index
     assert_frame_equal(get_transform_data.combine_subregions(test_data_subregion),
                        expected_subregion)
 
 
 def test_combine_subregions_with_nosubregion():
     test_data = pd.DataFrame(create_test_data())
-    test_data['end_date'] = pd.to_datetime(test_data['end_date'])
+    test_data.loc[:, 'end_date'] = pd.to_datetime(test_data['end_date'])
     test_data_subregion = test_data[['end_date', 'value']]
     test_data_nosubregion = test_data_subregion.drop(test_data_subregion.index[-1])
     expected_nosubregion = pd.DataFrame({'end_date': ['2019-07-31T00:00:00.000Z',
@@ -90,17 +90,17 @@ def test_combine_subregions_with_nosubregion():
     # Depending on the version of pandas, the data type of the datetime object
     # can vary between 'datetime64[ns, UTC]' and 'datetime64[ns]'
     expected_nosubregion.index = expected_nosubregion['end_date']
-    expected_nosubregion['end_date'] = pd.to_datetime(expected_nosubregion['end_date'], utc=utc_tz)
+    expected_nosubregion.loc[:, 'end_date'] = pd.to_datetime(expected_nosubregion['end_date'], utc=utc_tz)
     expected_nosubregion.index = pd.to_datetime(expected_nosubregion.index, utc=utc_tz)
     expected_nosubregion = expected_nosubregion.resample('D').pad()
-    expected_nosubregion['end_date'] = pd.to_datetime(expected_nosubregion.index, utc=utc_tz)
+    expected_nosubregion.loc[:, 'end_date'] = pd.to_datetime(expected_nosubregion.index, utc=utc_tz)
     assert_frame_equal(get_transform_data.combine_subregions(test_data_nosubregion),
                        expected_nosubregion)
 
 
 def test_combine_subregions_nodate():
     test_data = pd.DataFrame(create_test_data())
-    test_data['end_date'] = pd.to_datetime(test_data['end_date'])
+    test_data.loc[:, 'end_date'] = pd.to_datetime(test_data['end_date'])
     test_data_subregion = test_data[['end_date', 'value']]
     test_data_no_date = test_data_subregion.drop('end_date', axis=1)
     with pytest.raises(KeyError):
@@ -109,7 +109,7 @@ def test_combine_subregions_nodate():
 
 def test_extract_time_periods_by_dates_invalid_test_dates():
     test_data = pd.DataFrame(create_test_data())
-    test_data['end_date'] = pd.to_datetime(test_data['end_date'])
+    test_data.loc[:, 'end_date'] = pd.to_datetime(test_data['end_date'])
     # this is an invalid date because the initial and final dates are not within 1 year
     invalid_initial_date = '2016-02-02'
     invalid_final_date = '2017-02-02'
@@ -136,14 +136,14 @@ def test_extract_time_periods_by_dates_with_non_unique_dates():
     initial_date = '2019-03-01'
     final_date = '2019-07-31'
     expected_data = test_data
-    expected_data['date'] = pd.to_datetime(expected_data['end_date'])
-    expected_data['year'] = expected_data['date'].dt.year.astype('str')
-    expected_data['period'] = ['2019-03-01 to 2019-07-31',
-                               '2005-03-01 to 2005-07-31',
-                               '2000-03-01 to 2000-07-31',
-                               '2005-03-01 to 2005-07-31']
+    expected_data.loc[:, 'date'] = pd.to_datetime(expected_data['end_date'])
+    expected_data.loc[:, 'year'] = expected_data['date'].dt.year.astype('str')
+    expected_data.loc[:, 'period'] = ['2019-03-01 to 2019-07-31',
+                                      '2005-03-01 to 2005-07-31',
+                                      '2000-03-01 to 2000-07-31',
+                                      '2005-03-01 to 2005-07-31']
     expected_data = expected_data[expected_data.period != '2005-03-01 to 2005-07-31']
-    expected_data['mm-dd'] = expected_data['date'].dt.strftime("%m-%d")
+    expected_data.loc[:, 'mm-dd'] = expected_data['date'].dt.strftime("%m-%d")
     expected_data = expected_data.sort_values(by=list(expected_data.columns), axis=0,
                                               ascending=False)
     assert_frame_equal(
@@ -155,7 +155,7 @@ def test_extract_time_periods_by_dates_with_non_unique_dates():
 
 def test_stack_time_periods_by_ddmm_nonunique_dates():
     test_data_invalid = pd.DataFrame(create_test_data())
-    test_data_invalid['end_date'] = pd.to_datetime(test_data_invalid['end_date'])
+    test_data_invalid.loc[:, 'end_date'] = pd.to_datetime(test_data_invalid['end_date'])
     with pytest.raises(KeyError):
         get_transform_data.stack_time_periods_by_ddmm(test_data_invalid)
 

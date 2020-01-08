@@ -25,8 +25,8 @@ def test_feature_scaling():
     expected_df = create_test_data()
     for column in list(create_test_data().columns):
         expected_df[column] = expected_df[column] - (create_test_data()[column].mean())
-        if create_test_data()[column].get_values().std() != 0:
-            std = np.nanstd(create_test_data()[column].get_values())
+        if create_test_data()[column].to_numpy().std() != 0:
+            std = np.nanstd(create_test_data()[column].to_numpy())
             expected_df[column] = expected_df[column] / std
         else:
             expected_df[column] = 0.0
