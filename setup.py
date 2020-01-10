@@ -16,7 +16,7 @@ with open("requirements-test.txt", "r") as test_requirements_file:
 with open("requirements-docs.txt", "r") as docs_requirements_file:
     docs_requirements = docs_requirements_file.read()
 
-exec(open('./version.py').read())
+exec(open('./api/version.py').read())
 setuptools.setup(
     name="gro",
     version=__version__,
