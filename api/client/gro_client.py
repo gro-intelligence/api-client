@@ -62,12 +62,23 @@ class GroClient(Client):
         """
         while self._data_series_queue:
             data_series = self._data_series_queue.pop()
-            self.add_points_to_df(1, data_series, self.get_data_points(**data_series))
+            if show_revisions:
+                data_series['show_revisions'] = True
+            self.add_points_to_df(
+                0, data_series, self.get_data_points(**data_series))
         return self._data_frame
 
     def add_points_to_df(self, index, data_series, data_points):
-        self.get_logger().info('{}: {} {} {} points'.format(
-            index, data_series, type(data_points), len(data_points)))
+        """Internal function used by get_df to add individual series to the
+        frame.
+
+        Parameters:
+        -----------
+        index: unused
+        data_series: dict
+        data_points: list of dict
+
+        """
         tmp = pandas.DataFrame(data=data_points)
         if tmp.empty:
             return
