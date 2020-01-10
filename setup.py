@@ -16,9 +16,10 @@ with open("requirements-test.txt", "r") as test_requirements_file:
 with open("requirements-docs.txt", "r") as docs_requirements_file:
     docs_requirements = docs_requirements_file.read()
 
+exec(open('./version.py').read())
 setuptools.setup(
     name="gro",
-    version="1.56.2",
+    version=__version__,
     description="Python client library for accessing Gro Intelligence's "
                 "agricultural data platform",
     long_description=long_description,
