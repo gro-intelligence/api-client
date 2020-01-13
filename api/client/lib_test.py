@@ -24,7 +24,6 @@ def initialize_requests_mocker_and_get_mock_data(mock_requests_get, mock_data={
 
 @mock.patch('requests.get')
 def test_get_available(mock_requests_get):
-    print 'mock_requests_get', mock_requests_get
     mock_data = initialize_requests_mocker_and_get_mock_data(mock_requests_get)
 
     # Test data
