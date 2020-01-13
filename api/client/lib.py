@@ -187,9 +187,6 @@ def get_data(url, headers, params=None, logger=None):
     base_log_record = dict(route=url, params=params)
     retry_count = 0
 
-    ########
-    url = url.replace("https://", "")
-    ###########
     # append version info
     headers['python_version'] = platform.python_version()
     try:
