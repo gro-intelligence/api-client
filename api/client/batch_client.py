@@ -16,6 +16,8 @@ from tornado.ioloop import IOLoop
 from tornado.queues import Queue
 from api.client import cfg, lib
 from api.client.gro_client import GroClient
+import platform
+from pkg_resources import get_distribution, DistributionNotFound
 
 class BatchClient(GroClient):
     """API client with support for batch asynchronous queries."""
@@ -99,7 +101,15 @@ class BatchClient(GroClient):
     # approach with get_data_points and get_df
     @gen.coroutine
     def get_data_points_generator(self, **selection):
+        # append version info
         headers = {'authorization': 'Bearer ' + self.access_token}
+        headers['python_version'] = platform.python_version()
+        try:
+            headers['api_client_version'] = get_distribution('gro').version
+        except DistributionNotFound:
+            # package is not installed
+            pass
+        
         url = '/'.join(['https:', '', self.api_host, 'v2/data'])
         params = lib.get_data_call_params(**selection)
         resp = yield self.get_data(url, headers, params)
