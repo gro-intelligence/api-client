@@ -39,6 +39,15 @@ class BatchClient(GroClient):
         base_log_record = dict(route=url, params=params)
         retry_count = 0
         self._logger.debug(url)
+
+        # append version info
+        headers['python_version'] = platform.python_version()
+        try:
+            headers['api_client_version'] = get_distribution('gro').version
+        except DistributionNotFound:
+            # package is not installed
+            pass
+
         while retry_count < cfg.MAX_RETRIES:
             start_time = time.time()
             http_request = HTTPRequest('{url}?{params}'.format(url=url, params=urlencode(params)),
@@ -101,15 +110,7 @@ class BatchClient(GroClient):
     # approach with get_data_points and get_df
     @gen.coroutine
     def get_data_points_generator(self, **selection):
-        # append version info
         headers = {'authorization': 'Bearer ' + self.access_token}
-        headers['python_version'] = platform.python_version()
-        try:
-            headers['api_client_version'] = get_distribution('gro').version
-        except DistributionNotFound:
-            # package is not installed
-            pass
-        
         url = '/'.join(['https:', '', self.api_host, 'v2/data'])
         params = lib.get_data_call_params(**selection)
         resp = yield self.get_data(url, headers, params)
