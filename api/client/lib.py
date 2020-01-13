@@ -8,13 +8,13 @@ should appear in the client classes rather than here.
 from builtins import map
 from builtins import str
 from api.client import cfg
-from api.version import __version__
 import json
 import re
 import logging
 import requests
 import time
 import platform
+from pkg_resources import get_distribution, DistributionNotFound
 try:
     # functools are native in Python 3.2.3+
     from functools import lru_cache as memoize
@@ -187,9 +187,16 @@ def get_data(url, headers, params=None, logger=None):
     base_log_record = dict(route=url, params=params)
     retry_count = 0
 
+    ########
+    url = url.replace("https://", "")
+    ###########
     # append version info
-    headers['api_client_version'] = __version__
     headers['python_version'] = platform.python_version()
+    try:
+        headers['api_client_version'] = get_distribution('gro').version
+    except DistributionNotFound:
+        # package is not installed
+        pass
 
     if not logger:
         logger = get_default_logger()
