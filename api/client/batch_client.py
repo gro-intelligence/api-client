@@ -41,9 +41,9 @@ class BatchClient(GroClient):
         self._logger.debug(url)
 
         # append version info
-        headers['python_version'] = platform.python_version()
+        headers['python-version'] = platform.python_version()
         try:
-            headers['api_client_version'] = get_distribution('gro').version
+            headers['api-client-version'] = get_distribution('gro').version
         except DistributionNotFound:
             # package is not installed
             pass
