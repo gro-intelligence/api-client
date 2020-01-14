@@ -49,6 +49,7 @@ class CropModel(GroClient):
             'item_id': self.search_for_entity('items', crop_name),
             'metric_id': self.search_for_entity('metrics', metric_name)
         }
+        entities['unit_id'] = self.allowed_units(**entities).next()['id']
         for region in regions:
             entities['region_id'] = region['id']
             for data_series in self.get_data_series(**entities):
