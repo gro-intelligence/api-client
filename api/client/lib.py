@@ -228,7 +228,7 @@ def get_allowed_units(access_token, api_host, metric_id, item_id):
     if item_id:
         params['itemIds'] = item_id
     resp = get_data(url, headers, params)
-    return resp.json()['data']
+    return [unit['id'] for unit in resp.json()['data']]
 
 
 @memoize(maxsize=None)
