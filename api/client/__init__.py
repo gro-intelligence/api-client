@@ -94,8 +94,22 @@ class Client(object):
         return self.lookup('units', unit_id)['abbreviation']
 
     def get_allowed_units(self, metric_id, item_id=None):
+        """Get a list of unit that can be used with the given metric (and
+        optionally, item).
+
+        Parameters
+        ----------
+        metric_id: int
+        item_id: int, optional.
+
+
+        Returns
+        -------
+        list of unit ids
+
+        """
         return lib.get_allowed_units(self.access_token, self.api_host, metric_id,
-                                 item_id)
+                                     item_id)
 
     def get_data_series(self, **selection):
         """Get available data series for the given selections.
