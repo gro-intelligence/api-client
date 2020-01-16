@@ -93,8 +93,8 @@ class Client(object):
     def lookup_unit_abbreviation(self, unit_id):
         return self.lookup('units', unit_id)['abbreviation']
 
-    def allowed_units(self, metric_id, item_id=None):
-        return lib.allowed_units(self.access_token, self.api_host, metric_id,
+    def get_allowed_units(self, metric_id, item_id=None):
+        return lib.get_allowed_units(self.access_token, self.api_host, metric_id,
                                  item_id)
 
     def get_data_series(self, **selection):

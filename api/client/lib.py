@@ -221,7 +221,7 @@ def get_data(url, headers, params=None, logger=None):
 
 
 @memoize(maxsize=None)
-def allowed_units(access_token, api_host, metric_id, item_id):
+def get_allowed_units(access_token, api_host, metric_id, item_id):
     url = '/'.join(['https:', '', api_host, 'v2/units/allowed'])
     headers = {'authorization': 'Bearer ' + access_token}
     params = {'metricIds': metric_id}
