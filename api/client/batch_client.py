@@ -41,12 +41,7 @@ class BatchClient(GroClient):
         self._logger.debug(url)
 
         # append version info
-        headers['python-version'] = platform.python_version()
-        try:
-            headers['api-client-version'] = get_distribution('gro').version
-        except DistributionNotFound:
-            # package is not installed
-            pass
+        headers.update(lib.get_version_info())
 
         while retry_count < cfg.MAX_RETRIES:
             start_time = time.time()

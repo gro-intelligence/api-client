@@ -167,6 +167,19 @@ def redirect(old_params, migration):
     return new_params
 
 
+def get_version_info():
+    versions = dict()
+
+    # retrieve python version and api client version
+    versions['python-version'] = platform.python_version()
+    try:
+        versions['api-client-version'] = get_distribution('gro').version
+    except DistributionNotFound:
+        # package is not installed
+        pass
+    return versions
+
+
 def get_data(url, headers, params=None, logger=None):
     """General 'make api request' function.
 
@@ -188,12 +201,7 @@ def get_data(url, headers, params=None, logger=None):
     retry_count = 0
 
     # append version info
-    headers['python-version'] = platform.python_version()
-    try:
-        headers['api-client-version'] = get_distribution('gro').version
-    except DistributionNotFound:
-        # package is not installed
-        pass
+    headers.update(get_version_info())
 
     if not logger:
         logger = get_default_logger()
