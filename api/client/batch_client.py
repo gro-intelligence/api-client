@@ -16,8 +16,6 @@ from tornado.ioloop import IOLoop
 from tornado.queues import Queue
 from api.client import cfg, lib
 from api.client.gro_client import GroClient
-import platform
-from pkg_resources import get_distribution, DistributionNotFound
 
 class BatchClient(GroClient):
     """API client with support for batch asynchronous queries."""
