@@ -363,6 +363,7 @@
             <span class="s1">&#39;item_id&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">search_for_entity</span><span class="p">(</span><span class="s1">&#39;items&#39;</span><span class="p">,</span> <span class="n">crop_name</span><span class="p">),</span>
             <span class="s1">&#39;metric_id&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">search_for_entity</span><span class="p">(</span><span class="s1">&#39;metrics&#39;</span><span class="p">,</span> <span class="n">metric_name</span><span class="p">)</span>
         <span class="p">}</span>
+        <span class="n">entities</span><span class="p">[</span><span class="s1">&#39;unit_id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_allowed_units</span><span class="p">(</span><span class="o">**</span><span class="n">entities</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
         <span class="k">for</span> <span class="n">region</span> <span class="ow">in</span> <span class="n">regions</span><span class="p">:</span>
             <span class="n">entities</span><span class="p">[</span><span class="s1">&#39;region_id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">region</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span>
             <span class="k">for</span> <span class="n">data_series</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_data_series</span><span class="p">(</span><span class="o">**</span><span class="n">entities</span><span class="p">):</span>
@@ -619,7 +620,6 @@
             <dd><a href="../../../CLEWS-22288/index.html">CLEWS-22288</a></dd>
             <dd><a href="../../../CLEWS-23237_revision_get_df/index.html">CLEWS-23237_revision_get_df</a></dd>
             <dd><a href="../../../CLEWS-23863/index.html">CLEWS-23863</a></dd>
-            <dd><a href="../../../brazil_soybeans_update/index.html">brazil_soybeans_update</a></dd>
             <dd><a href="../../../development/_modules/api/client/crop_model.html">development</a></dd>
             <dd><a href="../../../docs-latest-tag/index.html">docs-latest-tag</a></dd>
             <dd><a href="../../../eliaschneider-patch-1/index.html">eliaschneider-patch-1</a></dd>
