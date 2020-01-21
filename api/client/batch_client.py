@@ -37,6 +37,10 @@ class BatchClient(GroClient):
         base_log_record = dict(route=url, params=params)
         retry_count = 0
         self._logger.debug(url)
+
+        # append version info
+        headers.update(lib.get_version_info())
+
         while retry_count < cfg.MAX_RETRIES:
             start_time = time.time()
             http_request = HTTPRequest('{url}?{params}'.format(url=url, params=urlencode(params)),

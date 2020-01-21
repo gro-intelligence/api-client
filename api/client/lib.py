@@ -13,6 +13,8 @@ import re
 import logging
 import requests
 import time
+import platform
+from pkg_resources import get_distribution, DistributionNotFound
 try:
     # functools are native in Python 3.2.3+
     from functools import lru_cache as memoize
@@ -165,6 +167,19 @@ def redirect(old_params, migration):
     return new_params
 
 
+def get_version_info():
+    versions = dict()
+
+    # retrieve python version and api client version
+    versions['python-version'] = platform.python_version()
+    try:
+        versions['api-client-version'] = get_distribution('gro').version
+    except DistributionNotFound:
+        # package is not installed
+        pass
+    return versions
+
+
 def get_data(url, headers, params=None, logger=None):
     """General 'make api request' function.
 
@@ -184,6 +199,10 @@ def get_data(url, headers, params=None, logger=None):
     """
     base_log_record = dict(route=url, params=params)
     retry_count = 0
+
+    # append version info
+    headers.update(get_version_info())
+
     if not logger:
         logger = get_default_logger()
         logger.debug(url)
