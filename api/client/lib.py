@@ -599,19 +599,31 @@ def get_geojson(access_token, api_host, region_id):
 
 
 def get_descendant_regions(access_token, api_host, region_id,
-                           descendant_level=False, include_historical=True):
-    descendants = []
-    region = lookup(access_token, api_host, 'regions', region_id)
-    for member_id in region['contains']:
-        member = lookup(access_token, api_host, 'regions', member_id)
-        if (not include_historical and member['historical']):
-            continue
-        if not descendant_level or descendant_level == member['level']:
-            descendants.append(member)
-        if not descendant_level or member['level'] < descendant_level:
-            descendants += get_descendant_regions(
-                access_token, api_host, member_id, descendant_level, include_historical)
-    return descendants
+                           descendant_level=False, include_historical=True, include_details=True):
+    url = '/'.join(['https:', '', api_host, 'v2/regions/contains'])
+    headers = {'authorization': 'Bearer ' + access_token}
+    params = {
+        'ids': [region_id]
+    }
+    if descendant_level:
+        params['level'] = descendant_level
+    else:
+        params['distance'] = -1
+    resp = get_data(url, headers, params)
+    descendant_region_ids = resp.json()['data'][str(region_id)]
+
+    # Exit early if no additional details are needed:
+    if not include_details and include_historical:
+        return [{'id': descendant_region_id}
+                for descendant_region_id in descendant_region_ids]
+
+    detailed_regions = [lookup(access_token, api_host, 'regions', descendant_region_id)
+                        for descendant_region_id in descendant_region_ids]
+    if not include_historical:
+        # filter out regions with the 'historical' flag
+        return [detailed_region for detailed_region in detailed_regions
+                if not detailed_region['historical']]
+    return detailed_regions
 
 
 if __name__ == '__main__':
