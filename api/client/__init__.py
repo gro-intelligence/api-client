@@ -144,8 +144,8 @@ class Client(object):
         return lib.get_data_series(self.access_token, self.api_host, **selection)
 
 
-    def get_data_points(self, **selection):
-        return lib.get_data_points(self.access_token, self.api_host, **selection)
+    def get_data_points(self, include_historical=True, **selection):
+        return lib.get_data_points(self.access_token, self.api_host, include_historical=include_historical, **selection)
 
 
     def search(self, entity_type, search_terms):

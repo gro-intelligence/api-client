@@ -99,7 +99,7 @@ class GroClient(Client):
         else:
             self._data_frame = self._data_frame.merge(tmp, how='outer')
 
-    def get_data_points(self, **selections):
+    def get_data_points(self, include_historical=True, **selections):
         """Get all the data points for a given selection.
 
         https://developers.gro-intelligence.com/data-point-definition.html
@@ -215,7 +215,7 @@ class GroClient(Client):
         list of dicts
 
         """
-        data_points = super(GroClient, self).get_data_points(**selections)
+        data_points = super(GroClient, self).get_data_points(include_historical=include_historical, **selections)
         # Apply unit conversion if a unit is specified
         if 'unit_id' in selections:
             return list(map(functools.partial(self.convert_unit,
