@@ -598,7 +598,8 @@
         <span class="k">return</span> <span class="n">lib</span><span class="o">.</span><span class="n">get_geojson</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_host</span><span class="p">,</span> <span class="n">region_id</span><span class="p">)</span>
 
 
-    <span class="k">def</span> <span class="nf">get_descendant_regions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">region_id</span><span class="p">,</span> <span class="n">descendant_level</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">include_historical</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">get_descendant_regions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">region_id</span><span class="p">,</span> <span class="n">descendant_level</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                               <span class="n">include_historical</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">include_details</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Look up details of all regions of the given level contained by a region.</span>
 
 <span class="sd">        Given any region by id, get all the descendant regions that are of the specified level.</span>
@@ -612,6 +613,10 @@
 <span class="sd">        include_historical : boolean, optional</span>
 <span class="sd">            True by default. If False is specified, regions that only exist in historical data</span>
 <span class="sd">            (e.g. the Soviet Union) will be excluded.</span>
+<span class="sd">        include_details : boolean, optional</span>
+<span class="sd">            True by default. Will perform a lookup() on each descendant region to find name,</span>
+<span class="sd">            latitude, longitude, etc. If this option is set to False, only ids of descendant</span>
+<span class="sd">            regions will be returned, which makes execution significantly faster.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -634,8 +639,8 @@
 <span class="sd">            See output of :meth:`~.lookup`</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">lib</span><span class="o">.</span><span class="n">get_descendant_regions</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_host</span><span class="p">,</span>
-                                          <span class="n">region_id</span><span class="p">,</span> <span class="n">descendant_level</span><span class="p">,</span> <span class="n">include_historical</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">lib</span><span class="o">.</span><span class="n">get_descendant_regions</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_host</span><span class="p">,</span> <span class="n">region_id</span><span class="p">,</span>
+                                          <span class="n">descendant_level</span><span class="p">,</span> <span class="n">include_historical</span><span class="p">,</span> <span class="n">include_details</span><span class="p">)</span>
 </pre></div>
 
            </div>
@@ -691,6 +696,7 @@
             <dd><a href="../../../CLEWS-22325-get_data_points/index.html">CLEWS-22325-get_data_points</a></dd>
             <dd><a href="../../../CLEWS-23237_revision_get_df/index.html">CLEWS-23237_revision_get_df</a></dd>
             <dd><a href="../../../CLEWS-23863/index.html">CLEWS-23863</a></dd>
+            <dd><a href="../../../JGrinst-patch-1/index.html">JGrinst-patch-1</a></dd>
             <dd><a href="client.html">development</a></dd>
             <dd><a href="../../../docs-latest-tag/index.html">docs-latest-tag</a></dd>
             <dd><a href="../../../eliaschneider-patch-1/index.html">eliaschneider-patch-1</a></dd>
