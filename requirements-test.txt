@@ -10,3 +10,4 @@ seaborn
 scikit-learn<0.21.0  # last version to support Python 2
 scipy<v1.3.0  # 1.2.* is the Python 2 LTS release
 tsfresh<0.13.0  # last version to support Python 2
+statsmodels<0.11.0  # Required by tsfresh. Last version to support Python 2
