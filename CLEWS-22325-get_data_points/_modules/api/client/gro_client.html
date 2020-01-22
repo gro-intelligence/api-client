@@ -416,7 +416,7 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_data_frame</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_frame</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">tmp</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s1">&#39;outer&#39;</span><span class="p">)</span>
 
-<div class="viewcode-block" id="GroClient.get_data_points"><a class="viewcode-back" href="../../../api.html#api.client.gro_client.GroClient.get_data_points">[docs]</a>    <span class="k">def</span> <span class="nf">get_data_points</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">selections</span><span class="p">):</span>
+<div class="viewcode-block" id="GroClient.get_data_points"><a class="viewcode-back" href="../../../api.html#api.client.gro_client.GroClient.get_data_points">[docs]</a>    <span class="k">def</span> <span class="nf">get_data_points</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">include_historical</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">selections</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Get all the data points for a given selection.</span>
 
 <span class="sd">        https://developers.gro-intelligence.com/data-point-definition.html</span>
@@ -532,7 +532,7 @@
 <span class="sd">        list of dicts</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">data_points</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">GroClient</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">get_data_points</span><span class="p">(</span><span class="o">**</span><span class="n">selections</span><span class="p">)</span>
+        <span class="n">data_points</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">GroClient</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">get_data_points</span><span class="p">(</span><span class="n">include_historical</span><span class="o">=</span><span class="n">include_historical</span><span class="p">,</span> <span class="o">**</span><span class="n">selections</span><span class="p">)</span>
         <span class="c1"># Apply unit conversion if a unit is specified</span>
         <span class="k">if</span> <span class="s1">&#39;unit_id&#39;</span> <span class="ow">in</span> <span class="n">selections</span><span class="p">:</span>
             <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">functools</span><span class="o">.</span><span class="n">partial</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">convert_unit</span><span class="p">,</span>
@@ -984,7 +984,6 @@
             <dd><a href="gro_client.html">CLEWS-22325-get_data_points</a></dd>
             <dd><a href="../../../../CLEWS-23237_revision_get_df/index.html">CLEWS-23237_revision_get_df</a></dd>
             <dd><a href="../../../../CLEWS-23863/index.html">CLEWS-23863</a></dd>
-            <dd><a href="../../../../JGrinst-patch-1/index.html">JGrinst-patch-1</a></dd>
             <dd><a href="../../../../development/index.html">development</a></dd>
             <dd><a href="../../../../docs-latest-tag/index.html">docs-latest-tag</a></dd>
             <dd><a href="../../../../eliaschneider-patch-1/index.html">eliaschneider-patch-1</a></dd>
