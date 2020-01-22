@@ -291,3 +291,51 @@ def test_rank_series_by_source(mock_requests_get):
     for x in c:
         assert 'source_name' not in x
     assert mock_return + mock_return == [x['source_id'] for x in c]
+
+
+def lookup_mock(MOCK_TOKEN, MOCK_HOST, entity_type, entity_id):
+    if entity_type == 'regions':
+        if entity_id == 1:
+            return {'id': 1, 'name': 'region 1', 'contains': [], 'historical': True}
+        if entity_id == 2:
+            return {'id': 2, 'name': 'region 2', 'contains': [], 'historical': False}
+
+
+@mock.patch('api.client.lib.lookup')
+@mock.patch('requests.get')
+def test_descendant_regions(mock_requests_get, lookup_mocked):
+    mock_requests_get.return_value.json.return_value = {'data': {'14': [1, 2]}}
+    mock_requests_get.return_value.status_code = 200
+    lookup_mocked.side_effect = lookup_mock
+
+    assert lib.get_descendant_regions(MOCK_TOKEN, MOCK_HOST, 14) == [
+        {'id': 1, 'name': 'region 1', 'contains': [], 'historical': True},
+        {'id': 2, 'name': 'region 2', 'contains': [], 'historical': False}
+    ]
+
+    assert lib.get_descendant_regions(MOCK_TOKEN, MOCK_HOST, 14, include_details=True) == [
+        {'id': 1, 'name': 'region 1', 'contains': [], 'historical': True},
+        {'id': 2, 'name': 'region 2', 'contains': [], 'historical': False}
+    ]
+
+    assert lib.get_descendant_regions(MOCK_TOKEN, MOCK_HOST, 14, include_details=False) == [
+        {'id': 1}, {'id': 2}
+    ]
+
+    assert lib.get_descendant_regions(MOCK_TOKEN, MOCK_HOST, 14, include_historical=True) == [
+        {'id': 1, 'name': 'region 1', 'contains': [], 'historical': True},
+        {'id': 2, 'name': 'region 2', 'contains': [], 'historical': False}
+    ]
+
+    assert lib.get_descendant_regions(MOCK_TOKEN, MOCK_HOST, 14, include_historical=False) == [
+        {'id': 2, 'name': 'region 2', 'contains': [], 'historical': False}
+    ]
+
+    assert lib.get_descendant_regions(MOCK_TOKEN, MOCK_HOST, 14,
+                                      include_historical=True, include_details=True) == [
+        {'id': 1, 'name': 'region 1', 'contains': [], 'historical': True},
+        {'id': 2, 'name': 'region 2', 'contains': [], 'historical': False}
+    ]
+
+    assert lib.get_descendant_regions(MOCK_TOKEN, MOCK_HOST, 14, include_historical=False,
+                                      include_details=False) == [{'id': 2}]
