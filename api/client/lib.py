@@ -424,7 +424,7 @@ def rank_series_by_source(access_token, api_host, series_list):
             yield series_with_source
 
 
-def list_of_series_to_single_series(series_list, add_belongs_to=False):
+def list_of_series_to_single_series(series_list, add_belongs_to=False, include_historical=True):
     """Convert list_of_series format from API back into the familiar single_series output format.
 
     >>> list_of_series_to_single_series([{
@@ -487,11 +487,13 @@ def list_of_series_to_single_series(series_list, add_belongs_to=False):
     for series in series_list:
         if not (isinstance(series, dict) and isinstance(series.get('data', []), list)):
             continue
+        series_metadata = series.get('series', {}).get('metadata', {})
+        if not include_historical and series_metadata.get('includesHistoricalRegion', False):
+            continue
         # All the belongsTo keys are in camelCase. Convert them to snake_case.
         # Only need to do this once per series, so do this outside of the list
         # comprehension and save to a variable to avoid duplicate work:
         belongs_to = camel_to_snake_dict(series.get('series', {}).get('belongsTo', {}))
-        series_metadata = series.get('series', {}).get('metadata', None)
         for point in series.get('data', []):
             formatted_point = {
                 'start_date': point[0],
@@ -525,12 +527,12 @@ def list_of_series_to_single_series(series_list, add_belongs_to=False):
     return output
 
 
-def get_data_points(access_token, api_host, **selection):
+def get_data_points(access_token, api_host, include_historical=True, **selection):
     headers = {'authorization': 'Bearer ' + access_token}
     url = '/'.join(['https:', '', api_host, 'v2/data'])
     params = get_data_call_params(**selection)
     resp = get_data(url, headers, params)
-    return list_of_series_to_single_series(resp.json())
+    return list_of_series_to_single_series(resp.json(), False, include_historical)
 
 
 @memoize(maxsize=None)
