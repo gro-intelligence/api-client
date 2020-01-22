@@ -681,7 +681,7 @@ that does not have data.</li>
 
 <dl class="method">
 <dt id="api.client.gro_client.GroClient.get_descendant_regions">
-<code class="descclassname">GroClient.</code><code class="descname">get_descendant_regions</code><span class="sig-paren">(</span><em>region_id</em>, <em>descendant_level=None</em>, <em>include_historical=True</em><span class="sig-paren">)</span><a class="headerlink" href="#api.client.gro_client.GroClient.get_descendant_regions" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">GroClient.</code><code class="descname">get_descendant_regions</code><span class="sig-paren">(</span><em>region_id</em>, <em>descendant_level=None</em>, <em>include_historical=True</em>, <em>include_details=True</em><span class="sig-paren">)</span><a class="headerlink" href="#api.client.gro_client.GroClient.get_descendant_regions" title="Permalink to this definition">¶</a></dt>
 <dd><p>Look up details of all regions of the given level contained by a region.</p>
 <p>Given any region by id, get all the descendant regions that are of the specified level.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -694,6 +694,9 @@ that does not have data.</li>
 descendants.</li>
 <li><strong>include_historical</strong> (<em>boolean</em><em>, </em><em>optional</em>) &#8211; True by default. If False is specified, regions that only exist in historical data
 (e.g. the Soviet Union) will be excluded.</li>
+<li><strong>include_details</strong> (<em>boolean</em><em>, </em><em>optional</em>) &#8211; True by default. Will perform a lookup() on each descendant region to find name,
+latitude, longitude, etc. If this option is set to False, only ids of descendant
+regions will be returned, which makes execution significantly faster.</li>
 </ul>
 </td>
 </tr>
