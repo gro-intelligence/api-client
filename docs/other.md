@@ -116,8 +116,8 @@ Listed below are Gro's existing models. Each available link will lead you to bac
 * [US Soybeans](https://s3.amazonaws.com/groprod/yield_model_backtest/US_soybeans_backtest_2001_to_2017.zip)
 * [Argentina Soybeans](https://s3.amazonaws.com/groprod/yield_model_backtest/Argentina_soybeans_backtest_2001_to_2017.zip)
 * [India Wheat](https://s3.amazonaws.com/groprod/yield_model_backtest/India_wheat_backtest_2001_to_2017.zip)
-* Ukraine Wheat (Beta)
-* Russia Wheat (Beta)
+* [Ukraine Wheat (Beta)](https://groprod.s3.amazonaws.com/yield_model_backtest/Wheat_Ukraine_backtest_2001_to_2017.zip)
+* [Russia Wheat (Beta)](https://groprod.s3.amazonaws.com/yield_model_backtest/Winter+wheat_Russia_backtest_2001_to_2018.zip)
 * [US Hard Red Winter Wheat (Beta)](https://s3.amazonaws.com/groprod/yield_model_backtest/US_hardRedWinterWheat_backtest_2001_to_2018.zip)
 
 NOTE: Our "beta" models have run for less than one full season. At this stage, each model has been fully backtested at monthly frequency across a whole crop season. However, the beta models are still under active development, so the inputs and parameters to the models might change during the current season.
