@@ -491,6 +491,7 @@ def list_of_series_to_single_series(series_list, add_belongs_to=False):
         # Only need to do this once per series, so do this outside of the list
         # comprehension and save to a variable to avoid duplicate work:
         belongs_to = camel_to_snake_dict(series.get('series', {}).get('belongsTo', {}))
+        series_metadata = series.get('series', {}).get('metadata', None)
         for point in series.get('data', []):
             formatted_point = {
                 'start_date': point[0],
@@ -513,6 +514,8 @@ def list_of_series_to_single_series(series_list, add_belongs_to=False):
                 'frequency_id': series['series'].get('frequencyId', None)
                 # 'source_id': series['series'].get('sourceId', None), TODO: add source to output
             }
+            if series_metadata:
+                formatted_point['metadata'] = series_metadata
             if add_belongs_to:
                 # belongs_to is consistent with the series the user requested. So if an
                 # expansion happened on the server side, the user can reconstruct what
