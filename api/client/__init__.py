@@ -89,6 +89,31 @@ class Client(object):
         """
         return lib.lookup(self.access_token, self.api_host, entity_type, entity_id)
 
+    def lookup_property(self, entity_type, entity_ids, property_plural):
+        """Retrieve details about a given id of type entity_type.
+
+        https://developers.gro-intelligence.com/gro-ontology.html
+
+        Parameters
+        ----------
+        entity_type : { 'metrics', 'items', 'regions', 'frequencies', 'sources', 'units' }
+        entity_id : int
+
+        Returns
+        -------
+        dict
+
+            Example::
+
+                { 'id': 274,
+                  'contains': [779, 780, ...]
+                  'name': 'Corn',
+                  'definition': 'The seeds of the widely cultivated corn plant <i>Zea mays</i>,'
+                                ' which is one of the world\'s most popular grains.' }
+
+        """
+        return lib.lookup_property(self.access_token, self.api_host,
+                                   entity_type, entity_ids, property_plural)
 
     def lookup_unit_abbreviation(self, unit_id):
         return self.lookup('units', unit_id)['abbreviation']

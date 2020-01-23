@@ -33,6 +33,55 @@ REGION_LEVELS = {
     'coordinate': 9
 }
 
+ENTITY_TYPES_PLURAL = ['metrics', 'items', 'regions', 'frequencies', 'sources', 'units']
+PROPERTIES_PLURAL = {
+    'metrics': [
+        'names',  # TODO: 'propertyName': endpoint dict
+        'contains',
+        'definitions',
+        'allow-negative',
+        'allowed-aggregations',
+        'belongs-to'
+    ],
+    'items': [
+        'names',
+        'contains',
+        'definitions',
+        'belongs-to'
+    ],
+    'regions': [
+        'names',
+        'contains',
+        'definitions',
+        'belongs-to',
+        'levels',
+        'latitudes',
+        'longitudes'
+    ],
+    'frequencies': [
+        'names',
+        'abbreviations',
+        'periods'
+    ],
+    'sources': [
+        'names',
+        'long-names',
+        'lags',
+        'historical-start-dates',
+        'descriptions',
+        'resolutions',
+        'regional-coverages',
+        'language',  # plural?
+        'file-format'  # plural?
+    ],
+    'units': [
+        'names',
+        'plural-names',
+        'abbreviations',
+        'conversions',
+        'conversion-types'
+    ]
+}
 
 @memoize(maxsize=None)
 def camel_to_snake(term):
@@ -55,6 +104,40 @@ def camel_to_snake(term):
 
     """
     return re.sub('([a-z0-9])([A-Z])', r'\1_\2', re.sub('(.)([A-Z][a-z]+)', r'\1_\2', term)).lower()
+
+
+@memoize(maxsize=None)
+def snake_to_kebab(term):
+    """Convert a string from snake_case to kebab-case.
+
+    Parameters
+    ----------
+    term : string
+        A snake_case string
+    Returns
+    -------
+    string
+        A new kebab-case string
+
+    """
+    return '-'.join(term.split('_'))
+
+
+@memoize(maxsize=None)
+def kebab_to_snake(term):
+    """Convert a string from kebab-case to snake_case.
+
+    Parameters
+    ----------
+    term : string
+        A kebab-case string
+    Returns
+    -------
+    string
+        A new snake_case string
+
+    """
+    return '_'.join(term.split('-'))
 
 
 def camel_to_snake_dict(obj):
@@ -271,10 +354,39 @@ def list_available(access_token, api_host, selected_entities):
 
 
 @memoize(maxsize=None)
-def lookup(access_token, api_host, entity_type, entity_id):
-    url = '/'.join(['https:', '', api_host, 'v2', entity_type, str(entity_id)])
+def lookup(access_token, api_host, entity_type, entity_ids, properties_plural=None):
+    if isinstance(entity_ids, int):
+        entity_ids = [entity_ids]
+    if properties_plural is None:
+        properties_plural = [kebab_to_snake(prop) for prop in PROPERTIES_PLURAL[entity_type]]
+    responses = {}
+    for property_plural in properties_plural:
+        values = lookup_property(access_token, api_host, entity_type, entity_ids, property_plural)
+        for entity_id in entity_ids:
+            if str(entity_id) not in responses:
+                responses[str(entity_id)] = {}
+            # TODO: should be property_singular, and in camelcase
+            responses[str(entity_id)][property_plural] = values[str(entity_id)]
+    if len(entity_ids) == 1:
+        return responses[str(entity_ids[0])]
+    else:
+        return responses
+
+
+def lookup_property(access_token, api_host, entity_type, entity_ids, property_plural):
+    assert entity_type in ENTITY_TYPES_PLURAL, \
+        'entity_type must be one of {}'.format(ENTITY_TYPES_PLURAL)
+    assert isinstance(entity_ids, list), 'entity_ids must be a list'
+    assert len(entity_ids) > 0, 'entity_ids must contain at least one element'
+    assert isinstance(entity_ids[0], int), 'entity_ids must be a list of integers'
+    property_list = [kebab_to_snake(prop) for prop in PROPERTIES_PLURAL[entity_type]]
+    assert property_plural in property_list, \
+        'property_plural must be one of {}'.format(property_list)
+
+    url = '/'.join(['https:', '', api_host, 'v2', entity_type, snake_to_kebab(property_plural)])
     headers = {'authorization': 'Bearer ' + access_token}
-    resp = get_data(url, headers)
+    params = {'ids': '[{}]'.format(','.join([str(entity_id) for entity_id in entity_ids]))}
+    resp = get_data(url, headers, params)
     try:
         return resp.json()['data']
     except KeyError:
