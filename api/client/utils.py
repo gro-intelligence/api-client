@@ -12,10 +12,10 @@ import re
 def str_camel_to_snake(term):
     """Convert a string from camelCase to snake_case.
 
-    >>> camel_to_snake('partnerRegionId')
+    >>> str_camel_to_snake('partnerRegionId')
     'partner_region_id'
 
-    >>> camel_to_snake('partner_region_id')
+    >>> str_camel_to_snake('partner_region_id')
     'partner_region_id'
 
     Parameters
@@ -32,44 +32,33 @@ def str_camel_to_snake(term):
 
 
 @memoize(maxsize=None)
-def str_snake_to_kebab(term):
-    """Convert a string from snake_case to kebab-case.
+def str_snake_to_camel(term):
+    """Convert a string from snake_case to camelCase.
+
+    >>> str_snake_to_camel('hello_world')
+    'helloWorld'
 
     Parameters
     ----------
     term : string
-        A snake_case string
+
     Returns
     -------
     string
-        A new kebab-case string
 
     """
-    return '-'.join(term.split('_'))
-
-
-@memoize(maxsize=None)
-def str_kebab_to_snake(term):
-    """Convert a string from kebab-case to snake_case.
-
-    Parameters
-    ----------
-    term : string
-        A kebab-case string
-    Returns
-    -------
-    string
-        A new snake_case string
-
-    """
-    return '_'.join(term.split('-'))
+    camel = term.split('_')
+    return ''.join(camel[:1] + list([x[0].upper()+x[1:] for x in camel[1:]]))
 
 
 def dict_reformat_keys(obj, format_func):
-    """Convert a dictionary's keys from one format to another.
+    """Convert a dictionary's keys from one string format to another.
 
-    >>> dict_reformat_keys({'belongsTo': {'metricId': 4}}, camel_to_snake)
+    >>> dict_reformat_keys({'belongsTo': {'metricId': 4}}, str_camel_to_snake)
     {'belongs_to': {'metricId': 4}}
+
+    >>> dict_reformat_keys({'belongs_to': {'metric_id': 4}}, str_snake_to_camel)
+    {'belongsTo': {'metric_id': 4}}
 
     Parameters
     ----------
@@ -101,9 +90,9 @@ def list_chunk(arr, chunk_size=50):
 
     Examples
     --------
-    >>> chunk([1,2,3,4,5,6,7,8], 3)
+    >>> list_chunk([1,2,3,4,5,6,7,8], 3)
     [[1,2,3], [4,5,6], [7,8]]
-    >>> chunk([1,2,3,4,5,6,7,8,9,10,11], 5)
+    >>> list_chunk([1,2,3,4,5,6,7,8,9,10,11], 5)
     [[1,2,3,4,5], [6,7,8,9,10], [11]]
 
     """
