@@ -5,159 +5,21 @@ exposed in this module. Helper functions or shims or derivative functionality
 should appear in the client classes rather than here.
 """
 
-from builtins import map
-from builtins import str
 from api.client import cfg
+from api.client.constants import DATA_SERIES_UNIQUE_TYPES_ID, ENTITY_PROPERTIES, REGION_LEVELS
+from api.client.utils import str_camel_to_snake, snake_to_camel, dict_reformat_keys, list_chunk
+from builtins import str
+from pkg_resources import get_distribution, DistributionNotFound
 import json
-import re
 import logging
+import platform
 import requests
 import time
-import platform
-from pkg_resources import get_distribution, DistributionNotFound
 try:
     # functools are native in Python 3.2.3+
     from functools import lru_cache as memoize
 except ImportError:
     from backports.functools_lru_cache import lru_cache as memoize
-
-REGION_LEVELS = {
-    'world': 1,
-    'continent': 2,
-    'country': 3,
-    'province': 4,  # Equivalent to state in the United States
-    'district': 5,  # Equivalent to county in the United States
-    'city': 6,
-    'market': 7,
-    'other': 8,
-    'coordinate': 9
-}
-
-ENTITY_TYPES_PLURAL = ['metrics', 'items', 'regions', 'frequencies', 'sources', 'units']
-PROPERTIES_PLURAL = {
-    'metrics': [
-        'names',  # TODO: 'propertyName': endpoint dict
-        'contains',
-        'definitions',
-        'allow-negative',
-        'allowed-aggregations',
-        'belongs-to'
-    ],
-    'items': [
-        'names',
-        'contains',
-        'definitions',
-        'belongs-to'
-    ],
-    'regions': [
-        'names',
-        'contains',
-        'definitions',
-        'belongs-to',
-        'levels',
-        'latitudes',
-        'longitudes'
-    ],
-    'frequencies': [
-        'names',
-        'abbreviations',
-        'periods'
-    ],
-    'sources': [
-        'names',
-        'long-names',
-        'lags',
-        'historical-start-dates',
-        'descriptions',
-        'resolutions',
-        'regional-coverages',
-        'language',  # plural?
-        'file-format'  # plural?
-    ],
-    'units': [
-        'names',
-        'plural-names',
-        'abbreviations',
-        'conversions',
-        'conversion-types'
-    ]
-}
-
-@memoize(maxsize=None)
-def camel_to_snake(term):
-    """Convert a string from camelCase to snake_case.
-
-    >>> camel_to_snake('partnerRegionId')
-    'partner_region_id'
-
-    >>> camel_to_snake('partner_region_id')
-    'partner_region_id'
-
-    Parameters
-    ----------
-    term : string
-        A camelCase string
-    Returns
-    -------
-    string
-        A new snake_case string
-
-    """
-    return re.sub('([a-z0-9])([A-Z])', r'\1_\2', re.sub('(.)([A-Z][a-z]+)', r'\1_\2', term)).lower()
-
-
-@memoize(maxsize=None)
-def snake_to_kebab(term):
-    """Convert a string from snake_case to kebab-case.
-
-    Parameters
-    ----------
-    term : string
-        A snake_case string
-    Returns
-    -------
-    string
-        A new kebab-case string
-
-    """
-    return '-'.join(term.split('_'))
-
-
-@memoize(maxsize=None)
-def kebab_to_snake(term):
-    """Convert a string from kebab-case to snake_case.
-
-    Parameters
-    ----------
-    term : string
-        A kebab-case string
-    Returns
-    -------
-    string
-        A new snake_case string
-
-    """
-    return '_'.join(term.split('-'))
-
-
-def camel_to_snake_dict(obj):
-    """Convert a dictionary's keys from camelCase to snake_case.
-
-    >>> camel_to_snake_dict({'belongsTo': {'metricId': 4}})
-    {'belongs_to': {'metricId': 4}}
-
-    Parameters
-    ----------
-    term : dict
-        A dictionary with camelCase keys
-
-    Returns
-    -------
-    dict
-        A new dictionary with snake_case keys
-
-    """
-    return dict((camel_to_snake(key), value) for key, value in obj.items())
 
 
 def get_default_logger():
@@ -245,14 +107,13 @@ def redirect(old_params, migration):
     for migration_key in migration:
         split_mig_key = migration_key.split('_')
         if split_mig_key[0] == 'new':
-            param_key = snake_to_camel('_'.join([split_mig_key[1], 'id']))
+            param_key = str_snake_to_camel('_'.join([split_mig_key[1], 'id']))
             new_params[param_key] = migration[migration_key]
     return new_params
 
 
 def get_version_info():
     versions = dict()
-
     # retrieve python version and api client version
     versions['python-version'] = platform.python_version()
     try:
@@ -344,7 +205,7 @@ def get_available(access_token, api_host, entity_type):
 def list_available(access_token, api_host, selected_entities):
     url = '/'.join(['https:', '', api_host, 'v2/entities/list'])
     headers = {'authorization': 'Bearer ' + access_token}
-    params = dict([(snake_to_camel(key), value)
+    params = dict([(str_snake_to_camel(key), value)
                    for (key, value) in list(selected_entities.items())])
     resp = get_data(url, headers, params)
     try:
@@ -353,75 +214,61 @@ def list_available(access_token, api_host, selected_entities):
         raise Exception(resp.text)
 
 
-@memoize(maxsize=None)
-def lookup(access_token, api_host, entity_type, entity_ids, properties_plural=None):
+def lookup(access_token, api_host, entity_type, entity_ids, property_names=None):
     if isinstance(entity_ids, int):
         entity_ids = [entity_ids]
-    if properties_plural is None:
-        properties_plural = [kebab_to_snake(prop) for prop in PROPERTIES_PLURAL[entity_type]]
+    if property_names is None:
+        property_names = list(ENTITY_PROPERTIES[entity_type].keys())
     responses = {}
-    for property_plural in properties_plural:
-        values = lookup_property(access_token, api_host, entity_type, entity_ids, property_plural)
-        for entity_id in entity_ids:
-            if str(entity_id) not in responses:
-                responses[str(entity_id)] = {}
-            # TODO: should be property_singular, and in camelcase
-            responses[str(entity_id)][property_plural] = values[str(entity_id)]
+    for property_name in property_names:
+        for entity_id, property_value in lookup_property(access_token, api_host, entity_type,
+                                                         entity_ids, property_name):
+            responses[entity_id] = {**d.get(entity_id, {}), **{property_name: []}}
     if len(entity_ids) == 1:
         return responses[str(entity_ids[0])]
     else:
         return responses
 
 
-def lookup_property(access_token, api_host, entity_type, entity_ids, property_plural):
-    assert entity_type in ENTITY_TYPES_PLURAL, \
-        'entity_type must be one of {}'.format(ENTITY_TYPES_PLURAL)
-    assert isinstance(entity_ids, list), 'entity_ids must be a list'
-    assert len(entity_ids) > 0, 'entity_ids must contain at least one element'
-    assert isinstance(entity_ids[0], int), 'entity_ids must be a list of integers'
-    property_list = [kebab_to_snake(prop) for prop in PROPERTIES_PLURAL[entity_type]]
-    assert property_plural in property_list, \
-        'property_plural must be one of {}'.format(property_list)
+def lookup_property(access_token, api_host, entity_type, entity_ids, property_name):
+    assert entity_type in ENTITY_PROPERTIES, \
+        'entity_type must be one of {}'.format(ENTITY_PROPERTIES)
+    if isinstance(entity_ids, int):
+        entity_ids = [entity_ids]
+    else:
+        assert isinstance(entity_ids, list), 'entity_ids must be a list'
+        assert len(entity_ids) > 0, 'entity_ids must contain at least one element'
+        assert isinstance(entity_ids[0], int), 'entity_ids must be a list of integers'
+    assert property_name in ENTITY_PROPERTIES[entity_type], \
+        'property_name must be one of {}'.format(ENTITY_PROPERTIES[entity_type].keys())
 
-    url = '/'.join(['https:', '', api_host, 'v2', entity_type, snake_to_kebab(property_plural)])
+    url = '/'.join(['https:', '', api_host, 'v2', entity_type,
+                    ENTITY_PROPERTIES[entity_type][property_name]])
     headers = {'authorization': 'Bearer ' + access_token}
-    params = {'ids': '[{}]'.format(','.join([str(entity_id) for entity_id in entity_ids]))}
-    resp = get_data(url, headers, params)
-    try:
-        return resp.json()['data']
-    except KeyError:
-        raise Exception(resp.text)
+    output = {}
+    for id_chunk in list_chunk(entity_ids):
+        params = {'ids': '[{}]'.format(','.join([str(entity_id) for entity_id in entity_ids]))}
+        resp = get_data(url, headers, params)
+        try:
+            output.update(resp.json()['data'])
+        except KeyError:
+            raise Exception(resp.text)
+    if len(entity_ids) == 1:
+        return output[str(entity_ids[0])]
+    return output
 
 
-@memoize(maxsize=None)
-def snake_to_camel(term):
-    """Convert a string from snake_case to camelCase.
-
-    >>> snake_to_camel('hello_world')
-    'helloWorld'
-
-    Parameters
-    ----------
-    term : string
-
-    Returns
-    -------
-    string
-
-    """
-    camel = term.split('_')
-    return ''.join(camel[:1] + list([x[0].upper()+x[1:] for x in camel[1:]]))
-
-
-def get_params_from_selection(**selection):
+def get_params(additional_keys=[], **selection):
     """Construct http request params from dict of entity selections.
 
     For use with get_data_series() and rank_series_by_source().
 
-    >>> get_params_from_selection(
-    ...     metric_id=123, item_id=456, unit_id=14
-    ... ) == { 'itemId': 456, 'metricId': 123 }
+    >>> get_params(metric_id=123, item_id=456, unit_id=14) == { 'itemId': 456, 'metricId': 123 }
     True
+    >>> get_params(
+    ...     ['start_date', 'end_date', 'show_revisions', 'insert_null', 'at_time']
+    ...     metric_id=123, start_date='2012-01-01', unit_id=14, at_time='2019-01-01'
+    ... ) == {'metricId': 123, 'startDate': '2012-01-01', 'atTime': '2019-01-01'}
 
     Parameters
     ----------
@@ -431,8 +278,7 @@ def get_params_from_selection(**selection):
     partner_region_id : integer, optional
     source_id : integer, optional
     frequency_id : integer, optional
-    start_date: string, optional
-    end_date: string, optional
+    additional_keys : list, optional
 
     Returns
     -------
@@ -442,47 +288,8 @@ def get_params_from_selection(**selection):
     """
     params = {}
     for key, value in list(selection.items()):
-        if key in ('region_id', 'partner_region_id', 'item_id', 'metric_id',
-                   'source_id', 'frequency_id', 'start_date', 'end_date'):
-            params[snake_to_camel(key)] = value
-    return params
-
-
-def get_data_call_params(**selection):
-    """Construct http request params from dict of entity selections.
-
-    For use with get_data_points().
-
-    >>> get_data_call_params(
-    ...     metric_id=123, start_date='2012-01-01', unit_id=14
-    ... ) == {'startDate': '2012-01-01', 'metricId': 123, 'responseType': 'list_of_series'}
-    True
-
-    Parameters
-    ----------
-    metric_id : integer
-    item_id : integer
-    region_id : integer
-    partner_region_id : integer
-    source_id : integer
-    frequency_id : integer
-    start_date : string, optional
-    end_date : string, optional
-    show_revisions : boolean, optional
-    insert_null : boolean, optional
-    at_time : string, optional
-
-    Returns
-    -------
-    dict
-        selections with valid keys converted to camelcase and invalid ones filtered out
-
-    """
-    params = get_params_from_selection(**selection)
-    for key, value in list(selection.items()):
-        if key in ('start_date', 'end_date', 'show_revisions', 'insert_null', 'at_time'):
-            params[snake_to_camel(key)] = value
-    params['responseType'] = 'list_of_series'
+        if key in DATA_SERIES_UNIQUE_TYPES_ID + additional_keys:
+            params[str_snake_to_camel(key)] = value
     return params
 
 
@@ -490,7 +297,7 @@ def get_data_series(access_token, api_host, **selection):
     logger = get_default_logger()
     url = '/'.join(['https:', '', api_host, 'v2/data_series/list'])
     headers = {'authorization': 'Bearer ' + access_token}
-    params = get_params_from_selection(**selection)
+    params = get_params(['start_date', 'end_date'], **selection)
     resp = get_data(url, headers, params)
     try:
         response = resp.json()['data']
@@ -501,20 +308,28 @@ def get_data_series(access_token, api_host, **selection):
         raise Exception(resp.text)
 
 
-def get_source_ranking(access_token, api_host, series):
+def get_source_ranking(access_token, api_host, selections):
     """Given a series, return a list of ranked sources.
 
-    :param access_token: API access token.
-    :param api_host: API host.
-    :param series: Series to calculate source raking for.
-    :return: List of sources that match the series parameters, sorted by rank.
+    Parameters
+    ----------
+    access_token : string
+    api_host : string
+    selections : dict
+
+    Returns
+    -------
+    list of dicts
+        Sources that match the selections, sorted by rank
+
     """
     def make_key(key):
         if key not in ('startDate', 'endDate'):
             return key + 's'
         return key
-    params = dict((make_key(k), v) for k, v in iter(list(
-        get_params_from_selection(**series).items())))
+    params = dict((make_key(k), v)
+                  for k, v in iter(list(get_params(['start_date', 'end_date'],
+                                                   **selections).items())))
     url = '/'.join(['https:', '', api_host, 'v2/available/sources'])
     headers = {'authorization': 'Bearer ' + access_token}
     return get_data(url, headers, params).json()
@@ -602,7 +417,8 @@ def list_of_series_to_single_series(series_list, add_belongs_to=False):
         # All the belongsTo keys are in camelCase. Convert them to snake_case.
         # Only need to do this once per series, so do this outside of the list
         # comprehension and save to a variable to avoid duplicate work:
-        belongs_to = camel_to_snake_dict(series.get('series', {}).get('belongsTo', {}))
+        belongs_to = dict_reformat_keys(series.get('series', {}).get('belongsTo', {}),
+                                        str_camel_to_snake)
         for point in series.get('data', []):
             formatted_point = {
                 'start_date': point[0],
@@ -637,7 +453,9 @@ def list_of_series_to_single_series(series_list, add_belongs_to=False):
 def get_data_points(access_token, api_host, **selection):
     headers = {'authorization': 'Bearer ' + access_token}
     url = '/'.join(['https:', '', api_host, 'v2/data'])
-    params = get_data_call_params(**selection)
+    params = get_params(['start_date', 'end_date', 'show_revisions', 'insert_null', 'at_time'],
+                        **selection)
+    params['responseType'] = 'list_of_series'
     resp = get_data(url, headers, params)
     return list_of_series_to_single_series(resp.json())
 
@@ -678,33 +496,30 @@ def search(access_token, api_host, entity_type, search_terms):
 
 def search_and_lookup(access_token, api_host, entity_type, search_terms, num_results=10):
     search_results = search(access_token, api_host, entity_type, search_terms)
-    for result in search_results[:num_results]:
-        yield lookup(access_token, api_host, entity_type, result['id'])
+    for result in lookup(access_token, api_host, entity_type, search_results[:num_results]):
+        yield result
 
 
 def lookup_belongs(access_token, api_host, entity_type, entity_id):
-    url = '/'.join(['https:', '', api_host, 'v2', entity_type, 'belongs-to'])
-    params = {'ids': str(entity_id)}
-    headers = {'authorization': 'Bearer ' + access_token}
-    parents = get_data(url, headers, params).json().get('data').get(str(entity_id), [])
-    for parent_entity_id in parents:
-        yield lookup(access_token, api_host, entity_type, parent_entity_id)
+    parent_entity_ids = lookup_property(access_token, api_host, entity_type, entity_id, 'belongsTo')
+    for parent_details in lookup(access_token, api_host, entity_type, parent_entity_ids):
+        yield parent_details
 
 
 def get_geo_centre(access_token, api_host, region_id):
-    url = '/'.join(['https:', '', api_host, 'v2/geocentres?regionIds=' +
-                    str(region_id)])
+    url = '/'.join(['https:', '', api_host, 'v2', 'geocentres']
     headers = {'authorization': 'Bearer ' + access_token}
-    resp = get_data(url, headers)
+    params = {'regionIds': region_id}
+    resp = get_data(url, headers, params)
     return resp.json()['data']
 
 
 @memoize(maxsize=None)
 def get_geojson(access_token, api_host, region_id):
-    url = '/'.join(['https:', '', api_host, 'v2/geocentres?includeGeojson=True&regionIds=' +
-                    str(region_id)])
+    url = '/'.join(['https:', '', api_host, 'v2/geocentres'])
     headers = {'authorization': 'Bearer ' + access_token}
-    resp = get_data(url, headers)
+    params = {'includeGeojson': True, 'regionIds': region_id}
+    resp = get_data(url, headers, params)
     for region in resp.json()['data']:
         return json.loads(region['geojson'])
     return None
