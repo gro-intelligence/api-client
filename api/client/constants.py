@@ -1,4 +1,4 @@
-"""Importable by lib or Client classes."""
+"""Constants about the Gro ontology that can be imported and re-used anywhere."""
 
 REGION_LEVELS = {
     'world': 1,
