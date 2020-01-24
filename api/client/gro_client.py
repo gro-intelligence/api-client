@@ -1,26 +1,21 @@
 from __future__ import print_function
-from builtins import zip
+from api.client import cfg, lib, Client
+from api.client.constants import DATA_POINTS_UNIQUE_COLS
 from builtins import str
+from builtins import zip
 from random import random
 import argparse
+import functools
 import getpass
 import itertools
-import functools
 import os
 import pandas
 import sys
 import unicodecsv
-from api.client import cfg, lib, Client
 
 
 API_HOST = 'api.gro-intelligence.com'
 OUTPUT_FILENAME = 'gro_client_output.csv'
-
-
-DATA_POINTS_UNIQUE_COLS = ['item_id', 'metric_id',
-                           'region_id', 'partner_region_id',
-                           'frequency_id', 'source_id',
-                           'reporting_date', 'start_date', 'end_date']
 
 
 class GroClient(Client):
