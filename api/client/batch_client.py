@@ -83,14 +83,12 @@ class BatchClient(GroClient):
                         url, retry_count, e.response.error))
 
     @gen.coroutine
-    def get_data_points(self, include_historical=True, **selection):
+    def get_data_points(self, **selection):
         """Get all the data points for a given selection, which is some or all
         of: item_id, metric_id, region_id, frequency_id, source_id,
         partner_region_id. Additional arguments are allowed and ignored.
         """
-        data_points = super(BatchClient, self).get_data_points(
-            include_historical=include_historical, 
-            **selection)
+        data_points = super(BatchClient, self).get_data_points(**selection)
         raise gen.Return(data_points)
 
     def get_df(self, show_revisions=True):
@@ -104,20 +102,22 @@ class BatchClient(GroClient):
     # TODO: deprecate  the following  two methods, standardize  on one
     # approach with get_data_points and get_df
     @gen.coroutine
-    def get_data_points_generator(self, include_historical=True, **selection):
+    def get_data_points_generator(self, **selection):
         headers = {'authorization': 'Bearer ' + self.access_token}
-        url = '/'.join(['https:', '', self.api_host, 'v2/data'])
+        url = '/'.join(['http:', '', self.api_host, 'v2/data'])
         params = lib.get_data_call_params(**selection)
         resp = yield self.get_data(url, headers, params)
         raise gen.Return(json_decode(resp))
 
     def batch_async_get_data_points(self, batched_args, output_list=None,
-                                    map_result=None, include_historical=True):
-        for args in batched_args:
-            args['include_historical'] = include_historical
+                                    map_result=None):
         batch_async_series_list = self.batch_async_queue(
             self.get_data_points_generator, batched_args, output_list, map_result)
-        return [lib.list_of_series_to_single_series(series_list, False, include_historical) for series_list in batch_async_series_list]
+        result = []
+        for idx in range(len(batched_args)):
+            include_historical = batched_args[idx].get('include_historical', True)
+            result.append(lib.list_of_series_to_single_series(batch_async_series_list[idx], False, include_historical))
+        return result
 
     @gen.coroutine
     def async_rank_series_by_source(self, **selection):

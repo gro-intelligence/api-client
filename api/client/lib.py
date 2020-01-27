@@ -527,11 +527,12 @@ def list_of_series_to_single_series(series_list, add_belongs_to=False, include_h
     return output
 
 
-def get_data_points(access_token, api_host, include_historical=True, **selection):
+def get_data_points(access_token, api_host, **selection):
     headers = {'authorization': 'Bearer ' + access_token}
     url = '/'.join(['https:', '', api_host, 'v2/data'])
     params = get_data_call_params(**selection)
     resp = get_data(url, headers, params)
+    include_historical = selection.get('include_historical', True)
     return list_of_series_to_single_series(resp.json(), False, include_historical)
 
 
