@@ -63,7 +63,7 @@ def combine_subregions(df_sub_regions):
     return df_consolidated_regions
 
 
-def loop_start_dates(max_date, initial_date, final_date):
+def loop_start_dates(max_date, initial_date, final_date, display_fin_dt):
     """
     :param max_date: datetime
     :param initial_date: string 'YYYY-MM-DD'
@@ -75,6 +75,8 @@ def loop_start_dates(max_date, initial_date, final_date):
     initial_date = initial_date.replace(tzinfo=tz_info)
     final_date = parse(final_date)
     final_date = final_date.replace(tzinfo=tz_info)
+    display_fin_dt = parse(display_fin_dt)
+    display_fin_dt = display_fin_dt.replace(tzinfo=tz_info)
     if initial_date >= final_date:
         raise ValueError('Initial date {} is not prior to final date {}. '
                          'Change and try again'.format(initial_date, final_date))
@@ -85,10 +87,13 @@ def loop_start_dates(max_date, initial_date, final_date):
         raise ValueError('Data unavailable after {}'.format(max_date))
     loop_final_date = final_date
     loop_initial_date = initial_date
+    loop_display_final_date = display_fin_dt
     while loop_final_date + relativedelta(years=+1) < max_date:
         loop_final_date = loop_final_date + relativedelta(years=+1)
         loop_initial_date = loop_initial_date + relativedelta(years=+1)
-    return {'initial_date': loop_initial_date, 'final_date': loop_final_date}
+        loop_display_final_date = loop_display_final_date + relativedelta(years=+1)
+    return {'initial_date': loop_initial_date, 'final_date': loop_final_date,
+            'display_date': loop_display_final_date}
 
 
 def dates_to_period_string(date_1, date_2):
@@ -100,7 +105,7 @@ def dates_to_period_string(date_1, date_2):
     return date_1.strftime("%Y-%m-%d") + ' to ' + date_2.strftime("%Y-%m-%d")
 
 
-def extract_time_periods_by_dates(dataframe, initial_date, final_date):
+def extract_time_periods_by_dates(dataframe, initial_date, actual_final_date, display_final_date):
     """
     Extract a dataframe from an input dataframe of daily values using the
     MM-DD for different years
@@ -113,16 +118,19 @@ def extract_time_periods_by_dates(dataframe, initial_date, final_date):
     max_date = dataframe['date'].max()
     min_date = dataframe['date'].min()
     loop_final_date = loop_start_dates(
-        max_date, initial_date, final_date)['final_date']
+        max_date, initial_date, actual_final_date, display_final_date)['final_date']
     loop_initial_date = loop_start_dates(
-        max_date, initial_date, final_date)['initial_date']
+        max_date, initial_date, actual_final_date, display_final_date)['initial_date']
+    loop_display_final_date = loop_start_dates(
+        max_date, initial_date, actual_final_date, display_final_date)['display_date']
     extracted_df_list = []
     while loop_initial_date >= min_date:
         temp_df = dataframe[(dataframe['date'] >= loop_initial_date) &
                             (dataframe['date'] <= loop_final_date)]
-        temp_df['period'] = dates_to_period_string(loop_initial_date, loop_final_date)
+        temp_df['period'] = dates_to_period_string(loop_initial_date, loop_display_final_date)
         loop_initial_date = loop_initial_date + relativedelta(years=-1)
         loop_final_date = loop_final_date + relativedelta(years=-1)
+        loop_display_final_date = loop_display_final_date + relativedelta(years=-1)
         extracted_df_list.append(temp_df)
     extracted_df = pd.concat(extracted_df_list)
     extracted_df['mm-dd'] = extracted_df['date'].dt.strftime("%m-%d")

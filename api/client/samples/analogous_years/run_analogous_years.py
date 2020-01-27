@@ -7,7 +7,6 @@ from api.client.gro_client import GroClient
 
 from api.client.samples.analogous_years.lib import final_ranks_computation
 
-
 def str2bool(v):
     if isinstance(v, bool):
         return v
@@ -115,6 +114,9 @@ def main():
     client = GroClient(API_HOST, args.groapi_token)
     data_series_list = get_data_series_list(args.region_id, args.item_ids, args.metric_ids,
                                             args.source_ids, args.frequency_ids, client=client)
+    # series_list, display_final_date, display_initial_date = \
+    #     get_df_experiment.common_start_date(
+    #         client, data_series_list, args.initial_date, args.final_date, args.start_date)
     folder_name = final_ranks_computation.get_file_name(client, data_series_list,
                                                         initial_date=args.initial_date,
                                                         final_date=args.final_date)

@@ -46,7 +46,7 @@ def dtw_dist_matrix(dataframe):
     return distance_matrix
 
 
-def scaled_labeled_method_distances(distance_matrix_df, initial_date, final_date, method):
+def scaled_labeled_method_distances(distance_matrix_df, initial_date, display_final_date, method):
     """
     Retrieves and scales a column of the input dataframe
     :param distance_matrix_df: A pandas dataframe
@@ -59,7 +59,7 @@ def scaled_labeled_method_distances(distance_matrix_df, initial_date, final_date
     list_of_methods = ['euclidean', 'cumulative', 'dtw', 'ts-features']
     if method.split('_')[0] not in list_of_methods:
         raise ValueError('Method of calculation unavailable')
-    column_name = initial_date + ' to ' + final_date
+    column_name = initial_date + ' to ' + display_final_date
     ranked_periods_df = pd.DataFrame(distance_matrix_df[column_name])
     scaler = MaxAbsScaler()
     ranked_periods_df.loc[:, column_name] = scaler.fit_transform(ranked_periods_df[[column_name]])
