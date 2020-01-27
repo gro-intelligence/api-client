@@ -99,7 +99,7 @@ class GroClient(Client):
         else:
             self._data_frame = self._data_frame.merge(tmp, how='outer')
 
-    def get_data_points(self, include_historical=True, **selections):
+    def get_data_points(self, **selections):
         """Get all the data points for a given selection.
 
         https://developers.gro-intelligence.com/data-point-definition.html
@@ -209,13 +209,15 @@ class GroClient(Client):
         at_time : string, optional
             Estimate what data would have been available via Gro at a given time in the past. See
             :sample:`at-time-query-examples.ipynb` for more details.
+        include_historical : boolean, optional
+            True by default, will include historical regions that are part of your selections
 
         Returns
         -------
         list of dicts
 
         """
-        data_points = super(GroClient, self).get_data_points(include_historical=include_historical, **selections)
+        data_points = super(GroClient, self).get_data_points(**selections)
         # Apply unit conversion if a unit is specified
         if 'unit_id' in selections:
             return list(map(functools.partial(self.convert_unit,
