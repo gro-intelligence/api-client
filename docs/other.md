@@ -115,6 +115,7 @@ Listed below are Gro's existing models. Each available link will lead you to bac
 * [US Corn](https://s3.amazonaws.com/groprod/yield_model_backtest/US_corn_backtest_2001_to_2017.zip)
 * [US Soybeans](https://s3.amazonaws.com/groprod/yield_model_backtest/US_soybeans_backtest_2001_to_2017.zip)
 * [Argentina Soybeans](https://s3.amazonaws.com/groprod/yield_model_backtest/Argentina_soybeans_backtest_2001_to_2017.zip)
+* [Brazil Soybeans](https://s3.amazonaws.com/groprod/yield_model_backtest/Brazil_soybeans_backtest_2001_to_2018.zip)
 * [India Wheat](https://s3.amazonaws.com/groprod/yield_model_backtest/India_wheat_backtest_2001_to_2017.zip)
 * [Ukraine Wheat (Beta)](https://groprod.s3.amazonaws.com/yield_model_backtest/Wheat_Ukraine_backtest_2001_to_2017.zip)
 * [Russia Wheat (Beta)](https://groprod.s3.amazonaws.com/yield_model_backtest/Winter+wheat_Russia_backtest_2001_to_2018.zip)
