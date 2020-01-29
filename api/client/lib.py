@@ -488,7 +488,8 @@ def list_of_series_to_single_series(series_list, add_belongs_to=False, include_h
         if not (isinstance(series, dict) and isinstance(series.get('data', []), list)):
             continue
         series_metadata = series.get('series', {}).get('metadata', {})
-        if not include_historical and series_metadata.get('includesHistoricalRegion', False):
+        if not include_historical and (series_metadata.get('includesHistoricalRegion', False) or 
+        series_metadata.get('includesHistoricalPartnerRegion', False)):
             continue
         # All the belongsTo keys are in camelCase. Convert them to snake_case.
         # Only need to do this once per series, so do this outside of the list
@@ -516,8 +517,6 @@ def list_of_series_to_single_series(series_list, add_belongs_to=False, include_h
                 'frequency_id': series['series'].get('frequencyId', None)
                 # 'source_id': series['series'].get('sourceId', None), TODO: add source to output
             }
-            if series_metadata:
-                formatted_point['metadata'] = series_metadata
             if add_belongs_to:
                 # belongs_to is consistent with the series the user requested. So if an
                 # expansion happened on the server side, the user can reconstruct what
