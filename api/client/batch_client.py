@@ -104,7 +104,7 @@ class BatchClient(GroClient):
     @gen.coroutine
     def get_data_points_generator(self, **selection):
         headers = {'authorization': 'Bearer ' + self.access_token}
-        url = '/'.join(['http:', '', self.api_host, 'v2/data'])
+        url = '/'.join(['https:', '', self.api_host, 'v2/data'])
         params = lib.get_data_call_params(**selection)
         resp = yield self.get_data(url, headers, params)
         raise gen.Return(json_decode(resp))
