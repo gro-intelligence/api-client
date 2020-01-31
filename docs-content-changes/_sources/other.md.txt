@@ -28,9 +28,9 @@ Additional refinements:
 
 Yearly corn masks (binary) were extracted from USDA NASS Cropland Data Layers (CDL) for the US Corn Belt, which includes 10 states: Illinois, Indiana, Iowa, Kansas, Minnesota, Missouri, Nebraska, Ohio, South Dakota, and Wisconsin, from 1999 to 2015. Note that not all states were covered in the yearly masks prior to 2008 due to growing coverage of NASS CDL from 1999 to 2008.
 
-In-season masks:
-
 A low-confidence mask and a high-confidence mask were made from those yearly crop masks. Each of them was further clumped to remove erroneous pixels, which gave us two more static corn masks.
+
+Click the links below to download TIF files of in-season masks:
 
 * [low confidence](https://s3.amazonaws.com/groprod/gro_crop_masks/us_corn/USCorn_LC_99_15.tif)
 * [high confidence](https://s3.amazonaws.com/groprod/gro_crop_masks/us_corn/USCorn_HC_99_15.tif)
@@ -39,13 +39,13 @@ A low-confidence mask and a high-confidence mask were made from those yearly cro
 
 ### US Soy
 
-Yearly soy masks were extracted from the NASS CDL the same way as corn, except that the entire contiguous US was included. In this case we end up using only one mask:
-
-In-season masks:
-
-* [low confidence](https://s3.amazonaws.com/groprod/gro_crop_masks/us_soy/USSoy_LC_08_17.tif) was made from yearly masks for 2008 to 2017.
+Yearly soy masks were extracted from the NASS CDL the same way as corn, except that the entire contiguous US was included. In this case we end up using only one mask.
 
 We start in 2008, because including years prior to 2008 reduces the accuracy for yield modeling purposes. A high-confidence mask is not used, as it was found to not help the yield modeling accuracy. Both of these observations seem to reflect the fact that, in the US, the areas where soybeans are planted have been changing relatively more than the corn areas, which makes older crop masks less informative in this case.
+
+Click the link below to download TIF files of in-season masks:
+
+* [low confidence](https://s3.amazonaws.com/groprod/gro_crop_masks/us_soy/USSoy_LC_08_17.tif) was made from yearly masks for 2008 to 2017.
 
 ### Argentina Soy
 
@@ -59,7 +59,7 @@ Once those unidentifiable crops have been found, a simple ratio was used to iden
 
 A low-confidence mask and a high-confidence mask were made from those yearly crop masks. Each of them were further clumped to remove erroneous pixels, which gave us two more static soy masks.
 
-In-season masks:
+Click the links below to download TIF files of in-season masks:
 
 * [low confidence](https://s3.amazonaws.com/groprod/gro_crop_masks/argentina_soy/ArgLC07_16.tif)
 * [high confidence](https://s3.amazonaws.com/groprod/gro_crop_masks/argentina_soy/ArgHC07_16.tif)
@@ -76,7 +76,7 @@ Since India does not have the equivalent of NASS CDL available to the public, we
 
 A low-confidence mask and a high-confidence mask were made from those yearly crop masks. Each of them were further clumped to remove erroneous pixels, which gave us two more static wheat masks.
 
-In-season masks:
+Click the links below to download TIF files of in-season masks:
 
 * [low confidence](https://s3.amazonaws.com/groprod/gro_crop_masks/india_wheat/IndiaWheat_07_17_LC_1b.tif)
 * [high confidence](https://s3.amazonaws.com/groprod/gro_crop_masks/india_wheat/IndiaWheat_07_17_HC_1b.tif)
@@ -110,7 +110,7 @@ For each crop-region pair for which we have a yield model, we provide two csv fi
 
 #### Models
 
-Listed below are Gro's existing models. Each available link will lead you to backtest data (daily frequency) for a whole crop season.
+Listed below are Gro's existing models. Each available link will download backtest data (daily frequency) for a whole crop season.
 
 * [US Corn](https://s3.amazonaws.com/groprod/yield_model_backtest/US_corn_backtest_2001_to_2017.zip)
 * [US Soybeans](https://s3.amazonaws.com/groprod/yield_model_backtest/US_soybeans_backtest_2001_to_2017.zip)
