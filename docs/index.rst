@@ -19,7 +19,7 @@ With the Gro API Client, you have the power to:
     Prerequisites <prerequisites>
     Installation <installation>
     Authentication <authentication>
-    Quickstart Examples <quickstart-examples>
+    Quick Start Projects <quick-start-projects/index>
 
 .. toctree::
     :caption: Using the API Client
