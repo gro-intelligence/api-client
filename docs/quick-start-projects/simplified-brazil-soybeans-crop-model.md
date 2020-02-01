@@ -1,4 +1,4 @@
-#Simplified Brazil Soybeans Crop Model
+# Simplified Brazil Soybeans Crop Model
 
 See the [Simplified Brazil Soybeans Crop Model](https://gro-intelligence.com/gro-showcase/brazil-soybeans-showcase) example in the [Gro Showcase](https://gro-intelligence.com/gro-showcase) for a longer, more detailed demonstration of many of the API's capabilities in the form of a Jupyter notebook.
 
