@@ -7,6 +7,7 @@ from api.client.gro_client import GroClient
 
 from api.client.samples.analogous_years.lib import final_ranks_computation
 
+
 def str2bool(v):
     if isinstance(v, bool):
         return v
@@ -114,12 +115,25 @@ def main():
     client = GroClient(API_HOST, args.groapi_token)
     data_series_list = get_data_series_list(args.region_id, args.item_ids, args.metric_ids,
                                             args.source_ids, args.frequency_ids, client=client)
-    # series_list, display_final_date, display_initial_date = \
-    #     get_df_experiment.common_start_date(
+    # data_series_list, display_final_date, display_initial_date = \
+    #     final_ranks_computation.date_utils(
     #         client, data_series_list, args.initial_date, args.final_date, args.start_date)
+    # for series in data_series_list:
+    #     series.pop('start_date')
+    #     series.pop('end_date')
+    data_series_list_w_start_end_dates = final_ranks_computation.start_end_date_list(
+        client, data_series_list, args.start_date)[0]
+
+    display_initial_date, display_final_date = \
+        final_ranks_computation.display_initial_final_date(client,
+                                                           data_series_list_w_start_end_dates,
+                                                           args.initial_date,
+                                                           args.final_date)[1:]
+
     folder_name = final_ranks_computation.get_file_name(client, data_series_list,
-                                                        initial_date=args.initial_date,
-                                                        final_date=args.final_date)
+                                                        display_initial_date,
+                                                        display_final_date,
+                                                        args.ENSO)
     result = final_ranks_computation.analogous_years(
         client, data_series_list, args.initial_date, args.final_date,
         methods_list=args.methods, all_ranks=args.all_ranks,

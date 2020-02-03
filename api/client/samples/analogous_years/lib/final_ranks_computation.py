@@ -7,6 +7,7 @@ from functools import reduce
 import os
 
 import matplotlib
+
 matplotlib.use('agg')
 import seaborn as sns
 from dateutil.relativedelta import relativedelta
@@ -19,16 +20,15 @@ from api.client.samples.analogous_years.lib import \
     get_transform_data
 
 
-def date_utils(client, data_series_list, initial_date, final_date,
-               provided_start_date=None):
-    """Computes the earliest available start date from which all gro-data_series have data"""
-    logger = client.get_logger()
+def start_end_date_list(client, data_series_list, provided_start_date):
     start_date_list = []
     if provided_start_date:
         start_date_list.append(provided_start_date)
     end_date_list = []
-
     for data_series in data_series_list:
+        if 'start_date' in data_series or 'end_date' in data_series:
+            data_series.pop('start_date')
+            data_series.pop('end_date')
         min_local_start_date = client.get_data_series(**data_series)[0]['start_date']
         max_local_end_date = client.get_data_series(**data_series)[0]['end_date']
         # choose the best start/end date if there are subregions
@@ -40,20 +40,23 @@ def date_utils(client, data_series_list, initial_date, final_date,
         data_series['end_date'] = max_local_end_date
         start_date_list.append(min_local_start_date)
         end_date_list.append(max_local_end_date)
-
-    # Adding global start date to the data series
     global_start_date = max(start_date_list)
     for data_series in data_series_list:
         data_series['start_date'] = global_start_date
+    return data_series_list, start_date_list, end_date_list
 
-    # Computing the display initial and final date for all the series combined
+
+def display_initial_final_date(client, data_series_list, initial_date, final_date):
+    logger = client.get_logger()
     display_final_date = data_series_list[0]['end_date']
     display_initial_date = (pd.to_datetime(data_series_list[0]['end_date']) - relativedelta(
         pd.to_datetime(final_date),
         pd.to_datetime(initial_date))).strftime('%Y-%m-%dT%H:%M:%S.000Z')
     for data_series in data_series_list:
+        data_series['final_date'] = final_date
         if data_series['end_date'] < final_date:
-            logger.info('Data is available until {}'.format(data_series['end_date']))
+            item = client.lookup('items', data_series['item_id'])['name']
+            logger.info('Data for {} is available until {}'.format(item, data_series['end_date']))
             data_series['final_date'] = data_series['end_date']
         if display_final_date < data_series['end_date']:
             display_final_date = data_series['end_date']
@@ -61,55 +64,43 @@ def date_utils(client, data_series_list, initial_date, final_date,
                     pd.to_datetime(data_series['final_date']) - relativedelta(
                 pd.to_datetime(final_date),
                 pd.to_datetime(initial_date))).strftime('%Y-%m-%dT%H:%M:%S.000Z')
+    return data_series_list, display_initial_date, display_final_date
 
-        if display_final_date < data_series['final_date']:
-            display_final_date = data_series['final_date']
-            display_initial_date = (pd.to_datetime(data_series['final_date']) - relativedelta(
-                pd.to_datetime(final_date),
-                pd.to_datetime(initial_date))).strftime('%Y-%m-%dT%H:%M:%S.000Z')
 
-    for data_series in data_series_list:
+def date_utils(client, data_series_list, initial_date, final_date,
+               provided_start_date=None):
+    """Computes the earliest available start date from which all gro-data_series have data"""
+    logger = client.get_logger()
+    data_series_list_w_start_end_dates, start_date_list, end_date_list = start_end_date_list(
+        client, data_series_list, provided_start_date)
+
+    data_series_list_w_start_end_final_dates, display_initial_date, display_final_date = \
+        display_initial_final_date(client, data_series_list_w_start_end_dates,
+                                   initial_date, final_date)
+
+    for data_series in data_series_list_w_start_end_final_dates:
         data_series['initial_date'] = display_initial_date
-    logger.info('Computing analogous years between {} and {} for the available data'.format(
-        display_initial_date, display_final_date))
-    return data_series_list, display_final_date, display_initial_date
+        item = client.lookup('items', data_series['item_id'])['name']
+        logger.info('Data for {} is available until {}'.format(item, data_series['end_date']))
+    logger.info('Analogous years will be computed for the period between '
+                '{} and {} for the available data'.format(display_initial_date, display_final_date))
+    return data_series_list_w_start_end_final_dates, display_final_date, display_initial_date
 
 
-# def common_start_date(client, data_series, provided_start_date=None):
-#     """Computes the earliest available start date from which all gro-data_series have data"""
-#     logger = client.get_logger()
-#     start_date_list = []
-#     if provided_start_date:
-#         start_date_list.append(provided_start_date)
-#     for i in range(len(data_series)):
-#         dates = client.get_data_points(**data_series[i])
-#         if len(dates) == 0:
-#             msg = "No data found for the following gro-data_series - {}".format(data_series[i])
-#             logger.warning(msg)
-#             raise Exception
-#         else:
-#             start_date_list.append(dates[0]['start_date'])
-#     start_date = max(start_date_list)
-#     for i in range(len(data_series)):
-#         data_series[i]['start_date'] = start_date
-#     return {'data_series': data_series, 'start_date': start_date}
-
-
-def enso_data(start_date, initial_date, display_final_date):
+def enso_data():
     enso_data_series = {'metric_id': 15851977,
                         'item_id': 13495,
                         'region_id': 0,
                         'source_id': 124,
-                        'start_date': start_date,
-                        'frequency_id': 6,
-                        'initial_date': initial_date,
-                        'final_date': display_final_date}
+                        'frequency_id': 6}
     return enso_data_series
 
 
-def get_file_name(client, data_series_list, initial_date, final_date):
+def get_file_name(client, data_series_list, initial_date, final_date, enso=None):
     """Combines region, items, and dates to return a string"""
     logger = client.get_logger()
+    if enso:
+        data_series_list.append(enso_data())
     key_words = [client.lookup('regions', data_series_list[0]['region_id'])['name']]
     for i in range(len(data_series_list)):
         key_words.append(client.lookup('items', data_series_list[i]['item_id'])['name'])
@@ -249,19 +240,17 @@ def analogous_years(client, data_series_list, initial_date, final_date,
     data_series_list, display_final_date, display_initial_date = \
         date_utils(
             client, data_series_list, initial_date, final_date, provided_start_date)
-    start_date = data_series_list[0]['start_date']
+    # start_date = data_series_list[0]['start_date']
     # data_series_list = common_start_date(client, data_series_list, provided_start_date)[
     #    'data_series']
     # start_date = common_start_date(client, data_series_list, provided_start_date)['start_date']
 
     if not weights:
         weights = [1] * len(data_series_list)
-    if enso:
-        data_series_list.append(enso_data(start_date, initial_date, display_final_date))
-        if enso_weight:
-            weights.append(enso_weight)
-        else:
-            weights.append(1)
+    if enso_weight:
+        weights.append(enso_weight)
+    else:
+        weights.append(1)
 
     for i in range(len(data_series_list)):
         gro_item = client.lookup('items', data_series_list[i]['item_id'])['name']
