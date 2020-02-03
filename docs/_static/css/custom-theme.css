@@ -1,16 +1,16 @@
 @import 'theme.css';
 h1 {
     font-family: Roboto,Arial,sans-serif;
-    font-weight:300;
-    font-size: 48px;
+    font-weight:200;
+    font-size: 36px;
     color: #444447;
-    line-height: 48px;
+    line-height: 42px;
 }
 
 h2 {
     font-family: Roboto,Arial,sans-serif;
     font-weight:300;
-    font-size: 32px;
+    font-size: 22px;
     color: #444447;
     line-height: 36px;
 }
@@ -18,22 +18,22 @@ h2 {
 h3 {
     font-family: Roboto,Arial,sans-serif;
     font-weight:500;
-    font-size: 21px;
-    color: #555558;
-    line-height: 21px;
+    font-size: 18px;
+    color: #666669;
+    line-height: 28px;
 }
 
 h4 {
     font-family: Roboto,Arial,sans-serif;
-    font-weight:500;
-    font-size: 18px;
+    font-weight:300;
+    font-size: 16px;
     color: #555558;
     line-height: 21px;
 }
 
 p {
     font-family: Roboto,Arial,sans-serif;
-    font-weight:400;
+    font-weight:300;
     font-size: 16px;
     color: #444447;
     line-height: 28px;
