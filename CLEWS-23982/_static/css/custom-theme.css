@@ -1,7 +1,12 @@
 @import 'theme.css';
+/* LIGHT = 300 */
+/* REGULAR = 400 */
+/* MEDIUM = 500 */
+@import 'sidebar.css';
+
 h1 {
     font-family: Roboto,Arial,sans-serif;
-    font-weight:200;
+    font-weight: 300;
     font-size: 36px;
     color: #444447;
     line-height: 42px;
@@ -9,7 +14,7 @@ h1 {
 
 h2 {
     font-family: Roboto,Arial,sans-serif;
-    font-weight:300;
+    font-weight: 400;
     font-size: 22px;
     color: #444447;
     line-height: 36px;
@@ -17,7 +22,7 @@ h2 {
 
 h3 {
     font-family: Roboto,Arial,sans-serif;
-    font-weight:500;
+    font-weight: 500;
     font-size: 18px;
     color: #666669;
     line-height: 28px;
@@ -25,7 +30,7 @@ h3 {
 
 h4 {
     font-family: Roboto,Arial,sans-serif;
-    font-weight:300;
+    font-weight: 400;
     font-size: 16px;
     color: #555558;
     line-height: 21px;
@@ -33,10 +38,10 @@ h4 {
 
 p {
     font-family: Roboto,Arial,sans-serif;
-    font-weight:300;
+    font-weight: 400;
     font-size: 16px;
-    color: #444447;
-    line-height: 28px;
+    color: #666669;
+    line-height: 21px;
 }
 
 ol li{
@@ -49,9 +54,9 @@ ol li{
 
 a {
     font-family: Roboto,Arial,sans-serif;
-    font-weight:400;
+    font-weight: 300;
     font-size: 16px;
-    color: #e31b37;
+    color: #00A1C2;
     line-height: 28px;
     text-decoration: underline;
 }
@@ -60,78 +65,10 @@ img {
     padding: 26px 0;
 }
 
-.wy-side-nav-search {
-    background-color: #ffffff;
-}
 
-.wy-menu-vertical a {
-    color: #404040;
-}
 
-.wy-nav-side {
-    background: #ffffff;
-}
 
-.wy-nav-content {
-    border-left: 2px #EEEEF1 solid;
-    max-width: 800px;
-}
 
-.caption {
-    border-top: 1px solid #eeeef1;
-}
-
-.caption-text {
-    font-family: Roboto,Arial,sans-serif;
-    font-weight:500;
-    font-size: 12px;
-    color: #9b9b9e;
-    line-height: 14px;
-    text-transform: capitalize;
-}
-
-.current {
-    font-family: Roboto,Arial,sans-serif;
-    font-weight:400;
-    font-size: 13px;
-    color: #555558;
-    line-height: 13px;
-    background: #fff;
-}
-
-.reference.internal {
-    font-family: Roboto,Arial,sans-serif;
-    font-weight:400;
-    font-size: 13px;
-    color: #555558;
-    line-height: 20px;
-    text-decoration: none;
-}
-
-a:hover.reference.internal {
-    color: #e31b37;
-}
-
-.wy-menu-vertical li span.toctree-expand {
-    line-height: 20px;
-}
-
-.wy-menu-vertical li.toctree-l2 span.toctree-expand {
-    line-height: 20px;
-}
-
-.wy-menu-vertical li.toctree-l2 a:hover span.toctree-expand{
-    line-height: 20px;
-}
-
-.wy-menu-vertical li.on a span.toctree-expand, .wy-menu-vertical li.current>a span.toctree-expand {
-    line-height: 20px;
-}
-
-.wy-menu-vertical a:hover {
-    background: #fff;
-    color: #e31b37;
-}
 
 .reference.internal.current {
     color: #e31b37;
@@ -141,14 +78,9 @@ a:hover.reference.internal {
     background: #fff;
 }
 
-.wy-menu-vertical li.current a:hover {
-    background: #fff;
-    color: #e31b37;
-}
 
 .wy-menu-vertical li.toctree-l1.current>a {
     border:none;
-    font-size: 16px;
 }
 
 .wy-menu-vertical li.toctree-l2.current>a {
@@ -177,6 +109,7 @@ a:hover.reference.internal {
 
 .wy-side-nav-search>a, .wy-side-nav-search .wy-dropdown>a {
     display: table-cell;
+    color: #fff;
 }
 
 .wy-side-nav-search>a.icon img.logo, .wy-side-nav-search .wy-dropdown>a.icon img.logo {
@@ -247,6 +180,14 @@ a:hover.reference.internal {
 
 .rst-content .highlighted {
     font-family: Roboto,Arial,sans-serif;
+}
+
+.rst-content ol li {
+  font-family: Roboto,Arial,sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+  color: #666669;
+  line-height: 21px;
 }
 
 footer {
