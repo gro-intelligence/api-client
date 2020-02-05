@@ -54,7 +54,7 @@ def mock_test_units(entity_type, entity_id):
             'convType': 0
         }
     else:
-        raise '{} {} not mocked'.format(entity_type, entity_id)
+        raise Exception('{} {} not mocked'.format(entity_type, entity_id))
 
 client.lookup = MagicMock(
     side_effect=mock_test_units
