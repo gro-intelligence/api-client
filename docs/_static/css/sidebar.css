@@ -1,0 +1,131 @@
+/* sidebar structure */
+
+
+.wy-side-nav-search {
+    background-color: #ffffff;
+}
+
+.wy-menu-vertical a {
+    color: #404040;
+    padding: .6em 1.618em;
+}
+
+.wy-nav-side {
+    background: #ffffff;
+}
+
+.wy-nav-content {
+    border-left: 2px #EEEEF1 solid;
+    max-width: 800px;
+}
+
+/* inner structure of sidebar */
+
+.wy-menu-vertical li.on a, .wy-menu-vertical li>a,  .wy-menu-vertical li.current>a{
+  padding: .6em 1.618em;
+}
+
+.wy-menu-vertical li.toctree-l2>a, .wy-menu-vertical li.toctree-l2.current>a {
+  padding: .6em 3.2em;
+}
+
+.wy-menu-vertical li.on a span.toctree-expand, .wy-menu-vertical li>a span.toctree-expand {
+  line-height: 14px;
+}
+
+.wy-menu-vertical li.toctree-l2 li.toctree-l3>a, .wy-menu-vertical li.toctree-l2.current li.toctree-l3>a {
+  padding: .6em 4.4em;
+}
+
+/* inner content of sidebar */
+.reference.internal {
+  text-decoration: none;
+}
+
+.wy-menu-vertical p.caption {
+  border-top: 1px solid #eeeef1;
+  font-size: 15px;
+  font-weight: 500;
+  color: #555558;
+  text-transform: none;
+}
+
+.wy-menu-vertical a, .wy-menu-vertical a:hover {
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 13px;
+  color: #555558;
+  background: #fff;
+}
+
+.wy-menu-vertical li.toctree-l2 a, .wy-menu-vertical li.toctree-l3 a, .wy-menu-vertical li.toctree-l4 a {
+  color: #555558;
+}
+
+.wy-menu-vertical li.on a:hover,
+.wy-menu-vertical li.current a:hover {
+  background: #fff;
+}
+/* 
+.wy-menu-vertical li.toctree-l1 > a {
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 13px;
+  color: #555558; */
+}
+
+.caption-text {
+    font-family: Roboto,Arial,sans-serif;
+    font-weight:500;
+    font-size: 12px;
+    color: #9b9b9e;
+    line-height: 14px;
+    text-transform: capitalize;
+}
+
+.current {
+    font-family: Roboto,Arial,sans-serif;
+    font-weight:400;
+    font-size: 13px;
+    color: #555558;
+    line-height: 13px;
+    background: #fff;
+}
+
+.wy-menu-vertical li.current>a span.toctree-expand,
+.wy-menu-vertical li.current>a:hover span.toctree-expand,
+.wy-menu-vertical li.on a span.toctree-expand,
+.wy-menu-vertical li.on a:hover span.toctree-expand, 
+.wy-menu-vertical li.current>a span.toctree-expand
+.wy-menu-vertical li.current>a:hover span.toctree-expand,
+.wy-menu-vertical li.toctree-l2 span.toctree-expand,
+.wy-menu-vertical li.toctree-l2 a:hover span.toctree-expand,
+.wy-menu-vertical a:hover span.toctree-expand,
+.wy-menu-vertical a span.toctree-expand {
+  color: #555558;
+}
+
+.wy-menu-vertical li.on a, .wy-menu-vertical li.current>a {
+  font-weight: initial;
+}
+
+
+
+
+.wy-menu-vertical li.on a, .wy-menu-vertical li.current>a {
+  background: #fff;
+}
+/* a:hover.reference.internal {
+    color: #e31b37;
+} */
+
+
+
+/* expand icon */
+.wy-menu-vertical li.on a span.toctree-expand, 
+.wy-menu-vertical li.current>a span.toctree-expand,
+.wy-menu-vertical li span.toctree-expand,
+.wy-menu-vertical li.toctree-l2 span.toctree-expand,
+.wy-menu-vertical li.toctree-l2 a:hover span.toctree-expand {
+  line-height: 14px;
+}
