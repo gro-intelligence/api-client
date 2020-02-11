@@ -4,6 +4,8 @@
 /* MEDIUM = 500 */
 @import 'sidebar.css';
 
+@font-face{font-family:'Entypo';src:url("../fonts/entypo.woff");
+
 h1 {
     font-family: Roboto,Arial,sans-serif;
     font-weight: 300;
@@ -65,59 +67,6 @@ img {
     padding: 26px 0;
 }
 
-
-
-
-
-
-.reference.internal.current {
-    color: #e31b37;
-}
-
-.wy-menu-vertical li.current {
-    background: #fff;
-}
-
-
-.wy-menu-vertical li.toctree-l1.current>a {
-    border:none;
-}
-
-.wy-menu-vertical li.toctree-l2.current>a {
-    background: #fff;
-}
-
-.wy-menu-vertical li.toctree-l2.current li.toctree-l3>a {
-    background: #fff; 
-}
-
-.wy-menu-vertical li.toctree-l3.current li.toctree-l4>a {
-    background: #fff;
-}
-
-.wy-side-nav-search>a.icon img.logo, .wy-side-nav-search .wy-dropdown>a.icon img.logo {
-    width: 74px;
-    padding-left: 0;
-}
-
-.wy-side-nav-search input[type=text] {
-    font-family: Roboto,Arial,sans-serif;
-    border-color: #eeeef1;
-    border-radius: 3px;
-    background-color: #eeeef1;
-}
-
-.wy-side-nav-search>a, .wy-side-nav-search .wy-dropdown>a {
-    display: table-cell;
-    color: #fff;
-}
-
-.wy-side-nav-search>a.icon img.logo, .wy-side-nav-search .wy-dropdown>a.icon img.logo {
-    margin-left: 0;
-    margin-top: 0;
-    width: 180px;
-    margin-bottom: 24px;
-}
 
 .wy-breadcrumbs {
     font-family: Roboto,Arial,sans-serif;

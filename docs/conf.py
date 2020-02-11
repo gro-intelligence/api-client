@@ -64,10 +64,15 @@ html_theme_options = {
     'includehidden': False,
     'titles_only': False,
     'prev_next_buttons_location': 'both',
-    'style_external_links': True
+    'style_external_links': True,
+    'display_version': True
 }
 
 html_style = 'css/custom-theme.css'
+# TODO: required if an custom js files are in place
+# html_js_files = [
+#     'js/custom.js',
+# ]
 
 # https://www.sphinx-doc.org/en/master/usage/extensions/extlinks.html
 extlinks = {
@@ -93,4 +98,7 @@ scv_banner_main_ref = 'development'
 # scv_whitelist_branches = ('development',)
 
 # Omit versions before docs style was finalized
-scv_whitelist_tags = (re.compile(r'^(?!.*(v1.40.0|v1.40.1|v1.40.2|v1.40.3|v1.40.4|v1.40.5)).*$'),)
+# TODO: https://stackoverflow.com/questions/26141851/let-sphinx-use-version-from-setup-py
+# scv_whitelist_tags = (re.compile(r'^(?!.*(v1.40.0|v1.40.1|v1.40.2|v1.40.3|v1.40.4|v1.40.5)).*$'),)
+scv_whitelist_branches = ('CLEWS-23982','development',)
+scv_whitelist_tags = ('false-tag', 'v1.40.0',)
