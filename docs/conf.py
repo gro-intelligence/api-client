@@ -60,7 +60,7 @@ html_theme = 'sphinx_rtd_theme'
 html_theme_options = {
     'collapse_navigation': False,
     'sticky_navigation': True,
-    'navigation_depth': -1,
+    'navigation_depth': 2,
     'includehidden': False,
     'titles_only': False,
     'prev_next_buttons_location': 'both',
@@ -69,6 +69,9 @@ html_theme_options = {
 }
 
 html_style = 'css/custom-theme.css'
+html_sidebars = {
+   '**': ['localtoc.html', 'globaltoc.html', 'relations.html', 'sourcelink.html', 'searchbox.html']
+}
 # TODO: required if an custom js files are in place
 # html_js_files = [
 #     'js/custom.js',
