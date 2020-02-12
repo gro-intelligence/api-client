@@ -4,7 +4,10 @@
 /* MEDIUM = 500 */
 @import 'sidebar.css';
 
-@font-face{font-family:'Entypo';src:url("../fonts/entypo.woff");
+@font-face {
+  font-family: 'Entypo';
+  src :url("../fonts/entypo.woff");
+}
 
 h1 {
     font-family: Roboto,Arial,sans-serif;
