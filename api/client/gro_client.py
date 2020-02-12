@@ -209,6 +209,8 @@ class GroClient(Client):
         at_time : string, optional
             Estimate what data would have been available via Gro at a given time in the past. See
             :sample:`at-time-query-examples.ipynb` for more details.
+        include_historical : boolean, optional
+            True by default, will include historical regions that are part of your selections
 
         Returns
         -------
