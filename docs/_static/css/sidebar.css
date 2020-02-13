@@ -3,6 +3,7 @@
 
 .wy-side-nav-search {
     background-color: #ffffff;
+    text-align: left;
 }
 
 .wy-menu-vertical a {
@@ -103,8 +104,8 @@
     background-color: #eeeef1;
 }
 
-.wy-side-nav-search>a, .wy-side-nav-search .wy-dropdown>a {
-    display: table-cell;
+.wy-side-nav-search>a {
+  max-width: 190px;
 }
 
 .wy-side-nav-search>a.icon img.logo, .wy-side-nav-search .wy-dropdown>a.icon img.logo {
