@@ -65,7 +65,8 @@ html_theme_options = {
     'titles_only': False,
     'prev_next_buttons_location': 'both',
     'style_external_links': True,
-    'display_version': True
+    'display_version': True,
+    'logo_only': True
 }
 
 html_style = 'css/custom-theme.css'
