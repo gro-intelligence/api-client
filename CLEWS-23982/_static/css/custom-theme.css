@@ -62,8 +62,12 @@ a {
     font-weight: 300;
     font-size: 16px;
     color: #00A1C2;
-    line-height: 28px;
+    line-height: inherit;
     text-decoration: underline;
+}
+
+a:visited {
+  color: #00A1C2;
 }
 
 img {
@@ -141,6 +145,17 @@ img {
   color: #666669;
   line-height: 21px;
 }
+
+
+/* Page Table of Contents */
+ .rst-content .section .contents ul li,
+ .rst-content .section .contents ul li li {
+   list-style: none;
+ }
+ 
+ .rst-content .section .contents > ul > li {
+   margin-left: 0;
+ }
 
 .rst-content a.toc-backref {
   text-decoration: inherit;

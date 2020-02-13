@@ -2,7 +2,8 @@
 Installation
 ############
 
-.. contents:: :local:
+.. contents:: Table of Contents
+  :local:
 
 Install with pip
 ================
