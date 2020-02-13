@@ -34,6 +34,18 @@ REGION_LEVELS = {
 }
 
 
+class APIError(Exception):
+    def __init__(self, response, retry_count, url):
+        self.response = response
+        self.retry_count = retry_count
+        self.url = url
+        self.status_code = self.response.status_code
+        self.text = self.response.text
+        self.message = 'Giving up on {} after {} tries: {}.'.format(self.url,
+                                                                    self.retry_count,
+                                                                    self.response)
+
+
 @memoize(maxsize=None)
 def camel_to_snake(term):
     """Convert a string from camelCase to snake_case.
@@ -232,7 +244,10 @@ def get_data(url, headers, params=None, logger=None):
             logger.warning('Redirecting {} to {}'.format(params, new_params), extra=log_record)
             params = new_params
         elif data.status_code in [400, 401, 404, 500]:
-            break
+            try:
+                raise APIError(data, retry_count, url)
+            except APIError as error:
+                return error
         else:
             logger.error('{}'.format(data), extra=log_record)
     raise Exception('Giving up on {} after {} tries: {}.'.format(
