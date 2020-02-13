@@ -1,3 +1,6 @@
+/* TODO: add property for -webkit-antialiasing for a.current*/
+/* left side open section font */
+
 @import 'theme.css';
 /* LIGHT = 300 */
 /* REGULAR = 400 */
@@ -140,6 +143,11 @@ img {
   font-size: 16px;
   color: #666669;
   line-height: 21px;
+}
+
+.rst-content a.toc-backref {
+  text-decoration: inherit;
+  font: inherit;
 }
 
 footer {
