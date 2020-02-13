@@ -124,12 +124,15 @@ class GroClient(Client):
         unit_name = self.lookup("units", unit_id).get('name')
         pairs.append(("unit", unit_name))
         cols = pandas.MultiIndex.from_tuples([tuple(pair[1] for pair in pairs)],
-                                             names=tuple(pair[0] for pair in pairs))                       
+                                             names=tuple(pair[0] for pair in pairs))                                                          
+        filters = ((df['item_id'] == selection['item_id']) & 
+                   (df['metric_id'] == selection['metric_id']) &
+                   (df['region_id'] == selection['region_id']) &
+                   (df['frequency_id'] == selection['frequency_id']))
+        if 'partner_region_id' in df.columns:
+            filters = (filters & (df['partner_region_id'] == selection['partner_region_id']))
         series = pandas.DataFrame(
-            data = df[(df['item_id'] == selection['item_id']) &
-                      (df['metric_id'] == selection['metric_id']) &
-                      (df['region_id'] == selection['region_id']) &
-                      (df['frequency_id'] == selection['frequency_id'])]['value'].values,
+            data = df[filters]['value'].values,
             columns = cols,
             index = df['end_date'])
         return series
