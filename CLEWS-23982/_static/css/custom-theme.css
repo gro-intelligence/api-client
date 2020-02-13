@@ -142,6 +142,11 @@ img {
   line-height: 21px;
 }
 
+.rst-content a.toc-backref {
+  text-decoration: inherit;
+  font: inherit;
+}
+
 footer {
     font-family: Roboto,Arial,sans-serif;
     font-size: 0;

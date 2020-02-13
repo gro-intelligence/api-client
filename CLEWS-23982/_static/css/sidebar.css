@@ -23,6 +23,7 @@
 
 .wy-menu-vertical li.on a, .wy-menu-vertical li>a,  .wy-menu-vertical li.current>a{
   padding: .6em 1.618em;
+  -webkit-font-smoothing: inherit;
 }
 
 .wy-menu-vertical li.toctree-l2>a, .wy-menu-vertical li.toctree-l2.current>a {
