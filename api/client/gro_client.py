@@ -93,7 +93,7 @@ class GroClient(Client):
 
         The selection of data series to retrieve is encoded in a
         'gdh_seletion' string of the form
-        <metric_id>-<item_id>-<region_id>-<source_id>-<frequency_id>
+        <metric_id>-<item_id>-<region_id>-<partner_region_id>-<source_id>-<frequency_id>
 
         For example, client.GDH("860032-274-1231-14-9") will get the
         data points for Production of Corn in China from PS&D at an
@@ -112,16 +112,19 @@ class GroClient(Client):
             subset of the main DataFrame get_df() with only the requested series.
 
         """
-        entity_keys = ['metric_id', 'item_id', 'region_id', 'source_id',
-                       'frequency_id']
+        entity_keys = ['metric_id', 'item_id', 'region_id', 'partner_region_id',
+                       'source_id', 'frequency_id']
         entity_ids = [int(x) for x in gdh_selection.split('-')]
         selection = dict(zip(entity_keys, entity_ids))
         self.add_single_data_series(selection)
         df = self.get_df()
         # Subset the dataframe and fill in names
         pairs = self.get_names_for_selection(selection)
+        unit_id = df['unit_id'].values[0]
+        unit_name = self.lookup("units", unit_id).get('name')
+        pairs.append(("unit", unit_name))
         cols = pandas.MultiIndex.from_tuples([tuple(pair[1] for pair in pairs)],
-                                             names=tuple(pair[0] for pair in pairs))
+                                             names=tuple(pair[0] for pair in pairs))                       
         series = pandas.DataFrame(
             data = df[(df['item_id'] == selection['item_id']) &
                       (df['metric_id'] == selection['metric_id']) &
