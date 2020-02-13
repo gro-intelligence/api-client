@@ -230,7 +230,7 @@
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="_sources/prerequisites.md.txt" rel="nofollow"> View page source</a>
+            <a href="_sources/prerequisites.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -263,31 +263,47 @@
     <p class="scv-banner scv-sphinx_rtd_theme"><a href="../development/prerequisites.html"><b>Warning:</b> This document is for the development version of Gro API Client. The main version is development.</a></p>
 <div class="section" id="prerequisites">
 <h1>Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this headline">¶</a></h1>
+<div class="contents local topic" id="table-of-contents">
+<p class="topic-title">Table of Contents</p>
+<ul class="simple">
+<li><a class="reference internal" href="#macos-and-linux" id="id1">MacOS and Linux</a></li>
+<li><a class="reference internal" href="#windows" id="id2">Windows</a><ul>
+<li><a class="reference internal" href="#anaconda" id="id3">Anaconda</a></li>
+<li><a class="reference internal" href="#non-anaconda" id="id4">Non-Anaconda</a></li>
+</ul>
+</li>
+</ul>
+</div>
 <p>The Gro API Client requires the following OS-dependent system requirements.</p>
 <div class="section" id="macos-and-linux">
-<h2>MacOS and Linux<a class="headerlink" href="#macos-and-linux" title="Permalink to this headline">¶</a></h2>
-<ol class="simple">
-<li>git (<a class="reference external" href="https://git-scm.com/book/en/v2/Getting-Started-Installing-Git">Installation instructions</a>)</li>
+<h2><a class="toc-backref" href="#id1">MacOS and Linux</a><a class="headerlink" href="#macos-and-linux" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic simple">
+<li>git <a class="reference external" href="https://git-scm.com/book/en/v2/Getting-Started-Installing-Git">Installation instructions</a></li>
 <li>python version 3.5 or above from <a class="reference external" href="https://www.python.org">https://www.python.org</a>. Support for Python 2.7.13 or above is also maintained, but with its <a class="reference external" href="https://mail.python.org/pipermail/python-dev/2018-March/152348.html">End of Life</a> soon approaching, Python 3 is recommended.</li>
 </ol>
 </div>
 <div class="section" id="windows">
-<h2>Windows<a class="headerlink" href="#windows" title="Permalink to this headline">¶</a></h2>
-<p>The Gro API Client package is supported both with or without Anaconda. However, some popular data science packages, including some used in the sample scripts provided, are only available on Windows via <a class="reference external" href="https://docs.conda.io/en/latest/">conda</a>. For that reason, instructions are provided for both. You should select the distribution that fits your requirements.</p>
+<h2><a class="toc-backref" href="#id2">Windows</a><a class="headerlink" href="#windows" title="Permalink to this headline">¶</a></h2>
+<p>The Gro API Client package is supported both with or without Anaconda. However, some popular data science packages, including some used in the sample scripts provided, are only available on Windows via <a class="reference external" href="ttps://docs.conda.io/en/latest/">conda</a>. For that reason, instructions are provided for both. You should select the distribution that fits your requirements.</p>
 <div class="section" id="anaconda">
-<h3>Anaconda<a class="headerlink" href="#anaconda" title="Permalink to this headline">¶</a></h3>
-<ol class="simple">
-<li>Download Anaconda with Python 3.5 or above from <a class="reference external" href="https://www.anaconda.com/distribution/">anaconda.com</a>. Support for Python 2.7.13 or above is also maintained, but with <a class="reference external" href="https://mail.python.org/pipermail/python-dev/2018-March/152348.html">its End of Life</a> soon approaching, it is recommended you start with Python 3.</li>
+<h3><a class="toc-backref" href="#id3">Anaconda</a><a class="headerlink" href="#anaconda" title="Permalink to this headline">¶</a></h3>
+<ol class="arabic simple">
+<li>Download Anaconda with Python 3.5 or above from <a class="reference external" href="https://mail.python.org/pipermail/python-dev/2018-March/152348.html">anaconda.com</a> soon approaching, it is recommended you start with Python 3.</li>
 <li>Install Git from <a class="reference external" href="https://git-scm.com/download/win">git-scm.com</a>. Proceed with the default options.</li>
 </ol>
 </div>
 <div class="section" id="non-anaconda">
-<h3>Non-Anaconda<a class="headerlink" href="#non-anaconda" title="Permalink to this headline">¶</a></h3>
-<ol class="simple">
-<li>Powershell (should come default with Windows)</li>
-<li>Download Python version 3.5 or above from <a class="reference external" href="https://www.python.org/downloads/windows/">python.org</a>. Support for Python 2.7.13 or above is also maintained, but with <a class="reference external" href="https://mail.python.org/pipermail/python-dev/2018-March/152348.html">its End of Life</a> soon approaching, it is recommended you start with Python 3.</li>
-<li>Install both Python and pip to PATH either in the installer (enable component during the installation) or manually. The easiest way to do this is to make sure the below is checked during installation: <img alt="readme_add_python_to_path_installer.png" src="https://raw.githubusercontent.com/gro-intelligence/api-client/development/readme_add_python_to_path_installer.png" /></li>
-<li>Install Git from <a class="reference external" href="https://git-scm.com/download/win">git-scm.com</a>. Proceed with the default options.</li>
+<h3><a class="toc-backref" href="#id4">Non-Anaconda</a><a class="headerlink" href="#non-anaconda" title="Permalink to this headline">¶</a></h3>
+<ol class="arabic">
+<li><p class="first">Powershell (should come default with Windows)</p>
+</li>
+<li><p class="first">Download Python version 3.5 or above from <a class="reference external" href="https://www.python.org/downloads/windows/">python.org</a>. Support for Python 2.7.13 or above is also maintained, but with <a class="reference external" href="https://mail.python.org/pipermail/python-dev/2018-March/152348.html">its End of Life</a> soon approaching, it is recommended you start with Python 3.</p>
+</li>
+<li><p class="first">Install both Python and pip to PATH either in the installer (enable component during the installation) or manually. The easiest way to do this is to make sure the below is checked during installation:</p>
+<img alt="Add python to path installer" class="align-center" src="https://raw.githubusercontent.com/gro-intelligence/api-client/development/readme_add_python_to_path_installer.png" />
+</li>
+<li><p class="first">Install Git from [git-scm.com](<a class="reference external" href="https://git-scm.com/download/win">https://git-scm.com/download/win</a>). Proceed with the default options.</p>
+</li>
 </ol>
 </div>
 </div>
@@ -337,38 +353,12 @@
     <div class="rst-other-versions">
         <dl>
             <dt>Tags</dt>
-            <dd><a href="../v1.40.6/prerequisites.html">v1.40.6</a></dd>
-            <dd><a href="../v1.56.0/prerequisites.html">v1.56.0</a></dd>
-            <dd><a href="../v1.56.1/prerequisites.html">v1.56.1</a></dd>
-            <dd><a href="../v1.56.2/prerequisites.html">v1.56.2</a></dd>
-            <dd><a href="../v1.60.0/prerequisites.html">v1.60.0</a></dd>
+            <dd><a href="../v1.40.0/index.html">v1.40.0</a></dd>
         </dl>
         <dl>
             <dt>Branches</dt>
-            <dd><a href="../CLEWS-15762/index.html">CLEWS-15762</a></dd>
-            <dd><a href="../CLEWS-15766/index.html">CLEWS-15766</a></dd>
-            <dd><a href="../CLEWS-16955-units/index.html">CLEWS-16955-units</a></dd>
-            <dd><a href="../CLEWS-17015/index.html">CLEWS-17015</a></dd>
-            <dd><a href="../CLEWS-19063/prerequisites.html">CLEWS-19063</a></dd>
-            <dd><a href="../CLEWS-19840/prerequisites.html">CLEWS-19840</a></dd>
-            <dd><a href="../CLEWS-21846/index.html">CLEWS-21846</a></dd>
-            <dd><a href="../CLEWS-22288/index.html">CLEWS-22288</a></dd>
-            <dd><a href="../CLEWS-23237_revision_get_df/prerequisites.html">CLEWS-23237_revision_get_df</a></dd>
-            <dd><a href="../CLEWS-23863/prerequisites.html">CLEWS-23863</a></dd>
             <dd><a href="prerequisites.html">CLEWS-23982</a></dd>
-            <dd><a href="../CLEWS-24615-v1.61-rc4-validate-release-api-errors/prerequisites.html">CLEWS-24615-v1.61-rc4-validate-release-api-errors</a></dd>
-            <dd><a href="../CLEWS-25000/prerequisites.html">CLEWS-25000</a></dd>
-            <dd><a href="../analogous_years_modifications/prerequisites.html">analogous_years_modifications</a></dd>
             <dd><a href="../development/prerequisites.html">development</a></dd>
-            <dd><a href="../docs-content-changes/prerequisites.html">docs-content-changes</a></dd>
-            <dd><a href="../docs-latest-tag/prerequisites.html">docs-latest-tag</a></dd>
-            <dd><a href="../eliaschneider-patch-1/prerequisites.html">eliaschneider-patch-1</a></dd>
-            <dd><a href="../fix-docs-links/prerequisites.html">fix-docs-links</a></dd>
-            <dd><a href="../gdh/index.html">gdh</a></dd>
-            <dd><a href="../get_region_id_given_lat_lon/index.html">get_region_id_given_lat_lon</a></dd>
-            <dd><a href="../nemozen-path-1/prerequisites.html">nemozen-path-1</a></dd>
-            <dd><a href="../prevented_plant/index.html">prevented_plant</a></dd>
-            <dd><a href="../simplify-quickstart/prerequisites.html">simplify-quickstart</a></dd>
         </dl>
     </div>
 </div>
