@@ -95,10 +95,10 @@ class GroClient(Client):
         'gdh_seletion' string of the form
         <metric_id>-<item_id>-<region_id>-<partner_region_id>-<source_id>-<frequency_id>
 
-        For example, client.GDH("860032-274-1231-14-9") will get the
+        For example, client.GDH("860032-274-1231-0-14-9") will get the
         data points for Production of Corn in China from PS&D at an
         annual frequency, e.g.
-        for csv_row in client.GDH("860032-274-1231-14-9"):
+        for csv_row in client.GDH("860032-274-1231-0-14-9"):
             print csv_row
 
         Parameters:
