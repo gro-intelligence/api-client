@@ -111,6 +111,68 @@ class BatchClient(GroClient):
 
     def batch_async_get_data_points(self, batched_args, output_list=None,
                                     map_result=None):
+        """Make many :meth:`~get_data_points` requests asynchronously.
+
+        Parameters
+        ----------
+        batched_args : list of dicts
+            Each dict should be a `selections` object like would be passed to
+            :meth:`~get_data_points`.
+
+            Example::
+
+                input_list = [
+                    {'metric_id': 860032, 'item_id': 274, 'region_id': 1215, 'frequency_id': 9, 'source_id': 2},
+                    {'metric_id': 860032, 'item_id': 270, 'region_id': 1215, 'frequency_id': 9, 'source_id': 2}
+                ]
+
+        output_list : any, optional
+            A custom accumulator to use in map_result. For example: may pass in a non-empty list
+            to append results to it, or may pass in a pandas dataframe, etc. By default, is a list
+            of n 0s, where n is the length of batched_args.
+        map_result : function, optional
+            Function to apply changes to individual requests' responses before returning.
+            Takes 4 params:
+            1. the index in batched_args
+            2. the element from batched_args
+            3. the result from that input
+            4. `output_list`. The accumulator of all results
+
+            Example::
+
+                output_list = []
+
+                # Merge all responses into a single list
+                def map_response(inputIndex, inputObject, response, output_list):
+                    output_list += response
+                    return output_list
+
+                batch_output = client.batch_async_get_data_points(input_list,
+                                                                  output_list=output_list,
+                                                                  map_result=map_response)
+
+        Returns
+        -------
+        any
+            By default, returns a list of lists of data points. Likely either objects or lists of
+            dictionaries. If using a custom map_result function, can return any type.
+
+            Example of the default output format::
+
+                [
+                    [
+                        {'metric_id': 1, 'item_id': 2, 'start_date': 2000-01-01, 'value': 41, ...},
+                        {'metric_id': 1, 'item_id': 2, 'start_date': 2001-01-01, 'value': 39, ...},
+                        {'metric_id': 1, 'item_id': 2, 'start_date': 2002-01-01, 'value': 50, ...},
+                    ],
+                    [
+                        {'metric_id': 1, 'item_id': 6, 'start_date': 2000-01-01, 'value': 12, ...},
+                        {'metric_id': 1, 'item_id': 6, 'start_date': 2001-01-01, 'value': 13, ...},
+                        {'metric_id': 1, 'item_id': 6, 'start_date': 2002-01-01, 'value': 4, ...},
+                    ],
+                ]
+
+        """
         return self.batch_async_queue(self.get_data_points_generator, batched_args, output_list,
                                       map_result)
 
@@ -141,12 +203,11 @@ class BatchClient(GroClient):
         map_result : function, optional
             Function to apply changes to individual requests' responses before returning. Must
             return an accumulator, like a map() function.
-
-        Returns
-        -------
-        any
-            By default, returns a list of outputs. Likely either objects or lists of objects.
-            If using a custom map_result function, can return any type.
+            Takes 4 params:
+            1. the index in batched_args
+            2. the element from batched_args
+            3. the result from that input
+            4. `output_list`. The accumulator of all results
 
         """
         assert type(batched_args) is list, \
