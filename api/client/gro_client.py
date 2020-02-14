@@ -107,9 +107,9 @@ class GroClient(Client):
 
         Returns:
         ------
-        DataFrame
+        pandas.DataFrame
 
-            subset of the main DataFrame get_df() with only the requested series.
+            the main DataFrame get_df() with the get_data_points() results for requested series.
 
         """
         entity_keys = ['metric_id', 'item_id', 'region_id', 'partner_region_id',
@@ -118,24 +118,7 @@ class GroClient(Client):
         selection = dict(zip(entity_keys, entity_ids))
         self.add_single_data_series(selection)
         df = self.get_df()
-        # Subset the dataframe and fill in names
-        pairs = self.get_names_for_selection(selection)
-        unit_id = df['unit_id'].values[0]
-        unit_name = self.lookup("units", unit_id).get('name')
-        pairs.append(("unit", unit_name))
-        cols = pandas.MultiIndex.from_tuples([tuple(pair[1] for pair in pairs)],
-                                             names=tuple(pair[0] for pair in pairs))                                                          
-        filters = ((df['item_id'] == selection['item_id']) & 
-                   (df['metric_id'] == selection['metric_id']) &
-                   (df['region_id'] == selection['region_id']) &
-                   (df['frequency_id'] == selection['frequency_id']))
-        if 'partner_region_id' in df.columns:
-            filters = (filters & (df['partner_region_id'] == selection['partner_region_id']))
-        series = pandas.DataFrame(
-            data = df[filters]['value'].values,
-            columns = cols,
-            index = df['end_date'])
-        return series
+        return df
 
     def get_data_points(self, **selections):
         """Get all the data points for a given selection.
