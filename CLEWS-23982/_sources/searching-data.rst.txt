@@ -53,6 +53,7 @@ Get data series
 Instead of searching for all the individual entity IDs required to create a data series, the :meth:`api.client.gro_client.GroClient.get_data_series` method will return a list of all the data series available for the filters you have supplied. For example, if you are interested in Russian Oats you could use the following code to find out all the available data series that have "Oats" (item_id = 327) as the item and "Russia" (region_id = 1168) as the region:
 To look up all descendants of region 1029 (Brazil) that are of level 4 (provinces):
 ::
+
   from api.client.gro_client.GroClient import REGION_LEVELS
   provinces_of_brazil = client.get_descendant_regions(1029, REGION_LEVELS['province'])
 
@@ -61,6 +62,7 @@ Lookup contains
 ===============
 Our ontology is defined in terms of a graph, with metrics/items/regions containing others. In each case, you can see the :code:`'contains'` property in the output of :code:`client.lookup(type, id)`. For example:
 ::
+
   client.lookup('items', 10009)['contains']
 
 will return a list of items ids for items that are cereals (item_id = 10009): :code:`[..., 274, 422, ...]`. Once you have those ids, you can use the :meth:`api.client.gro_client.GroClient.lookup` function on each one to find more info, like their names, e.g.: :code:`client.lookup('items', 274)['name']` will return `Corn`.
@@ -73,11 +75,13 @@ Using the :code:`lookup()` method, you can get an entity's list of direct childr
 
 To look up all descendants of region 1029 (Brazil) that are of level 4 (provinces):
 ::
+
   from api.client.gro_client.GroClient import REGION_LEVELS
   provinces_of_brazil = client.get_descendant_regions(1029, REGION_LEVELS['province'])
 
 To look up all descendants of region 1029 (Brazil) that are of level 5 (districts):
 ::
+
   from api.client.gro_client.GroClient import REGION_LEVELS
   provinces_of_brazil = client.get_descendant_regions(1029, REGION_LEVELS['district'])
 
@@ -89,6 +93,7 @@ Lookup belongs
 
 If you want to find "what entities contain the given entity?" there is a method, :meth:`api.client.gro_client.GroClient.lookup_belongs` that just does that. For example:
 ::
+
   UNITED_STATES = 1215
   client.lookup_belongs('regions', UNITED_STATES)
 
