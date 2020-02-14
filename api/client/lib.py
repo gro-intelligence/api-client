@@ -244,14 +244,10 @@ def get_data(url, headers, params=None, logger=None):
             logger.warning('Redirecting {} to {}'.format(params, new_params), extra=log_record)
             params = new_params
         elif data.status_code in [400, 401, 404, 500]:
-            try:
-                raise APIError(data, retry_count, url)
-            except APIError as error:
-                return error
+            raise APIError(data, retry_count, url)
         else:
             logger.error('{}'.format(data), extra=log_record)
-    raise Exception('Giving up on {} after {} tries: {}.'.format(
-        url, retry_count, data))
+    raise APIError(data, retry_count, url)
 
 
 @memoize(maxsize=None)
