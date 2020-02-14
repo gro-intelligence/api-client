@@ -16,7 +16,7 @@ MacOS and Linux
 Windows
 =======
 
-The Gro API Client package is supported both with or without Anaconda. However, some popular data science packages, including some used in the sample scripts provided, are only available on Windows via `conda <ttps://docs.conda.io/en/latest/>`_. For that reason, instructions are provided for both. You should select the distribution that fits your requirements.
+The Gro API Client package is supported both with or without Anaconda. However, some popular data science packages, including some used in the sample scripts provided, are only available on Windows via `conda <https://docs.conda.io/en/latest/>`_. For that reason, instructions are provided for both. You should select the distribution that fits your requirements.
 
 Anaconda
 --------
