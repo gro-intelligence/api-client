@@ -67,7 +67,7 @@ class Client(object):
     def lookup(self, entity_type, entity_id):
         """Retrieve details about a given id of type entity_type.
 
-        https://github.com/gro-intelligence/api-client/wiki/Entities-Definition
+        https://developers.gro-intelligence.com/gro-ontology.html
 
         Parameters
         ----------
@@ -93,10 +93,28 @@ class Client(object):
     def lookup_unit_abbreviation(self, unit_id):
         return self.lookup('units', unit_id)['abbreviation']
 
+    def get_allowed_units(self, metric_id, item_id=None):
+        """Get a list of unit that can be used with the given metric (and
+        optionally, item).
+
+        Parameters
+        ----------
+        metric_id: int
+        item_id: int, optional.
+
+
+        Returns
+        -------
+        list of unit ids
+
+        """
+        return lib.get_allowed_units(self.access_token, self.api_host, metric_id,
+                                     item_id)
+
     def get_data_series(self, **selection):
         """Get available data series for the given selections.
 
-        https://github.com/gro-intelligence/api-client/wiki/Data-Series-Definition
+        https://developers.gro-intelligence.com/data-series-definition.html
 
         Parameters
         ----------
@@ -166,7 +184,7 @@ class Client(object):
         Yields
         ------
         dict
-            Result from search() passed to lookup() to get additional details.
+            Result from :meth:`~.search` passed to :meth:`~.lookup` to get additional details.
             
             Example::
 
@@ -175,7 +193,7 @@ class Client(object):
                   'name': 'Corn',
                   'definition': 'The seeds of the widely cultivated...' }
 
-            See output of lookup(). Note that as with search(), the first result is
+            See output of :meth:`~.lookup`. Note that as with :meth:`~.search`, the first result is
             the best match for the given search term(s).
 
         """
@@ -194,10 +212,10 @@ class Client(object):
         Yields
         ------
         dict
-            Result of lookup() on each entity the given entity belongs to.
+            Result of :meth:`~.lookup` on each entity the given entity belongs to.
 
             For example: For the region 'United States', one yielded result will be for
-            'North America.' The format of which matches the output of lookup()::
+            'North America.' The format of which matches the output of :meth:`~.lookup`::
 
                 { 'id': 15,
                   'contains': [ 1008, 1009, 1012, 1215, ... ],
@@ -216,7 +234,7 @@ class Client(object):
         Parameters
         ----------
         series_list : list of dicts
-            See the output of get_data_series().
+            See the output of :meth:`~.get_data_series`.
 
         Yields
         ------
@@ -268,7 +286,8 @@ class Client(object):
         return lib.get_geojson(self.access_token, self.api_host, region_id)
 
 
-    def get_descendant_regions(self, region_id, descendant_level=None, include_historical=True):
+    def get_descendant_regions(self, region_id, descendant_level=None,
+                               include_historical=True, include_details=True):
         """Look up details of all regions of the given level contained by a region.
 
         Given any region by id, get all the descendant regions that are of the specified level.
@@ -282,6 +301,10 @@ class Client(object):
         include_historical : boolean, optional
             True by default. If False is specified, regions that only exist in historical data
             (e.g. the Soviet Union) will be excluded.
+        include_details : boolean, optional
+            True by default. Will perform a lookup() on each descendant region to find name,
+            latitude, longitude, etc. If this option is set to False, only ids of descendant
+            regions will be returned, which makes execution significantly faster.
 
         Returns
         -------
@@ -301,8 +324,8 @@ class Client(object):
                     'level': 4
                 }, ...]
 
-            See output of lookup()
+            See output of :meth:`~.lookup`
 
         """
-        return lib.get_descendant_regions(self.access_token, self.api_host,
-                                          region_id, descendant_level, include_historical)
+        return lib.get_descendant_regions(self.access_token, self.api_host, region_id,
+                                          descendant_level, include_historical, include_details)

@@ -61,9 +61,10 @@ def main():
         writer = unicodecsv.writer(open(filename, 'wb'))
         count = 0
         for point in model.get_data_points(**data_series):
-            writer.writerow([point['start_date'], point['end_date'],
-                             point['value'] * point['input_unit_scale'],
-                             model.lookup_unit_abbreviation(point['input_unit_id'])])
+            writer.writerow([point['start_date'],
+                             point['end_date'],
+                             point['value'],
+                             model.lookup_unit_abbreviation(point['unit_id'])])
             count += 1
         print("Output {} rows to {}".format(count, filename))
 
