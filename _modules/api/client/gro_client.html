@@ -378,11 +378,10 @@
             <span class="n">data_series</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_series_queue</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
             <span class="k">if</span> <span class="n">show_revisions</span><span class="p">:</span>
                 <span class="n">data_series</span><span class="p">[</span><span class="s1">&#39;show_revisions&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">add_points_to_df</span><span class="p">(</span>
-                <span class="mi">0</span><span class="p">,</span> <span class="n">data_series</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_data_points</span><span class="p">(</span><span class="o">**</span><span class="n">data_series</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_points_to_df</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">data_series</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_data_points</span><span class="p">(</span><span class="o">**</span><span class="n">data_series</span><span class="p">))</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_frame</span></div>
 
-    <span class="k">def</span> <span class="nf">add_points_to_df</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="n">data_series</span><span class="p">,</span> <span class="n">data_points</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">add_points_to_df</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="n">data_series</span><span class="p">,</span> <span class="n">data_points</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Internal function used by get_df to add individual series to the</span>
 <span class="sd">        frame.</span>
 
@@ -963,12 +962,6 @@
     <div class="rst-other-versions">
         <dl>
             <dt>Tags</dt>
-            <dd><a href="../../../v1.40.0/index.html">v1.40.0</a></dd>
-            <dd><a href="../../../v1.40.1/index.html">v1.40.1</a></dd>
-            <dd><a href="../../../v1.40.2/index.html">v1.40.2</a></dd>
-            <dd><a href="../../../v1.40.3/index.html">v1.40.3</a></dd>
-            <dd><a href="../../../v1.40.4/index.html">v1.40.4</a></dd>
-            <dd><a href="../../../v1.40.5/index.html">v1.40.5</a></dd>
             <dd><a href="../../../v1.40.6/index.html">v1.40.6</a></dd>
             <dd><a href="../../../v1.56.0/index.html">v1.56.0</a></dd>
             <dd><a href="../../../v1.56.1/index.html">v1.56.1</a></dd>
@@ -988,7 +981,6 @@
             <dd><a href="../../../CLEWS-23237_revision_get_df/index.html">CLEWS-23237_revision_get_df</a></dd>
             <dd><a href="../../../CLEWS-23863/index.html">CLEWS-23863</a></dd>
             <dd><a href="../../../CLEWS-23982/index.html">CLEWS-23982</a></dd>
-            <dd><a href="../../../CLEWS-25000/index.html">CLEWS-25000</a></dd>
             <dd><a href="../../../analogous_years_modifications/index.html">analogous_years_modifications</a></dd>
             <dd><a href="../../../development/_modules/api/client/gro_client.html">development</a></dd>
             <dd><a href="../../../docs-content-changes/index.html">docs-content-changes</a></dd>
