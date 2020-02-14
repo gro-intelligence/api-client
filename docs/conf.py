@@ -103,6 +103,5 @@ scv_banner_main_ref = 'development'
 
 # Omit versions before docs style was finalized
 # TODO: https://stackoverflow.com/questions/26141851/let-sphinx-use-version-from-setup-py
-# scv_whitelist_tags = (re.compile(r'^(?!.*(v1.40.0|v1.40.1|v1.40.2|v1.40.3|v1.40.4|v1.40.5)).*$'),)
+scv_whitelist_tags = (re.compile(r'^(?!.*(v1.40.0|v1.40.1|v1.40.2|v1.40.3|v1.40.4|v1.40.5)).*$'),)
 scv_whitelist_branches = ('CLEWS-23982','development',)
-scv_whitelist_tags = ('false-tag', 'v1.40.0',)
