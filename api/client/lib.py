@@ -35,15 +35,25 @@ REGION_LEVELS = {
 
 
 class APIError(Exception):
-    def __init__(self, response, retry_count, url):
+    def __init__(self, response, retry_count, url, params):
         self.response = response
         self.retry_count = retry_count
         self.url = url
+        self.params = params
         self.status_code = self.response.status_code
-        self.text = self.response.text
-        self.message = 'Giving up on {} after {} tries: {}.'.format(self.url,
-                                                                    self.retry_count,
-                                                                    self.response)
+        try:
+            json_content = self.response.json()
+            # 'error' should be something like 'Not Found' or 'Bad Request'
+            self.message = json_content.get('error', '')
+            # Some error responses give additional info.
+            # For example, a 400 Bad Request might say "metricId is required"
+            if 'message' in json_content:
+                self.message += ': {}'.format(json_content['message'])
+        except Exception:
+            # If the error message can't be parsed, fall back to a generic "giving up" message.
+            self.message = 'Giving up on {} after {} {}: {}'.format(self.url, self.retry_count,
+                                                                    'try' if self.retry_count == 1
+                                                                    else 'tries', response)
 
 
 @memoize(maxsize=None)
@@ -139,8 +149,7 @@ def get_access_token(api_host, user_email, user_password, logger=None):
             logger.debug('Authentication succeeded in get_access_token')
             return get_api_token.json()['data']['accessToken']
         else:
-            logger.warning('Error in get_access_token: {}'.format(
-                get_api_token))
+            logger.warning('Error in get_access_token: {}'.format(get_api_token))
         retry_count += 1
     raise Exception('Giving up on get_access_token after {0} tries.'.format(
         retry_count))
@@ -221,33 +230,33 @@ def get_data(url, headers, params=None, logger=None):
         logger.debug(params)
     while retry_count < cfg.MAX_RETRIES:
         start_time = time.time()
-        data = requests.get(url, params=params, headers=headers, timeout=None)
+        response = requests.get(url, params=params, headers=headers, timeout=None)
         elapsed_time = time.time() - start_time
         log_record = dict(base_log_record)
         log_record['elapsed_time_in_ms'] = 1000 * elapsed_time
         log_record['retry_count'] = retry_count
-        log_record['status_code'] = data.status_code
-        if data.status_code == 200:
+        log_record['status_code'] = response.status_code
+        if response.status_code == 200:
             logger.debug('OK', extra=log_record)
-            return data
-        if data.status_code == 204:
+            return response
+        if response.status_code == 204:
             logger.warning('No Content', extra=log_record)
-            return data
+            return response
         retry_count += 1
         log_record['tag'] = 'failed_gro_api_request'
         if retry_count < cfg.MAX_RETRIES:
-            logger.warning(data.text, extra=log_record)
-        if data.status_code == 429:
+            logger.warning(response.text, extra=log_record)
+        if response.status_code == 429:
             time.sleep(2 ** retry_count)  # Exponential backoff before retrying
-        elif data.status_code == 301:
-            new_params = redirect(params, data.json()['data'][0])
+        elif response.status_code == 301:
+            new_params = redirect(params, response.json()['data'][0])
             logger.warning('Redirecting {} to {}'.format(params, new_params), extra=log_record)
             params = new_params
-        elif data.status_code in [400, 401, 404, 500]:
+        elif response.status_code in [400, 401, 404, 500]:
             break
         else:
-            logger.error('{}'.format(data), extra=log_record)
-    raise APIError(data, retry_count, url)
+            logger.error('{}'.format(response), extra=log_record)
+    raise APIError(response, retry_count, url, params)
 
 
 @memoize(maxsize=None)
