@@ -73,38 +73,6 @@ class GroClient(Client):
             self.add_points_to_df(0, data_series, self.get_data_points(**data_series))
         return self._data_frame
 
-    def GDH(self, gdh_selection):
-        """Wrapper for get_data_points with alternative input and output style.
-
-        The selection of data series to retrieve is encoded in a
-        'gdh_seletion' string of the form
-        <metric_id>-<item_id>-<region_id>-<partner_region_id>-<source_id>-<frequency_id>
-
-        For example, client.GDH("860032-274-1231-0-14-9") will get the
-        data points for Production of Corn in China from PS&D at an
-        annual frequency, e.g.
-        for csv_row in client.GDH("860032-274-1231-0-14-9"):
-            print csv_row
-
-        Parameters:
-        ----------
-        gdh_selection: string
-
-        Returns:
-        ------
-        pandas.DataFrame
-
-            the main DataFrame get_df() with the get_data_points() results for requested series.
-
-        """
-        entity_keys = ['metric_id', 'item_id', 'region_id', 'partner_region_id',
-                       'source_id', 'frequency_id']
-        entity_ids = [int(x) for x in gdh_selection.split('-')]
-        selection = dict(zip(entity_keys, entity_ids))
-        self.add_single_data_series(selection)
-        df = self.get_df()
-        return df
-
     def add_points_to_df(self, index, data_series, data_points, *args):
         """Internal function used by get_df to add individual series to the
         frame.
@@ -261,6 +229,38 @@ class GroClient(Client):
                                               target_unit_id=selections['unit_id']), data_points))
         # Return data points in input units if not unit is specified
         return data_points
+
+    def GDH(self, gdh_selection):
+        """Wrapper for :meth:`~.get_data_points`. with alternative input and output style.
+
+        The selection of data series to retrieve is encoded in a
+        'gdh_seletion' string of the form
+        <metric_id>-<item_id>-<region_id>-<partner_region_id>-<source_id>-<frequency_id>
+
+        For example, client.GDH("860032-274-1231-0-14-9") will get the
+        data points for Production of Corn in China from PS&D at an
+        annual frequency, e.g.
+        for csv_row in client.GDH("860032-274-1231-0-14-9"):
+            print csv_row
+
+        Parameters:
+        ----------
+        gdh_selection: string
+
+        Returns:
+        ------
+        pandas.DataFrame
+
+            the main DataFrame :meth:`~.get_df`. with the :meth:`~.get_data_points`. results for requested series.
+
+        """
+        entity_keys = ['metric_id', 'item_id', 'region_id', 'partner_region_id',
+                       'source_id', 'frequency_id']
+        entity_ids = [int(x) for x in gdh_selection.split('-')]
+        selection = dict(zip(entity_keys, entity_ids))
+        self.add_single_data_series(selection)
+        df = self.get_df()
+        return df
 
     def get_data_series_list(self):
         """Inspect the current list of saved data series contained in the GroClient.
