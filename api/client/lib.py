@@ -9,9 +9,12 @@ from builtins import map
 from builtins import str
 from api.client import cfg
 import json
+import re
 import logging
 import requests
 import time
+import platform
+from pkg_resources import get_distribution, DistributionNotFound
 try:
     # functools are native in Python 3.2.3+
     from functools import lru_cache as memoize
@@ -29,6 +32,71 @@ REGION_LEVELS = {
     'other': 8,
     'coordinate': 9
 }
+
+
+class APIError(Exception):
+    def __init__(self, response, retry_count, url, params):
+        self.response = response
+        self.retry_count = retry_count
+        self.url = url
+        self.params = params
+        self.status_code = self.response.status_code
+        try:
+            json_content = self.response.json()
+            # 'error' should be something like 'Not Found' or 'Bad Request'
+            self.message = json_content.get('error', '')
+            # Some error responses give additional info.
+            # For example, a 400 Bad Request might say "metricId is required"
+            if 'message' in json_content:
+                self.message += ': {}'.format(json_content['message'])
+        except Exception:
+            # If the error message can't be parsed, fall back to a generic "giving up" message.
+            self.message = 'Giving up on {} after {} {}: {}'.format(self.url, self.retry_count,
+                                                                    'try' if self.retry_count == 1
+                                                                    else 'tries', response)
+
+
+@memoize(maxsize=None)
+def camel_to_snake(term):
+    """Convert a string from camelCase to snake_case.
+
+    >>> camel_to_snake('partnerRegionId')
+    'partner_region_id'
+
+    >>> camel_to_snake('partner_region_id')
+    'partner_region_id'
+
+    Parameters
+    ----------
+    term : string
+        A camelCase string
+    Returns
+    -------
+    string
+        A new snake_case string
+
+    """
+    return re.sub('([a-z0-9])([A-Z])', r'\1_\2', re.sub('(.)([A-Z][a-z]+)', r'\1_\2', term)).lower()
+
+
+def camel_to_snake_dict(obj):
+    """Convert a dictionary's keys from camelCase to snake_case.
+
+    >>> camel_to_snake_dict({'belongsTo': {'metricId': 4}})
+    {'belongs_to': {'metricId': 4}}
+
+    Parameters
+    ----------
+    term : dict
+        A dictionary with camelCase keys
+
+    Returns
+    -------
+    dict
+        A new dictionary with snake_case keys
+
+    """
+    return dict((camel_to_snake(key), value) for key, value in obj.items())
 
 
 def get_default_logger():
@@ -81,8 +149,7 @@ def get_access_token(api_host, user_email, user_password, logger=None):
             logger.debug('Authentication succeeded in get_access_token')
             return get_api_token.json()['data']['accessToken']
         else:
-            logger.warning('Error in get_access_token: {}'.format(
-                get_api_token))
+            logger.warning('Error in get_access_token: {}'.format(get_api_token))
         retry_count += 1
     raise Exception('Giving up on get_access_token after {0} tries.'.format(
         retry_count))
@@ -121,6 +188,19 @@ def redirect(old_params, migration):
     return new_params
 
 
+def get_version_info():
+    versions = dict()
+
+    # retrieve python version and api client version
+    versions['python-version'] = platform.python_version()
+    try:
+        versions['api-client-version'] = get_distribution('gro').version
+    except DistributionNotFound:
+        # package is not installed
+        pass
+    return versions
+
+
 def get_data(url, headers, params=None, logger=None):
     """General 'make api request' function.
 
@@ -140,40 +220,54 @@ def get_data(url, headers, params=None, logger=None):
     """
     base_log_record = dict(route=url, params=params)
     retry_count = 0
+
+    # append version info
+    headers.update(get_version_info())
+
     if not logger:
         logger = get_default_logger()
         logger.debug(url)
         logger.debug(params)
     while retry_count < cfg.MAX_RETRIES:
         start_time = time.time()
-        data = requests.get(url, params=params, headers=headers, timeout=None)
+        response = requests.get(url, params=params, headers=headers, timeout=None)
         elapsed_time = time.time() - start_time
         log_record = dict(base_log_record)
         log_record['elapsed_time_in_ms'] = 1000 * elapsed_time
         log_record['retry_count'] = retry_count
-        log_record['status_code'] = data.status_code
-        if data.status_code == 200:
+        log_record['status_code'] = response.status_code
+        if response.status_code == 200:
             logger.debug('OK', extra=log_record)
-            return data
-        if data.status_code == 204:
+            return response
+        if response.status_code == 204:
             logger.warning('No Content', extra=log_record)
-            return data
+            return response
         retry_count += 1
         log_record['tag'] = 'failed_gro_api_request'
         if retry_count < cfg.MAX_RETRIES:
-            logger.warning(data.text, extra=log_record)
-        if data.status_code == 429:
+            logger.warning(response.text, extra=log_record)
+        if response.status_code == 429:
             time.sleep(2 ** retry_count)  # Exponential backoff before retrying
-        elif data.status_code == 301:
-            new_params = redirect(params, data.json()['data'][0])
+        elif response.status_code == 301:
+            new_params = redirect(params, response.json()['data'][0])
             logger.warning('Redirecting {} to {}'.format(params, new_params), extra=log_record)
             params = new_params
-        elif data.status_code in [404, 401, 500]:
+        elif response.status_code in [400, 401, 404, 500]:
             break
         else:
-            logger.error('{}'.format(data), extra=log_record)
-    raise Exception('Giving up on {} after {} tries: {}.'.format(
-        url, retry_count, data))
+            logger.error('{}'.format(response), extra=log_record)
+    raise APIError(response, retry_count, url, params)
+
+
+@memoize(maxsize=None)
+def get_allowed_units(access_token, api_host, metric_id, item_id):
+    url = '/'.join(['https:', '', api_host, 'v2/units/allowed'])
+    headers = {'authorization': 'Bearer ' + access_token}
+    params = {'metricIds': metric_id}
+    if item_id:
+        params['itemIds'] = item_id
+    resp = get_data(url, headers, params)
+    return [unit['id'] for unit in resp.json()['data']]
 
 
 @memoize(maxsize=None)
@@ -269,7 +363,7 @@ def get_data_call_params(**selection):
 
     >>> get_data_call_params(
     ...     metric_id=123, start_date='2012-01-01', unit_id=14
-    ... ) == {'startDate': '2012-01-01', 'metricId': 123}
+    ... ) == {'startDate': '2012-01-01', 'metricId': 123, 'responseType': 'list_of_series'}
     True
 
     Parameters
@@ -296,6 +390,7 @@ def get_data_call_params(**selection):
     for key, value in list(selection.items()):
         if key in ('start_date', 'end_date', 'show_revisions', 'insert_null', 'at_time'):
             params[snake_to_camel(key)] = value
+    params['responseType'] = 'list_of_series'
     return params
 
 
@@ -334,16 +429,11 @@ def get_source_ranking(access_token, api_host, series):
 
 
 def rank_series_by_source(access_token, api_host, series_list):
-    # We sort the internal tuple representations of the dictionaries because
-    # otherwise when we call set() we end up with duplicates if iteritems()
-    # returns a different order for the same dictionary. See test case.
-    selections_sorted = set(tuple(sorted(
-        [k_v for k_v in iter(list(single_series.items()))
-         if k_v[0] not in ('source_id', 'source_name')],
-        key=lambda x: x[0])) for single_series in series_list)
-
-    for series in map(dict, selections_sorted):
+    for series in series_list:
         try:
+            # Remove source if selected, to consider all sources.
+            series.pop('source_name', None)
+            series.pop('source_id', None)
             source_ids = get_source_ranking(access_token, api_host, series)
         except ValueError:
             continue  # empty response
@@ -354,12 +444,115 @@ def rank_series_by_source(access_token, api_host, series_list):
             yield series_with_source
 
 
+def list_of_series_to_single_series(series_list, add_belongs_to=False, include_historical=True):
+    """Convert list_of_series format from API back into the familiar single_series output format.
+
+    >>> list_of_series_to_single_series([{
+    ...     'series': { 'metricId': 1, 'itemId': 2, 'regionId': 3, 'unitId': 4, 'inputUnitId': 5,
+    ...                 'belongsTo': { 'itemId': 22 }
+    ...     },
+    ...     'data': [
+    ...         ['2001-01-01', '2001-12-31', 123],
+    ...         ['2002-01-01', '2002-12-31', 123, '2012-01-01'],
+    ...         ['2003-01-01', '2003-12-31', 123, None, {}]
+    ...     ]
+    ... }], True) == [
+    ...   { 'start_date': '2001-01-01',
+    ...     'end_date': '2001-12-31',
+    ...     'value': 123,
+    ...     'unit_id': 4,
+    ...     'input_unit_id': 4,
+    ...     'input_unit_scale': 1,
+    ...     'reporting_date': None,
+    ...     'metric_id': 1,
+    ...     'item_id': 2,
+    ...     'region_id': 3,
+    ...     'partner_region_id': 0,
+    ...     'frequency_id': None,
+    ...     'belongs_to': { 'item_id': 22 } },
+    ...   { 'start_date': '2002-01-01',
+    ...     'end_date': '2002-12-31',
+    ...     'value': 123,
+    ...     'unit_id': 4,
+    ...     'input_unit_id': 4,
+    ...     'input_unit_scale': 1,
+    ...     'reporting_date': '2012-01-01',
+    ...     'metric_id': 1,
+    ...     'item_id': 2,
+    ...     'region_id': 3,
+    ...     'partner_region_id': 0,
+    ...     'frequency_id': None,
+    ...     'belongs_to': { 'item_id': 22 } },
+    ...   { 'start_date': '2003-01-01',
+    ...     'end_date': '2003-12-31',
+    ...     'value': 123,
+    ...     'unit_id': 4,
+    ...     'input_unit_id': 4,
+    ...     'input_unit_scale': 1,
+    ...     'reporting_date': None,
+    ...     'metric_id': 1,
+    ...     'item_id': 2,
+    ...     'region_id': 3,
+    ...     'partner_region_id': 0,
+    ...     'frequency_id': None,
+    ...     'belongs_to': { 'item_id': 22 } }
+    ... ]
+    True
+
+    """
+    if not isinstance(series_list, list):
+        # If the output is an error or None or something else that's not a list, just propagate
+        return series_list
+    output = []
+    for series in series_list:
+        if not (isinstance(series, dict) and isinstance(series.get('data', []), list)):
+            continue
+        series_metadata = series.get('series', {}).get('metadata', {})
+        if not include_historical and (series_metadata.get('includesHistoricalRegion', False) or 
+        series_metadata.get('includesHistoricalPartnerRegion', False)):
+            continue
+        # All the belongsTo keys are in camelCase. Convert them to snake_case.
+        # Only need to do this once per series, so do this outside of the list
+        # comprehension and save to a variable to avoid duplicate work:
+        belongs_to = camel_to_snake_dict(series.get('series', {}).get('belongsTo', {}))
+        for point in series.get('data', []):
+            formatted_point = {
+                'start_date': point[0],
+                'end_date': point[1],
+                'value': point[2],
+                # list_of_series has unit_id in the series attributes currently. Does
+                # not allow for mixed units in the same series
+                'unit_id': series['series'].get('unitId', None),
+                # input_unit_id and input_unit_scale are deprecated but provided for backwards
+                # compatibility. unit_id should be used instead.
+                'input_unit_id': series['series'].get('unitId', None),
+                'input_unit_scale': 1,
+                # If a point does not have reporting_date, use None
+                'reporting_date': point[3] if len(point) > 3 else None,
+                # Series attributes:
+                'metric_id': series['series'].get('metricId', None),
+                'item_id': series['series'].get('itemId', None),
+                'region_id': series['series'].get('regionId', None),
+                'partner_region_id': series['series'].get('partnerRegionId', 0),
+                'frequency_id': series['series'].get('frequencyId', None)
+                # 'source_id': series['series'].get('sourceId', None), TODO: add source to output
+            }
+            if add_belongs_to:
+                # belongs_to is consistent with the series the user requested. So if an
+                # expansion happened on the server side, the user can reconstruct what
+                # results came from which request.
+                formatted_point['belongs_to'] = belongs_to
+            output.append(formatted_point)
+    return output
+
+
 def get_data_points(access_token, api_host, **selection):
     headers = {'authorization': 'Bearer ' + access_token}
     url = '/'.join(['https:', '', api_host, 'v2/data'])
     params = get_data_call_params(**selection)
     resp = get_data(url, headers, params)
-    return resp.json()
+    include_historical = selection.get('include_historical', True)
+    return list_of_series_to_single_series(resp.json(), False, include_historical)
 
 
 @memoize(maxsize=None)
@@ -431,19 +624,30 @@ def get_geojson(access_token, api_host, region_id):
 
 
 def get_descendant_regions(access_token, api_host, region_id,
-                           descendant_level=False, include_historical=True):
-    descendants = []
-    region = lookup(access_token, api_host, 'regions', region_id)
-    for member_id in region['contains']:
-        member = lookup(access_token, api_host, 'regions', member_id)
-        if (not include_historical and member['historical']):
-            continue
-        if not descendant_level or descendant_level == member['level']:
-            descendants.append(member)
-        if not descendant_level or member['level'] < descendant_level:
-            descendants += get_descendant_regions(
-                access_token, api_host, member_id, descendant_level, include_historical)
-    return descendants
+                           descendant_level=False, include_historical=True, include_details=True):
+    url = '/'.join(['https:', '', api_host, 'v2/regions/contains'])
+    headers = {'authorization': 'Bearer ' + access_token}
+    params = {'ids': [region_id]}
+    if descendant_level:
+        params['level'] = descendant_level
+    else:
+        params['distance'] = -1
+
+    resp = get_data(url, headers, params)
+    descendant_region_ids = resp.json()['data'][str(region_id)]
+
+    # Filter out regions with the 'historical' flag set to true
+    if not include_historical:
+        descendant_region_ids = [
+            descendant_region_id for descendant_region_id in descendant_region_ids
+            if not lookup(access_token, api_host, 'regions', descendant_region_id)['historical']
+        ]
+
+    if include_details:
+        return [lookup(access_token, api_host, 'regions', descendant_region_id)
+                for descendant_region_id in descendant_region_ids]
+
+    return [{'id': descendant_region_id} for descendant_region_id in descendant_region_ids]
 
 
 if __name__ == '__main__':

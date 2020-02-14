@@ -15,6 +15,8 @@ Basic Exploration
 
 .. automethod:: api.client.gro_client.GroClient.get_data_series
 
+.. automethod:: api.client.gro_client.GroClient.find_data_series
+
 **************
 Data Retrieval
 **************
@@ -50,3 +52,15 @@ Pandas Utils
 .. automethod:: api.client.gro_client.GroClient.add_single_data_series
 
 .. automethod:: api.client.gro_client.GroClient.get_data_series_list
+
+*************
+Crop Modeling
+*************
+
+.. automethod:: api.client.crop_model.CropModel.compute_weights
+
+.. automethod:: api.client.crop_model.CropModel.compute_crop_weighted_series
+
+.. automethod:: api.client.crop_model.CropModel.compute_gdd
+
+.. automethod:: api.client.crop_model.CropModel.growing_degree_days

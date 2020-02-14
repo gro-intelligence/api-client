@@ -4,6 +4,7 @@ from functools import reduce
 import tempfile
 import numpy as np
 import os
+from tqdm import tqdm
 
 import api.client.lib
 from api.client.samples.similar_regions import transform
@@ -259,7 +260,9 @@ class SimilarRegionState(object):
             queries.append(copy_of_metric)
             map_query_to_data_table.append(self.mapping[region])
 
-        def map_response(idx, _, response):
+        load_bar = tqdm(total=len(queries))
+
+        def map_response(idx, _, response, *args):
             data_table_idx = map_query_to_data_table[idx]
             if response is None or len(response) == 0 or (len(response) == 1 and response[0] == {}):
                 # no data on this region. let's fill it with zeros for the odd cases and mark it for masking.
@@ -281,15 +284,17 @@ class SimilarRegionState(object):
                         self.data[property_name][data_table_idx] = result
                 elif props["properties"]["type"] == "pit":
                     # for point in time just add the value
-                    if response[0]["value"] == None or np.isnan(response[0]["value"]):
+                    if response[0]["value"] is None or np.isnan(response[0]["value"]):
                         self.data[property_name][data_table_idx] = np.ma.masked
                     else:
                         self.data[property_name][data_table_idx] = response[0]["value"]
             # Mark this as downloaded.
             self.missing[property_name][data_table_idx] = False
+            load_bar.update()
 
         self._logger.info("Getting data series for {} regions for property {}".format(len(queries), property_name))
         self.client.batch_async_get_data_points(queries, map_result=map_response)
+        load_bar.close()
         return
 
 

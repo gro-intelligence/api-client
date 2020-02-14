@@ -12,6 +12,7 @@
 #
 import os
 import sys
+import re
 sys.path.insert(0, os.path.abspath('..'))
 
 
@@ -30,10 +31,11 @@ author = 'Gro Intelligence'
 # ones.
 extensions = [
     'sphinx.ext.autodoc',
-    'sphinx.ext.doctest',
     'sphinx.ext.coverage',
-    'sphinx.ext.viewcode',
+    'sphinx.ext.doctest',
+    'sphinx.ext.extlinks',
     'sphinx.ext.napoleon',
+    'sphinx.ext.viewcode',
     'recommonmark'
 ]
 
@@ -67,6 +69,13 @@ html_theme_options = {
 
 html_style = 'css/custom-theme.css'
 
+# https://www.sphinx-doc.org/en/master/usage/extensions/extlinks.html
+extlinks = {
+    'sample': (
+        'https://github.com/gro-intelligence/api-client/tree/development/api/client/samples/%s', ''
+    )
+}
+
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
@@ -78,3 +87,10 @@ master_doc = 'index'
 scv_grm_exclude = ('README.md', '.gitignore', '.nojekyll', 'CNAME')
 scv_show_banner = True
 scv_banner_main_ref = 'development'
+
+# still build other branches, but hide the version selectors in _static/css/custom-theme.css.
+# Uncomment this line to stop building them altogether:
+# scv_whitelist_branches = ('development',)
+
+# Omit versions before docs style was finalized
+scv_whitelist_tags = (re.compile(r'^(?!.*(v1.40.0|v1.40.1|v1.40.2|v1.40.3|v1.40.4|v1.40.5)).*$'),)
