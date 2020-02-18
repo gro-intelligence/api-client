@@ -97,7 +97,6 @@ class GroClient(Client):
                                         if col in tmp.columns])
         else:
             self._data_frame = self._data_frame.merge(tmp, how='outer')
-        return self._data_frame
 
     def get_data_points(self, **selections):
         """Get all the data points for a given selection.
