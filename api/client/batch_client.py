@@ -99,8 +99,9 @@ class BatchClient(GroClient):
         if show_revisions:
             for data_series in self._data_series_queue:
                 data_series['show_revisions'] = True
-        return self.batch_async_queue(self.get_data_points, self._data_series_queue,
-                                      self._data_frame, self.add_points_to_df)
+        self.batch_async_queue(self.get_data_points, self._data_series_queue, None,
+                               self.add_points_to_df)
+        return self._data_frame
 
     # TODO: deprecate  the following  two methods, standardize  on one
     # approach with get_data_points and get_df
