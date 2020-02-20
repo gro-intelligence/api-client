@@ -64,19 +64,22 @@ class Client(object):
         return lib.list_available(self.access_token, self.api_host, selected_entities)
 
 
-    def lookup(self, entity_type, entity_ids, property_plural=None):
-        """Retrieve details about a given id of type entity_type.
+    def lookup(self, entity_type, entity_ids):
+        """Retrieve details about a given id or list of ids of type entity_type.
 
         https://developers.gro-intelligence.com/gro-ontology.html
 
         Parameters
         ----------
         entity_type : { 'metrics', 'items', 'regions', 'frequencies', 'sources', 'units' }
-        entity_id : int
+        entity_ids : int or list of ints
 
         Returns
         -------
-        dict
+        dict or dict of dicts
+            A dict with entity details is returned if an integer is given for entity_ids.
+            A dict of dicts with entity details, keyed by id is returned if a list of integers is
+            given for entity_ids.
 
             Example::
 
@@ -86,8 +89,35 @@ class Client(object):
                   'definition': 'The seeds of the widely cultivated corn plant <i>Zea mays</i>,'
                                 ' which is one of the world\'s most popular grains.' }
 
+            Example::
+
+                {   '274': {
+                        'id': 274,
+                        'contains': [779, 780, ...],
+                        'belongsTo': [4138, 8830, ...],
+                        'name': 'Corn',
+                        'definition': 'The seeds of the widely cultivated corn plant'
+                                      ' <i>Zea mays</i>, which is one of the world\'s most popular'
+                                      ' grains.'
+                    },
+                    '270': {
+                        'id': 270,
+                        'contains': [1737, 7401, ...],
+                        'belongsTo': [8830, 9053, ...],
+                        'name': 'Soybeans',
+                        'definition': 'The seeds and harvested crops of plants belonging to the'
+                                      ' species <i>Glycine max</i> that are used in the production'
+                                      ' of oil and both human and livestock consumption.'
+                    }
+                }
+
         """
-        return lib.lookup(self.access_token, self.api_host, entity_type, entity_ids)
+        # If a list of integers is given, return an dict of dicts, keyed by id
+        if isinstance(entity_ids, list):
+            return lib.lookup(self.access_token, self.api_host, entity_type, entity_ids)
+        # If an integer is given, return only the dict with that id
+        return lib.lookup(self.access_token, self.api_host,
+                          entity_type, [entity_ids]).get(str(entity_ids))
 
 
     def lookup_unit_abbreviation(self, unit_id):
