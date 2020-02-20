@@ -71,6 +71,10 @@ img {
     padding: 26px 0;
 }
 
+.wy-nav-content {
+  border-left: 2px #EEEEF1 solid;
+  max-width: 800px;
+}
 
 .wy-breadcrumbs {
     font-family: Roboto,Arial,sans-serif;
