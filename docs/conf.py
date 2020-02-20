@@ -70,13 +70,6 @@ html_theme_options = {
 }
 
 html_style = 'css/custom-theme.css'
-html_sidebars = {
-   '**': ['localtoc.html', 'globaltoc.html', 'relations.html', 'sourcelink.html', 'searchbox.html']
-}
-# TODO: required if an custom js files are in place
-# html_js_files = [
-#     'js/custom.js',
-# ]
 
 # https://www.sphinx-doc.org/en/master/usage/extensions/extlinks.html
 extlinks = {
@@ -96,6 +89,7 @@ master_doc = 'index'
 scv_grm_exclude = ('README.md', '.gitignore', '.nojekyll', 'CNAME')
 scv_show_banner = True
 scv_banner_main_ref = 'development'
+scv_root_ref = 'development'
 
 # still build other branches, but hide the version selectors in _static/css/custom-theme.css.
 # Uncomment this line to stop building them altogether:
