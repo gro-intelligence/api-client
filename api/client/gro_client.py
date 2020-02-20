@@ -59,19 +59,17 @@ class GroClient(Client):
             data_series = self._data_series_queue.pop()
             if show_revisions:
                 data_series['show_revisions'] = True
-            self.add_points_to_df(
-                0, data_series, self.get_data_points(**data_series))
+            self.add_points_to_df(None, data_series, self.get_data_points(**data_series))
         return self._data_frame
 
-    def add_points_to_df(self, index, data_series, data_points):
-        """Internal function used by get_df to add individual series to the
-        frame.
+    def add_points_to_df(self, index, data_series, data_points, *args):
+        """Add the given datapoints to a pandas dataframe.
 
         Parameters:
         -----------
-        index: unused
-        data_series: dict
-        data_points: list of dict
+        index : unused
+        data_series : dict
+        data_points : list of dicts
 
         """
         tmp = pandas.DataFrame(data=data_points)
@@ -87,6 +85,7 @@ class GroClient(Client):
             tmp.start_date = pandas.to_datetime(tmp.start_date)
         if 'reporting_date' in tmp.columns:
             tmp.reporting_date = pandas.to_datetime(tmp.reporting_date)
+
         if self._data_frame.empty:
             self._data_frame = tmp
             self._data_frame.set_index([col for col in DATA_POINTS_UNIQUE_COLS
@@ -204,6 +203,8 @@ class GroClient(Client):
         at_time : string, optional
             Estimate what data would have been available via Gro at a given time in the past. See
             :sample:`at-time-query-examples.ipynb` for more details.
+        include_historical : boolean, optional
+            True by default, will include historical regions that are part of your selections
 
         Returns
         -------
