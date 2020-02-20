@@ -378,18 +378,17 @@
             <span class="n">data_series</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_series_queue</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
             <span class="k">if</span> <span class="n">show_revisions</span><span class="p">:</span>
                 <span class="n">data_series</span><span class="p">[</span><span class="s1">&#39;show_revisions&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">add_points_to_df</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">data_series</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_data_points</span><span class="p">(</span><span class="o">**</span><span class="n">data_series</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_points_to_df</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">data_series</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_data_points</span><span class="p">(</span><span class="o">**</span><span class="n">data_series</span><span class="p">))</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_frame</span></div>
 
     <span class="k">def</span> <span class="nf">add_points_to_df</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="n">data_series</span><span class="p">,</span> <span class="n">data_points</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Internal function used by get_df to add individual series to the</span>
-<span class="sd">        frame.</span>
+        <span class="sd">&quot;&quot;&quot;Add the given datapoints to a pandas dataframe.</span>
 
 <span class="sd">        Parameters:</span>
 <span class="sd">        -----------</span>
-<span class="sd">        index: unused</span>
-<span class="sd">        data_series: dict</span>
-<span class="sd">        data_points: list of dict</span>
+<span class="sd">        index : unused</span>
+<span class="sd">        data_series : dict</span>
+<span class="sd">        data_points : list of dicts</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">tmp</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">data_points</span><span class="p">)</span>
@@ -405,6 +404,7 @@
             <span class="n">tmp</span><span class="o">.</span><span class="n">start_date</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">tmp</span><span class="o">.</span><span class="n">start_date</span><span class="p">)</span>
         <span class="k">if</span> <span class="s1">&#39;reporting_date&#39;</span> <span class="ow">in</span> <span class="n">tmp</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
             <span class="n">tmp</span><span class="o">.</span><span class="n">reporting_date</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">tmp</span><span class="o">.</span><span class="n">reporting_date</span><span class="p">)</span>
+
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_frame</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_data_frame</span> <span class="o">=</span> <span class="n">tmp</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_data_frame</span><span class="o">.</span><span class="n">set_index</span><span class="p">([</span><span class="n">col</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">DATA_POINTS_UNIQUE_COLS</span>
@@ -970,8 +970,30 @@
         </dl>
         <dl>
             <dt>Branches</dt>
+            <dd><a href="../../../CLEWS-15762/index.html">CLEWS-15762</a></dd>
+            <dd><a href="../../../CLEWS-15766/index.html">CLEWS-15766</a></dd>
+            <dd><a href="../../../CLEWS-16955-units/index.html">CLEWS-16955-units</a></dd>
+            <dd><a href="../../../CLEWS-17015/index.html">CLEWS-17015</a></dd>
+            <dd><a href="../../../CLEWS-19063/index.html">CLEWS-19063</a></dd>
+            <dd><a href="../../../CLEWS-19840/index.html">CLEWS-19840</a></dd>
+            <dd><a href="../../../CLEWS-21846/index.html">CLEWS-21846</a></dd>
+            <dd><a href="../../../CLEWS-22288/index.html">CLEWS-22288</a></dd>
+            <dd><a href="../../../CLEWS-23237_revision_get_df/index.html">CLEWS-23237_revision_get_df</a></dd>
+            <dd><a href="../../../CLEWS-23863/index.html">CLEWS-23863</a></dd>
             <dd><a href="../../../CLEWS-23982/index.html">CLEWS-23982</a></dd>
+            <dd><a href="../../../analogous_years_modifications/index.html">analogous_years_modifications</a></dd>
+            <dd><a href="../../../brazil_soybeans_update/index.html">brazil_soybeans_update</a></dd>
             <dd><a href="../../../development/_modules/api/client/gro_client.html">development</a></dd>
+            <dd><a href="../../../docs-content-changes/index.html">docs-content-changes</a></dd>
+            <dd><a href="../../../docs-latest-tag/index.html">docs-latest-tag</a></dd>
+            <dd><a href="../../../eliaschneider-patch-1/index.html">eliaschneider-patch-1</a></dd>
+            <dd><a href="../../../fix-docs-links/index.html">fix-docs-links</a></dd>
+            <dd><a href="../../../gdh/index.html">gdh</a></dd>
+            <dd><a href="../../../gdh-extra-params/index.html">gdh-extra-params</a></dd>
+            <dd><a href="../../../get_region_id_given_lat_lon/index.html">get_region_id_given_lat_lon</a></dd>
+            <dd><a href="../../../nemozen-path-1/index.html">nemozen-path-1</a></dd>
+            <dd><a href="../../../prevented_plant/index.html">prevented_plant</a></dd>
+            <dd><a href="../../../simplify-quickstart/index.html">simplify-quickstart</a></dd>
         </dl>
     </div>
 </div>
