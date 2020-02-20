@@ -197,7 +197,12 @@ footer a {
 
 /* Make method links like :meth:`~.get_data_points` not tiny */
 code, .rst-content tt, .rst-content code {
-    font-size: 80% !important;
+  font-size: 90% !important;
+  font-weight: 500 !important;
+}
+
+a > code {
+  text-decoration: underline;
 }
 
 .rst-content code.xref {
