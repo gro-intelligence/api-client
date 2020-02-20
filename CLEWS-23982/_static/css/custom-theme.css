@@ -84,6 +84,10 @@ img {
     display: none;
 }
 
+.wy-breadcrumbs li.wy-breadcrumbs-aside {
+  display: none;
+}
+
 .rst-footer-buttons {
     display: none;
 }
@@ -211,4 +215,17 @@ a > code {
 
 .rst-content a {
   font-size: inherit;
+}
+
+.caption-text {
+  font-size: 15px;
+  font-weight: 500;
+  color: #555558;
+  text-transform: capitalize;
+}
+
+.rst-content .caption-text {
+  font-family: Roboto,Arial,sans-serif;
+  font-weight: 500;
+  color: #9b9b9e;
 }
