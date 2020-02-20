@@ -226,7 +226,7 @@ class Client(object):
         return lib.lookup_belongs(self.access_token, self.api_host, entity_type, entity_id)
 
 
-    def rank_series_by_source(self, series_list):
+    def rank_series_by_source(self, selections_list):
         """Given a list of series selections, for each unique combination excluding source, expand
         to all available sources and return them in ranked order. The order corresponds to how well
         that source covers the selection (metrics, items, regions, and time range and frequency).
@@ -242,8 +242,7 @@ class Client(object):
             The input series_list, expanded out to each possible source, ordered by coverage.
 
         """
-        return lib.rank_series_by_source(self.access_token, self.api_host,
-                                         series_list)
+        return lib.rank_series_by_source(self.access_token, self.api_host, selections_list)
 
 
     def get_geo_centre(self, region_id):

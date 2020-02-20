@@ -99,7 +99,7 @@ class BatchClient(GroClient):
         if show_revisions:
             for data_series in self._data_series_queue:
                 data_series['show_revisions'] = True
-        self.batch_async_queue(self.get_data_points, self._data_series_queue, [],
+        self.batch_async_queue(self.get_data_points, self._data_series_queue, None,
                                self.add_points_to_df)
         return self._data_frame
 
@@ -111,7 +111,11 @@ class BatchClient(GroClient):
         url = '/'.join(['https:', '', self.api_host, 'v2/data'])
         params = lib.get_data_call_params(**selection)
         resp = yield self.get_data(url, headers, params)
-        raise gen.Return(json_decode(resp))
+        list_of_series_points = json_decode(resp)
+        include_historical = selection.get('include_historical', True)
+        points = lib.list_of_series_to_single_series(list_of_series_points, False,
+                                                     include_historical)
+        raise gen.Return(points)
 
     def batch_async_get_data_points(self, batched_args, output_list=None,
                                     map_result=None):
@@ -181,13 +185,21 @@ class BatchClient(GroClient):
                                       map_result)
 
     @gen.coroutine
-    def async_rank_series_by_source(self, **selection):
+    def async_rank_series_by_source(self, *selections_list):
         """Get all sources, in ranked order, for a given selection."""
-        response = super(BatchClient, self).rank_series_by_source(**selection)
-        raise gen.Return([r for r in response])
+        response = super(BatchClient, self).rank_series_by_source(selections_list)
+        raise gen.Return(list(response))
 
     def batch_async_rank_series_by_source(self, batched_args,
                                           output_list=None, map_result=None):
+        """Perform multiple rank_series_by_source requests asynchronously.
+
+        Parameters
+        ----------
+        batched_args : list of lists of dicts
+            See :meth:`~.rank_series_by_source` `selections_list`. A list of those lists.
+
+        """
         return self.batch_async_queue(self.async_rank_series_by_source, batched_args,
                                       output_list, map_result)
 
@@ -245,12 +257,14 @@ class BatchClient(GroClient):
                 idx, item = q.get().result()
                 self._logger.debug('Doing work on {}'.format(idx))
                 if type(item) is dict:
+                    # Assume that dict types should be unpacked as kwargs
                     result = yield func(**item)
-                else:
+                elif type(item) is list:
+                    # Assume that list types should be unpacked as positional args
                     result = yield func(*item)
-                include_historical = item.get('include_historical', True)
-                points = lib.list_of_series_to_single_series(result, False, include_historical)
-                output_data['result'] = map_result(idx, item, points, output_data['result'])
+                else:
+                    result = yield func(item)
+                output_data['result'] = map_result(idx, item, result, output_data['result'])
                 self._logger.debug('Done with {}'.format(idx))
                 q.task_done()
 
