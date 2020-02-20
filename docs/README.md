@@ -11,7 +11,7 @@ The API reference page, [api.rst](api.rst) uses [sphinx.ext.autodoc](http://www.
 From the project root (`api-client/`) run the below command:
 
 ```sh
-sphinx-versioning build -r development docs docs/_build/html
+sphinx-versioning build docs docs/_build/html
 ```
 
 It should generate html in `api-client/docs/_build/html` that you can open up and view in a web browser.
