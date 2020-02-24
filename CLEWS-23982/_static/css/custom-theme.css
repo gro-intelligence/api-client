@@ -1,10 +1,7 @@
 @import 'theme.css';
 @import 'sidebar.css';
+@import 'banner.css';
 
-@font-face {
-  font-family: 'Entypo';
-  src :url("../fonts/entypo.woff");
-}
 
 h1 {
     font-family: Roboto,Arial,sans-serif;
