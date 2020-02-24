@@ -64,6 +64,11 @@ a:visited {
   color: #00A1C2;
 }
 
+a.reference.external:after {
+  font-size: unset !important;
+  vertical-align: initial !important;
+}
+
 img {
     padding: 26px 0;
 }
