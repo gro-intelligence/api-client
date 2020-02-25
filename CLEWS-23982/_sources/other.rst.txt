@@ -42,10 +42,16 @@ In-season masks:
 
 A low-confidence mask and a high-confidence mask were made from those yearly crop masks. Each of them was further clumped to remove erroneous pixels, which gave us two more static corn masks.
 
-* `low confidence <https://s3.amazonaws.com/groprod/gro_crop_masks/us_corn/USCorn_LC_99_15.tif>`_
-* `high confidence <https://s3.amazonaws.com/groprod/gro_crop_masks/us_corn/USCorn_HC_99_15.tif>`_
-* `low confidence clumped <https://s3.amazonaws.com/groprod/gro_crop_masks/us_corn/USCorn_LCClump_99_15.tif>`_
-* `high confidence clumped <https://s3.amazonaws.com/groprod/gro_crop_masks/us_corn/USCorn_HCClump_99_15.tif>`_
+
+
+.. raw:: html 
+
+  <ul class="simple">
+  <li><a href="https://s3.amazonaws.com/groprod/gro_crop_masks/us_corn/USCorn_LC_99_15.tif" target="_blank"><code class="download"><span class="pre"></span>low confidence</code></a></li>
+  <li><a href="<https://s3.amazonaws.com/groprod/gro_crop_masks/us_corn/USCorn_HC_99_15.tif" target="_blank"><code class="download"><span class="pre"></span>high confidence</code></a></li>
+  <li><a href="https://s3.amazonaws.com/groprod/gro_crop_masks/us_corn/USCorn_LCClump_99_15.tif" target="_blank"><code class="download"><span class="pre"></span>low confidence clumped</code></a></li>
+  <li><a href="https://s3.amazonaws.com/groprod/gro_crop_masks/us_corn/USCorn_HCClump_99_15.tif" target="_blank"><code class="download"><span class="pre"></span>low confidence clumped</code></a></li>
+  </ul>
 
 US Soy
 ------
@@ -73,10 +79,14 @@ A low-confidence mask and a high-confidence mask were made from those yearly cro
 
 In-season masks:
 
-* `low confidence <https://s3.amazonaws.com/groprod/gro_crop_masks/argentina_soy/ArgLC07_16.tif>`_
-* `high confidence <https://s3.amazonaws.com/groprod/gro_crop_masks/argentina_soy/ArgHC07_16.tif>`_
-* `low confidence clumped <https://s3.amazonaws.com/groprod/gro_crop_masks/argentina_soy/ArgLC07_16Clumped.tif>`_
-* `high confidence clumped <https://s3.amazonaws.com/groprod/gro_crop_masks/argentina_soy/ArgHC07_16Clumped.tif>`_ 
+.. raw:: html 
+
+  <ul class="simple">
+  <li><a href="https://s3.amazonaws.com/groprod/gro_crop_masks/argentina_soy/ArgLC07_16.tif" target="_blank"><code class="download"><span class="pre"></span>low confidence</code></a></li>
+  <li><a href="<https://s3.amazonaws.com/groprod/gro_crop_masks/argentina_soy/ArgHC07_16.tif" target="_blank"><code class="download"><span class="pre"></span>high confidence</code></a></li>
+  <li><a href="https://s3.amazonaws.com/groprod/gro_crop_masks/argentina_soy/ArgLC07_16Clumped.tif" target="_blank"><code class="download"><span class="pre"></span>low confidence clumped</code></a></li>
+  <li><a href="https://s3.amazonaws.com/groprod/gro_crop_masks/argentina_soy/ArgHC07_16Clumped.tif" target="_blank"><code class="download"><span class="pre"></span>low confidence clumped</code></a></li>
+  </ul>
 
 India Wheat
 -----------
@@ -91,10 +101,14 @@ A low-confidence mask and a high-confidence mask were made from those yearly cro
 
 In-season masks:
 
-* `low confidence <https://s3.amazonaws.com/groprod/gro_crop_masks/india_wheat/IndiaWheat_07_17_LC_1b.tif>`_ 
-* `high confidence <https://s3.amazonaws.com/groprod/gro_crop_masks/india_wheat/IndiaWheat_07_17_HC_1b.tif>`_
-* `low confidence clumped <https://s3.amazonaws.com/groprod/gro_crop_masks/india_wheat/IndiaWheat_07_17_LC_ClumpDual.tif>`_
-* `high confidence clumped <https://s3.amazonaws.com/groprod/gro_crop_masks/india_wheat/IndiaWheat_07_17_HC_ClumpDual.tif>`_
+.. raw:: html 
+
+  <ul class="simple">
+  <li><a href="https://s3.amazonaws.com/groprod/gro_crop_masks/india_wheat/IndiaWheat_07_17_LC_1b.tif" target="_blank"><code class="download"><span class="pre"></span>low confidence</code></a></li>
+  <li><a href="<https://s3.amazonaws.com/groprod/gro_crop_masks/india_wheat/IndiaWheat_07_17_HC_1b.tif" target="_blank"><code class="download"><span class="pre"></span>high confidence</code></a></li>
+  <li><a href="https://s3.amazonaws.com/groprod/gro_crop_masks/india_wheat/IndiaWheat_07_17_LC_ClumpDual.tif" target="_blank"><code class="download"><span class="pre"></span>low confidence clumped</code></a></li>
+  <li><a href="https://s3.amazonaws.com/groprod/gro_crop_masks/india_wheat/IndiaWheat_07_17_HC_ClumpDual.tif" target="_blank"><code class="download"><span class="pre"></span>low confidence clumped</code></a></li>
+  </ul>
 
 Gro Yield Model Backtest Data
 =============================
@@ -129,14 +143,18 @@ Models
 
 Listed below are Gro's existing models. Each available link will lead you to backtest data (daily frequency) for a whole crop season.
 
-* `US Corn <https://s3.amazonaws.com/groprod/yield_model_backtest/US_corn_backtest_2001_to_2017.zip>`_
-* `US Soybeans <https://s3.amazonaws.com/groprod/yield_model_backtest/US_soybeans_backtest_2001_to_2017.zip>`_
-* `Argentina Soybeans <https://s3.amazonaws.com/groprod/yield_model_backtest/Argentina_soybeans_backtest_2001_to_2017.zip>`_
-* `Brazil Soybeans <https://s3.amazonaws.com/groprod/yield_model_backtest/Brazil_soybeans_backtest_2001_to_2018.zip>`_
-* `India Wheat <https://s3.amazonaws.com/groprod/yield_model_backtest/India_wheat_backtest_2001_to_2017.zip>`_
-* `Ukraine Wheat (Beta) <https://groprod.s3.amazonaws.com/yield_model_backtest/Wheat_Ukraine_backtest_2001_to_2017.zip>`_
-* `Russa Wheat (Beta) <https://groprod.s3.amazonaws.com/yield_model_backtest/Winter+wheat_Russia_backtest_2001_to_2018.zip>`_
-* `US Hard Red Winter Wheat <https://s3.amazonaws.com/groprod/yield_model_backtest/Winter+wheat_United_States_backtest_2002_to_2018.zip>`_
+.. raw:: html 
+
+  <ul class="simple">
+  <li><a href="https://s3.amazonaws.com/groprod/yield_model_backtest/US_corn_backtest_2001_to_2017.zip" target="_blank"><code class="download"><span class="pre"></span>US Corn</code></a></li>
+  <li><a href="<https://s3.amazonaws.com/groprod/yield_model_backtest/US_soybeans_backtest_2001_to_2017.zip" target="_blank"><code class="download"><span class="pre"></span>US Soybeans</code></a></li>
+  <li><a href="https://s3.amazonaws.com/groprod/yield_model_backtest/Argentina_soybeans_backtest_2001_to_2017.zip" target="_blank"><code class="download"><span class="pre"></span>Argentina Soybeans</code></a></li>
+  <li><a href="https://s3.amazonaws.com/groprod/yield_model_backtest/Brazil_soybeans_backtest_2001_to_2018.zip" target="_blank"><code class="download"><span class="pre"></span>Brazil Soybeans</code></a></li>
+  <li><a href="https://s3.amazonaws.com/groprod/yield_model_backtest/India_wheat_backtest_2001_to_2017.zip" target="_blank"><code class="download"><span class="pre"></span>India Wheat</code></a></li>
+  <li><a href="https://groprod.s3.amazonaws.com/yield_model_backtest/Wheat_Ukraine_backtest_2001_to_2017.zip" target="_blank"><code class="download"><span class="pre"></span>Ukraine Wheat</code></a></li>
+  <li><a href="https://groprod.s3.amazonaws.com/yield_model_backtest/Winter+wheat_Russia_backtest_2001_to_2018.zip" target="_blank"><code class="download"><span class="pre"></span>Russia Wheat (Beta)</code></a></li>
+  <li><a href="https://s3.amazonaws.com/groprod/yield_model_backtest/Winter+wheat_United_States_backtest_2002_to_2018.zip" target="_blank"><code class="download"><span class="pre"></span>US Hard Red Winter Wheat</code></a></li>
+  </ul>
 
 NOTE: Our "beta" models have run for less than one full season. At this stage, each model has been fully backtested at monthly frequency across a whole crop season. However, the beta models are still under active development, so the inputs and parameters to the models might change during the current season.
 
