@@ -93,7 +93,7 @@ scv_root_ref = 'development'
 
 # still build other branches, but hide the version selectors in _static/css/custom-theme.css.
 # Uncomment this line to stop building them altogether:
-scv_whitelist_branches = ('development',)
+scv_whitelist_branches = ('CLEWS-23982', 'development',)
 
 # Omit versions before docs style was finalized
 # TODO: https://stackoverflow.com/questions/26141851/let-sphinx-use-version-from-setup-py
