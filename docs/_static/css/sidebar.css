@@ -11,6 +11,10 @@
 
 /* inner structure of sidebar */
 
+.wy-menu-vertical {
+  padding-bottom: 20px;
+}
+
 .wy-menu-vertical .reference.internal {
   text-decoration: none;
 }
