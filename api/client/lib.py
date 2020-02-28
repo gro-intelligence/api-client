@@ -79,6 +79,29 @@ def camel_to_snake(term):
     return re.sub('([a-z0-9])([A-Z])', r'\1_\2', re.sub('(.)([A-Z][a-z]+)', r'\1_\2', term)).lower()
 
 
+@memoize(maxsize=None)
+def camel_to_kebab(term):
+    """Convert a string from camelCase to kebab-case.
+
+    >>> camel_to_kebab('partnerRegionId')
+    'partner-region-id'
+
+    >>> camel_to_kebab('partner-region-id')
+    'partner-region-id'
+
+    Parameters
+    ----------
+    term : string
+        A camelCase string
+    Returns
+    -------
+    string
+        A new kebab-case string
+
+    """
+    return re.sub('([a-z0-9])([A-Z])', r'\1-\2', re.sub('(.)([A-Z][a-z]+)', r'\1-\2', term)).lower()
+
+
 def camel_to_snake_dict(obj):
     """Convert a dictionary's keys from camelCase to snake_case.
 
@@ -428,22 +451,6 @@ def get_source_ranking(access_token, api_host, series):
     return get_data(url, headers, params).json()
 
 
-def rank_series_by_source(access_token, api_host, series_list):
-    for series in series_list:
-        try:
-            # Remove source if selected, to consider all sources.
-            series.pop('source_name', None)
-            series.pop('source_id', None)
-            source_ids = get_source_ranking(access_token, api_host, series)
-        except ValueError:
-            continue  # empty response
-        for source_id in source_ids:
-            # Make a copy to avoid passing the same reference each time.
-            series_with_source = dict(series)
-            series_with_source['source_id'] = source_id
-            yield series_with_source
-
-
 def list_of_series_to_single_series(series_list, add_belongs_to=False, include_historical=True):
     """Convert list_of_series format from API back into the familiar single_series output format.
 
@@ -589,21 +596,6 @@ def search(access_token, api_host, entity_type, search_terms):
     return resp.json()
 
 
-def search_and_lookup(access_token, api_host, entity_type, search_terms, num_results=10):
-    search_results = search(access_token, api_host, entity_type, search_terms)
-    for result in search_results[:num_results]:
-        yield lookup(access_token, api_host, entity_type, result['id'])
-
-
-def lookup_belongs(access_token, api_host, entity_type, entity_id):
-    url = '/'.join(['https:', '', api_host, 'v2', entity_type, 'belongs-to'])
-    params = {'ids': str(entity_id)}
-    headers = {'authorization': 'Bearer ' + access_token}
-    parents = get_data(url, headers, params).json().get('data').get(str(entity_id), [])
-    for parent_entity_id in parents:
-        yield lookup(access_token, api_host, entity_type, parent_entity_id)
-
-
 def get_geo_centre(access_token, api_host, region_id):
     url = '/'.join(['https:', '', api_host, 'v2/geocentres?regionIds=' +
                     str(region_id)])
@@ -623,19 +615,34 @@ def get_geojson(access_token, api_host, region_id):
     return None
 
 
+def get_entity_property(access_token, api_host, entity_type_plural, property_plural, ids, **kwargs):
+    assert property_plural in ['contains', 'belongsTo'], \
+        'Only contains and belongsTo properties are supported'
+    url = '/'.join(['https:', '', api_host,
+                    'v2', entity_type_plural, camel_to_kebab(property_plural)])
+    headers = {'authorization': 'Bearer ' + access_token}
+    params = {'ids': ids}
+    if 'level' in kwargs:
+        params['level'] = kwargs['level']
+    if 'distance' in kwargs:
+        params['distance'] = kwargs['level']
+    return get_data(url, headers, params).json()['data']
+
+
+# =====================
+# Convenience Functions
+# =====================
+# Functions that wrap behavior of other functions and expose no unique endpoint of their own
+
 def get_descendant_regions(access_token, api_host, region_id,
                            descendant_level=False, include_historical=True, include_details=True):
-    url = '/'.join(['https:', '', api_host, 'v2/regions/contains'])
-    headers = {'authorization': 'Bearer ' + access_token}
-    params = {'ids': [region_id]}
-    if descendant_level:
+    params = {}
+    if descendant_level is not None:
         params['level'] = descendant_level
     else:
         params['distance'] = -1
-
-    resp = get_data(url, headers, params)
-    descendant_region_ids = resp.json()['data'][str(region_id)]
-
+    descendant_region_ids = get_entity_property(access_token, api_host, 'regions', 'belongsTo',
+                                                [region_id], params)[str(region_id)]
     # Filter out regions with the 'historical' flag set to true
     if not include_historical:
         descendant_region_ids = [
@@ -649,6 +656,40 @@ def get_descendant_regions(access_token, api_host, region_id,
 
     return [{'id': descendant_region_id} for descendant_region_id in descendant_region_ids]
 
+def rank_series_by_source(access_token, api_host, series_list):
+    for series in series_list:
+        try:
+            # Remove source if selected, to consider all sources.
+            series.pop('source_name', None)
+            series.pop('source_id', None)
+            source_ids = get_source_ranking(access_token, api_host, series)
+        except ValueError:
+            continue  # empty response
+        for source_id in source_ids:
+            # Make a copy to avoid passing the same reference each time.
+            series_with_source = dict(series)
+            series_with_source['source_id'] = source_id
+            yield series_with_source
+
+
+def search_and_lookup(access_token, api_host, entity_type, search_terms, num_results=10):
+    search_results = search(access_token, api_host, entity_type, search_terms)
+    for result in search_results[:num_results]:
+        yield lookup(access_token, api_host, entity_type, result['id'])
+
+
+def lookup_contains(access_token, api_host, entity_type, entity_id, **kwargs):
+    contains_ids = get_entity_property(access_token, api_host, entity_type, 'contains',
+                                       entity_id, **kwargs)[str(entity_id)]
+    for contained_entity_id in contains_ids:
+        yield lookup(access_token, api_host, entity_type, contained_entity_id)
+
+
+def lookup_belongs(access_token, api_host, entity_type, entity_id, **kwargs):
+    belongs_to_ids = get_entity_property(access_token, api_host, entity_type, 'belongsTo',
+                                         entity_id, **kwargs)[str(entity_id)]
+    for belongs_to_id in belongs_to_ids:
+        yield lookup(access_token, api_host, entity_type, belongs_to_id)
 
 if __name__ == '__main__':
     # To run doctests:
