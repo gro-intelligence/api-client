@@ -625,7 +625,7 @@ def get_entity_property(access_token, api_host, entity_type_plural, property_plu
     if 'level' in kwargs:
         params['level'] = kwargs['level']
     if 'distance' in kwargs:
-        params['distance'] = kwargs['level']
+        params['distance'] = kwargs['distance']
     return get_data(url, headers, params).json()['data']
 
 
