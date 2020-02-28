@@ -5,7 +5,6 @@ exposed in this module. Helper functions or shims or derivative functionality
 should appear in the client classes rather than here.
 """
 
-from builtins import map
 from builtins import str
 from api.client import cfg
 import json
@@ -402,8 +401,11 @@ def get_data_series(access_token, api_host, **selection):
     resp = get_data(url, headers, params)
     try:
         response = resp.json()['data']
-        if any((series.get('metadata', {}).get('includes_historical_region', False)) for series in response):
-            logger.warning('Some of the regions in your data call are historical, with boundaries that may be outdated. The regions may have overlapping values with current regions')
+        if any((series.get('metadata', {}).get('includes_historical_region', False))
+               for series in response):
+            logger.warning('Some of the regions in your data call are historical, with boundaries '
+                           'that may be outdated. The regions may have overlapping values with '
+                           'current regions')
         return response
     except KeyError:
         raise Exception(resp.text)
@@ -508,8 +510,10 @@ def list_of_series_to_single_series(series_list, add_belongs_to=False, include_h
         if not (isinstance(series, dict) and isinstance(series.get('data', []), list)):
             continue
         series_metadata = series.get('series', {}).get('metadata', {})
-        if not include_historical and (series_metadata.get('includesHistoricalRegion', False) or 
-        series_metadata.get('includesHistoricalPartnerRegion', False)):
+
+        if (not include_historical and
+            (series_metadata.get('includesHistoricalRegion', False) or
+             series_metadata.get('includesHistoricalPartnerRegion', False))):
             continue
         # All the belongsTo keys are in camelCase. Convert them to snake_case.
         # Only need to do this once per series, so do this outside of the list
@@ -590,18 +594,18 @@ def search(access_token, api_host, entity_type, search_terms):
 
 
 def search_and_lookup(access_token, api_host, entity_type, search_terms, num_results=10):
-    search_results = search(access_token, api_host, entity_type, search_terms)
-    for result in search_results[:num_results]:
-        yield lookup(access_token, api_host, entity_type, result['id'])
+    search_results = search(access_token, api_host, entity_type, search_terms)[:num_results]
+    search_result_ids = [result['id'] for result in search_results]
+    search_result_details = lookup(access_token, api_host, entity_type, search_result_ids)
+    for search_result_id in search_result_ids:
+        yield search_result_details[str(search_result_id)]
 
 
 def lookup_belongs(access_token, api_host, entity_type, entity_id):
-    url = '/'.join(['https:', '', api_host, 'v2', entity_type, 'belongs-to'])
-    params = {'ids': str(entity_id)}
-    headers = {'authorization': 'Bearer ' + access_token}
-    parents = get_data(url, headers, params).json().get('data').get(str(entity_id), [])
-    for parent_entity_id in parents:
-        yield lookup(access_token, api_host, entity_type, parent_entity_id)
+    parent_ids = lookup(access_token, api_host, entity_type, entity_id)['belongsTo']
+    parent_details = lookup(access_token, api_host, entity_type, parent_ids)
+    for parent_id in parent_ids:
+        yield parent_details[str(parent_id)]
 
 
 def get_geo_centre(access_token, api_host, region_id):
@@ -637,15 +641,15 @@ def get_descendant_regions(access_token, api_host, region_id,
     descendant_region_ids = resp.json()['data'][str(region_id)]
 
     # Filter out regions with the 'historical' flag set to true
-    if not include_historical:
-        descendant_region_ids = [
-            descendant_region_id for descendant_region_id in descendant_region_ids
-            if not lookup(access_token, api_host, 'regions', descendant_region_id)['historical']
-        ]
+    if not include_historical or include_details:
+        region_details = lookup(access_token, api_host, 'regions', descendant_region_ids).values()
 
-    if include_details:
-        return [lookup(access_token, api_host, 'regions', descendant_region_id)
-                for descendant_region_id in descendant_region_ids]
+        if not include_historical:
+            descendant_region_ids = [region['id'] for region in region_details
+                                     if not region['historical']]
+
+        if include_details:
+            return [region_details[str(region_id)] for region_id in descendant_region_ids]
 
     return [{'id': descendant_region_id} for descendant_region_id in descendant_region_ids]
 
