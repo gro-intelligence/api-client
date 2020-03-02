@@ -252,7 +252,7 @@ def get_data(url, headers, params=None, logger=None):
             logger.warning('Redirecting {} to {}'.format(params, new_params), extra=log_record)
             params = new_params
         else:
-            logger.error('{}'.format(response), extra=log_record)
+            logger.warning('{}'.format(response), extra=log_record)
             time.sleep(2 ** retry_count)  # Exponential backoff before retrying
     raise APIError(response, retry_count, url, params)
 
