@@ -244,8 +244,9 @@ def get_data(url, headers, params=None, logger=None):
             return response
         retry_count += 1
         log_record['tag'] = 'failed_gro_api_request'
-        if retry_count < cfg.MAX_RETRIES or response.status_code in [400, 401, 404]:
+        if retry_count < cfg.MAX_RETRIES:
             logger.warning(response.text, extra=log_record)
+        if response.status_code in [400, 401, 404]:
             break  # Do not retry
         if response.status_code == 301:
             new_params = redirect(params, response.json()['data'][0])
