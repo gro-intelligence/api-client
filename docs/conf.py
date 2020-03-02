@@ -70,6 +70,9 @@ html_theme_options = {
 }
 
 html_style = 'css/custom-theme.css'
+html_js_files = [
+    'js/ga-tracking.js'
+]
 
 # https://www.sphinx-doc.org/en/master/usage/extensions/extlinks.html
 extlinks = {
@@ -93,7 +96,7 @@ scv_root_ref = 'development'
 
 # still build other branches, but hide the version selectors in _static/css/custom-theme.css.
 # Uncomment this line to stop building them altogether:
-scv_whitelist_branches = ('CLEWS-23982', 'development',)
+scv_whitelist_branches = ('CLEWS-23982', 'CLEWS-24031', 'development',)
 
 # Omit versions before docs style was finalized
 # TODO: https://stackoverflow.com/questions/26141851/let-sphinx-use-version-from-setup-py
