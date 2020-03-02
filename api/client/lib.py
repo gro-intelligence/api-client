@@ -244,18 +244,16 @@ def get_data(url, headers, params=None, logger=None):
             return response
         retry_count += 1
         log_record['tag'] = 'failed_gro_api_request'
-        if retry_count < cfg.MAX_RETRIES:
+        if retry_count < cfg.MAX_RETRIES or response.status_code in [400, 401, 404]:
             logger.warning(response.text, extra=log_record)
-        if response.status_code == 429:
-            time.sleep(2 ** retry_count)  # Exponential backoff before retrying
-        elif response.status_code == 301:
+            break  # Do not retry
+        if response.status_code == 301:
             new_params = redirect(params, response.json()['data'][0])
             logger.warning('Redirecting {} to {}'.format(params, new_params), extra=log_record)
             params = new_params
-        elif response.status_code in [400, 401, 404, 500]:
-            break
         else:
             logger.error('{}'.format(response), extra=log_record)
+            time.sleep(2 ** retry_count)  # Exponential backoff before retrying
     raise APIError(response, retry_count, url, params)
 
 
