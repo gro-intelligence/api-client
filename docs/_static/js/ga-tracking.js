@@ -12,3 +12,4 @@ console.log('test tracking module');
   j.src = 'https://www.googletagmanager.com/gtm.js?id='+i+dl;
   f.parentNode.insertBefore(j,f);
 })(window,document,'script','dataLayer','GTM-5VHQ76P');
+console.log('/end test');
