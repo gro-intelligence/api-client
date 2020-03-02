@@ -236,10 +236,10 @@ def get_data(url, headers, params=None, logger=None):
         log_record['elapsed_time_in_ms'] = 1000 * elapsed_time
         log_record['retry_count'] = retry_count
         log_record['status_code'] = response.status_code
-        if response.status_code == 200:
+        if response.status_code == 200:  # Success
             logger.debug('OK', extra=log_record)
             return response
-        elif response.status_code in [204, 206]:
+        if response.status_code in [204, 206]:  # Success with a caveat - warning
             log_msg = {204: 'No Content', 206: 'Partial Content'}[response.status_code]
             logger.warning(log_msg, extra=log_record)
             return response
