@@ -60,7 +60,12 @@ Yearly soy masks were extracted from the NASS CDL the same way as corn, except t
 
 In-season masks:
 
-* `low confidence <https://s3.amazonaws.com/groprod/gro_crop_masks/us_soy/USSoy_LC_08_17.tif>`_ was made from yearly masks for 2008 to 2017.
+.. raw:: html 
+  
+  <ul class="simple">
+  <li><a href="https://s3.amazonaws.com/groprod/gro_crop_masks/us_soy/USSoy_LC_08_17.tif" target="_blank"><code class="download"><span class="pre"></span>low confidence</code></a></li>
+  </ul>
+
 
 We start in 2008, because including years prior to 2008 reduces the accuracy for yield modeling purposes. A high-confidence mask is not used, as it was found to not help the yield modeling accuracy. Both of these observations seem to reflect the fact that, in the US, the areas where soybeans are planted have been changing relatively more than the corn areas, which makes older crop masks less informative in this case.
 
