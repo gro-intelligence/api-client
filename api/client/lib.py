@@ -236,10 +236,12 @@ def get_data(url, headers, params=None, logger=None):
         log_record['elapsed_time_in_ms'] = 1000 * elapsed_time
         log_record['retry_count'] = retry_count
         log_record['status_code'] = response.status_code
-        if response.status_code in [200, 204, 206]:
-            log_level = {200: 'debug', 204: 'warning', 206: 'warning'}
-            log_msg = {200: 'OK', 204: 'No Content', 206: 'Partial Content'}
-            logger[log_level[response.status_code]](log_msg[response.status_code], extra=log_record)
+        if response.status_code == 200:
+            logger.debug('OK', extra=log_record)
+            return response
+        elif response.status_code in [204, 206]:
+            log_msg = {204: 'No Content', 206: 'Partial Content'}[response.status_code]
+            logger.warning(log_msg, extra=log_record)
             return response
         retry_count += 1
         log_record['tag'] = 'failed_gro_api_request'
