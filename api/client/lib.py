@@ -642,7 +642,7 @@ def get_descendant_regions(access_token, api_host, region_id,
     else:
         params['distance'] = -1
     descendant_region_ids = get_entity_property(access_token, api_host, 'regions', 'belongsTo',
-                                                [region_id], params)[str(region_id)]
+                                                [region_id], **params)[str(region_id)]
     # Filter out regions with the 'historical' flag set to true
     if not include_historical:
         descendant_region_ids = [
