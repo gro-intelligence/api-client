@@ -90,7 +90,12 @@ scv_banner_main_ref = 'development'
 
 # still build other branches, but hide the version selectors in _static/css/custom-theme.css.
 # Uncomment this line to stop building them altogether:
-# scv_whitelist_branches = ('development',)
+scv_whitelist_branches = ('CLEWS-23982', 'CLEWS-24031', 'development',)
 
 # Omit versions before docs style was finalized
 scv_whitelist_tags = (re.compile(r'^(?!.*(v1.40.0|v1.40.1|v1.40.2|v1.40.3|v1.40.4|v1.40.5)).*$'),)
+
+
+def setup(app):
+    app.add_javascript("https://www.googletagmanager.com/gtag/js?id=UA-49099862-1")
+    app.add_javascript("ga-tag-manager.js")
