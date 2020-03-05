@@ -12,13 +12,11 @@ except ImportError:
 from tornado import gen
 from tornado.escape import json_decode
 from tornado.httpclient import AsyncHTTPClient, HTTPRequest, HTTPError
-import socket
 from tornado.ioloop import IOLoop
 from tornado.queues import Queue
 from api.client import cfg, lib
 from api.client.gro_client import GroClient
 from api.client.lib import APIError
-import random
 
 
 class BatchClient(GroClient):
@@ -69,13 +67,6 @@ class BatchClient(GroClient):
                 try:
                     response = yield self._http_client.fetch(http_request)
                     status_code = response.code
-                    random_error = random.choice(range(1, 10))
-                    if random_error == 1:
-                        raise socket.gaierror()
-                    elif random_error == 2:
-                        raise HTTPError(500, 'Internal server error')
-                    elif random_error == 3:
-                        raise HTTPError(206, 'Partial content')
                 except HTTPError as e:
                     # Catch non-200 codes that aren't actually errors
                     status_code = e.code if hasattr(e, 'code') else None
