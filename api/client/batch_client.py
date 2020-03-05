@@ -19,6 +19,29 @@ from api.client.gro_client import GroClient
 from api.client.lib import APIError
 
 
+class BatchError(APIError):
+    """Replicate the APIError interface given a Tornado HTTPError."""
+    def __init__(self, response, retry_count, url, params):
+        self.response = response
+        self.retry_count = retry_count
+        self.url = url
+        self.params = params
+        self.status_code = self.response.code if hasattr(self.response, 'code') else None
+        try:
+            json_content = json_decode(self.response.body)
+            # 'error' should be something like 'Not Found' or 'Bad Request'
+            self.message = json_content.get('error', '')
+            # Some error responses give additional info.
+            # For example, a 400 Bad Request might say "metricId is required"
+            if 'message' in json_content:
+                self.message += ': {}'.format(json_content['message'])
+        except Exception:
+            # If the error message can't be parsed, fall back to a generic "giving up" message.
+            self.message = 'Giving up on {} after {} {}: {}'.format(self.url, self.retry_count,
+                                                                    'try' if self.retry_count == 1
+                                                                    else 'tries', response)
+
+
 class BatchClient(GroClient):
     """API client with support for batch asynchronous queries."""
 
@@ -68,12 +91,13 @@ class BatchClient(GroClient):
                     response = yield self._http_client.fetch(http_request)
                     status_code = response.code
                 except HTTPError as e:
-                    # Catch non-200 codes that aren't actually errors
+                    # Catch non-200 codes that aren't errors
                     status_code = e.code if hasattr(e, 'code') else None
                     if status_code in [204, 206]:
                         log_msg = {204: 'No Content', 206: 'Partial Content'}[status_code]
                         response = e.response
                         log_request(start_time, retry_count, log_msg, status_code)
+                        # Do not retry.
                     elif status_code == 301:
                         redirected_ids = json.loads(e.response.body.decode("utf-8"))['data'][0]
                         new_params = lib.redirect(params, redirected_ids)
@@ -102,8 +126,7 @@ class BatchClient(GroClient):
             raise gen.Return(json_decode(response.body) if hasattr(response, 'body') else None)
 
         # Retries failed. Raise exception
-        raise APIError(response, retry_count, url, params)
-
+        raise BatchError(response, retry_count, url, params)
 
     @gen.coroutine
     def get_data_points(self, **selection):
@@ -129,14 +152,16 @@ class BatchClient(GroClient):
         headers = {'authorization': 'Bearer ' + self.access_token}
         url = '/'.join(['https:', '', self.api_host, 'v2/data'])
         params = lib.get_data_call_params(**selection)
-        list_of_series_points = yield self.get_data(url, headers, params)
-        include_historical = selection.get('include_historical', True)
-        points = lib.list_of_series_to_single_series(list_of_series_points, False,
-                                                     include_historical)
-        raise gen.Return(points)
+        try:
+            list_of_series_points = yield self.get_data(url, headers, params)
+            include_historical = selection.get('include_historical', True)
+            points = lib.list_of_series_to_single_series(list_of_series_points, False,
+                                                         include_historical)
+            raise gen.Return(points)
+        except BatchError as b:
+            raise gen.Return(b)
 
-    def batch_async_get_data_points(self, batched_args, output_list=None,
-                                    map_result=None):
+    def batch_async_get_data_points(self, batched_args, output_list=None, map_result=None):
         """Make many :meth:`~get_data_points` requests asynchronously.
 
         Parameters
