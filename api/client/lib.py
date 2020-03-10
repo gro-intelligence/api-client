@@ -141,7 +141,7 @@ def get_access_token(api_host, user_email, user_password, logger=None):
     retry_count = 0
     if not logger:
         logger = get_default_logger()
-    while retry_count < cfg.MAX_RETRIES:
+    while retry_count <= cfg.MAX_RETRIES:
         get_api_token = requests.post('https://' + api_host + '/api-token',
                                       data={'email': user_email,
                                             'password': user_password})
@@ -228,7 +228,7 @@ def get_data(url, headers, params=None, logger=None):
         logger = get_default_logger()
         logger.debug(url)
         logger.debug(params)
-    while retry_count < cfg.MAX_RETRIES:
+    while retry_count <= cfg.MAX_RETRIES:
         start_time = time.time()
         response = requests.get(url, params=params, headers=headers, timeout=None)
         elapsed_time = time.time() - start_time
