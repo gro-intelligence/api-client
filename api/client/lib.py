@@ -255,7 +255,10 @@ def get_data(url, headers, params=None, logger=None):
             params = new_params
         else:
             logger.warning('{}'.format(response), extra=log_record)
-            time.sleep(2 ** retry_count)  # Exponential backoff before retrying
+            if retry_count > 1:
+                # Retry immediately on first failure.
+                # Exponential backoff before retrying repeatedly failing requests.
+                time.sleep(2 ** retry_count)
     raise APIError(response, retry_count, url, params)
 
 
