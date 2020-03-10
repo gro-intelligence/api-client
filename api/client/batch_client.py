@@ -72,13 +72,14 @@ class BatchClient(GroClient):
 
         Assigns headers and builds in retries and logging.
         """
-        retry_count = 0
         self._logger.debug(url)
 
         # append version info
         headers.update(lib.get_version_info())
 
-        while retry_count < cfg.MAX_RETRIES:
+        # Initialize to -1 so first attempt will be retry 0
+        retry_count = -1
+        while retry_count <= cfg.MAX_RETRIES:
             retry_count += 1
             start_time = time.time()
             http_request = HTTPRequest('{url}?{params}'.format(url=url, params=urlencode(params)),
@@ -118,7 +119,7 @@ class BatchClient(GroClient):
                 if status_code in [429, 500, 503, 504]:
                     # First retry is immediate.
                     # After that, exponential backoff before retrying.
-                    if retry_count > 1:
+                    if retry_count > 0:
                         time.sleep(2 ** retry_count)
                     continue
                 elif status_code in [400, 401, 402, 404]:
