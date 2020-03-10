@@ -52,8 +52,8 @@ class APIError(Exception):
         except Exception:
             # If the error message can't be parsed, fall back to a generic "giving up" message.
             self.message = 'Giving up on {} after {} {}: {}'.format(self.url, self.retry_count,
-                                                                    'try' if self.retry_count == 1
-                                                                    else 'tries', response)
+                                                                    'retry' if self.retry_count == 1
+                                                                    else 'retries', response)
 
 
 @memoize(maxsize=None)
@@ -151,8 +151,7 @@ def get_access_token(api_host, user_email, user_password, logger=None):
         else:
             logger.warning('Error in get_access_token: {}'.format(get_api_token))
         retry_count += 1
-    raise Exception('Giving up on get_access_token after {0} tries.'.format(
-        retry_count))
+    raise Exception('Giving up on get_access_token after {0} tries.'.format(retry_count))
 
 
 def redirect(old_params, migration):
@@ -243,7 +242,6 @@ def get_data(url, headers, params=None, logger=None):
             log_msg = {204: 'No Content', 206: 'Partial Content'}[response.status_code]
             logger.warning(log_msg, extra=log_record)
             return response
-        retry_count += 1
         log_record['tag'] = 'failed_gro_api_request'
         if retry_count < cfg.MAX_RETRIES:
             logger.warning(response.text, extra=log_record)
@@ -255,10 +253,11 @@ def get_data(url, headers, params=None, logger=None):
             params = new_params
         else:
             logger.warning('{}'.format(response), extra=log_record)
-            if retry_count > 1:
+            if retry_count > 0:
                 # Retry immediately on first failure.
                 # Exponential backoff before retrying repeatedly failing requests.
                 time.sleep(2 ** retry_count)
+        retry_count += 1
     raise APIError(response, retry_count, url, params)
 
 
