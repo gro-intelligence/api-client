@@ -297,19 +297,25 @@ class BatchClient(GroClient):
         def consumer():
             """Execute func on all items in queue asynchronously."""
             while q.qsize():
-                idx, item = q.get().result()
-                self._logger.debug('Doing work on {}'.format(idx))
-                if type(item) is dict:
-                    # Assume that dict types should be unpacked as kwargs
-                    result = yield func(**item)
-                elif type(item) is list:
-                    # Assume that list types should be unpacked as positional args
-                    result = yield func(*item)
-                else:
-                    result = yield func(item)
-                output_data['result'] = map_result(idx, item, result, output_data['result'])
-                self._logger.debug('Done with {}'.format(idx))
-                q.task_done()
+                try:
+                    idx, item = q.get().result()
+                    self._logger.debug('Doing work on {}'.format(idx))
+                    if type(item) is dict:
+                        # Assume that dict types should be unpacked as kwargs
+                        result = yield func(**item)
+                    elif type(item) is list:
+                        # Assume that list types should be unpacked as positional args
+                        result = yield func(*item)
+                    else:
+                        result = yield func(item)
+                    output_data['result'] = map_result(idx, item, result, output_data['result'])
+                    self._logger.debug('Done with {}'.format(idx))
+                    q.task_done()
+                except Exception:
+                    # Cease processing
+                    # IOLoop raises "Operation timed out after None seconds"
+                    IOLoop.current().stop()
+                    IOLoop.current().close()
 
         def producer():
             """Immediately enqueue the whole batch of requests."""
