@@ -38,8 +38,8 @@ class BatchError(APIError):
         except Exception:
             # If the error message can't be parsed, fall back to a generic "giving up" message.
             self.message = 'Giving up on {} after {} {}: {}'.format(self.url, self.retry_count,
-                                                                    'try' if self.retry_count == 1
-                                                                    else 'tries', response)
+                                                                    'retry' if self.retry_count == 1
+                                                                    else 'retries', response)
 
 
 class BatchClient(GroClient):
