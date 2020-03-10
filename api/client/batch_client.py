@@ -116,7 +116,10 @@ class BatchClient(GroClient):
                                                  hasattr(e.response, 'error')) else e
                 log_request(start_time, retry_count, error_msg, status_code)
                 if status_code in [429, 500, 503, 504]:
-                    time.sleep(2 ** retry_count)  # Exponential backoff before retrying.
+                    # First retry is immediate.
+                    # After that, exponential backoff before retrying.
+                    if retry_count > 1:
+                        time.sleep(2 ** retry_count)
                     continue
                 elif status_code in [400, 401, 402, 404]:
                     break  # Do not retry. Go right to raising an Exception.
