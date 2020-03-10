@@ -18,7 +18,6 @@ with open("requirements-docs.txt", "r") as docs_requirements_file:
 
 setuptools.setup(
     name="gro",
-    version="1.40.1",
     description="Python client library for accessing Gro Intelligence's "
                 "agricultural data platform",
     long_description=long_description,
@@ -31,7 +30,10 @@ setuptools.setup(
         'docs': docs_requirements,
         'test': test_requirements
     },
-    setup_requires=pytest_runner,
+    # root must be current directory
+    # otherwise, use_scm_version = {"root": path, "relative_to": __file__}
+    use_scm_version=True,
+    setup_requires=pytest_runner + ['setuptools_scm'],
     test_suite='pytest',
     tests_require=test_requirements,
     entry_points={
