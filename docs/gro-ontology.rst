@@ -35,7 +35,7 @@ The above information can be retrieved using the :meth:`api.client.gro_client.Gr
 
   client.lookup('items', 270)
 
-`See this Getting Started section for help on finding entities by name or by id. <understanding-data-responses#look-up>`
+See this Getting Started section for help on finding entities by name or by id. `Understanding Data Responses#lookup <./understanding-data-responses.html#lookup>`_
 
 
 Entity Relationships: Contains
@@ -52,7 +52,7 @@ And, in the opposite direction, the following will return a list of regions "Cal
 
   client.lookup_belongs('regions', 13055)
 
-`See this Getting Started section for navigation of relationships between entities. <./searching-data.html#lookup-contains>`
+See this Getting Started section for navigation of relationships between entities. `Searching Data#lookup-contains <./searching-data.html#lookup-contains>`_
 
 
 Special Properties for Regions
