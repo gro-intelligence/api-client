@@ -97,12 +97,12 @@ Which has the result:
 :code:`historical`
 ------------------
 Regions with :code:`historical` set to :code:`True` are administrative regions (e.g. countries, provinces, disricts) that no longer exist
-adminstratively in the real world. However, data can still be accessed for those regions.
+adminstratively in the real world. However, data can be accessed for those regions like all regions. For example:
 ::
 
    client.lookup('regions',1262)
 
-Which has the result:
+which has the result:
 ::
 
    {'contains': [1226, 1228],
