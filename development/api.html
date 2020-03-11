@@ -852,7 +852,7 @@ the two regions, when averaged across all time.</p>
 
 <dl class="method">
 <dt id="api.client.crop_model.CropModel.compute_crop_weighted_series">
-<code class="descclassname">CropModel.</code><code class="descname">compute_crop_weighted_series</code><span class="sig-paren">(</span><em>weighting_crop_name</em>, <em>weighting_metric_name</em>, <em>item_name</em>, <em>metric_name</em>, <em>regions</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/crop_model.html#CropModel.compute_crop_weighted_series"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.crop_model.CropModel.compute_crop_weighted_series" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">CropModel.</code><code class="descname">compute_crop_weighted_series</code><span class="sig-paren">(</span><em>weighting_crop_name</em>, <em>weighting_metric_name</em>, <em>item_name</em>, <em>metric_name</em>, <em>regions</em>, <em>weighting_func=&lt;function &lt;lambda&gt;&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/crop_model.html#CropModel.compute_crop_weighted_series"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.crop_model.CropModel.compute_crop_weighted_series" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute the &#8216;crop-weighted average&#8217; of the series for the given
 item and metric, across regions. The weight of a region is the
 fraction of the value of the weighting series represented by
@@ -877,6 +877,7 @@ across provinces will give a crop weighted average of NDVI.</p>
 <li><strong>item_name</strong> (<em>string</em>) &#8211; </li>
 <li><strong>metric_name</strong> (<em>string</em>) &#8211; </li>
 <li><strong>regions</strong> (<em>list of dicts</em>) &#8211; Each entry is a region with id and name</li>
+<li><strong>weighting_func</strong> (<em>optional function</em>) &#8211; A function of (weight, value) to apply. Default: weight*value</li>
 </ul>
 </td>
 </tr>

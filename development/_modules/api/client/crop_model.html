@@ -277,7 +277,8 @@
 
 
 <div class="viewcode-block" id="CropModel.compute_crop_weighted_series"><a class="viewcode-back" href="../../../api.html#api.client.crop_model.CropModel.compute_crop_weighted_series">[docs]</a>    <span class="k">def</span> <span class="nf">compute_crop_weighted_series</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">weighting_crop_name</span><span class="p">,</span> <span class="n">weighting_metric_name</span><span class="p">,</span>
-                                     <span class="n">item_name</span><span class="p">,</span> <span class="n">metric_name</span><span class="p">,</span> <span class="n">regions</span><span class="p">):</span>
+                                     <span class="n">item_name</span><span class="p">,</span> <span class="n">metric_name</span><span class="p">,</span> <span class="n">regions</span><span class="p">,</span>
+                                     <span class="n">weighting_func</span><span class="o">=</span><span class="k">lambda</span> <span class="n">w</span><span class="p">,</span> <span class="n">v</span><span class="p">:</span> <span class="n">w</span><span class="o">*</span><span class="n">v</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Compute the &#39;crop-weighted average&#39; of the series for the given</span>
 <span class="sd">        item and metric, across regions. The weight of a region is the</span>
 <span class="sd">        fraction of the value of the weighting series represented by</span>
@@ -302,6 +303,8 @@
 <span class="sd">        metric_name : string</span>
 <span class="sd">        regions : list of dicts</span>
 <span class="sd">            Each entry is a region with id and name</span>
+<span class="sd">        weighting_func: optional function </span>
+<span class="sd">            A function of (weight, value) to apply. Default: weight*value</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -330,7 +333,7 @@
             <span class="n">series</span> <span class="o">=</span> <span class="n">df</span><span class="p">[(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;item_id&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">entities</span><span class="p">[</span><span class="s1">&#39;item_id&#39;</span><span class="p">])</span> <span class="o">&amp;</span>
                         <span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;metric_id&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">entities</span><span class="p">[</span><span class="s1">&#39;metric_id&#39;</span><span class="p">])</span> <span class="o">&amp;</span>
                         <span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;region_id&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">region</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">])]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-            <span class="n">series</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="s1">&#39;value&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">series</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">]</span><span class="o">*</span><span class="n">weight</span>
+            <span class="n">series</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="s1">&#39;value&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">weighting_func</span><span class="p">(</span><span class="n">weight</span><span class="p">,</span> <span class="n">series</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">])</span>
             <span class="c1"># TODO: change metric to reflect it is weighted in this copy</span>
             <span class="n">series_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">series</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">pandas</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">series_list</span><span class="p">)</span></div>
