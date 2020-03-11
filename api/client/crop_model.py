@@ -3,6 +3,7 @@ from builtins import map
 from builtins import zip
 from datetime import datetime
 import math
+import numpy
 import pandas
 from api.client.gro_client import GroClient
 
@@ -63,11 +64,16 @@ class CropModel(GroClient):
                       (df['metric_id'] == entities['metric_id']) &
                       (df['region_id'] == region['id'])]['value'].mean(skipna=True)
         means = list(map(mapper, regions))
-        self._logger.debug('Means = {}'.format(
+        self.get_logger().debug('Means = {}'.format(
             list(zip([region['name'] for region in regions], means))))
         # Normalize into weights
-        total = math.fsum([x for x in means if not math.isnan(x)])
-        return [float(mean)/total for mean in means]
+        total = numpy.nansum(means)
+        if not numpy.isclose(total, 0.0):
+            return [float(mean)/total for mean in means]
+        self.get_logger().warning(
+            'Cannot normalize {} {} data.'.format(crop_name, metric_name))
+        return means
+
 
     def compute_crop_weighted_series(self, weighting_crop_name, weighting_metric_name,
                                      item_name, metric_name, regions):
