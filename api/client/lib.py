@@ -13,6 +13,8 @@ import re
 import logging
 import requests
 import time
+import platform
+from pkg_resources import get_distribution, DistributionNotFound
 try:
     # functools are native in Python 3.2.3+
     from functools import lru_cache as memoize
@@ -30,6 +32,28 @@ REGION_LEVELS = {
     'other': 8,
     'coordinate': 9
 }
+
+
+class APIError(Exception):
+    def __init__(self, response, retry_count, url, params):
+        self.response = response
+        self.retry_count = retry_count
+        self.url = url
+        self.params = params
+        self.status_code = self.response.status_code
+        try:
+            json_content = self.response.json()
+            # 'error' should be something like 'Not Found' or 'Bad Request'
+            self.message = json_content.get('error', '')
+            # Some error responses give additional info.
+            # For example, a 400 Bad Request might say "metricId is required"
+            if 'message' in json_content:
+                self.message += ': {}'.format(json_content['message'])
+        except Exception:
+            # If the error message can't be parsed, fall back to a generic "giving up" message.
+            self.message = 'Giving up on {} after {} {}: {}'.format(self.url, self.retry_count,
+                                                                    'retry' if self.retry_count == 1
+                                                                    else 'retries', response)
 
 
 @memoize(maxsize=None)
@@ -117,7 +141,7 @@ def get_access_token(api_host, user_email, user_password, logger=None):
     retry_count = 0
     if not logger:
         logger = get_default_logger()
-    while retry_count < cfg.MAX_RETRIES:
+    while retry_count <= cfg.MAX_RETRIES:
         get_api_token = requests.post('https://' + api_host + '/api-token',
                                       data={'email': user_email,
                                             'password': user_password})
@@ -125,11 +149,9 @@ def get_access_token(api_host, user_email, user_password, logger=None):
             logger.debug('Authentication succeeded in get_access_token')
             return get_api_token.json()['data']['accessToken']
         else:
-            logger.warning('Error in get_access_token: {}'.format(
-                get_api_token))
+            logger.warning('Error in get_access_token: {}'.format(get_api_token))
         retry_count += 1
-    raise Exception('Giving up on get_access_token after {0} tries.'.format(
-        retry_count))
+    raise Exception('Giving up on get_access_token after {0} tries.'.format(retry_count))
 
 
 def redirect(old_params, migration):
@@ -165,6 +187,19 @@ def redirect(old_params, migration):
     return new_params
 
 
+def get_version_info():
+    versions = dict()
+
+    # retrieve python version and api client version
+    versions['python-version'] = platform.python_version()
+    try:
+        versions['api-client-version'] = get_distribution('gro').version
+    except DistributionNotFound:
+        # package is not installed
+        pass
+    return versions
+
+
 def get_data(url, headers, params=None, logger=None):
     """General 'make api request' function.
 
@@ -184,40 +219,46 @@ def get_data(url, headers, params=None, logger=None):
     """
     base_log_record = dict(route=url, params=params)
     retry_count = 0
+
+    # append version info
+    headers.update(get_version_info())
+
     if not logger:
         logger = get_default_logger()
         logger.debug(url)
         logger.debug(params)
-    while retry_count < cfg.MAX_RETRIES:
+    while retry_count <= cfg.MAX_RETRIES:
         start_time = time.time()
-        data = requests.get(url, params=params, headers=headers, timeout=None)
+        response = requests.get(url, params=params, headers=headers, timeout=None)
         elapsed_time = time.time() - start_time
         log_record = dict(base_log_record)
         log_record['elapsed_time_in_ms'] = 1000 * elapsed_time
         log_record['retry_count'] = retry_count
-        log_record['status_code'] = data.status_code
-        if data.status_code == 200:
+        log_record['status_code'] = response.status_code
+        if response.status_code == 200:  # Success
             logger.debug('OK', extra=log_record)
-            return data
-        if data.status_code == 204:
-            logger.warning('No Content', extra=log_record)
-            return data
-        retry_count += 1
+            return response
+        if response.status_code in [204, 206]:  # Success with a caveat - warning
+            log_msg = {204: 'No Content', 206: 'Partial Content'}[response.status_code]
+            logger.warning(log_msg, extra=log_record)
+            return response
         log_record['tag'] = 'failed_gro_api_request'
         if retry_count < cfg.MAX_RETRIES:
-            logger.warning(data.text, extra=log_record)
-        if data.status_code == 429:
-            time.sleep(2 ** retry_count)  # Exponential backoff before retrying
-        elif data.status_code == 301:
-            new_params = redirect(params, data.json()['data'][0])
+            logger.warning(response.text, extra=log_record)
+        if response.status_code in [400, 401, 402, 404]:
+            break  # Do not retry
+        if response.status_code == 301:
+            new_params = redirect(params, response.json()['data'][0])
             logger.warning('Redirecting {} to {}'.format(params, new_params), extra=log_record)
             params = new_params
-        elif data.status_code in [400, 401, 404, 500]:
-            break
         else:
-            logger.error('{}'.format(data), extra=log_record)
-    raise Exception('Giving up on {} after {} tries: {}.'.format(
-        url, retry_count, data))
+            logger.warning('{}'.format(response), extra=log_record)
+            if retry_count > 0:
+                # Retry immediately on first failure.
+                # Exponential backoff before retrying repeatedly failing requests.
+                time.sleep(2 ** retry_count)
+        retry_count += 1
+    raise APIError(response, retry_count, url, params)
 
 
 @memoize(maxsize=None)
@@ -405,7 +446,7 @@ def rank_series_by_source(access_token, api_host, series_list):
             yield series_with_source
 
 
-def list_of_series_to_single_series(series_list, add_belongs_to=False):
+def list_of_series_to_single_series(series_list, add_belongs_to=False, include_historical=True):
     """Convert list_of_series format from API back into the familiar single_series output format.
 
     >>> list_of_series_to_single_series([{
@@ -468,6 +509,10 @@ def list_of_series_to_single_series(series_list, add_belongs_to=False):
     for series in series_list:
         if not (isinstance(series, dict) and isinstance(series.get('data', []), list)):
             continue
+        series_metadata = series.get('series', {}).get('metadata', {})
+        if not include_historical and (series_metadata.get('includesHistoricalRegion', False) or 
+        series_metadata.get('includesHistoricalPartnerRegion', False)):
+            continue
         # All the belongsTo keys are in camelCase. Convert them to snake_case.
         # Only need to do this once per series, so do this outside of the list
         # comprehension and save to a variable to avoid duplicate work:
@@ -508,7 +553,8 @@ def get_data_points(access_token, api_host, **selection):
     url = '/'.join(['https:', '', api_host, 'v2/data'])
     params = get_data_call_params(**selection)
     resp = get_data(url, headers, params)
-    return list_of_series_to_single_series(resp.json())
+    include_historical = selection.get('include_historical', True)
+    return list_of_series_to_single_series(resp.json(), False, include_historical)
 
 
 @memoize(maxsize=None)
@@ -580,19 +626,30 @@ def get_geojson(access_token, api_host, region_id):
 
 
 def get_descendant_regions(access_token, api_host, region_id,
-                           descendant_level=False, include_historical=True):
-    descendants = []
-    region = lookup(access_token, api_host, 'regions', region_id)
-    for member_id in region['contains']:
-        member = lookup(access_token, api_host, 'regions', member_id)
-        if (not include_historical and member['historical']):
-            continue
-        if not descendant_level or descendant_level == member['level']:
-            descendants.append(member)
-        if not descendant_level or member['level'] < descendant_level:
-            descendants += get_descendant_regions(
-                access_token, api_host, member_id, descendant_level, include_historical)
-    return descendants
+                           descendant_level=False, include_historical=True, include_details=True):
+    url = '/'.join(['https:', '', api_host, 'v2/regions/contains'])
+    headers = {'authorization': 'Bearer ' + access_token}
+    params = {'ids': [region_id]}
+    if descendant_level:
+        params['level'] = descendant_level
+    else:
+        params['distance'] = -1
+
+    resp = get_data(url, headers, params)
+    descendant_region_ids = resp.json()['data'][str(region_id)]
+
+    # Filter out regions with the 'historical' flag set to true
+    if not include_historical:
+        descendant_region_ids = [
+            descendant_region_id for descendant_region_id in descendant_region_ids
+            if not lookup(access_token, api_host, 'regions', descendant_region_id)['historical']
+        ]
+
+    if include_details:
+        return [lookup(access_token, api_host, 'regions', descendant_region_id)
+                for descendant_region_id in descendant_region_ids]
+
+    return [{'id': descendant_region_id} for descendant_region_id in descendant_region_ids]
 
 
 if __name__ == '__main__':
