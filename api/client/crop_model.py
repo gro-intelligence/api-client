@@ -67,7 +67,7 @@ class CropModel(GroClient):
         self.get_logger().debug('Means = {}'.format(
             list(zip([region['name'] for region in regions], means))))
         # Normalize into weights
-        total = math.fsum([x for x in means if not math.isnan(x)])
+        total = numpy.nansum(means)
         if not numpy.isclose(total, 0.0):
             return [float(mean)/total for mean in means]
         self.get_logger().warning(
