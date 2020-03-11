@@ -52,8 +52,8 @@ class APIError(Exception):
         except Exception:
             # If the error message can't be parsed, fall back to a generic "giving up" message.
             self.message = 'Giving up on {} after {} {}: {}'.format(self.url, self.retry_count,
-                                                                    'try' if self.retry_count == 1
-                                                                    else 'tries', response)
+                                                                    'retry' if self.retry_count == 1
+                                                                    else 'retries', response)
 
 
 @memoize(maxsize=None)
@@ -141,7 +141,7 @@ def get_access_token(api_host, user_email, user_password, logger=None):
     retry_count = 0
     if not logger:
         logger = get_default_logger()
-    while retry_count < cfg.MAX_RETRIES:
+    while retry_count <= cfg.MAX_RETRIES:
         get_api_token = requests.post('https://' + api_host + '/api-token',
                                       data={'email': user_email,
                                             'password': user_password})
@@ -151,8 +151,7 @@ def get_access_token(api_host, user_email, user_password, logger=None):
         else:
             logger.warning('Error in get_access_token: {}'.format(get_api_token))
         retry_count += 1
-    raise Exception('Giving up on get_access_token after {0} tries.'.format(
-        retry_count))
+    raise Exception('Giving up on get_access_token after {0} tries.'.format(retry_count))
 
 
 def redirect(old_params, migration):
@@ -228,7 +227,7 @@ def get_data(url, headers, params=None, logger=None):
         logger = get_default_logger()
         logger.debug(url)
         logger.debug(params)
-    while retry_count < cfg.MAX_RETRIES:
+    while retry_count <= cfg.MAX_RETRIES:
         start_time = time.time()
         response = requests.get(url, params=params, headers=headers, timeout=None)
         elapsed_time = time.time() - start_time
@@ -236,26 +235,29 @@ def get_data(url, headers, params=None, logger=None):
         log_record['elapsed_time_in_ms'] = 1000 * elapsed_time
         log_record['retry_count'] = retry_count
         log_record['status_code'] = response.status_code
-        if response.status_code == 200:
+        if response.status_code == 200:  # Success
             logger.debug('OK', extra=log_record)
             return response
-        if response.status_code == 204:
-            logger.warning('No Content', extra=log_record)
+        if response.status_code in [204, 206]:  # Success with a caveat - warning
+            log_msg = {204: 'No Content', 206: 'Partial Content'}[response.status_code]
+            logger.warning(log_msg, extra=log_record)
             return response
-        retry_count += 1
         log_record['tag'] = 'failed_gro_api_request'
         if retry_count < cfg.MAX_RETRIES:
             logger.warning(response.text, extra=log_record)
-        if response.status_code == 429:
-            time.sleep(2 ** retry_count)  # Exponential backoff before retrying
-        elif response.status_code == 301:
+        if response.status_code in [400, 401, 402, 404]:
+            break  # Do not retry
+        if response.status_code == 301:
             new_params = redirect(params, response.json()['data'][0])
             logger.warning('Redirecting {} to {}'.format(params, new_params), extra=log_record)
             params = new_params
-        elif response.status_code in [400, 401, 404, 500]:
-            break
         else:
-            logger.error('{}'.format(response), extra=log_record)
+            logger.warning('{}'.format(response), extra=log_record)
+            if retry_count > 0:
+                # Retry immediately on first failure.
+                # Exponential backoff before retrying repeatedly failing requests.
+                time.sleep(2 ** retry_count)
+        retry_count += 1
     raise APIError(response, retry_count, url, params)
 
 
