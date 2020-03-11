@@ -39,7 +39,7 @@ Why are there some gaps in the soil moisture data?
 
 Radio Frequency Interferences (RFI) can limit the quality of remotely sensed data in some regions. For more information see `Radio Frequency Interference Effects On SMOS <other#radio-frequency-interference-effects-on-smos>`_.
 
-What do I get a warning about data containing 'historical' regions?
+What do warnings about 'historical' regions mean?
 -------------------------------------------------------------------
 
 `Historical regions <gro-ontology#historical>` behave just like other regions, any data that exists can be accessed the same way as data for
