@@ -67,7 +67,7 @@ class CropModel(GroClient):
         self.get_logger().debug('Means = {}'.format(
             list(zip([region['name'] for region in regions], means))))
         # Normalize into weights
-        total = math.fsum([x for x in means if not math.isnan(x)])
+        total = numpy.nansum(means)
         if not numpy.isclose(total, 0.0):
             return [float(mean)/total for mean in means]
         self.get_logger().warning(
@@ -76,7 +76,8 @@ class CropModel(GroClient):
 
 
     def compute_crop_weighted_series(self, weighting_crop_name, weighting_metric_name,
-                                     item_name, metric_name, regions):
+                                     item_name, metric_name, regions,
+                                     weighting_func=lambda w, v: w*v):
         """Compute the 'crop-weighted average' of the series for the given
         item and metric, across regions. The weight of a region is the
         fraction of the value of the weighting series represented by
@@ -101,6 +102,8 @@ class CropModel(GroClient):
         metric_name : string
         regions : list of dicts
             Each entry is a region with id and name
+        weighting_func: optional function 
+            A function of (weight, value) to apply. Default: weight*value
 
         Returns
         -------
@@ -129,7 +132,7 @@ class CropModel(GroClient):
             series = df[(df['item_id'] == entities['item_id']) &
                         (df['metric_id'] == entities['metric_id']) &
                         (df['region_id'] == region['id'])].copy()
-            series.loc[:, 'value'] = series['value']*weight
+            series.loc[:, 'value'] = weighting_func(weight, series['value'])
             # TODO: change metric to reflect it is weighted in this copy
             series_list.append(series)
         return pandas.concat(series_list)
