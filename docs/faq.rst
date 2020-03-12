@@ -25,11 +25,11 @@ I specified an end_date when calling get_data_points(), but I am getting points 
 ----------------------------------------------------------------------------------------------------
 
 start_date and end_date specify a time interval. When retrieving a
-series, it is interpreted *inclusively* i.e. it will includes points
+series, it is interpreted *inclusively* i.e. it will include points
 that are fully or partially in the desired interval. Thus if the start
 and end dates selected are March 15 to May 15, and the data happens to
 be monthly on calendar months, it will include points for [Mar 1, Mar
-31], [Feb 1, April 30], [May 1, May 31]. Mathematically, this can be
+31], [Apr 1, Apr 30], [May 1, May 31]. Mathematically, this can be
 summarized as all points such that "point_end_date >=
 series_start_date and point_start_date <= series_end_date.”
 
