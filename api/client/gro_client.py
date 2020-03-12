@@ -196,7 +196,7 @@ class GroClient(Client):
         frequency_id : integer
         unit_id : integer, optional
         start_date : string, optional
-            All points with end dates equal to or before this date
+            All points with end dates equal to or after this date
         end_date : string, optional
             All points with start dates equal to or before this date
         show_revisions : boolean, optional
