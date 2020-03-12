@@ -196,9 +196,9 @@ class GroClient(Client):
         frequency_id : integer
         unit_id : integer, optional
         start_date : string, optional
-            All points with start dates equal to or after this date
+            All points with end dates equal to or before this date
         end_date : string, optional
-            All points with end dates equal to or after this date
+            All points with start dates equal to or before this date
         show_revisions : boolean, optional
             False by default, meaning only the latest value for each period. If true, will return
             all values for a given period, differentiated by the `reporting_date` field.
