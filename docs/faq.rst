@@ -24,7 +24,16 @@ Data Retrieval
 I specified an end_date when calling get_data_points(), but I am getting points with other end_dates
 ----------------------------------------------------------------------------------------------------
 
-start_date and end_date behave as ranges. Specifying end_date is interpreted as "all points with an end date prior to this date" and start_date is "all points with a start_date later than this date." Both can be specified to narrow down the range.
+start_date and end_date specify a time interval. When retrieving a
+series, it is interpreted *inclusively* i.e. it will includes points
+that are fully or partially in the desired interval. Thus if the start
+and end dates selected are March 15 to May 15, and the data happens to
+be monthly on calendar months, it will include points for [Mar 1, Mar
+31], [Feb 1, April 30], [May 1, May 31]. Mathematically, this can be
+summarized as all points such that "point_end_date >=
+series_start_date and point_start_date <= series_end_date.”
+
+
 
 Data Coverage
 =============
