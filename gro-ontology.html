@@ -219,6 +219,7 @@
 <li><a class="reference internal" href="#special-properties-for-regions" id="id3">Special Properties for Regions</a><ul>
 <li><a class="reference internal" href="#level" id="id4"><code class="code docutils literal"><span class="pre">level</span></code></a></li>
 <li><a class="reference internal" href="#latitude-and-longitude" id="id5"><code class="code docutils literal"><span class="pre">latitude</span></code> and <code class="code docutils literal"><span class="pre">longitude</span></code></a></li>
+<li><a class="reference internal" href="#historical" id="id6"><code class="code docutils literal"><span class="pre">historical</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -292,6 +293,22 @@
   <span class="s1">&#39;level&#39;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
   <span class="s1">&#39;longitude&#39;</span><span class="p">:</span> <span class="mf">36.8691</span><span class="p">,</span>
   <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Nairobi&#39;</span> <span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="historical">
+<h3><a class="toc-backref" href="#id6"><code class="code docutils literal"><span class="pre">historical</span></code></a><a class="headerlink" href="#historical" title="Permalink to this headline">¶</a></h3>
+<p>Regions with <code class="code docutils literal"><span class="pre">historical</span></code> set to <code class="code docutils literal"><span class="pre">True</span></code> are administrative regions (e.g. countries, provinces, disricts) that no longer exist
+adminstratively in the real world. However, data can be accessed for those regions like all regions. For example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">client</span><span class="o">.</span><span class="n">lookup</span><span class="p">(</span><span class="s1">&#39;regions&#39;</span><span class="p">,</span><span class="mi">1262</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>which has the result:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;contains&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1226</span><span class="p">,</span> <span class="mi">1228</span><span class="p">],</span>
+ <span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="mi">1262</span><span class="p">,</span>
+ <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="sa">u</span><span class="s1">&#39;Serbia and Kosovo&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;level&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+ <span class="s1">&#39;historical&#39;</span><span class="p">:</span> <span class="kc">True</span> <span class="p">}</span>
 </pre></div>
 </div>
 </div>
