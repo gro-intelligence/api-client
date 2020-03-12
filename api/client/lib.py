@@ -405,8 +405,8 @@ def get_data_series(access_token, api_host, **selection):
     try:
         response = resp.json()['data']
         if any((series.get('metadata', {}).get('includes_historical_region', False)) for series in response):
-            logger.warning('Selected data series have some historical regions, ' \
-                           'See https://developers.gro-intelligence.com/faq.html')
+            logger.warning('Data series have some historical regions, ' \
+                           'see https://developers.gro-intelligence.com/faq.html')
         return response
     except KeyError:
         raise Exception(resp.text)
