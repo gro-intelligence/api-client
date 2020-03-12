@@ -24,7 +24,15 @@ Data Retrieval
 I specified an end_date when calling get_data_points(), but I am getting points with other end_dates
 ----------------------------------------------------------------------------------------------------
 
-start_date and end_date behave as ranges. Specifying end_date is interpreted as "all points with an end date prior to this date" and start_date is "all points with a start_date later than this date." Both can be specified to narrow down the range.
+start_date and end_date specify a time interval. When retrieving a
+series, it is interpreted *inclusively* i.e. it will include points
+that are fully or partially in the desired interval. Thus if the start
+and end dates selected are March 15 to May 15, and the data happens to
+be monthly on calendar months, it will include points for [Mar 1, Mar
+31], [Apr 1, Apr 30], [May 1, May 31]. 
+
+Thus, when calling `get_data_points() <api.html#api.client.gro_client.GroClient.get_data_points>`_ specifying a start_date for the series restricts the query to any point where "point_end_date >= series_start_date," and a series end_date restricts it to any point where "point_start_date <= series_end_date".
+
 
 Data Coverage
 =============
@@ -38,6 +46,14 @@ Why are there some gaps in the soil moisture data?
 --------------------------------------------------
 
 Radio Frequency Interferences (RFI) can limit the quality of remotely sensed data in some regions. For more information see `Radio Frequency Interference Effects On SMOS <other#radio-frequency-interference-effects-on-smos>`_.
+
+What do warnings about 'historical' regions mean?
+-------------------------------------------------------------------
+
+`Historical regions <gro-ontology#historical>`_ behave just like other regions. Any data that exists can be accessed the same way as data for any region in Gro.  Generally historical regions will only have data corresponding to the time periods when they existed. But in some
+cases, new regions can have data that extends into the past and overlaps with historical regions. 
+Rather than always excluding the old regions in such cases, we allow the user to choose via the  :code:`include_historical` option in `get_data_points() <api.html#api.client.gro_client.GroClient.get_data_points>`_. This can be useful if for example you are analyzing historical temperatures at the district level in a country where the districts that exist today were only created 5 years ago and but you want 20 years of data. In that case, you can filter out the historical regions to avoid double counting.
+
 
 Account
 =======

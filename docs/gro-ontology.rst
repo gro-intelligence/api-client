@@ -98,3 +98,21 @@ Which has the result:
     'level': 4,
     'longitude': 36.8691,
     'name': 'Nairobi' }
+
+
+:code:`historical`
+------------------
+Regions with :code:`historical` set to :code:`True` are administrative regions (e.g. countries, provinces, disricts) that no longer exist
+adminstratively in the real world. However, data can be accessed for those regions like all regions. For example:
+::
+
+   client.lookup('regions',1262)
+
+which has the result:
+::
+
+   {'contains': [1226, 1228],
+    'id': 1262,
+    'name': u'Serbia and Kosovo',
+    'level': 3,
+    'historical': True }
