@@ -50,10 +50,9 @@ Radio Frequency Interferences (RFI) can limit the quality of remotely sensed dat
 What do warnings about 'historical' regions mean?
 -------------------------------------------------------------------
 
-`Historical regions <gro-ontology#historical>`_ behave just like other regions, any data that exists can be accessed the same way as data for
-any region in Gro.  Generally historical regions will only have data corresponding to the time periods when they existed. But in some
+`Historical regions <gro-ontology#historical>`_ behave just like other regions. Any data that exists can be accessed the same way as data for any region in Gro.  Generally historical regions will only have data corresponding to the time periods when they existed. But in some
 cases, new regions can have data that extends into the past and overlaps with historical regions. 
-Rather than always excluding the old regions in such cases, we allow the user to choose via :code:`include_historical` option in `get_data_points() <api.html#api.client.gro_client.GroClient.get_data_points>`_. This can be useful if for example you are analyzing  historical temperatures at the district level in a country where the districts that exist today were only created 5 years ago and but you want 20 years of data. In that case, you can filter out the historical regions to avoid double counting.
+Rather than always excluding the old regions in such cases, we allow the user to choose via the  :code:`include_historical` option in `get_data_points() <api.html#api.client.gro_client.GroClient.get_data_points>`_. This can be useful if for example you are analyzing historical temperatures at the district level in a country where the districts that exist today were only created 5 years ago and but you want 20 years of data. In that case, you can filter out the historical regions to avoid double counting.
 
 
 Account
