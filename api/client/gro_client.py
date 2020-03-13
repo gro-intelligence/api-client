@@ -230,7 +230,7 @@ class GroClient(Client):
         # Return data points in input units if not unit is specified
         return data_points
 
-    def GDH(self, gdh_selection):
+    def GDH(self, gdh_selection, **optional_selections):
         """Wrapper for :meth:`~.get_data_points`. with alternative input and output style.
 
         The selection of data series to retrieve is encoded in a
@@ -246,6 +246,8 @@ class GroClient(Client):
         Parameters:
         ----------
         gdh_selection: string
+        optional_selections: dict, optional
+            accepts optional params from :meth:`~.get_data_points`.
 
         Returns:
         ------
@@ -254,10 +256,17 @@ class GroClient(Client):
             the main DataFrame :meth:`~.get_df`. with the :meth:`~.get_data_points`. results for requested series.
 
         """
+
         entity_keys = ['metric_id', 'item_id', 'region_id', 'partner_region_id',
                        'source_id', 'frequency_id']
         entity_ids = [int(x) for x in gdh_selection.split('-')]
         selection = dict(zip(entity_keys, entity_ids))
+
+        # add optional pararms to selection 
+        for key, value in list(optional_selections.items()):    
+            if key not in entity_keys:
+                selection[key] = value
+
         self.add_single_data_series(selection)
         df = self.get_df()
         return df
