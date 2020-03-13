@@ -278,7 +278,7 @@ In Colab, it will look like this:</p>
 <li>Add one more cell with the &#8220;+ Code&#8221; button, then copy the below code and paste it into the third cell.</li>
 </ol>
 <blockquote>
-<div><div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">Rice</span><span class="p">,</span> <span class="n">milled</span> <span class="o">-</span> <span class="n">Area</span> <span class="n">Harvested</span> <span class="p">(</span><span class="n">area</span><span class="p">)</span> <span class="o">-</span> <span class="n">Kenya</span> <span class="p">(</span><span class="n">USDA</span> <span class="n">PS</span><span class="o">&amp;</span><span class="n">D</span><span class="p">)</span>
+<div><div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1"># Rice, milled - Area Harvested (area) - Kenya (USDA PS&amp;D)</span>
 <span class="n">client</span><span class="o">.</span><span class="n">get_data_points</span><span class="p">(</span><span class="o">**</span><span class="p">{</span>
   <span class="s1">&#39;metric_id&#39;</span><span class="p">:</span> <span class="mi">570001</span><span class="p">,</span>
   <span class="s1">&#39;item_id&#39;</span><span class="p">:</span> <span class="mi">392</span><span class="p">,</span>
@@ -326,7 +326,7 @@ In Colab, it will look like this:</p>
 <div class="section" id="quickstart-py">
 <h2><a class="toc-backref" href="#id6">Quickstart.py</a><a class="headerlink" href="#quickstart-py" title="Permalink to this headline">¶</a></h2>
 <p><a class="reference external" href="https://github.com/gro-intelligence/api-client/blob/development/api/client/samples/quick_start.py">quick_start.py</a> is a simple script that creates an authenticated <code class="code docutils literal"><span class="pre">GroClient</span></code> object and uses the <code class="code docutils literal"><span class="pre">get_data_series()</span></code> and <code class="code docutils literal"><span class="pre">get_data_points()</span></code> methods to find Area Harvested series for Ukrainian Wheat from a variety of different sources, and outputs the time series points to a CSV file. You will likely want to revisit this script as a starting point for building your own scripts.</p>
-<p>Note that the script assumes you have your authentication token set to a <code class="code docutils literal"><span class="pre">GROAPI_TOKEN</span></code> environment variable <a class="reference external" href="./authentication#saving-your-token-as-an-environment-variable">seee Saving your token as an environment variable</a>. If you don&#8217;t wish to use environment variables, you can modify the sample script to set <code class="code docutils literal"><span class="pre">ACCESS_TOKEN</span></code> in some other way.</p>
+<p>Note that the script assumes you have your authentication token set to a <code class="code docutils literal"><span class="pre">GROAPI_TOKEN</span></code> environment variable <a class="reference external" href="./authentication#saving-your-token-as-an-environment-variable">see Saving your token as an environment variable</a>. If you don&#8217;t wish to use environment variables, you can modify the sample script to set <code class="code docutils literal"><span class="pre">ACCESS_TOKEN</span></code> in some other way.</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span>$ python quick_start.py
 </pre></div>
 </div>
