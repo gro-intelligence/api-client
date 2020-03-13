@@ -359,7 +359,7 @@ class GroClient(Client):
 
         Returns
         -------
-        None
+        A data_series object, as returned by :meth:`~.get_data_series`.
 
         See also
         --------
@@ -370,7 +370,7 @@ class GroClient(Client):
         """
         for the_data_series in self.find_data_series(**kwargs):
             self.add_single_data_series(the_data_series)
-            return
+            return the_data_series
         return
 
     ###
