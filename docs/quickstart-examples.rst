@@ -67,7 +67,7 @@ Step 2: Run the code in a notebook
 
   ::
 
-    Rice, milled - Area Harvested (area) - Kenya (USDA PS&D)
+    # Rice, milled - Area Harvested (area) - Kenya (USDA PS&D)
     client.get_data_points(**{
       'metric_id': 570001,
       'item_id': 392,
@@ -115,7 +115,7 @@ Quickstart.py
 
 `quick_start.py <https://github.com/gro-intelligence/api-client/blob/development/api/client/samples/quick_start.py>`_ is a simple script that creates an authenticated :code:`GroClient` object and uses the :code:`get_data_series()` and :code:`get_data_points()` methods to find Area Harvested series for Ukrainian Wheat from a variety of different sources, and outputs the time series points to a CSV file. You will likely want to revisit this script as a starting point for building your own scripts.
 
-Note that the script assumes you have your authentication token set to a :code:`GROAPI_TOKEN` environment variable `seee Saving your token as an environment variable <./authentication#saving-your-token-as-an-environment-variable>`_. If you don't wish to use environment variables, you can modify the sample script to set :code:`ACCESS_TOKEN` in some other way.
+Note that the script assumes you have your authentication token set to a :code:`GROAPI_TOKEN` environment variable `see Saving your token as an environment variable <./authentication#saving-your-token-as-an-environment-variable>`_. If you don't wish to use environment variables, you can modify the sample script to set :code:`ACCESS_TOKEN` in some other way.
 ::
 
   $ python quick_start.py
