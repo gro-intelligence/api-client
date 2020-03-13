@@ -336,7 +336,7 @@ class GroClient(Client):
                 if kwargs.get('end_date'):
                     data_series['end_date'] = kwargs['end_date']
             all_data_series += data_series_list
-        self._logger.warning("Found {} distinct data series total for {}".format(
+        self._logger.info("Found {} distinct data series total for {}".format(
             len(all_data_series), kwargs))
         for data_series in self.rank_series_by_source(all_data_series):
             yield data_series
@@ -359,7 +359,8 @@ class GroClient(Client):
 
         Returns
         -------
-        A data_series object, as returned by :meth:`~.get_data_series`.
+        data_series object, as returned by :meth:`~.get_data_series`.
+            The data_series that was added or None if none were found.
 
         See also
         --------
