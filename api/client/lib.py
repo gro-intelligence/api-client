@@ -447,6 +447,18 @@ def rank_series_by_source(access_token, api_host, series_list):
             yield series_with_source
 
 
+def get_available_timefrequency(access_token, api_host, **series):
+    def make_key(key):
+        if key not in ('startDate', 'endDate'):
+            return key + 's'
+        return key
+    params = dict((make_key(k), v) for k, v in iter(list(
+        get_params_from_selection(**series).items())))
+    url = '/'.join(['https:', '', api_host, 'v2/available/time-frequencies'])
+    headers = {'authorization': 'Bearer ' + access_token}
+    return [camel_to_snake_dict(tf) for tf in get_data(url, headers, params).json()]
+
+
 def list_of_series_to_single_series(series_list, add_belongs_to=False, include_historical=True):
     """Convert list_of_series format from API back into the familiar single_series output format.
 
