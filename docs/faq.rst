@@ -76,7 +76,7 @@ You must get an `authentication token <authentication#retrieving-a-token>`_ from
 I tried using my Gro username and login but am getting a 401 Unauthorized error
 -------------------------------------------------------------------------------
 
-A Gro account gives you access to the web application at app.gro-intelligence.com. API access is sold as an add-on product you need to be activated for. To learn more about getting an API account, contact our sales team using the link at `gro-intelligence.com/products/gro-api <gro-intelligence.com/products/gro-api>`_
+A Gro account gives you access to the web application at app.gro-intelligence.com. API access is sold as an add-on product you need to be activated for. To learn more about getting an API account, contact our sales team using the link at `gro-intelligence.com/products/gro-api <https://www.gro-intelligence.com/products/gro-api>`_
 
 Gro Models
 ==========
