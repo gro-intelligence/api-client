@@ -46,20 +46,22 @@ class CropModel(GroClient):
 
         """
         # Get the weighting series
-        entities = { 'item_ids': set(), 'metric_ids': set() }
+        entities = {
+            'item_id': self.search_for_entity('items', crop_name),
+            'metric_id': self.search_for_entity('metrics', metric_name)
+        }
+        entities['unit_id'] = self.get_allowed_units(**entities)[0]
         for region in regions:
-            series = self.add_data_series(
-                item=crop_name, metric=metric_name, region=region['name'])
-            if series:
-                entities['item_ids'].add(series['item_id'])
-                entities['metric_ids'].add(series['metric_id'])
-
+            entities['region_id'] = region['id']
+            for data_series in self.get_data_series(**entities):
+                self.add_single_data_series(data_series)
+                break
         # Compute the average over time for reach region
         df = self.get_df()
 
         def mapper(region):
-            return df[(df['item_id'].isin(entities['item_ids'])) &
-                      (df['metric_id'].isin(entities['metric_ids'])) &
+            return df[(df['item_id'] == entities['item_id']) &
+                      (df['metric_id'] == entities['metric_id']) &
                       (df['region_id'] == region['id'])]['value'].mean(skipna=True)
         means = list(map(mapper, regions))
         self.get_logger().debug('Means = {}'.format(
@@ -100,7 +102,7 @@ class CropModel(GroClient):
         metric_name : string
         regions : list of dicts
             Each entry is a region with id and name
-        weighting_func: optional function
+        weighting_func: optional function 
             A function of (weight, value) to apply. Default: weight*value
 
         Returns
@@ -111,24 +113,24 @@ class CropModel(GroClient):
             by the crop weight for that region.
 
         """
-        weights = self.compute_weights(
-            weighting_crop_name, weighting_metric_name, regions)
-
-        entities = { 'item_ids': set(), 'metric_ids': set() }
+        weights = self.compute_weights(weighting_crop_name, weighting_metric_name,
+                                       regions)
+        entities = {
+            'item_id': self.search_for_entity('items', item_name),
+            'metric_id': self.search_for_entity('metrics', metric_name)
+        }
         for region in regions:
-            series = self.add_data_series(
-                item=item_name, metric=metric_name, region=region['name'])
-            if series:
-                entities['item_ids'].add(series['item_id'])
-                entities['metric_ids'].add(series['metric_id'])
-
+            entities['region_id'] = region['id']
+            for data_series in self.get_data_series(**entities):
+                self.add_single_data_series(data_series)
+                break
         df = self.get_df()
         series_list = []
         for (region, weight) in zip(regions, weights):
             self._logger.info(u'Computing {}_{}_{} x {}'.format(
                 item_name, metric_name,  region['name'], weight))
-            series = df[(df['item_id'].isin(entities['item_ids'])) &
-                        (df['metric_id'].isin(entities['metric_ids'])) &
+            series = df[(df['item_id'] == entities['item_id']) &
+                        (df['metric_id'] == entities['metric_id']) &
                         (df['region_id'] == region['id'])].copy()
             series.loc[:, 'value'] = weighting_func(weight, series['value'])
             # TODO: change metric to reflect it is weighted in this copy
@@ -188,7 +190,7 @@ class CropModel(GroClient):
         if tmean.value.size < coverage_threshold:
             raise Exception(
                 "Insufficient coverage for GDD, {} < {} data points. ".format(
-                    tmean.value.size, coverage_threshold) +
+                    tmean.value.size, coverage_threshold) + 
                 "min_temporal_coverage is {}.".format(min_temporal_coverage))
         gdd_values = tmean.value.apply(
             lambda x: max(min(x, upper_temperature_cap) - base_temperature, 0))
