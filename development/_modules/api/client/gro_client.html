@@ -223,6 +223,12 @@
                            <span class="s1">&#39;frequency_id&#39;</span><span class="p">,</span> <span class="s1">&#39;source_id&#39;</span><span class="p">,</span>
                            <span class="s1">&#39;reporting_date&#39;</span><span class="p">,</span> <span class="s1">&#39;start_date&#39;</span><span class="p">,</span> <span class="s1">&#39;end_date&#39;</span><span class="p">]</span>
 
+<span class="n">ENTITY_KEY_TO_TYPE</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;item_id&#39;</span><span class="p">:</span> <span class="s1">&#39;items&#39;</span><span class="p">,</span>
+                      <span class="s1">&#39;metric_id&#39;</span><span class="p">:</span> <span class="s1">&#39;metrics&#39;</span><span class="p">,</span>
+                      <span class="s1">&#39;region_id&#39;</span><span class="p">:</span> <span class="s1">&#39;regions&#39;</span><span class="p">,</span>
+                      <span class="s1">&#39;partner_region_id&#39;</span><span class="p">:</span> <span class="s1">&#39;regions&#39;</span><span class="p">,</span>
+                      <span class="s1">&#39;source_id&#39;</span><span class="p">:</span> <span class="s1">&#39;sources&#39;</span><span class="p">,</span>
+                      <span class="s1">&#39;frequency_id&#39;</span><span class="p">:</span> <span class="s1">&#39;frequencies&#39;</span><span class="p">}</span>
 
 <span class="k">class</span> <span class="nc">GroClient</span><span class="p">(</span><span class="n">Client</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;An extension of the Client class with extra convenience methods for some common operations.</span>
@@ -424,6 +430,47 @@
                                               <span class="n">target_unit_id</span><span class="o">=</span><span class="n">selections</span><span class="p">[</span><span class="s1">&#39;unit_id&#39;</span><span class="p">]),</span> <span class="n">data_points</span><span class="p">))</span>
         <span class="c1"># Return data points in input units if not unit is specified</span>
         <span class="k">return</span> <span class="n">data_points</span></div>
+
+    <span class="k">def</span> <span class="nf">GDH</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gdh_selection</span><span class="p">,</span> <span class="o">**</span><span class="n">optional_selections</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Wrapper for :meth:`~.get_data_points`. with alternative input and output style.</span>
+
+<span class="sd">        The selection of data series to retrieve is encoded in a</span>
+<span class="sd">        &#39;gdh_seletion&#39; string of the form</span>
+<span class="sd">        &lt;metric_id&gt;-&lt;item_id&gt;-&lt;region_id&gt;-&lt;partner_region_id&gt;-&lt;source_id&gt;-&lt;frequency_id&gt;</span>
+
+<span class="sd">        For example, client.GDH(&quot;860032-274-1231-0-14-9&quot;) will get the</span>
+<span class="sd">        data points for Production of Corn in China from PS&amp;D at an</span>
+<span class="sd">        annual frequency, e.g.</span>
+<span class="sd">        for csv_row in client.GDH(&quot;860032-274-1231-0-14-9&quot;):</span>
+<span class="sd">            print csv_row</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">        ----------</span>
+<span class="sd">        gdh_selection: string</span>
+<span class="sd">        optional_selections: dict, optional</span>
+<span class="sd">            accepts optional params from :meth:`~.get_data_points`.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">        ------</span>
+<span class="sd">        pandas.DataFrame</span>
+
+<span class="sd">            the main DataFrame :meth:`~.get_df`. with the :meth:`~.get_data_points`. results for requested series.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">entity_keys</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;metric_id&#39;</span><span class="p">,</span> <span class="s1">&#39;item_id&#39;</span><span class="p">,</span> <span class="s1">&#39;region_id&#39;</span><span class="p">,</span> <span class="s1">&#39;partner_region_id&#39;</span><span class="p">,</span>
+                       <span class="s1">&#39;source_id&#39;</span><span class="p">,</span> <span class="s1">&#39;frequency_id&#39;</span><span class="p">]</span>
+        <span class="n">entity_ids</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">gdh_selection</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">)]</span>
+        <span class="n">selection</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">entity_keys</span><span class="p">,</span> <span class="n">entity_ids</span><span class="p">))</span>
+
+        <span class="c1"># add optional pararms to selection </span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">optional_selections</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>    
+            <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">entity_keys</span><span class="p">:</span>
+                <span class="n">selection</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_single_data_series</span><span class="p">(</span><span class="n">selection</span><span class="p">)</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_df</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">df</span>
 
 <div class="viewcode-block" id="GroClient.get_data_series_list"><a class="viewcode-back" href="../../../api.html#api.client.gro_client.GroClient.get_data_series_list">[docs]</a>    <span class="k">def</span> <span class="nf">get_data_series_list</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Inspect the current list of saved data series contained in the GroClient.</span>
@@ -636,6 +683,25 @@
                 <span class="k">return</span> <span class="n">provinces</span>
         <span class="k">return</span> <span class="kc">None</span></div>
 
+    <span class="k">def</span> <span class="nf">get_names_for_selection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">selection</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Convert a selection into entity names.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">        -----------</span>
+<span class="sd">        data_series : dict</span>
+<span class="sd">            A single data_series object, as returned by get_data_series() or find_data_series().</span>
+<span class="sd">            See https://github.com/gro-intelligence/api-client/wiki/Data-Series-Definition</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">        --------</span>
+<span class="sd">        list of pairs of strings</span>
+<span class="sd">            [(&#39;item&#39;, &#39;Corn&#39;), (&#39;region&#39;, &#39;China&#39;) ...]</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">[(</span><span class="n">entity_key</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span>
+                 <span class="bp">self</span><span class="o">.</span><span class="n">lookup</span><span class="p">(</span><span class="n">ENTITY_KEY_TO_TYPE</span><span class="p">[</span><span class="n">entity_key</span><span class="p">],</span> <span class="n">entity_id</span><span class="p">)[</span><span class="s1">&#39;name&#39;</span><span class="p">])</span>
+                <span class="k">for</span> <span class="n">entity_key</span><span class="p">,</span> <span class="n">entity_id</span> <span class="ow">in</span> <span class="n">selection</span><span class="o">.</span><span class="n">items</span><span class="p">()]</span>
+
     <span class="c1">###</span>
     <span class="c1"># Convenience methods that automatically fill in partial selections with random entities</span>
     <span class="c1">###</span>
@@ -692,7 +758,7 @@
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        dict</span>
-<span class="sd">            </span>
+
 <span class="sd">            Example ::</span>
 
 <span class="sd">                { value: 14.2, unit_id: 4 }</span>
