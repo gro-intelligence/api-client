@@ -50,8 +50,9 @@ class CropModel(GroClient):
         for region in regions:
             series = self.add_data_series(
                 item=crop_name, metric=metric_name, region=region['name'])
-            entities['item_ids'].add(series['item_id'])
-            entities['metric_ids'].add(series['metric_id'])
+            if series:
+                entities['item_ids'].add(series['item_id'])
+                entities['metric_ids'].add(series['metric_id'])
 
         # Compute the average over time for reach region
         df = self.get_df()
@@ -117,8 +118,9 @@ class CropModel(GroClient):
         for region in regions:
             series = self.add_data_series(
                 item=item_name, metric=metric_name, region=region['name'])
-            entities['item_ids'].add(series['item_id'])
-            entities['metric_ids'].add(series['metric_id'])
+            if series:
+                entities['item_ids'].add(series['item_id'])
+                entities['metric_ids'].add(series['metric_id'])
 
         df = self.get_df()
         series_list = []
