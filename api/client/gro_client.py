@@ -370,21 +370,30 @@ class GroClient(Client):
             search_results.append(
                 self.search('regions', kwargs['partner_region'])[:cfg.MAX_RESULT_COMBINATION_DEPTH])
             keys.append('partner_region_id')
+        # use the highest ranked frequency and source
         all_data_series = []
         for comb in itertools.product(*search_results):
             entities = dict(list(zip(keys, [entity['id'] for entity in comb])))
             data_series_list = self.get_data_series(**entities)
-            self._logger.debug("Found {} distinct data series for {}".format(
+            self._logger.debug("Found {} data series for {}".format(
                 len(data_series_list), entities))
             # temporal coverage affects ranking so add time range if specified.
             for data_series in data_series_list:
+                del data_series['start_date']
+                del data_series['end_date']
                 if kwargs.get('start_date'):
                     data_series['start_date'] = kwargs['start_date']
                 if kwargs.get('end_date'):
                     data_series['end_date'] = kwargs['end_date']
+
+                del data_series['frequency_id']
+                del data_series['source_id']
+                for tf in self.get_available_timefrequency(**data_series):
+                    data_series['frequency_id'] = tf['frequency_id']
+                    break
+                self._logger.debug("Data series: {}".format(data_series))
             all_data_series += data_series_list
-        self._logger.info("Found {} distinct data series total for {}".format(
-            len(all_data_series), kwargs))
+        self._logger.info("Found {} data series for {}".format(len(all_data_series), kwargs))
         for data_series in self.rank_series_by_source(all_data_series):
             yield data_series
 
