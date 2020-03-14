@@ -47,7 +47,7 @@ class GroClient(Client):
     def get_df(self, show_revisions=False):
         """Call :meth:`~.get_data_points` for each saved data series and return as a combined
         dataframe.
-        
+
         Note you must have first called either :meth:`~.add_data_series` or
         :meth:`~.add_single_data_series` to save data series into the GroClient's data_series_list.
         You can inspect the client's saved list using :meth:`~.get_data_series_list`.
@@ -240,9 +240,9 @@ class GroClient(Client):
 
     def add_single_data_series(self, data_series):
         """Save a data series object to the GroClient's data_series_list.
-        
+
         For use with :meth:`~.get_df`.
-        
+
         Parameters
         ----------
         data_series : dict
@@ -367,7 +367,7 @@ class GroClient(Client):
         :meth:`~.get_df`
         :meth:`~.add_single_data_series`
         :meth:`~.find_data_series`
-        
+
         """
         for the_data_series in self.find_data_series(**kwargs):
             self.add_single_data_series(the_data_series)
@@ -492,7 +492,7 @@ class GroClient(Client):
         Returns
         -------
         dict
-            
+
             Example ::
 
                 { value: 14.2, unit_id: 4 }
@@ -569,23 +569,12 @@ def main():
         sys.exit(0)
     client = GroClient(API_HOST, access_token)
 
-    selected_entities = {}
-    if args.item:
-        selected_entities['item_id'] = client.search_for_entity('items', args.item)
-    if args.metric:
-        selected_entities['metric_id'] = client.search_for_entity('metrics', args.metric)
-    if args.region:
-        selected_entities['region_id'] = client.search_for_entity('regions', args.region)
-    if args.partner_region:
-        selected_entities['partner_region_id'] = client.search_for_entity('regions',
-                                                                          args.partner_region)
-    if not selected_entities:
-        selected_entities = client.pick_random_entities()
-
-    data_series = client.pick_random_data_series(selected_entities)
-    print("Data series example:")
-    client.print_one_data_series(data_series, OUTPUT_FILENAME)
-
+    client.print_one_data_series(
+        next(client.find_data_series(
+            item=args.item, metric=args.metric,
+            region=args.region, partner_region=args.partner_region)),
+        OUTPUT_FILENAME)
+    
 
 def get_df(client, **selected_entities):
     """Deprecated: use the corresponding method in GroClient instead."""
