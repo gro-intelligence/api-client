@@ -261,7 +261,7 @@ class GroClient(Client):
         return
 
     def find_data_series(self, **kwargs):
-        """Find the best possible  data series matching a combination of entities specified by name.
+        """Find the best possible data series matching a combination of entities specified by name.
 
         Example::
 
@@ -280,9 +280,9 @@ class GroClient(Client):
 
         See https://developers.gro-intelligence.com/data-series-definition.html
 
-        This method uses :meth:`~.search` to find entities by name and :meth:`~.get_data_series` to
-        find available data series for all possible combinations of the entities, and
-        :meth:`~.rank_series_by_source`.
+        This method uses :meth:`~.search`, :meth:`~.get_data_series`,
+        :meth:`~.get_available_timeandfrequency` and  :meth:`~.rank_series_by_source`.
+
 
         Parameters
         ----------
@@ -323,8 +323,10 @@ class GroClient(Client):
             search_results.append(
                 self.search('regions', kwargs['partner_region'])[:cfg.MAX_RESULT_COMBINATION_DEPTH])
             keys.append('partner_region_id')
-        # use the highest ranked frequency and source
-        all_data_series = set()
+        # Rank by frequency and source, while preserving search ranking in
+        # permutations of item, metric, region, and partner region.
+        ordered_data_series = []
+        distinct_data_series = set()
         for comb in itertools.product(*search_results):
             entities = dict(list(zip(keys, [entity['id'] for entity in comb])))
             data_series_list = self.get_data_series(**entities)
@@ -349,11 +351,14 @@ class GroClient(Client):
                     break
 
                 self._logger.debug("Data series: {}".format(data_series))
-                all_data_series.add(frozenset(data_series.items()))
-                
-        self._logger.info("Found {} data series for {}".format(len(all_data_series), kwargs))
+                series_hash = frozenset(data_series.items())
+                if series_hash not in distinct_data_series:
+                    ordered_data_series.append(data_series)
+                    distinct_data_series.add(series_hash)
+
+        self._logger.info("Found {} data series for {}".format(len(ordered_data_series), kwargs))
         for data_series in self.rank_series_by_source(
-                [dict(s) for s in all_data_series]):
+                [dict(s) for s in ordered_data_series]):
             yield data_series
 
     def add_data_series(self, **kwargs):
