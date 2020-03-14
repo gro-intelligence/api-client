@@ -324,7 +324,7 @@ class GroClient(Client):
                 self.search('regions', kwargs['partner_region'])[:cfg.MAX_RESULT_COMBINATION_DEPTH])
             keys.append('partner_region_id')
         # use the highest ranked frequency and source
-        all_data_series = []
+        all_data_series = set()
         for comb in itertools.product(*search_results):
             entities = dict(list(zip(keys, [entity['id'] for entity in comb])))
             data_series_list = self.get_data_series(**entities)
@@ -341,13 +341,19 @@ class GroClient(Client):
 
                 del data_series['frequency_id']
                 del data_series['source_id']
+                if 'metadata' in data_series:
+                    # delete unhashable fields for uniqueness
+                    del data_series['metadata']
                 for tf in self.get_available_timefrequency(**data_series):
                     data_series['frequency_id'] = tf['frequency_id']
                     break
+
                 self._logger.debug("Data series: {}".format(data_series))
-            all_data_series += data_series_list
+                all_data_series.add(frozenset(data_series.items()))
+                
         self._logger.info("Found {} data series for {}".format(len(all_data_series), kwargs))
-        for data_series in self.rank_series_by_source(all_data_series):
+        for data_series in self.rank_series_by_source(
+                [dict(s) for s in all_data_series]):
             yield data_series
 
     def add_data_series(self, **kwargs):
