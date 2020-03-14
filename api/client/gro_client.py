@@ -22,6 +22,12 @@ DATA_POINTS_UNIQUE_COLS = ['item_id', 'metric_id',
                            'frequency_id', 'source_id',
                            'reporting_date', 'start_date', 'end_date']
 
+ENTITY_KEY_TO_TYPE = {'item_id': 'items',
+                      'metric_id': 'metrics',
+                      'region_id': 'regions',
+                      'partner_region_id': 'regions',
+                      'source_id': 'sources',
+                      'frequency_id': 'frequencies'}
 
 class GroClient(Client):
     """An extension of the Client class with extra convenience methods for some common operations.
@@ -196,9 +202,9 @@ class GroClient(Client):
         frequency_id : integer
         unit_id : integer, optional
         start_date : string, optional
-            All points with start dates equal to or after this date
-        end_date : string, optional
             All points with end dates equal to or after this date
+        end_date : string, optional
+            All points with start dates equal to or before this date
         show_revisions : boolean, optional
             False by default, meaning only the latest value for each period. If true, will return
             all values for a given period, differentiated by the `reporting_date` field.
@@ -223,6 +229,47 @@ class GroClient(Client):
                                               target_unit_id=selections['unit_id']), data_points))
         # Return data points in input units if not unit is specified
         return data_points
+
+    def GDH(self, gdh_selection, **optional_selections):
+        """Wrapper for :meth:`~.get_data_points`. with alternative input and output style.
+
+        The selection of data series to retrieve is encoded in a
+        'gdh_seletion' string of the form
+        <metric_id>-<item_id>-<region_id>-<partner_region_id>-<source_id>-<frequency_id>
+
+        For example, client.GDH("860032-274-1231-0-14-9") will get the
+        data points for Production of Corn in China from PS&D at an
+        annual frequency, e.g.
+        for csv_row in client.GDH("860032-274-1231-0-14-9"):
+            print csv_row
+
+        Parameters:
+        ----------
+        gdh_selection: string
+        optional_selections: dict, optional
+            accepts optional params from :meth:`~.get_data_points`.
+
+        Returns:
+        ------
+        pandas.DataFrame
+
+            the main DataFrame :meth:`~.get_df`. with the :meth:`~.get_data_points`. results for requested series.
+
+        """
+
+        entity_keys = ['metric_id', 'item_id', 'region_id', 'partner_region_id',
+                       'source_id', 'frequency_id']
+        entity_ids = [int(x) for x in gdh_selection.split('-')]
+        selection = dict(zip(entity_keys, entity_ids))
+
+        # add optional pararms to selection 
+        for key, value in list(optional_selections.items()):    
+            if key not in entity_keys:
+                selection[key] = value
+
+        self.add_single_data_series(selection)
+        df = self.get_df()
+        return df
 
     def get_data_series_list(self):
         """Inspect the current list of saved data series contained in the GroClient.
@@ -456,6 +503,25 @@ class GroClient(Client):
                 return provinces
         return None
 
+    def get_names_for_selection(self, selection):
+        """Convert a selection into entity names.
+
+        Parameters:
+        -----------
+        data_series : dict
+            A single data_series object, as returned by get_data_series() or find_data_series().
+            See https://github.com/gro-intelligence/api-client/wiki/Data-Series-Definition
+
+        Returns:
+        --------
+        list of pairs of strings
+            [('item', 'Corn'), ('region', 'China') ...]
+
+        """
+        return [(entity_key.split('_')[0],
+                 self.lookup(ENTITY_KEY_TO_TYPE[entity_key], entity_id)['name'])
+                for entity_key, entity_id in selection.items()]
+
     ###
     # Convenience methods that automatically fill in partial selections with random entities
     ###
@@ -589,23 +655,12 @@ def main():
         sys.exit(0)
     client = GroClient(API_HOST, access_token)
 
-    selected_entities = {}
-    if args.item:
-        selected_entities['item_id'] = client.search_for_entity('items', args.item)
-    if args.metric:
-        selected_entities['metric_id'] = client.search_for_entity('metrics', args.metric)
-    if args.region:
-        selected_entities['region_id'] = client.search_for_entity('regions', args.region)
-    if args.partner_region:
-        selected_entities['partner_region_id'] = client.search_for_entity('regions',
-                                                                          args.partner_region)
-    if not selected_entities:
-        selected_entities = client.pick_random_entities()
-
-    data_series = client.pick_random_data_series(selected_entities)
-    print("Data series example:")
-    client.print_one_data_series(data_series, OUTPUT_FILENAME)
-
+    client.print_one_data_series(
+        next(client.find_data_series(
+            item=args.item, metric=args.metric,
+            region=args.region, partner_region=args.partner_region)),
+        OUTPUT_FILENAME)
+    
 
 def get_df(client, **selected_entities):
     """Deprecated: use the corresponding method in GroClient instead."""
