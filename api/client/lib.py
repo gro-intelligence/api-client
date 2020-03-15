@@ -456,7 +456,10 @@ def get_available_timefrequency(access_token, api_host, **series):
         get_params_from_selection(**series).items())))
     url = '/'.join(['https:', '', api_host, 'v2/available/time-frequencies'])
     headers = {'authorization': 'Bearer ' + access_token}
-    return [camel_to_snake_dict(tf) for tf in get_data(url, headers, params).json()]
+    response = get_data(url, headers, params)
+    if response.status_code == 204:
+        return []
+    return [camel_to_snake_dict(tf) for tf in response.json()]
 
 
 def list_of_series_to_single_series(series_list, add_belongs_to=False, include_historical=True):
