@@ -325,40 +325,34 @@ class GroClient(Client):
             keys.append('partner_region_id')
         # Rank by frequency and source, while preserving search ranking in
         # permutations of item, metric, region, and partner region.
-        ordered_data_series = []
-        distinct_data_series = set()
+        freq_ranking = []
+        ranking_groups = set()
+        count = 0
         for comb in itertools.product(*search_results):
             entities = dict(list(zip(keys, [entity['id'] for entity in comb])))
-            data_series_list = self.get_data_series(**entities)
-            self._logger.debug("Found {} data series for {}".format(
-                len(data_series_list), entities))
-            # temporal coverage affects ranking so add time range if specified.
-            for data_series in data_series_list:
-                del data_series['start_date']
-                del data_series['end_date']
-                if kwargs.get('start_date'):
-                    data_series['start_date'] = kwargs['start_date']
-                if kwargs.get('end_date'):
-                    data_series['end_date'] = kwargs['end_date']
-
-                del data_series['frequency_id']
-                del data_series['source_id']
-                if 'metadata' in data_series:
-                    # delete unhashable fields for uniqueness
-                    del data_series['metadata']
-                for tf in self.get_available_timefrequency(**data_series):
-                    data_series['frequency_id'] = tf['frequency_id']
-                    break
-
+            for data_series in self.get_data_series(**entities):
+                count += 1
                 self._logger.debug("Data series: {}".format(data_series))
+                # time range affects ranking
+                data_series.pop('start_date', None)
+                data_series.pop('end_date', None)
+                data_series.pop('frequency_id', None)
+                data_series.pop('source_id', None)
+                data_series.pop('source_name', None)
+                data_series.pop('metadata', None)
                 series_hash = frozenset(data_series.items())
-                if series_hash not in distinct_data_series:
-                    ordered_data_series.append(data_series)
-                    distinct_data_series.add(series_hash)
+                if series_hash not in ranking_groups:
+                    ranking_groups.add(series_hash)
+                    if kwargs.get('start_date'):
+                        data_series['start_date'] = kwargs['start_date']
+                    if kwargs.get('end_date'):
+                        data_series['end_date'] = kwargs['end_date']
+                    for tf in self.get_available_timefrequency(**data_series):
+                        data_series['frequency_id'] = tf['frequency_id']
+                        freq_ranking.append(data_series)
 
-        self._logger.info("Found {} data series for {}".format(len(ordered_data_series), kwargs))
-        for data_series in self.rank_series_by_source(
-                [dict(s) for s in ordered_data_series]):
+        self._logger.info("Found {} results for {}".format(count, kwargs))
+        for data_series in self.rank_series_by_source(freq_ranking):
             yield data_series
 
     def add_data_series(self, **kwargs):
