@@ -281,7 +281,7 @@ class GroClient(Client):
         See https://developers.gro-intelligence.com/data-series-definition.html
 
         This method uses :meth:`~.search`, :meth:`~.get_data_series`,
-        :meth:`~.get_available_timeandfrequency` and  :meth:`~.rank_series_by_source`.
+        :meth:`~.get_available_timefrequency` and  :meth:`~.rank_series_by_source`.
 
 
         Parameters
