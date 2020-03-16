@@ -384,7 +384,7 @@ class GroClient(Client):
         ranking_groups = set()
         count = 0
         for comb in itertools.product(*results):
-            for data_series in self.get_data_series(**dict(comb)):
+            for data_series in self.get_data_series(**dict(comb))[:cfg.MAX_SERIES_PER_COMB]:
                 count += 1
                 self._logger.debug("Data series: {}".format(data_series))
                 # remove time and frequency to rank them
