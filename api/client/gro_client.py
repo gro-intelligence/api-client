@@ -330,7 +330,7 @@ class GroClient(Client):
         count = 0
         for comb in itertools.product(*search_results):
             entities = dict(list(zip(keys, [entity['id'] for entity in comb])))
-            for data_series in self.get_data_series(**entities):
+            for data_series in self.get_data_series(**entities)[:cfg.MAX_SERIES_PER_COMB]:
                 count += 1
                 self._logger.debug("Data series: {}".format(data_series))
                 # time range affects ranking
