@@ -412,6 +412,12 @@ def get_data_series(access_token, api_host, **selection):
         raise Exception(resp.text)
 
 
+def make_key(key):
+    if key not in ('startDate', 'endDate'):
+        return key + 's'
+    return key
+
+
 def get_source_ranking(access_token, api_host, series):
     """Given a series, return a list of ranked sources.
 
@@ -420,10 +426,6 @@ def get_source_ranking(access_token, api_host, series):
     :param series: Series to calculate source raking for.
     :return: List of sources that match the series parameters, sorted by rank.
     """
-    def make_key(key):
-        if key not in ('startDate', 'endDate'):
-            return key + 's'
-        return key
     params = dict((make_key(k), v) for k, v in iter(list(
         get_params_from_selection(**series).items())))
     url = '/'.join(['https:', '', api_host, 'v2/available/sources'])
@@ -448,10 +450,6 @@ def rank_series_by_source(access_token, api_host, series_list):
 
 
 def get_available_timefrequency(access_token, api_host, **series):
-    def make_key(key):
-        if key not in ('startDate', 'endDate'):
-            return key + 's'
-        return key
     params = dict((make_key(k), v) for k, v in iter(list(
         get_params_from_selection(**series).items())))
     url = '/'.join(['https:', '', api_host, 'v2/available/time-frequencies'])
