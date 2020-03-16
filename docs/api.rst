@@ -44,6 +44,8 @@ Advanced Exploration
 
 .. automethod:: api.client.gro_client.GroClient.rank_series_by_source
 
+.. automethod:: api.client.gro_client.GroClient.get_available_timefrequency
+
 ============
 Pandas Utils
 ============
