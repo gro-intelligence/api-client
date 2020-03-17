@@ -35,5 +35,5 @@ Non-Anaconda
     :align: center
     :alt: Add python to path installer
   
-#. Install Git from [git-scm.com](https://git-scm.com/download/win). Proceed with the default options.
+#. Install Git from `git-scm.com <https://git-scm.com/download/win>`_. Proceed with the default options.
 
