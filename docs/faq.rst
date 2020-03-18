@@ -11,7 +11,9 @@ Exploring What's Available
 Why is it that when I use client.search() to find metrics/items/regions I'm interested in, sometimes client.get_data_series() doesn't have any data for those metrics/items/regions?
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-:code:`client.search()` provides a way to search across everything we have identified and defined in our ontology. Sometimes data doesn't exist for a particular result for a number of reasons, most commonly because we may have defined new entries in preparation for an incoming source which is undergoing testing. `client.get_data_series()` will tell you what data is actually available. You can intersect the results from those two functions to find things programmatically, or you can use the web application at https://app.gro-intelligence.com to explore what data is available, intersected already.
+:code:`client.search()` provides a way to search across everything we have identified and defined in our ontology. Sometimes data doesn't exist for a particular result for a number of reasons, most commonly because we may have defined new entries in preparation for an incoming source which is undergoing testing. 
+`find_data_series() <api.html#api.client.gro_client.GroClient.find_data_series>`_
+will tell you what data is actually available by performing searches for combinations of items, metrics and regions. You can intersect the results from those two functions to find things programmatically, or you can use the web application at https://app.gro-intelligence.com to explore what data is available, intersected already.
 
 What does 'sourceLag' mean when I use client.lookup() to inspect a source's details?
 ------------------------------------------------------------------------------------
@@ -76,7 +78,7 @@ You must get an `authentication token <authentication#retrieving-a-token>`_ from
 I tried using my Gro username and login but am getting a 401 Unauthorized error
 -------------------------------------------------------------------------------
 
-A Gro account gives you access to the web application at app.gro-intelligence.com. API access is sold as an add-on product you need to be activated for. To learn more about getting an API account, contact our sales team using the link at `gro-intelligence.com/products/gro-api <gro-intelligence.com/products/gro-api>`_
+A Gro account gives you access to the web application at app.gro-intelligence.com. API access is sold as an add-on product you need to be activated for. To learn more about getting an API account, contact our sales team using the link at `gro-intelligence.com/products/gro-api <https://www.gro-intelligence.com/products/gro-api>`_
 
 Gro Models
 ==========
