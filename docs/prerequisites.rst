@@ -21,7 +21,7 @@ The Gro API Client package is supported both with or without Anaconda. However, 
 Anaconda
 --------
 
-1. Download Anaconda with Python 3.5 or above from `anaconda.com <https://mail.python.org/pipermail/python-dev/2018-March/152348.html>`_ soon approaching, it is recommended you start with Python 3.
+1. Download Anaconda with Python 3.5 or above from `anaconda.com <https://www.anaconda.com/distribution/>`_ Support for Python 2.7.13 or above is also maintained, but with `its End of Life <https://mail.python.org/pipermail/python-dev/2018-March/152348.html>`_ soon approaching, it is recommended you start with Python 3.
 2. Install Git from `git-scm.com <https://git-scm.com/download/win>`_. Proceed with the default options.
 
 Non-Anaconda
