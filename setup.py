@@ -37,6 +37,6 @@ setuptools.setup(
     test_suite='pytest',
     tests_require=test_requirements,
     entry_points={
-        'console_scripts': ['gro_client=api.client.gro_client:main']
+        'console_scripts': ['gro_client=gro.client:main']
     }
 )
