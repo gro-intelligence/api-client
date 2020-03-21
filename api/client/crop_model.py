@@ -50,8 +50,8 @@ class CropModel(GroClient):
         for region in regions:
             series = self.add_data_series(
                 item=crop_name, metric=metric_name, region=region['name'],
-                result_filter=lambda x: 'region' not in x or \
-                                        x['region']['id'] == region['id'])
+                result_filter=lambda x: 'region_id' not in x or \
+                                        x['region_id'] == region['id'])
             if series:
                 entities['item_ids'].add(series['item_id'])
                 entities['metric_ids'].add(series['metric_id'])
@@ -120,8 +120,8 @@ class CropModel(GroClient):
         for region in regions:
             series = self.add_data_series(
                 item=item_name, metric=metric_name, region=region['name'],
-                result_filter=lambda x: 'region' not in x or \
-                                        x['region']['id'] == region['id'])
+                result_filter=lambda x: 'region_id' not in x or \
+                                        x['region_id'] == region['id'])
             if series:
                 entities['item_ids'].add(series['item_id'])
                 entities['metric_ids'].add(series['metric_id'])

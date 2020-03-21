@@ -334,7 +334,7 @@ class GroClient(Client):
             client.find_data_series(item="vegetation",
                                     metric="vegetation indices",
                                     region="Central",
-                                    result_filter=lambda r: 'region' not in r or r['region']['id'] == 10393)
+                                    result_filter=lambda r: 'region_id' not in r or r['region_id'] == 10393)
 
         will only consider that particular region, and not the many other regions
         with the same name.  The filter applies to entities not series, so
@@ -356,7 +356,7 @@ class GroClient(Client):
         end_date : string, optional
             YYYY-MM-DD
         result_filter: function, optional
-            A function taking a dict of the form {key: <search_result>} and returning a boolean
+            function taking data series selection dict returning boolean
 
         Yields
         ------
@@ -369,13 +369,12 @@ class GroClient(Client):
 
         """
         result_filter = kwargs.pop('result_filter', lambda x: True)
-        # results are of the form [ [('item_id', 1), ('item_id', 2), ...], [('metric_id", 1), ...],   ... ]
-        results = []
+        results = []  # [[('item_id',1),('item_id',2),...],[('metric_id" 1),...],...]
         for kw in kwargs:
             id_key = '{}_id'.format(kw)
             results.append([
                 (id_key, result['id']) for result in filter(
-                    lambda entity: result_filter({kw: entity}),
+                    lambda entity: result_filter({id_key: entity['id']}),
                     self.search(ENTITY_KEY_TO_TYPE[id_key], kwargs[kw]))
             ][:cfg.MAX_RESULT_COMBINATION_DEPTH])
         # Rank by frequency and source, while preserving search ranking in
@@ -427,7 +426,7 @@ class GroClient(Client):
         end_date : string, optional
             YYYY-MM-DD
         result_filter: function, optional
-            function taking data_series returning boolean
+            function taking data series selection dict returning boolean
 
         Returns
         -------
