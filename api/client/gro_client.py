@@ -407,7 +407,8 @@ class GroClient(Client):
                         freq_ranking.append(data_series)
 
         self._logger.info("Found {} results for {}".format(count, kwargs))
-        for data_series in self.rank_series_by_source(freq_ranking):
+        for data_series in filter(lambda s: result_filter(s),
+                                  self.rank_series_by_source(freq_ranking)):
             yield data_series
 
     def add_data_series(self, **kwargs):
