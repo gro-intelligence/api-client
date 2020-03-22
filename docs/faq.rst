@@ -11,7 +11,9 @@ Exploring What's Available
 Why is it that when I use client.search() to find metrics/items/regions I'm interested in, sometimes client.get_data_series() doesn't have any data for those metrics/items/regions?
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-:code:`client.search()` provides a way to search across everything we have identified and defined in our ontology. Sometimes data doesn't exist for a particular result for a number of reasons, most commonly because we may have defined new entries in preparation for an incoming source which is undergoing testing. `client.get_data_series()` will tell you what data is actually available. You can intersect the results from those two functions to find things programmatically, or you can use the web application at https://app.gro-intelligence.com to explore what data is available, intersected already.
+:code:`client.search()` provides a way to search across everything we have identified and defined in our ontology. Sometimes data doesn't exist for a particular result for a number of reasons, most commonly because we may have defined new entries in preparation for an incoming source which is undergoing testing. 
+`find_data_series() <api.html#api.client.gro_client.GroClient.find_data_series>`_
+will tell you what data is actually available by performing searches for combinations of items, metrics and regions. You can intersect the results from those two functions to find things programmatically, or you can use the web application at https://app.gro-intelligence.com to explore what data is available, intersected already.
 
 What does 'sourceLag' mean when I use client.lookup() to inspect a source's details?
 ------------------------------------------------------------------------------------
@@ -25,14 +27,13 @@ I specified an end_date when calling get_data_points(), but I am getting points 
 ----------------------------------------------------------------------------------------------------
 
 start_date and end_date specify a time interval. When retrieving a
-series, it is interpreted *inclusively* i.e. it will includes points
+series, it is interpreted *inclusively* i.e. it will include points
 that are fully or partially in the desired interval. Thus if the start
 and end dates selected are March 15 to May 15, and the data happens to
 be monthly on calendar months, it will include points for [Mar 1, Mar
-31], [Feb 1, April 30], [May 1, May 31]. Mathematically, this can be
-summarized as all points such that "point_end_date >=
-series_start_date and point_start_date <= series_end_date.”
+31], [Apr 1, Apr 30], [May 1, May 31]. 
 
+Thus, when calling `get_data_points() <api.html#api.client.gro_client.GroClient.get_data_points>`_ specifying a start_date for the series restricts the query to any point where "point_end_date >= series_start_date," and a series end_date restricts it to any point where "point_start_date <= series_end_date".
 
 
 Data Coverage
@@ -51,10 +52,9 @@ Radio Frequency Interferences (RFI) can limit the quality of remotely sensed dat
 What do warnings about 'historical' regions mean?
 -------------------------------------------------------------------
 
-`Historical regions <gro-ontology#historical>`_ behave just like other regions, any data that exists can be accessed the same way as data for
-any region in Gro.  Generally historical regions will only have data corresponding to the time periods when they existed. But in some
+`Historical regions <gro-ontology#historical>`_ behave just like other regions. Any data that exists can be accessed the same way as data for any region in Gro.  Generally historical regions will only have data corresponding to the time periods when they existed. But in some
 cases, new regions can have data that extends into the past and overlaps with historical regions. 
-Rather than always excluding the old regions in such cases, we allow the user to choose via :code:`include_historical` option in `get_data_points() <api.html#api.client.gro_client.GroClient.get_data_points>`_. This can be useful if for example you are analyzing  historical temperatures at the district level in a country where the districts that exist today were only created 5 years ago and but you want 20 years of data. In that case, you can filter out the historical regions to avoid double counting.
+Rather than always excluding the old regions in such cases, we allow the user to choose via the  :code:`include_historical` option in `get_data_points() <api.html#api.client.gro_client.GroClient.get_data_points>`_. This can be useful if for example you are analyzing historical temperatures at the district level in a country where the districts that exist today were only created 5 years ago and but you want 20 years of data. In that case, you can filter out the historical regions to avoid double counting.
 
 
 Account
@@ -78,7 +78,7 @@ You must get an `authentication token <authentication#retrieving-a-token>`_ from
 I tried using my Gro username and login but am getting a 401 Unauthorized error
 -------------------------------------------------------------------------------
 
-A Gro account gives you access to the web application at app.gro-intelligence.com. API access is sold as an add-on product you need to be activated for. To learn more about getting an API account, contact our sales team using the link at `gro-intelligence.com/products/gro-api <gro-intelligence.com/products/gro-api>`_
+A Gro account gives you access to the web application at app.gro-intelligence.com. API access is sold as an add-on product you need to be activated for. To learn more about getting an API account, contact our sales team using the link at `gro-intelligence.com/products/gro-api <https://www.gro-intelligence.com/products/gro-api>`_
 
 Gro Models
 ==========
