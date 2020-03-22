@@ -348,8 +348,9 @@ class GroClient(Client):
                     if kwargs.get('end_date'):
                         data_series['end_date'] = kwargs['end_date']
                     for tf in self.get_available_timefrequency(**data_series):
-                        data_series['frequency_id'] = tf['frequency_id']
-                        freq_ranking.append(data_series)
+                        ds = dict(data_series)
+                        ds['frequency_id'] = tf['frequency_id']
+                        freq_ranking.append(ds)
 
         self._logger.info("Found {} results for {}".format(count, kwargs))
         for data_series in self.rank_series_by_source(freq_ranking):
