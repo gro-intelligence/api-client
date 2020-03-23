@@ -247,12 +247,12 @@ class CropModel(GroClient):
 
         """
         try:
-            tmin_series = self.find_data_series(
+            tmin_series = next(self.find_data_series(
                 item='Temperature min', metric='Temperature', region=region_name,
-                start_date=start_date, end_date=end_date).next()
-            tmax_series = self.find_data_series(
+                start_date=start_date, end_date=end_date))
+            tmax_series = next(self.find_data_series(
                 item='Temperature max', metric='Temperature', region=region_name,
-                start_date=start_date, end_date=end_date).next()
+                start_date=start_date, end_date=end_date))
             return self.compute_gdd(tmin_series, tmax_series, base_temperature,
                                     start_date, end_date, min_temporal_coverage,
                                     upper_temperature_cap)
