@@ -400,7 +400,7 @@ class GroClient(Client):
                     for tf in self.get_available_timefrequency(**data_series):
                         ds = dict(data_series)
                         ds['frequency_id'] = tf['frequency_id']
-                        for data_series in self.rank_series_by_source(ds):
+                        for data_series in self.rank_series_by_source([ds]):
                             yield data_series
 
     def add_data_series(self, **kwargs):
