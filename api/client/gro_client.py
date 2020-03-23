@@ -337,9 +337,7 @@ class GroClient(Client):
                                     result_filter=lambda r: 'region_id' not in r or r['region_id'] == 10393)
 
         will only consider that particular region, and not the many other regions
-        with the same name.  The filter applies to entities not series, so
-        results will still include series from related regions, e.g. districts
-        in that province.
+        with the same name.
 
         This method uses :meth:`~.search`, :meth:`~.get_data_series`,
         :meth:`~.get_available_timefrequency` and  :meth:`~.rank_series_by_source`.
