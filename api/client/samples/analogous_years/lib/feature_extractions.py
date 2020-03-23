@@ -20,6 +20,7 @@ def ts_feature_extraction(dataframe):
                                 column_id='period',
                                 column_sort='date',
                                 column_value='value',
+                                n_jobs=0
                                 )
     features = rm_const_cols(features)
     return pca_transformation(features)
