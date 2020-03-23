@@ -372,13 +372,10 @@ class GroClient(Client):
             keys.append('partner_region_id')
         # Rank by frequency and source, while preserving search ranking in
         # permutations of item, metric, region, and partner region.
-        freq_ranking = []
         ranking_groups = set()
-        count = 0
         for comb in itertools.product(*search_results):
             entities = dict(list(zip(keys, [entity['id'] for entity in comb])))
             for data_series in self.get_data_series(**entities)[:cfg.MAX_SERIES_PER_COMB]:
-                count += 1
                 self._logger.debug("Data series: {}".format(data_series))
                 # time range affects ranking
                 data_series.pop('start_date', None)
@@ -397,11 +394,8 @@ class GroClient(Client):
                     for tf in self.get_available_timefrequency(**data_series):
                         ds = dict(data_series)
                         ds['frequency_id'] = tf['frequency_id']
-                        freq_ranking.append(ds)
-
-        self._logger.info("Found {} results for {}".format(count, kwargs))
-        for data_series in self.rank_series_by_source(freq_ranking):
-            yield data_series
+                        for data_series in self.rank_series_by_source(ds):
+                            yield data_series
 
     def add_data_series(self, **kwargs):
         """Adds the top result of :meth:`~.find_data_series` to the saved data series list.
