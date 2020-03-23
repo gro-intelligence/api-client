@@ -10,17 +10,18 @@ from sklearn.decomposition import PCA
 from tsfresh import extract_features
 
 
-def ts_feature_extraction(dataframe):
+def ts_feature_extraction(dataframe, num_jobs=0):
     """
     Gets 5 transformed features from 794 features extracted by tsfresh
     :param dataframe: A pandas dataframe
+    :param num_jobs: integer, number of parallel processes in tsfresh
     :return: A pandas dataframe
     """
     features = extract_features(dataframe,
                                 column_id='period',
                                 column_sort='date',
                                 column_value='value',
-                                n_jobs=0
+                                n_jobs=num_jobs
                                 )
     features = rm_const_cols(features)
     return pca_transformation(features)
