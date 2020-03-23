@@ -31,4 +31,9 @@ Stay updated
 
 To ensure that you have the latest client version with newest features, you can use the following command:
 
+::
+
+  pip install --upgrade git+https://github.com/gro-intelligence/api-client.git
+  
+
 
