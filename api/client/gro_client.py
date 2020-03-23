@@ -378,7 +378,7 @@ class GroClient(Client):
         # Rank by frequency and source, while preserving search ranking in
         # permutations of search results.
         ranking_groups = set()
-        for comb in itertools.product(*search_results):
+        for comb in itertools.product(*results):
             entities = dict(list(zip(keys, [entity['id'] for entity in comb])))
             for data_series in self.get_data_series(**entities)[:cfg.MAX_SERIES_PER_COMB]:
                 self._logger.debug("Data series: {}".format(data_series))
