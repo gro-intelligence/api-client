@@ -1,6 +1,7 @@
 from builtins import object
 from api.client import lib
 
+
 class Client(object):
     """API client with stateful authentication for lib functions."""
 
@@ -185,7 +186,7 @@ class Client(object):
         ------
         dict
             Result from :meth:`~.search` passed to :meth:`~.lookup` to get additional details.
-            
+
             Example::
 
                 { 'id': 274,
@@ -274,7 +275,7 @@ class Client(object):
         Returns
         -------
         a geojson object or None
-        
+
             Example::
 
                 { 'type': 'GeometryCollection',
@@ -328,3 +329,35 @@ class Client(object):
         """
         return lib.get_descendant_regions(self.access_token, self.api_host, region_id,
                                           descendant_level, include_historical, include_details)
+
+
+    def get_available_timefrequency(self, **selection):
+        """Given a selection, return a list of frequencies and time ranges.
+        The results are ordered by coverage-optimized ranking.
+
+        Parameters
+        ----------
+        metric_id : integer, optional
+        item_id : integer, optional
+        region_id : integer, optional
+        partner_region_id : integer, optional
+
+        Returns
+        -------
+        list of dicts
+
+            Example::
+
+                 [{
+                    'startDate': '2000-02-18T00:00:00.000Z',
+                    'frequencyId': 3,
+                     'endDate': '2020-03-12T00:00:00.000Z',
+                     'name': '8-day'
+                  }, {
+                    'startDate': '2019-09-02T00:00:00.000Z',
+                    'frequencyId': 1,
+                    'endDate': '2020-03-09T00:00:00.000Z',
+                    'name': u'daily'}, ... ]
+        """
+        return lib.get_available_timefrequency(self.access_token, self.api_host,
+                                               **selection)
