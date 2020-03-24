@@ -384,7 +384,7 @@ the best match for the given search term(s).</p>
 <dl class="method">
 <dt id="api.client.gro_client.GroClient.find_data_series">
 <code class="descclassname">GroClient.</code><code class="descname">find_data_series</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/gro_client.html#GroClient.find_data_series"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.gro_client.GroClient.find_data_series" title="Permalink to this definition">¶</a></dt>
-<dd><p>Find the best possible  data series matching a combination of entities specified by name.</p>
+<dd><p>Find the best possible data series matching a combination of entities specified by name.</p>
 <p>Example:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="nb">next</span><span class="p">(</span><span class="n">client</span><span class="o">.</span><span class="n">find_data_series</span><span class="p">(</span><span class="n">item</span><span class="o">=</span><span class="s2">&quot;Corn&quot;</span><span class="p">,</span>
                              <span class="n">metric</span><span class="o">=</span><span class="s2">&quot;Futures Open Interest&quot;</span><span class="p">,</span>
@@ -401,9 +401,8 @@ the best match for the given search term(s).</p>
 </pre></div>
 </div>
 <p>See <a class="reference external" href="https://developers.gro-intelligence.com/data-series-definition.html">https://developers.gro-intelligence.com/data-series-definition.html</a></p>
-<p>This method uses <a class="reference internal" href="#api.client.gro_client.GroClient.search" title="api.client.gro_client.GroClient.search"><code class="xref py py-meth docutils literal"><span class="pre">search()</span></code></a> to find entities by name and <a class="reference internal" href="#api.client.gro_client.GroClient.get_data_series" title="api.client.gro_client.GroClient.get_data_series"><code class="xref py py-meth docutils literal"><span class="pre">get_data_series()</span></code></a> to
-find available data series for all possible combinations of the entities, and
-<a class="reference internal" href="#api.client.gro_client.GroClient.rank_series_by_source" title="api.client.gro_client.GroClient.rank_series_by_source"><code class="xref py py-meth docutils literal"><span class="pre">rank_series_by_source()</span></code></a>.</p>
+<p>This method uses <a class="reference internal" href="#api.client.gro_client.GroClient.search" title="api.client.gro_client.GroClient.search"><code class="xref py py-meth docutils literal"><span class="pre">search()</span></code></a>, <a class="reference internal" href="#api.client.gro_client.GroClient.get_data_series" title="api.client.gro_client.GroClient.get_data_series"><code class="xref py py-meth docutils literal"><span class="pre">get_data_series()</span></code></a>,
+<a class="reference internal" href="#api.client.gro_client.GroClient.get_available_timefrequency" title="api.client.gro_client.GroClient.get_available_timefrequency"><code class="xref py py-meth docutils literal"><span class="pre">get_available_timefrequency()</span></code></a> and  <a class="reference internal" href="#api.client.gro_client.GroClient.rank_series_by_source" title="api.client.gro_client.GroClient.rank_series_by_source"><code class="xref py py-meth docutils literal"><span class="pre">rank_series_by_source()</span></code></a>.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -702,6 +701,46 @@ that source covers the selection (metrics, items, regions, and time range and fr
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>series_list</strong> (<em>list of dicts</em>) &#8211; See the output of <a class="reference internal" href="#api.client.gro_client.GroClient.get_data_series" title="api.client.gro_client.GroClient.get_data_series"><code class="xref py py-meth docutils literal"><span class="pre">get_data_series()</span></code></a>.</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Yields:</th><td class="field-body"><em>dict</em> &#8211; The input series_list, expanded out to each possible source, ordered by coverage.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="api.client.gro_client.GroClient.get_available_timefrequency">
+<code class="descclassname">GroClient.</code><code class="descname">get_available_timefrequency</code><span class="sig-paren">(</span><em>**selection</em><span class="sig-paren">)</span><a class="headerlink" href="#api.client.gro_client.GroClient.get_available_timefrequency" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given a selection, return a list of frequencies and time ranges.
+The results are ordered by coverage-optimized ranking.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>metric_id</strong> (<em>integer</em><em>, </em><em>optional</em>) &#8211; </li>
+<li><strong>item_id</strong> (<em>integer</em><em>, </em><em>optional</em>) &#8211; </li>
+<li><strong>region_id</strong> (<em>integer</em><em>, </em><em>optional</em>) &#8211; </li>
+<li><strong>partner_region_id</strong> (<em>integer</em><em>, </em><em>optional</em>) &#8211; </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><p>Example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="p">[{</span>
+   <span class="s1">&#39;startDate&#39;</span><span class="p">:</span> <span class="s1">&#39;2000-02-18T00:00:00.000Z&#39;</span><span class="p">,</span>
+   <span class="s1">&#39;frequencyId&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+    <span class="s1">&#39;endDate&#39;</span><span class="p">:</span> <span class="s1">&#39;2020-03-12T00:00:00.000Z&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;8-day&#39;</span>
+ <span class="p">},</span> <span class="p">{</span>
+   <span class="s1">&#39;startDate&#39;</span><span class="p">:</span> <span class="s1">&#39;2019-09-02T00:00:00.000Z&#39;</span><span class="p">,</span>
+   <span class="s1">&#39;frequencyId&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+   <span class="s1">&#39;endDate&#39;</span><span class="p">:</span> <span class="s1">&#39;2020-03-09T00:00:00.000Z&#39;</span><span class="p">,</span>
+   <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="sa">u</span><span class="s1">&#39;daily&#39;</span><span class="p">},</span> <span class="o">...</span> <span class="p">]</span>
+</pre></div>
+</div>
+</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list of dicts</p>
+</td>
 </tr>
 </tbody>
 </table>
