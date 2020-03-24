@@ -228,25 +228,30 @@ def get_data(url, headers, params=None, logger=None):
         logger.debug(params)
     while retry_count <= cfg.MAX_RETRIES:
         start_time = time.time()
-        response = requests.get(url, params=params, headers=headers, timeout=None)
+        try:
+            response = requests.get(url, params=params, headers=headers, timeout=None)
+        except Exception as e:
+            response = e
         elapsed_time = time.time() - start_time
+        status_code = response.status_code if hasattr(response, 'status_code') else None
         log_record = dict(base_log_record)
         log_record['elapsed_time_in_ms'] = 1000 * elapsed_time
         log_record['retry_count'] = retry_count
-        log_record['status_code'] = response.status_code
-        if response.status_code == 200:  # Success
+        log_record['status_code'] = status_code
+        if status_code == 200:  # Success
             logger.debug('OK', extra=log_record)
             return response
-        if response.status_code in [204, 206]:  # Success with a caveat - warning
-            log_msg = {204: 'No Content', 206: 'Partial Content'}[response.status_code]
+        if status_code in [204, 206]:  # Success with a caveat - warning
+            log_msg = {204: 'No Content', 206: 'Partial Content'}[status_code]
             logger.warning(log_msg, extra=log_record)
             return response
         log_record['tag'] = 'failed_gro_api_request'
         if retry_count < cfg.MAX_RETRIES:
-            logger.warning(response.text, extra=log_record)
-        if response.status_code in [400, 401, 402, 404]:
+            logger.warning(response.text if hasattr(response, 'text') else response,
+                           extra=log_record)
+        if status_code in [400, 401, 402, 404]:
             break  # Do not retry
-        if response.status_code == 301:
+        if status_code == 301:
             new_params = redirect(params, response.json()['data'][0])
             logger.warning('Redirecting {} to {}'.format(params, new_params), extra=log_record)
             params = new_params
@@ -411,6 +416,12 @@ def get_data_series(access_token, api_host, **selection):
         raise Exception(resp.text)
 
 
+def make_key(key):
+    if key not in ('startDate', 'endDate'):
+        return key + 's'
+    return key
+
+
 def get_source_ranking(access_token, api_host, series):
     """Given a series, return a list of ranked sources.
 
@@ -419,10 +430,6 @@ def get_source_ranking(access_token, api_host, series):
     :param series: Series to calculate source raking for.
     :return: List of sources that match the series parameters, sorted by rank.
     """
-    def make_key(key):
-        if key not in ('startDate', 'endDate'):
-            return key + 's'
-        return key
     params = dict((make_key(k), v) for k, v in iter(list(
         get_params_from_selection(**series).items())))
     url = '/'.join(['https:', '', api_host, 'v2/available/sources'])
@@ -444,6 +451,17 @@ def rank_series_by_source(access_token, api_host, series_list):
             series_with_source = dict(series)
             series_with_source['source_id'] = source_id
             yield series_with_source
+
+
+def get_available_timefrequency(access_token, api_host, **series):
+    params = dict((make_key(k), v) for k, v in iter(list(
+        get_params_from_selection(**series).items())))
+    url = '/'.join(['https:', '', api_host, 'v2/available/time-frequencies'])
+    headers = {'authorization': 'Bearer ' + access_token}
+    response = get_data(url, headers, params)
+    if response.status_code == 204:
+        return []
+    return [camel_to_snake_dict(tf) for tf in response.json()]
 
 
 def list_of_series_to_single_series(series_list, add_belongs_to=False, include_historical=True):
