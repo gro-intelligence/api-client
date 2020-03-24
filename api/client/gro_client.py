@@ -508,7 +508,7 @@ class GroClient(Client):
         """Pick a random item that has some data associated with it, and a random metric and region
         pair for that item with data available.
         """
-        item_list = self.get_available('items')
+        item_list = list(self.get_available('items').values())
         num = 0
         while not num:
             item = item_list[int(len(item_list)*random())]
