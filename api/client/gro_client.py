@@ -53,7 +53,7 @@ class GroClient(Client):
     def get_df(self, show_revisions=False):
         """Call :meth:`~.get_data_points` for each saved data series and return as a combined
         dataframe.
-        
+
         Note you must have first called either :meth:`~.add_data_series` or
         :meth:`~.add_single_data_series` to save data series into the GroClient's data_series_list.
         You can inspect the client's saved list using :meth:`~.get_data_series_list`.
@@ -287,9 +287,9 @@ class GroClient(Client):
 
     def add_single_data_series(self, data_series):
         """Save a data series object to the GroClient's data_series_list.
-        
+
         For use with :meth:`~.get_df`.
-        
+
         Parameters
         ----------
         data_series : dict
@@ -308,7 +308,7 @@ class GroClient(Client):
         return
 
     def find_data_series(self, **kwargs):
-        """Find the best possible  data series matching a combination of entities specified by name.
+        """Find the best possible data series matching a combination of entities specified by name.
 
         Example::
 
@@ -327,9 +327,9 @@ class GroClient(Client):
 
         See https://developers.gro-intelligence.com/data-series-definition.html
 
-        This method uses :meth:`~.search` to find entities by name and :meth:`~.get_data_series` to
-        find available data series for all possible combinations of the entities, and
-        :meth:`~.rank_series_by_source`.
+        This method uses :meth:`~.search`, :meth:`~.get_data_series`,
+        :meth:`~.get_available_timefrequency` and  :meth:`~.rank_series_by_source`.
+
 
         Parameters
         ----------
@@ -370,23 +370,32 @@ class GroClient(Client):
             search_results.append(
                 self.search('regions', kwargs['partner_region'])[:cfg.MAX_RESULT_COMBINATION_DEPTH])
             keys.append('partner_region_id')
-        all_data_series = []
+        # Rank by frequency and source, while preserving search ranking in
+        # permutations of item, metric, region, and partner region.
+        ranking_groups = set()
         for comb in itertools.product(*search_results):
             entities = dict(list(zip(keys, [entity['id'] for entity in comb])))
-            data_series_list = self.get_data_series(**entities)
-            self._logger.debug("Found {} distinct data series for {}".format(
-                len(data_series_list), entities))
-            # temporal coverage affects ranking so add time range if specified.
-            for data_series in data_series_list:
-                if kwargs.get('start_date'):
-                    data_series['start_date'] = kwargs['start_date']
-                if kwargs.get('end_date'):
-                    data_series['end_date'] = kwargs['end_date']
-            all_data_series += data_series_list
-        self._logger.info("Found {} distinct data series total for {}".format(
-            len(all_data_series), kwargs))
-        for data_series in self.rank_series_by_source(all_data_series):
-            yield data_series
+            for data_series in self.get_data_series(**entities)[:cfg.MAX_SERIES_PER_COMB]:
+                self._logger.debug("Data series: {}".format(data_series))
+                # time range affects ranking
+                data_series.pop('start_date', None)
+                data_series.pop('end_date', None)
+                data_series.pop('frequency_id', None)
+                data_series.pop('source_id', None)
+                data_series.pop('source_name', None)
+                data_series.pop('metadata', None)
+                series_hash = frozenset(data_series.items())
+                if series_hash not in ranking_groups:
+                    ranking_groups.add(series_hash)
+                    if kwargs.get('start_date'):
+                        data_series['start_date'] = kwargs['start_date']
+                    if kwargs.get('end_date'):
+                        data_series['end_date'] = kwargs['end_date']
+                    for tf in self.get_available_timefrequency(**data_series):
+                        ds = dict(data_series)
+                        ds['frequency_id'] = tf['frequency_id']
+                        for data_series in self.rank_series_by_source([ds]):
+                            yield data_series
 
     def add_data_series(self, **kwargs):
         """Adds the top result of :meth:`~.find_data_series` to the saved data series list.
@@ -414,7 +423,7 @@ class GroClient(Client):
         :meth:`~.get_df`
         :meth:`~.add_single_data_series`
         :meth:`~.find_data_series`
-        
+
         """
         for the_data_series in self.find_data_series(**kwargs):
             self.add_single_data_series(the_data_series)
