@@ -26,8 +26,6 @@ def get_data(client, metric_id, item_id, region_id, source_id, frequency_id, sta
                    'source_id': source_id,
                    'frequency_id': frequency_id,
                    'start_date': start_date}
-    client._data_series_list = []
-    client._data_frame = pd.DataFrame()
     client.add_single_data_series(data_series)
     data = client.get_df()
     data = data[['end_date', 'value']]
