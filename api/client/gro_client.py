@@ -518,7 +518,7 @@ class GroClient(Client):
         """Pick a random item that has some data associated with it, and a random metric and region
         pair for that item with data available.
         """
-        item_list = self.get_available('items')
+        item_list = list(self.get_available('items').values())
         num = 0
         while not num:
             item = item_list[int(len(item_list)*random())]
@@ -544,8 +544,8 @@ class GroClient(Client):
     # TODO: rename function to "write_..." rather than "print_..."
     def print_one_data_series(self, data_series, filename):
         """Output a data series to a CSV file."""
-        self._logger.info("Using data series: {}".format(str(data_series)))
-        self._logger.info("Outputing to file: {}".format(filename))
+        self._logger.warning("Using data series: {}".format(str(data_series)))
+        self._logger.warning("Outputing to file: {}".format(filename))
         writer = unicodecsv.writer(open(filename, 'wb'))
         for point in self.get_data_points(**data_series):
             writer.writerow([point['start_date'],
@@ -644,23 +644,14 @@ def main():
         sys.exit(0)
     client = GroClient(API_HOST, access_token)
 
-    selected_entities = {}
-    if args.item:
-        selected_entities['item_id'] = client.search_for_entity('items', args.item)
-    if args.metric:
-        selected_entities['metric_id'] = client.search_for_entity('metrics', args.metric)
-    if args.region:
-        selected_entities['region_id'] = client.search_for_entity('regions', args.region)
-    if args.partner_region:
-        selected_entities['partner_region_id'] = client.search_for_entity('regions',
-                                                                          args.partner_region)
-    if not selected_entities:
-        selected_entities = client.pick_random_entities()
-
-    data_series = client.pick_random_data_series(selected_entities)
-    print("Data series example:")
-    client.print_one_data_series(data_series, OUTPUT_FILENAME)
-
+    if not args.metric and not args.item and not args.region and not args.partner_region:
+        ds = client.pick_random_data_series(client.pick_random_entities())
+    else:
+        ds = next(client.find_data_series(
+            item=args.item, metric=args.metric,
+            region=args.region, partner_region=args.partner_region))
+    client.print_one_data_series(ds, OUTPUT_FILENAME)
+    
 
 def get_df(client, **selected_entities):
     """Deprecated: use the corresponding method in GroClient instead."""

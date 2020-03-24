@@ -110,7 +110,6 @@ def get_default_logger():
 
     """
     logger = logging.getLogger(__name__)
-    logger.setLevel(cfg.DEFAULT_LOG_LEVEL)
     if not logger.handlers:
         stderr_handler = logging.StreamHandler()
         logger.addHandler(stderr_handler)
