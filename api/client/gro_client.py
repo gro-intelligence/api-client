@@ -534,8 +534,8 @@ class GroClient(Client):
     # TODO: rename function to "write_..." rather than "print_..."
     def print_one_data_series(self, data_series, filename):
         """Output a data series to a CSV file."""
-        self._logger.info("Using data series: {}".format(str(data_series)))
-        self._logger.info("Outputing to file: {}".format(filename))
+        self._logger.warning("Using data series: {}".format(str(data_series)))
+        self._logger.warning("Outputing to file: {}".format(filename))
         writer = unicodecsv.writer(open(filename, 'wb'))
         for point in self.get_data_points(**data_series):
             writer.writerow([point['start_date'],
@@ -634,11 +634,13 @@ def main():
         sys.exit(0)
     client = GroClient(API_HOST, access_token)
 
-    client.print_one_data_series(
-        next(client.find_data_series(
+    if not args.metric and not args.item and not args.region and not args.partner_region:
+        ds = client.pick_random_data_series(client.pick_random_entities())
+    else:
+        ds = next(client.find_data_series(
             item=args.item, metric=args.metric,
-            region=args.region, partner_region=args.partner_region)),
-        OUTPUT_FILENAME)
+            region=args.region, partner_region=args.partner_region))
+    client.print_one_data_series(ds, OUTPUT_FILENAME)
     
 
 def get_df(client, **selected_entities):
