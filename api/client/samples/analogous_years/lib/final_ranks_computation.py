@@ -95,8 +95,9 @@ def time_series(client, data_series, initial_date, final_date):
         raise e
 
 
-def ay_tsfresh(timeseries):
-    tsfresh_features = feature_extractions.ts_feature_extraction(timeseries)
+def ay_tsfresh(timeseries, num_jobs=0):
+    tsfresh_features = feature_extractions.ts_feature_extraction(
+        timeseries, num_jobs=num_jobs)
     return distance_matrix.euclidean_dist_matrix(tsfresh_features)
 
 
@@ -116,7 +117,8 @@ def ay_dtw(timeseries):
     return distance_matrix.dtw_dist_matrix(pivot_time_series)
 
 
-def ranked_df_dictionary(client, data_series, initial_date, final_date, item, methods_list):
+def ranked_df_dictionary(client, data_series, initial_date, final_date, item, methods_list,
+                         tsfresh_num_jobs=0):
     """
     Returns a dictionary whose keys are given by a 'method_item' and values are the dataframes
     of distances computed for that item using that method. Example: key: cumulative_Rainfall
@@ -126,6 +128,7 @@ def ranked_df_dictionary(client, data_series, initial_date, final_date, item, me
     :param final_date: 'YYYY-MM-DD'
     :param item: Gro Item
     :param methods_list: a sublist of ['cumulative', 'euclidean', 'ts-features', 'dtw']
+    :param tsfresh_num_jobs: integer, number of parallel processes in tsfresh
     :return: Dictionary of dataframes
     """
     ts = time_series(client, data_series, initial_date, final_date)
@@ -136,8 +139,12 @@ def ranked_df_dictionary(client, data_series, initial_date, final_date, item, me
     ranked_dfs = {}
     for key, value in dictionary_of_methods.items():
         if key.split('_')[0] in methods_list:
-            ranked_dfs[key] = distance_matrix.scaled_labeled_method_distances(
-                value(ts), initial_date, final_date, key)
+            if key.split('_')[0] == 'ts-features':
+                ranked_dfs[key] = distance_matrix.scaled_labeled_method_distances(
+                    value(ts, num_jobs=tsfresh_num_jobs), initial_date, final_date, key)
+            else:
+                ranked_dfs[key] = distance_matrix.scaled_labeled_method_distances(
+                    value(ts), initial_date, final_date, key)
     return ranked_dfs
 
 
@@ -166,7 +173,7 @@ def combined_methods_distances(dictionary_of_df):
 def analogous_years(client, data_series_list, initial_date, final_date,
                     methods_list=['euclidean', 'cumulative', 'ts-features'],
                     all_ranks=None, weights=None, enso=None, enso_weight=None,
-                    provided_start_date=None):
+                    provided_start_date=None, tsfresh_num_jobs=0):
     """
     Use L^2 distance function to combine weighted distances from multiple gro-data_series
     and return the rank
@@ -180,6 +187,7 @@ def analogous_years(client, data_series_list, initial_date, final_date,
     :param enso: Boolean to include ENSO
     :param enso_weight: Float
     :param provided_start_date: A string in YYYY-MM-DD format
+    :param tsfresh_num_jobs: integer, number of parallel processes in tsfresh
     :return: A tuple (string, dataframe)
     The string contains '_' separated region, item, date
     The dataframe contains integer values (ranks)
@@ -201,7 +209,7 @@ def analogous_years(client, data_series_list, initial_date, final_date,
         combined_methods_distances_df = combined_methods_distances(
             ranked_df_dictionary(
                 client, data_series_list[i], initial_date,
-                final_date, gro_item, methods_list))
+                final_date, gro_item, methods_list, tsfresh_num_jobs=tsfresh_num_jobs))
         numpy_combined_methods_distances = combined_methods_distances_df.values
         if combined_items_distances is None:
             combined_items_distances = np.zeros(numpy_combined_methods_distances.shape)
