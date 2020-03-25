@@ -111,6 +111,8 @@ def main():
     parser.add_argument('--all_ranks', action='store_true', help='Lets you see all the ranks'
                                                                  'as opposed to separate method'
                                                                  'ranks')
+    parser.add_argument('--num_jobs', type=int, default=0,
+                        help='number of parallel processes for tsfresh')
     args = parser.parse_args()
     client = GroClient(API_HOST, args.groapi_token)
     data_series_list = get_data_series_list(args.region_id, args.item_ids, args.metric_ids,
@@ -122,7 +124,8 @@ def main():
         client, data_series_list, args.initial_date, args.final_date,
         methods_list=args.methods, all_ranks=args.all_ranks,
         weights=args.weights, enso=args.ENSO,
-        enso_weight=args.ENSO_weight, provided_start_date=args.start_date)
+        enso_weight=args.ENSO_weight, provided_start_date=args.start_date,
+        tsfresh_num_jobs=args.num_jobs)
     final_ranks_computation.save_to_csv(client, result,
                                         folder_name,
                                         file_name='ranks.csv',
