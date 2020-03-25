@@ -6,6 +6,7 @@ should appear in the client classes rather than here.
 """
 
 from builtins import str
+from math import ceil
 from api.client import cfg
 import json
 import re
@@ -288,16 +289,24 @@ def list_available(access_token, api_host, selected_entities):
     except KeyError:
         raise Exception(resp.text)
 
+def batch(ids):
+    BATCH_SIZE = 200
+    return [ids[i*BATCH_SIZE:(i+1)*BATCH_SIZE] for i in range(ceil(len(ids)/BATCH_SIZE))]
 
 def lookup(access_token, api_host, entity_type, entity_ids):
     url = '/'.join(['https:', '', api_host, 'v2', entity_type])
     headers = {'authorization': 'Bearer ' + access_token}
-    params = {'ids': str(entity_ids)}
-    resp = get_data(url, headers, params)
-    try:
-        return resp.json()['data']
-    except KeyError:
-        raise Exception(resp.text)
+    all_results = {}
+    for id_batch in batch(entity_ids):
+        params = {'ids': id_batch}
+        resp = get_data(url, headers, params)
+        try:
+            result = resp.json()['data']
+            for key in result.keys():
+                all_results[key] = result[key]
+        except KeyError:
+            raise Exception(resp.text)
+        return all_results
 
 
 @memoize(maxsize=None)
@@ -642,10 +651,10 @@ def get_descendant_regions(access_token, api_host, region_id,
 
     # Filter out regions with the 'historical' flag set to true
     if not include_historical or include_details:
-        region_details = lookup(access_token, api_host, 'regions', descendant_region_ids).values()
+        region_details = lookup(access_token, api_host, 'regions', descendant_region_ids)
 
         if not include_historical:
-            descendant_region_ids = [region['id'] for region in region_details
+            descendant_region_ids = [region['id'] for region in region_details.values()
                                      if not region['historical']]
 
         if include_details:
