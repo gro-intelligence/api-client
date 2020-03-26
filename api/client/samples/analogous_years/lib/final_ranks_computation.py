@@ -194,6 +194,9 @@ def analogous_years(api_token, data_series_list, initial_date, final_date,
     The string contains '_' separated region, item, date
     The dataframe contains integer values (ranks)
     """
+    # TODO: Remove the following lines after a few releases
+    if isinstance(api_token, GroClient):
+        api_token = api_token.acess_token
     client = GroClient(API_HOST, api_token)
     combined_items_distances = None
     data_series_list = common_start_date(client, data_series_list, provided_start_date)[
