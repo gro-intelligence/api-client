@@ -384,23 +384,33 @@ the best match for the given search term(s).</p>
 <dl class="method">
 <dt id="api.client.gro_client.GroClient.find_data_series">
 <code class="descclassname">GroClient.</code><code class="descname">find_data_series</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/gro_client.html#GroClient.find_data_series"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.gro_client.GroClient.find_data_series" title="Permalink to this definition">¶</a></dt>
-<dd><p>Find the best possible data series matching a combination of entities specified by name.</p>
+<dd><p>Find data series matching a combination of entities specified by
+name and yield them ranked by coverage.</p>
 <p>Example:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="nb">next</span><span class="p">(</span><span class="n">client</span><span class="o">.</span><span class="n">find_data_series</span><span class="p">(</span><span class="n">item</span><span class="o">=</span><span class="s2">&quot;Corn&quot;</span><span class="p">,</span>
-                             <span class="n">metric</span><span class="o">=</span><span class="s2">&quot;Futures Open Interest&quot;</span><span class="p">,</span>
-                             <span class="n">region</span><span class="o">=</span><span class="s2">&quot;United States of America&quot;</span><span class="p">))</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">client</span><span class="o">.</span><span class="n">find_data_series</span><span class="p">(</span><span class="n">item</span><span class="o">=</span><span class="s2">&quot;Corn&quot;</span><span class="p">,</span>
+                        <span class="n">metric</span><span class="o">=</span><span class="s2">&quot;Futures Open Interest&quot;</span><span class="p">,</span>
+                        <span class="n">region</span><span class="o">=</span><span class="s2">&quot;United States of America&quot;</span><span class="p">))</span>
 </pre></div>
 </div>
-<p>will yield:</p>
+<p>will yield a sequence of dictionaries of the form:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s1">&#39;metric_id&#39;</span><span class="p">:</span> <span class="mi">15610005</span><span class="p">,</span> <span class="s1">&#39;metric_name&#39;</span><span class="p">:</span> <span class="s1">&#39;Futures Open Interest&#39;</span><span class="p">,</span>
   <span class="s1">&#39;item_id&#39;</span><span class="p">:</span> <span class="mi">274</span><span class="p">,</span> <span class="s1">&#39;item_name&#39;</span><span class="p">:</span> <span class="s1">&#39;Corn&#39;</span><span class="p">,</span>
   <span class="s1">&#39;region_id&#39;</span><span class="p">:</span> <span class="mi">1215</span><span class="p">,</span> <span class="s1">&#39;region_name&#39;</span><span class="p">:</span> <span class="s1">&#39;United States&#39;</span><span class="p">,</span>
-  <span class="s1">&#39;partner_region_id&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;partner_region_name&#39;</span><span class="p">:</span> <span class="s1">&#39;World&#39;</span><span class="p">,</span>
   <span class="s1">&#39;frequency_id&#39;</span><span class="p">:</span> <span class="mi">15</span><span class="p">,</span> <span class="s1">&#39;source_id&#39;</span><span class="p">:</span> <span class="mi">81</span><span class="p">,</span>
-  <span class="s1">&#39;start_date&#39;</span><span class="p">:</span> <span class="s1">&#39;1972-03-01T00:00:00.000Z&#39;</span><span class="p">,</span> <span class="s1">&#39;end_date&#39;</span><span class="p">:</span> <span class="s1">&#39;2022-12-31T00:00:00.000Z&#39;</span> <span class="p">}</span>
+  <span class="s1">&#39;start_date&#39;</span><span class="p">:</span> <span class="s1">&#39;1972-03-01T00:00:00.000Z&#39;</span><span class="p">,</span> <span class="o">...</span><span class="p">},</span>
+<span class="p">{</span> <span class="o">...</span> <span class="p">},</span>  <span class="o">...</span>
 </pre></div>
 </div>
 <p>See <a class="reference external" href="https://developers.gro-intelligence.com/data-series-definition.html">https://developers.gro-intelligence.com/data-series-definition.html</a></p>
+<p><code class="code docutils literal"><span class="pre">result_filter</span></code> can be used to filter entity searches. For example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">client</span><span class="o">.</span><span class="n">find_data_series</span><span class="p">(</span><span class="n">item</span><span class="o">=</span><span class="s2">&quot;vegetation&quot;</span><span class="p">,</span>
+                        <span class="n">metric</span><span class="o">=</span><span class="s2">&quot;vegetation indices&quot;</span><span class="p">,</span>
+                        <span class="n">region</span><span class="o">=</span><span class="s2">&quot;Central&quot;</span><span class="p">,</span>
+                        <span class="n">result_filter</span><span class="o">=</span><span class="k">lambda</span> <span class="n">r</span><span class="p">:</span> <span class="s1">&#39;region_id&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">r</span> <span class="ow">or</span> <span class="n">r</span><span class="p">[</span><span class="s1">&#39;region_id&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">10393</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>will only consider that particular region, and not the many other regions
+with the same name.</p>
 <p>This method uses <a class="reference internal" href="#api.client.gro_client.GroClient.search" title="api.client.gro_client.GroClient.search"><code class="xref py py-meth docutils literal"><span class="pre">search()</span></code></a>, <a class="reference internal" href="#api.client.gro_client.GroClient.get_data_series" title="api.client.gro_client.GroClient.get_data_series"><code class="xref py py-meth docutils literal"><span class="pre">get_data_series()</span></code></a>,
 <a class="reference internal" href="#api.client.gro_client.GroClient.get_available_timefrequency" title="api.client.gro_client.GroClient.get_available_timefrequency"><code class="xref py py-meth docutils literal"><span class="pre">get_available_timefrequency()</span></code></a> and  <a class="reference internal" href="#api.client.gro_client.GroClient.rank_series_by_source" title="api.client.gro_client.GroClient.rank_series_by_source"><code class="xref py py-meth docutils literal"><span class="pre">rank_series_by_source()</span></code></a>.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -414,10 +424,11 @@ the best match for the given search term(s).</p>
 <li><strong>partner_region</strong> (<em>string</em><em>, </em><em>optional</em>) &#8211; </li>
 <li><strong>start_date</strong> (<em>string</em><em>, </em><em>optional</em>) &#8211; YYYY-MM-DD</li>
 <li><strong>end_date</strong> (<em>string</em><em>, </em><em>optional</em>) &#8211; YYYY-MM-DD</li>
+<li><strong>result_filter</strong> (<em>function</em><em>, </em><em>optional</em>) &#8211; function taking data series selection dict returning boolean</li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Yields:</th><td class="field-body"><p class="first last"><em>dict</em> &#8211; A sequence of data series matching the input selections, in quality rank order.</p>
+<tr class="field-even field"><th class="field-name">Yields:</th><td class="field-body"><p class="first last"><em>dict</em> &#8211; A sequence of data series matching the input selections</p>
 </td>
 </tr>
 </tbody>
@@ -787,6 +798,7 @@ See <a class="reference external" href="https://developers.gro-intelligence.com/
 <li><strong>partner_region</strong> (<em>string</em><em>, </em><em>optional</em>) &#8211; </li>
 <li><strong>start_date</strong> (<em>string</em><em>, </em><em>optional</em>) &#8211; YYYY-MM-DD</li>
 <li><strong>end_date</strong> (<em>string</em><em>, </em><em>optional</em>) &#8211; YYYY-MM-DD</li>
+<li><strong>result_filter</strong> (<em>function</em><em>, </em><em>optional</em>) &#8211; function taking data series selection dict returning boolean</li>
 </ul>
 </td>
 </tr>
