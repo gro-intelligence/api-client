@@ -58,7 +58,6 @@ def get_data_series_list(region_id_list, item_id_list, metric_id_list, source_id
                          frequency_id_list, api_token):
     # checking if the length of the list for metric_id, item_id, source_id and
     # frequency_id match
-    client = GroClient(API_HOST, api_token)
     item_id_list = list_length_validator(metric_id_list, item_id_list)
     source_id_list = list_length_validator(metric_id_list, source_id_list)
     frequency_id_list = list_length_validator(metric_id_list, frequency_id_list)
