@@ -116,7 +116,6 @@ def main():
     parser.add_argument('--num_jobs', type=int, default=0,
                         help='number of parallel processes for tsfresh')
     args = parser.parse_args()
-    # client = GroClient(API_HOST, args.groapi_token)
     data_series_list = get_data_series_list(args.region_id, args.item_ids, args.metric_ids,
                                             args.source_ids, args.frequency_ids,
                                             api_token=args.groapi_token)
