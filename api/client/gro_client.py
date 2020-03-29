@@ -17,10 +17,9 @@ API_HOST = 'api.gro-intelligence.com'
 OUTPUT_FILENAME = 'gro_client_output.csv'
 
 
-DATA_POINTS_UNIQUE_COLS = ['item_id', 'metric_id',
+DATA_SERIES_UNIQUE_COLS = ['item_id', 'metric_id',
                            'region_id', 'partner_region_id',
-                           'frequency_id', 'source_id',
-                           'reporting_date', 'start_date', 'end_date']
+                           'frequency_id', 'source_id']
 
 ENTITY_KEY_TO_TYPE = {'item_id': 'items',
                       'metric_id': 'metrics',
@@ -98,9 +97,8 @@ class GroClient(Client):
             tmp.reporting_date = pandas.to_datetime(tmp.reporting_date)
 
         if self._data_frame.empty:
-            self._data_frame = tmp
-            self._data_frame.set_index([col for col in DATA_POINTS_UNIQUE_COLS
-                                        if col in tmp.columns])
+            self._data_frame = tmp.set_index(
+                filter(col in DATA_SERIES_UNIQUE_COLS, tmp.columns))
         else:
             self._data_frame = self._data_frame.merge(tmp, how='outer')
 
