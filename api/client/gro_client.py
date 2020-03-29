@@ -42,7 +42,7 @@ class GroClient(Client):
     def __init__(self, api_host, access_token):
         super(GroClient, self).__init__(api_host, access_token)
         self._logger = lib.get_default_logger()
-        self._data_series_list = []  # all that have been added
+        self._data_series_list = set()  # all that have been added
         self._data_series_queue = []  # added but not loaded in data frame
         self._data_frame = pandas.DataFrame()
 
@@ -301,9 +301,13 @@ class GroClient(Client):
         None
 
         """
-        self._data_series_list.append(data_series)
-        self._data_series_queue.append(data_series)
-        self._logger.info("Added {}".format(data_series))
+        series_hash = frozenset(data_series.items())
+        if series_hash not in self._data_series_list:
+            self._data_series_list.add(series_hash)
+            self._data_series_queue.append(data_series)
+            self._logger.info("Added {}".format(data_series))
+        else:
+            self._logger.debug("Already added: {}".format(data_series))
         return
 
     def find_data_series(self, **kwargs):
