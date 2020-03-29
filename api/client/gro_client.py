@@ -49,7 +49,7 @@ class GroClient(Client):
     def get_logger(self):
         return self._logger
 
-    def get_df(self, show_revisions=False):
+    def get_df(self, show_revisions=False, index_by_series=False):
         """Call :meth:`~.get_data_points` for each saved data series and return as a combined
         dataframe.
 
@@ -63,13 +63,18 @@ class GroClient(Client):
             The results to :meth:`~.get_data_points` for all the saved series, appended together
             into a single dataframe.
             See https://developers.gro-intelligence.com/data-point-definition.html
-
+            If index_by_series is set, the dataframe is indexed by series.
+            See https://developers.gro-intelligence.com/data-series-definition.html
         """
         while self._data_series_queue:
             data_series = self._data_series_queue.pop()
             if show_revisions:
                 data_series['show_revisions'] = True
             self.add_points_to_df(None, data_series, self.get_data_points(**data_series))
+        if index_by_series:
+            return self._data_frame.set_index([c for c in filter(
+                lambda col: col in self._data_frame.columns,
+                DATA_SERIES_UNIQUE_COLS)])
         return self._data_frame
 
     def add_points_to_df(self, index, data_series, data_points, *args):
@@ -263,11 +268,8 @@ class GroClient(Client):
                 selection[key] = value
 
         self.add_single_data_series(selection)
-        df = self.get_df()
-        return df.set_index([c for c in filter(
-            lambda col: col in DATA_SERIES_UNIQUE_COLS, df.columns)]).loc[
-                entity_ids, :]
-    
+        return self.get_df(index_by_series=True).loc[[tuple(entity_ids)], :]
+
     def get_data_series_list(self):
         """Inspect the current list of saved data series contained in the GroClient.
 
