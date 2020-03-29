@@ -17,9 +17,9 @@ API_HOST = 'api.gro-intelligence.com'
 OUTPUT_FILENAME = 'gro_client_output.csv'
 
 
-DATA_SERIES_UNIQUE_COLS = ['item_id', 'metric_id',
+DATA_SERIES_UNIQUE_COLS = ['metric_id', 'item_id',
                            'region_id', 'partner_region_id',
-                           'frequency_id', 'source_id']
+                           'source_id', 'frequency_id']
 
 ENTITY_KEY_TO_TYPE = {'item_id': 'items',
                       'metric_id': 'metrics',
@@ -97,8 +97,7 @@ class GroClient(Client):
             tmp.reporting_date = pandas.to_datetime(tmp.reporting_date)
 
         if self._data_frame.empty:
-            self._data_frame = tmp.set_index(
-                filter(col in DATA_SERIES_UNIQUE_COLS, tmp.columns))
+            self._data_frame = tmp
         else:
             self._data_frame = self._data_frame.merge(tmp, how='outer')
 
@@ -255,20 +254,20 @@ class GroClient(Client):
 
         """
 
-        entity_keys = ['metric_id', 'item_id', 'region_id', 'partner_region_id',
-                       'source_id', 'frequency_id']
         entity_ids = [int(x) for x in gdh_selection.split('-')]
-        selection = dict(zip(entity_keys, entity_ids))
+        selection = dict(zip(DATA_SERIES_UNIQUE_COLS, entity_ids))
 
         # add optional pararms to selection
         for key, value in list(optional_selections.items()):
-            if key not in entity_keys:
+            if key not in DATA_SERIES_UNIQUE_COLS:
                 selection[key] = value
 
         self.add_single_data_series(selection)
         df = self.get_df()
-        return df
-
+        return df.set_index([c for c in filter(
+            lambda col: col in DATA_SERIES_UNIQUE_COLS, df.columns)]).loc[
+                entity_ids, :]
+    
     def get_data_series_list(self):
         """Inspect the current list of saved data series contained in the GroClient.
 
