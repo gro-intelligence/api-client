@@ -104,7 +104,7 @@ class GroClient(Client):
         if self._data_frame.empty:
             self._data_frame = tmp
         else:
-            self._data_frame = self._data_frame.merge(tmp, how='outer')
+            self._data_frame = pandas.concat([self._data_frame, tmp])
 
     def get_data_points(self, **selections):
         """Get all the data points for a given selection.
