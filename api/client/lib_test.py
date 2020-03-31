@@ -92,7 +92,7 @@ def test_list_available_snake_to_camel(mock_requests_get):
 def test_single_lookup(mock_requests_get):
     api_response = {'data': {'12345': {'id': 12345, 'name': 'Test', 'contains': []}}}
     initialize_requests_mocker_and_get_mock_data(mock_requests_get, api_response)
-    expected_return = {'12345': {'id': 12345, 'name': 'Test', 'contains': []}}
+    expected_return = {'id': 12345, 'name': 'Test', 'contains': []}
     assert lib.lookup(MOCK_TOKEN, MOCK_HOST, 'items', 12345) == expected_return
 
 
@@ -110,19 +110,6 @@ def test_multiple_lookups(mock_requests_get):
         '67890': {'id': 67890, 'name': 'Eggplant', 'contains': [], 'belongsTo': [12345]}
     }
     assert lib.lookup(MOCK_TOKEN, MOCK_HOST, 'items', [12345, 67890]) == expected_return
-
-# TODO: Add test case for logic in __init.py__. Below will be in that test case:
-# @mock.patch('api.client.Client.lookup')
-# def test_lookup_unit_abbreviation(lookup_mocked):
-#
-#     lookup_mocked.return_value = {'abbreviation': 'test123'}
-#     assert lib.lookup_unit_abbreviation(MOCK_TOKEN, MOCK_HOST, 'kg') ==  'test123'
-#     assert lib.lookup_unit_abbreviation(MOCK_TOKEN, MOCK_HOST, 'kg') ==  'test123'
-#     assert lib.lookup_unit_abbreviation(MOCK_TOKEN, MOCK_HOST, 'kg') ==  'test123'
-#     assert lib.lookup_unit_abbreviation(MOCK_TOKEN, MOCK_HOST, 'mg') == 'test123'
-#
-#     # Make sure it caches properly
-#     assert lookup_mocked.call_args_list == [mock.call('units', 'kg'), mock.call('units', 'mg')]
 
 
 @mock.patch('requests.get')

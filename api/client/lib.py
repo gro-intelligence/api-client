@@ -247,7 +247,11 @@ def lookup(access_token, api_host, entity_type, entity_ids):
     params = {'ids': str(entity_ids)}
     resp = get_data(url, headers, params)
     try:
-        return resp.json()['data']
+        # If an integer is given, return only the dict with that id
+        if isinstance(entity_ids, int):
+            return resp.json()['data'].get(str(entity_ids))
+        else:  # If a list of integers is given, return an dict of dicts, keyed by id
+            return resp.json()['data']
     except KeyError:
         raise Exception(resp.text)
 

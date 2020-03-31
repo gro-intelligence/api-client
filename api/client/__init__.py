@@ -79,7 +79,7 @@ class Client(object):
         -------
         dict or dict of dicts
             A dict with entity details is returned if an integer is given for entity_ids.
-            A dict of dicts with entity details, keyed by id is returned if a list of integers is
+            A dict of dicts with entity details, keyed by id, is returned if a list of integers is
             given for entity_ids.
 
             Example::
@@ -113,12 +113,7 @@ class Client(object):
                 }
 
         """
-        # If a list of integers is given, return an dict of dicts, keyed by id
-        if isinstance(entity_ids, list):
-            return lib.lookup(self.access_token, self.api_host, entity_type, entity_ids)
-        # If an integer is given, return only the dict with that id
-        return lib.lookup(self.access_token, self.api_host,
-                          entity_type, [entity_ids]).get(str(entity_ids))
+        return lib.lookup(self.access_token, self.api_host, entity_type, entity_ids)
 
 
     def lookup_unit_abbreviation(self, unit_id):
