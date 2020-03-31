@@ -606,4 +606,5 @@ if __name__ == '__main__':
     # To run doctests:
     # $ python lib.py -v
     import doctest
-    doctest.testmod(optionflags=doctest.NORMALIZE_WHITESPACE | doctest.ELLIPSIS)
+    doctest.testmod(raise_on_error=True,
+                    optionflags=doctest.NORMALIZE_WHITESPACE | doctest.ELLIPSIS)

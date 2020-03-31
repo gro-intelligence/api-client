@@ -74,3 +74,11 @@ def dict_reformat_keys(obj, format_func):
 
     """
     return {format_func(key): value for key, value in obj.items()}
+
+
+if __name__ == '__main__':
+    # To run doctests:
+    # $ python utils.py -v
+    import doctest
+    doctest.testmod(raise_on_error=True,
+                    optionflags=doctest.NORMALIZE_WHITESPACE | doctest.ELLIPSIS)
