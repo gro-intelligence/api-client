@@ -5,11 +5,11 @@ exposed in this module. Helper functions or shims or derivative functionality
 should appear in the client classes rather than here.
 """
 
-from builtins import map
 from builtins import str
 from api.client import cfg
+from api.client.constants import REGION_LEVELS
+from api.client.utils import dict_reformat_keys, str_snake_to_camel, str_camel_to_snake
 import json
-import re
 import logging
 import requests
 import time
@@ -20,18 +20,6 @@ try:
     from functools import lru_cache as memoize
 except ImportError:
     from backports.functools_lru_cache import lru_cache as memoize
-
-REGION_LEVELS = {
-    'world': 1,
-    'continent': 2,
-    'country': 3,
-    'province': 4,  # Equivalent to state in the United States
-    'district': 5,  # Equivalent to county in the United States
-    'city': 6,
-    'market': 7,
-    'other': 8,
-    'coordinate': 9
-}
 
 
 class APIError(Exception):
@@ -54,49 +42,6 @@ class APIError(Exception):
             self.message = 'Giving up on {} after {} {}: {}'.format(self.url, self.retry_count,
                                                                     'retry' if self.retry_count == 1
                                                                     else 'retries', response)
-
-
-@memoize(maxsize=None)
-def camel_to_snake(term):
-    """Convert a string from camelCase to snake_case.
-
-    >>> camel_to_snake('partnerRegionId')
-    'partner_region_id'
-
-    >>> camel_to_snake('partner_region_id')
-    'partner_region_id'
-
-    Parameters
-    ----------
-    term : string
-        A camelCase string
-    Returns
-    -------
-    string
-        A new snake_case string
-
-    """
-    return re.sub('([a-z0-9])([A-Z])', r'\1_\2', re.sub('(.)([A-Z][a-z]+)', r'\1_\2', term)).lower()
-
-
-def camel_to_snake_dict(obj):
-    """Convert a dictionary's keys from camelCase to snake_case.
-
-    >>> camel_to_snake_dict({'belongsTo': {'metricId': 4}})
-    {'belongs_to': {'metricId': 4}}
-
-    Parameters
-    ----------
-    term : dict
-        A dictionary with camelCase keys
-
-    Returns
-    -------
-    dict
-        A new dictionary with snake_case keys
-
-    """
-    return dict((camel_to_snake(key), value) for key, value in obj.items())
 
 
 def get_default_logger():
@@ -181,7 +126,7 @@ def redirect(old_params, migration):
     for migration_key in migration:
         split_mig_key = migration_key.split('_')
         if split_mig_key[0] == 'new':
-            param_key = snake_to_camel('_'.join([split_mig_key[1], 'id']))
+            param_key = str_snake_to_camel('_'.join([split_mig_key[1], 'id']))
             new_params[param_key] = migration[migration_key]
     return new_params
 
@@ -287,7 +232,7 @@ def get_available(access_token, api_host, entity_type):
 def list_available(access_token, api_host, selected_entities):
     url = '/'.join(['https:', '', api_host, 'v2/entities/list'])
     headers = {'authorization': 'Bearer ' + access_token}
-    params = dict([(snake_to_camel(key), value)
+    params = dict([(str_snake_to_camel(key), value)
                    for (key, value) in list(selected_entities.items())])
     resp = get_data(url, headers, params)
     try:
@@ -305,26 +250,6 @@ def lookup(access_token, api_host, entity_type, entity_ids):
         return resp.json()['data']
     except KeyError:
         raise Exception(resp.text)
-
-
-@memoize(maxsize=None)
-def snake_to_camel(term):
-    """Convert a string from snake_case to camelCase.
-
-    >>> snake_to_camel('hello_world')
-    'helloWorld'
-
-    Parameters
-    ----------
-    term : string
-
-    Returns
-    -------
-    string
-
-    """
-    camel = term.split('_')
-    return ''.join(camel[:1] + list([x[0].upper()+x[1:] for x in camel[1:]]))
 
 
 def get_params_from_selection(**selection):
@@ -358,7 +283,7 @@ def get_params_from_selection(**selection):
     for key, value in list(selection.items()):
         if key in ('region_id', 'partner_region_id', 'item_id', 'metric_id',
                    'source_id', 'frequency_id', 'start_date', 'end_date'):
-            params[snake_to_camel(key)] = value
+            params[str_snake_to_camel(key)] = value
     return params
 
 
@@ -395,7 +320,7 @@ def get_data_call_params(**selection):
     params = get_params_from_selection(**selection)
     for key, value in list(selection.items()):
         if key in ('start_date', 'end_date', 'show_revisions', 'insert_null', 'at_time'):
-            params[snake_to_camel(key)] = value
+            params[str_snake_to_camel(key)] = value
     params['responseType'] = 'list_of_series'
     return params
 
@@ -408,8 +333,9 @@ def get_data_series(access_token, api_host, **selection):
     resp = get_data(url, headers, params)
     try:
         response = resp.json()['data']
-        if any((series.get('metadata', {}).get('includes_historical_region', False)) for series in response):
-            logger.warning('Data series have some historical regions, ' \
+        if any((series.get('metadata', {}).get('includes_historical_region', False))
+               for series in response):
+            logger.warning('Data series have some historical regions, '
                            'see https://developers.gro-intelligence.com/faq.html')
         return response
     except KeyError:
@@ -461,7 +387,7 @@ def get_available_timefrequency(access_token, api_host, **series):
     response = get_data(url, headers, params)
     if response.status_code == 204:
         return []
-    return [camel_to_snake_dict(tf) for tf in response.json()]
+    return [dict_reformat_keys(tf, str_camel_to_snake) for tf in response.json()]
 
 
 def list_of_series_to_single_series(series_list, add_belongs_to=False, include_historical=True):
@@ -528,13 +454,15 @@ def list_of_series_to_single_series(series_list, add_belongs_to=False, include_h
         if not (isinstance(series, dict) and isinstance(series.get('data', []), list)):
             continue
         series_metadata = series.get('series', {}).get('metadata', {})
-        if not include_historical and (series_metadata.get('includesHistoricalRegion', False) or 
-        series_metadata.get('includesHistoricalPartnerRegion', False)):
+        has_historical_regions = (series_metadata.get('includesHistoricalRegion', False) or
+                                  series_metadata.get('includesHistoricalPartnerRegion', False))
+        if not include_historical and has_historical_regions:
             continue
         # All the belongsTo keys are in camelCase. Convert them to snake_case.
         # Only need to do this once per series, so do this outside of the list
         # comprehension and save to a variable to avoid duplicate work:
-        belongs_to = camel_to_snake_dict(series.get('series', {}).get('belongsTo', {}))
+        belongs_to = dict_reformat_keys(series.get('series', {}).get('belongsTo', {}),
+                                        str_camel_to_snake)
         for point in series.get('data', []):
             formatted_point = {
                 'start_date': point[0],
