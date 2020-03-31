@@ -28,10 +28,8 @@ def get_data(client, metric_id, item_id, region_id, source_id, frequency_id, sta
                    'start_date': start_date}
     client.add_single_data_series(data_series)
     data = client.get_df()
-    # TODO: select data from dataframe such that the date start_date restrictions are maintained
-    #  and the client does not need to be re-initiated in a single jupyter notebook
-    data = data[['end_date', 'value']]
     start_date = pd.to_datetime(start_date)
+    data = data.loc[data.end_date >= start_date][['end_date', 'value']]
     if data['end_date'].iloc[0] > start_date:
         new_value = data['value'].iloc[0]
         new_row = pd.DataFrame({'end_date': [start_date], 'value': [new_value]})
