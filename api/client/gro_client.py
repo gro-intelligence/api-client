@@ -235,8 +235,8 @@ class GroClient(Client):
     def GDH(self, gdh_selection, **optional_selections):
         """Wrapper for :meth:`~.get_data_points`. with alternative input and output style.
 
-        The selection of data series to retrieve is encoded in a
-        'gdh_seletion' string of the form
+        The data series selection to retrieve is encoded in a 
+        'gdh_selection' string of the form
         <metric_id>-<item_id>-<region_id>-<partner_region_id>-<source_id>-<frequency_id>
 
         For example, client.GDH("860032-274-1231-0-14-9") will get the
@@ -255,7 +255,7 @@ class GroClient(Client):
         ------
         pandas.DataFrame
 
-            the main DataFrame :meth:`~.get_df`. with the :meth:`~.get_data_points`. results for requested series.
+            the subset of the main DataFrame :meth:`~.get_df`. with the requested series.
 
         """
 
@@ -268,7 +268,10 @@ class GroClient(Client):
                 selection[key] = value
 
         self.add_single_data_series(selection)
-        return self.get_df(index_by_series=True).loc[[tuple(entity_ids)], :]
+        try:
+            return self.get_df(index_by_series=True).loc[[tuple(entity_ids)], :]
+        except KeyError as e:
+            return pandas.DataFrame()
 
     def get_data_series_list(self):
         """Inspect the current list of saved data series contained in the GroClient.
