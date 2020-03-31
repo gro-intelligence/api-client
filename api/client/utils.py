@@ -73,4 +73,4 @@ def dict_reformat_keys(obj, format_func):
         A new dictionary with formatted keys
 
     """
-    return dict(format_func((key), value) for key, value in obj.items())
+    return {format_func(key): value for key, value in obj.items()}
