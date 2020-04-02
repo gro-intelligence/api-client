@@ -37,11 +37,15 @@ def create_test_data_datetime():
 @mock.patch('api.client.gro_client.GroClient.get_df', return_value=create_test_data_datetime())
 def test_get_data(test_data_1):
     client = GroClient('mock_website', 'mock_access_token')
+    start_date = '2000-03-01T00:00:00.000Z'
     expected = pd.DataFrame(create_test_data())
     expected = expected[['end_date', 'value']]
-    test_data = get_transform_data.get_data(client, 'metric_id', 'item_id', 'region_id',
-                                           'source_id', 'frequency_id', '2020-03-01T00:00:00.000Z')
+    new_value = expected['value'].iloc[0]
+    new_row = pd.DataFrame({'end_date': [start_date], 'value': [new_value]})
+    expected = pd.concat([new_row, expected[:]]).reset_index(drop=True)
     expected.loc[:, 'end_date'] = pd.to_datetime(expected['end_date'])
+    test_data = get_transform_data.get_data(client, 'metric_id', 'item_id', 'region_id',
+                                            'source_id', 'frequency_id', start_date)
     assert_frame_equal(test_data, expected)
 
 
@@ -60,7 +64,8 @@ def test_combine_subregions_with_subregion():
         utc_tz = True
     # Depending on the version of pandas, the data type of the datetime object
     # can vary between 'datetime64[ns, UTC]' and 'datetime64[ns]'
-    expected_subregion.loc[:, 'end_date'] = pd.to_datetime(expected_subregion['end_date'], utc=utc_tz)
+    expected_subregion.loc[:, 'end_date'] = pd.to_datetime(expected_subregion['end_date'],
+                                                           utc=utc_tz)
     # The order of the columns after applying consolidation function is the following
     expected_subregion = expected_subregion[['value', 'end_date']]
     # The dataframes index columns is same as 'end_date' column
@@ -90,7 +95,8 @@ def test_combine_subregions_with_nosubregion():
     # Depending on the version of pandas, the data type of the datetime object
     # can vary between 'datetime64[ns, UTC]' and 'datetime64[ns]'
     expected_nosubregion.index = expected_nosubregion['end_date']
-    expected_nosubregion.loc[:, 'end_date'] = pd.to_datetime(expected_nosubregion['end_date'], utc=utc_tz)
+    expected_nosubregion.loc[:, 'end_date'] = pd.to_datetime(expected_nosubregion['end_date'],
+                                                             utc=utc_tz)
     expected_nosubregion.index = pd.to_datetime(expected_nosubregion.index, utc=utc_tz)
     expected_nosubregion = expected_nosubregion.resample('D').pad()
     expected_nosubregion.loc[:, 'end_date'] = pd.to_datetime(expected_nosubregion.index, utc=utc_tz)
