@@ -98,12 +98,12 @@ def list_chunk(arr, chunk_size=50):
 
     """
     return [arr[i*chunk_size:(i+1)*chunk_size]
-            for i in range(int(ceil(len(arr)/chunk_size)))]
+            for i in range(int(ceil(len(arr)/float(chunk_size))))]
 
 
 if __name__ == '__main__':
     # To run doctests:
     # $ python utils.py -v
     import doctest
-    doctest.testmod(raise_on_error=True,  # Set to False for prettier error message
+    doctest.testmod(#raise_on_error=True,  # Set to False for prettier error message
                     optionflags=doctest.NORMALIZE_WHITESPACE | doctest.ELLIPSIS)
