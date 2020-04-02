@@ -1,32 +1,22 @@
 from __future__ import print_function
-from builtins import zip
+from api.client import cfg, lib, Client
+from api.client.constants import DATA_SERIES_UNIQUE_TYPES_ID, ENTITY_KEY_TO_TYPE
 from builtins import str
+from builtins import zip
 from random import random
 import argparse
+import functools
 import getpass
 import itertools
-import functools
 import os
 import pandas
 import sys
 import unicodecsv
-from api.client import cfg, lib, Client
 
 
 API_HOST = 'api.gro-intelligence.com'
 OUTPUT_FILENAME = 'gro_client_output.csv'
 
-
-DATA_SERIES_UNIQUE_COLS = ['metric_id', 'item_id',
-                           'region_id', 'partner_region_id',
-                           'source_id', 'frequency_id']
-
-ENTITY_KEY_TO_TYPE = {'item_id': 'items',
-                      'metric_id': 'metrics',
-                      'region_id': 'regions',
-                      'partner_region_id': 'regions',
-                      'source_id': 'sources',
-                      'frequency_id': 'frequencies'}
 
 class GroClient(Client):
     """An extension of the Client class with extra convenience methods for some common operations.
@@ -74,7 +64,7 @@ class GroClient(Client):
         if index_by_series:
             return self._data_frame.set_index([c for c in filter(
                 lambda col: col in self._data_frame.columns,
-                DATA_SERIES_UNIQUE_COLS)])
+                DATA_SERIES_UNIQUE_TYPES_ID)])
         return self._data_frame
 
     def add_points_to_df(self, index, data_series, data_points, *args):
@@ -260,11 +250,11 @@ class GroClient(Client):
         """
 
         entity_ids = [int(x) for x in gdh_selection.split('-')]
-        selection = dict(zip(DATA_SERIES_UNIQUE_COLS, entity_ids))
+        selection = dict(zip(DATA_SERIES_UNIQUE_TYPES_ID, entity_ids))
 
         # add optional pararms to selection
         for key, value in list(optional_selections.items()):
-            if key not in DATA_SERIES_UNIQUE_COLS:
+            if key not in DATA_SERIES_UNIQUE_TYPES_ID:
                 selection[key] = value
 
         self.add_single_data_series(selection)
