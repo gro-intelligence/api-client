@@ -1,6 +1,6 @@
 from __future__ import print_function
 from api.client import cfg, lib, Client
-from api.client.constants import DATA_POINTS_UNIQUE_COLS, ENTITY_KEY_TO_TYPE
+from api.client.constants import DATA_SERIES_UNIQUE_TYPES_ID, ENTITY_KEY_TO_TYPE
 from builtins import str
 from builtins import zip
 from random import random
@@ -32,14 +32,14 @@ class GroClient(Client):
     def __init__(self, api_host, access_token):
         super(GroClient, self).__init__(api_host, access_token)
         self._logger = lib.get_default_logger()
-        self._data_series_list = []  # all that have been added
+        self._data_series_list = set()  # all that have been added
         self._data_series_queue = []  # added but not loaded in data frame
         self._data_frame = pandas.DataFrame()
 
     def get_logger(self):
         return self._logger
 
-    def get_df(self, show_revisions=False):
+    def get_df(self, show_revisions=False, index_by_series=False):
         """Call :meth:`~.get_data_points` for each saved data series and return as a combined
         dataframe.
 
@@ -53,13 +53,18 @@ class GroClient(Client):
             The results to :meth:`~.get_data_points` for all the saved series, appended together
             into a single dataframe.
             See https://developers.gro-intelligence.com/data-point-definition.html
-
+            If index_by_series is set, the dataframe is indexed by series.
+            See https://developers.gro-intelligence.com/data-series-definition.html
         """
         while self._data_series_queue:
             data_series = self._data_series_queue.pop()
             if show_revisions:
                 data_series['show_revisions'] = True
             self.add_points_to_df(None, data_series, self.get_data_points(**data_series))
+        if index_by_series:
+            return self._data_frame.set_index([c for c in filter(
+                lambda col: col in self._data_frame.columns,
+                DATA_SERIES_UNIQUE_TYPES_ID)])
         return self._data_frame
 
     def add_points_to_df(self, index, data_series, data_points, *args):
@@ -88,10 +93,8 @@ class GroClient(Client):
 
         if self._data_frame.empty:
             self._data_frame = tmp
-            self._data_frame.set_index([col for col in DATA_POINTS_UNIQUE_COLS
-                                        if col in tmp.columns])
         else:
-            self._data_frame = self._data_frame.merge(tmp, how='outer')
+            self._data_frame = pandas.concat([self._data_frame, tmp])
 
     def get_data_points(self, **selections):
         """Get all the data points for a given selection.
@@ -222,8 +225,8 @@ class GroClient(Client):
     def GDH(self, gdh_selection, **optional_selections):
         """Wrapper for :meth:`~.get_data_points`. with alternative input and output style.
 
-        The selection of data series to retrieve is encoded in a
-        'gdh_seletion' string of the form
+        The data series selection to retrieve is encoded in a 
+        'gdh_selection' string of the form
         <metric_id>-<item_id>-<region_id>-<partner_region_id>-<source_id>-<frequency_id>
 
         For example, client.GDH("860032-274-1231-0-14-9") will get the
@@ -242,23 +245,23 @@ class GroClient(Client):
         ------
         pandas.DataFrame
 
-            the main DataFrame :meth:`~.get_df`. with the :meth:`~.get_data_points`. results for requested series.
+            the subset of the main DataFrame :meth:`~.get_df`. with the requested series.
 
         """
 
-        entity_keys = ['metric_id', 'item_id', 'region_id', 'partner_region_id',
-                       'source_id', 'frequency_id']
         entity_ids = [int(x) for x in gdh_selection.split('-')]
-        selection = dict(zip(entity_keys, entity_ids))
+        selection = dict(zip(DATA_SERIES_UNIQUE_TYPES_ID, entity_ids))
 
-        # add optional pararms to selection 
-        for key, value in list(optional_selections.items()):    
-            if key not in entity_keys:
+        # add optional pararms to selection
+        for key, value in list(optional_selections.items()):
+            if key not in DATA_SERIES_UNIQUE_TYPES_ID:
                 selection[key] = value
 
         self.add_single_data_series(selection)
-        df = self.get_df()
-        return df
+        try:
+            return self.get_df(index_by_series=True).loc[[tuple(entity_ids)], :]
+        except KeyError as e:
+            return pandas.DataFrame()
 
     def get_data_series_list(self):
         """Inspect the current list of saved data series contained in the GroClient.
@@ -291,30 +294,46 @@ class GroClient(Client):
         None
 
         """
-        self._data_series_list.append(data_series)
-        self._data_series_queue.append(data_series)
-        self._logger.info("Added {}".format(data_series))
+        series_hash = frozenset(data_series.items())
+        if series_hash not in self._data_series_list:
+            self._data_series_list.add(series_hash)
+            self._data_series_queue.append(data_series)
+            self._logger.info("Added {}".format(data_series))
+        else:
+            self._logger.debug("Already added: {}".format(data_series))
         return
 
     def find_data_series(self, **kwargs):
-        """Find the best possible data series matching a combination of entities specified by name.
+        """Find data series matching a combination of entities specified by
+        name and yield them ranked by coverage.
 
         Example::
 
-            next(client.find_data_series(item="Corn",
-                                         metric="Futures Open Interest",
-                                         region="United States of America"))
+            client.find_data_series(item="Corn",
+                                    metric="Futures Open Interest",
+                                    region="United States of America"))
 
-        will yield::
+        will yield a sequence of dictionaries of the form::
 
             { 'metric_id': 15610005, 'metric_name': 'Futures Open Interest',
               'item_id': 274, 'item_name': 'Corn',
               'region_id': 1215, 'region_name': 'United States',
-              'partner_region_id': 0, 'partner_region_name': 'World',
               'frequency_id': 15, 'source_id': 81,
-              'start_date': '1972-03-01T00:00:00.000Z', 'end_date': '2022-12-31T00:00:00.000Z' }
+              'start_date': '1972-03-01T00:00:00.000Z', ...},
+            { ... },  ...
+
 
         See https://developers.gro-intelligence.com/data-series-definition.html
+
+        :code:`result_filter` can be used to filter entity searches. For example::
+
+            client.find_data_series(item="vegetation",
+                                    metric="vegetation indices",
+                                    region="Central",
+                                    result_filter=lambda r: 'region_id' not in r or r['region_id'] == 10393)
+
+        will only consider that particular region, and not the many other regions
+        with the same name.
 
         This method uses :meth:`~.search`, :meth:`~.get_data_series`,
         :meth:`~.get_available_timefrequency` and  :meth:`~.rank_series_by_source`.
@@ -330,48 +349,42 @@ class GroClient(Client):
             YYYY-MM-DD
         end_date : string, optional
             YYYY-MM-DD
+        result_filter: function, optional
+            function taking data series selection dict returning boolean
 
         Yields
         ------
         dict
-           A sequence of data series matching the input selections, in quality rank order.
+           A sequence of data series matching the input selections
 
         See also
         --------
         :meth:`~.get_data_series`
 
         """
-        search_results = []
-        keys = []
-        if kwargs.get('item'):
-            search_results.append(
-                self.search('items', kwargs['item'])[:cfg.MAX_RESULT_COMBINATION_DEPTH])
-            keys.append('item_id')
-        if kwargs.get('metric'):
-            search_results.append(
-                self.search('metrics', kwargs['metric'])[:cfg.MAX_RESULT_COMBINATION_DEPTH])
-            keys.append('metric_id')
-        if kwargs.get('region'):
-            search_results.append(
-                self.search('regions', kwargs['region'])[:cfg.MAX_RESULT_COMBINATION_DEPTH])
-            keys.append('region_id')
-        if kwargs.get('partner_region'):
-            search_results.append(
-                self.search('regions', kwargs['partner_region'])[:cfg.MAX_RESULT_COMBINATION_DEPTH])
-            keys.append('partner_region_id')
+        result_filter = kwargs.pop('result_filter', lambda x: True)
+        results = []  # [[('item_id',1),('item_id',2),...],[('metric_id" 1),...],...]
+        for kw in kwargs:
+            id_key = '{}_id'.format(kw)
+            results.append([
+                (id_key, result['id']) for result in filter(
+                    lambda entity: result_filter({id_key: entity['id']}),
+                    self.search(ENTITY_KEY_TO_TYPE[id_key], kwargs[kw]))
+            ][:cfg.MAX_RESULT_COMBINATION_DEPTH])
         # Rank by frequency and source, while preserving search ranking in
-        # permutations of item, metric, region, and partner region.
+        # permutations of search results.
         ranking_groups = set()
-        for comb in itertools.product(*search_results):
-            entities = dict(list(zip(keys, [entity['id'] for entity in comb])))
-            for data_series in self.get_data_series(**entities)[:cfg.MAX_SERIES_PER_COMB]:
+        for comb in itertools.product(*results):
+            for data_series in self.get_data_series(**dict(comb))[:cfg.MAX_SERIES_PER_COMB]:
                 self._logger.debug("Data series: {}".format(data_series))
-                # time range affects ranking
+                # remove time and frequency to rank them
                 data_series.pop('start_date', None)
                 data_series.pop('end_date', None)
                 data_series.pop('frequency_id', None)
+                # remove source to rank them
                 data_series.pop('source_id', None)
                 data_series.pop('source_name', None)
+                # metadata is not hashable
                 data_series.pop('metadata', None)
                 series_hash = frozenset(data_series.items())
                 if series_hash not in ranking_groups:
@@ -401,6 +414,8 @@ class GroClient(Client):
             YYYY-MM-DD
         end_date : string, optional
             YYYY-MM-DD
+        result_filter: function, optional
+            function taking data series selection dict returning boolean
 
         Returns
         -------
@@ -640,7 +655,7 @@ def main():
             item=args.item, metric=args.metric,
             region=args.region, partner_region=args.partner_region))
     client.print_one_data_series(ds, OUTPUT_FILENAME)
-    
+
 
 def get_df(client, **selected_entities):
     """Deprecated: use the corresponding method in GroClient instead."""
