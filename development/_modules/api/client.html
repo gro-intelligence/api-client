@@ -264,19 +264,22 @@
         <span class="k">return</span> <span class="n">lib</span><span class="o">.</span><span class="n">list_available</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_host</span><span class="p">,</span> <span class="n">selected_entities</span><span class="p">)</span>
 
 
-    <span class="k">def</span> <span class="nf">lookup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">,</span> <span class="n">entity_id</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Retrieve details about a given id of type entity_type.</span>
+    <span class="k">def</span> <span class="nf">lookup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">,</span> <span class="n">entity_ids</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Retrieve details about a given id or list of ids of type entity_type.</span>
 
 <span class="sd">        https://developers.gro-intelligence.com/gro-ontology.html</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        entity_type : { &#39;metrics&#39;, &#39;items&#39;, &#39;regions&#39;, &#39;frequencies&#39;, &#39;sources&#39;, &#39;units&#39; }</span>
-<span class="sd">        entity_id : int</span>
+<span class="sd">        entity_ids : int or list of ints</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        dict</span>
+<span class="sd">        dict or dict of dicts</span>
+<span class="sd">            A dict with entity details is returned if an integer is given for entity_ids.</span>
+<span class="sd">            A dict of dicts with entity details, keyed by id, is returned if a list of integers is</span>
+<span class="sd">            given for entity_ids.</span>
 
 <span class="sd">            Example::</span>
 
@@ -286,8 +289,30 @@
 <span class="sd">                  &#39;definition&#39;: &#39;The seeds of the widely cultivated corn plant &lt;i&gt;Zea mays&lt;/i&gt;,&#39;</span>
 <span class="sd">                                &#39; which is one of the world\&#39;s most popular grains.&#39; }</span>
 
+<span class="sd">            Example::</span>
+
+<span class="sd">                {   &#39;274&#39;: {</span>
+<span class="sd">                        &#39;id&#39;: 274,</span>
+<span class="sd">                        &#39;contains&#39;: [779, 780, ...],</span>
+<span class="sd">                        &#39;belongsTo&#39;: [4138, 8830, ...],</span>
+<span class="sd">                        &#39;name&#39;: &#39;Corn&#39;,</span>
+<span class="sd">                        &#39;definition&#39;: &#39;The seeds of the widely cultivated corn plant&#39;</span>
+<span class="sd">                                      &#39; &lt;i&gt;Zea mays&lt;/i&gt;, which is one of the world\&#39;s most popular&#39;</span>
+<span class="sd">                                      &#39; grains.&#39;</span>
+<span class="sd">                    },</span>
+<span class="sd">                    &#39;270&#39;: {</span>
+<span class="sd">                        &#39;id&#39;: 270,</span>
+<span class="sd">                        &#39;contains&#39;: [1737, 7401, ...],</span>
+<span class="sd">                        &#39;belongsTo&#39;: [8830, 9053, ...],</span>
+<span class="sd">                        &#39;name&#39;: &#39;Soybeans&#39;,</span>
+<span class="sd">                        &#39;definition&#39;: &#39;The seeds and harvested crops of plants belonging to the&#39;</span>
+<span class="sd">                                      &#39; species &lt;i&gt;Glycine max&lt;/i&gt; that are used in the production&#39;</span>
+<span class="sd">                                      &#39; of oil and both human and livestock consumption.&#39;</span>
+<span class="sd">                    }</span>
+<span class="sd">                }</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">lib</span><span class="o">.</span><span class="n">lookup</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_host</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">,</span> <span class="n">entity_id</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">lib</span><span class="o">.</span><span class="n">lookup</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_host</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">,</span> <span class="n">entity_ids</span><span class="p">)</span>
 
 
     <span class="k">def</span> <span class="nf">lookup_unit_abbreviation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">unit_id</span><span class="p">):</span>
