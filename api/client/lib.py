@@ -416,6 +416,18 @@ def get_data_series(access_token, api_host, **selection):
         raise Exception(resp.text)
 
 
+def get_top(access_token, api_host, entity_type, n=5, **selection):
+    url = '/'.join(['https:', '', api_host, 'v2/top/{}'.format(entity_type)])
+    headers = {'authorization': 'Bearer ' + access_token}
+    params = get_params_from_selection(**selection)
+    params['n'] = n
+    resp = get_data(url, headers, params)
+    try:
+        return resp.json()
+    except KeyError:
+        raise Exception(resp.text)
+
+
 def make_key(key):
     if key not in ('startDate', 'endDate'):
         return key + 's'
