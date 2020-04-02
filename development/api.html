@@ -226,8 +226,8 @@
 <h2><a class="toc-backref" href="#id1">Basic Exploration</a><a class="headerlink" href="#basic-exploration" title="Permalink to this headline">¶</a></h2>
 <dl class="method">
 <dt id="api.client.gro_client.GroClient.lookup">
-<code class="descclassname">GroClient.</code><code class="descname">lookup</code><span class="sig-paren">(</span><em>entity_type</em>, <em>entity_id</em><span class="sig-paren">)</span><a class="headerlink" href="#api.client.gro_client.GroClient.lookup" title="Permalink to this definition">¶</a></dt>
-<dd><p>Retrieve details about a given id of type entity_type.</p>
+<code class="descclassname">GroClient.</code><code class="descname">lookup</code><span class="sig-paren">(</span><em>entity_type</em>, <em>entity_ids</em><span class="sig-paren">)</span><a class="headerlink" href="#api.client.gro_client.GroClient.lookup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve details about a given id or list of ids of type entity_type.</p>
 <p><a class="reference external" href="https://developers.gro-intelligence.com/gro-ontology.html">https://developers.gro-intelligence.com/gro-ontology.html</a></p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -235,11 +235,14 @@
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>entity_type</strong> (<em>{ 'metrics'</em><em>, </em><em>'items'</em><em>, </em><em>'regions'</em><em>, </em><em>'frequencies'</em><em>, </em><em>'sources'</em><em>, </em><em>'units' }</em>) &#8211; </li>
-<li><strong>entity_id</strong> (<em>int</em>) &#8211; </li>
+<li><strong>entity_ids</strong> (<em>int</em><em> or </em><em>list of ints</em>) &#8211; </li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><p>Example:</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><p>A dict with entity details is returned if an integer is given for entity_ids.
+A dict of dicts with entity details, keyed by id, is returned if a list of integers is
+given for entity_ids.</p>
+<p>Example:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="mi">274</span><span class="p">,</span>
   <span class="s1">&#39;contains&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">779</span><span class="p">,</span> <span class="mi">780</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span>
   <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Corn&#39;</span><span class="p">,</span>
@@ -247,10 +250,32 @@
                 <span class="s1">&#39; which is one of the world&#39;</span><span class="n">s</span> <span class="n">most</span> <span class="n">popular</span> <span class="n">grains</span><span class="o">.</span><span class="s1">&#39; }</span>
 </pre></div>
 </div>
+<p>Example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="p">{</span>   <span class="s1">&#39;274&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="mi">274</span><span class="p">,</span>
+        <span class="s1">&#39;contains&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">779</span><span class="p">,</span> <span class="mi">780</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span>
+        <span class="s1">&#39;belongsTo&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">4138</span><span class="p">,</span> <span class="mi">8830</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span>
+        <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Corn&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;definition&#39;</span><span class="p">:</span> <span class="s1">&#39;The seeds of the widely cultivated corn plant&#39;</span>
+                      <span class="s1">&#39; &lt;i&gt;Zea mays&lt;/i&gt;, which is one of the world&#39;</span><span class="n">s</span> <span class="n">most</span> <span class="n">popular</span><span class="s1">&#39;</span>
+                      <span class="s1">&#39; grains.&#39;</span>
+    <span class="p">},</span>
+    <span class="s1">&#39;270&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="mi">270</span><span class="p">,</span>
+        <span class="s1">&#39;contains&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1737</span><span class="p">,</span> <span class="mi">7401</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span>
+        <span class="s1">&#39;belongsTo&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">8830</span><span class="p">,</span> <span class="mi">9053</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span>
+        <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Soybeans&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;definition&#39;</span><span class="p">:</span> <span class="s1">&#39;The seeds and harvested crops of plants belonging to the&#39;</span>
+                      <span class="s1">&#39; species &lt;i&gt;Glycine max&lt;/i&gt; that are used in the production&#39;</span>
+                      <span class="s1">&#39; of oil and both human and livestock consumption.&#39;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
 </p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">dict</p>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">dict or dict of dicts</p>
 </td>
 </tr>
 </tbody>
