@@ -1,8 +1,6 @@
 import mock
 
 from api.client import lib
-from requests import Response
-import json
 import platform
 from pkg_resources import get_distribution
 
