@@ -6,6 +6,7 @@ try:
 except ImportError:
     from backports.functools_lru_cache import lru_cache as memoize
 import re
+from math import ceil
 
 
 @memoize(maxsize=None)
@@ -73,7 +74,7 @@ def dict_reformat_keys(obj, format_func):
         A new dictionary with formatted keys
 
     """
-    return dict(format_func((key), value) for key, value in obj.items())
+    return {format_func(key): value for key, value in obj.items()}
 
 
 def list_chunk(arr, chunk_size=50):
@@ -91,9 +92,18 @@ def list_chunk(arr, chunk_size=50):
     Examples
     --------
     >>> list_chunk([1,2,3,4,5,6,7,8], 3)
-    [[1,2,3], [4,5,6], [7,8]]
+    [[1, 2, 3], [4, 5, 6], [7, 8]]
     >>> list_chunk([1,2,3,4,5,6,7,8,9,10,11], 5)
-    [[1,2,3,4,5], [6,7,8,9,10], [11]]
+    [[1, 2, 3, 4, 5], [6, 7, 8, 9, 10], [11]]
 
     """
-    return [arr[i*chunk_size:(i+1)*chunk_size] for i in range(len(arr))]
+    return [arr[i*chunk_size:(i+1)*chunk_size]
+            for i in range(ceil(len(arr)/chunk_size))]
+
+
+if __name__ == '__main__':
+    # To run doctests:
+    # $ python utils.py -v
+    import doctest
+    doctest.testmod(raise_on_error=True,  # Set to False for prettier error message
+                    optionflags=doctest.NORMALIZE_WHITESPACE | doctest.ELLIPSIS)
