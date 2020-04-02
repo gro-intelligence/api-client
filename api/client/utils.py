@@ -98,7 +98,7 @@ def list_chunk(arr, chunk_size=50):
 
     """
     return [arr[i*chunk_size:(i+1)*chunk_size]
-            for i in range(ceil(len(arr)/chunk_size))]
+            for i in range(int(ceil(len(arr)/chunk_size)))]
 
 
 if __name__ == '__main__':
