@@ -89,39 +89,27 @@ def test_list_available_snake_to_camel(mock_requests_get):
 
 
 @mock.patch('requests.get')
-def test_lookup(mock_requests_get):
-    mock_data = initialize_requests_mocker_and_get_mock_data(mock_requests_get)
+def test_single_lookup(mock_requests_get):
+    api_response = {'data': {'12345': {'id': 12345, 'name': 'Test', 'contains': []}}}
+    initialize_requests_mocker_and_get_mock_data(mock_requests_get, api_response)
+    expected_return = {'id': 12345, 'name': 'Test', 'contains': []}
+    assert lib.lookup(MOCK_TOKEN, MOCK_HOST, 'items', 12345) == expected_return
 
-    # test data
-    entity_types = ['items', 'metrics', 'regions', 'units', 'sources']
 
-    for ent_type in entity_types:
-        assert lib.lookup(MOCK_TOKEN, MOCK_HOST, ent_type, 12345) == mock_data['data']
-
-        # Make sure that call now exists in the mock call stack
-        mock_requests_get.assert_has_calls(
-            [mock.call('https://pytest.groclient.url/v2/' + ent_type + '/12345',
-                       headers={
-                        'authorization': 'Bearer pytest.groclient.token',
-                        'python-version': PYTHON_VERSION,
-                        'api-client-version': API_CLIENT_VERSION
-                       },
-                       params=None,
-                       timeout=None)]
-        )
-
-# TODO: Add test case for logic in __init.py__. Below will be in that test case:
-# @mock.patch('api.client.Client.lookup')
-# def test_lookup_unit_abbreviation(lookup_mocked):
-#
-#     lookup_mocked.return_value = {'abbreviation': 'test123'}
-#     assert lib.lookup_unit_abbreviation(MOCK_TOKEN, MOCK_HOST, 'kg') ==  'test123'
-#     assert lib.lookup_unit_abbreviation(MOCK_TOKEN, MOCK_HOST, 'kg') ==  'test123'
-#     assert lib.lookup_unit_abbreviation(MOCK_TOKEN, MOCK_HOST, 'kg') ==  'test123'
-#     assert lib.lookup_unit_abbreviation(MOCK_TOKEN, MOCK_HOST, 'mg') == 'test123'
-#
-#     # Make sure it caches properly
-#     assert lookup_mocked.call_args_list == [mock.call('units', 'kg'), mock.call('units', 'mg')]
+@mock.patch('requests.get')
+def test_multiple_lookups(mock_requests_get):
+    api_response = {
+        'data': {
+            '12345': {'id': 12345, 'name': 'Vegetables', 'contains': [67890], 'belongsTo': []},
+            '67890': {'id': 67890, 'name': 'Eggplant', 'contains': [], 'belongsTo': [12345]}
+        }
+    }
+    initialize_requests_mocker_and_get_mock_data(mock_requests_get, api_response)
+    expected_return = {
+        '12345': {'id': 12345, 'name': 'Vegetables', 'contains': [67890], 'belongsTo': []},
+        '67890': {'id': 67890, 'name': 'Eggplant', 'contains': [], 'belongsTo': [12345]}
+    }
+    assert lib.lookup(MOCK_TOKEN, MOCK_HOST, 'items', [12345, 67890]) == expected_return
 
 
 @mock.patch('requests.get')
