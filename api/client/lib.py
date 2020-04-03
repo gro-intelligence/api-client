@@ -242,6 +242,10 @@ def list_available(access_token, api_host, selected_entities):
 
 
 def lookup(access_token, api_host, entity_type, entity_ids):
+    try:  # Convert iterable types like numpy arrays or tuples into plain lists
+        entity_ids = list(entity_ids)
+    except TypeError:  # Convert anything else, like strings or numpy integers, into plain integers
+        entity_ids = int(entity_ids)
     url = '/'.join(['https:', '', api_host, 'v2', entity_type])
     headers = {'authorization': 'Bearer ' + access_token}
     params = {'ids': str(entity_ids)}
