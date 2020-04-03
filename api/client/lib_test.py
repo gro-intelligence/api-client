@@ -1,4 +1,5 @@
 import mock
+import numpy as np
 
 from api.client import lib
 import platform
@@ -110,6 +111,25 @@ def test_multiple_lookups(mock_requests_get):
         '67890': {'id': 67890, 'name': 'Eggplant', 'contains': [], 'belongsTo': [12345]}
     }
     assert lib.lookup(MOCK_TOKEN, MOCK_HOST, 'items', [12345, 67890]) == expected_return
+
+
+@mock.patch('requests.get')
+def test_lookup_with_numpy(mock_requests_get):
+    api_response = {
+        'data': {
+            '12345': {'id': 12345, 'name': 'Vegetables', 'contains': [67890], 'belongsTo': []},
+            '67890': {'id': 67890, 'name': 'Eggplant', 'contains': [], 'belongsTo': [12345]}
+        }
+    }
+    initialize_requests_mocker_and_get_mock_data(mock_requests_get, api_response)
+    expected_return = {
+        '12345': {'id': 12345, 'name': 'Vegetables', 'contains': [67890], 'belongsTo': []},
+        '67890': {'id': 67890, 'name': 'Eggplant', 'contains': [], 'belongsTo': [12345]}
+    }
+    assert lib.lookup(MOCK_TOKEN, MOCK_HOST, 'items', np.array([12345, 67890])) == expected_return
+
+    assert lib.lookup(MOCK_TOKEN, MOCK_HOST, 'items',
+                      np.array([12345])[0]) == expected_return['12345']
 
 
 @mock.patch('requests.get')
