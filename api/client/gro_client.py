@@ -67,7 +67,7 @@ class GroClient(Client):
                 if type_id in self._data_frame.columns
             ])
             indexed_df.index.set_names(DATA_SERIES_UNIQUE_TYPES_ID, inplace=True)
-            return indexed_df
+            return indexed_df.sort_index()
         return self._data_frame
 
     def add_points_to_df(self, index, data_series, data_points, *args):
