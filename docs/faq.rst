@@ -1,5 +1,5 @@
 ###
-FAQ
+FAQs
 ###
 
 .. contents:: Table of Contents
@@ -23,7 +23,7 @@ Source lag is defined as the worst normal case scenario in regards to how long a
 Data Retrieval
 ==============
 
-I specified an end_date when calling get_data_points(), but I am getting points with other end_dates
+I specified an end_date when calling get_data_points(), why am I getting points with other end_dates?
 ----------------------------------------------------------------------------------------------------
 
 start_date and end_date specify a time interval. When retrieving a
@@ -75,7 +75,7 @@ How do I get authenticated access to Gro API?
 
 You must get an `authentication token <authentication#retrieving-a-token>`_ from your Gro account.
 
-I tried using my Gro username and login but am getting a 401 Unauthorized error
+Why am I getting a 401 Unauthorized error when I try to use my Gro username and login?
 -------------------------------------------------------------------------------
 
 A Gro account gives you access to the web application at app.gro-intelligence.com. API access is sold as an add-on product you need to be activated for. To learn more about getting an API account, contact our sales team using the link at `gro-intelligence.com/products/gro-api <https://www.gro-intelligence.com/products/gro-api>`_
