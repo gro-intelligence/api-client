@@ -19,6 +19,8 @@ from api.client.samples.analogous_years.lib import \
     feature_extractions, \
     get_transform_data
 
+DEFAULT_API_HOST = 'api.gro-intelligence.com'
+
 
 def common_start_date(client, data_series, provided_start_date=None):
     """Computes the earliest available start date from which all gro-data_series have data"""
@@ -51,7 +53,7 @@ def enso_data(start_date):
 
 
 def get_file_name(api_token, data_series_list, initial_date, final_date,
-                  api_host='api.gro-intelligence.com'):
+                  api_host=DEFAULT_API_HOST):
     """Combines region, items, and dates to return a string"""
     client = GroClient(api_host, api_token)
     logger = client.get_logger()
@@ -176,7 +178,7 @@ def analogous_years(api_token, data_series_list, initial_date, final_date,
                     methods_list=['euclidean', 'cumulative', 'ts-features'],
                     all_ranks=None, weights=None, enso=None, enso_weight=None,
                     provided_start_date=None, tsfresh_num_jobs=0,
-                    api_host='api.gro-intelligence.com'):
+                    api_host=DEFAULT_API_HOST):
     """
     Use L^2 distance function to combine weighted distances from multiple gro-data_series
     and return the rank
@@ -244,7 +246,7 @@ def analogous_years(api_token, data_series_list, initial_date, final_date,
 
 
 def generate_correlation_scatterplots(api_token, dataframe, folder_name, output_dir='',
-                                      api_host='api.gro-intelligence.com'):
+                                      api_host=DEFAULT_API_HOST):
     client = GroClient(api_host, api_token)
     logger = client.get_logger()
     folder_path = os.path.join(output_dir, './ranks_csv', folder_name)
@@ -260,7 +262,7 @@ def generate_correlation_matrix(dataframe):
 
 
 def save_to_csv(api_token, dataframe, folder_name, file_name='', output_dir='',
-                api_host='api.gro-intelligence.com'):
+                api_host=DEFAULT_API_HOST):
     """ save the dataframe into csv file called <output_dir>/ranks_csv/ranks.csv """
     client = GroClient(api_host, api_token)
     logger = client.get_logger()
