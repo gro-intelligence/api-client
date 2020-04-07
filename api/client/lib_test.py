@@ -347,3 +347,16 @@ def test_descendant_regions(mock_requests_get, lookup_mocked):
 
     assert lib.get_descendant_regions(MOCK_TOKEN, MOCK_HOST, 14, include_historical=False,
                                       include_details=False) == [{'id': 2}]
+
+
+@mock.patch('requests.get')
+def test_get_top(mock_requests_get):
+    mock_response = [
+        {'itemId': 274, 'value': 13175206696, 'unitId': 14},
+        {'itemId': 574, 'value': 13175206878, 'unitId': 14},
+        {'itemId': 7193, 'value': 13175206343, 'unitId': 14}
+    ]
+    mock_requests_get.return_value.json.return_value = mock_response
+    mock_requests_get.return_value.status_code = 200
+    assert lib.get_top(MOCK_TOKEN, MOCK_HOST, 'items', metric_id=14) == mock_response
+    assert lib.get_top(MOCK_TOKEN, MOCK_HOST, 'items', num_results=3, metric_id=14) == mock_response
