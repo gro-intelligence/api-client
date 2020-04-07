@@ -575,8 +575,8 @@
 <span class="sd">                 [{</span>
 <span class="sd">                    &#39;startDate&#39;: &#39;2000-02-18T00:00:00.000Z&#39;,</span>
 <span class="sd">                    &#39;frequencyId&#39;: 3,</span>
-<span class="sd">                     &#39;endDate&#39;: &#39;2020-03-12T00:00:00.000Z&#39;,</span>
-<span class="sd">                     &#39;name&#39;: &#39;8-day&#39;</span>
+<span class="sd">                    &#39;endDate&#39;: &#39;2020-03-12T00:00:00.000Z&#39;,</span>
+<span class="sd">                    &#39;name&#39;: &#39;8-day&#39;</span>
 <span class="sd">                  }, {</span>
 <span class="sd">                    &#39;startDate&#39;: &#39;2019-09-02T00:00:00.000Z&#39;,</span>
 <span class="sd">                    &#39;frequencyId&#39;: 1,</span>
@@ -585,6 +585,63 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">lib</span><span class="o">.</span><span class="n">get_available_timefrequency</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_host</span><span class="p">,</span>
                                                <span class="o">**</span><span class="n">selection</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">get_top</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">,</span> <span class="n">num_results</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="o">**</span><span class="n">selection</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Find the data series with the highest cumulative value for the given time range.</span>
+
+<span class="sd">        Examples::</span>
+
+<span class="sd">            # To get FAO&#39;s top 5 corn-producing countries of all time:</span>
+<span class="sd">            &gt;&gt;&gt; get_top(&#39;regions&#39;, metric_id=860032, item_id=274, frequency_id=9, source_id=2)</span>
+
+<span class="sd">            # To get FAO&#39;s top 5 corn-producing countries of 2014:</span>
+<span class="sd">            &gt;&gt;&gt; get_top(&#39;regions&#39;, metric_id=860032, item_id=274, frequency_id=9, source_id=2,</span>
+<span class="sd">                        start_date=&#39;2014-01-01&#39;, end_date=&#39;2014-12-31&#39;)</span>
+
+<span class="sd">            # To get the United States&#39; top 15 exports in the decade of 2010-2019:</span>
+<span class="sd">            &gt;&gt;&gt; get_top(&#39;items&#39;, num_results=15, metric_id=20032, region_id=1215, frequency_id=9,</span>
+<span class="sd">                        source_id=2, start_date=&#39;2010-01-01&#39;, end_date=&#39;2019-12-31&#39;)</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        entity_type : { &#39;items&#39;, &#39;regions&#39; }</span>
+<span class="sd">            The entity type to rank, all other selections being the same. Only items and regions</span>
+<span class="sd">            are rankable at this time.</span>
+<span class="sd">        num_results : integer, optional</span>
+<span class="sd">            How many data series to rank. Top 5 by default.</span>
+<span class="sd">        metric_id : integer</span>
+<span class="sd">        item_id : integer</span>
+<span class="sd">            Required if requesting top regions. Disallowed if requesting top items.</span>
+<span class="sd">        region_id : integer</span>
+<span class="sd">            Required if requesting top items. Disallowed if requesting top regions.</span>
+<span class="sd">        partner_region_id : integer, optional</span>
+<span class="sd">        frequency_id : integer</span>
+<span class="sd">        source_id : integer</span>
+<span class="sd">        start_date : string, optional</span>
+<span class="sd">            If not provided, the cumulative value used for ranking will include data points as far</span>
+<span class="sd">            back as the source provides.</span>
+<span class="sd">        end_date : string, optional</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        list of dicts</span>
+
+<span class="sd">            Example::</span>
+
+<span class="sd">                [</span>
+<span class="sd">                    {&#39;metricId&#39;: 860032, &#39;itemId&#39;: 274, &#39;regionId&#39;: 1215, &#39;frequencyId&#39;: 9,</span>
+<span class="sd">                     &#39;sourceId&#39;: 2, &#39;value&#39;: 400, &#39;unitId&#39;: 14},</span>
+<span class="sd">                    {&#39;metricId&#39;: 860032, &#39;itemId&#39;: 274, &#39;regionId&#39;: 1215, &#39;frequencyId&#39;: 9,</span>
+<span class="sd">                     &#39;sourceId&#39;: 2, &#39;value&#39;: 395, &#39;unitId&#39;: 14},</span>
+<span class="sd">                    {&#39;metricId&#39;: 860032, &#39;itemId&#39;: 274, &#39;regionId&#39;: 1215, &#39;frequencyId&#39;: 9,</span>
+<span class="sd">                     &#39;sourceId&#39;: 2, &#39;value&#39;: 12, &#39;unitId&#39;: 14},</span>
+<span class="sd">                ]</span>
+
+<span class="sd">            Along with the series attributes, value and unit are also given for the total cumulative</span>
+<span class="sd">            value the series are ranked by. You may then use the results to call</span>
+<span class="sd">            :meth:`~.get_data_points` to get the individual time series points.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">lib</span><span class="o">.</span><span class="n">get_top</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_host</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">,</span> <span class="n">num_results</span><span class="p">,</span> <span class="o">**</span><span class="n">selection</span><span class="p">)</span>
 </pre></div>
 
            </div>
