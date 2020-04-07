@@ -351,4 +351,4 @@ def test_get_top(mock_requests_get):
     mock_requests_get.return_value.json.return_value = mock_response
     mock_requests_get.return_value.status_code = 200
     assert lib.get_top(MOCK_TOKEN, MOCK_HOST, 'items', metric_id=14) == mock_response
-    assert lib.get_top(MOCK_TOKEN, MOCK_HOST, 'items', n=3, metric_id=14) == mock_response
+    assert lib.get_top(MOCK_TOKEN, MOCK_HOST, 'items', num_results=3, metric_id=14) == mock_response
