@@ -416,11 +416,11 @@ def get_data_series(access_token, api_host, **selection):
         raise Exception(resp.text)
 
 
-def get_top(access_token, api_host, entity_type, n=5, **selection):
+def get_top(access_token, api_host, entity_type, num_results=5, **selection):
     url = '/'.join(['https:', '', api_host, 'v2/top/{}'.format(entity_type)])
     headers = {'authorization': 'Bearer ' + access_token}
     params = get_params_from_selection(**selection)
-    params['n'] = n
+    params['n'] = num_results
     resp = get_data(url, headers, params)
     try:
         return resp.json()
