@@ -362,7 +362,7 @@ class Client(object):
         return lib.get_available_timefrequency(self.access_token, self.api_host,
                                                **selection)
 
-    def get_top(self, entity_type, n=5, **selection):
+    def get_top(self, entity_type, num_results=5, **selection):
         """Find the data series with the highest cumulative value for the given time range.
 
         Examples::
@@ -375,15 +375,15 @@ class Client(object):
                         start_date='2014-01-01', end_date='2014-12-31')
 
             # To get the United States' top 15 exports in the decade of 2010-2019:
-            >>> get_top('items', n=15, metric_id=20032, region_id=1215, frequency_id=9, source_id=2,
-                        start_date='2010-01-01', end_date='2019-12-31')
+            >>> get_top('items', num_results=15, metric_id=20032, region_id=1215, frequency_id=9,
+                        source_id=2, start_date='2010-01-01', end_date='2019-12-31')
 
         Parameters
         ----------
         entity_type : { 'items', 'regions' }
             The entity type to rank, all other selections being the same. Only items and regions
             are rankable at this time.
-        n : integer, optional
+        num_results : integer, optional
             How many data series to rank. Top 5 by default.
         metric_id : integer
         item_id : integer
@@ -417,4 +417,4 @@ class Client(object):
             value the series are ranked by. You may then use the results to call
             :meth:`~.get_data_points` to get the individual time series points.
         """
-        return lib.get_top(self.access_token, self.api_host, entity_type, n, **selection)
+        return lib.get_top(self.access_token, self.api_host, entity_type, num_results, **selection)
