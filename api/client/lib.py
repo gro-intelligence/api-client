@@ -243,6 +243,10 @@ def list_available(access_token, api_host, selected_entities):
 
 
 def lookup(access_token, api_host, entity_type, entity_ids):
+    try:  # Convert iterable types like numpy arrays or tuples into plain lists
+        entity_ids = list(entity_ids)
+    except TypeError:  # Convert anything else, like strings or numpy integers, into plain integers
+        entity_ids = int(entity_ids)
     url = '/'.join(['https:', '', api_host, 'v2', entity_type])
     headers = {'authorization': 'Bearer ' + access_token}
     # If an integer is given, return only the dict with that id
@@ -350,6 +354,18 @@ def get_data_series(access_token, api_host, **selection):
             logger.warning('Data series have some historical regions, '
                            'see https://developers.gro-intelligence.com/faq.html')
         return response
+    except KeyError:
+        raise Exception(resp.text)
+
+
+def get_top(access_token, api_host, entity_type, num_results=5, **selection):
+    url = '/'.join(['https:', '', api_host, 'v2/top/{}'.format(entity_type)])
+    headers = {'authorization': 'Bearer ' + access_token}
+    params = get_params_from_selection(**selection)
+    params['n'] = num_results
+    resp = get_data(url, headers, params)
+    try:
+        return resp.json()
     except KeyError:
         raise Exception(resp.text)
 

@@ -101,6 +101,34 @@ def list_chunk(arr, chunk_size=50):
             for i in range(int(ceil(len(arr)/float(chunk_size))))]
 
 
+def intersect(lhs_list, rhs_list):
+    """Return the common elements of two lists
+
+    >>> intersect([1,2,3], [4,5,6])
+    []
+
+    >>> intersect([1,2,3], [4,5,6,2])
+    [2]
+
+    >>> intersect([1,2,3], [1,2,3])
+    [1, 2, 3]
+
+    Parameters
+    ----------
+    lhs_list : list
+        A list of some type that can be compared using `in`
+    rhs_list : list
+        A list of some type that can be compared using `in`
+
+    Returns
+    -------
+    list
+        A list of common elements
+
+    """
+    return list(filter(lambda elem: elem in rhs_list, lhs_list))
+
+
 if __name__ == '__main__':
     # To run doctests:
     # $ python utils.py -v

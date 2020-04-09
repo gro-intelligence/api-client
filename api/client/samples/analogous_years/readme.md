@@ -30,7 +30,7 @@ following [Gro Data Series](https://app.gro-intelligence.com/displays/za9MlQYRM)
 Then, from the `api-client/api/client/samples/analogous_years` directory they may run the following shell command.
 
 ```shell script
-analogous_years $ python run_analogous_years.py -m 2100031 2540047 15531082 -i 2039 3457 7382 -r 100000100 -s 35 26 43 -f 1 1 1 --initial_date 2019-01-01 --final_date 2019-10-31
+python run_analogous_years.py -m 2100031 2540047 15531082 -i 2039 3457 7382 -r 100000100 -s 35 26 43 -f 1 1 1 --initial_date 2019-01-01 --final_date 2019-10-31
 ```
 The ranks will be saved as a csv file in a subdirectory in the same directory.
 
@@ -91,7 +91,7 @@ default they will be saved in a subdirectory under the present working directory
 ## 3. Detailed Example
 A more detailed example with all the options in shell may look like
 ```shell script
-analogous_years $ python run_analogous_years.py -m 2100031 2540047 15531082 -i 2039 3457 7382 -r 100000100 -s 35 26 43 -f 1 1 1 --weights 0.2 0.3 0.4 --initial_date 2019-01-01 --final_date 2019-10-31 --groapi_token <Enter GroAccessToken> --output_dir <output director location> --report True --methods cumulative euclidean ts-features dtw --ENSO --ENSO-weight 0.5 --all_ranks --start_date 2015-01-01
+python run_analogous_years.py -m 2100031 2540047 15531082 -i 2039 3457 7382 -r 100000100 -s 35 26 43 -f 1 1 1 --weights 0.2 0.3 0.4 --initial_date 2019-01-01 --final_date 2019-10-31 --groapi_token <Enter GroAccessToken> --output_dir <output director location> --report True --methods cumulative euclidean ts-features dtw --ENSO --ENSO-weight 0.5 --all_ranks --start_date 2015-01-01
 ```
 
 ## 4. Working Example In Python
