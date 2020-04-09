@@ -200,8 +200,8 @@ def analogous_years(api_token, data_series_list, initial_date, final_date,
     """
     # TODO: Remove the following lines after a few releases
     if isinstance(api_token, GroClient):
-        api_token = api_token.access_token
         api_host = api_token.api_host
+        api_token = api_token.access_token
     client = GroClient(api_host, api_token)
     combined_items_distances = None
     data_series_list = common_start_date(client, data_series_list, provided_start_date)[
