@@ -6,6 +6,7 @@ try:
 except ImportError:
     from backports.functools_lru_cache import lru_cache as memoize
 import re
+from math import ceil
 
 
 @memoize(maxsize=None)
@@ -76,6 +77,30 @@ def dict_reformat_keys(obj, format_func):
     return {format_func(key): value for key, value in obj.items()}
 
 
+def list_chunk(arr, chunk_size=50):
+    """Chunk an array into chunks of a given max length.
+
+    Parameters
+    ----------
+    arr : list
+    chunk_size : int, optional
+
+    Returns
+    -------
+    list of lists
+
+    Examples
+    --------
+    >>> list_chunk([1,2,3,4,5,6,7,8], 3)
+    [[1, 2, 3], [4, 5, 6], [7, 8]]
+    >>> list_chunk([1,2,3,4,5,6,7,8,9,10,11], 5)
+    [[1, 2, 3, 4, 5], [6, 7, 8, 9, 10], [11]]
+
+    """
+    return [arr[i*chunk_size:(i+1)*chunk_size]
+            for i in range(int(ceil(len(arr)/float(chunk_size))))]
+
+
 def intersect(lhs_list, rhs_list):
     """Return the common elements of two lists
 
@@ -108,5 +133,5 @@ if __name__ == '__main__':
     # To run doctests:
     # $ python utils.py -v
     import doctest
-    doctest.testmod(raise_on_error=True,
+    doctest.testmod(#raise_on_error=True,  # Set to False for prettier error message
                     optionflags=doctest.NORMALIZE_WHITESPACE | doctest.ELLIPSIS)
