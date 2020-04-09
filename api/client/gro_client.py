@@ -1,6 +1,4 @@
 from __future__ import print_function
-from api.client import cfg, lib, Client
-from api.client.constants import DATA_SERIES_UNIQUE_TYPES_ID, ENTITY_KEY_TO_TYPE
 from builtins import str
 from builtins import zip
 from random import random
@@ -9,8 +7,13 @@ import functools
 import getpass
 import itertools
 import os
-import pandas
 import sys
+
+from api.client import cfg, lib, Client
+from api.client.constants import DATA_SERIES_UNIQUE_TYPES_ID, ENTITY_KEY_TO_TYPE
+from api.client.utils import intersect
+
+import pandas
 import unicodecsv
 
 
@@ -62,10 +65,8 @@ class GroClient(Client):
                 data_series['show_revisions'] = True
             self.add_points_to_df(None, data_series, self.get_data_points(**data_series))
         if index_by_series:
-            indexed_df = self._data_frame.set_index([
-                type_id for type_id in DATA_SERIES_UNIQUE_TYPES_ID
-                if type_id in self._data_frame.columns
-            ])
+            indexed_df = self._data_frame.set_index(intersect(DATA_SERIES_UNIQUE_TYPES_ID,
+                                                              self._data_frame.columns))
             indexed_df.index.set_names(DATA_SERIES_UNIQUE_TYPES_ID, inplace=True)
             return indexed_df.sort_index()
         return self._data_frame
