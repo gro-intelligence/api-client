@@ -1,4 +1,5 @@
 import mock
+import numpy as np
 
 from api.client import lib
 import platform
@@ -87,6 +88,25 @@ def test_multiple_lookups(mock_requests_get):
         '67890': {'id': 67890, 'name': 'Eggplant', 'contains': [], 'belongsTo': [12345]}
     }
     assert lib.lookup(MOCK_TOKEN, MOCK_HOST, 'items', [12345, 67890]) == expected_return
+
+
+@mock.patch('requests.get')
+def test_lookup_with_numpy(mock_requests_get):
+    api_response = {
+        'data': {
+            '12345': {'id': 12345, 'name': 'Vegetables', 'contains': [67890], 'belongsTo': []},
+            '67890': {'id': 67890, 'name': 'Eggplant', 'contains': [], 'belongsTo': [12345]}
+        }
+    }
+    initialize_requests_mocker_and_get_mock_data(mock_requests_get, api_response)
+    expected_return = {
+        '12345': {'id': 12345, 'name': 'Vegetables', 'contains': [67890], 'belongsTo': []},
+        '67890': {'id': 67890, 'name': 'Eggplant', 'contains': [], 'belongsTo': [12345]}
+    }
+    assert lib.lookup(MOCK_TOKEN, MOCK_HOST, 'items', np.array([12345, 67890])) == expected_return
+
+    assert lib.lookup(MOCK_TOKEN, MOCK_HOST, 'items',
+                      np.array([12345])[0]) == expected_return['12345']
 
 
 @mock.patch('requests.get')
@@ -248,3 +268,16 @@ def test_descendant_regions(mock_requests_get, lookup_mocked):
 
     assert lib.get_descendant_regions(MOCK_TOKEN, MOCK_HOST, 3, include_historical=False,
                                       include_details=False) == [{'id': 2}]
+
+
+@mock.patch('requests.get')
+def test_get_top(mock_requests_get):
+    mock_response = [
+        {'itemId': 274, 'value': 13175206696, 'unitId': 14},
+        {'itemId': 574, 'value': 13175206878, 'unitId': 14},
+        {'itemId': 7193, 'value': 13175206343, 'unitId': 14}
+    ]
+    mock_requests_get.return_value.json.return_value = mock_response
+    mock_requests_get.return_value.status_code = 200
+    assert lib.get_top(MOCK_TOKEN, MOCK_HOST, 'items', metric_id=14) == mock_response
+    assert lib.get_top(MOCK_TOKEN, MOCK_HOST, 'items', num_results=3, metric_id=14) == mock_response

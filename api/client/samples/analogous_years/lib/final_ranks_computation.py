@@ -13,11 +13,13 @@ import seaborn as sns
 import numpy as np
 import pandas as pd
 
-
+from api.client.gro_client import GroClient
 from api.client.samples.analogous_years.lib import \
     distance_matrix, \
     feature_extractions, \
     get_transform_data
+
+DEFAULT_API_HOST = 'api.gro-intelligence.com'
 
 
 def common_start_date(client, data_series, provided_start_date=None):
@@ -50,8 +52,10 @@ def enso_data(start_date):
     return enso_data_series
 
 
-def get_file_name(client, data_series_list, initial_date, final_date):
+def get_file_name(api_token, data_series_list, initial_date, final_date,
+                  api_host=DEFAULT_API_HOST):
     """Combines region, items, and dates to return a string"""
+    client = GroClient(api_host, api_token)
     logger = client.get_logger()
     key_words = [client.lookup('regions', data_series_list[0]['region_id'])['name']]
     for i in range(len(data_series_list)):
@@ -170,14 +174,15 @@ def combined_methods_distances(dictionary_of_df):
     return rank_df
 
 
-def analogous_years(client, data_series_list, initial_date, final_date,
+def analogous_years(api_token, data_series_list, initial_date, final_date,
                     methods_list=['euclidean', 'cumulative', 'ts-features'],
                     all_ranks=None, weights=None, enso=None, enso_weight=None,
-                    provided_start_date=None, tsfresh_num_jobs=0):
+                    provided_start_date=None, tsfresh_num_jobs=0,
+                    api_host=DEFAULT_API_HOST):
     """
     Use L^2 distance function to combine weighted distances from multiple gro-data_series
     and return the rank
-    :param client: Gro_client
+    :param api_token: string, Gro-api token
     :param data_series_list: list of dictionaries containing gro data series
     :param initial_date: A date in YYYY-MM-DD format
     :param final_date: A date in YYYY-MM-DD format
@@ -188,10 +193,16 @@ def analogous_years(client, data_series_list, initial_date, final_date,
     :param enso_weight: Float
     :param provided_start_date: A string in YYYY-MM-DD format
     :param tsfresh_num_jobs: integer, number of parallel processes in tsfresh
+    :param api_host:
     :return: A tuple (string, dataframe)
     The string contains '_' separated region, item, date
     The dataframe contains integer values (ranks)
     """
+    # TODO: Remove the following lines after a few releases
+    if isinstance(api_token, GroClient):
+        api_host = api_token.api_host
+        api_token = api_token.access_token
+    client = GroClient(api_host, api_token)
     combined_items_distances = None
     data_series_list = common_start_date(client, data_series_list, provided_start_date)[
         'data_series']
@@ -234,7 +245,9 @@ def analogous_years(client, data_series_list, initial_date, final_date,
     return display_dataframe
 
 
-def generate_correlation_scatterplots(client, dataframe, folder_name, output_dir=''):
+def generate_correlation_scatterplots(api_token, dataframe, folder_name, output_dir='',
+                                      api_host=DEFAULT_API_HOST):
+    client = GroClient(api_host, api_token)
     logger = client.get_logger()
     folder_path = os.path.join(output_dir, './ranks_csv', folder_name)
     sns.set(style="ticks")
@@ -248,8 +261,10 @@ def generate_correlation_matrix(dataframe):
     return dataframe.corr(method='spearman')
 
 
-def save_to_csv(client, dataframe, folder_name, file_name='', output_dir=''):
+def save_to_csv(api_token, dataframe, folder_name, file_name='', output_dir='',
+                api_host=DEFAULT_API_HOST):
     """ save the dataframe into csv file called <output_dir>/ranks_csv/ranks.csv """
+    client = GroClient(api_host, api_token)
     logger = client.get_logger()
     folder_path = os.path.join(output_dir, './ranks_csv', folder_name)
     if not os.path.exists(folder_path):
