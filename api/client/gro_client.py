@@ -723,7 +723,7 @@ class GroClient:
 
             client.find_data_series(item="Corn",
                                     metric="Futures Open Interest",
-                                    region="United States of America"))
+                                    region="United States of America")
 
         will yield a sequence of dictionaries of the form::
 
