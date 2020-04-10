@@ -8,7 +8,7 @@ Now that you have installed the basic requirements, you can start pulling data. 
     :caption: Table of Contents
     :maxdepth: 1
     
-    Get Started in 120 Seconds <getting-started-in-120-seconds>
+    Get Started in 120 Seconds <get-started-in-120-seconds>
     Quickstart.py <quickstart>
     Brazil Soybeans <simplified-brazil-soybeans-crop-model>
     gro_client tool <gro_client-tool>
