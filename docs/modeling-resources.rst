@@ -1,6 +1,6 @@
-#####
-Other
-#####
+###################
+Modeling Resources
+###################
 
 .. contents:: Table of Contents
   :local:
