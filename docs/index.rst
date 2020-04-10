@@ -43,4 +43,4 @@ With the Gro API Client, you have the power to:
     :maxdepth: 1
 
     FAQ <faq>
-    Other <other>
+    Modeling Resources <modeling-resources>
