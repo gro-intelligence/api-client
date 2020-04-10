@@ -8,10 +8,10 @@ Anaconda Additional Information
 	#. Open the .jupyter folder (pay attention to the ‘dot’ before the name)
 	#. Open the following file using a text editor: jupyter_notebook_config.py
 	#. Edit the following line
-	:code:`#c.NotebookApp.notebook_dir = u"`
-	change it to:
-	:code:`c.NotebookApp.notebook_dir = 'C:\Your\Path'`
-	Note: Be careful not to leave an empty space in the line when you delete the ‘#’ character, the first character on that line is ‘c’
+		:code:`#c.NotebookApp.notebook_dir = u"`
+		change it to:
+		:code:`c.NotebookApp.notebook_dir = 'C:\Your\Path'`
+		Note: Be careful not to leave an empty space in the line when you delete the ‘#’ character, the first character on that line is ‘c’
 	* Save the file
 	* Relaunch Anaconda Navigator
 	* Launch jupyter notebook
