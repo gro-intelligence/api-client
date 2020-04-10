@@ -52,12 +52,8 @@ def enso_data(start_date_bound):
     return enso_data_series
 
 
-<<<<<<< HEAD
-def get_file_name(api_token, data_series_list, initial_date, final_date, api_host=API_HOST):
-=======
 def get_file_name(api_token, data_series_list, initial_date, final_date,
                   api_host=DEFAULT_API_HOST):
->>>>>>> development
     """Combines region, items, and dates to return a string"""
     client = GroClient(api_host, api_token)
     logger = client.get_logger()
@@ -181,12 +177,8 @@ def combined_methods_distances(dictionary_of_df):
 def analogous_years(api_token, data_series_list, initial_date, final_date,
                     methods_list=['euclidean', 'cumulative', 'ts-features'],
                     all_ranks=None, weights=None, enso=None, enso_weight=None,
-<<<<<<< HEAD
-                    provided_start_date_bound=None, tsfresh_num_jobs=0, api_host=API_HOST):
-=======
-                    provided_start_date=None, tsfresh_num_jobs=0,
+                    provided_start_date_bound=None, tsfresh_num_jobs=0,
                     api_host=DEFAULT_API_HOST):
->>>>>>> development
     """
     Use L^2 distance function to combine weighted distances from multiple gro-data_series
     and return the rank
@@ -206,13 +198,6 @@ def analogous_years(api_token, data_series_list, initial_date, final_date,
     The string contains '_' separated region, item, date
     The dataframe contains integer values (ranks)
     """
-<<<<<<< HEAD
-=======
-    # TODO: Remove the following lines after a few releases
-    if isinstance(api_token, GroClient):
-        api_host = api_token.api_host
-        api_token = api_token.access_token
->>>>>>> development
     client = GroClient(api_host, api_token)
     combined_items_distances = None
     data_series_list = common_start_date_bound(client, data_series_list, provided_start_date_bound)[
@@ -258,11 +243,7 @@ def analogous_years(api_token, data_series_list, initial_date, final_date,
 
 
 def generate_correlation_scatterplots(api_token, dataframe, folder_name, output_dir='',
-<<<<<<< HEAD
-                                      api_host=API_HOST):
-=======
                                       api_host=DEFAULT_API_HOST):
->>>>>>> development
     client = GroClient(api_host, api_token)
     logger = client.get_logger()
     folder_path = os.path.join(output_dir, './ranks_csv', folder_name)
@@ -277,12 +258,8 @@ def generate_correlation_matrix(dataframe):
     return dataframe.corr(method='spearman')
 
 
-<<<<<<< HEAD
-def save_to_csv(api_token, dataframe, folder_name, file_name='', output_dir='', api_host=API_HOST):
-=======
 def save_to_csv(api_token, dataframe, folder_name, file_name='', output_dir='',
                 api_host=DEFAULT_API_HOST):
->>>>>>> development
     """ save the dataframe into csv file called <output_dir>/ranks_csv/ranks.csv """
     client = GroClient(api_host, api_token)
     logger = client.get_logger()
