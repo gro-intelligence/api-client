@@ -41,9 +41,9 @@ def list_length_validator(list1, list2):
         return list2
 
 
-def check_if_exists(entity_type, entity_value, api_token):
+def check_if_exists(entity_type, entity_value, api_token, api_host=API_HOST):
     """Checks if the Gro-entity_id exists"""
-    client = GroClient(API_HOST, api_token)
+    client = GroClient(api_host, api_token)
     logger = client.get_logger()
     try:
         client.lookup(entity_type, entity_value)
@@ -55,7 +55,7 @@ def check_if_exists(entity_type, entity_value, api_token):
 
 
 def get_data_series_list(region_id_list, item_id_list, metric_id_list, source_id_list,
-                         frequency_id_list, api_token):
+                         frequency_id_list, api_token, api_host=API_HOST):
     # checking if the length of the list for metric_id, item_id, source_id and
     # frequency_id match
     item_id_list = list_length_validator(metric_id_list, item_id_list)
@@ -95,6 +95,8 @@ def main():
                         help='Format YYYY-MM-DD')
     parser.add_argument('--groapi_token', type=str, default=os.environ['GROAPI_TOKEN'],
                         help='GroAPI token')
+    parser.add_argument('--api_host', type=str, default='api.gro-intelligence.com',
+                        help='api host')
     parser.add_argument('--output_dir', type=str, default='')
     parser.add_argument('--report', type=str2bool, default=True,
                         help='Generates correlation matrix and scatter plots between ranks')
@@ -118,27 +120,30 @@ def main():
     args = parser.parse_args()
     data_series_list = get_data_series_list(args.region_id, args.item_ids, args.metric_ids,
                                             args.source_ids, args.frequency_ids,
-                                            api_token=args.groapi_token)
+                                            api_token=args.groapi_token, api_host=args.api_host)
     folder_name = final_ranks_computation.get_file_name(args.groapi_token, data_series_list,
                                                         initial_date=args.initial_date,
-                                                        final_date=args.final_date)
+                                                        final_date=args.final_date,
+                                                        api_host=args.api_host)
     result = final_ranks_computation.analogous_years(
         args.groapi_token, data_series_list, args.initial_date, args.final_date,
         methods_list=args.methods, all_ranks=args.all_ranks, weights=args.weights, enso=args.ENSO,
         enso_weight=args.ENSO_weight, provided_start_date_bound=args.start_date_bound,
-        tsfresh_num_jobs=args.num_jobs)
+        tsfresh_num_jobs=args.num_jobs, api_host=args.api_host)
     final_ranks_computation.save_to_csv(args.groapi_token, result,
                                         folder_name,
                                         file_name='ranks.csv',
-                                        output_dir=args.output_dir)
+                                        output_dir=args.output_dir,
+                                        api_host=args.api_host)
     if args.all_ranks and args.report:
         correlation_matrix = final_ranks_computation.generate_correlation_matrix(result)
         final_ranks_computation.save_to_csv(args.groapi_token, correlation_matrix, folder_name,
                                             file_name='correlation_matrix.csv',
-                                            output_dir=args.output_dir)
+                                            output_dir=args.output_dir, api_host=args.api_host)
         final_ranks_computation.generate_correlation_scatterplots(args.groapi_token, result,
                                                                   folder_name,
-                                                                  output_dir=args.output_dir)
+                                                                  output_dir=args.output_dir,
+                                                                  api_host=args.api_host)
     return None
 
 
