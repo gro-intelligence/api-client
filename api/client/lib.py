@@ -6,9 +6,10 @@ should appear in the client classes rather than here.
 """
 
 from builtins import str
+from math import ceil
 from api.client import cfg
 from api.client.constants import REGION_LEVELS
-from api.client.utils import dict_reformat_keys, str_snake_to_camel, str_camel_to_snake
+from api.client.utils import dict_reformat_keys, str_snake_to_camel, str_camel_to_snake, list_chunk
 import json
 import logging
 import requests
@@ -248,16 +249,23 @@ def lookup(access_token, api_host, entity_type, entity_ids):
         entity_ids = int(entity_ids)
     url = '/'.join(['https:', '', api_host, 'v2', entity_type])
     headers = {'authorization': 'Bearer ' + access_token}
-    params = {'ids': str(entity_ids)}
-    resp = get_data(url, headers, params)
-    try:
-        # If an integer is given, return only the dict with that id
-        if isinstance(entity_ids, int):
+    # If an integer is given, return only the dict with that id
+    if isinstance(entity_ids, int):
+        params = {'ids': [entity_ids]}
+        resp = get_data(url, headers, params)
+        try:
             return resp.json()['data'].get(str(entity_ids))
-        else:  # If a list of integers is given, return an dict of dicts, keyed by id
-            return resp.json()['data']
-    except KeyError:
-        raise Exception(resp.text)
+        except KeyError:
+            raise Exception(resp.text)
+    else:  # If a list of integers is given, return an dict of dicts, keyed by id
+        all_results = {}
+        for id_batch in list_chunk(entity_ids):
+            params = {'ids': id_batch}
+            resp = get_data(url, headers, params)
+            result = resp.json()['data']
+            for id_str in result.keys():
+                all_results[id_str] = result[id_str]
+        return all_results
 
 
 def get_params_from_selection(**selection):
@@ -342,10 +350,22 @@ def get_data_series(access_token, api_host, **selection):
     try:
         response = resp.json()['data']
         if any((series.get('metadata', {}).get('includes_historical_region', False))
-               for series in response):
+                for series in response):
             logger.warning('Data series have some historical regions, '
                            'see https://developers.gro-intelligence.com/faq.html')
         return response
+    except KeyError:
+        raise Exception(resp.text)
+
+
+def get_top(access_token, api_host, entity_type, num_results=5, **selection):
+    url = '/'.join(['https:', '', api_host, 'v2/top/{}'.format(entity_type)])
+    headers = {'authorization': 'Bearer ' + access_token}
+    params = get_params_from_selection(**selection)
+    params['n'] = num_results
+    resp = get_data(url, headers, params)
+    try:
+        return resp.json()
     except KeyError:
         raise Exception(resp.text)
 
@@ -546,18 +566,18 @@ def search(access_token, api_host, entity_type, search_terms):
 
 
 def search_and_lookup(access_token, api_host, entity_type, search_terms, num_results=10):
-    search_results = search(access_token, api_host, entity_type, search_terms)
-    for result in search_results[:num_results]:
-        yield lookup(access_token, api_host, entity_type, result['id'])
+    search_results = search(access_token, api_host, entity_type, search_terms)[:num_results]
+    search_result_ids = [result['id'] for result in search_results]
+    search_result_details = lookup(access_token, api_host, entity_type, search_result_ids)
+    for search_result_id in search_result_ids:
+        yield search_result_details[str(search_result_id)]
 
 
 def lookup_belongs(access_token, api_host, entity_type, entity_id):
-    url = '/'.join(['https:', '', api_host, 'v2', entity_type, 'belongs-to'])
-    params = {'ids': str(entity_id)}
-    headers = {'authorization': 'Bearer ' + access_token}
-    parents = get_data(url, headers, params).json().get('data').get(str(entity_id), [])
-    for parent_entity_id in parents:
-        yield lookup(access_token, api_host, entity_type, parent_entity_id)
+    parent_ids = lookup(access_token, api_host, entity_type, entity_id)['belongsTo']
+    parent_details = lookup(access_token, api_host, entity_type, parent_ids)
+    for parent_id in parent_ids:
+        yield parent_details[str(parent_id)]
 
 
 def get_geo_centre(access_token, api_host, region_id):
@@ -593,15 +613,15 @@ def get_descendant_regions(access_token, api_host, region_id,
     descendant_region_ids = resp.json()['data'][str(region_id)]
 
     # Filter out regions with the 'historical' flag set to true
-    if not include_historical:
-        descendant_region_ids = [
-            descendant_region_id for descendant_region_id in descendant_region_ids
-            if not lookup(access_token, api_host, 'regions', descendant_region_id)['historical']
-        ]
+    if not include_historical or include_details:
+        region_details = lookup(access_token, api_host, 'regions', descendant_region_ids)
 
-    if include_details:
-        return [lookup(access_token, api_host, 'regions', descendant_region_id)
-                for descendant_region_id in descendant_region_ids]
+        if not include_historical:
+            descendant_region_ids = [region['id'] for region in region_details.values()
+                                     if not region['historical']]
+
+        if include_details:
+            return [region_details[str(region_id)] for region_id in descendant_region_ids]
 
     return [{'id': descendant_region_id} for descendant_region_id in descendant_region_ids]
 
@@ -610,5 +630,5 @@ if __name__ == '__main__':
     # To run doctests:
     # $ python lib.py -v
     import doctest
-    doctest.testmod(raise_on_error=True,
+    doctest.testmod(raise_on_error=True,  # Set to False for prettier error message
                     optionflags=doctest.NORMALIZE_WHITESPACE | doctest.ELLIPSIS)

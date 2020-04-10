@@ -376,8 +376,8 @@ class Client(object):
                  [{
                     'startDate': '2000-02-18T00:00:00.000Z',
                     'frequencyId': 3,
-                     'endDate': '2020-03-12T00:00:00.000Z',
-                     'name': '8-day'
+                    'endDate': '2020-03-12T00:00:00.000Z',
+                    'name': '8-day'
                   }, {
                     'startDate': '2019-09-02T00:00:00.000Z',
                     'frequencyId': 1,
@@ -386,3 +386,60 @@ class Client(object):
         """
         return lib.get_available_timefrequency(self.access_token, self.api_host,
                                                **selection)
+
+    def get_top(self, entity_type, num_results=5, **selection):
+        """Find the data series with the highest cumulative value for the given time range.
+
+        Examples::
+
+            # To get FAO's top 5 corn-producing countries of all time:
+            >>> get_top('regions', metric_id=860032, item_id=274, frequency_id=9, source_id=2)
+
+            # To get FAO's top 5 corn-producing countries of 2014:
+            >>> get_top('regions', metric_id=860032, item_id=274, frequency_id=9, source_id=2,
+                        start_date='2014-01-01', end_date='2014-12-31')
+
+            # To get the United States' top 15 exports in the decade of 2010-2019:
+            >>> get_top('items', num_results=15, metric_id=20032, region_id=1215, frequency_id=9,
+                        source_id=2, start_date='2010-01-01', end_date='2019-12-31')
+
+        Parameters
+        ----------
+        entity_type : { 'items', 'regions' }
+            The entity type to rank, all other selections being the same. Only items and regions
+            are rankable at this time.
+        num_results : integer, optional
+            How many data series to rank. Top 5 by default.
+        metric_id : integer
+        item_id : integer
+            Required if requesting top regions. Disallowed if requesting top items.
+        region_id : integer
+            Required if requesting top items. Disallowed if requesting top regions.
+        partner_region_id : integer, optional
+        frequency_id : integer
+        source_id : integer
+        start_date : string, optional
+            If not provided, the cumulative value used for ranking will include data points as far
+            back as the source provides.
+        end_date : string, optional
+
+        Returns
+        -------
+        list of dicts
+
+            Example::
+
+                [
+                    {'metricId': 860032, 'itemId': 274, 'regionId': 1215, 'frequencyId': 9,
+                     'sourceId': 2, 'value': 400, 'unitId': 14},
+                    {'metricId': 860032, 'itemId': 274, 'regionId': 1215, 'frequencyId': 9,
+                     'sourceId': 2, 'value': 395, 'unitId': 14},
+                    {'metricId': 860032, 'itemId': 274, 'regionId': 1215, 'frequencyId': 9,
+                     'sourceId': 2, 'value': 12, 'unitId': 14},
+                ]
+
+            Along with the series attributes, value and unit are also given for the total cumulative
+            value the series are ranked by. You may then use the results to call
+            :meth:`~.get_data_points` to get the individual time series points.
+        """
+        return lib.get_top(self.access_token, self.api_host, entity_type, num_results, **selection)
