@@ -37,15 +37,15 @@ def create_test_data_datetime():
 @mock.patch('api.client.gro_client.GroClient.get_df', return_value=create_test_data_datetime())
 def test_get_data(test_data_1):
     client = GroClient('mock_website', 'mock_access_token')
-    start_date = '2000-03-01T00:00:00.000Z'
+    start_date_bound = '2000-03-01T00:00:00.000Z'
     expected = pd.DataFrame(create_test_data())
     expected = expected[['end_date', 'value']]
     new_value = expected['value'].iloc[0]
-    new_row = pd.DataFrame({'end_date': [start_date], 'value': [new_value]})
+    new_row = pd.DataFrame({'end_date': [start_date_bound], 'value': [new_value]})
     expected = pd.concat([new_row, expected[:]]).reset_index(drop=True)
     expected.loc[:, 'end_date'] = pd.to_datetime(expected['end_date'])
     test_data = get_transform_data.get_data(client, 'metric_id', 'item_id', 'region_id',
-                                            'source_id', 'frequency_id', start_date)
+                                            'source_id', 'frequency_id', start_date_bound)
     assert_frame_equal(test_data, expected)
 
 
@@ -200,34 +200,34 @@ def test_dates_to_period_string():
     assert get_transform_data.dates_to_period_string(test_dates[0], test_dates[1]) == expected
 
 
-def test_loop_start_dates_invalid_initial_greater_than_final():
+def test_loop_initiation_dates_invalid_initial_greater_than_final():
     test_max_date = pd.to_datetime('2019-08-31T00:00:00.000Z')
     invalid_initial_date = '2019-07-31'
     invalid_final_date = '2019-06-30'
     with pytest.raises(ValueError):
-        get_transform_data.loop_start_dates(
+        get_transform_data.loop_initiation_dates(
             test_max_date, invalid_initial_date, invalid_final_date)
 
 
-def test_loop_start_dates_invalid_final_greater_than_year_from_initial():
+def test_loop_initiation_dates_invalid_final_greater_than_year_from_initial():
     test_max_date = pd.to_datetime('2019-08-31T00:00:00.000Z')
     invalid_initial_date = '2018-06-30'
     invalid_final_date = '2019-07-31'
     with pytest.raises(ValueError):
-        get_transform_data.loop_start_dates(
+        get_transform_data.loop_initiation_dates(
             test_max_date, invalid_initial_date, invalid_final_date)
 
 
-def test_loop_start_dates_invalid_final_greater_than_max():
+def test_loop_initiation_dates_invalid_final_greater_than_max():
     test_max_date = pd.to_datetime('2019-08-31T00:00:00.000Z')
     invalid_initial_date = '2019-07-31'
     invalid_final_date = '2019-09-30'
     with pytest.raises(ValueError):
-        get_transform_data.loop_start_dates(
+        get_transform_data.loop_initiation_dates(
             test_max_date, invalid_initial_date, invalid_final_date)
 
 
-def test_loop_start_dates():
+def test_loop_initiation_dates():
     test_max_date = pd.to_datetime('2019-08-31T00:00:00.000Z')
     invalid_initial_date = '2016-12-31'
     invalid_final_date = '2017-12-01'
@@ -238,5 +238,5 @@ def test_loop_start_dates():
         utc_tz = True
     expected = {'initial_date': pd.to_datetime('2017-12-31', utc=utc_tz),
                 'final_date': pd.to_datetime('2018-12-01', utc=utc_tz)}
-    assert get_transform_data.loop_start_dates(
+    assert get_transform_data.loop_initiation_dates(
         test_max_date, invalid_initial_date, invalid_final_date) == expected
