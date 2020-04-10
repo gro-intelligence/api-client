@@ -9,7 +9,7 @@ from dateutil.relativedelta import relativedelta
 import pandas as pd
 
 
-def get_data(client, metric_id, item_id, region_id, source_id, frequency_id, start_date):
+def get_data(client, metric_id, item_id, region_id, source_id, frequency_id, start_date_bound):
     """
     :param client: GroClient
     :param metric_id: Gro-metric
@@ -17,7 +17,7 @@ def get_data(client, metric_id, item_id, region_id, source_id, frequency_id, sta
     :param region_id: Gro-region
     :param source_id: Gro-source
     :param frequency_id: Gro-frequency
-    :param start_date: start-date of the Gro data series
+    :param start_date_bound: start-date of the Gro data series user provided
     :return: A dataframe with an 'end_date' and 'value' column
     """
     data_series = {'metric_id': metric_id,
@@ -25,16 +25,16 @@ def get_data(client, metric_id, item_id, region_id, source_id, frequency_id, sta
                    'region_id': region_id,
                    'source_id': source_id,
                    'frequency_id': frequency_id,
-                   'start_date': start_date}
+                   'start_date': start_date_bound}
     client.add_single_data_series(data_series)
     data = client.get_df()
-    start_date = pd.to_datetime(start_date)
+    start_date_bound = pd.to_datetime(start_date_bound)
     # TODO: Do not drop the series start_date column, use that to build an interpolation function
     #  for non daily frequency values
-    data = data.loc[data.end_date >= start_date][['end_date', 'value']]
-    if data['end_date'].iloc[0] > start_date:
+    data = data.loc[data.end_date >= start_date_bound][['end_date', 'value']]
+    if data['end_date'].iloc[0] > start_date_bound:
         new_value = data['value'].iloc[0]
-        new_row = pd.DataFrame({'end_date': [start_date], 'value': [new_value]})
+        new_row = pd.DataFrame({'end_date': [start_date_bound], 'value': [new_value]})
         data = pd.concat([new_row, data[:]]).reset_index(drop=True)
     return ffill_bfill_nulls(data)
 
@@ -65,7 +65,7 @@ def combine_subregions(df_sub_regions):
     return df_consolidated_regions
 
 
-def loop_start_dates(max_date, initial_date, final_date):
+def loop_initiation_dates(max_date, initial_date, final_date):
     """
     :param max_date: datetime
     :param initial_date: string 'YYYY-MM-DD'
@@ -114,9 +114,9 @@ def extract_time_periods_by_dates(dataframe, initial_date, final_date):
     dataframe['date'] = pd.to_datetime(dataframe['end_date'])
     max_date = dataframe['date'].max()
     min_date = dataframe['date'].min()
-    loop_final_date = loop_start_dates(
+    loop_final_date = loop_initiation_dates(
         max_date, initial_date, final_date)['final_date']
-    loop_initial_date = loop_start_dates(
+    loop_initial_date = loop_initiation_dates(
         max_date, initial_date, final_date)['initial_date']
     extracted_df_list = []
     while loop_initial_date >= min_date:
