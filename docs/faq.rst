@@ -42,12 +42,12 @@ Data Coverage
 Why is there no satellite rainfall data in northern latitudes sometimes?
 ------------------------------------------------------------------------
 
-This is determined by the spatial extent of the satellites. For more information see `TRMM/GPM spatial extent <other#trmm-and-gpm-spatial-extents>`_. Note that this limitation is only for satellite data. Rainfall data from ground-based weather stations is also available in Gro, see `NOAA/NCDC GHCN <https://app.gro-intelligence.com/dictionary/sources/22>`_.
+This is determined by the spatial extent of the satellites. For more information see `TRMM/GPM spatial extent <modeling-resources#trmm-and-gpm-spatial-extents>`_. Note that this limitation is only for satellite data. Rainfall data from ground-based weather stations is also available in Gro, see `NOAA/NCDC GHCN <https://app.gro-intelligence.com/dictionary/sources/22>`_.
 
 Why are there some gaps in the soil moisture data?
 --------------------------------------------------
 
-Radio Frequency Interferences (RFI) can limit the quality of remotely sensed data in some regions. For more information see `Radio Frequency Interference Effects On SMOS <other#radio-frequency-interference-effects-on-smos>`_.
+Radio Frequency Interferences (RFI) can limit the quality of remotely sensed data in some regions. For more information see `Radio Frequency Interference Effects On SMOS <modeling-resources#radio-frequency-interference-effects-on-smos>`_.
 
 What do warnings about 'historical' regions mean?
 -------------------------------------------------------------------
