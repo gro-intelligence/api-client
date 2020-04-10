@@ -16,6 +16,31 @@ from tornado.ioloop import IOLoop
 from tornado.queues import Queue
 from api.client import cfg, lib
 from api.client.gro_client import GroClient
+from api.client.lib import APIError
+
+
+class BatchError(APIError):
+    """Replicate the APIError interface given a Tornado HTTPError."""
+    def __init__(self, response, retry_count, url, params):
+        self.response = response
+        self.retry_count = retry_count
+        self.url = url
+        self.params = params
+        self.status_code = self.response.code if hasattr(self.response, 'code') else None
+        try:
+            json_content = json_decode(self.response.body)
+            # 'error' should be something like 'Not Found' or 'Bad Request'
+            self.message = json_content.get('error', '')
+            # Some error responses give additional info.
+            # For example, a 400 Bad Request might say "metricId is required"
+            if 'message' in json_content:
+                self.message += ': {}'.format(json_content['message'])
+        except Exception:
+            # If the error message can't be parsed, fall back to a generic "giving up" message.
+            self.message = 'Giving up on {} after {} {}: {}'.format(self.url, self.retry_count,
+                                                                    'retry' if self.retry_count == 1
+                                                                    else 'retries', response)
+
 
 class BatchClient(GroClient):
     """API client with support for batch asynchronous queries."""
@@ -30,18 +55,32 @@ class BatchClient(GroClient):
 
     @gen.coroutine
     def get_data(self, url, headers, params=None):
+        base_log_record = dict(route=url, params=params)
+
+        def log_request(start_time, retry_count, msg, status_code):
+            elapsed_time = time.time() - start_time
+            log_record = dict(base_log_record)
+            log_record['elapsed_time_in_ms'] = 1000 * elapsed_time
+            log_record['retry_count'] = retry_count
+            log_record['status_code'] = status_code
+            if status_code == 200:
+                self._logger.debug(msg, extra=log_record)
+            else:
+                self._logger.warning(msg, extra=log_record)
+
         """General 'make api request' function.
 
         Assigns headers and builds in retries and logging.
         """
-        base_log_record = dict(route=url, params=params)
-        retry_count = 0
         self._logger.debug(url)
 
         # append version info
         headers.update(lib.get_version_info())
 
-        while retry_count < cfg.MAX_RETRIES:
+        # Initialize to -1 so first attempt will be retry 0
+        retry_count = -1
+        while retry_count <= cfg.MAX_RETRIES:
+            retry_count += 1
             start_time = time.time()
             http_request = HTTPRequest('{url}?{params}'.format(url=url, params=urlencode(params)),
                                        method="GET",
@@ -49,42 +88,49 @@ class BatchClient(GroClient):
                                        request_timeout=cfg.TIMEOUT,
                                        connect_timeout=cfg.TIMEOUT)
             try:
-                data = yield self._http_client.fetch(http_request)
-                elapsed_time = time.time() - start_time
-                log_record = dict(base_log_record)
-                log_record['elapsed_time_in_ms'] = 1000 * elapsed_time
-                log_record['retry_count'] = retry_count
-                log_record['status_code'] = data.code
-                self._logger.debug('OK', extra=log_record)
-                raise gen.Return(data.body)
-            except HTTPError as e:
-                elapsed_time = time.time() - start_time
-                log_record = dict(base_log_record)
-                log_record['elapsed_time_in_ms'] = 1000 * elapsed_time
-                log_record['retry_count'] = retry_count
-                log_record['status_code'] = e.code
-                if retry_count < cfg.MAX_RETRIES:
-                    if hasattr(e, 'response') and hasattr(e.response, 'error'):
-                        self._logger.warning(e.response.error, extra=log_record)
-                    else:
-                        self._logger.warning(e, extra=log_record)
-                    retry_count += 1
-                    if e.code in [429, 503, 504]:
-                        time.sleep(2 ** retry_count)  # Exponential backoff
-                    elif e.code == 301:
-                        new_params = lib.redirect(
-                            params,
-                            json.loads(e.response.body.decode("utf-8"))['data'][0])
-                        self._logger.warning(
-                            'Redirecting {} to {}'.format(params, new_params),
-                            extra=log_record)
+                try:
+                    response = yield self._http_client.fetch(http_request)
+                    status_code = response.code
+                except HTTPError as e:
+                    # Catch non-200 codes that aren't errors
+                    status_code = e.code if hasattr(e, 'code') else None
+                    if status_code in [204, 206]:
+                        log_msg = {204: 'No Content', 206: 'Partial Content'}[status_code]
+                        response = e.response
+                        log_request(start_time, retry_count, log_msg, status_code)
+                        # Do not retry.
+                    elif status_code == 301:
+                        redirected_ids = json.loads(e.response.body.decode("utf-8"))['data'][0]
+                        new_params = lib.redirect(params, redirected_ids)
+                        log_request(start_time, retry_count,
+                                    'Redirecting {} to {}'.format(params, new_params), status_code)
                         params = new_params
-                else:
-                    self._logger.error(e.response.error, extra=log_record)
-                    raise Exception('Giving up on {} after {} tries. \
-                        Error is: {}.'.format(
-                        url, retry_count, e.response.error))
+                        continue  # retry
+                    else:  # Otherwise, propagate to error handling
+                        raise e
+            except Exception as e:
+                # HTTPError raised when there's a non-200 status code
+                # socket.gaio error raised when there's a connection error
+                response = e.response if hasattr(e, 'response') else e
+                status_code = e.code if hasattr(e, 'code') else None
+                error_msg = e.response.error if (hasattr(e, 'response') and
+                                                 hasattr(e.response, 'error')) else e
+                log_request(start_time, retry_count, error_msg, status_code)
+                if status_code in [429, 500, 503, 504]:
+                    # First retry is immediate.
+                    # After that, exponential backoff before retrying.
+                    if retry_count > 0:
+                        time.sleep(2 ** retry_count)
+                    continue
+                elif status_code in [400, 401, 402, 404]:
+                    break  # Do not retry. Go right to raising an Exception.
 
+            # Request was successful
+            log_request(start_time, retry_count, 'OK', status_code)
+            raise gen.Return(json_decode(response.body) if hasattr(response, 'body') else None)
+
+        # Retries failed. Raise exception
+        raise BatchError(response, retry_count, url, params)
 
     @gen.coroutine
     def get_data_points(self, **selection):
@@ -110,15 +156,16 @@ class BatchClient(GroClient):
         headers = {'authorization': 'Bearer ' + self.access_token}
         url = '/'.join(['https:', '', self.api_host, 'v2/data'])
         params = lib.get_data_call_params(**selection)
-        resp = yield self.get_data(url, headers, params)
-        list_of_series_points = json_decode(resp)
-        include_historical = selection.get('include_historical', True)
-        points = lib.list_of_series_to_single_series(list_of_series_points, False,
-                                                     include_historical)
-        raise gen.Return(points)
+        try:
+            list_of_series_points = yield self.get_data(url, headers, params)
+            include_historical = selection.get('include_historical', True)
+            points = lib.list_of_series_to_single_series(list_of_series_points, False,
+                                                         include_historical)
+            raise gen.Return(points)
+        except BatchError as b:
+            raise gen.Return(b)
 
-    def batch_async_get_data_points(self, batched_args, output_list=None,
-                                    map_result=None):
+    def batch_async_get_data_points(self, batched_args, output_list=None, map_result=None):
         """Make many :meth:`~get_data_points` requests asynchronously.
 
         Parameters
@@ -254,19 +301,25 @@ class BatchClient(GroClient):
         def consumer():
             """Execute func on all items in queue asynchronously."""
             while q.qsize():
-                idx, item = q.get().result()
-                self._logger.debug('Doing work on {}'.format(idx))
-                if type(item) is dict:
-                    # Assume that dict types should be unpacked as kwargs
-                    result = yield func(**item)
-                elif type(item) is list:
-                    # Assume that list types should be unpacked as positional args
-                    result = yield func(*item)
-                else:
-                    result = yield func(item)
-                output_data['result'] = map_result(idx, item, result, output_data['result'])
-                self._logger.debug('Done with {}'.format(idx))
-                q.task_done()
+                try:
+                    idx, item = q.get().result()
+                    self._logger.debug('Doing work on {}'.format(idx))
+                    if type(item) is dict:
+                        # Assume that dict types should be unpacked as kwargs
+                        result = yield func(**item)
+                    elif type(item) is list:
+                        # Assume that list types should be unpacked as positional args
+                        result = yield func(*item)
+                    else:
+                        result = yield func(item)
+                    output_data['result'] = map_result(idx, item, result, output_data['result'])
+                    self._logger.debug('Done with {}'.format(idx))
+                    q.task_done()
+                except Exception:
+                    # Cease processing
+                    # IOLoop raises "Operation timed out after None seconds"
+                    IOLoop.current().stop()
+                    IOLoop.current().close()
 
         def producer():
             """Immediately enqueue the whole batch of requests."""

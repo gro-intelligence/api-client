@@ -1,6 +1,7 @@
 from builtins import object
 from api.client import lib
 
+
 class Client(object):
     """API client with stateful authentication for lib functions."""
 
@@ -64,19 +65,22 @@ class Client(object):
         return lib.list_available(self.access_token, self.api_host, selected_entities)
 
 
-    def lookup(self, entity_type, entity_id):
-        """Retrieve details about a given id of type entity_type.
+    def lookup(self, entity_type, entity_ids):
+        """Retrieve details about a given id or list of ids of type entity_type.
 
         https://developers.gro-intelligence.com/gro-ontology.html
 
         Parameters
         ----------
         entity_type : { 'metrics', 'items', 'regions', 'frequencies', 'sources', 'units' }
-        entity_id : int
+        entity_ids : int or list of ints
 
         Returns
         -------
-        dict
+        dict or dict of dicts
+            A dict with entity details is returned if an integer is given for entity_ids.
+            A dict of dicts with entity details, keyed by id, is returned if a list of integers is
+            given for entity_ids.
 
             Example::
 
@@ -86,8 +90,30 @@ class Client(object):
                   'definition': 'The seeds of the widely cultivated corn plant <i>Zea mays</i>,'
                                 ' which is one of the world\'s most popular grains.' }
 
+            Example::
+
+                {   '274': {
+                        'id': 274,
+                        'contains': [779, 780, ...],
+                        'belongsTo': [4138, 8830, ...],
+                        'name': 'Corn',
+                        'definition': 'The seeds of the widely cultivated corn plant'
+                                      ' <i>Zea mays</i>, which is one of the world\'s most popular'
+                                      ' grains.'
+                    },
+                    '270': {
+                        'id': 270,
+                        'contains': [1737, 7401, ...],
+                        'belongsTo': [8830, 9053, ...],
+                        'name': 'Soybeans',
+                        'definition': 'The seeds and harvested crops of plants belonging to the'
+                                      ' species <i>Glycine max</i> that are used in the production'
+                                      ' of oil and both human and livestock consumption.'
+                    }
+                }
+
         """
-        return lib.lookup(self.access_token, self.api_host, entity_type, entity_id)
+        return lib.lookup(self.access_token, self.api_host, entity_type, entity_ids)
 
 
     def lookup_unit_abbreviation(self, unit_id):
@@ -185,7 +211,7 @@ class Client(object):
         ------
         dict
             Result from :meth:`~.search` passed to :meth:`~.lookup` to get additional details.
-            
+
             Example::
 
                 { 'id': 274,
@@ -274,7 +300,7 @@ class Client(object):
         Returns
         -------
         a geojson object or None
-        
+
             Example::
 
                 { 'type': 'GeometryCollection',
@@ -328,3 +354,92 @@ class Client(object):
         """
         return lib.get_descendant_regions(self.access_token, self.api_host, region_id,
                                           descendant_level, include_historical, include_details)
+
+
+    def get_available_timefrequency(self, **selection):
+        """Given a selection, return a list of frequencies and time ranges.
+        The results are ordered by coverage-optimized ranking.
+
+        Parameters
+        ----------
+        metric_id : integer, optional
+        item_id : integer, optional
+        region_id : integer, optional
+        partner_region_id : integer, optional
+
+        Returns
+        -------
+        list of dicts
+
+            Example::
+
+                 [{
+                    'startDate': '2000-02-18T00:00:00.000Z',
+                    'frequencyId': 3,
+                    'endDate': '2020-03-12T00:00:00.000Z',
+                    'name': '8-day'
+                  }, {
+                    'startDate': '2019-09-02T00:00:00.000Z',
+                    'frequencyId': 1,
+                    'endDate': '2020-03-09T00:00:00.000Z',
+                    'name': u'daily'}, ... ]
+        """
+        return lib.get_available_timefrequency(self.access_token, self.api_host,
+                                               **selection)
+
+    def get_top(self, entity_type, num_results=5, **selection):
+        """Find the data series with the highest cumulative value for the given time range.
+
+        Examples::
+
+            # To get FAO's top 5 corn-producing countries of all time:
+            >>> get_top('regions', metric_id=860032, item_id=274, frequency_id=9, source_id=2)
+
+            # To get FAO's top 5 corn-producing countries of 2014:
+            >>> get_top('regions', metric_id=860032, item_id=274, frequency_id=9, source_id=2,
+                        start_date='2014-01-01', end_date='2014-12-31')
+
+            # To get the United States' top 15 exports in the decade of 2010-2019:
+            >>> get_top('items', num_results=15, metric_id=20032, region_id=1215, frequency_id=9,
+                        source_id=2, start_date='2010-01-01', end_date='2019-12-31')
+
+        Parameters
+        ----------
+        entity_type : { 'items', 'regions' }
+            The entity type to rank, all other selections being the same. Only items and regions
+            are rankable at this time.
+        num_results : integer, optional
+            How many data series to rank. Top 5 by default.
+        metric_id : integer
+        item_id : integer
+            Required if requesting top regions. Disallowed if requesting top items.
+        region_id : integer
+            Required if requesting top items. Disallowed if requesting top regions.
+        partner_region_id : integer, optional
+        frequency_id : integer
+        source_id : integer
+        start_date : string, optional
+            If not provided, the cumulative value used for ranking will include data points as far
+            back as the source provides.
+        end_date : string, optional
+
+        Returns
+        -------
+        list of dicts
+
+            Example::
+
+                [
+                    {'metricId': 860032, 'itemId': 274, 'regionId': 1215, 'frequencyId': 9,
+                     'sourceId': 2, 'value': 400, 'unitId': 14},
+                    {'metricId': 860032, 'itemId': 274, 'regionId': 1215, 'frequencyId': 9,
+                     'sourceId': 2, 'value': 395, 'unitId': 14},
+                    {'metricId': 860032, 'itemId': 274, 'regionId': 1215, 'frequencyId': 9,
+                     'sourceId': 2, 'value': 12, 'unitId': 14},
+                ]
+
+            Along with the series attributes, value and unit are also given for the total cumulative
+            value the series are ranked by. You may then use the results to call
+            :meth:`~.get_data_points` to get the individual time series points.
+        """
+        return lib.get_top(self.access_token, self.api_host, entity_type, num_results, **selection)

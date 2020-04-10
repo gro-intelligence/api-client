@@ -7,6 +7,8 @@ from api.client.gro_client import GroClient
 
 from api.client.samples.analogous_years.lib import final_ranks_computation
 
+API_HOST = "api.gro-intelligence.com"
+
 
 def str2bool(v):
     if isinstance(v, bool):
@@ -39,8 +41,9 @@ def list_length_validator(list1, list2):
         return list2
 
 
-def check_if_exists(entity_type, entity_value, client):
+def check_if_exists(entity_type, entity_value, api_token):
     """Checks if the Gro-entity_id exists"""
+    client = GroClient(API_HOST, api_token)
     logger = client.get_logger()
     try:
         client.lookup(entity_type, entity_value)
@@ -52,14 +55,14 @@ def check_if_exists(entity_type, entity_value, client):
 
 
 def get_data_series_list(region_id_list, item_id_list, metric_id_list, source_id_list,
-                         frequency_id_list, client):
+                         frequency_id_list, api_token):
     # checking if the length of the list for metric_id, item_id, source_id and
     # frequency_id match
     item_id_list = list_length_validator(metric_id_list, item_id_list)
     source_id_list = list_length_validator(metric_id_list, source_id_list)
     frequency_id_list = list_length_validator(metric_id_list, frequency_id_list)
     data_series_list = []
-    checking = partial(check_if_exists, client=client)
+    checking = partial(check_if_exists, api_token=api_token)
     for i in range(len(metric_id_list)):
         data_series = {'metric_id': checking('metrics', metric_id_list[i]),
                        'item_id': checking('items', item_id_list[i]),
@@ -71,7 +74,6 @@ def get_data_series_list(region_id_list, item_id_list, metric_id_list, source_id
 
 
 def main():
-    API_HOST = "api.gro-intelligence.com"
     parser = argparse.ArgumentParser(description='ConGrouent Years')
     parser.add_argument('-m', '--metric_ids', nargs='+', type=int, default=[2100031, 2540047],
                         help='metric_ids separated by spaces')
@@ -111,29 +113,31 @@ def main():
     parser.add_argument('--all_ranks', action='store_true', help='Lets you see all the ranks'
                                                                  'as opposed to separate method'
                                                                  'ranks')
+    parser.add_argument('--num_jobs', type=int, default=0,
+                        help='number of parallel processes for tsfresh')
     args = parser.parse_args()
-    client = GroClient(API_HOST, args.groapi_token)
     data_series_list = get_data_series_list(args.region_id, args.item_ids, args.metric_ids,
-                                            args.source_ids, args.frequency_ids, client=client)
-    folder_name = final_ranks_computation.get_file_name(client, data_series_list,
+                                            args.source_ids, args.frequency_ids,
+                                            api_token=args.groapi_token)
+    folder_name = final_ranks_computation.get_file_name(args.groapi_token, data_series_list,
                                                         initial_date=args.initial_date,
                                                         final_date=args.final_date)
     result = final_ranks_computation.analogous_years(
-        client, data_series_list, args.initial_date, args.final_date,
-        methods_list=args.methods, all_ranks=args.all_ranks,
-        weights=args.weights, enso=args.ENSO,
-        enso_weight=args.ENSO_weight, provided_start_date=args.start_date)
-    final_ranks_computation.save_to_csv(client, result,
+        args.groapi_token, data_series_list, args.initial_date, args.final_date,
+        methods_list=args.methods, all_ranks=args.all_ranks, weights=args.weights, enso=args.ENSO,
+        enso_weight=args.ENSO_weight, provided_start_date=args.start_date,
+        tsfresh_num_jobs=args.num_jobs)
+    final_ranks_computation.save_to_csv(args.groapi_token, result,
                                         folder_name,
                                         file_name='ranks.csv',
                                         output_dir=args.output_dir)
     if args.all_ranks and args.report:
         correlation_matrix = final_ranks_computation.generate_correlation_matrix(result)
-        final_ranks_computation.save_to_csv(client, correlation_matrix,
-                                            folder_name,
+        final_ranks_computation.save_to_csv(args.groapi_token, correlation_matrix, folder_name,
                                             file_name='correlation_matrix.csv',
                                             output_dir=args.output_dir)
-        final_ranks_computation.generate_correlation_scatterplots(client, result, folder_name,
+        final_ranks_computation.generate_correlation_scatterplots(args.groapi_token, result,
+                                                                  folder_name,
                                                                   output_dir=args.output_dir)
     return None
 
