@@ -104,7 +104,7 @@ def main():
                         help='methods of rank calculation. The arguments can be one or more of'
                              'the following strings - "euclidean", "ts features", "cumulative",'
                              '"dtw"')
-    parser.add_argument('--start_date', type=valid_date, help='start date of all the Gro data '
+    parser.add_argument('--start_date_bound', type=valid_date, help='start date of all the Gro data '
                                                               'series to be used for this '
                                                               'analysis')
     parser.add_argument("--ENSO", action='store_true', help='Include ENSO for rank distance '
@@ -125,7 +125,7 @@ def main():
     result = final_ranks_computation.analogous_years(
         args.groapi_token, data_series_list, args.initial_date, args.final_date,
         methods_list=args.methods, all_ranks=args.all_ranks, weights=args.weights, enso=args.ENSO,
-        enso_weight=args.ENSO_weight, provided_start_date=args.start_date,
+        enso_weight=args.ENSO_weight, provided_start_date_bound=args.start_date_bound,
         tsfresh_num_jobs=args.num_jobs)
     final_ranks_computation.save_to_csv(args.groapi_token, result,
                                         folder_name,
