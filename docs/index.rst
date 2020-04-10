@@ -16,7 +16,7 @@ With the Gro API Client, you have the power to:
     :caption: Getting Started
     :maxdepth: 1
 
-    Prerequisites <prerequisites>
+    Prerequisites <prerequisites/index>
     Installation <installation>
     Authentication <authentication>
     Quick Start Projects <quick-start-projects/index>
