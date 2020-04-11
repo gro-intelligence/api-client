@@ -10,13 +10,13 @@ Step 1: Get your API token
 1. Login to your Gro web app account at https://app.gro-intelligence.com
 2. Open the Account button in the bottom left corner of the app.
 
-  .. image:: ./_images/account-button.PNG
+  .. image:: ./docs/_images/account-button.PNG
     :align: center
     :alt: Account button
 
 3. Navigate to the API tab.
 
-  .. image:: ./_images/account-api-section.PNG
+  .. image:: ./docs/_images/account-api-section.PNG
     :align: center
     :alt: Account api section
 
@@ -35,13 +35,13 @@ Step 2: Run the code in a notebook
   Then click the "Run Cell" button to the left of the cell.
   In Colab, it will look like this:
 
-  .. image:: ./_images/colab-run-button.PNG
+  .. image:: ./docs/_images/colab-run-button.PNG
     :align: center
     :alt: Colab run button
 
   In Jupyter Notebook, it looks like this:
 
-  .. image:: ./_images/jupyter-run-button.PNG
+  .. image:: ./docs/_images/jupyter-run-button.PNG
     :align: center
     :alt: Jupyter run button
 
@@ -77,19 +77,19 @@ Step 3: Bonus Round
 
 2. Click the dropdown arrow in the top right of the chart.
 
-  .. image:: ./_images/chart-dropdown.PNG
+  .. image:: ./docs/_images/chart-dropdown.PNG
     :align: center
     :alt: Chart dropdown
 
 3. Click Export, and then click API Client Code Snippets.
 
-  .. image:: ./_images/export-code-snippet.PNG
+  .. image:: ./docs/_images/export-code-snippet.PNG
     :align: center
     :alt: Export code snippet
 
 4. Copy to code from the pop up window.
 
-  .. image:: ./_images/code-snippet-window.PNG
+  .. image:: ./docs/_images/code-snippet-window.PNG
     :align: center
     :alt: Code snippet window
 
@@ -97,7 +97,7 @@ Step 3: Bonus Round
 
 6. Click the "Run Cell" button to the left of the call. Congrats! You've just discovered data in the web app and then pulled it via the API client.
 
-  .. image:: ./_images/snippet-response.PNG
+  .. image:: ./docs/_images/snippet-response.PNG
     :align: center
     :alt: Snippet response
       ![snippet-response]
