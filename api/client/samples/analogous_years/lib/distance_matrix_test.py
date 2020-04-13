@@ -55,10 +55,6 @@ def test_scaled_labeled_method_distances():
     expected.rename(columns={admissible_test_date:method}, inplace=True)
     scaler = MaxAbsScaler()
     expected.loc[:, method] = scaler.fit_transform(expected[[method]])
-    print(distance_matrix.scaled_labeled_method_distances
-                       (create_test_data(), initial_date, final_date,
-                        method))
-    print(expected)
     assert_frame_equal(distance_matrix.scaled_labeled_method_distances
                        (create_test_data(), initial_date, final_date,
                         method), expected)

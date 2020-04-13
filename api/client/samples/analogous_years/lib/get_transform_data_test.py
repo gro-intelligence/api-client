@@ -72,7 +72,6 @@ def test_combine_subregions_with_subregion():
     # expected_subregion.index = pd.to_datetime(expected_subregion.index)
     expected_subregion = expected_subregion.resample('D').nearest()
     expected_subregion.loc[:, 'end_date'] = expected_subregion.index
-    print(expected_subregion)
     assert_frame_equal(get_transform_data.combine_subregions(test_data_subregion),
                        expected_subregion)
 

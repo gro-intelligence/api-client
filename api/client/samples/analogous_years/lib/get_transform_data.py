@@ -25,27 +25,12 @@ def get_data(client, metric_id, item_id, region_id, source_id, frequency_id, sta
                    'region_id': region_id,
                    'source_id': source_id,
                    'frequency_id': frequency_id}
-        # ,
-        #            'start_date': start_date_bound}
     client.add_single_data_series(data_series)
     data = client.get_df()
     data = combine_subregions(data)
     start_date_bound = pd.to_datetime(start_date_bound)
-    # TODO: Do not drop the series start_date column, use that to build an interpolation function
-    #  for non daily frequency values
     data = data.loc[data.end_date >= start_date_bound][['end_date', 'value']]
-    # if data['end_date'].iloc[0] > start_date_bound:
-    #     new_value = data['value'].iloc[0]
-    #     new_row = pd.DataFrame({'end_date': [start_date_bound], 'value': [new_value]})
-    #     data = pd.concat([new_row, data[:]]).reset_index(drop=True)
     return data
-
-
-# def ffill_bfill_nulls(dataframe):
-#     dataframe.fillna(method='ffill', inplace=True)
-#     dataframe.fillna(method='bfill', inplace=True)
-#     dataframe.reset_index()
-#     return dataframe
 
 
 def combine_subregions(df_sub_regions):
@@ -141,6 +126,5 @@ def stack_time_periods_by_ddmm(dataframe):
     """
     segmented_periods = pd.pivot_table(dataframe, values='value',
                                        index=['mm-dd'], columns=['period'])
-    # ffill_bfill_nulls(segmented_periods)
     segmented_periods = segmented_periods[segmented_periods.index != '02-29']
     return segmented_periods
