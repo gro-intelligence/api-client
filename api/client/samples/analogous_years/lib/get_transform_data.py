@@ -41,11 +41,11 @@ def get_data(client, metric_id, item_id, region_id, source_id, frequency_id, sta
     return data
 
 
-def ffill_bfill_nulls(dataframe):
-    dataframe.fillna(method='ffill', inplace=True)
-    dataframe.fillna(method='bfill', inplace=True)
-    dataframe.reset_index()
-    return dataframe
+# def ffill_bfill_nulls(dataframe):
+#     dataframe.fillna(method='ffill', inplace=True)
+#     dataframe.fillna(method='bfill', inplace=True)
+#     dataframe.reset_index()
+#     return dataframe
 
 
 def combine_subregions(df_sub_regions):
@@ -62,7 +62,7 @@ def combine_subregions(df_sub_regions):
     else:
         df_consolidated_regions = df_sub_regions.groupby(['end_date'])[['value']].sum()
     df_consolidated_regions.index = pd.to_datetime(df_consolidated_regions.index)
-    df_consolidated_regions = df_consolidated_regions.resample('D').pad()
+    df_consolidated_regions = df_consolidated_regions.resample('D').nearest()
     df_consolidated_regions['end_date'] = df_consolidated_regions.index
     return df_consolidated_regions
 
@@ -141,6 +141,6 @@ def stack_time_periods_by_ddmm(dataframe):
     """
     segmented_periods = pd.pivot_table(dataframe, values='value',
                                        index=['mm-dd'], columns=['period'])
-    ffill_bfill_nulls(segmented_periods)
+    # ffill_bfill_nulls(segmented_periods)
     segmented_periods = segmented_periods[segmented_periods.index != '02-29']
     return segmented_periods
