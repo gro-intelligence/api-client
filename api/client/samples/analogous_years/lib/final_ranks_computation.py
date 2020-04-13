@@ -47,7 +47,7 @@ def enso_data(start_date_bound):
                         'item_id': 13495,
                         'region_id': 0,
                         'source_id': 124,
-                        'start_date': start_date_bound,
+                        'start_date_bound': start_date_bound,
                         'frequency_id': 6}
     return enso_data_series
 
