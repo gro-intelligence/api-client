@@ -40,13 +40,10 @@ def test_get_data(test_data_1):
     client = GroClient('mock_website', 'mock_access_token')
     start_date_bound = '2000-03-01T00:00:00.000Z'
     expected = pd.DataFrame(create_test_data())
-    expected = expected[['end_date', 'value']]
-    new_value = expected['value'].iloc[0]
-    new_row = pd.DataFrame({'end_date': [start_date_bound], 'value': [new_value]})
-    expected = pd.concat([new_row, expected[:]]).reset_index(drop=True)
     expected.loc[:, 'end_date'] = pd.to_datetime(expected['end_date'])
     test_data = get_transform_data.get_data(client, 'metric_id', 'item_id', 'region_id',
                                             'source_id', 'frequency_id', start_date_bound)
+    expected = get_transform_data.combine_subregions(expected)[['end_date', 'value']]
     assert_frame_equal(test_data, expected)
 
 
@@ -75,6 +72,7 @@ def test_combine_subregions_with_subregion():
     # expected_subregion.index = pd.to_datetime(expected_subregion.index)
     expected_subregion = expected_subregion.resample('D').nearest()
     expected_subregion.loc[:, 'end_date'] = expected_subregion.index
+    print(expected_subregion)
     assert_frame_equal(get_transform_data.combine_subregions(test_data_subregion),
                        expected_subregion)
 
