@@ -167,14 +167,14 @@ def test_stack_time_periods_by_ddmm_nonunique_dates():
 
 def test_stack_time_periods_by_ddmm_unique_dates():
     test_data_invalid = pd.DataFrame(create_test_data())
-    test_data_invalid['end_date'] = pd.to_datetime(test_data_invalid['end_date'])
-    test_data_invalid['date'] = pd.to_datetime(test_data_invalid['end_date'])
-    test_data_invalid['period'] = [
+    test_data_invalid.loc[:, 'end_date'] = pd.to_datetime(test_data_invalid['end_date'])
+    test_data_invalid.loc[:, 'date'] = pd.to_datetime(test_data_invalid['end_date'])
+    test_data_invalid.loc[:, 'period'] = [
         '2019-01-01 to 2019-12-31',
         '2005-01-01 to 2005-12-31',
         '2000-01-01 to 2000-12-31',
         '2005-01-01 to 2005-12-31']
-    test_data_invalid['mm-dd'] = test_data_invalid['date'].dt.strftime("%m-%d")
+    test_data_invalid.loc[:, 'mm-dd'] = test_data_invalid['date'].dt.strftime("%m-%d")
     test_data = test_data_invalid.drop(test_data_invalid.index[-1])
     expected = pd.DataFrame({'mm-dd': ['03-01', '07-31', '08-28'],
                              '2000-01-01 to 2000-12-31': [2.39664378851418,
