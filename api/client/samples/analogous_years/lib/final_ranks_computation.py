@@ -86,9 +86,9 @@ def time_series(client, data_series, initial_date, final_date):
     for entity_type in discard:
         data_series.pop(entity_type)
     data = get_transform_data.get_data(client, **data_series)
-    consolidated_data = get_transform_data.combine_subregions(data)
+    # consolidated_data = get_transform_data.combine_subregions(data)
     try:
-        ts = get_transform_data.extract_time_periods_by_dates(consolidated_data,
+        ts = get_transform_data.extract_time_periods_by_dates(data,
                                                               initial_date,
                                                               final_date)
         return ts
