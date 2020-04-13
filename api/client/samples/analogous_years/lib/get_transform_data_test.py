@@ -73,7 +73,7 @@ def test_combine_subregions_with_subregion():
     expected_subregion.index = expected_subregion['end_date']
     # Test the equality of frames
     # expected_subregion.index = pd.to_datetime(expected_subregion.index)
-    expected_subregion = expected_subregion.resample('D').pad()
+    expected_subregion = expected_subregion.resample('D').nearest()
     expected_subregion.loc[:, 'end_date'] = expected_subregion.index
     assert_frame_equal(get_transform_data.combine_subregions(test_data_subregion),
                        expected_subregion)
@@ -99,7 +99,7 @@ def test_combine_subregions_with_nosubregion():
     expected_nosubregion.loc[:, 'end_date'] = pd.to_datetime(expected_nosubregion['end_date'],
                                                              utc=utc_tz)
     expected_nosubregion.index = pd.to_datetime(expected_nosubregion.index, utc=utc_tz)
-    expected_nosubregion = expected_nosubregion.resample('D').pad()
+    expected_nosubregion = expected_nosubregion.resample('D').nearest()
     expected_nosubregion.loc[:, 'end_date'] = pd.to_datetime(expected_nosubregion.index, utc=utc_tz)
     assert_frame_equal(get_transform_data.combine_subregions(test_data_nosubregion),
                        expected_nosubregion)
