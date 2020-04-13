@@ -1,5 +1,6 @@
 from api.client.gro_client import GroClient
 import mock
+import numpy as np
 import pandas as pd
 from pandas.util.testing import assert_frame_equal
 import pytest
@@ -179,15 +180,14 @@ def test_stack_time_periods_by_ddmm_unique_dates():
     test_data = test_data_invalid.drop(test_data_invalid.index[-1])
     expected = pd.DataFrame({'mm-dd': ['03-01', '07-31', '08-28'],
                              '2000-01-01 to 2000-12-31': [2.39664378851418,
-                                                          2.39664378851418,
-                                                          2.39664378851418],
-                             '2005-01-01 to 2005-12-31': [1.17640700229636,
-                                                          1.17640700229636,
+                                                          np.nan,
+                                                          np.nan],
+                             '2005-01-01 to 2005-12-31': [np.nan,
+                                                          np.nan,
                                                           1.17640700229636],
-                             '2019-01-01 to 2019-12-31': [0.13002748115958,
+                             '2019-01-01 to 2019-12-31': [np.nan,
                                                           0.13002748115958,
-                                                          0.13002748115958]}). \
-        set_index('mm-dd')
+                                                          np.nan]}).set_index('mm-dd')
     expected.columns.name = 'period'
     assert_frame_equal(get_transform_data.stack_time_periods_by_ddmm(test_data), expected)
 
