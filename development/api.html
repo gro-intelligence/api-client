@@ -226,7 +226,7 @@
 <h2><a class="toc-backref" href="#id1">Basic Exploration</a><a class="headerlink" href="#basic-exploration" title="Permalink to this headline">¶</a></h2>
 <dl class="method">
 <dt id="api.client.gro_client.GroClient.lookup">
-<code class="descclassname">GroClient.</code><code class="descname">lookup</code><span class="sig-paren">(</span><em>entity_type</em>, <em>entity_ids</em><span class="sig-paren">)</span><a class="headerlink" href="#api.client.gro_client.GroClient.lookup" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">GroClient.</code><code class="descname">lookup</code><span class="sig-paren">(</span><em>entity_type</em>, <em>entity_ids</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/gro_client.html#GroClient.lookup"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.gro_client.GroClient.lookup" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieve details about a given id or list of ids of type entity_type.</p>
 <p><a class="reference external" href="https://developers.gro-intelligence.com/gro-ontology.html">https://developers.gro-intelligence.com/gro-ontology.html</a></p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -284,7 +284,7 @@ given for entity_ids.</p>
 
 <dl class="method">
 <dt id="api.client.gro_client.GroClient.search">
-<code class="descclassname">GroClient.</code><code class="descname">search</code><span class="sig-paren">(</span><em>entity_type</em>, <em>search_terms</em><span class="sig-paren">)</span><a class="headerlink" href="#api.client.gro_client.GroClient.search" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">GroClient.</code><code class="descname">search</code><span class="sig-paren">(</span><em>entity_type</em>, <em>search_terms</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/gro_client.html#GroClient.search"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.gro_client.GroClient.search" title="Permalink to this definition">¶</a></dt>
 <dd><p>Search for the given search term. Better matches appear first.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -312,7 +312,7 @@ given for entity_ids.</p>
 
 <dl class="method">
 <dt id="api.client.gro_client.GroClient.search_and_lookup">
-<code class="descclassname">GroClient.</code><code class="descname">search_and_lookup</code><span class="sig-paren">(</span><em>entity_type</em>, <em>search_terms</em>, <em>num_results=10</em><span class="sig-paren">)</span><a class="headerlink" href="#api.client.gro_client.GroClient.search_and_lookup" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">GroClient.</code><code class="descname">search_and_lookup</code><span class="sig-paren">(</span><em>entity_type</em>, <em>search_terms</em>, <em>num_results=10</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/gro_client.html#GroClient.search_and_lookup"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.gro_client.GroClient.search_and_lookup" title="Permalink to this definition">¶</a></dt>
 <dd><p>Search for the given search terms and look up their details.</p>
 <p>For each result, yield a dict of the entity and it&#8217;s properties.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -368,7 +368,7 @@ the best match for the given search term(s).</p>
 
 <dl class="method">
 <dt id="api.client.gro_client.GroClient.get_data_series">
-<code class="descclassname">GroClient.</code><code class="descname">get_data_series</code><span class="sig-paren">(</span><em>**selection</em><span class="sig-paren">)</span><a class="headerlink" href="#api.client.gro_client.GroClient.get_data_series" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">GroClient.</code><code class="descname">get_data_series</code><span class="sig-paren">(</span><em>**selection</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/gro_client.html#GroClient.get_data_series"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.gro_client.GroClient.get_data_series" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get available data series for the given selections.</p>
 <p><a class="reference external" href="https://developers.gro-intelligence.com/data-series-definition.html">https://developers.gro-intelligence.com/data-series-definition.html</a></p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -414,7 +414,7 @@ name and yield them ranked by coverage.</p>
 <p>Example:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">client</span><span class="o">.</span><span class="n">find_data_series</span><span class="p">(</span><span class="n">item</span><span class="o">=</span><span class="s2">&quot;Corn&quot;</span><span class="p">,</span>
                         <span class="n">metric</span><span class="o">=</span><span class="s2">&quot;Futures Open Interest&quot;</span><span class="p">,</span>
-                        <span class="n">region</span><span class="o">=</span><span class="s2">&quot;United States of America&quot;</span><span class="p">))</span>
+                        <span class="n">region</span><span class="o">=</span><span class="s2">&quot;United States of America&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>will yield a sequence of dictionaries of the form:</p>
@@ -431,7 +431,8 @@ name and yield them ranked by coverage.</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">client</span><span class="o">.</span><span class="n">find_data_series</span><span class="p">(</span><span class="n">item</span><span class="o">=</span><span class="s2">&quot;vegetation&quot;</span><span class="p">,</span>
                         <span class="n">metric</span><span class="o">=</span><span class="s2">&quot;vegetation indices&quot;</span><span class="p">,</span>
                         <span class="n">region</span><span class="o">=</span><span class="s2">&quot;Central&quot;</span><span class="p">,</span>
-                        <span class="n">result_filter</span><span class="o">=</span><span class="k">lambda</span> <span class="n">r</span><span class="p">:</span> <span class="s1">&#39;region_id&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">r</span> <span class="ow">or</span> <span class="n">r</span><span class="p">[</span><span class="s1">&#39;region_id&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">10393</span><span class="p">)</span>
+                        <span class="n">result_filter</span><span class="o">=</span><span class="k">lambda</span> <span class="n">r</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;region_id&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">r</span> <span class="ow">or</span>
+                                                 <span class="n">r</span><span class="p">[</span><span class="s1">&#39;region_id&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">10393</span><span class="p">))</span>
 </pre></div>
 </div>
 <p>will only consider that particular region, and not the many other regions
@@ -589,7 +590,7 @@ that does not have data.</li>
 <h2><a class="toc-backref" href="#id3">Geographic</a><a class="headerlink" href="#geographic" title="Permalink to this headline">¶</a></h2>
 <dl class="method">
 <dt id="api.client.gro_client.GroClient.get_geojson">
-<code class="descclassname">GroClient.</code><code class="descname">get_geojson</code><span class="sig-paren">(</span><em>region_id</em><span class="sig-paren">)</span><a class="headerlink" href="#api.client.gro_client.GroClient.get_geojson" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">GroClient.</code><code class="descname">get_geojson</code><span class="sig-paren">(</span><em>region_id</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/gro_client.html#GroClient.get_geojson"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.gro_client.GroClient.get_geojson" title="Permalink to this definition">¶</a></dt>
 <dd><p>Given a region ID, return a geojson shape information</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -612,7 +613,7 @@ that does not have data.</li>
 
 <dl class="method">
 <dt id="api.client.gro_client.GroClient.get_descendant_regions">
-<code class="descclassname">GroClient.</code><code class="descname">get_descendant_regions</code><span class="sig-paren">(</span><em>region_id</em>, <em>descendant_level=None</em>, <em>include_historical=True</em>, <em>include_details=True</em><span class="sig-paren">)</span><a class="headerlink" href="#api.client.gro_client.GroClient.get_descendant_regions" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">GroClient.</code><code class="descname">get_descendant_regions</code><span class="sig-paren">(</span><em>region_id</em>, <em>descendant_level=None</em>, <em>include_historical=True</em>, <em>include_details=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/gro_client.html#GroClient.get_descendant_regions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.gro_client.GroClient.get_descendant_regions" title="Permalink to this definition">¶</a></dt>
 <dd><p>Look up details of all regions of the given level contained by a region.</p>
 <p>Given any region by id, get all the descendant regions that are of the specified level.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -697,7 +698,7 @@ regions will be returned, which makes execution significantly faster.</li>
 <h2><a class="toc-backref" href="#id4">Advanced Exploration</a><a class="headerlink" href="#advanced-exploration" title="Permalink to this headline">¶</a></h2>
 <dl class="method">
 <dt id="api.client.gro_client.GroClient.lookup_belongs">
-<code class="descclassname">GroClient.</code><code class="descname">lookup_belongs</code><span class="sig-paren">(</span><em>entity_type</em>, <em>entity_id</em><span class="sig-paren">)</span><a class="headerlink" href="#api.client.gro_client.GroClient.lookup_belongs" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">GroClient.</code><code class="descname">lookup_belongs</code><span class="sig-paren">(</span><em>entity_type</em>, <em>entity_id</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/gro_client.html#GroClient.lookup_belongs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.gro_client.GroClient.lookup_belongs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Look up details of entities containing the given entity.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -726,7 +727,7 @@ regions will be returned, which makes execution significantly faster.</li>
 
 <dl class="method">
 <dt id="api.client.gro_client.GroClient.rank_series_by_source">
-<code class="descclassname">GroClient.</code><code class="descname">rank_series_by_source</code><span class="sig-paren">(</span><em>selections_list</em><span class="sig-paren">)</span><a class="headerlink" href="#api.client.gro_client.GroClient.rank_series_by_source" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">GroClient.</code><code class="descname">rank_series_by_source</code><span class="sig-paren">(</span><em>selections_list</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/gro_client.html#GroClient.rank_series_by_source"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.gro_client.GroClient.rank_series_by_source" title="Permalink to this definition">¶</a></dt>
 <dd><p>Given a list of series selections, for each unique combination excluding source, expand
 to all available sources and return them in ranked order. The order corresponds to how well
 that source covers the selection (metrics, items, regions, and time range and frequency).</p>
@@ -744,7 +745,7 @@ that source covers the selection (metrics, items, regions, and time range and fr
 
 <dl class="method">
 <dt id="api.client.gro_client.GroClient.get_available_timefrequency">
-<code class="descclassname">GroClient.</code><code class="descname">get_available_timefrequency</code><span class="sig-paren">(</span><em>**selection</em><span class="sig-paren">)</span><a class="headerlink" href="#api.client.gro_client.GroClient.get_available_timefrequency" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">GroClient.</code><code class="descname">get_available_timefrequency</code><span class="sig-paren">(</span><em>**selection</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/gro_client.html#GroClient.get_available_timefrequency"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.gro_client.GroClient.get_available_timefrequency" title="Permalink to this definition">¶</a></dt>
 <dd><p>Given a selection, return a list of frequencies and time ranges.
 The results are ordered by coverage-optimized ranking.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -1127,7 +1128,6 @@ search for available series, use <a class="reference internal" href="#api.client
             <dd><a href="../CLEWS-23237_revision_get_df/api.html">CLEWS-23237_revision_get_df</a></dd>
             <dd><a href="../CLEWS-23863/api.html">CLEWS-23863</a></dd>
             <dd><a href="../CLEWS-25132/api.html">CLEWS-25132</a></dd>
-            <dd><a href="../CLEWS-25139/api.html">CLEWS-25139</a></dd>
             <dd><a href="../CLEWS-25726/api.html">CLEWS-25726</a></dd>
             <dd><a href="../CLEWS-26731-ay_date_utils_function/api.html">CLEWS-26731-ay_date_utils_function</a></dd>
             <dd><a href="../CLEWS-26758-similar_regions/api.html">CLEWS-26758-similar_regions</a></dd>
