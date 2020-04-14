@@ -37,7 +37,7 @@ def add_brazil_soybeans_yield(model):
     for data_series in data_series_list:
         # Look up the name of the source based on the source_id
         source_name = model.lookup('sources', data_series['source_id']).get('longName')
-        print("{}: {} to {}".format(source_name,
+        print(u'{}: {} to {}'.format(source_name,
                                     data_series['start_date'], data_series['end_date']))
         model.add_single_data_series(data_series)
     return
