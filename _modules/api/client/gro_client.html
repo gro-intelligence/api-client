@@ -175,8 +175,6 @@
         
           <li><a href="../../index.html">Module code</a> &raquo;</li>
         
-          <li><a href="../client.html">api.client</a> &raquo;</li>
-        
       <li>api.client.gro_client</li>
     
     
@@ -210,7 +208,7 @@
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">sys</span>
 
-<span class="kn">from</span> <span class="nn">api.client</span> <span class="kn">import</span> <span class="n">cfg</span><span class="p">,</span> <span class="n">lib</span><span class="p">,</span> <span class="n">Client</span>
+<span class="kn">from</span> <span class="nn">api.client</span> <span class="kn">import</span> <span class="n">cfg</span><span class="p">,</span> <span class="n">lib</span>
 <span class="kn">from</span> <span class="nn">api.client.constants</span> <span class="kn">import</span> <span class="n">DATA_SERIES_UNIQUE_TYPES_ID</span><span class="p">,</span> <span class="n">ENTITY_KEY_TO_TYPE</span>
 <span class="kn">from</span> <span class="nn">api.client.utils</span> <span class="kn">import</span> <span class="n">intersect</span>
 
@@ -222,19 +220,12 @@
 <span class="n">OUTPUT_FILENAME</span> <span class="o">=</span> <span class="s1">&#39;gro_client_output.csv&#39;</span>
 
 
-<span class="k">class</span> <span class="nc">GroClient</span><span class="p">(</span><span class="n">Client</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;An extension of the Client class with extra convenience methods for some common operations.</span>
-
-<span class="sd">    Extra functionality includes:</span>
-<span class="sd">    - Automatic conversion of units</span>
-<span class="sd">    - Finding data series using entity names rather than ids</span>
-<span class="sd">    - Exploration shortcuts for filling in partial selections</span>
-<span class="sd">    - Saving data series in a data frame for repeated use</span>
-
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="k">class</span> <span class="nc">GroClient</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;API client with stateful authentication for lib functions and extra convenience methods.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">api_host</span><span class="p">,</span> <span class="n">access_token</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">GroClient</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">api_host</span><span class="p">,</span> <span class="n">access_token</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">api_host</span> <span class="o">=</span> <span class="n">api_host</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">access_token</span> <span class="o">=</span> <span class="n">access_token</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span> <span class="o">=</span> <span class="n">lib</span><span class="o">.</span><span class="n">get_default_logger</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_data_series_list</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>  <span class="c1"># all that have been added</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_data_series_queue</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># added but not loaded in data frame</span>
@@ -242,6 +233,425 @@
 
     <span class="k">def</span> <span class="nf">get_logger</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span>
+
+    <span class="k">def</span> <span class="nf">get_available</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;List the first 5000 available entities of the given type.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        entity_type : {&#39;metrics&#39;, &#39;items&#39;, &#39;regions&#39;}</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        data : list of dicts</span>
+
+<span class="sd">            Example::</span>
+
+<span class="sd">                [ { &#39;id&#39;: 0, &#39;contains&#39;: [1, 2, 3], &#39;name&#39;: &#39;World&#39;, &#39;level&#39;: 1},</span>
+<span class="sd">                  { &#39;id&#39;: 1, &#39;contains&#39;: [4, 5, 6], &#39;name&#39;: &#39;Asia&#39;, &#39;level&#39;: 2},</span>
+<span class="sd">                ... ]</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">lib</span><span class="o">.</span><span class="n">get_available</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_host</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">list_available</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">selected_entities</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;List available entities given some selected entities.</span>
+
+<span class="sd">        Given one or more selections, return entities combinations that have</span>
+<span class="sd">        data for the given selections.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        selected_entities : dict</span>
+
+<span class="sd">            Example::</span>
+
+<span class="sd">                { &#39;metric_id&#39;: 123, &#39;item_id&#39;: 456, &#39;source_id&#39;: 7 }</span>
+
+<span class="sd">            Keys may include: metric_id, item_id, region_id, partner_region_id,</span>
+<span class="sd">            source_id, frequency_id</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        list of dicts</span>
+
+<span class="sd">            Example::</span>
+
+<span class="sd">                [ { &#39;metric_id&#39;: 11078, &#39;metric_name&#39;: &#39;Export Value (currency)&#39;,</span>
+<span class="sd">                    &#39;item_id&#39;: 274, &#39;item_name&#39;: &#39;Corn&#39;,</span>
+<span class="sd">                    &#39;region_id&#39;: 1215, &#39;region_name&#39;: &#39;United States&#39;,</span>
+<span class="sd">                    &#39;source_id&#39;: 15, &#39;source_name&#39;: &#39;USDA GATS&#39; },</span>
+<span class="sd">                  { ... },</span>
+<span class="sd">                ... ]</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">lib</span><span class="o">.</span><span class="n">list_available</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_host</span><span class="p">,</span> <span class="n">selected_entities</span><span class="p">)</span>
+
+<div class="viewcode-block" id="GroClient.lookup"><a class="viewcode-back" href="../../../api.html#api.client.gro_client.GroClient.lookup">[docs]</a>    <span class="k">def</span> <span class="nf">lookup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">,</span> <span class="n">entity_ids</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Retrieve details about a given id or list of ids of type entity_type.</span>
+
+<span class="sd">        https://developers.gro-intelligence.com/gro-ontology.html</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        entity_type : { &#39;metrics&#39;, &#39;items&#39;, &#39;regions&#39;, &#39;frequencies&#39;, &#39;sources&#39;, &#39;units&#39; }</span>
+<span class="sd">        entity_ids : int or list of ints</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        dict or dict of dicts</span>
+<span class="sd">            A dict with entity details is returned if an integer is given for entity_ids.</span>
+<span class="sd">            A dict of dicts with entity details, keyed by id, is returned if a list of integers is</span>
+<span class="sd">            given for entity_ids.</span>
+
+<span class="sd">            Example::</span>
+
+<span class="sd">                { &#39;id&#39;: 274,</span>
+<span class="sd">                  &#39;contains&#39;: [779, 780, ...]</span>
+<span class="sd">                  &#39;name&#39;: &#39;Corn&#39;,</span>
+<span class="sd">                  &#39;definition&#39;: &#39;The seeds of the widely cultivated corn plant &lt;i&gt;Zea mays&lt;/i&gt;,&#39;</span>
+<span class="sd">                                &#39; which is one of the world\&#39;s most popular grains.&#39; }</span>
+
+<span class="sd">            Example::</span>
+
+<span class="sd">                {   &#39;274&#39;: {</span>
+<span class="sd">                        &#39;id&#39;: 274,</span>
+<span class="sd">                        &#39;contains&#39;: [779, 780, ...],</span>
+<span class="sd">                        &#39;belongsTo&#39;: [4138, 8830, ...],</span>
+<span class="sd">                        &#39;name&#39;: &#39;Corn&#39;,</span>
+<span class="sd">                        &#39;definition&#39;: &#39;The seeds of the widely cultivated corn plant&#39;</span>
+<span class="sd">                                      &#39; &lt;i&gt;Zea mays&lt;/i&gt;, which is one of the world\&#39;s most popular&#39;</span>
+<span class="sd">                                      &#39; grains.&#39;</span>
+<span class="sd">                    },</span>
+<span class="sd">                    &#39;270&#39;: {</span>
+<span class="sd">                        &#39;id&#39;: 270,</span>
+<span class="sd">                        &#39;contains&#39;: [1737, 7401, ...],</span>
+<span class="sd">                        &#39;belongsTo&#39;: [8830, 9053, ...],</span>
+<span class="sd">                        &#39;name&#39;: &#39;Soybeans&#39;,</span>
+<span class="sd">                        &#39;definition&#39;: &#39;The seeds and harvested crops of plants belonging to the&#39;</span>
+<span class="sd">                                      &#39; species &lt;i&gt;Glycine max&lt;/i&gt; that are used in the production&#39;</span>
+<span class="sd">                                      &#39; of oil and both human and livestock consumption.&#39;</span>
+<span class="sd">                    }</span>
+<span class="sd">                }</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">lib</span><span class="o">.</span><span class="n">lookup</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_host</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">,</span> <span class="n">entity_ids</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">lookup_unit_abbreviation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">unit_id</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">lookup</span><span class="p">(</span><span class="s1">&#39;units&#39;</span><span class="p">,</span> <span class="n">unit_id</span><span class="p">)[</span><span class="s1">&#39;abbreviation&#39;</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">get_allowed_units</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">metric_id</span><span class="p">,</span> <span class="n">item_id</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get a list of unit that can be used with the given metric (and</span>
+<span class="sd">        optionally, item).</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        metric_id: int</span>
+<span class="sd">        item_id: int, optional.</span>
+
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        list of unit ids</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">lib</span><span class="o">.</span><span class="n">get_allowed_units</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_host</span><span class="p">,</span> <span class="n">metric_id</span><span class="p">,</span>
+                                     <span class="n">item_id</span><span class="p">)</span>
+
+<div class="viewcode-block" id="GroClient.get_data_series"><a class="viewcode-back" href="../../../api.html#api.client.gro_client.GroClient.get_data_series">[docs]</a>    <span class="k">def</span> <span class="nf">get_data_series</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">selection</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get available data series for the given selections.</span>
+
+<span class="sd">        https://developers.gro-intelligence.com/data-series-definition.html</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        metric_id : integer, optional</span>
+<span class="sd">        item_id : integer, optional</span>
+<span class="sd">        region_id : integer, optional</span>
+<span class="sd">        partner_region_id : integer, optional</span>
+<span class="sd">        source_id : integer, optional</span>
+<span class="sd">        frequency_id : integer, optional</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        list of dicts</span>
+
+<span class="sd">            Example::</span>
+
+<span class="sd">                [{ &#39;metric_id&#39;: 2020032, &#39;metric_name&#39;: &#39;Seed Use&#39;,</span>
+<span class="sd">                   &#39;item_id&#39;: 274, &#39;item_name&#39;: &#39;Corn&#39;,</span>
+<span class="sd">                   &#39;region_id&#39;: 1215, &#39;region_name&#39;: &#39;United States&#39;,</span>
+<span class="sd">                   &#39;source_id&#39;: 24, &#39;source_name&#39;: &#39;USDA FEEDGRAINS&#39;,</span>
+<span class="sd">                   &#39;frequency_id&#39;: 7,</span>
+<span class="sd">                   &#39;start_date&#39;: &#39;1975-03-01T00:00:00.000Z&#39;,</span>
+<span class="sd">                   &#39;end_date&#39;: &#39;2018-05-31T00:00:00.000Z&#39;</span>
+<span class="sd">                 }, { ... }, ... ]</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">lib</span><span class="o">.</span><span class="n">get_data_series</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_host</span><span class="p">,</span> <span class="o">**</span><span class="n">selection</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="GroClient.search"><a class="viewcode-back" href="../../../api.html#api.client.gro_client.GroClient.search">[docs]</a>    <span class="k">def</span> <span class="nf">search</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">,</span> <span class="n">search_terms</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Search for the given search term. Better matches appear first.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        entity_type : { &#39;metrics&#39;, &#39;items&#39;, &#39;regions&#39;, &#39;sources&#39; }</span>
+<span class="sd">        search_terms : string</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        list of dicts</span>
+
+<span class="sd">            Example::</span>
+
+<span class="sd">                [{&#39;id&#39;: 5604}, {&#39;id&#39;: 10204}, {&#39;id&#39;: 10210}, ....]</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">lib</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_host</span><span class="p">,</span>
+                          <span class="n">entity_type</span><span class="p">,</span> <span class="n">search_terms</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="GroClient.search_and_lookup"><a class="viewcode-back" href="../../../api.html#api.client.gro_client.GroClient.search_and_lookup">[docs]</a>    <span class="k">def</span> <span class="nf">search_and_lookup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">,</span> <span class="n">search_terms</span><span class="p">,</span> <span class="n">num_results</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Search for the given search terms and look up their details.</span>
+
+<span class="sd">        For each result, yield a dict of the entity and it&#39;s properties.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        entity_type : { &#39;metrics&#39;, &#39;items&#39;, &#39;regions&#39;, &#39;sources&#39; }</span>
+<span class="sd">        search_terms : string</span>
+<span class="sd">        num_results: int</span>
+<span class="sd">            Maximum number of results to return. Defaults to 10.</span>
+
+<span class="sd">        Yields</span>
+<span class="sd">        ------</span>
+<span class="sd">        dict</span>
+<span class="sd">            Result from :meth:`~.search` passed to :meth:`~.lookup` to get additional details.</span>
+
+<span class="sd">            Example::</span>
+
+<span class="sd">                { &#39;id&#39;: 274,</span>
+<span class="sd">                  &#39;contains&#39;: [779, 780, ...],</span>
+<span class="sd">                  &#39;name&#39;: &#39;Corn&#39;,</span>
+<span class="sd">                  &#39;definition&#39;: &#39;The seeds of the widely cultivated...&#39; }</span>
+
+<span class="sd">            See output of :meth:`~.lookup`. Note that as with :meth:`~.search`, the first result is</span>
+<span class="sd">            the best match for the given search term(s).</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">lib</span><span class="o">.</span><span class="n">search_and_lookup</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_host</span><span class="p">,</span>
+                                     <span class="n">entity_type</span><span class="p">,</span> <span class="n">search_terms</span><span class="p">,</span> <span class="n">num_results</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="GroClient.lookup_belongs"><a class="viewcode-back" href="../../../api.html#api.client.gro_client.GroClient.lookup_belongs">[docs]</a>    <span class="k">def</span> <span class="nf">lookup_belongs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">,</span> <span class="n">entity_id</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Look up details of entities containing the given entity.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        entity_type : { &#39;metrics&#39;, &#39;items&#39;, &#39;regions&#39; }</span>
+<span class="sd">        entity_id : int</span>
+
+<span class="sd">        Yields</span>
+<span class="sd">        ------</span>
+<span class="sd">        dict</span>
+<span class="sd">            Result of :meth:`~.lookup` on each entity the given entity belongs to.</span>
+
+<span class="sd">            For example: For the region &#39;United States&#39;, one yielded result will be for</span>
+<span class="sd">            &#39;North America.&#39; The format of which matches the output of :meth:`~.lookup`::</span>
+
+<span class="sd">                { &#39;id&#39;: 15,</span>
+<span class="sd">                  &#39;contains&#39;: [ 1008, 1009, 1012, 1215, ... ],</span>
+<span class="sd">                  &#39;name&#39;: &#39;North America&#39;,</span>
+<span class="sd">                  &#39;level&#39;: 2 }</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">lib</span><span class="o">.</span><span class="n">lookup_belongs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_host</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">,</span> <span class="n">entity_id</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="GroClient.rank_series_by_source"><a class="viewcode-back" href="../../../api.html#api.client.gro_client.GroClient.rank_series_by_source">[docs]</a>    <span class="k">def</span> <span class="nf">rank_series_by_source</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">selections_list</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Given a list of series selections, for each unique combination excluding source, expand</span>
+<span class="sd">        to all available sources and return them in ranked order. The order corresponds to how well</span>
+<span class="sd">        that source covers the selection (metrics, items, regions, and time range and frequency).</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        series_list : list of dicts</span>
+<span class="sd">            See the output of :meth:`~.get_data_series`.</span>
+
+<span class="sd">        Yields</span>
+<span class="sd">        ------</span>
+<span class="sd">        dict</span>
+<span class="sd">            The input series_list, expanded out to each possible source, ordered by coverage.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">lib</span><span class="o">.</span><span class="n">rank_series_by_source</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_host</span><span class="p">,</span> <span class="n">selections_list</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">get_geo_centre</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">region_id</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Given a region ID, return the geographic centre in degrees lat/lon.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        region_id : integer</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        list of dicts</span>
+
+<span class="sd">            Example::</span>
+
+<span class="sd">                [{&#39;centre&#39;: [ 45.7228, -112.996 ], &#39;regionId&#39;: 1215, &#39;regionName&#39;: &#39;United States&#39;}]</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">lib</span><span class="o">.</span><span class="n">get_geo_centre</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_host</span><span class="p">,</span> <span class="n">region_id</span><span class="p">)</span>
+
+<div class="viewcode-block" id="GroClient.get_geojson"><a class="viewcode-back" href="../../../api.html#api.client.gro_client.GroClient.get_geojson">[docs]</a>    <span class="k">def</span> <span class="nf">get_geojson</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">region_id</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Given a region ID, return a geojson shape information</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        region_id : integer</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        a geojson object or None</span>
+
+<span class="sd">            Example::</span>
+
+<span class="sd">                { &#39;type&#39;: &#39;GeometryCollection&#39;,</span>
+<span class="sd">                &#39;geometries&#39;: [{&#39;type&#39;: &#39;MultiPolygon&#39;,</span>
+<span class="sd">                                &#39;coordinates&#39;: [[[[-38.394, -4.225], ...]]]}, ...]}</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">lib</span><span class="o">.</span><span class="n">get_geojson</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_host</span><span class="p">,</span> <span class="n">region_id</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="GroClient.get_descendant_regions"><a class="viewcode-back" href="../../../api.html#api.client.gro_client.GroClient.get_descendant_regions">[docs]</a>    <span class="k">def</span> <span class="nf">get_descendant_regions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">region_id</span><span class="p">,</span> <span class="n">descendant_level</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                               <span class="n">include_historical</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">include_details</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Look up details of all regions of the given level contained by a region.</span>
+
+<span class="sd">        Given any region by id, get all the descendant regions that are of the specified level.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        region_id : integer</span>
+<span class="sd">        descendant_level : integer, optional</span>
+<span class="sd">            The region level of interest. See REGION_LEVELS constant. If not provided, get all</span>
+<span class="sd">            descendants.</span>
+<span class="sd">        include_historical : boolean, optional</span>
+<span class="sd">            True by default. If False is specified, regions that only exist in historical data</span>
+<span class="sd">            (e.g. the Soviet Union) will be excluded.</span>
+<span class="sd">        include_details : boolean, optional</span>
+<span class="sd">            True by default. Will perform a lookup() on each descendant region to find name,</span>
+<span class="sd">            latitude, longitude, etc. If this option is set to False, only ids of descendant</span>
+<span class="sd">            regions will be returned, which makes execution significantly faster.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        list of dicts</span>
+
+<span class="sd">            Example::</span>
+
+<span class="sd">                [{</span>
+<span class="sd">                    &#39;id&#39;: 13100,</span>
+<span class="sd">                    &#39;contains&#39;: [139839, 139857, ...],</span>
+<span class="sd">                    &#39;name&#39;: &#39;Wisconsin&#39;,</span>
+<span class="sd">                    &#39;level&#39;: 4</span>
+<span class="sd">                } , {</span>
+<span class="sd">                    &#39;id&#39;: 13101,</span>
+<span class="sd">                    &#39;contains&#39;: [139891, 139890, ...],</span>
+<span class="sd">                    &#39;name&#39;: &#39;Wyoming&#39;,</span>
+<span class="sd">                    &#39;level&#39;: 4</span>
+<span class="sd">                }, ...]</span>
+
+<span class="sd">            See output of :meth:`~.lookup`</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">lib</span><span class="o">.</span><span class="n">get_descendant_regions</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_host</span><span class="p">,</span> <span class="n">region_id</span><span class="p">,</span>
+                                          <span class="n">descendant_level</span><span class="p">,</span> <span class="n">include_historical</span><span class="p">,</span> <span class="n">include_details</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="GroClient.get_available_timefrequency"><a class="viewcode-back" href="../../../api.html#api.client.gro_client.GroClient.get_available_timefrequency">[docs]</a>    <span class="k">def</span> <span class="nf">get_available_timefrequency</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">selection</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Given a selection, return a list of frequencies and time ranges.</span>
+<span class="sd">        The results are ordered by coverage-optimized ranking.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        metric_id : integer, optional</span>
+<span class="sd">        item_id : integer, optional</span>
+<span class="sd">        region_id : integer, optional</span>
+<span class="sd">        partner_region_id : integer, optional</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        list of dicts</span>
+
+<span class="sd">            Example::</span>
+
+<span class="sd">                 [{</span>
+<span class="sd">                    &#39;startDate&#39;: &#39;2000-02-18T00:00:00.000Z&#39;,</span>
+<span class="sd">                    &#39;frequencyId&#39;: 3,</span>
+<span class="sd">                    &#39;endDate&#39;: &#39;2020-03-12T00:00:00.000Z&#39;,</span>
+<span class="sd">                    &#39;name&#39;: &#39;8-day&#39;</span>
+<span class="sd">                  }, {</span>
+<span class="sd">                    &#39;startDate&#39;: &#39;2019-09-02T00:00:00.000Z&#39;,</span>
+<span class="sd">                    &#39;frequencyId&#39;: 1,</span>
+<span class="sd">                    &#39;endDate&#39;: &#39;2020-03-09T00:00:00.000Z&#39;,</span>
+<span class="sd">                    &#39;name&#39;: u&#39;daily&#39;}, ... ]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">lib</span><span class="o">.</span><span class="n">get_available_timefrequency</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_host</span><span class="p">,</span>
+                                               <span class="o">**</span><span class="n">selection</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">get_top</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">,</span> <span class="n">num_results</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="o">**</span><span class="n">selection</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Find the data series with the highest cumulative value for the given time range.</span>
+
+<span class="sd">        Examples::</span>
+
+<span class="sd">            # To get FAO&#39;s top 5 corn-producing countries of all time:</span>
+<span class="sd">            &gt;&gt;&gt; get_top(&#39;regions&#39;, metric_id=860032, item_id=274, frequency_id=9, source_id=2)</span>
+
+<span class="sd">            # To get FAO&#39;s top 5 corn-producing countries of 2014:</span>
+<span class="sd">            &gt;&gt;&gt; get_top(&#39;regions&#39;, metric_id=860032, item_id=274, frequency_id=9, source_id=2,</span>
+<span class="sd">                        start_date=&#39;2014-01-01&#39;, end_date=&#39;2014-12-31&#39;)</span>
+
+<span class="sd">            # To get the United States&#39; top 15 exports in the decade of 2010-2019:</span>
+<span class="sd">            &gt;&gt;&gt; get_top(&#39;items&#39;, num_results=15, metric_id=20032, region_id=1215, frequency_id=9,</span>
+<span class="sd">                        source_id=2, start_date=&#39;2010-01-01&#39;, end_date=&#39;2019-12-31&#39;)</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        entity_type : { &#39;items&#39;, &#39;regions&#39; }</span>
+<span class="sd">            The entity type to rank, all other selections being the same. Only items and regions</span>
+<span class="sd">            are rankable at this time.</span>
+<span class="sd">        num_results : integer, optional</span>
+<span class="sd">            How many data series to rank. Top 5 by default.</span>
+<span class="sd">        metric_id : integer</span>
+<span class="sd">        item_id : integer</span>
+<span class="sd">            Required if requesting top regions. Disallowed if requesting top items.</span>
+<span class="sd">        region_id : integer</span>
+<span class="sd">            Required if requesting top items. Disallowed if requesting top regions.</span>
+<span class="sd">        partner_region_id : integer, optional</span>
+<span class="sd">        frequency_id : integer</span>
+<span class="sd">        source_id : integer</span>
+<span class="sd">        start_date : string, optional</span>
+<span class="sd">            If not provided, the cumulative value used for ranking will include data points as far</span>
+<span class="sd">            back as the source provides.</span>
+<span class="sd">        end_date : string, optional</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        list of dicts</span>
+
+<span class="sd">            Example::</span>
+
+<span class="sd">                [</span>
+<span class="sd">                    {&#39;metricId&#39;: 860032, &#39;itemId&#39;: 274, &#39;regionId&#39;: 1215, &#39;frequencyId&#39;: 9,</span>
+<span class="sd">                     &#39;sourceId&#39;: 2, &#39;value&#39;: 400, &#39;unitId&#39;: 14},</span>
+<span class="sd">                    {&#39;metricId&#39;: 860032, &#39;itemId&#39;: 274, &#39;regionId&#39;: 1215, &#39;frequencyId&#39;: 9,</span>
+<span class="sd">                     &#39;sourceId&#39;: 2, &#39;value&#39;: 395, &#39;unitId&#39;: 14},</span>
+<span class="sd">                    {&#39;metricId&#39;: 860032, &#39;itemId&#39;: 274, &#39;regionId&#39;: 1215, &#39;frequencyId&#39;: 9,</span>
+<span class="sd">                     &#39;sourceId&#39;: 2, &#39;value&#39;: 12, &#39;unitId&#39;: 14},</span>
+<span class="sd">                ]</span>
+
+<span class="sd">            Along with the series attributes, value and unit are also given for the total cumulative</span>
+<span class="sd">            value the series are ranked by. You may then use the results to call</span>
+<span class="sd">            :meth:`~.get_data_points` to get the individual time series points.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">lib</span><span class="o">.</span><span class="n">get_top</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_host</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">,</span> <span class="n">num_results</span><span class="p">,</span> <span class="o">**</span><span class="n">selection</span><span class="p">)</span>
 
 <div class="viewcode-block" id="GroClient.get_df"><a class="viewcode-back" href="../../../api.html#api.client.gro_client.GroClient.get_df">[docs]</a>    <span class="k">def</span> <span class="nf">get_df</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">show_revisions</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">index_by_series</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Call :meth:`~.get_data_points` for each saved data series and return as a combined</span>
@@ -465,7 +875,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">add_single_data_series</span><span class="p">(</span><span class="n">selection</span><span class="p">)</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_df</span><span class="p">(</span><span class="n">index_by_series</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">loc</span><span class="p">[[</span><span class="nb">tuple</span><span class="p">(</span><span class="n">entity_ids</span><span class="p">)],</span> <span class="p">:]</span>
-        <span class="k">except</span> <span class="ne">KeyError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
 
 <div class="viewcode-block" id="GroClient.get_data_series_list"><a class="viewcode-back" href="../../../api.html#api.client.gro_client.GroClient.get_data_series_list">[docs]</a>    <span class="k">def</span> <span class="nf">get_data_series_list</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -516,7 +926,7 @@
 
 <span class="sd">            client.find_data_series(item=&quot;Corn&quot;,</span>
 <span class="sd">                                    metric=&quot;Futures Open Interest&quot;,</span>
-<span class="sd">                                    region=&quot;United States of America&quot;))</span>
+<span class="sd">                                    region=&quot;United States of America&quot;)</span>
 
 <span class="sd">        will yield a sequence of dictionaries of the form::</span>
 
@@ -535,7 +945,8 @@
 <span class="sd">            client.find_data_series(item=&quot;vegetation&quot;,</span>
 <span class="sd">                                    metric=&quot;vegetation indices&quot;,</span>
 <span class="sd">                                    region=&quot;Central&quot;,</span>
-<span class="sd">                                    result_filter=lambda r: &#39;region_id&#39; not in r or r[&#39;region_id&#39;] == 10393)</span>
+<span class="sd">                                    result_filter=lambda r: (&#39;region_id&#39; not in r or</span>
+<span class="sd">                                                             r[&#39;region_id&#39;] == 10393))</span>
 
 <span class="sd">        will only consider that particular region, and not the many other regions</span>
 <span class="sd">        with the same name.</span>
@@ -945,7 +1356,6 @@
             <dd><a href="../../../CLEWS-23237_revision_get_df/index.html">CLEWS-23237_revision_get_df</a></dd>
             <dd><a href="../../../CLEWS-23863/index.html">CLEWS-23863</a></dd>
             <dd><a href="../../../CLEWS-25132/index.html">CLEWS-25132</a></dd>
-            <dd><a href="../../../CLEWS-25139/index.html">CLEWS-25139</a></dd>
             <dd><a href="../../../CLEWS-25726/index.html">CLEWS-25726</a></dd>
             <dd><a href="../../../CLEWS-26731-ay_date_utils_function/index.html">CLEWS-26731-ay_date_utils_function</a></dd>
             <dd><a href="../../../CLEWS-26758-similar_regions/index.html">CLEWS-26758-similar_regions</a></dd>
