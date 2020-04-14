@@ -630,7 +630,7 @@ class GroClient(object):
         list of dicts
 
         """
-        data_points = super(GroClient, self).get_data_points(**selections)
+        data_points = lib.get_data_points(self.access_token, self.api_host, **selections)
         # Apply unit conversion if a unit is specified
         if 'unit_id' in selections:
             return list(map(functools.partial(self.convert_unit,
