@@ -21,7 +21,7 @@ API_HOST = 'api.gro-intelligence.com'
 OUTPUT_FILENAME = 'gro_client_output.csv'
 
 
-class GroClient:
+class GroClient(object):
     """API client with stateful authentication for lib functions and extra convenience methods."""
 
     def __init__(self, api_host, access_token):
