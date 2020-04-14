@@ -10,6 +10,20 @@ MOCK_TOKEN = 'pytest.groclient.token'
 PYTHON_VERSION = platform.python_version()
 API_CLIENT_VERSION = get_distribution('gro').version
 
+LOOKUP_MAP = {
+    'metrics': {},
+    'items': {},
+    'regions': {
+        '1': {'id': 1, 'name': 'region 1', 'contains': [], 'belongsTo': [3], 'historical': True},
+        '2': {'id': 2, 'name': 'region 2', 'contains': [], 'belongsTo': [3], 'historical': False},
+        '3': {'id': 3, 'name': 'parent', 'contains': [1, 2], 'belongsTo': [4], 'historical': False},
+        '4': {'id': 4, 'name': 'ancestor', 'contains': [3], 'belongsTo': [], 'historical': False}
+    },
+    'frequencies': {},
+    'sources': {},
+    'units': {}
+}
+
 
 def initialize_requests_mocker_and_get_mock_data(mock_requests_get, mock_data={
     'data': [
@@ -32,16 +46,6 @@ def test_get_available(mock_requests_get):
 
     for ent_type in entity_types:
         assert lib.get_available(MOCK_TOKEN, MOCK_HOST, ent_type) == mock_data['data']
-        # Make sure that call now exists in the mock call stack
-        mock_requests_get.assert_has_calls([
-            mock.call('https://pytest.groclient.url/v2/' + ent_type,
-                      headers={
-                        'authorization': 'Bearer pytest.groclient.token',
-                        'python-version': PYTHON_VERSION,
-                        'api-client-version': API_CLIENT_VERSION
-                      },
-                      params=None,
-                      timeout=None)])
 
 
 @mock.patch('requests.get')
@@ -53,40 +57,13 @@ def test_list_available(mock_requests_get):
 
     assert lib.list_available(MOCK_TOKEN, MOCK_HOST, entities) == mock_data['data']
 
-    # Make sure that call now exists in the mock call stack
-    mock_requests_get.assert_has_calls(
-        [mock.call('https://pytest.groclient.url/v2/entities/list',
-                   headers={
-                    'authorization': 'Bearer pytest.groclient.token',
-                    'python-version': PYTHON_VERSION,
-                    'api-client-version': API_CLIENT_VERSION
-                   },
-                   params=entities,
-                   timeout=None)]
-    )
-
 
 @mock.patch('requests.get')
 def test_list_available_snake_to_camel(mock_requests_get):
     # Tests that the camel-ing fix is working properly.
     mock_data = initialize_requests_mocker_and_get_mock_data(mock_requests_get)
-
     entities = {'metric_id': '123', 'item_id': '456', 'regionId': '789'}
-    entities_camel = {'metricId': '123', 'itemId': '456', 'regionId': '789'}
-
     assert lib.list_available(MOCK_TOKEN, MOCK_HOST, entities) == mock_data['data']
-
-    # Make sure that call now exists in the mock call stack
-    mock_requests_get.assert_has_calls(
-        [mock.call('https://pytest.groclient.url/v2/entities/list',
-                   headers={
-                    'authorization': 'Bearer pytest.groclient.token',
-                    'python-version': PYTHON_VERSION,
-                    'api-client-version': API_CLIENT_VERSION
-                   },
-                   params=entities_camel,
-                   timeout=None)]
-    )
 
 
 @mock.patch('requests.get')
@@ -141,17 +118,6 @@ def test_get_data_series(mock_requests_get):
 
     assert lib.get_data_series(MOCK_TOKEN, MOCK_HOST, **selection_dict) == mock_data['data']
 
-    # Make sure that call now exists in the mock call stack
-    assert [mock.call('https://pytest.groclient.url/v2/data_series/list',
-                      headers={
-                        'authorization': 'Bearer pytest.groclient.token',
-                        'python-version': PYTHON_VERSION,
-                        'api-client-version': API_CLIENT_VERSION
-                      },
-                      params={'itemId': 123, 'metricId': 456, 'regionId': 789,
-                              'partnerRegionId': 161718, 'frequencyId': 101112, 'sourceId': 12},
-                      timeout=None)] == mock_requests_get.call_args_list
-
 
 @mock.patch('requests.get')
 def test_get_data_points(mock_requests_get):
@@ -183,18 +149,6 @@ def test_get_data_points(mock_requests_get):
 
     assert lib.get_data_points(MOCK_TOKEN, MOCK_HOST, **selection_dict) == single_series_format_data
 
-    # Make sure that call now exists in the mock call stack
-    assert [mock.call('https://pytest.groclient.url/v2/data',
-                      headers={
-                        'authorization': 'Bearer pytest.groclient.token',
-                        'python-version': PYTHON_VERSION,
-                        'api-client-version': API_CLIENT_VERSION
-                      },
-                      params={'itemId': 123, 'regionId': 789, 'partnerRegionId': 161718,
-                              'sourceId': 131415, 'metricId': 456, 'frequencyId': 101112,
-                              'responseType': 'list_of_series'},
-                      timeout=None)] == mock_requests_get.call_args_list
-
 
 @mock.patch('requests.get')
 def test_search(mock_requests_get):
@@ -203,66 +157,33 @@ def test_search(mock_requests_get):
 
     assert lib.search(MOCK_TOKEN, MOCK_HOST, 'items', 'test123') == mock_data
 
-    assert [mock.call('https://pytest.groclient.url/v2/search/items',
-                      headers={
-                        'authorization': 'Bearer pytest.groclient.token',
-                        'python-version': PYTHON_VERSION,
-                        'api-client-version': API_CLIENT_VERSION
-                      },
-                      params={'q': 'test123'},
-                      timeout=None)] == mock_requests_get.call_args_list
-
 
 @mock.patch('api.client.lib.lookup')
 @mock.patch('api.client.lib.search')
 def test_search_and_lookup(search_mocked, lookup_mocked):
     # Set up
     # mock return values
-    search_mocked.return_value = [{'id': 'test1'}, {'id': 'test2'}]
-    mock_data = ['obj1', 'obj2']
-    lookup_mocked.return_value = mock_data
+    search_mocked.return_value = [{'id': 1}, {'id': 2}]
+    lookup_mocked.side_effect = lookup_mock
     search_and_lookup_result = list(lib.search_and_lookup(MOCK_TOKEN, MOCK_HOST,
-                                                          'items', 'test123'))
+                                                          'regions', 'test123'))
 
-    assert search_and_lookup_result == [mock_data]*2
-
-    assert [
-        mock.call('pytest.groclient.token', 'pytest.groclient.url', 'items', 'test123')
-    ] == search_mocked.mock_calls
-    assert [
-        mock.call('pytest.groclient.token', 'pytest.groclient.url', 'items', 'test1'),
-        mock.call('pytest.groclient.token', 'pytest.groclient.url', 'items', 'test2')
-    ] == lookup_mocked.mock_calls
+    assert search_and_lookup_result == [
+        LOOKUP_MAP['regions']['1'],
+        LOOKUP_MAP['regions']['2']
+    ]
 
 
 @mock.patch('api.client.lib.lookup')
 @mock.patch('requests.get')
 def test_lookup_belongs(mock_requests_get, lookup_mocked):
-    # Set up
-    # mock return values
-    mock_data = ['obj1', 'obj2']
-    mock_requests_get.return_value.json.return_value = {'data': {'test_entity': [1, 2, 3]}}
+    mock_requests_get.return_value.json.return_value = {'data': {'1': [3]}}
     mock_requests_get.return_value.status_code = 200
-    lookup_mocked.return_value = mock_data
+    lookup_mocked.side_effect = lookup_mock
 
-    lookup_belongs_result = list(lib.lookup_belongs(MOCK_TOKEN, MOCK_HOST, 'items', 'test_entity'))
+    lookup_belongs_result = list(lib.lookup_belongs(MOCK_TOKEN, MOCK_HOST, 'regions', 1))
 
-    assert [mock_data]*3 == lookup_belongs_result
-
-    assert [mock.call('https://pytest.groclient.url/v2/items/belongs-to',
-                      headers={
-                        'authorization': 'Bearer pytest.groclient.token',
-                        'python-version': PYTHON_VERSION,
-                        'api-client-version': API_CLIENT_VERSION
-                      },
-                      params={'ids': 'test_entity'},
-                      timeout=None)] == mock_requests_get.call_args_list
-
-    assert [
-        mock.call('pytest.groclient.token', 'pytest.groclient.url', 'items', 1),
-        mock.call('pytest.groclient.token', 'pytest.groclient.url', 'items', 2),
-        mock.call('pytest.groclient.token', 'pytest.groclient.url', 'items', 3)
-    ] == lookup_mocked.mock_calls
+    assert lookup_belongs_result == [LOOKUP_MAP['regions']['3']]
 
 
 @mock.patch('requests.get')
@@ -301,51 +222,51 @@ def test_rank_series_by_source(mock_requests_get):
     assert mock_return + mock_return == [x['source_id'] for x in c]
 
 
-def lookup_mock(MOCK_TOKEN, MOCK_HOST, entity_type, entity_id):
-    if entity_type == 'regions':
-        if entity_id == 1:
-            return {'id': 1, 'name': 'region 1', 'contains': [], 'historical': True}
-        if entity_id == 2:
-            return {'id': 2, 'name': 'region 2', 'contains': [], 'historical': False}
+def lookup_mock(MOCK_TOKEN, MOCK_HOST, entity_type, entity_ids):
+    if isinstance(entity_ids, int):
+        return LOOKUP_MAP[entity_type][str(entity_ids)]
+    if isinstance(entity_ids, list):
+        return {str(entity_id): LOOKUP_MAP[entity_type][str(entity_id)]
+                for entity_id in entity_ids}
 
 
 @mock.patch('api.client.lib.lookup')
 @mock.patch('requests.get')
 def test_descendant_regions(mock_requests_get, lookup_mocked):
-    mock_requests_get.return_value.json.return_value = {'data': {'14': [1, 2]}}
+    mock_requests_get.return_value.json.return_value = {'data': {'3': [1, 2]}}
     mock_requests_get.return_value.status_code = 200
     lookup_mocked.side_effect = lookup_mock
 
-    assert lib.get_descendant_regions(MOCK_TOKEN, MOCK_HOST, 14) == [
-        {'id': 1, 'name': 'region 1', 'contains': [], 'historical': True},
-        {'id': 2, 'name': 'region 2', 'contains': [], 'historical': False}
+    assert lib.get_descendant_regions(MOCK_TOKEN, MOCK_HOST, 3) == [
+        {'id': 1, 'name': 'region 1', 'contains': [], 'belongsTo': [3], 'historical': True},
+        {'id': 2, 'name': 'region 2', 'contains': [], 'belongsTo': [3], 'historical': False}
     ]
 
-    assert lib.get_descendant_regions(MOCK_TOKEN, MOCK_HOST, 14, include_details=True) == [
-        {'id': 1, 'name': 'region 1', 'contains': [], 'historical': True},
-        {'id': 2, 'name': 'region 2', 'contains': [], 'historical': False}
+    assert lib.get_descendant_regions(MOCK_TOKEN, MOCK_HOST, 3, include_details=True) == [
+        {'id': 1, 'name': 'region 1', 'contains': [], 'belongsTo': [3], 'historical': True},
+        {'id': 2, 'name': 'region 2', 'contains': [], 'belongsTo': [3], 'historical': False}
     ]
 
-    assert lib.get_descendant_regions(MOCK_TOKEN, MOCK_HOST, 14, include_details=False) == [
+    assert lib.get_descendant_regions(MOCK_TOKEN, MOCK_HOST, 3, include_details=False) == [
         {'id': 1}, {'id': 2}
     ]
 
-    assert lib.get_descendant_regions(MOCK_TOKEN, MOCK_HOST, 14, include_historical=True) == [
-        {'id': 1, 'name': 'region 1', 'contains': [], 'historical': True},
-        {'id': 2, 'name': 'region 2', 'contains': [], 'historical': False}
+    assert lib.get_descendant_regions(MOCK_TOKEN, MOCK_HOST, 3, include_historical=True) == [
+        {'id': 1, 'name': 'region 1', 'contains': [], 'belongsTo': [3], 'historical': True},
+        {'id': 2, 'name': 'region 2', 'contains': [], 'belongsTo': [3], 'historical': False}
     ]
 
-    assert lib.get_descendant_regions(MOCK_TOKEN, MOCK_HOST, 14, include_historical=False) == [
-        {'id': 2, 'name': 'region 2', 'contains': [], 'historical': False}
+    assert lib.get_descendant_regions(MOCK_TOKEN, MOCK_HOST, 3, include_historical=False) == [
+        {'id': 2, 'name': 'region 2', 'contains': [], 'belongsTo': [3], 'historical': False}
     ]
 
-    assert lib.get_descendant_regions(MOCK_TOKEN, MOCK_HOST, 14,
+    assert lib.get_descendant_regions(MOCK_TOKEN, MOCK_HOST, 3,
                                       include_historical=True, include_details=True) == [
-        {'id': 1, 'name': 'region 1', 'contains': [], 'historical': True},
-        {'id': 2, 'name': 'region 2', 'contains': [], 'historical': False}
+        {'id': 1, 'name': 'region 1', 'contains': [], 'belongsTo': [3], 'historical': True},
+        {'id': 2, 'name': 'region 2', 'contains': [], 'belongsTo': [3], 'historical': False}
     ]
 
-    assert lib.get_descendant_regions(MOCK_TOKEN, MOCK_HOST, 14, include_historical=False,
+    assert lib.get_descendant_regions(MOCK_TOKEN, MOCK_HOST, 3, include_historical=False,
                                       include_details=False) == [{'id': 2}]
 
 
