@@ -44,6 +44,7 @@ def test_get_data(test_data_1):
     test_data = get_transform_data.get_data(client, 'metric_id', 'item_id', 'region_id',
                                             'source_id', 'frequency_id', start_date_bound)
     expected = get_transform_data.combine_subregions(expected)[['end_date', 'value']]
+    expected = expected.resample('D').nearest()
     assert_frame_equal(test_data, expected)
 
 
@@ -70,7 +71,6 @@ def test_combine_subregions_with_subregion():
     expected_subregion.index = expected_subregion['end_date']
     # Test the equality of frames
     # expected_subregion.index = pd.to_datetime(expected_subregion.index)
-    expected_subregion = expected_subregion.resample('D').nearest()
     expected_subregion.loc[:, 'end_date'] = expected_subregion.index
     assert_frame_equal(get_transform_data.combine_subregions(test_data_subregion),
                        expected_subregion)
@@ -96,7 +96,6 @@ def test_combine_subregions_with_nosubregion():
     expected_nosubregion.loc[:, 'end_date'] = pd.to_datetime(expected_nosubregion['end_date'],
                                                              utc=utc_tz)
     expected_nosubregion.index = pd.to_datetime(expected_nosubregion.index, utc=utc_tz)
-    expected_nosubregion = expected_nosubregion.resample('D').nearest()
     expected_nosubregion.loc[:, 'end_date'] = pd.to_datetime(expected_nosubregion.index, utc=utc_tz)
     assert_frame_equal(get_transform_data.combine_subregions(test_data_nosubregion),
                        expected_nosubregion)
@@ -237,3 +236,4 @@ def test_loop_initiation_dates():
                 'final_date': pd.to_datetime('2018-12-01', utc=utc_tz)}
     assert get_transform_data.loop_initiation_dates(
         test_max_date, invalid_initial_date, invalid_final_date) == expected
+
