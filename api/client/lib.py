@@ -579,15 +579,17 @@ def search_and_lookup(access_token, api_host, entity_type, search_terms, num_res
 def lookup_belongs(access_token, api_host, entity_type, entity_id, **kwargs):
     belongs_to_ids = get_entity_property(access_token, api_host, entity_type, 'belongsTo',
                                          entity_id, **kwargs)[str(entity_id)]
+    belongs_to_details = lookup(access_token, api_host, entity_type, belongs_to_ids)
     for belongs_to_id in belongs_to_ids:
-        yield lookup(access_token, api_host, entity_type, belongs_to_id)
+        yield belongs_to_details[str(belongs_to_id)]
 
 
 def lookup_contains(access_token, api_host, entity_type, entity_id, **kwargs):
     contains_ids = get_entity_property(access_token, api_host, entity_type, 'contains',
                                        entity_id, **kwargs)[str(entity_id)]
-    for contained_entity_id in contains_ids:
-        yield lookup(access_token, api_host, entity_type, contained_entity_id)
+    contains_details = lookup(access_token, api_host, entity_type, contains_ids)
+    for contains_id in contains_ids:
+        yield contains_details[str(contains_id)]
 
 
 def get_geo_centre(access_token, api_host, region_id):
@@ -615,18 +617,13 @@ def get_entity_property(access_token, api_host, entity_type_plural, property_plu
     url = '/'.join(['https:', '', api_host,
                     'v2', entity_type_plural, str_camel_to_kebab(property_plural)])
     headers = {'authorization': 'Bearer ' + access_token}
-    params = {'ids': ids}
+    params = {'ids': ids}  # TODO: add chunking as in lookup()
     if 'level' in kwargs:
         params['level'] = kwargs['level']
-    if 'distance' in kwargs:
-        params['distance'] = kwargs['distance']
+    if kwargs.get('all', False):
+        params['distance'] = -1
     return get_data(url, headers, params).json()['data']
 
-
-# =====================
-# Convenience Functions
-# =====================
-# Functions that wrap behavior of other functions and expose no unique endpoint of their own
 
 def get_descendant_regions(access_token, api_host, region_id,
                            descendant_level=False, include_historical=True, include_details=True):
