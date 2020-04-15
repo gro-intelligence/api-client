@@ -22,12 +22,12 @@ from api.client.samples.analogous_years.lib import \
 DEFAULT_API_HOST = 'api.gro-intelligence.com'
 
 
-def common_start_date_bound(client, data_series, provided_start_date_bound=None):
+def common_start_date(client, data_series, provided_start_date=None):
     """Computes the earliest available start date from which all gro-data_series have data"""
     logger = client.get_logger()
-    start_date_bound_list = []
-    if provided_start_date_bound:
-        start_date_bound_list.append(provided_start_date_bound)
+    start_date_list = []
+    if provided_start_date:
+        start_date_list.append(provided_start_date)
     for i in range(len(data_series)):
         dates = client.get_data_points(**data_series[i])
         if len(dates) == 0:
@@ -35,19 +35,19 @@ def common_start_date_bound(client, data_series, provided_start_date_bound=None)
             logger.warning(msg)
             raise Exception
         else:
-            start_date_bound_list.append(dates[0]['start_date'])
-    start_date_bound = max(start_date_bound_list)
+            start_date_list.append(dates[0]['start_date'])
+    start_date = max(start_date_list)
     for i in range(len(data_series)):
-        data_series[i]['start_date_bound'] = start_date_bound
-    return {'data_series': data_series, 'start_date_bound': start_date_bound}
+        data_series[i]['start_date_bound'] = start_date
+    return {'data_series': data_series, 'start_date': start_date}
 
 
-def enso_data(start_date_bound):
+def enso_data(start_date):
     enso_data_series = {'metric_id': 15851977,
                         'item_id': 13495,
                         'region_id': 0,
                         'source_id': 124,
-                        'start_date_bound': start_date_bound,
+                        'start_date_bound': start_date,
                         'frequency_id': 6}
     return enso_data_series
 
@@ -169,7 +169,7 @@ def combined_methods_distances(dictionary_of_df):
 def analogous_years(api_token, data_series_list, initial_date, final_date,
                     methods_list=['euclidean', 'cumulative', 'ts-features'],
                     all_ranks=None, weights=None, enso=None, enso_weight=None,
-                    provided_start_date_bound=None, tsfresh_num_jobs=0,
+                    provided_start_date=None, tsfresh_num_jobs=0,
                     api_host=DEFAULT_API_HOST):
     """
     Use L^2 distance function to combine weighted distances from multiple gro-data_series
@@ -183,7 +183,7 @@ def analogous_years(api_token, data_series_list, initial_date, final_date,
     :param weights: Float determining the weight given to each data_series
     :param enso: Boolean to include ENSO
     :param enso_weight: Float
-    :param provided_start_date_bound: A string in YYYY-MM-DD format
+    :param provided_start_date: A string in YYYY-MM-DD format
     :param tsfresh_num_jobs: integer, number of parallel processes in tsfresh
     :param api_host:
     :return: A tuple (string, dataframe)
@@ -192,14 +192,14 @@ def analogous_years(api_token, data_series_list, initial_date, final_date,
     """
     client = GroClient(api_host, api_token)
     combined_items_distances = None
-    data_series_list = common_start_date_bound(client, data_series_list, provided_start_date_bound)[
+    data_series_list = common_start_date(client, data_series_list, provided_start_date)[
         'data_series']
-    start_date_bound = common_start_date_bound(client, data_series_list, provided_start_date_bound)[
-        'start_date_bound']
+    start_date = common_start_date(client, data_series_list, provided_start_date)[
+        'start_date']
     if not weights:
         weights = [1] * len(data_series_list)
     if enso:
-        data_series_list.append(enso_data(start_date_bound))
+        data_series_list.append(enso_data(start_date))
         if enso_weight:
             weights.append(enso_weight)
         else:
