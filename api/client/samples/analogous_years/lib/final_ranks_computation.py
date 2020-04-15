@@ -79,17 +79,10 @@ def time_series(client, data_series, initial_date, final_date):
     """
     logger = client.get_logger()
     entities = {'metric_id', 'item_id', 'region_id', 'source_id', 'frequency_id', 'start_date_bound'}
-    discard = []
-    for entity_type in data_series:
-        if entity_type not in entities:
-            discard.append(entity_type)
-    for entity_type in discard:
-        data_series.pop(entity_type)
+    data_series = {k: data_series[k] for k in data_series if k in entities}
     data = get_transform_data.get_data(client, **data_series)
     try:
-        ts = get_transform_data.extract_time_periods_by_dates(data,
-                                                              initial_date,
-                                                              final_date)
+        ts = get_transform_data.extract_time_periods_by_dates(data, initial_date, final_date)
         return ts
     except Exception as e:
         message = ('Please check availability of data for {}'.format(client.lookup(
