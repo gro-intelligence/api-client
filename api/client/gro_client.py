@@ -21,7 +21,7 @@ API_HOST = 'api.gro-intelligence.com'
 OUTPUT_FILENAME = 'gro_client_output.csv'
 
 
-class GroClient:
+class GroClient(object):
     """API client with stateful authentication for lib functions and extra convenience methods."""
 
     def __init__(self, api_host, access_token):
@@ -630,7 +630,7 @@ class GroClient:
         list of dicts
 
         """
-        data_points = super(GroClient, self).get_data_points(**selections)
+        data_points = lib.get_data_points(self.access_token, self.api_host, **selections)
         # Apply unit conversion if a unit is specified
         if 'unit_id' in selections:
             return list(map(functools.partial(self.convert_unit,
