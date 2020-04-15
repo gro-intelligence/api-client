@@ -394,6 +394,22 @@ def get_source_ranking(access_token, api_host, series):
     return get_data(url, headers, params).json()
 
 
+def rank_series_by_source(access_token, api_host, series_list):
+    for series in series_list:
+        try:
+            # Remove source if selected, to consider all sources.
+            series.pop('source_name', None)
+            series.pop('source_id', None)
+            source_ids = get_source_ranking(access_token, api_host, series)
+        except ValueError:
+            continue  # empty response
+        for source_id in source_ids:
+            # Make a copy to avoid passing the same reference each time.
+            series_with_source = dict(series)
+            series_with_source['source_id'] = source_id
+            yield series_with_source
+
+
 def get_available_timefrequency(access_token, api_host, **series):
     params = dict((make_key(k), v) for k, v in iter(list(
         get_params_from_selection(**series).items())))
@@ -552,6 +568,28 @@ def search(access_token, api_host, entity_type, search_terms):
     return resp.json()
 
 
+def search_and_lookup(access_token, api_host, entity_type, search_terms, num_results=10):
+    search_results = search(access_token, api_host, entity_type, search_terms)[:num_results]
+    search_result_ids = [result['id'] for result in search_results]
+    search_result_details = lookup(access_token, api_host, entity_type, search_result_ids)
+    for search_result_id in search_result_ids:
+        yield search_result_details[str(search_result_id)]
+
+
+def lookup_belongs(access_token, api_host, entity_type, entity_id, **kwargs):
+    belongs_to_ids = get_entity_property(access_token, api_host, entity_type, 'belongsTo',
+                                         entity_id, **kwargs)[str(entity_id)]
+    for belongs_to_id in belongs_to_ids:
+        yield lookup(access_token, api_host, entity_type, belongs_to_id)
+
+
+def lookup_contains(access_token, api_host, entity_type, entity_id, **kwargs):
+    contains_ids = get_entity_property(access_token, api_host, entity_type, 'contains',
+                                       entity_id, **kwargs)[str(entity_id)]
+    for contained_entity_id in contains_ids:
+        yield lookup(access_token, api_host, entity_type, contained_entity_id)
+
+
 def get_geo_centre(access_token, api_host, region_id):
     url = '/'.join(['https:', '', api_host, 'v2/geocentres?regionIds=' +
                     str(region_id)])
@@ -611,44 +649,6 @@ def get_descendant_regions(access_token, api_host, region_id,
             return [region_details[str(region_id)] for region_id in descendant_region_ids]
 
     return [{'id': descendant_region_id} for descendant_region_id in descendant_region_ids]
-
-
-def rank_series_by_source(access_token, api_host, series_list):
-    for series in series_list:
-        try:
-            # Remove source if selected, to consider all sources.
-            series.pop('source_name', None)
-            series.pop('source_id', None)
-            source_ids = get_source_ranking(access_token, api_host, series)
-        except ValueError:
-            continue  # empty response
-        for source_id in source_ids:
-            # Make a copy to avoid passing the same reference each time.
-            series_with_source = dict(series)
-            series_with_source['source_id'] = source_id
-            yield series_with_source
-
-
-def search_and_lookup(access_token, api_host, entity_type, search_terms, num_results=10):
-    search_results = search(access_token, api_host, entity_type, search_terms)[:num_results]
-    search_result_ids = [result['id'] for result in search_results]
-    search_result_details = lookup(access_token, api_host, entity_type, search_result_ids)
-    for search_result_id in search_result_ids:
-        yield search_result_details[str(search_result_id)]
-
-
-def lookup_contains(access_token, api_host, entity_type, entity_id, **kwargs):
-    contains_ids = get_entity_property(access_token, api_host, entity_type, 'contains',
-                                       entity_id, **kwargs)[str(entity_id)]
-    for contained_entity_id in contains_ids:
-        yield lookup(access_token, api_host, entity_type, contained_entity_id)
-
-
-def lookup_belongs(access_token, api_host, entity_type, entity_id, **kwargs):
-    belongs_to_ids = get_entity_property(access_token, api_host, entity_type, 'belongsTo',
-                                         entity_id, **kwargs)[str(entity_id)]
-    for belongs_to_id in belongs_to_ids:
-        yield lookup(access_token, api_host, entity_type, belongs_to_id)
 
 
 if __name__ == '__main__':
