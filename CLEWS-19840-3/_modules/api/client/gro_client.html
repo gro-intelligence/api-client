@@ -444,13 +444,21 @@
         <span class="k">return</span> <span class="n">lib</span><span class="o">.</span><span class="n">search_and_lookup</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_host</span><span class="p">,</span>
                                      <span class="n">entity_type</span><span class="p">,</span> <span class="n">search_terms</span><span class="p">,</span> <span class="n">num_results</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="GroClient.lookup_belongs"><a class="viewcode-back" href="../../../api.html#api.client.gro_client.GroClient.lookup_belongs">[docs]</a>    <span class="k">def</span> <span class="nf">lookup_belongs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">,</span> <span class="n">entity_id</span><span class="p">):</span>
+<div class="viewcode-block" id="GroClient.lookup_belongs"><a class="viewcode-back" href="../../../api.html#api.client.gro_client.GroClient.lookup_belongs">[docs]</a>    <span class="k">def</span> <span class="nf">lookup_belongs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">,</span> <span class="n">entity_id</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Look up details of entities containing the given entity.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        entity_type : { &#39;metrics&#39;, &#39;items&#39;, &#39;regions&#39; }</span>
 <span class="sd">        entity_id : int</span>
+<span class="sd">        level, optional : int</span>
+<span class="sd">            For regions, you can specify a region level, i.e. 3 for &quot;country&quot; or 5 for &quot;district.&quot;</span>
+<span class="sd">            See REGION_LEVELS constant. If not provided, get results of all levels.</span>
+<span class="sd">        all, optional : boolean</span>
+<span class="sd">            If all=True is not specified, this function will only yield entities directly</span>
+<span class="sd">            containing the given entity. If all=True is specified, entities containing entities</span>
+<span class="sd">            that contain the given one, and so on, will be yielded.</span>
+
 
 <span class="sd">        Yields</span>
 <span class="sd">        ------</span>
@@ -461,12 +469,53 @@
 <span class="sd">            &#39;North America.&#39; The format of which matches the output of :meth:`~.lookup`::</span>
 
 <span class="sd">                { &#39;id&#39;: 15,</span>
-<span class="sd">                  &#39;contains&#39;: [ 1008, 1009, 1012, 1215, ... ],</span>
 <span class="sd">                  &#39;name&#39;: &#39;North America&#39;,</span>
-<span class="sd">                  &#39;level&#39;: 2 }</span>
+<span class="sd">                  &#39;level&#39;: 2,</span>
+<span class="sd">                  &#39;contains&#39;: [1008, 1009, ...],</span>
+<span class="sd">                  &#39;belongsTo&#39;: [0],</span>
+<span class="sd">                  &#39;longitude&#39;: -106.213,</span>
+<span class="sd">                  &#39;latitude&#39;: 49.6144,</span>
+<span class="sd">                  &#39;historical&#39;: False,</span>
+<span class="sd">                  &#39;aliases&#39;: [] }</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">lib</span><span class="o">.</span><span class="n">lookup_belongs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_host</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">,</span> <span class="n">entity_id</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">lib</span><span class="o">.</span><span class="n">lookup_belongs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_host</span><span class="p">,</span>
+                                  <span class="n">entity_type</span><span class="p">,</span> <span class="n">entity_id</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">lookup_contains</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">,</span> <span class="n">entity_id</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Look up details of entities the given entity contains.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        entity_type : { &#39;metrics&#39;, &#39;items&#39;, &#39;regions&#39; }</span>
+<span class="sd">        entity_id : int</span>
+<span class="sd">        level, optional : int</span>
+<span class="sd">            For regions, you can specify a region level, i.e. 3 for &quot;country&quot; or 5 for &quot;district.&quot;</span>
+<span class="sd">            See REGION_LEVELS constant. If not provided, get results of all levels.</span>
+<span class="sd">        all, optional : boolean</span>
+<span class="sd">            If all=True is not specified, this function will only yield entities directly contained</span>
+<span class="sd">            by the given entity. If all=True is specified, entities contained by entities contained</span>
+<span class="sd">            by the given one, and so on, will be yielded.</span>
+
+
+<span class="sd">        Yields</span>
+<span class="sd">        ------</span>
+<span class="sd">        dict</span>
+<span class="sd">            Result of :meth:`~.lookup` on each entity the given entity contains.</span>
+
+<span class="sd">            For example: For the item &#39;Oil crops&#39;, one yielded result will be for &#39;Soybeans,&#39;</span>
+<span class="sd">            the format of which matches the output of :meth:`~.lookup`::</span>
+
+<span class="sd">                { &#39;id&#39;: 270,</span>
+<span class="sd">                  &#39;name&#39;: &#39;Soybeans&#39;,</span>
+<span class="sd">                  &#39;definition&#39;: &#39;The seeds and harvested crops of plants belonging to the ...&#39;,</span>
+<span class="sd">                  &#39;contains&#39;: [1737, 7401, ...],</span>
+<span class="sd">                  &#39;belongsTo&#39;: [8830, 9053, ...],</span>
+<span class="sd">                  &#39;aliases&#39;: [&#39;Soyabeans&#39;] }</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">lib</span><span class="o">.</span><span class="n">lookup_contains</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_host</span><span class="p">,</span>
+                                   <span class="n">entity_type</span><span class="p">,</span> <span class="n">entity_id</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
 <div class="viewcode-block" id="GroClient.rank_series_by_source"><a class="viewcode-back" href="../../../api.html#api.client.gro_client.GroClient.rank_series_by_source">[docs]</a>    <span class="k">def</span> <span class="nf">rank_series_by_source</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">selections_list</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Given a list of series selections, for each unique combination excluding source, expand</span>
