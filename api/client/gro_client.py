@@ -253,9 +253,9 @@ class GroClient(object):
             For regions, you can specify a region level, i.e. 3 for "country" or 5 for "district."
             See REGION_LEVELS constant. If not provided, get results of all levels.
         all, optional : boolean
-            If all=True is not specified, this function will only entities directly containing the
-            given entity. If all=True is specified, entities containing entities that contain the
-            given one are returned, and so on.
+            If all=True is not specified, this function will only yield entities directly
+            containing the given entity. If all=True is specified, entities containing entities
+            that contain the given one, and so on, will be yielded.
 
 
         Yields
@@ -291,9 +291,9 @@ class GroClient(object):
             For regions, you can specify a region level, i.e. 3 for "country" or 5 for "district."
             See REGION_LEVELS constant. If not provided, get results of all levels.
         all, optional : boolean
-            If all=True is not specified, this function will only entities directly contained by the
-            given entity. If all=True is specified, entities contained by entities contained by the
-            given one are returned, and so on.
+            If all=True is not specified, this function will only yield entities directly contained
+            by the given entity. If all=True is specified, entities contained by entities contained
+            by the given one, and so on, will be yielded.
 
 
         Yields
