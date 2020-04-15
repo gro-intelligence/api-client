@@ -28,6 +28,7 @@ def get_data(client, metric_id, item_id, region_id, source_id, frequency_id, sta
     client.add_single_data_series(data_series)
     data = client.get_df()
     data = combine_subregions(data)
+    data = data.resample('D').nearest()
     start_date_bound = pd.to_datetime(start_date_bound)
     data = data.loc[data.end_date >= start_date_bound][['end_date', 'value']]
     return data
@@ -36,8 +37,7 @@ def get_data(client, metric_id, item_id, region_id, source_id, frequency_id, sta
 def combine_subregions(df_sub_regions):
     """
     Consolidate values of sub_regions within the data frame
-    by grouping together same date entries followed by re-sampling (up-sampling)
-    the data to daily frequency
+    by grouping together same date entries
     :param df_sub_regions: A dataframe with subregions
     :return: A dataframe with summed 'value' across regions for each date
     """
@@ -47,7 +47,6 @@ def combine_subregions(df_sub_regions):
     else:
         df_consolidated_regions = df_sub_regions.groupby(['end_date'])[['value']].sum()
     df_consolidated_regions.index = pd.to_datetime(df_consolidated_regions.index)
-    df_consolidated_regions = df_consolidated_regions.resample('D').nearest()
     df_consolidated_regions.loc[:, 'end_date'] = df_consolidated_regions.index
     return df_consolidated_regions
 
