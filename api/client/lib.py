@@ -626,7 +626,7 @@ def get_entity_property(access_token, api_host, entity_type_plural, property_plu
 
 
 def get_descendant_regions(access_token, api_host, region_id,
-                           descendant_level=False, include_historical=True, include_details=True):
+                           descendant_level=None, include_historical=True, include_details=True):
     params = {}
     if descendant_level is not None:
         params['level'] = descendant_level

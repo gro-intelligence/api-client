@@ -242,13 +242,21 @@ class GroClient(object):
         return lib.search_and_lookup(self.access_token, self.api_host,
                                      entity_type, search_terms, num_results)
 
-    def lookup_belongs(self, entity_type, entity_id):
+    def lookup_belongs(self, entity_type, entity_id, **kwargs):
         """Look up details of entities containing the given entity.
 
         Parameters
         ----------
         entity_type : { 'metrics', 'items', 'regions' }
         entity_id : int
+        level, optional : int
+            For regions, you can specify a region level, i.e. 3 for "country" or 5 for "district."
+            See REGION_LEVELS constant. If not provided, get results of all levels.
+        all, optional : boolean
+            If all=True is not specified, this function will only entities directly containing the
+            given entity. If all=True is specified, entities containing entities that contain the
+            given one are returned, and so on.
+
 
         Yields
         ------
@@ -259,12 +267,53 @@ class GroClient(object):
             'North America.' The format of which matches the output of :meth:`~.lookup`::
 
                 { 'id': 15,
-                  'contains': [ 1008, 1009, 1012, 1215, ... ],
                   'name': 'North America',
-                  'level': 2 }
+                  'level': 2,
+                  'contains': [1008, 1009, ...],
+                  'belongsTo': [0],
+                  'longitude': -106.213,
+                  'latitude': 49.6144,
+                  'historical': False,
+                  'aliases': [] }
 
         """
-        return lib.lookup_belongs(self.access_token, self.api_host, entity_type, entity_id)
+        return lib.lookup_belongs(self.access_token, self.api_host,
+                                  entity_type, entity_id, **kwargs)
+
+    def lookup_contains(self, entity_type, entity_id, **kwargs):
+        """Look up details of entities the given entity contains.
+
+        Parameters
+        ----------
+        entity_type : { 'metrics', 'items', 'regions' }
+        entity_id : int
+        level, optional : int
+            For regions, you can specify a region level, i.e. 3 for "country" or 5 for "district."
+            See REGION_LEVELS constant. If not provided, get results of all levels.
+        all, optional : boolean
+            If all=True is not specified, this function will only entities directly contained by the
+            given entity. If all=True is specified, entities contained by entities contained by the
+            given one are returned, and so on.
+
+
+        Yields
+        ------
+        dict
+            Result of :meth:`~.lookup` on each entity the given entity contains.
+
+            For example: For the item 'Oil crops', one yielded result will be for 'Soybeans,'
+            the format of which matches the output of :meth:`~.lookup`::
+
+                { 'id': 270,
+                  'name': 'Soybeans',
+                  'definition': 'The seeds and harvested crops of plants belonging to the ...',
+                  'contains': [1737, 7401, ...],
+                  'belongsTo': [8830, 9053, ...],
+                  'aliases': ['Soyabeans'] }
+
+        """
+        return lib.lookup_contains(self.access_token, self.api_host,
+                                   entity_type, entity_id, **kwargs)
 
     def rank_series_by_source(self, selections_list):
         """Given a list of series selections, for each unique combination excluding source, expand
