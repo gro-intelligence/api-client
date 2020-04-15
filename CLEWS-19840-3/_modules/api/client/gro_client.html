@@ -223,7 +223,7 @@
 <span class="n">OUTPUT_FILENAME</span> <span class="o">=</span> <span class="s1">&#39;gro_client_output.csv&#39;</span>
 
 
-<span class="k">class</span> <span class="nc">GroClient</span><span class="p">:</span>
+<span class="k">class</span> <span class="nc">GroClient</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;API client with stateful authentication for lib functions and extra convenience methods.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">api_host</span><span class="p">,</span> <span class="n">access_token</span><span class="p">):</span>
@@ -832,7 +832,7 @@
 <span class="sd">        list of dicts</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">data_points</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">GroClient</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">get_data_points</span><span class="p">(</span><span class="o">**</span><span class="n">selections</span><span class="p">)</span>
+        <span class="n">data_points</span> <span class="o">=</span> <span class="n">lib</span><span class="o">.</span><span class="n">get_data_points</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_host</span><span class="p">,</span> <span class="o">**</span><span class="n">selections</span><span class="p">)</span>
         <span class="c1"># Apply unit conversion if a unit is specified</span>
         <span class="k">if</span> <span class="s1">&#39;unit_id&#39;</span> <span class="ow">in</span> <span class="n">selections</span><span class="p">:</span>
             <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">functools</span><span class="o">.</span><span class="n">partial</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">convert_unit</span><span class="p">,</span>
