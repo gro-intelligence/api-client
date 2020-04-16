@@ -11,6 +11,8 @@ import pandas as pd
 
 def get_data(client, metric_id, item_id, region_id, source_id, frequency_id, start_date_bound):
     """
+    Reads data from api into a dataframe then the values corresponding to non-unique dates are
+    combined, resampled to daily frequency
     :param client: GroClient
     :param metric_id: Gro-metric
     :param item_id: Gro-item associated to the metric
@@ -26,8 +28,8 @@ def get_data(client, metric_id, item_id, region_id, source_id, frequency_id, sta
                    'source_id': source_id,
                    'frequency_id': frequency_id}
     client.add_single_data_series(data_series)
-    data = client.get_df()
-    data = combine_subregions(data)
+    data = client.get_df()[['end_date', 'value']]
+    data = combine_subregions(data) # consolidates non unique dates together
     data = data.resample('D').nearest()
     start_date_bound = pd.to_datetime(start_date_bound)
     data = data.loc[data.end_date >= start_date_bound][['end_date', 'value']]
