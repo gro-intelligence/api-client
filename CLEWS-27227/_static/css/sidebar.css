@@ -1,0 +1,71 @@
+/* sidebar structure */
+
+.wy-side-nav-search {
+  background-color: #ffffff;
+  text-align: left;
+}
+
+.wy-nav-side {
+  background: #ffffff;
+}
+
+/* inner structure of sidebar */
+
+.wy-menu-vertical {
+  padding-bottom: 20px;
+}
+
+.wy-menu-vertical .reference.internal {
+  text-decoration: none;
+}
+
+/* logo */
+.wy-side-nav-search>a {
+  max-width: 190px;
+}
+
+.wy-side-nav-search>a.icon img.logo, 
+.wy-side-nav-search .wy-dropdown>a.icon img.logo {
+  margin-left: 0;
+  margin-top: 0;
+  width: 180px;
+  margin-bottom: 24px;
+}
+
+/* search bar */
+.wy-side-nav-search input[type=text] {
+  font-family: Roboto,Arial,sans-serif;
+  border-color: #eeeef1;
+  border-radius: 3px;
+  background-color: #eeeef1;
+}
+
+/* sidebar section header */
+.wy-menu-vertical p.caption {
+  border-top: 1px solid #eeeef1;
+  text-transform: uppercase;
+}
+
+/* inner tree */
+
+/* submenu items */
+.wy-menu-vertical li.on a, 
+.wy-menu-vertical li>a,  
+.wy-menu-vertical a,
+.wy-menu-vertical li.current>a {
+  padding: .6em 1.8em;
+  background: #FFFFFF;
+  font-size: 13px;
+  line-height: 14px;
+  color: #555558;
+  font-weight: 400;
+  -webkit-font-smoothing: inherit;
+}
+
+.wy-menu-vertical li.current>a,
+.wy-menu-vertical li.toctree-l1.current>a,
+.wy-menu-vertical a:hover {
+  border: none;
+  color: #e31b37;
+  background: #FFFFFF;
+}
