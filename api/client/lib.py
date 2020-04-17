@@ -242,30 +242,39 @@ def list_available(access_token, api_host, selected_entities):
         raise Exception(resp.text)
 
 
+@memoize(maxsize=None)
+def lookup_single(access_token, api_host, entity_type, entity_id):
+    url = '/'.join(['https:', '', api_host, 'v2', entity_type])
+    headers = {'authorization': 'Bearer ' + access_token}
+    params = {'ids': [entity_id]}
+    resp = get_data(url, headers, params)
+    try:
+        return resp.json()['data'].get(str(entity_id))
+    except KeyError:
+        raise Exception(resp.text)
+
+
+def lookup_batch(access_token, api_host, entity_type, entity_ids):
+    url = '/'.join(['https:', '', api_host, 'v2', entity_type])
+    headers = {'authorization': 'Bearer ' + access_token}
+    all_results = {}
+    for id_batch in list_chunk(entity_ids):
+        params = {'ids': id_batch}
+        resp = get_data(url, headers, params)
+        result = resp.json()['data']
+        for id_str in result.keys():
+            all_results[id_str] = result[id_str]
+    return all_results
+
+
 def lookup(access_token, api_host, entity_type, entity_ids):
     try:  # Convert iterable types like numpy arrays or tuples into plain lists
         entity_ids = list(entity_ids)
+        return lookup_batch(access_token, api_host, entity_type, entity_ids)
     except TypeError:  # Convert anything else, like strings or numpy integers, into plain integers
-        entity_ids = int(entity_ids)
-    url = '/'.join(['https:', '', api_host, 'v2', entity_type])
-    headers = {'authorization': 'Bearer ' + access_token}
-    # If an integer is given, return only the dict with that id
-    if isinstance(entity_ids, int):
-        params = {'ids': [entity_ids]}
-        resp = get_data(url, headers, params)
-        try:
-            return resp.json()['data'].get(str(entity_ids))
-        except KeyError:
-            raise Exception(resp.text)
-    else:  # If a list of integers is given, return an dict of dicts, keyed by id
-        all_results = {}
-        for id_batch in list_chunk(entity_ids):
-            params = {'ids': id_batch}
-            resp = get_data(url, headers, params)
-            result = resp.json()['data']
-            for id_str in result.keys():
-                all_results[id_str] = result[id_str]
-        return all_results
+        entity_id = int(entity_ids)
+        # If an integer is given, return only the dict with that id
+        return lookup_single(access_token, api_host, entity_type, entity_id)
 
 
 def get_params_from_selection(**selection):
