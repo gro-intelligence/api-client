@@ -38,7 +38,7 @@ def common_start_date(client, data_series, provided_start_date=None):
             start_date_list.append(dates[0]['start_date'])
     start_date = max(start_date_list)
     for i in range(len(data_series)):
-        data_series[i]['start_date_bound'] = start_date
+        data_series[i]['start_date'] = start_date
     return {'data_series': data_series, 'start_date': start_date}
 
 
@@ -47,7 +47,7 @@ def enso_data(start_date):
                         'item_id': 13495,
                         'region_id': 0,
                         'source_id': 124,
-                        'start_date_bound': start_date,
+                        'start_date': start_date,
                         'frequency_id': 6}
     return enso_data_series
 
@@ -78,7 +78,7 @@ def time_series(client, data_series, initial_date, final_date):
     :return: A dataframe with data from the relevant dates
     """
     logger = client.get_logger()
-    entities = {'metric_id', 'item_id', 'region_id', 'source_id', 'frequency_id', 'start_date_bound'}
+    entities = {'metric_id', 'item_id', 'region_id', 'source_id', 'frequency_id', 'start_date'}
     data_series = {k: data_series[k] for k in data_series if k in entities}
     data = get_transform_data.get_data(client, **data_series)
     try:
