@@ -9,7 +9,7 @@ from dateutil.relativedelta import relativedelta
 import pandas as pd
 
 
-def get_data(client, metric_id, item_id, region_id, source_id, frequency_id, start_date_bound):
+def get_data(client, metric_id, item_id, region_id, source_id, frequency_id, start_date):
     """
     Reads data from api into a dataframe then the values corresponding to non-unique dates are
     combined, resampled to daily frequency
@@ -31,7 +31,7 @@ def get_data(client, metric_id, item_id, region_id, source_id, frequency_id, sta
     data = client.get_df()[['end_date', 'value']]
     data = combine_subregions(data) # consolidates non unique dates together
     data = data.resample('D').nearest()
-    start_date_bound = pd.to_datetime(start_date_bound)
+    start_date_bound = pd.to_datetime(start_date)
     data = data.loc[data.end_date >= start_date_bound][['end_date', 'value']]
     return data
 
