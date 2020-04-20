@@ -107,5 +107,5 @@ For MacOS, you can find official instructions for setting environment variables 
 
 1. Open your terminal and type :code:`echo $SHELL` to determine what shell you are using.
 2. If the result is :code:`/bin/bash` then run :code:`open ~/.bashrc`. If the result is :code:`/bin/zsh`, then run :code:`open ~/.zshrc`. If you are using another shell, please reference your shell-specific documentation.
-3. In that file, add the following line: :code:`export GROAPI_TOKEN="YOUR TOKEN HERE"`
+3. In that file, add the following line: :code:`export GROAPI_TOKEN='YOUR TOKEN HERE'`
 4. Save the file and close any shells you have open. The environment variable should be available next time you open a shell.
