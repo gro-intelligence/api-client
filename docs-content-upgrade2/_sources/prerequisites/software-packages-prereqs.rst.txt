@@ -27,7 +27,7 @@ Non-Anaconda
 #. Download Python version 3.5 or above from `python.org <https://www.python.org/downloads/windows/>`_. Support for Python 2.7.13 or above is also maintained, but with `its End of Life <https://mail.python.org/pipermail/python-dev/2018-March/152348.html>`_ soon approaching, it is recommended you start with Python 3.
 #. Install both Python and pip to PATH either in the installer (enable component during the installation) or manually. The easiest way to do this is to make sure the below is checked during installation:
 
-   .. image:: https://raw.githubusercontent.com/gro-intelligence/api-client/development/readme_add_python_to_path_installer.png
+   .. image:: ../_images/python3-path.PNG
     :align: center
     :alt: Add python to path installer
   
