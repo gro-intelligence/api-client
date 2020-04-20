@@ -68,9 +68,18 @@ def test_list_available_snake_to_camel(mock_requests_get):
 
 @mock.patch('requests.get')
 def test_single_lookup(mock_requests_get):
-    api_response = {'data': {'12345': {'id': 12345, 'name': 'Test', 'contains': []}}}
+    api_response = {
+        'data': {
+            '12345': {
+                'id': 12345,
+                'name': 'Vegetables',
+                'contains': [67890],
+                'belongsTo': []
+            }
+        }
+    }
     initialize_requests_mocker_and_get_mock_data(mock_requests_get, api_response)
-    expected_return = {'id': 12345, 'name': 'Test', 'contains': []}
+    expected_return = {'id': 12345, 'name': 'Vegetables', 'contains': [67890], 'belongsTo': []}
     assert lib.lookup(MOCK_TOKEN, MOCK_HOST, 'items', 12345) == expected_return
 
 
