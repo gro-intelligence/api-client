@@ -237,6 +237,7 @@ be initialized as follows:</p>
     <span class="s1">&#39;region_id&#39;</span><span class="p">:</span> <span class="mi">1094</span><span class="p">,</span>
     <span class="s1">&#39;source_id&#39;</span><span class="p">:</span> <span class="mi">14</span><span class="p">,</span>
     <span class="s1">&#39;frequency_id&#39;</span><span class="p">:</span> <span class="mi">9</span>
+<span class="p">})</span>
 </pre></div>
 </div>
 <p>The above query has completed fields for <code class="code docutils literal"><span class="pre">metric_id</span></code>, <code class="code docutils literal"><span class="pre">item_id</span></code>, <code class="code docutils literal"><span class="pre">region_id</span></code>, <code class="code docutils literal"><span class="pre">source_id</span></code>, and <code class="code docutils literal"><span class="pre">frequency_id</span></code>. However, <a class="reference internal" href="api.html#api.client.gro_client.GroClient.get_data_points" title="api.client.gro_client.GroClient.get_data_points"><code class="xref py py-meth docutils literal"><span class="pre">api.client.gro_client.GroClient.get_data_points()</span></code></a> can also accept fields to further narrow your data series of interest: <code class="code docutils literal"><span class="pre">partner_region_id</span></code> (used only in series that represent a flow between two places), <code class="code docutils literal"><span class="pre">start_date</span></code>, <code class="code docutils literal"><span class="pre">end_date</span></code>, <code class="code docutils literal"><span class="pre">show_revions</span></code>, <code class="code docutils literal"><span class="pre">insert_null</span></code>, and <code class="code docutils literal"><span class="pre">at_time</span></code>.</p>
@@ -386,7 +387,6 @@ be initialized as follows:</p>
             <dd><a href="../CLEWS-26731-ay_date_utils_function/querying-data.html">CLEWS-26731-ay_date_utils_function</a></dd>
             <dd><a href="../CLEWS-26758-similar_regions/querying-data.html">CLEWS-26758-similar_regions</a></dd>
             <dd><a href="../CLEWS-26915b/querying-data.html">CLEWS-26915b</a></dd>
-            <dd><a href="../JGrinst-patch-1/querying-data.html">JGrinst-patch-1</a></dd>
             <dd><a href="../analogous_years_modifications/querying-data.html">analogous_years_modifications</a></dd>
             <dd><a href="../brazil_soybeans_update/querying-data.html">brazil_soybeans_update</a></dd>
             <dd><a href="querying-data.html">development</a></dd>
