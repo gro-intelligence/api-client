@@ -7,7 +7,7 @@ MacOS and Linux
 ===============
 
 1. git `Installation instructions <https://git-scm.com/book/en/v2/Getting-Started-Installing-Git>`_
-2. python version 3.5 or above from `<https://www.python.org>`_. Support for Python 2.7.13 or above is also maintained, but with its `End of Life <https://mail.python.org/pipermail/python-dev/2018-March/152348.html>`_ soon approaching, Python 3 is recommended.
+2. python version 3.5 or above from `<https://www.python.org>`_. Support for Python 2.7.13 or above is also maintained, but with its `End of Life <https://mail.python.org/pipermail/python-dev/2018-March/152348.html>`_, Python 3 is recommended.
 3. MacOS comes with python 2.7 out of the box, see the following link for `installing Python 3 on MacOS <https://docs.python-guide.org/starting/install3/osx/>`_ without disrupting the base install
 
 Windows
@@ -17,14 +17,14 @@ The Gro API Client package is supported both with or without Anaconda. However, 
 
 Anaconda
 --------
-1. Download Anaconda with Python 3.5 or above from `anaconda.com <https://www.anaconda.com/distribution/>`_ Support for Python 2.7.13 or above is also maintained, but with `its End of Life <https://mail.python.org/pipermail/python-dev/2018-March/152348.html>`_ soon approaching, it is recommended you start with Python 3.
+1. Download Anaconda with Python 3.5 or above from `anaconda.com <https://www.anaconda.com/distribution/>`_ Support for Python 2.7.13 or above is also maintained, but with `its End of Life <https://mail.python.org/pipermail/python-dev/2018-March/152348.html>`_, it is recommended you start with Python 3.
 2. Install Git from `git-scm.com <https://git-scm.com/download/win>`_. Proceed with the default options.
-3. See `additional information <./anaconda-additional-information.rst>`_ related to Anaconda if Anaconda is not installed in the default directory (C:\Users\<your-username>) or if your environment uses a proxy or firewall in connections to the internet.
+3. See `additional information <../anaconda-additional-information.rst>`_ related to Anaconda if Anaconda is not installed in the default directory (C:\Users\<your-username>) or if your environment uses a proxy or firewall in connections to the internet.
 
 Non-Anaconda 
 ------------
 #. Powershell (should come default with Windows)
-#. Download Python version 3.5 or above from `python.org <https://www.python.org/downloads/windows/>`_. Support for Python 2.7.13 or above is also maintained, but with `its End of Life <https://mail.python.org/pipermail/python-dev/2018-March/152348.html>`_ soon approaching, it is recommended you start with Python 3.
+#. Download Python version 3.5 or above from `python.org <https://www.python.org/downloads/windows/>`_. Support for Python 2.7.13 or above is also maintained, but with `its End of Life <https://mail.python.org/pipermail/python-dev/2018-March/152348.html>`_, it is recommended you start with Python 3.
 #. Install both Python and pip to PATH either in the installer (enable component during the installation) or manually. The easiest way to do this is to make sure the below is checked during installation:
 
    .. image:: ../_images/python3-path.PNG
