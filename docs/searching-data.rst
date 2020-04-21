@@ -40,7 +40,7 @@ Search
 ======
 
 
-As described in the `Data Series Definition <./data-series-definition.rst>`_ page, a data series in Gro is a unique combination of the entities: item, metric, region, partner_region (optional), frequency, and source. To find the specific entity you would like to retrieve data for, you can use a variety of search methods. For example, :meth:`api.client.gro_client.GroClient.search` will return a list of IDs that match your search term. If you want to understand the differences between various search results, you may find the :meth:`api.client.gro_client.GroClient.search_and_lookup` method more helpful.
+As described in the `Data Series Definition <./data-series-definition.md>`_ page, a data series in Gro is a unique combination of the entities: item, metric, region, partner_region (optional), frequency, and source. To find the specific entity you would like to retrieve data for, you can use a variety of search methods. For example, :meth:`api.client.gro_client.GroClient.search` will return a list of IDs that match your search term. If you want to understand the differences between various search results, you may find the :meth:`api.client.gro_client.GroClient.search_and_lookup` method more helpful.
 
 :code:`client.search_and_lookup('items','Corn')` will yield a list of all items that contain "corn" in their name, along with supporting information like id, name, and ids of other items contained by a given item.
 
