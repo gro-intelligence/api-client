@@ -8,10 +8,11 @@ Prerequisites
 User Skills
 ===========
 
-The user(s) should be: 
+The user(s) should be:
+
 1. Familiar with command line syntax
     a. MacOS: Terminal
-    b. Windows: Command Prompt \ Powershell
+    b. Windows: Command Prompt / Powershell
     c. Linux: Command Line
 2. Experienced in Python
 3. Experienced with Jupyter notebooks
