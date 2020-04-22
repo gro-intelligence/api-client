@@ -31,6 +31,7 @@ def get_data(client, metric_id, item_id, region_id, source_id, frequency_id, sta
     data = client.get_df()[['end_date', 'value']]
     data = combine_subregions(data) # consolidates non unique dates together
     data = data.resample('D').nearest()
+    data.loc[:, 'end_date'] = data.index
     start_date_bound = pd.to_datetime(start_date)
     data = data.loc[data.end_date >= start_date_bound][['end_date', 'value']]
     return data
