@@ -28,23 +28,48 @@ def create_test_data():
                       2.39664378851418, 1.10551943121531]}
 
 
-def create_test_data_datetime():
-    data = pd.DataFrame(create_test_data())
-    data.loc[:, 'end_date'] = pd.to_datetime(data['end_date'])
-    data.loc[:, 'start_date'] = pd.to_datetime(data['start_date'])
-    return data
+def create_test_data_for_get_data():
+    return pd.DataFrame({'end_date': pd.to_datetime(['2019-07-31T00:00:00.000Z',
+                                                     '2019-08-03T00:00:00.000Z',
+                                                     '2019-08-05T00:00:00.000Z',
+                                                     '2019-08-10T00:00:00.000Z']),
+                         'frequency_id': [1, 1, 1, 1],
+                         'input_unit_id': [2, 2, 2, 2],
+                         'input_unit_scale': [1, 1, 1, 1],
+                         'item_id': [2039, 2039, 2039, 2039],
+                         'metric_id': [2100031, 2100031, 2100031, 2100031],
+                         'region_id': [1215, 1215, 1215, 1215],
+                         'start_date': pd.to_datetime(['2019-07-31T00:00:00.000Z',
+                                                       '2019-08-03T00:00:00.000Z',
+                                                       '2019-08-05T00:00:00.000Z',
+                                                       '2019-08-10T00:00:00.000Z']),
+                         'unit_id': [2, 2, 2, 2],
+                         'value': [0.13002748115958, 1.17640700229636,
+                                   2.39664378851418, 1.10551943121531]})
 
 
-@mock.patch('api.client.gro_client.GroClient.get_df', return_value=create_test_data_datetime())
+@mock.patch('api.client.gro_client.GroClient.get_df', return_value=create_test_data_for_get_data())
 def test_get_data(test_data_1):
     client = GroClient('mock_website', 'mock_access_token')
-    start_date_bound = '2000-03-01T00:00:00.000Z'
-    expected = pd.DataFrame(create_test_data())
-    expected.loc[:, 'end_date'] = pd.to_datetime(expected['end_date'])
+    start_date_bound = '2019-08-01T00:00:00.000Z'
+    expected = pd.DataFrame(pd.DataFrame({'end_date': pd.to_datetime(['2019-08-01T00:00:00.000Z',
+                                                                      '2019-08-02T00:00:00.000Z',
+                                                                      '2019-08-03T00:00:00.000Z',
+                                                                      '2019-08-04T00:00:00.000Z',
+                                                                      '2019-08-05T00:00:00.000Z',
+                                                                      '2019-08-06T00:00:00.000Z',
+                                                                      '2019-08-07T00:00:00.000Z',
+                                                                      '2019-08-08T00:00:00.000Z',
+                                                                      '2019-08-09T00:00:00.000Z',
+                                                                      '2019-08-10T00:00:00.000Z']),
+                                          'value': [0.13002748115958, 1.17640700229636,
+                                                    1.17640700229636, 2.39664378851418,
+                                                    2.39664378851418, 2.39664378851418,
+                                                    2.39664378851418, 1.10551943121531,
+                                                    1.10551943121531, 1.10551943121531]}))
+    expected.index = expected['end_date']
     test_data = get_transform_data.get_data(client, 'metric_id', 'item_id', 'region_id',
                                             'source_id', 'frequency_id', start_date_bound)
-    expected = get_transform_data.combine_subregions(expected)[['end_date', 'value']]
-    expected = expected.resample('D').nearest()
     assert_frame_equal(test_data, expected)
 
 
@@ -236,4 +261,3 @@ def test_loop_initiation_dates():
                 'final_date': pd.to_datetime('2018-12-01', utc=utc_tz)}
     assert get_transform_data.loop_initiation_dates(
         test_max_date, invalid_initial_date, invalid_final_date) == expected
-
