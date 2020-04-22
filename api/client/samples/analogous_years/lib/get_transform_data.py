@@ -19,7 +19,7 @@ def get_data(client, metric_id, item_id, region_id, source_id, frequency_id, sta
     :param region_id: Gro-region
     :param source_id: Gro-source
     :param frequency_id: Gro-frequency
-    :param start_date_bound: start-date of the Gro data series user provided
+    :param start_date: start-date of the Gro data series user provided
     :return: A dataframe with an 'end_date' and 'value' column
     """
     data_series = {'metric_id': metric_id,
