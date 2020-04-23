@@ -23,7 +23,7 @@ Source lag is defined as the worst normal case scenario in regards to how long a
 Data Retrieval
 ==============
 
-I specified an end_date when calling get_data_points(), why am I getting points with other end_dates?
+I specified an end_date when calling get_data_points(). Why am I getting points with other end_dates?
 ----------------------------------------------------------------------------------------------------
 
 start_date and end_date specify a time interval. When retrieving a
