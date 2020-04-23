@@ -7,7 +7,7 @@ Quickstart.py
 
 Note that the script assumes you have your authentication token set to a :code:`GROAPI_TOKEN` environment variable `see Saving your token as an environment variable <./authentication#saving-your-token-as-an-environment-variable>`_. If you don't wish to use environment variables, you can modify the sample script to set :code:`ACCESS_TOKEN` in some other way.
 
-Just simply run the following from your terminal 
+Just simply run the following from your terminal: 
 ::
 
   $ python quick_start.py
