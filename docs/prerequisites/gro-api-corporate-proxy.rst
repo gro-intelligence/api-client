@@ -24,14 +24,15 @@ To change environment variables on Windows:
 #. Add two variables :code:`http_proxy` and :code:`https_proxy` both with the same value depending on the type of proxy:
    
    #. Unauthenticated Proxy:
-   ::
-     http_proxy="http://your-proxy-domain:<port>"
-     https_proxy="http://your-proxy-domain:<port>"
+      ::
+        http_proxy="http://your-proxy-domain:<port>"
+        https_proxy="http://your-proxy-domain:<port>"
+	
 	
    #. Authenticated Proxy:
-   ::
-     http_proxy=”http://username:password@corp.com:<port>”
-     https_proxy=”http://username:password@corp.com:<port>”
+      ::
+        http_proxy=”http://username:password@corp.com:<port>”
+        https_proxy=”http://username:password@corp.com:<port>”
  
 MacOS / Linux
 --------------
@@ -41,14 +42,15 @@ You can set an environment variable for temporary or permanent use. If you need 
 #. Temporarily change the environment variables by running :code:`export variable_name=variable_value` from the terminal prompt depending on the type of proxy:
    
    #. Unauthenticated Proxy:
-   ::
-     export http_proxy="http://your-proxy-domain:<port>"
-     export https_proxy="http://your-proxy-domain:<port>"
+      ::
+        export http_proxy="http://your-proxy-domain:<port>"
+        export https_proxy="http://your-proxy-domain:<port>"
+	
 	
    #. Authenticated Proxy:
-   ::
-     export http_proxy=”http://username:password@corp.com:<port>”
-     export https_proxy=”http://username:password@corp.com:<port>”
+      ::
+        export http_proxy=”http://username:password@corp.com:<port>”
+        export https_proxy=”http://username:password@corp.com:<port>”
 	
 #. Permanently change the environment variables in MacOS.  For permanent setting, you need to understand where to put the “export” command. This is determined by what shell you are using. You can check this by running the following command: :code:`echo $SHELL` 
    
@@ -59,19 +61,21 @@ You can set an environment variable for temporary or permanent use. If you need 
 	   export http_proxy="http://your-proxy-domain:<port>"
 	   export https_proxy="http://your-proxy-domain:<port>"
       
+      
       #. Authenticated Proxy:
-      ::
-        export http_proxy=”http://username:password@corp.com:<port>”
-	export https_proxy=”http://username:password@corp.com:<port>”
+         ::
+           export http_proxy=”http://username:password@corp.com:<port>”
+	   export https_proxy=”http://username:password@corp.com:<port>”
 	
    #. /bin/zsh:   Edit  ~/.zshrc and add the following lines based on the type of proxy:
       
       #. Unauthenticated Proxy:
-      ::
-        export http_proxy="http://your-proxy-domain:<port>"
-	export https_proxy="http://your-proxy-domain:<port>"
-		
+         ::
+           export http_proxy="http://your-proxy-domain:<port>"
+	   export https_proxy="http://your-proxy-domain:<port>"
+	
+	
       #. Authenticated Proxy:
-      ::
-        export http_proxy=”http://username:password@corp.com:<port>”
-	export https_proxy=”http://username:password@corp.com:<port>”
+         ::
+           export http_proxy=”http://username:password@corp.com:<port>”
+	   export https_proxy=”http://username:password@corp.com:<port>”
