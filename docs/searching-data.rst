@@ -85,7 +85,7 @@ To look up all descendants of region 1029 (Brazil) that are of level 5 (district
   from api.client.gro_client.GroClient import REGION_LEVELS
   provinces_of_brazil = client.get_descendant_regions(1029, REGION_LEVELS['district'])
 
-For more information on region levels, please refer to the `Special properties of regions <./gro-ontology.rst#special-properties-for-regions` section of `Gro Ontology <./gro-ontology.rst>`_
+For more information on region levels, please refer to the `Special properties of regions <./gro-ontology.rst#special-properties-for-regions`_ section of `Gro Ontology <./gro-ontology.rst>`_
 
 
 Lookup belongs
