@@ -15,12 +15,12 @@ The user(s) should be:
     b. Windows: Command Prompt / Powershell
     c. Linux: Command Line
 2. Experienced in Python
-3. Experienced with Jupyter notebooks
+3. Experienced with Jupyter notebooks (preferred)
 
 Software Packages
 =================
 
-The following software packages must be installed in the environment(s) that will be used to access the Gro API prior to trying to install the Gro API client package.  See environment specific information for links related to the `installation of the prerequisite software packages <./software-packages-prereqs>`_, if they are not already available in the environment.
+The following software packages must be installed in the environment(s) that will be used to access the Gro API prior to trying to install the Gro API client package. See environment-specific instructions for installing `prerequisite software packages <./software-packages-prereqs>`_.
 
 1. Git 
 2. Python
@@ -31,6 +31,7 @@ Network communication
 =====================
 
 The environment must have access to the following resources in order to download and install the Gro API client:
+
 * github
     * github.com (port 443 - https) or (port 80 - http)
     * github.com (port 9418)
