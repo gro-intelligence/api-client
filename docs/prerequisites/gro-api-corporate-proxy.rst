@@ -32,8 +32,8 @@ To change environment variables on Windows:
 	  http_proxy=”http://username:password@corp.com:<port>”
 	  https_proxy=”http://username:password@corp.com:<port>”
  
-MacOS
------
+MacOS / Linux
+--------------
 
 You can set an environment variable for temporary or permanent use. If you need a variable for just one time, you can set it up using terminal.
 
@@ -70,32 +70,3 @@ You can set an environment variable for temporary or permanent use. If you need 
 		::
 		  export http_proxy=”http://username:password@corp.com:<port>”
 		  export https_proxy=”http://username:password@corp.com:<port>”
- 
-Linux
------
-
-You can set an environment variable for temporary or permanent use. 
-
-#. If you need a variable for just one shell session, you can can temporarily change the environment variables by running. :code:`export variable_name=variable_value` from the terminal prompt depending on the type of proxy:
-	#. Unauthenticated Proxy:
-	::
-	  export http_proxy="http://your-proxy-domain:<port>"
-	  export https_proxy="http://your-proxy-domain:<port>"
-	
-	#. Authenticated Proxy:
-	::
-	  export http_proxy=”http://username:password@corp.com:<port>”
-	  export https_proxy=”http://username:password@corp.com:<port>”
-
-#. To permanently change the environment variables in Linux.  
-	#. Edit ~/bash_profile and add the following lines based on the type of proxy:
-		#. Unauthenticated Proxy:
-		::
-		  export http_proxy="http://your-proxy-domain:<port>"
-		  export https_proxy="http://your-proxy-domain:<port>"
-		
-		#. Authenticated Proxy:
-		::	
-		  export http_proxy=”http://username:password@corp.com:<port>”
-		  export https_proxy=”http://username:password@corp.com:<port>”
- 
