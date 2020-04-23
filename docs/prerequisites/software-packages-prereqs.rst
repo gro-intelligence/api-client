@@ -8,7 +8,7 @@ MacOS and Linux
 
 1. git `Installation instructions <https://git-scm.com/book/en/v2/Getting-Started-Installing-Git>`_
 2. python version 3.5 or above from `<https://www.python.org>`_. Support for Python 2.7.13 or above is also maintained, but with its `End of Life <https://mail.python.org/pipermail/python-dev/2018-March/152348.html>`_, Python 3 is recommended.
-3. MacOS comes with python 2.7 out of the box, see the following link for `installing Python 3 on MacOS <https://docs.python-guide.org/starting/install3/osx/>`_ without disrupting the base install
+3. MacOS comes with an old version of python 2 which is incompatible with the Gro API client. See the following link for `installing Python 3 on MacOS <https://docs.python-guide.org/starting/install3/osx/>`_ without disrupting the base install
 
 Windows
 =======
