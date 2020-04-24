@@ -5,7 +5,7 @@ Welcome to Gro!
 
 With the Gro API Client, you have the power to:
 
-* Access to tens of millions of data series and trillions of data points.
+* Access tens of millions of data series and trillions of data points.
 * Build your own predictive models. 
 * Integrate Gro data with your own to develop highly customized forecasts.
 * Launch conversational interfaces — chatbot, Alexa skills.
@@ -16,10 +16,10 @@ With the Gro API Client, you have the power to:
     :caption: Getting Started
     :maxdepth: 1
 
-    Prerequisites <prerequisites>
+    Prerequisites <prerequisites/index>
     Installation <installation>
     Authentication <authentication>
-    Quickstart Examples <quickstart-examples>
+    Quick Start Projects <quick-start-projects/index>
 
 .. toctree::
     :caption: Using the API Client
@@ -43,4 +43,4 @@ With the Gro API Client, you have the power to:
     :maxdepth: 1
 
     FAQ <faq>
-    Other <other>
+    Modeling Resources <modeling-resources>
