@@ -31,8 +31,8 @@ To change environment variables on Windows:
 	
    #. Authenticated Proxy:
       ::
-        http_proxy=”http://username:password@corp.com:<port>”
-        https_proxy=”http://username:password@corp.com:<port>”
+        http_proxy="http://username:password@corp.com:<port>"
+        https_proxy="http://username:password@corp.com:<port>"
  
 MacOS / Linux
 --------------
@@ -49,8 +49,8 @@ You can set an environment variable for temporary or permanent use. If you need 
 	
    #. Authenticated Proxy:
       ::
-        export http_proxy=”http://username:password@corp.com:<port>”
-        export https_proxy=”http://username:password@corp.com:<port>”
+        export http_proxy="http://username:password@corp.com:<port>"
+        export https_proxy="http://username:password@corp.com:<port>"
 	
 #. Permanently change the environment variables in MacOS.  For permanent setting, you need to understand where to put the “export” command. This is determined by what shell you are using. You can check this by running the following command: :code:`echo $SHELL` 
    
@@ -64,8 +64,8 @@ You can set an environment variable for temporary or permanent use. If you need 
       
       #. Authenticated Proxy:
          ::
-           export http_proxy=”http://username:password@corp.com:<port>”
-	   export https_proxy=”http://username:password@corp.com:<port>”
+           export http_proxy="http://username:password@corp.com:<port>"
+	   export https_proxy="http://username:password@corp.com:<port>"
 	
    #. /bin/zsh:   Edit  ~/.zshrc and add the following lines based on the type of proxy:
       
@@ -77,5 +77,5 @@ You can set an environment variable for temporary or permanent use. If you need 
 	
       #. Authenticated Proxy:
          ::
-           export http_proxy=”http://username:password@corp.com:<port>”
-	   export https_proxy=”http://username:password@corp.com:<port>”
+           export http_proxy="http://username:password@corp.com:<port>"
+	   export https_proxy="http://username:password@corp.com:<port>"
