@@ -24,7 +24,7 @@ The following software packages must be installed in the environment(s) that wil
 
 1. Git 
 2. Python
-    * Python version 3.5 or above are recommended. Support for Python 2.7.13 or above is also maintained, but with its `End of Life <https://mail.python.org/pipermail/python-dev/2018-March/152348.html>`_, Python 3 is recommended for any new installations.
+    * Python version 3.5 or above are recommended. Support for Python 2.7.13 or above is also maintained, but with its `End of Life <https://mail.python.org/pipermail/python-dev/2018-March/152348.html>`_ now passed, Python version 3.5 or above is recommended for any new installations.
 3. Pip (should be installed as part of the python installation)
 
 Network communication
