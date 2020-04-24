@@ -1,6 +1,6 @@
-###
-FAQ
-###
+####
+FAQs
+####
 
 .. contents:: Table of Contents
   :local:
@@ -23,7 +23,7 @@ Source lag is defined as the worst normal case scenario in regards to how long a
 Data Retrieval
 ==============
 
-I specified an end_date when calling get_data_points(), but I am getting points with other end_dates
+I specified an end_date when calling get_data_points(). Why am I getting points with other end_dates?
 ----------------------------------------------------------------------------------------------------
 
 start_date and end_date specify a time interval. When retrieving a
@@ -42,12 +42,12 @@ Data Coverage
 Why is there no satellite rainfall data in northern latitudes sometimes?
 ------------------------------------------------------------------------
 
-This is determined by the spatial extent of the satellites. For more information see `TRMM/GPM spatial extent <other#trmm-and-gpm-spatial-extents>`_. Note that this limitation is only for satellite data. Rainfall data from ground-based weather stations is also available in Gro, see `NOAA/NCDC GHCN <https://app.gro-intelligence.com/dictionary/sources/22>`_.
+This is determined by the spatial extent of the satellites. For more information see `TRMM/GPM spatial extent <modeling-resources#trmm-and-gpm-spatial-extents>`_. Note that this limitation is only for satellite data. Rainfall data from ground-based weather stations is also available in Gro, see `NOAA/NCDC GHCN <https://app.gro-intelligence.com/dictionary/sources/22>`_.
 
 Why are there some gaps in the soil moisture data?
 --------------------------------------------------
 
-Radio Frequency Interferences (RFI) can limit the quality of remotely sensed data in some regions. For more information see `Radio Frequency Interference Effects On SMOS <other#radio-frequency-interference-effects-on-smos>`_.
+Radio Frequency Interferences (RFI) can limit the quality of remotely sensed data in some regions. For more information see `Radio Frequency Interference Effects On SMOS <modeling-resources#radio-frequency-interference-effects-on-smos>`_.
 
 What do warnings about 'historical' regions mean?
 -------------------------------------------------------------------
@@ -75,7 +75,7 @@ How do I get authenticated access to Gro API?
 
 You must get an `authentication token <authentication#retrieving-a-token>`_ from your Gro account.
 
-I tried using my Gro username and login but am getting a 401 Unauthorized error
+Why am I getting a 401 Unauthorized error when I try to use my Gro username and login?
 -------------------------------------------------------------------------------
 
 A Gro account gives you access to the web application at app.gro-intelligence.com. API access is sold as an add-on product you need to be activated for. To learn more about getting an API account, contact our sales team using the link at `gro-intelligence.com/products/gro-api <https://www.gro-intelligence.com/products/gro-api>`_
