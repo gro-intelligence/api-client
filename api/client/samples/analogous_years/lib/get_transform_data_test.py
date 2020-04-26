@@ -1,5 +1,6 @@
 from api.client.gro_client import GroClient
 import mock
+import numpy as np
 import pandas as pd
 from pandas.util.testing import assert_frame_equal
 import pytest
@@ -27,25 +28,48 @@ def create_test_data():
                       2.39664378851418, 1.10551943121531]}
 
 
-def create_test_data_datetime():
-    data = pd.DataFrame(create_test_data())
-    data.loc[:, 'end_date'] = pd.to_datetime(data['end_date'])
-    data.loc[:, 'start_date'] = pd.to_datetime(data['start_date'])
-    return data
+def create_test_data_for_get_data():
+    return pd.DataFrame({'end_date': pd.to_datetime(['2019-07-31T00:00:00.000Z',
+                                                     '2019-08-03T00:00:00.000Z',
+                                                     '2019-08-05T00:00:00.000Z',
+                                                     '2019-08-10T00:00:00.000Z']),
+                         'frequency_id': [1, 1, 1, 1],
+                         'input_unit_id': [2, 2, 2, 2],
+                         'input_unit_scale': [1, 1, 1, 1],
+                         'item_id': [2039, 2039, 2039, 2039],
+                         'metric_id': [2100031, 2100031, 2100031, 2100031],
+                         'region_id': [1215, 1215, 1215, 1215],
+                         'start_date': pd.to_datetime(['2019-07-31T00:00:00.000Z',
+                                                       '2019-08-03T00:00:00.000Z',
+                                                       '2019-08-05T00:00:00.000Z',
+                                                       '2019-08-10T00:00:00.000Z']),
+                         'unit_id': [2, 2, 2, 2],
+                         'value': [0.13002748115958, 1.17640700229636,
+                                   2.39664378851418, 1.10551943121531]})
 
 
-@mock.patch('api.client.gro_client.GroClient.get_df', return_value=create_test_data_datetime())
+@mock.patch('api.client.gro_client.GroClient.get_df', return_value=create_test_data_for_get_data())
 def test_get_data(test_data_1):
     client = GroClient('mock_website', 'mock_access_token')
-    start_date = '2000-03-01T00:00:00.000Z'
-    expected = pd.DataFrame(create_test_data())
-    expected = expected[['end_date', 'value']]
-    new_value = expected['value'].iloc[0]
-    new_row = pd.DataFrame({'end_date': [start_date], 'value': [new_value]})
-    expected = pd.concat([new_row, expected[:]]).reset_index(drop=True)
-    expected.loc[:, 'end_date'] = pd.to_datetime(expected['end_date'])
+    start_date_bound = '2019-08-01T00:00:00.000Z'
+    expected = pd.DataFrame(pd.DataFrame({'end_date': pd.to_datetime(['2019-08-01T00:00:00.000Z',
+                                                                      '2019-08-02T00:00:00.000Z',
+                                                                      '2019-08-03T00:00:00.000Z',
+                                                                      '2019-08-04T00:00:00.000Z',
+                                                                      '2019-08-05T00:00:00.000Z',
+                                                                      '2019-08-06T00:00:00.000Z',
+                                                                      '2019-08-07T00:00:00.000Z',
+                                                                      '2019-08-08T00:00:00.000Z',
+                                                                      '2019-08-09T00:00:00.000Z',
+                                                                      '2019-08-10T00:00:00.000Z']),
+                                          'value': [0.13002748115958, 1.17640700229636,
+                                                    1.17640700229636, 2.39664378851418,
+                                                    2.39664378851418, 2.39664378851418,
+                                                    2.39664378851418, 1.10551943121531,
+                                                    1.10551943121531, 1.10551943121531]}))
+    expected.index = expected['end_date']
     test_data = get_transform_data.get_data(client, 'metric_id', 'item_id', 'region_id',
-                                            'source_id', 'frequency_id', start_date)
+                                            'source_id', 'frequency_id', start_date_bound)
     assert_frame_equal(test_data, expected)
 
 
@@ -72,7 +96,6 @@ def test_combine_subregions_with_subregion():
     expected_subregion.index = expected_subregion['end_date']
     # Test the equality of frames
     # expected_subregion.index = pd.to_datetime(expected_subregion.index)
-    expected_subregion = expected_subregion.resample('D').pad()
     expected_subregion.loc[:, 'end_date'] = expected_subregion.index
     assert_frame_equal(get_transform_data.combine_subregions(test_data_subregion),
                        expected_subregion)
@@ -98,7 +121,6 @@ def test_combine_subregions_with_nosubregion():
     expected_nosubregion.loc[:, 'end_date'] = pd.to_datetime(expected_nosubregion['end_date'],
                                                              utc=utc_tz)
     expected_nosubregion.index = pd.to_datetime(expected_nosubregion.index, utc=utc_tz)
-    expected_nosubregion = expected_nosubregion.resample('D').pad()
     expected_nosubregion.loc[:, 'end_date'] = pd.to_datetime(expected_nosubregion.index, utc=utc_tz)
     assert_frame_equal(get_transform_data.combine_subregions(test_data_nosubregion),
                        expected_nosubregion)
@@ -168,26 +190,25 @@ def test_stack_time_periods_by_ddmm_nonunique_dates():
 
 def test_stack_time_periods_by_ddmm_unique_dates():
     test_data_invalid = pd.DataFrame(create_test_data())
-    test_data_invalid['end_date'] = pd.to_datetime(test_data_invalid['end_date'])
-    test_data_invalid['date'] = pd.to_datetime(test_data_invalid['end_date'])
-    test_data_invalid['period'] = [
+    test_data_invalid.loc[:, 'end_date'] = pd.to_datetime(test_data_invalid['end_date'])
+    test_data_invalid.loc[:, 'date'] = pd.to_datetime(test_data_invalid['end_date'])
+    test_data_invalid.loc[:, 'period'] = [
         '2019-01-01 to 2019-12-31',
         '2005-01-01 to 2005-12-31',
         '2000-01-01 to 2000-12-31',
         '2005-01-01 to 2005-12-31']
-    test_data_invalid['mm-dd'] = test_data_invalid['date'].dt.strftime("%m-%d")
+    test_data_invalid.loc[:, 'mm-dd'] = test_data_invalid['date'].dt.strftime("%m-%d")
     test_data = test_data_invalid.drop(test_data_invalid.index[-1])
     expected = pd.DataFrame({'mm-dd': ['03-01', '07-31', '08-28'],
                              '2000-01-01 to 2000-12-31': [2.39664378851418,
-                                                          2.39664378851418,
-                                                          2.39664378851418],
-                             '2005-01-01 to 2005-12-31': [1.17640700229636,
-                                                          1.17640700229636,
+                                                          np.nan,
+                                                          np.nan],
+                             '2005-01-01 to 2005-12-31': [np.nan,
+                                                          np.nan,
                                                           1.17640700229636],
-                             '2019-01-01 to 2019-12-31': [0.13002748115958,
+                             '2019-01-01 to 2019-12-31': [np.nan,
                                                           0.13002748115958,
-                                                          0.13002748115958]}). \
-        set_index('mm-dd')
+                                                          np.nan]}).set_index('mm-dd')
     expected.columns.name = 'period'
     assert_frame_equal(get_transform_data.stack_time_periods_by_ddmm(test_data), expected)
 
@@ -200,34 +221,34 @@ def test_dates_to_period_string():
     assert get_transform_data.dates_to_period_string(test_dates[0], test_dates[1]) == expected
 
 
-def test_loop_start_dates_invalid_initial_greater_than_final():
+def test_loop_initiation_dates_invalid_initial_greater_than_final():
     test_max_date = pd.to_datetime('2019-08-31T00:00:00.000Z')
     invalid_initial_date = '2019-07-31'
     invalid_final_date = '2019-06-30'
     with pytest.raises(ValueError):
-        get_transform_data.loop_start_dates(
+        get_transform_data.loop_initiation_dates(
             test_max_date, invalid_initial_date, invalid_final_date)
 
 
-def test_loop_start_dates_invalid_final_greater_than_year_from_initial():
+def test_loop_initiation_dates_invalid_final_greater_than_year_from_initial():
     test_max_date = pd.to_datetime('2019-08-31T00:00:00.000Z')
     invalid_initial_date = '2018-06-30'
     invalid_final_date = '2019-07-31'
     with pytest.raises(ValueError):
-        get_transform_data.loop_start_dates(
+        get_transform_data.loop_initiation_dates(
             test_max_date, invalid_initial_date, invalid_final_date)
 
 
-def test_loop_start_dates_invalid_final_greater_than_max():
+def test_loop_initiation_dates_invalid_final_greater_than_max():
     test_max_date = pd.to_datetime('2019-08-31T00:00:00.000Z')
     invalid_initial_date = '2019-07-31'
     invalid_final_date = '2019-09-30'
     with pytest.raises(ValueError):
-        get_transform_data.loop_start_dates(
+        get_transform_data.loop_initiation_dates(
             test_max_date, invalid_initial_date, invalid_final_date)
 
 
-def test_loop_start_dates():
+def test_loop_initiation_dates():
     test_max_date = pd.to_datetime('2019-08-31T00:00:00.000Z')
     invalid_initial_date = '2016-12-31'
     invalid_final_date = '2017-12-01'
@@ -238,5 +259,5 @@ def test_loop_start_dates():
         utc_tz = True
     expected = {'initial_date': pd.to_datetime('2017-12-31', utc=utc_tz),
                 'final_date': pd.to_datetime('2018-12-01', utc=utc_tz)}
-    assert get_transform_data.loop_start_dates(
+    assert get_transform_data.loop_initiation_dates(
         test_max_date, invalid_initial_date, invalid_final_date) == expected

@@ -11,46 +11,36 @@ import pandas as pd
 
 def get_data(client, metric_id, item_id, region_id, source_id, frequency_id, start_date):
     """
+    Reads data from api into a dataframe then the values corresponding to non-unique dates are
+    combined, resampled to daily frequency
     :param client: GroClient
     :param metric_id: Gro-metric
     :param item_id: Gro-item associated to the metric
     :param region_id: Gro-region
     :param source_id: Gro-source
     :param frequency_id: Gro-frequency
-    :param start_date: start-date of the Gro data series
+    :param start_date: start-date of the Gro data series user provided
     :return: A dataframe with an 'end_date' and 'value' column
     """
     data_series = {'metric_id': metric_id,
                    'item_id': item_id,
                    'region_id': region_id,
                    'source_id': source_id,
-                   'frequency_id': frequency_id,
-                   'start_date': start_date}
+                   'frequency_id': frequency_id}
     client.add_single_data_series(data_series)
-    data = client.get_df()
-    start_date = pd.to_datetime(start_date)
-    # TODO: Do not drop the series start_date column, use that to build an interpolation function
-    #  for non daily frequency values
-    data = data.loc[data.end_date >= start_date][['end_date', 'value']]
-    if data['end_date'].iloc[0] > start_date:
-        new_value = data['value'].iloc[0]
-        new_row = pd.DataFrame({'end_date': [start_date], 'value': [new_value]})
-        data = pd.concat([new_row, data[:]]).reset_index(drop=True)
-    return ffill_bfill_nulls(data)
-
-
-def ffill_bfill_nulls(dataframe):
-    dataframe.fillna(method='ffill', inplace=True)
-    dataframe.fillna(method='bfill', inplace=True)
-    dataframe.reset_index()
-    return dataframe
+    data = client.get_df()[['end_date', 'value']]
+    data = combine_subregions(data) # consolidates non unique dates together
+    data = data.resample('D').nearest()
+    data.loc[:, 'end_date'] = data.index
+    start_date_bound = pd.to_datetime(start_date)
+    data = data.loc[data.end_date >= start_date_bound][['end_date', 'value']]
+    return data
 
 
 def combine_subregions(df_sub_regions):
     """
     Consolidate values of sub_regions within the data frame
-    by grouping together same date entries followed by re-sampling (up-sampling)
-    the data to daily frequency
+    by grouping together same date entries
     :param df_sub_regions: A dataframe with subregions
     :return: A dataframe with summed 'value' across regions for each date
     """
@@ -60,12 +50,11 @@ def combine_subregions(df_sub_regions):
     else:
         df_consolidated_regions = df_sub_regions.groupby(['end_date'])[['value']].sum()
     df_consolidated_regions.index = pd.to_datetime(df_consolidated_regions.index)
-    df_consolidated_regions = df_consolidated_regions.resample('D').pad()
-    df_consolidated_regions['end_date'] = df_consolidated_regions.index
+    df_consolidated_regions.loc[:, 'end_date'] = df_consolidated_regions.index
     return df_consolidated_regions
 
 
-def loop_start_dates(max_date, initial_date, final_date):
+def loop_initiation_dates(max_date, initial_date, final_date):
     """
     :param max_date: datetime
     :param initial_date: string 'YYYY-MM-DD'
@@ -111,23 +100,23 @@ def extract_time_periods_by_dates(dataframe, initial_date, final_date):
     :param initial_date: 'YYYY-MM-DD'
     :return: A pandas dataframe
     """
-    dataframe['date'] = pd.to_datetime(dataframe['end_date'])
+    dataframe.loc[:, 'date'] = pd.to_datetime(dataframe['end_date'])
     max_date = dataframe['date'].max()
     min_date = dataframe['date'].min()
-    loop_final_date = loop_start_dates(
+    loop_final_date = loop_initiation_dates(
         max_date, initial_date, final_date)['final_date']
-    loop_initial_date = loop_start_dates(
+    loop_initial_date = loop_initiation_dates(
         max_date, initial_date, final_date)['initial_date']
     extracted_df_list = []
     while loop_initial_date >= min_date:
         temp_df = dataframe[(dataframe['date'] >= loop_initial_date) &
                             (dataframe['date'] <= loop_final_date)]
-        temp_df['period'] = dates_to_period_string(loop_initial_date, loop_final_date)
+        temp_df.loc[:, 'period'] = dates_to_period_string(loop_initial_date, loop_final_date)
         loop_initial_date = loop_initial_date + relativedelta(years=-1)
         loop_final_date = loop_final_date + relativedelta(years=-1)
         extracted_df_list.append(temp_df)
     extracted_df = pd.concat(extracted_df_list)
-    extracted_df['mm-dd'] = extracted_df['date'].dt.strftime("%m-%d")
+    extracted_df.loc[:, 'mm-dd'] = extracted_df['date'].dt.strftime("%m-%d")
     return extracted_df
 
 
@@ -139,6 +128,5 @@ def stack_time_periods_by_ddmm(dataframe):
     """
     segmented_periods = pd.pivot_table(dataframe, values='value',
                                        index=['mm-dd'], columns=['period'])
-    ffill_bfill_nulls(segmented_periods)
     segmented_periods = segmented_periods[segmented_periods.index != '02-29']
     return segmented_periods

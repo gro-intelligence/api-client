@@ -79,18 +79,10 @@ def time_series(client, data_series, initial_date, final_date):
     """
     logger = client.get_logger()
     entities = {'metric_id', 'item_id', 'region_id', 'source_id', 'frequency_id', 'start_date'}
-    discard = []
-    for entity_type in data_series:
-        if entity_type not in entities:
-            discard.append(entity_type)
-    for entity_type in discard:
-        data_series.pop(entity_type)
+    data_series = {k: data_series[k] for k in data_series if k in entities}
     data = get_transform_data.get_data(client, **data_series)
-    consolidated_data = get_transform_data.combine_subregions(data)
     try:
-        ts = get_transform_data.extract_time_periods_by_dates(consolidated_data,
-                                                              initial_date,
-                                                              final_date)
+        ts = get_transform_data.extract_time_periods_by_dates(data, initial_date, final_date)
         return ts
     except Exception as e:
         message = ('Please check availability of data for {}'.format(client.lookup(
@@ -198,15 +190,12 @@ def analogous_years(api_token, data_series_list, initial_date, final_date,
     The string contains '_' separated region, item, date
     The dataframe contains integer values (ranks)
     """
-    # TODO: Remove the following lines after a few releases
-    if isinstance(api_token, GroClient):
-        api_host = api_token.api_host
-        api_token = api_token.access_token
     client = GroClient(api_host, api_token)
     combined_items_distances = None
     data_series_list = common_start_date(client, data_series_list, provided_start_date)[
         'data_series']
-    start_date = common_start_date(client, data_series_list, provided_start_date)['start_date']
+    start_date = common_start_date(client, data_series_list, provided_start_date)[
+        'start_date']
     if not weights:
         weights = [1] * len(data_series_list)
     if enso:
@@ -229,12 +218,12 @@ def analogous_years(api_token, data_series_list, initial_date, final_date,
     combined_items_distances = pd.DataFrame(np.sqrt(combined_items_distances),
                                             index=combined_methods_distances_df.index,
                                             columns=combined_methods_distances_df.columns)
-    combined_items_distances['composite'] = combined_items_distances.sum(axis=1, skipna=True)
+    combined_items_distances.loc[:, 'composite'] = combined_items_distances.sum(axis=1, skipna=True)
     ranks = []
     for column_name in combined_items_distances.columns:
         combined_items_distances.sort_values(by=column_name, inplace=True)
         column_new_name = column_name.split('_')[0] + '_rank'
-        combined_items_distances[column_new_name] = \
+        combined_items_distances.loc[:, column_new_name] = \
             combined_items_distances.reset_index().index + 1
         ranks.append(column_new_name)
         combined_items_distances.sort_index(inplace=True)
