@@ -237,7 +237,7 @@
 </div>
 <div class="section" id="search">
 <h2><a class="toc-backref" href="#id2">Search</a><a class="headerlink" href="#search" title="Permalink to this headline">¶</a></h2>
-<p>As described in the <a class="reference external" href="./data-series-definition.md">Data Series Definition</a> page, a data series in Gro is a unique combination of the entities: item, metric, region, partner_region (optional), frequency, and source. To find the specific entity you would like to retrieve data for, you can use a variety of search methods. For example, <a class="reference internal" href="api.html#api.client.gro_client.GroClient.search" title="api.client.gro_client.GroClient.search"><code class="xref py py-meth docutils literal"><span class="pre">api.client.gro_client.GroClient.search()</span></code></a> will return a list of IDs that match your search term. If you want to understand the differences between various search results, you may find the <a class="reference internal" href="api.html#api.client.gro_client.GroClient.search_and_lookup" title="api.client.gro_client.GroClient.search_and_lookup"><code class="xref py py-meth docutils literal"><span class="pre">api.client.gro_client.GroClient.search_and_lookup()</span></code></a> method more helpful.</p>
+<p>As described in the <a class="reference external" href="./data-series-definition">Data Series Definition</a> page, a data series in Gro is a unique combination of the entities: item, metric, region, partner_region (optional), frequency, and source. To find the specific entity you would like to retrieve data for, you can use a variety of search methods. For example, <a class="reference internal" href="api.html#api.client.gro_client.GroClient.search" title="api.client.gro_client.GroClient.search"><code class="xref py py-meth docutils literal"><span class="pre">api.client.gro_client.GroClient.search()</span></code></a> will return a list of IDs that match your search term. If you want to understand the differences between various search results, you may find the <a class="reference internal" href="api.html#api.client.gro_client.GroClient.search_and_lookup" title="api.client.gro_client.GroClient.search_and_lookup"><code class="xref py py-meth docutils literal"><span class="pre">api.client.gro_client.GroClient.search_and_lookup()</span></code></a> method more helpful.</p>
 <p><code class="code docutils literal"><span class="pre">client.search_and_lookup('items','Corn')</span></code> will yield a list of all items that contain &#8220;corn&#8221; in their name, along with supporting information like id, name, and ids of other items contained by a given item.</p>
 <p>Note: the above query will return a <a class="reference external" href="https://wiki.python.org/moin/Generators">generator</a> object. Running a query like the one below will print every result:</p>
 </div>
@@ -271,7 +271,7 @@ To look up all descendants of region 1029 (Brazil) that are of level 4 (province
 <span class="n">provinces_of_brazil</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get_descendant_regions</span><span class="p">(</span><span class="mi">1029</span><span class="p">,</span> <span class="n">REGION_LEVELS</span><span class="p">[</span><span class="s1">&#39;district&#39;</span><span class="p">])</span>
 </pre></div>
 </div>
-<p>For more information on region levels, please refer to the <a href="#id7"><span class="problematic" id="id8">`Special properties of regions &lt;./gro-ontology.rst#special-properties-for-regions`_</span></a> section of <a class="reference external" href="./gro-ontology.rst">Gro Ontology</a></p>
+<p>For more information on region levels, please refer to the <a class="reference external" href="./gro-ontology#special-properties-for-regions">Special properties of regions</a> section of <a class="reference external" href="./gro-ontology">Gro Ontology</a></p>
 </div>
 <div class="section" id="lookup-belongs">
 <h2><a class="toc-backref" href="#id6">Lookup belongs</a><a class="headerlink" href="#lookup-belongs" title="Permalink to this headline">¶</a></h2>
@@ -353,7 +353,6 @@ To look up all descendants of region 1029 (Brazil) that are of level 4 (province
             <dd><a href="CLEWS-25726/searching-data.html">CLEWS-25726</a></dd>
             <dd><a href="CLEWS-26758-similar_regions/searching-data.html">CLEWS-26758-similar_regions</a></dd>
             <dd><a href="CLEWS-26915b/searching-data.html">CLEWS-26915b</a></dd>
-            <dd><a href="JGrinst-link-fixes/searching-data.html">JGrinst-link-fixes</a></dd>
             <dd><a href="analogous_years_modifications/searching-data.html">analogous_years_modifications</a></dd>
             <dd><a href="brazil_soybeans_update/searching-data.html">brazil_soybeans_update</a></dd>
             <dd><a href="development/searching-data.html">development</a></dd>
