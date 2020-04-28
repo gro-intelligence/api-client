@@ -605,15 +605,15 @@
 <span class="sd">        Examples::</span>
 
 <span class="sd">            # To get FAO&#39;s top 5 corn-producing countries of all time:</span>
-<span class="sd">            &gt;&gt;&gt; get_top(&#39;regions&#39;, metric_id=860032, item_id=274, frequency_id=9, source_id=2)</span>
+<span class="sd">            client.get_top(&#39;regions&#39;, metric_id=860032, item_id=274, frequency_id=9, source_id=2)</span>
 
 <span class="sd">            # To get FAO&#39;s top 5 corn-producing countries of 2014:</span>
-<span class="sd">            &gt;&gt;&gt; get_top(&#39;regions&#39;, metric_id=860032, item_id=274, frequency_id=9, source_id=2,</span>
-<span class="sd">                        start_date=&#39;2014-01-01&#39;, end_date=&#39;2014-12-31&#39;)</span>
+<span class="sd">            client.get_top(&#39;regions&#39;, metric_id=860032, item_id=274, frequency_id=9, source_id=2,</span>
+<span class="sd">                           start_date=&#39;2014-01-01&#39;, end_date=&#39;2014-12-31&#39;)</span>
 
 <span class="sd">            # To get the United States&#39; top 15 exports in the decade of 2010-2019:</span>
-<span class="sd">            &gt;&gt;&gt; get_top(&#39;items&#39;, num_results=15, metric_id=20032, region_id=1215, frequency_id=9,</span>
-<span class="sd">                        source_id=2, start_date=&#39;2010-01-01&#39;, end_date=&#39;2019-12-31&#39;)</span>
+<span class="sd">            client.get_top(&#39;items&#39;, num_results=15, metric_id=20032, region_id=1215, frequency_id=9,</span>
+<span class="sd">                           source_id=2, start_date=&#39;2010-01-01&#39;, end_date=&#39;2019-12-31&#39;)</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -843,7 +843,7 @@
     <span class="k">def</span> <span class="nf">GDH</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gdh_selection</span><span class="p">,</span> <span class="o">**</span><span class="n">optional_selections</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Wrapper for :meth:`~.get_data_points`. with alternative input and output style.</span>
 
-<span class="sd">        The data series selection to retrieve is encoded in a </span>
+<span class="sd">        The data series selection to retrieve is encoded in a</span>
 <span class="sd">        &#39;gdh_selection&#39; string of the form</span>
 <span class="sd">        &lt;metric_id&gt;-&lt;item_id&gt;-&lt;region_id&gt;-&lt;partner_region_id&gt;-&lt;source_id&gt;-&lt;frequency_id&gt;</span>
 
