@@ -4,6 +4,10 @@ python:
   - 2.7
   - 3.7
 
+branches:
+  except:
+    - gh-pages
+
 build:
   ci:
     - shippable_retry pip install .[test]
