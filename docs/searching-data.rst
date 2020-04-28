@@ -40,7 +40,7 @@ Search
 ======
 
 
-As described in the `Data Series Definition <./data-series-definition.md>`_ page, a data series in Gro is a unique combination of the entities: item, metric, region, partner_region (optional), frequency, and source. To find the specific entity you would like to retrieve data for, you can use a variety of search methods. For example, :meth:`api.client.gro_client.GroClient.search` will return a list of IDs that match your search term. If you want to understand the differences between various search results, you may find the :meth:`api.client.gro_client.GroClient.search_and_lookup` method more helpful.
+As described in the `Data Series Definition <./data-series-definition>`_ page, a data series in Gro is a unique combination of the entities: item, metric, region, partner_region (optional), frequency, and source. To find the specific entity you would like to retrieve data for, you can use a variety of search methods. For example, :meth:`api.client.gro_client.GroClient.search` will return a list of IDs that match your search term. If you want to understand the differences between various search results, you may find the :meth:`api.client.gro_client.GroClient.search_and_lookup` method more helpful.
 
 :code:`client.search_and_lookup('items','Corn')` will yield a list of all items that contain "corn" in their name, along with supporting information like id, name, and ids of other items contained by a given item.
 
@@ -85,7 +85,7 @@ To look up all descendants of region 1029 (Brazil) that are of level 5 (district
   from api.client.lib import REGION_LEVELS
   provinces_of_brazil = client.get_descendant_regions(1029, REGION_LEVELS['district'])
 
-For more information on region levels, please refer to the `Special properties of regions <./gro-ontology.rst#special-properties-for-regions`_ section of `Gro Ontology <./gro-ontology.rst>`_
+For more information on region levels, please refer to the `Special properties of regions <./gro-ontology#special-properties-for-regions>`_ section of `Gro Ontology <./gro-ontology>`_
 
 
 Lookup belongs
