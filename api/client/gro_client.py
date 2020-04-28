@@ -403,15 +403,15 @@ class GroClient(object):
         Examples::
 
             # To get FAO's top 5 corn-producing countries of all time:
-            >>> get_top('regions', metric_id=860032, item_id=274, frequency_id=9, source_id=2)
+            client.get_top('regions', metric_id=860032, item_id=274, frequency_id=9, source_id=2)
 
             # To get FAO's top 5 corn-producing countries of 2014:
-            >>> get_top('regions', metric_id=860032, item_id=274, frequency_id=9, source_id=2,
-                        start_date='2014-01-01', end_date='2014-12-31')
+            client.get_top('regions', metric_id=860032, item_id=274, frequency_id=9, source_id=2,
+                           start_date='2014-01-01', end_date='2014-12-31')
 
             # To get the United States' top 15 exports in the decade of 2010-2019:
-            >>> get_top('items', num_results=15, metric_id=20032, region_id=1215, frequency_id=9,
-                        source_id=2, start_date='2010-01-01', end_date='2019-12-31')
+            client.get_top('items', num_results=15, metric_id=20032, region_id=1215, frequency_id=9,
+                           source_id=2, start_date='2010-01-01', end_date='2019-12-31')
 
         Parameters
         ----------
@@ -641,7 +641,7 @@ class GroClient(object):
     def GDH(self, gdh_selection, **optional_selections):
         """Wrapper for :meth:`~.get_data_points`. with alternative input and output style.
 
-        The data series selection to retrieve is encoded in a 
+        The data series selection to retrieve is encoded in a
         'gdh_selection' string of the form
         <metric_id>-<item_id>-<region_id>-<partner_region_id>-<source_id>-<frequency_id>
 
