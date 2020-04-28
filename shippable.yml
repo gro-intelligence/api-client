@@ -9,18 +9,21 @@ branches:
     - gh-pages
 
 build:
+  cache: true
+  cache_dir_list:
+    - /root/.cache/pip
   ci:
     - shippable_retry pip install .[test]
-    # Run doctests
-    - python api/client/utils.py -v
-    - python api/client/lib.py -v
     # Create folders for test and code coverage
     - mkdir -p shippable/testresults
     - mkdir -p shippable/codecoverage
     # Run test and code coverage and output results to the right folder
-    - pytest --junitxml=shippable/testresults/nosetests.xml
-    - pytest --cov=api --cov-report=xml:shippable/codecoverage/coverage.xml
-  post_ci:
+    - >
+      pytest --doctest-modules
+      --junitxml=shippable/testresults/nosetests.xml
+      --cov=api
+      --cov-report=xml:shippable/codecoverage/coverage.xml
+  on_success:
     # Only build docs on the Python 2.7 run. It is unnecessary to run on both 2.x and 3.x - one or
     # the other should suffice. However, as of this writing
     # https://github.com/sphinx-contrib/sphinxcontrib-versioning does not support the latest 3.x
