@@ -133,5 +133,5 @@ if __name__ == '__main__':
     # To run doctests:
     # $ python utils.py -v
     import doctest
-    doctest.testmod(#raise_on_error=True,  # Set to False for prettier error message
+    doctest.testmod(raise_on_error=True,  # Set to False for prettier error message
                     optionflags=doctest.NORMALIZE_WHITESPACE | doctest.ELLIPSIS)
