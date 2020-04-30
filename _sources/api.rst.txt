@@ -46,6 +46,8 @@ Advanced Exploration
 
 .. automethod:: api.client.gro_client.GroClient.get_available_timefrequency
 
+.. automethod:: api.client.gro_client.GroClient.get_top
+
 ============
 Pandas Utils
 ============
