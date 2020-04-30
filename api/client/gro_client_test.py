@@ -14,7 +14,11 @@ MOCK_TOKEN = 'pytest.groclient.token'
 mock_entities = {
     'metrics': {},
     'items': {},
-    'regions': {},
+    'regions': {
+        0: {'id': 0, 'name': 'World', 'contains': [1215], 'belongsTo': []},
+        1215: {'id': 1215, 'name': 'United States', 'contains': [12345], 'belongsTo': [0]},
+        12345: {'id': 12345, 'name': 'Minnesota', 'contains': [], 'belongsTo': [1215]}
+    },
     'frequencies': {},
     'sources': {},
     'units': {
@@ -55,7 +59,7 @@ def mock_lookup(access_token, api_host, entity_type, entity_ids):
         # Raises a KeyError if the requested entity hasn't been mocked:
         return mock_entities[entity_type][entity_ids]
     else:
-        return [mock_entities[entity_type][entity_id] for entity_id in entity_ids]
+        return {str(entity_id): mock_entities[entity_type][entity_id] for entity_id in entity_ids}
 
 
 def mock_get_allowed_units(access_token, api_host, metric_id, item_id):
@@ -67,36 +71,107 @@ def mock_get_data_series(access_token, api_host, **selection):
 
 
 def mock_search(access_token, api_host, entity_type, search_terms):
-    return [{'id': entity['id']} for entity in mock_entities[entity_type]
+    return [{'id': entity['id']} for entity in mock_entities[entity_type].values()
             if search_terms in entity['name']]
 
 
 def mock_rank_series_by_source(access_token, api_host, selectoions_list):
-    pass
+    for data_series in mock_data_series:
+        yield data_series
 
 
 def mock_get_geo_centre(access_token, api_host, region_id):
-    pass
+    return [{'centre': [45.7228, -112.996], 'regionId': 1215, 'regionName': 'United States'}]
 
 
 def mock_get_geojson(access_token, api_host, region_id):
-    pass
+    return {'type': 'GeometryCollection',
+            'geometries': [{'type': 'MultiPolygon',
+                            'coordinates': [[[[-38.394, -4.225]]]]}]}
 
 
 def mock_get_descendant_regions(access_token, api_host, descendant_level, include_historical, include_details):
-    pass
+    regions = mock_entities['regions']
+    if not include_historical:
+        regions = [region for region in regions if not region['historical']]
+    if include_details:
+        return regions
+    else:
+        return [{'id': region['id']} for region in regions]
 
 
 def mock_get_available_timefrequency(access_token, api_host, **selection):
-    pass
+    return [{
+        'startDate': '2000-02-18T00:00:00.000Z',
+        'frequencyId': 3,
+        'endDate': '2020-03-12T00:00:00.000Z',
+        'name': '8-day'
+    }, {
+        'startDate': '2019-09-02T00:00:00.000Z',
+        'frequencyId': 1,
+        'endDate': '2020-03-09T00:00:00.000Z',
+        'name': 'daily'
+    }]
 
 
 def mock_get_top(access_token, api_host, entity_type, num_results, **selection):
-    pass
+    return [
+        {'metricId': 860032, 'itemId': 274, 'regionId': 1215, 'frequencyId': 9,
+         'sourceId': 2, 'value': 400, 'unitId': 14},
+        {'metricId': 860032, 'itemId': 274, 'regionId': 1215, 'frequencyId': 9,
+         'sourceId': 2, 'value': 395, 'unitId': 14},
+        {'metricId': 860032, 'itemId': 274, 'regionId': 1215, 'frequencyId': 9,
+         'sourceId': 2, 'value': 12, 'unitId': 14},
+    ]
 
 
 def mock_get_data_points(access_token, api_host, **selections):
-    pass
+    if isinstance(selections['region_id'], int):
+        return [{
+            'start_date': '2017-01-01T00:00:00.000Z',
+            'end_date': '2017-12-31T00:00:00.000Z',
+            'value': 408913833.8019222, 'unit_id': 15,
+            'reporting_date': None,
+            'metric_id': 860032, 'item_id': 274, 'region_id': 1215,
+            'partner_region_id': 0, 'frequency_id': 9, 'source_id': 2,
+            'belongs_to': {
+                'metric_id': 860032,
+                'item_id': 274,
+                'region_id': 1215,
+                'frequency_id': 9,
+                'source_id': 2
+            }
+        }]
+    elif isinstance(selections['region_id'], list):
+        return [{
+            'start_date': '2017-01-01T00:00:00.000Z',
+            'end_date': '2017-12-31T00:00:00.000Z',
+            'value': 408913833.8019222, 'unit_id': 15,
+            'reporting_date': None,
+            'metric_id': 860032, 'item_id': 274, 'region_id': 1215,
+            'partner_region_id': 0, 'frequency_id': 9, 'source_id': 2,
+            'belongs_to': {
+                'metric_id': 860032,
+                'item_id': 274,
+                'region_id': 1215,
+                'frequency_id': 9,
+                'source_id': 2
+            }
+        }, {
+            'start_date': '2017-01-01T00:00:00.000Z',
+            'end_date': '2017-12-31T00:00:00.000Z',
+            'value': 340614.19507563586, 'unit_id': 15,
+            'reporting_date': None,
+            'metric_id': 860032, 'item_id': 274, 'region_id': 1216,
+            'partner_region_id': 0, 'frequency_id': 9, 'source_id': 2,
+            'belongs_to': {
+                'metric_id': 860032,
+                'item_id': 274,
+                'region_id': 1216,
+                'frequency_id': 9,
+                'source_id': 2
+            }
+        }]
 
 
 @patch('api.client.lib.get_available', MagicMock(side_effect=mock_get_available))
@@ -104,6 +179,7 @@ def mock_get_data_points(access_token, api_host, **selections):
 @patch('api.client.lib.lookup', MagicMock(side_effect=mock_lookup))
 @patch('api.client.lib.get_allowed_units', MagicMock(side_effect=mock_get_allowed_units))
 @patch('api.client.lib.get_data_series', MagicMock(side_effect=mock_get_data_series))
+@patch('api.client.lib.search', MagicMock(side_effect=mock_search))
 @patch('api.client.lib.rank_series_by_source', MagicMock(side_effect=mock_rank_series_by_source))
 @patch('api.client.lib.get_geo_centre', MagicMock(side_effect=mock_get_geo_centre))
 @patch('api.client.lib.get_geojson', MagicMock(side_effect=mock_get_geojson))
@@ -136,13 +212,17 @@ class GroClientTests(TestCase):
         self.assertTrue(isinstance(self.client.get_allowed_units(1, 1)[0], int))
 
     def test_get_data_series(self):
-        self.assertTrue(True)
+        self.assertTrue('metric_id' in self.client.get_data_series()[0])
 
     def test_search(self):
-        self.assertTrue(True)
+        self.assertTrue(isinstance(self.client.search('regions', 'United')[0], dict))
+        self.assertTrue('id' in self.client.search('regions', 'United')[0])
 
     def test_search_and_lookup(self):
-        self.assertTrue(True)
+        region = next(self.client.search_and_lookup('regions', 'United'))
+        self.assertTrue(isinstance(region, dict))
+        self.assertTrue('id' in region)
+        self.assertEqual(region['name'], 'United States')
 
     def test_lookup_belongs(self):
         self.assertTrue(True)
