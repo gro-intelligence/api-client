@@ -540,7 +540,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">lib</span><span class="o">.</span><span class="n">get_geojson</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_host</span><span class="p">,</span> <span class="n">region_id</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="GroClient.get_descendant_regions"><a class="viewcode-back" href="../../../api.html#api.client.gro_client.GroClient.get_descendant_regions">[docs]</a>    <span class="k">def</span> <span class="nf">get_descendant_regions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">region_id</span><span class="p">,</span> <span class="n">descendant_level</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<div class="viewcode-block" id="GroClient.get_descendant_regions"><a class="viewcode-back" href="../../../api.html#api.client.gro_client.GroClient.get_descendant_regions">[docs]</a>    <span class="k">def</span> <span class="nf">get_descendant_regions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">region_id</span><span class="p">,</span> <span class="n">descendant_region_level_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                                <span class="n">include_historical</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">include_details</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Look up details of all regions of the given level contained by a region.</span>
 
@@ -549,7 +549,7 @@
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        region_id : integer</span>
-<span class="sd">        descendant_level : integer, optional</span>
+<span class="sd">        descendant_region_level_id : integer, optional</span>
 <span class="sd">            The region level of interest. See REGION_LEVELS constant. If not provided, get all</span>
 <span class="sd">            descendants.</span>
 <span class="sd">        include_historical : boolean, optional</span>
@@ -581,8 +581,9 @@
 <span class="sd">            See output of :meth:`~.lookup`</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">lib</span><span class="o">.</span><span class="n">get_descendant_regions</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_host</span><span class="p">,</span> <span class="n">region_id</span><span class="p">,</span>
-                                          <span class="n">descendant_level</span><span class="p">,</span> <span class="n">include_historical</span><span class="p">,</span> <span class="n">include_details</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">lib</span><span class="o">.</span><span class="n">get_descendant_regions</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_host</span><span class="p">,</span>
+            <span class="n">region_id</span><span class="p">,</span> <span class="n">descendant_region_level_id</span><span class="p">,</span> <span class="n">include_historical</span><span class="p">,</span> <span class="n">include_details</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="GroClient.get_available_timefrequency"><a class="viewcode-back" href="../../../api.html#api.client.gro_client.GroClient.get_available_timefrequency">[docs]</a>    <span class="k">def</span> <span class="nf">get_available_timefrequency</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">selection</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Given a selection, return a list of frequencies and time ranges.</span>
