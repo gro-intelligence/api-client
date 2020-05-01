@@ -605,7 +605,8 @@ def get_geojsons(access_token, api_host, region_id, descendant_region_level_id=N
         url += "&reqRegionLevelId={}&stringify=false".format(descendant_region_level_id)
     headers = {'authorization': 'Bearer ' + access_token}
     resp = get_data(url, headers)
-    return [dict_reformat_keys(r, str_camel_to_snake) for r in resp.json()['data']]
+    for r in resp.json()['data']:
+        yield dict_reformat_keys(r, str_camel_to_snake)
 
 
 def get_geojson(access_token, api_host, region_id):
