@@ -302,8 +302,24 @@ class GroClient(object):
         """
         return lib.get_geo_centre(self.access_token, self.api_host, region_id)
 
+
+    def get_geojsons(self, region_id, descendant_region_level_id=None):
+        """Given a region ID, return shape information in geojson, for the
+        region and all its descendants at the given level (if specified).
+
+        Returns
+        -------
+        a list of dicts
+
+           Example::
+
+               [{region_id: ..., region_name: ..., geojson: ...}, ...]
+        """
+        return lib.get_geojsons(self.access_token, self.api_host,
+                                region_id, descendant_region_level_id)
+
     def get_geojson(self, region_id):
-        """Given a region ID, return a geojson shape information
+        """Given a region ID, return shape information in geojson.
 
         Parameters
         ----------
@@ -641,7 +657,7 @@ class GroClient(object):
     def GDH(self, gdh_selection, **optional_selections):
         """Wrapper for :meth:`~.get_data_points`. with alternative input and output style.
 
-        The data series selection to retrieve is encoded in a 
+        The data series selection to retrieve is encoded in a
         'gdh_selection' string of the form
         <metric_id>-<item_id>-<region_id>-<partner_region_id>-<source_id>-<frequency_id>
 
