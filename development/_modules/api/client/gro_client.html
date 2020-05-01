@@ -501,8 +501,29 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">lib</span><span class="o">.</span><span class="n">get_geo_centre</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_host</span><span class="p">,</span> <span class="n">region_id</span><span class="p">)</span>
 
+
+    <span class="k">def</span> <span class="nf">get_geojsons</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">region_id</span><span class="p">,</span> <span class="n">descendant_level</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Given a region ID, return shape information in geojson, for the</span>
+<span class="sd">        region and all its descendants at the given level (if specified).</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        region_id : integer</span>
+<span class="sd">        descendant_level : integer, admin region level (2, 3, 4 or 5)</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        a list of dicts</span>
+
+<span class="sd">           Example::</span>
+
+<span class="sd">               [{region_id: ..., region_name: ..., geojson: ...}, ...]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">lib</span><span class="o">.</span><span class="n">get_geojsons</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_host</span><span class="p">,</span>
+                                <span class="n">region_id</span><span class="p">,</span> <span class="n">descendant_level</span><span class="p">)</span>
+
 <div class="viewcode-block" id="GroClient.get_geojson"><a class="viewcode-back" href="../../../api.html#api.client.gro_client.GroClient.get_geojson">[docs]</a>    <span class="k">def</span> <span class="nf">get_geojson</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">region_id</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Given a region ID, return a geojson shape information</span>
+        <span class="sd">&quot;&quot;&quot;Given a region ID, return shape information in geojson.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -562,8 +583,9 @@
 <span class="sd">            See output of :meth:`~.lookup`</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">lib</span><span class="o">.</span><span class="n">get_descendant_regions</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_host</span><span class="p">,</span> <span class="n">region_id</span><span class="p">,</span>
-                                          <span class="n">descendant_level</span><span class="p">,</span> <span class="n">include_historical</span><span class="p">,</span> <span class="n">include_details</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">lib</span><span class="o">.</span><span class="n">get_descendant_regions</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_host</span><span class="p">,</span>
+            <span class="n">region_id</span><span class="p">,</span> <span class="n">descendant_level</span><span class="p">,</span> <span class="n">include_historical</span><span class="p">,</span> <span class="n">include_details</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="GroClient.get_available_timefrequency"><a class="viewcode-back" href="../../../api.html#api.client.gro_client.GroClient.get_available_timefrequency">[docs]</a>    <span class="k">def</span> <span class="nf">get_available_timefrequency</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">selection</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Given a selection, return a list of frequencies and time ranges.</span>
@@ -840,7 +862,7 @@
     <span class="k">def</span> <span class="nf">GDH</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gdh_selection</span><span class="p">,</span> <span class="o">**</span><span class="n">optional_selections</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Wrapper for :meth:`~.get_data_points`. with alternative input and output style.</span>
 
-<span class="sd">        The data series selection to retrieve is encoded in a </span>
+<span class="sd">        The data series selection to retrieve is encoded in a</span>
 <span class="sd">        &#39;gdh_selection&#39; string of the form</span>
 <span class="sd">        &lt;metric_id&gt;-&lt;item_id&gt;-&lt;region_id&gt;-&lt;partner_region_id&gt;-&lt;source_id&gt;-&lt;frequency_id&gt;</span>
 
@@ -1343,6 +1365,7 @@
             <dd><a href="../../../../v1.60.1/index.html">v1.60.1</a></dd>
             <dd><a href="../../../../v1.71.0/index.html">v1.71.0</a></dd>
             <dd><a href="../../../../v1.76.0/index.html">v1.76.0</a></dd>
+            <dd><a href="../../../../v1.77.0/index.html">v1.77.0</a></dd>
         </dl>
         <dl>
             <dt>Branches</dt>
@@ -1362,7 +1385,6 @@
             <dd><a href="../../../../CLEWS-26758-similar_regions/index.html">CLEWS-26758-similar_regions</a></dd>
             <dd><a href="../../../../CLEWS-27163/index.html">CLEWS-27163</a></dd>
             <dd><a href="../../../../CLEWS-27625/index.html">CLEWS-27625</a></dd>
-            <dd><a href="../../../../CLEWS-27744/index.html">CLEWS-27744</a></dd>
             <dd><a href="../../../../analogous_years_modifications/index.html">analogous_years_modifications</a></dd>
             <dd><a href="../../../../brazil_soybeans_update/index.html">brazil_soybeans_update</a></dd>
             <dd><a href="gro_client.html">development</a></dd>
