@@ -616,7 +616,7 @@ that does not have data.</li>
 
 <dl class="method">
 <dt id="api.client.gro_client.GroClient.get_descendant_regions">
-<code class="descclassname">GroClient.</code><code class="descname">get_descendant_regions</code><span class="sig-paren">(</span><em>region_id</em>, <em>descendant_region_level_id=None</em>, <em>include_historical=True</em>, <em>include_details=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/gro_client.html#GroClient.get_descendant_regions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.gro_client.GroClient.get_descendant_regions" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">GroClient.</code><code class="descname">get_descendant_regions</code><span class="sig-paren">(</span><em>region_id</em>, <em>descendant_level=None</em>, <em>include_historical=True</em>, <em>include_details=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/gro_client.html#GroClient.get_descendant_regions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.gro_client.GroClient.get_descendant_regions" title="Permalink to this definition">¶</a></dt>
 <dd><p>Look up details of all regions of the given level contained by a region.</p>
 <p>Given any region by id, get all the descendant regions that are of the specified level.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -625,7 +625,7 @@ that does not have data.</li>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>region_id</strong> (<em>integer</em>) &#8211; </li>
-<li><strong>descendant_region_level_id</strong> (<em>integer</em><em>, </em><em>optional</em>) &#8211; The region level of interest. See REGION_LEVELS constant. If not provided, get all
+<li><strong>descendant_level</strong> (<em>integer</em><em>, </em><em>optional</em>) &#8211; The region level of interest. See REGION_LEVELS constant. If not provided, get all
 descendants.</li>
 <li><strong>include_historical</strong> (<em>boolean</em><em>, </em><em>optional</em>) &#8211; True by default. If False is specified, regions that only exist in historical data
 (e.g. the Soviet Union) will be excluded.</li>
