@@ -302,8 +302,29 @@ class GroClient(object):
         """
         return lib.get_geo_centre(self.access_token, self.api_host, region_id)
 
+
+    def get_geojsons(self, region_id, descendant_level=None):
+        """Given a region ID, return shape information in geojson, for the
+        region and all its descendants at the given level (if specified).
+
+        Parameters
+        ----------
+        region_id : integer
+        descendant_level : integer, admin region level (2, 3, 4 or 5)
+
+        Returns
+        -------
+        a list of dicts
+
+           Example::
+
+               [{region_id: ..., region_name: ..., geojson: ...}, ...]
+        """
+        return lib.get_geojsons(self.access_token, self.api_host,
+                                region_id, descendant_level)
+
     def get_geojson(self, region_id):
-        """Given a region ID, return a geojson shape information
+        """Given a region ID, return shape information in geojson.
 
         Parameters
         ----------
@@ -363,8 +384,9 @@ class GroClient(object):
             See output of :meth:`~.lookup`
 
         """
-        return lib.get_descendant_regions(self.access_token, self.api_host, region_id,
-                                          descendant_level, include_historical, include_details)
+        return lib.get_descendant_regions(
+            self.access_token, self.api_host,
+            region_id, descendant_level, include_historical, include_details)
 
     def get_available_timefrequency(self, **selection):
         """Given a selection, return a list of frequencies and time ranges.
@@ -641,7 +663,7 @@ class GroClient(object):
     def GDH(self, gdh_selection, **optional_selections):
         """Wrapper for :meth:`~.get_data_points`. with alternative input and output style.
 
-        The data series selection to retrieve is encoded in a 
+        The data series selection to retrieve is encoded in a
         'gdh_selection' string of the form
         <metric_id>-<item_id>-<region_id>-<partner_region_id>-<source_id>-<frequency_id>
 
