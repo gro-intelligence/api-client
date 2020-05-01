@@ -307,6 +307,11 @@ class GroClient(object):
         """Given a region ID, return shape information in geojson, for the
         region and all its descendants at the given level (if specified).
 
+        Parameters
+        ----------
+        region_id : integer
+        descendant_level : integer, admin region level (2, 3, 4 or 5)
+
         Returns
         -------
         a list of dicts
