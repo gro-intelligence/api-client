@@ -303,7 +303,7 @@ class GroClient(object):
         return lib.get_geo_centre(self.access_token, self.api_host, region_id)
 
 
-    def get_geojsons(self, region_id, descendant_region_level_id=None):
+    def get_geojsons(self, region_id, descendant_level=None):
         """Given a region ID, return shape information in geojson, for the
         region and all its descendants at the given level (if specified).
 
@@ -316,7 +316,7 @@ class GroClient(object):
                [{region_id: ..., region_name: ..., geojson: ...}, ...]
         """
         return lib.get_geojsons(self.access_token, self.api_host,
-                                region_id, descendant_region_level_id)
+                                region_id, descendant_level)
 
     def get_geojson(self, region_id):
         """Given a region ID, return shape information in geojson.
@@ -338,7 +338,7 @@ class GroClient(object):
         """
         return lib.get_geojson(self.access_token, self.api_host, region_id)
 
-    def get_descendant_regions(self, region_id, descendant_region_level_id=None,
+    def get_descendant_regions(self, region_id, descendant_level=None,
                                include_historical=True, include_details=True):
         """Look up details of all regions of the given level contained by a region.
 
@@ -347,7 +347,7 @@ class GroClient(object):
         Parameters
         ----------
         region_id : integer
-        descendant_region_level_id : integer, optional
+        descendant_level : integer, optional
             The region level of interest. See REGION_LEVELS constant. If not provided, get all
             descendants.
         include_historical : boolean, optional
@@ -381,7 +381,7 @@ class GroClient(object):
         """
         return lib.get_descendant_regions(
             self.access_token, self.api_host,
-            region_id, descendant_region_level_id, include_historical, include_details)
+            region_id, descendant_level, include_historical, include_details)
 
     def get_available_timefrequency(self, **selection):
         """Given a selection, return a list of frequencies and time ranges.

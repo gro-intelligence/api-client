@@ -598,11 +598,11 @@ def get_geo_centre(access_token, api_host, region_id):
 
 
 @memoize(maxsize=None)
-def get_geojsons(access_token, api_host, region_id, descendant_region_level_id=None):
+def get_geojsons(access_token, api_host, region_id, descendant_level=None):
     url = '/'.join(['https:', '', api_host, 'v2/geocentres?includeGeojson=True&regionIds={}'.format(
         region_id)])
-    if descendant_region_level_id:
-        url += "&reqRegionLevelId={}&stringify=false".format(descendant_region_level_id)
+    if descendant_level:
+        url += "&reqRegionLevelId={}&stringify=false".format(descendant_level)
     headers = {'authorization': 'Bearer ' + access_token}
     resp = get_data(url, headers)
     for r in resp.json()['data']:
@@ -615,7 +615,7 @@ def get_geojson(access_token, api_host, region_id):
 
 
 def get_descendant_regions(access_token, api_host, region_id,
-                           descendant_level=False, include_historical=True, include_details=True):
+                           descendant_level=None, include_historical=True, include_details=True):
     url = '/'.join(['https:', '', api_host, 'v2/regions/contains'])
     headers = {'authorization': 'Bearer ' + access_token}
     params = {'ids': [region_id]}
