@@ -5,6 +5,7 @@ except ImportError:
     # Python 2.7
     from mock import patch, MagicMock
 from unittest import TestCase
+from datetime import date
 
 from api.client.gro_client import GroClient
 
@@ -32,7 +33,7 @@ mock_entities = {
 
 mock_data_series = [
     {
-        'metric_id': 1, # TODO: add names
+        'metric_id': 1,  # TODO: add names
         'item_id': 1,
         'region_id': 1,
         'partner_region_id': 1,
@@ -90,8 +91,8 @@ def mock_get_geojson(access_token, api_host, region_id):
                             'coordinates': [[[[-38.394, -4.225]]]]}]}
 
 
-def mock_get_descendant_regions(access_token, api_host, descendant_level, include_historical, include_details):
-    regions = mock_entities['regions']
+def mock_get_descendant_regions(access_token, api_host, region_id, descendant_level, include_historical, include_details):
+    regions = list(mock_entities['regions'].values())
     if not include_historical:
         regions = [region for region in regions if not region['historical']]
     if include_details:
@@ -225,28 +226,69 @@ class GroClientTests(TestCase):
         self.assertEqual(region['name'], 'United States')
 
     def test_lookup_belongs(self):
-        self.assertTrue(True)
+        self.assertEqual(next(self.client.lookup_belongs('regions', 1215))['name'], 'World')
 
     def test_rank_series_by_source(self):
-        self.assertTrue(True)
+        series = next(self.client.rank_series_by_source([]))
+        self.assertTrue('metric_id' in series)
+        self.assertTrue('source_id' in series)
 
     def test_get_geo_centre(self):
-        self.assertTrue(True)
+        centre = self.client.get_geo_centre(1215)
+        self.assertTrue(len(centre) == 1)
+        self.assertTrue('centre' in centre[0])
+        self.assertTrue('regionName' in centre[0])
 
     def test_get_geojson(self):
-        self.assertTrue(True)
+        geojson = self.client.get_geojson(1215)
+        self.assertTrue('type' in geojson)
+        self.assertTrue('type' in geojson['geometries'][0])
+        self.assertTrue('coordinates' in geojson['geometries'][0])
 
     def test_get_descendant_regions(self):
-        self.assertTrue(True)
+        self.assertTrue('name' in self.client.get_descendant_regions(1215)[0])
+        self.assertTrue('name' not in self.client.get_descendant_regions(1215, include_details=False)[0])
 
     def test_get_available_timefrequency(self):
-        self.assertTrue(True)
+        self.assertEqual(self.client.get_available_timefrequency()[0]['frequencyId'], 3)
 
     def test_get_top(self):
-        self.assertTrue(True)
+        self.assertEqual(self.client.get_top('regions',
+                                             metric_id=860032,
+                                             item_id=274,
+                                             frequency_id=9,
+                                             source_id=2)[0]['regionId'], 1215)
 
     def test_get_df(self):
-        self.assertTrue(True)
+        self.client.add_single_data_series({
+            'metric_id': 860032,
+            'item_id': 274,
+            'region_id': 1215,
+            'frequency_id': 9,
+            'source_id': 2
+        })
+        df = self.client.get_df()
+        self.assertEqual(df.iloc[0]['start_date'].date(), date(2017, 1, 1))
+        self.client.add_single_data_series({
+            'metric_id': 860032,
+            'item_id': 274,
+            'region_id': 1215,
+            'frequency_id': 9,
+            'source_id': 2
+        })
+        df = self.client.get_df(show_revisions=True)
+        self.assertEqual(df.iloc[0]['start_date'].date(), date(2017, 1, 1))
+        df = self.client.get_df(index_by_series=True)
+        self.assertEqual(df.iloc[0]['start_date'].date(), date(2017, 1, 1))
+        series = dict(zip(df.index.names, df.iloc[0].name))
+        self.assertEqual(series, {
+            'metric_id': 860032,
+            'item_id': 274,
+            'region_id': 1215,
+            'partner_region_id': 0,
+            'frequency_id': 9,
+            'source_id': 2
+        })
 
     def test_add_points_to_df(self):
         self.assertTrue(True)

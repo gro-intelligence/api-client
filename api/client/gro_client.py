@@ -273,13 +273,13 @@ class GroClient(object):
 
         Parameters
         ----------
-        series_list : list of dicts
+        selections_list : list of dicts
             See the output of :meth:`~.get_data_series`.
 
         Yields
         ------
         dict
-            The input series_list, expanded out to each possible source, ordered by coverage.
+            The input selections_list, expanded out to each possible source, ordered by coverage.
 
         """
         return lib.rank_series_by_source(self.access_token, self.api_host, selections_list)
