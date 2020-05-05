@@ -334,6 +334,7 @@ def get_data_call_params(**selection):
     end_date : string, optional
     show_revisions : boolean, optional
     insert_null : boolean, optional
+    show_meta_data : boolean, optional
     at_time : string, optional
 
     Returns
@@ -344,7 +345,7 @@ def get_data_call_params(**selection):
     """
     params = get_params_from_selection(**selection)
     for key, value in list(selection.items()):
-        if key in ('start_date', 'end_date', 'show_revisions', 'insert_null', 'at_time'):
+        if key in ('start_date', 'end_date', 'show_revisions', 'insert_null', 'show_meta_data', 'at_time'):
             params[str_snake_to_camel(key)] = value
     params['responseType'] = 'list_of_series'
     return params
@@ -507,7 +508,8 @@ def list_of_series_to_single_series(series_list, add_belongs_to=False, include_h
                 'value': point[2],
                 # list_of_series has unit_id in the series attributes currently. Does
                 # not allow for mixed units in the same series
-                'unit_id': series['series'].get('unitId', None),
+                'unit_id': point[4] if len(point) > 4 else None,
+                'metadata': point[5] if len(point) > 5 else {},
                 # input_unit_id and input_unit_scale are deprecated but provided for backwards
                 # compatibility. unit_id should be used instead.
                 'input_unit_id': series['series'].get('unitId', None),
