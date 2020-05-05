@@ -598,18 +598,23 @@ def get_geo_centre(access_token, api_host, region_id):
 
 
 @memoize(maxsize=None)
-def get_geojson(access_token, api_host, region_id):
-    url = '/'.join(['https:', '', api_host, 'v2/geocentres?includeGeojson=True&regionIds=' +
-                    str(region_id)])
+def get_geojsons(access_token, api_host, region_id, descendant_level=None):
+    url = '/'.join(['https:', '', api_host, 'v2/geocentres?includeGeojson=True&regionIds={}'.format(
+        region_id)])
+    if descendant_level:
+        url += "&reqRegionLevelId={}&stringify=false".format(descendant_level)
     headers = {'authorization': 'Bearer ' + access_token}
     resp = get_data(url, headers)
-    for region in resp.json()['data']:
+    return [dict_reformat_keys(r, str_camel_to_snake) for r in resp.json()['data']]
+
+
+def get_geojson(access_token, api_host, region_id):
+    for region in get_geojsons(access_token, api_host, region_id):
         return json.loads(region['geojson'])
-    return None
 
 
 def get_descendant_regions(access_token, api_host, region_id,
-                           descendant_level=False, include_historical=True, include_details=True):
+                           descendant_level=None, include_historical=True, include_details=True):
     url = '/'.join(['https:', '', api_host, 'v2/regions/contains'])
     headers = {'authorization': 'Bearer ' + access_token}
     params = {'ids': [region_id]}
