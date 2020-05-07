@@ -437,7 +437,7 @@ def list_of_series_to_single_series(series_list, add_belongs_to=False, include_h
     ...     'data': [
     ...         ['2001-01-01', '2001-12-31', 123],
     ...         ['2002-01-01', '2002-12-31', 123, '2012-01-01'],
-    ...         ['2003-01-01', '2003-12-31', 123, None, {}]
+    ...         ['2003-01-01', '2003-12-31', 123, None, 15, {}]
     ...     ]
     ... }], True) == [
     ...   { 'start_date': '2001-01-01',
@@ -469,8 +469,8 @@ def list_of_series_to_single_series(series_list, add_belongs_to=False, include_h
     ...   { 'start_date': '2003-01-01',
     ...     'end_date': '2003-12-31',
     ...     'value': 123,
-    ...     'unit_id': 4,
-    ...     'input_unit_id': 4,
+    ...     'unit_id': 15,
+    ...     'input_unit_id': 15,
     ...     'input_unit_scale': 1,
     ...     'reporting_date': None,
     ...     'metric_id': 1,
@@ -505,12 +505,10 @@ def list_of_series_to_single_series(series_list, add_belongs_to=False, include_h
                 'start_date': point[0],
                 'end_date': point[1],
                 'value': point[2],
-                # list_of_series has unit_id in the series attributes currently. Does
-                # not allow for mixed units in the same series
-                'unit_id': series['series'].get('unitId', None),
+                'unit_id': point[4] if len(point) > 4 else series['series'].get('unitId', None),
                 # input_unit_id and input_unit_scale are deprecated but provided for backwards
                 # compatibility. unit_id should be used instead.
-                'input_unit_id': series['series'].get('unitId', None),
+                'input_unit_id': point[4] if len(point) > 4 else series['series'].get('unitId', None),
                 'input_unit_scale': 1,
                 # If a point does not have reporting_date, use None
                 'reporting_date': point[3] if len(point) > 3 else None,
