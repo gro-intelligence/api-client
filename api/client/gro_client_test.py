@@ -33,17 +33,52 @@ mock_entities = {
 
 mock_data_series = [
     {
-        'metric_id': 1,  # TODO: add names
-        'item_id': 1,
-        'region_id': 1,
-        'partner_region_id': 1,
-        'frequency_id': 1,
-        'source_id': 1
+        'metric_id': 860032,  # TODO: add names
+        'item_id': 274,
+        'region_id': 1215,
+        'partner_region_id': 0,
+        'frequency_id': 9,
+        'source_id': 2
+    }, {
+        'metric_id': 860032,  # TODO: add names
+        'item_id': 274,
+        'region_id': 1216,
+        'partner_region_id': 0,
+        'frequency_id': 9,
+        'source_id': 2
     }
 ]
 
 mock_data_points = [
-    {'start_date': '2000-01-01', 'end_date': '2000-12-31', 'value': 10, 'unit_id': 14, 'reporting_date': None}
+    {
+        'start_date': '2017-01-01T00:00:00.000Z',
+        'end_date': '2017-12-31T00:00:00.000Z',
+        'value': 408913833.8019222, 'unit_id': 15,
+        'reporting_date': None,
+        'metric_id': 860032, 'item_id': 274, 'region_id': 1215,
+        'partner_region_id': 0, 'frequency_id': 9, 'source_id': 2,
+        'belongs_to': {
+            'metric_id': 860032,
+            'item_id': 274,
+            'region_id': 1215,
+            'frequency_id': 9,
+            'source_id': 2
+        }
+    }, {
+        'start_date': '2017-01-01T00:00:00.000Z',
+        'end_date': '2017-12-31T00:00:00.000Z',
+        'value': 56789, 'unit_id': 15,
+        'reporting_date': None,
+        'metric_id': 860032, 'item_id': 274, 'region_id': 1216,
+        'partner_region_id': 0, 'frequency_id': 9, 'source_id': 2,
+        'belongs_to': {
+            'metric_id': 860032,
+            'item_id': 274,
+            'region_id': 1216,
+            'frequency_id': 9,
+            'source_id': 2
+        }
+    }
 ]
 
 
@@ -91,7 +126,8 @@ def mock_get_geojson(access_token, api_host, region_id):
                             'coordinates': [[[[-38.394, -4.225]]]]}]}
 
 
-def mock_get_descendant_regions(access_token, api_host, region_id, descendant_level, include_historical, include_details):
+def mock_get_descendant_regions(access_token, api_host, region_id, descendant_level,
+                                include_historical, include_details):
     regions = list(mock_entities['regions'].values())
     if not include_historical:
         regions = [region for region in regions if not region['historical']]
@@ -128,51 +164,9 @@ def mock_get_top(access_token, api_host, entity_type, num_results, **selection):
 
 def mock_get_data_points(access_token, api_host, **selections):
     if isinstance(selections['region_id'], int):
-        return [{
-            'start_date': '2017-01-01T00:00:00.000Z',
-            'end_date': '2017-12-31T00:00:00.000Z',
-            'value': 408913833.8019222, 'unit_id': 15,
-            'reporting_date': None,
-            'metric_id': 860032, 'item_id': 274, 'region_id': 1215,
-            'partner_region_id': 0, 'frequency_id': 9, 'source_id': 2,
-            'belongs_to': {
-                'metric_id': 860032,
-                'item_id': 274,
-                'region_id': 1215,
-                'frequency_id': 9,
-                'source_id': 2
-            }
-        }]
+        return mock_data_points[0]
     elif isinstance(selections['region_id'], list):
-        return [{
-            'start_date': '2017-01-01T00:00:00.000Z',
-            'end_date': '2017-12-31T00:00:00.000Z',
-            'value': 408913833.8019222, 'unit_id': 15,
-            'reporting_date': None,
-            'metric_id': 860032, 'item_id': 274, 'region_id': 1215,
-            'partner_region_id': 0, 'frequency_id': 9, 'source_id': 2,
-            'belongs_to': {
-                'metric_id': 860032,
-                'item_id': 274,
-                'region_id': 1215,
-                'frequency_id': 9,
-                'source_id': 2
-            }
-        }, {
-            'start_date': '2017-01-01T00:00:00.000Z',
-            'end_date': '2017-12-31T00:00:00.000Z',
-            'value': 340614.19507563586, 'unit_id': 15,
-            'reporting_date': None,
-            'metric_id': 860032, 'item_id': 274, 'region_id': 1216,
-            'partner_region_id': 0, 'frequency_id': 9, 'source_id': 2,
-            'belongs_to': {
-                'metric_id': 860032,
-                'item_id': 274,
-                'region_id': 1216,
-                'frequency_id': 9,
-                'source_id': 2
-            }
-        }]
+        return [mock_data_points[0], mock_data_points[1]]
 
 
 @patch('api.client.lib.get_available', MagicMock(side_effect=mock_get_available))
@@ -260,37 +254,25 @@ class GroClientTests(TestCase):
                                              source_id=2)[0]['regionId'], 1215)
 
     def test_get_df(self):
-        self.client.add_single_data_series({
-            'metric_id': 860032,
-            'item_id': 274,
-            'region_id': 1215,
-            'frequency_id': 9,
-            'source_id': 2
-        })
+        self.client.add_single_data_series(mock_data_series[0])
         df = self.client.get_df()
         self.assertEqual(df.iloc[0]['start_date'].date(), date(2017, 1, 1))
-        self.client.add_single_data_series({
-            'metric_id': 860032,
-            'item_id': 274,
-            'region_id': 1215,
-            'frequency_id': 9,
-            'source_id': 2
-        })
+        self.client.add_single_data_series(mock_data_series[0])
         df = self.client.get_df(show_revisions=True)
         self.assertEqual(df.iloc[0]['start_date'].date(), date(2017, 1, 1))
-        df = self.client.get_df(index_by_series=True)
+        indexed_df = self.client.get_df(index_by_series=True)
+        self.assertEqual(indexed_df.iloc[0]['start_date'].date(), date(2017, 1, 1))
+        series = dict(zip(indexed_df.index.names, indexed_df.iloc[0].name))
+        self.assertEqual(series, mock_data_series[0])
+
+    def test_get_df_show_revisions(self):
+        self.client.add_single_data_series(mock_data_series[0])
+        df = self.client.get_df(show_revisions=True)
         self.assertEqual(df.iloc[0]['start_date'].date(), date(2017, 1, 1))
-        series = dict(zip(df.index.names, df.iloc[0].name))
-        self.assertEqual(series, {
-            'metric_id': 860032,
-            'item_id': 274,
-            'region_id': 1215,
-            'partner_region_id': 0,
-            'frequency_id': 9,
-            'source_id': 2
-        })
 
     def test_add_points_to_df(self):
+        self.client.add_points_to_df(None, mock_data_series[0],
+                                     self.client.get_data_points(**mock_data_series[0]))
         self.assertTrue(True)
 
     def test_get_data_points(self):
