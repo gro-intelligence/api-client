@@ -293,7 +293,9 @@ class GroClientTests(TestCase):
         self.assertEqual(data_points[0]['value'], 40891)
 
         # Converts to the given unit:
-        data_points = self.client.get_data_points(**mock_data_series[0], unit_id=10)
+        selections = dict(mock_data_series[0])  # make a copy so we don't modify the original
+        selections['unit_id'] = 10
+        data_points = self.client.get_data_points(**selections)
         self.assertEqual(data_points[0]['unit_id'], 10)
         self.assertEqual(data_points[0]['value'], 40891000)
 
