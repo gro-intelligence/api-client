@@ -13,12 +13,14 @@ MOCK_HOST = 'pytest.groclient.url'
 MOCK_TOKEN = 'pytest.groclient.token'
 
 mock_entities = {
-    'metrics': {},
+    'metrics': {
+        860032: {'id': 860032, 'name': 'Production Quantity', 'contains': [], 'belongsTo': []}
+    },
     'items': {},
     'regions': {
-        0: {'id': 0, 'name': 'World', 'contains': [1215], 'belongsTo': []},
-        1215: {'id': 1215, 'name': 'United States', 'contains': [12345], 'belongsTo': [0]},
-        12345: {'id': 12345, 'name': 'Minnesota', 'contains': [], 'belongsTo': [1215]}
+        0: {'id': 0, 'level': 1, 'name': 'World', 'contains': [1215], 'belongsTo': []},
+        1215: {'id': 1215, 'level': 3, 'name': 'United States', 'contains': [12345], 'belongsTo': [0]},
+        12345: {'id': 12345, 'level': 4,  'name': 'Minnesota', 'contains': [], 'belongsTo': [1215]}
     },
     'frequencies': {},
     'sources': {},
@@ -53,7 +55,7 @@ mock_data_points = [
     {
         'start_date': '2017-01-01T00:00:00.000Z',
         'end_date': '2017-12-31T00:00:00.000Z',
-        'value': 408913833.8019222, 'unit_id': 15,
+        'value': 40891, 'unit_id': 14,
         'reporting_date': None,
         'metric_id': 860032, 'item_id': 274, 'region_id': 1215,
         'partner_region_id': 0, 'frequency_id': 9, 'source_id': 2,
@@ -67,7 +69,7 @@ mock_data_points = [
     }, {
         'start_date': '2017-01-01T00:00:00.000Z',
         'end_date': '2017-12-31T00:00:00.000Z',
-        'value': 56789, 'unit_id': 15,
+        'value': 56789, 'unit_id': 10,
         'reporting_date': None,
         'metric_id': 860032, 'item_id': 274, 'region_id': 1216,
         'partner_region_id': 0, 'frequency_id': 9, 'source_id': 2,
@@ -87,7 +89,7 @@ def mock_get_available(access_token, api_host, entity_type):
 
 
 def mock_list_available(access_token, api_host, selected_entities):
-    return mock_data_series
+    return [dict(data_series) for data_series in mock_data_series]
 
 
 def mock_lookup(access_token, api_host, entity_type, entity_ids):
@@ -103,7 +105,7 @@ def mock_get_allowed_units(access_token, api_host, metric_id, item_id):
 
 
 def mock_get_data_series(access_token, api_host, **selection):
-    return mock_data_series
+    return [dict(data_series) for data_series in mock_data_series]
 
 
 def mock_search(access_token, api_host, entity_type, search_terms):
@@ -128,7 +130,11 @@ def mock_get_geojson(access_token, api_host, region_id):
 
 def mock_get_descendant_regions(access_token, api_host, region_id, descendant_level,
                                 include_historical, include_details):
-    regions = list(mock_entities['regions'].values())
+    if descendant_level:
+        regions = [region for region in mock_entities['regions'].values()
+                   if region['level'] == descendant_level]
+    else:
+        regions = list(mock_entities['regions'].values())
     if not include_historical:
         regions = [region for region in regions if not region['historical']]
     if include_details:
@@ -139,14 +145,14 @@ def mock_get_descendant_regions(access_token, api_host, region_id, descendant_le
 
 def mock_get_available_timefrequency(access_token, api_host, **selection):
     return [{
-        'startDate': '2000-02-18T00:00:00.000Z',
-        'frequencyId': 3,
-        'endDate': '2020-03-12T00:00:00.000Z',
+        'start_date': '2000-02-18T00:00:00.000Z',
+        'frequency_id': 3,
+        'end_date': '2020-03-12T00:00:00.000Z',
         'name': '8-day'
     }, {
-        'startDate': '2019-09-02T00:00:00.000Z',
-        'frequencyId': 1,
-        'endDate': '2020-03-09T00:00:00.000Z',
+        'start_date': '2019-09-02T00:00:00.000Z',
+        'frequency_id': 1,
+        'end_date': '2020-03-09T00:00:00.000Z',
         'name': 'daily'
     }]
 
@@ -164,9 +170,10 @@ def mock_get_top(access_token, api_host, entity_type, num_results, **selection):
 
 def mock_get_data_points(access_token, api_host, **selections):
     if isinstance(selections['region_id'], int):
-        return mock_data_points[0]
+        print('mock_data_points[0]', mock_data_points[0])
+        return [dict(mock_data_points[0])]
     elif isinstance(selections['region_id'], list):
-        return [mock_data_points[0], mock_data_points[1]]
+        return [dict(mock_data_points[0]), dict(mock_data_points[1])]
 
 
 @patch('api.client.lib.get_available', MagicMock(side_effect=mock_get_available))
@@ -244,7 +251,7 @@ class GroClientTests(TestCase):
         self.assertTrue('name' not in self.client.get_descendant_regions(1215, include_details=False)[0])
 
     def test_get_available_timefrequency(self):
-        self.assertEqual(self.client.get_available_timefrequency()[0]['frequencyId'], 3)
+        self.assertEqual(self.client.get_available_timefrequency()[0]['frequency_id'], 3)
 
     def test_get_top(self):
         self.assertEqual(self.client.get_top('regions',
@@ -254,62 +261,83 @@ class GroClientTests(TestCase):
                                              source_id=2)[0]['regionId'], 1215)
 
     def test_get_df(self):
-        self.client.add_single_data_series(mock_data_series[0])
-        df = self.client.get_df()
+        client = GroClient(MOCK_HOST, MOCK_TOKEN)
+        client.add_single_data_series(mock_data_series[0])
+        df = client.get_df()
         self.assertEqual(df.iloc[0]['start_date'].date(), date(2017, 1, 1))
-        self.client.add_single_data_series(mock_data_series[0])
-        df = self.client.get_df(show_revisions=True)
+        client.add_single_data_series(mock_data_series[0])
+        df = client.get_df(show_revisions=True)
         self.assertEqual(df.iloc[0]['start_date'].date(), date(2017, 1, 1))
-        indexed_df = self.client.get_df(index_by_series=True)
+        indexed_df = client.get_df(index_by_series=True)
         self.assertEqual(indexed_df.iloc[0]['start_date'].date(), date(2017, 1, 1))
         series = dict(zip(indexed_df.index.names, indexed_df.iloc[0].name))
         self.assertEqual(series, mock_data_series[0])
 
     def test_get_df_show_revisions(self):
-        self.client.add_single_data_series(mock_data_series[0])
-        df = self.client.get_df(show_revisions=True)
+        client = GroClient(MOCK_HOST, MOCK_TOKEN)
+        client.add_single_data_series(mock_data_series[0])
+        df = client.get_df(show_revisions=True)
         self.assertEqual(df.iloc[0]['start_date'].date(), date(2017, 1, 1))
 
     def test_add_points_to_df(self):
-        self.client.add_points_to_df(None, mock_data_series[0],
-                                     self.client.get_data_points(**mock_data_series[0]))
-        self.assertTrue(True)
+        client = GroClient(MOCK_HOST, MOCK_TOKEN)
+        client.add_points_to_df(None, mock_data_series[0],
+                                client.get_data_points(**mock_data_series[0]))
+        df = client.get_df()
+        self.assertEqual(df.iloc[0]['start_date'].date(), date(2017, 1, 1))
 
     def test_get_data_points(self):
-        self.assertTrue(True)
+        # Gives the point's default unit if unit's not specified:
+        data_points = self.client.get_data_points(**mock_data_series[0])
+        self.assertEqual(data_points[0]['unit_id'], 14)
+        self.assertEqual(data_points[0]['value'], 40891)
+
+        # Converts to the given unit:
+        data_points = self.client.get_data_points(**mock_data_series[0], unit_id=10)
+        self.assertEqual(data_points[0]['unit_id'], 10)
+        self.assertEqual(data_points[0]['value'], 40891000)
 
     def test_GDH(self):
-        self.assertTrue(True)
+        client = GroClient(MOCK_HOST, MOCK_TOKEN)
+        df = client.GDH('860032-274-1215-0-9-2')
+        self.assertEqual(df.iloc[0]['start_date'].date(), date(2017, 1, 1))
+        # if you request a series with no data, an empty dataframe should be returned:
+        # Extra options can be given, but value in the GDH key itself (metric_id/item_id/etc.)
+        # should be ignored.
+        df = client.GDH('860032-274-1215-0-2-9', insert_nulls=True, metric_id=1)
+        self.assertEqual(len(df), 0)
 
     def test_get_data_series_list(self):
-        self.assertTrue(True)
-
-    def test_add_single_data_series(self):
-        self.assertTrue(True)
+        client = GroClient(MOCK_HOST, MOCK_TOKEN)
+        client.add_single_data_series(mock_data_series[0])
+        for idx, elem in enumerate(client.get_data_series_list()[0]):
+            key, value = elem
+            self.assertEqual(value, mock_data_series[0][key])
 
     def test_find_data_series(self):
-        self.assertTrue(True)
+        client = GroClient(MOCK_HOST, MOCK_TOKEN)
+        # TODO: when duplicates are removed, this should equal 2:
+        self.assertEqual(len(list(client.find_data_series(metric='Production', region='United'))), 8)
 
     def test_add_data_series(self):
-        self.assertTrue(True)
+        client = GroClient(MOCK_HOST, MOCK_TOKEN)
+        # TODO: when duplicates are removed, this should equal 2:
+        data_series = client.add_data_series(metric='Production', region='United')
+        self.assertEqual(data_series, mock_data_series[0])
+        for idx, elem in enumerate(client.get_data_series_list()[0]):
+            key, value = elem
+            self.assertEqual(value, mock_data_series[0][key])
 
     def test_search_for_entity(self):
-        self.assertTrue(True)
+        self.assertEqual(self.client.search_for_entity('metrics', 'Production'), 860032)
 
     def test_get_provinces(self):
-        self.assertTrue(True)
+        self.assertEqual(self.client.get_provinces('United')[0], mock_entities['regions'][12345])
 
     def test_get_names_for_selection(self):
-        self.assertTrue(True)
-
-    def test_pick_random_entities(self):
-        self.assertTrue(True)
-
-    def test_pick_random_data_series(self):
-        self.assertTrue(True)
-
-    def test_print_one_data_series(self):
-        self.assertTrue(True)
+        selection = {'metric_id': 860032, 'region_id': 0}
+        self.assertEqual(self.client.get_names_for_selection(selection),
+                         [('metric', 'Production Quantity'), ('region', 'World')])
 
     def test_convert_unit(self):
         self.assertEqual(
