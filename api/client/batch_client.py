@@ -132,15 +132,6 @@ class BatchClient(GroClient):
         # Retries failed. Raise exception
         raise BatchError(response, retry_count, url, params)
 
-    @gen.coroutine
-    def get_data_points(self, **selection):
-        """Get all the data points for a given selection, which is some or all
-        of: item_id, metric_id, region_id, frequency_id, source_id,
-        partner_region_id. Additional arguments are allowed and ignored.
-        """
-        data_points = super(BatchClient, self).get_data_points(**selection)
-        raise gen.Return(data_points)
-
     def get_df(self, show_revisions=True):
         if show_revisions:
             for data_series in self._data_series_queue:
