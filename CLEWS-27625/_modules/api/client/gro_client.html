@@ -586,14 +586,14 @@
 <span class="sd">            Example::</span>
 
 <span class="sd">                 [{</span>
-<span class="sd">                    &#39;startDate&#39;: &#39;2000-02-18T00:00:00.000Z&#39;,</span>
-<span class="sd">                    &#39;frequencyId&#39;: 3,</span>
-<span class="sd">                    &#39;endDate&#39;: &#39;2020-03-12T00:00:00.000Z&#39;,</span>
+<span class="sd">                    &#39;start_date&#39;: &#39;2000-02-18T00:00:00.000Z&#39;,</span>
+<span class="sd">                    &#39;frequency_id&#39;: 3,</span>
+<span class="sd">                    &#39;end_date&#39;: &#39;2020-03-12T00:00:00.000Z&#39;,</span>
 <span class="sd">                    &#39;name&#39;: &#39;8-day&#39;</span>
 <span class="sd">                  }, {</span>
-<span class="sd">                    &#39;startDate&#39;: &#39;2019-09-02T00:00:00.000Z&#39;,</span>
-<span class="sd">                    &#39;frequencyId&#39;: 1,</span>
-<span class="sd">                    &#39;endDate&#39;: &#39;2020-03-09T00:00:00.000Z&#39;,</span>
+<span class="sd">                    &#39;start_date&#39;: &#39;2019-09-02T00:00:00.000Z&#39;,</span>
+<span class="sd">                    &#39;frequency_id&#39;: 1,</span>
+<span class="sd">                    &#39;end_date&#39;: &#39;2020-03-09T00:00:00.000Z&#39;,</span>
 <span class="sd">                    &#39;name&#39;: u&#39;daily&#39;}, ... ]</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">lib</span><span class="o">.</span><span class="n">get_available_timefrequency</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_host</span><span class="p">,</span>
@@ -845,12 +845,12 @@
 
 <span class="sd">        The data series selection to retrieve is encoded in a</span>
 <span class="sd">        &#39;gdh_selection&#39; string of the form</span>
-<span class="sd">        &lt;metric_id&gt;-&lt;item_id&gt;-&lt;region_id&gt;-&lt;partner_region_id&gt;-&lt;source_id&gt;-&lt;frequency_id&gt;</span>
+<span class="sd">        &lt;metric_id&gt;-&lt;item_id&gt;-&lt;region_id&gt;-&lt;partner_region_id&gt;-&lt;frequency_id&gt;-&lt;source_id&gt;</span>
 
-<span class="sd">        For example, client.GDH(&quot;860032-274-1231-0-14-9&quot;) will get the</span>
+<span class="sd">        For example, client.GDH(&quot;860032-274-1231-0-9-14&quot;) will get the</span>
 <span class="sd">        data points for Production of Corn in China from PS&amp;D at an</span>
 <span class="sd">        annual frequency, e.g.</span>
-<span class="sd">        for csv_row in client.GDH(&quot;860032-274-1231-0-14-9&quot;):</span>
+<span class="sd">        for csv_row in client.GDH(&quot;860032-274-1231-0-9-14&quot;):</span>
 <span class="sd">            print csv_row</span>
 
 <span class="sd">        Parameters:</span>
@@ -879,6 +879,7 @@
         <span class="k">try</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_df</span><span class="p">(</span><span class="n">index_by_series</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">loc</span><span class="p">[[</span><span class="nb">tuple</span><span class="p">(</span><span class="n">entity_ids</span><span class="p">)],</span> <span class="p">:]</span>
         <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;GDH returned no data&quot;</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
 
 <div class="viewcode-block" id="GroClient.get_data_series_list"><a class="viewcode-back" href="../../../api.html#api.client.gro_client.GroClient.get_data_series_list">[docs]</a>    <span class="k">def</span> <span class="nf">get_data_series_list</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -1061,7 +1062,7 @@
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        entity_type : { &#39;metric&#39;, &#39;item&#39;, &#39;region&#39;, &#39;source&#39; }</span>
+<span class="sd">        entity_type : { &#39;metrics&#39;, &#39;items&#39;, &#39;regions&#39;, &#39;sources&#39; }</span>
 <span class="sd">        keywords : string</span>
 
 <span class="sd">        Returns</span>
@@ -1137,7 +1138,7 @@
     <span class="c1">###</span>
     <span class="c1"># Convenience methods that automatically fill in partial selections with random entities</span>
     <span class="c1">###</span>
-    <span class="k">def</span> <span class="nf">pick_random_entities</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">pick_random_entities</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>  <span class="c1"># pragma: no cover</span>
         <span class="sd">&quot;&quot;&quot;Pick a random item that has some data associated with it, and a random metric and region</span>
 <span class="sd">        pair for that item with data available.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -1153,7 +1154,7 @@
         <span class="n">selected_entities</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">entities</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">selected_entities</span>
 
-    <span class="k">def</span> <span class="nf">pick_random_data_series</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">selected_entities</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">pick_random_data_series</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">selected_entities</span><span class="p">):</span>  <span class="c1"># pragma: no cover</span>
         <span class="sd">&quot;&quot;&quot;Given a selection of tentities, pick a random available data series the given selection</span>
 <span class="sd">        of entities.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -1165,7 +1166,7 @@
         <span class="k">return</span> <span class="n">selected_data_series</span>
 
     <span class="c1"># TODO: rename function to &quot;write_...&quot; rather than &quot;print_...&quot;</span>
-    <span class="k">def</span> <span class="nf">print_one_data_series</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_series</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">print_one_data_series</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_series</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>  <span class="c1"># pragma: no cover</span>
         <span class="sd">&quot;&quot;&quot;Output a data series to a CSV file.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Using data series: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">data_series</span><span class="p">)))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Outputing to file: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">filename</span><span class="p">))</span>
@@ -1226,7 +1227,7 @@
         <span class="k">return</span> <span class="n">point</span>
 
 
-<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>  <span class="c1"># pragma: no cover</span>
     <span class="sd">&quot;&quot;&quot;Basic Gro API command line interface.</span>
 
 <span class="sd">    Note that results are chosen randomly from matching selections, and so results are not</span>
@@ -1276,22 +1277,22 @@
     <span class="n">client</span><span class="o">.</span><span class="n">print_one_data_series</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">OUTPUT_FILENAME</span><span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">get_df</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="o">**</span><span class="n">selected_entities</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">get_df</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="o">**</span><span class="n">selected_entities</span><span class="p">):</span>  <span class="c1"># pragma: no cover</span>
     <span class="sd">&quot;&quot;&quot;Deprecated: use the corresponding method in GroClient instead.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">client</span><span class="o">.</span><span class="n">get_data_points</span><span class="p">(</span><span class="o">**</span><span class="n">selected_entities</span><span class="p">))</span>
 
 
-<span class="k">def</span> <span class="nf">search_for_entity</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">,</span> <span class="n">keywords</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">search_for_entity</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">,</span> <span class="n">keywords</span><span class="p">):</span>  <span class="c1"># pragma: no cover</span>
     <span class="sd">&quot;&quot;&quot;Deprecated: use the corresponding method in GroClient instead.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">client</span><span class="o">.</span><span class="n">search_for_entity</span><span class="p">(</span><span class="n">entity_type</span><span class="p">,</span> <span class="n">keywords</span><span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">pick_random_entities</span><span class="p">(</span><span class="n">client</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">pick_random_entities</span><span class="p">(</span><span class="n">client</span><span class="p">):</span>  <span class="c1"># pragma: no cover</span>
     <span class="sd">&quot;&quot;&quot;Deprecated: use the corresponding method in GroClient instead.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">client</span><span class="o">.</span><span class="n">pick_random_entities</span><span class="p">()</span>
 
 
-<span class="k">def</span> <span class="nf">print_random_data_series</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="n">selected_entities</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">print_random_data_series</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="n">selected_entities</span><span class="p">):</span>  <span class="c1"># pragma: no cover</span>
     <span class="sd">&quot;&quot;&quot;Example which prints out a CSV of a random data series that</span>
 <span class="sd">    satisfies the (optional) given selection.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -1300,7 +1301,7 @@
         <span class="n">OUTPUT_FILENAME</span><span class="p">)</span>
 
 
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
     <span class="n">main</span><span class="p">()</span>
 </pre></div>
 
