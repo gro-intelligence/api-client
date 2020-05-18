@@ -8,6 +8,7 @@ except ImportError:
     from StringIO import StringIO
 from unittest import TestCase
 import json
+from datetime import date
 
 from tornado.httpclient import HTTPResponse
 from tornado.concurrent import Future
@@ -121,4 +122,15 @@ class GroClientTests(TestCase):
         self.assertTrue(True)
 
     def test_get_df(self):
-        self.assertTrue(True)
+        client = BatchClient(MOCK_HOST, MOCK_TOKEN)
+        client.add_single_data_series({
+            'metric_id': 1,
+            'item_id': 2,
+            'region_id': 3,
+            'frequency_id': 4,
+            'source_id': 5
+        })
+        df = client.get_df()
+        self.assertEqual(df.iloc[0]['start_date'].date(), date(2017, 1, 1))
+        self.assertEqual(df.iloc[0]['end_date'].date(), date(2017, 12, 31))
+        self.assertEqual(df.iloc[0]['value'], 40891)
