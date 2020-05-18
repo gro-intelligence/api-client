@@ -109,16 +109,16 @@ class GroClientTests(TestCase):
                 'insert_nulls': True
             }
         ])
-        self.assertEquals(data_points[0][0]['start_date'], '2017-01-01T00:00:00.000Z')
-        self.assertEquals(data_points[0][0]['end_date'], '2017-12-31T00:00:00.000Z')
-        self.assertEquals(data_points[0][0]['value'], 40891)
-        self.assertEquals(data_points[0][0]['unit_id'], 14)
-        self.assertEquals(data_points[0][0]['reporting_date'], None)
-        self.assertEquals(data_points[0][1]['start_date'], '2018-01-01T00:00:00.000Z')
-        self.assertEquals(data_points[0][1]['end_date'], '2018-12-31T00:00:00.000Z')
-        self.assertEquals(data_points[0][1]['value'], 56789)
-        self.assertEquals(data_points[0][1]['unit_id'], 14)
-        self.assertEquals(data_points[0][1]['reporting_date'], '2019-03-14T00:00:00.000Z')
+        self.assertEqual(data_points[0][0]['start_date'], '2017-01-01T00:00:00.000Z')
+        self.assertEqual(data_points[0][0]['end_date'], '2017-12-31T00:00:00.000Z')
+        self.assertEqual(data_points[0][0]['value'], 40891)
+        self.assertEqual(data_points[0][0]['unit_id'], 14)
+        self.assertEqual(data_points[0][0]['reporting_date'], None)
+        self.assertEqual(data_points[0][1]['start_date'], '2018-01-01T00:00:00.000Z')
+        self.assertEqual(data_points[0][1]['end_date'], '2018-12-31T00:00:00.000Z')
+        self.assertEqual(data_points[0][1]['value'], 56789)
+        self.assertEqual(data_points[0][1]['unit_id'], 14)
+        self.assertEqual(data_points[0][1]['reporting_date'], '2019-03-14T00:00:00.000Z')
 
     def test_batch_async_get_data_points_map_function(self):
 
@@ -133,11 +133,22 @@ class GroClientTests(TestCase):
             map_result=sum_results
         )
 
-        self.assertEquals(summation, 97680)
+        self.assertEqual(summation, 97680)
 
     def test_batch_async_get_data_points_bad_request_error(self):
         responses = self.client.batch_async_get_data_points([ERROR_SELECTION])
         self.assertTrue(isinstance(responses[0], BatchError))
+
+    def test_batch_async_get_data_points_map_errors(self):
+        def raise_exception(idx, query, response, accumulator):
+            if isinstance(response, Exception):
+                raise response
+            accumulator[idx] = response
+            return accumulator
+
+        with self.assertRaises(Exception):
+            self.client.batch_async_get_data_points([ERROR_SELECTION],
+                                                    map_result=raise_exception)
 
     def test_get_df(self):
         client = BatchClient(MOCK_HOST, MOCK_TOKEN)
@@ -159,10 +170,10 @@ class GroClientTests(TestCase):
             [mock_data_series, mock_data_series]
         )
         # There were two inputs, so there should be two outputs:
-        self.assertEquals(len(list_of_ranked_series_lists), 2)
+        self.assertEqual(len(list_of_ranked_series_lists), 2)
         for series_list in list_of_ranked_series_lists:
             # Not necessarily true, but true given the mock_rank_series_by_source() function:
-            self.assertEquals(len(series_list), len(mock_data_series))
+            self.assertEqual(len(series_list), len(mock_data_series))
             for series in series_list:
                 self.assertTrue('metric_id' in series)
                 self.assertTrue('source_id' in series)
