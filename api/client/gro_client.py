@@ -384,14 +384,14 @@ class GroClient(object):
             Example::
 
                  [{
-                    'startDate': '2000-02-18T00:00:00.000Z',
-                    'frequencyId': 3,
-                    'endDate': '2020-03-12T00:00:00.000Z',
+                    'start_date': '2000-02-18T00:00:00.000Z',
+                    'frequency_id': 3,
+                    'end_date': '2020-03-12T00:00:00.000Z',
                     'name': '8-day'
                   }, {
-                    'startDate': '2019-09-02T00:00:00.000Z',
-                    'frequencyId': 1,
-                    'endDate': '2020-03-09T00:00:00.000Z',
+                    'start_date': '2019-09-02T00:00:00.000Z',
+                    'frequency_id': 1,
+                    'end_date': '2020-03-09T00:00:00.000Z',
                     'name': u'daily'}, ... ]
         """
         return lib.get_available_timefrequency(self.access_token, self.api_host,
@@ -643,12 +643,12 @@ class GroClient(object):
 
         The data series selection to retrieve is encoded in a
         'gdh_selection' string of the form
-        <metric_id>-<item_id>-<region_id>-<partner_region_id>-<source_id>-<frequency_id>
+        <metric_id>-<item_id>-<region_id>-<partner_region_id>-<frequency_id>-<source_id>
 
-        For example, client.GDH("860032-274-1231-0-14-9") will get the
+        For example, client.GDH("860032-274-1231-0-9-14") will get the
         data points for Production of Corn in China from PS&D at an
         annual frequency, e.g.
-        for csv_row in client.GDH("860032-274-1231-0-14-9"):
+        for csv_row in client.GDH("860032-274-1231-0-9-14"):
             print csv_row
 
         Parameters:
@@ -677,6 +677,7 @@ class GroClient(object):
         try:
             return self.get_df(index_by_series=True).loc[[tuple(entity_ids)], :]
         except KeyError:
+            self._logger.warn("GDH returned no data")
             return pandas.DataFrame()
 
     def get_data_series_list(self):
@@ -859,7 +860,7 @@ class GroClient(object):
 
         Parameters
         ----------
-        entity_type : { 'metric', 'item', 'region', 'source' }
+        entity_type : { 'metrics', 'items', 'regions', 'sources' }
         keywords : string
 
         Returns
@@ -935,7 +936,7 @@ class GroClient(object):
     ###
     # Convenience methods that automatically fill in partial selections with random entities
     ###
-    def pick_random_entities(self):
+    def pick_random_entities(self):  # pragma: no cover
         """Pick a random item that has some data associated with it, and a random metric and region
         pair for that item with data available.
         """
@@ -951,7 +952,7 @@ class GroClient(object):
         selected_entities.update(entities)
         return selected_entities
 
-    def pick_random_data_series(self, selected_entities):
+    def pick_random_data_series(self, selected_entities):  # pragma: no cover
         """Given a selection of tentities, pick a random available data series the given selection
         of entities.
         """
@@ -963,7 +964,7 @@ class GroClient(object):
         return selected_data_series
 
     # TODO: rename function to "write_..." rather than "print_..."
-    def print_one_data_series(self, data_series, filename):
+    def print_one_data_series(self, data_series, filename):  # pragma: no cover
         """Output a data series to a CSV file."""
         self._logger.warning("Using data series: {}".format(str(data_series)))
         self._logger.warning("Outputing to file: {}".format(filename))
@@ -1024,7 +1025,7 @@ class GroClient(object):
         return point
 
 
-def main():
+def main():  # pragma: no cover
     """Basic Gro API command line interface.
 
     Note that results are chosen randomly from matching selections, and so results are not
@@ -1074,22 +1075,22 @@ def main():
     client.print_one_data_series(ds, OUTPUT_FILENAME)
 
 
-def get_df(client, **selected_entities):
+def get_df(client, **selected_entities):  # pragma: no cover
     """Deprecated: use the corresponding method in GroClient instead."""
     return pandas.DataFrame(client.get_data_points(**selected_entities))
 
 
-def search_for_entity(client, entity_type, keywords):
+def search_for_entity(client, entity_type, keywords):  # pragma: no cover
     """Deprecated: use the corresponding method in GroClient instead."""
     return client.search_for_entity(entity_type, keywords)
 
 
-def pick_random_entities(client):
+def pick_random_entities(client):  # pragma: no cover
     """Deprecated: use the corresponding method in GroClient instead."""
     return client.pick_random_entities()
 
 
-def print_random_data_series(client, selected_entities):
+def print_random_data_series(client, selected_entities):  # pragma: no cover
     """Example which prints out a CSV of a random data series that
     satisfies the (optional) given selection.
     """
@@ -1098,5 +1099,5 @@ def print_random_data_series(client, selected_entities):
         OUTPUT_FILENAME)
 
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
     main()
