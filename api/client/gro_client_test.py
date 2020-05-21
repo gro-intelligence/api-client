@@ -254,30 +254,31 @@ class GroClientTests(TestCase):
         )
 
     def test_get_df(self):
-        client = GroClient(MOCK_HOST, MOCK_TOKEN)
-        client.add_single_data_series(mock_data_series[0])
-        df = client.get_df()
+        self.client.add_single_data_series(mock_data_series[0])
+        df = self.client.get_df()
         self.assertEqual(df.iloc[0]["start_date"].date(), date(2017, 1, 1))
-        client.add_single_data_series(mock_data_series[0])
-        df = client.get_df(show_revisions=True)
+        self.client.add_single_data_series(mock_data_series[0])
+        df = self.client.get_df(show_revisions=True)
         self.assertEqual(df.iloc[0]["start_date"].date(), date(2017, 1, 1))
-        indexed_df = client.get_df(index_by_series=True)
+        indexed_df = self.client.get_df(index_by_series=True)
         self.assertEqual(indexed_df.iloc[0]["start_date"].date(), date(2017, 1, 1))
         series = dict(zip(indexed_df.index.names, indexed_df.iloc[0].name))
         self.assertEqual(series, mock_data_series[0])
 
     def test_get_df_show_revisions(self):
-        client = GroClient(MOCK_HOST, MOCK_TOKEN)
-        client.add_single_data_series(mock_data_series[0])
-        df = client.get_df(show_revisions=True)
+        self.client.add_single_data_series(mock_data_series[0])
+        df = self.client.get_df(show_revisions=True)
         self.assertEqual(df.iloc[0]["start_date"].date(), date(2017, 1, 1))
 
     def test_add_points_to_df(self):
-        client = GroClient(MOCK_HOST, MOCK_TOKEN)
-        client.add_points_to_df(
-            None, mock_data_series[0], client.get_data_points(**mock_data_series[0])
+        self.client.add_points_to_df(
+            None,
+            mock_data_series[0],
+            self.client.get_data_points(**mock_data_series[0]),
         )
-        self.assertEqual(client.get_df().iloc[0]["start_date"].date(), date(2017, 1, 1))
+        self.assertEqual(
+            self.client.get_df().iloc[0]["start_date"].date(), date(2017, 1, 1)
+        )
 
     def test_get_data_points(self):
         # Gives the point's default unit if unit's not specified:
@@ -295,35 +296,34 @@ class GroClientTests(TestCase):
         self.assertEqual(data_points[0]["value"], 40891000)
 
     def test_GDH(self):
-        client = GroClient(MOCK_HOST, MOCK_TOKEN)
-        df = client.GDH("860032-274-1215-0-9-2")
+        df = self.client.GDH("860032-274-1215-0-9-2")
         self.assertEqual(df.iloc[0]["start_date"].date(), date(2017, 1, 1))
         # if you request a series with no data, an empty dataframe should be returned:
         # Extra options can be given, but value in the GDH key itself (metric_id/item_id/etc.)
         # should be ignored.
-        df = client.GDH("860032-274-1215-0-2-9", insert_nulls=True, metric_id=1)
+        df = self.client.GDH("860032-274-1215-0-2-9", insert_nulls=True, metric_id=1)
         self.assertEqual(len(df), 0)
 
     def test_get_data_series_list(self):
-        client = GroClient(MOCK_HOST, MOCK_TOKEN)
-        client.add_single_data_series(mock_data_series[0])
-        for idx, elem in enumerate(client.get_data_series_list()[0]):
+        self.client.add_single_data_series(mock_data_series[0])
+        for idx, elem in enumerate(self.client.get_data_series_list()[0]):
             key, value = elem
             self.assertEqual(value, mock_data_series[0][key])
 
     def test_find_data_series(self):
-        client = GroClient(MOCK_HOST, MOCK_TOKEN)
         # TODO: when duplicates are removed, this should equal 2:
         self.assertEqual(
-            len(list(client.find_data_series(metric="Production", region="United"))), 8
+            len(
+                list(self.client.find_data_series(metric="Production", region="United"))
+            ),
+            8,
         )
 
     def test_add_data_series(self):
-        client = GroClient(MOCK_HOST, MOCK_TOKEN)
         # TODO: when duplicates are removed, this should equal 2:
-        data_series = client.add_data_series(metric="Production", region="United")
+        data_series = self.client.add_data_series(metric="Production", region="United")
         self.assertEqual(data_series, mock_data_series[0])
-        for idx, elem in enumerate(client.get_data_series_list()[0]):
+        for idx, elem in enumerate(self.client.get_data_series_list()[0]):
             key, value = elem
             self.assertEqual(value, mock_data_series[0][key])
 
