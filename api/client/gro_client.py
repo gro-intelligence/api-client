@@ -1,6 +1,5 @@
 from __future__ import print_function
 from builtins import str
-from builtins import zip
 from random import random
 import argparse
 import functools
@@ -11,14 +10,14 @@ import sys
 
 from api.client import cfg, lib
 from api.client.constants import DATA_SERIES_UNIQUE_TYPES_ID, ENTITY_KEY_TO_TYPE
-from api.client.utils import intersect
+from api.client.utils import intersect, zip_selections
 
 import pandas
 import unicodecsv
 
 
-API_HOST = 'api.gro-intelligence.com'
-OUTPUT_FILENAME = 'gro_client_output.csv'
+API_HOST = "api.gro-intelligence.com"
+OUTPUT_FILENAME = "gro_client_output.csv"
 
 
 class GroClient(object):
@@ -139,7 +138,7 @@ class GroClient(object):
         return lib.lookup(self.access_token, self.api_host, entity_type, entity_ids)
 
     def lookup_unit_abbreviation(self, unit_id):
-        return self.lookup('units', unit_id)['abbreviation']
+        return self.lookup("units", unit_id)["abbreviation"]
 
     def get_allowed_units(self, metric_id, item_id=None):
         """Get a list of unit that can be used with the given metric (and
@@ -156,8 +155,9 @@ class GroClient(object):
         list of unit ids
 
         """
-        return lib.get_allowed_units(self.access_token, self.api_host, metric_id,
-                                     item_id)
+        return lib.get_allowed_units(
+            self.access_token, self.api_host, metric_id, item_id
+        )
 
     def get_data_series(self, **selection):
         """Get available data series for the given selections.
@@ -208,8 +208,7 @@ class GroClient(object):
                 [{'id': 5604}, {'id': 10204}, {'id': 10210}, ....]
 
         """
-        return lib.search(self.access_token, self.api_host,
-                          entity_type, search_terms)
+        return lib.search(self.access_token, self.api_host, entity_type, search_terms)
 
     def search_and_lookup(self, entity_type, search_terms, num_results=10):
         """Search for the given search terms and look up their details.
@@ -239,8 +238,9 @@ class GroClient(object):
             the best match for the given search term(s).
 
         """
-        return lib.search_and_lookup(self.access_token, self.api_host,
-                                     entity_type, search_terms, num_results)
+        return lib.search_and_lookup(
+            self.access_token, self.api_host, entity_type, search_terms, num_results
+        )
 
     def lookup_belongs(self, entity_type, entity_id):
         """Look up details of entities containing the given entity.
@@ -264,7 +264,9 @@ class GroClient(object):
                   'level': 2 }
 
         """
-        return lib.lookup_belongs(self.access_token, self.api_host, entity_type, entity_id)
+        return lib.lookup_belongs(
+            self.access_token, self.api_host, entity_type, entity_id
+        )
 
     def rank_series_by_source(self, selections_list):
         """Given a list of series selections, for each unique combination excluding source, expand
@@ -282,7 +284,9 @@ class GroClient(object):
             The input selections_list, expanded out to each possible source, ordered by coverage.
 
         """
-        return lib.rank_series_by_source(self.access_token, self.api_host, selections_list)
+        return lib.rank_series_by_source(
+            self.access_token, self.api_host, selections_list
+        )
 
     def get_geo_centre(self, region_id):
         """Given a region ID, return the geographic centre in degrees lat/lon.
@@ -302,7 +306,6 @@ class GroClient(object):
         """
         return lib.get_geo_centre(self.access_token, self.api_host, region_id)
 
-
     def get_geojsons(self, region_id, descendant_level=None):
         """Given a region ID, return shape information in geojson, for the
         region and all its descendants at the given level (if specified).
@@ -320,8 +323,9 @@ class GroClient(object):
 
                [{region_id: ..., region_name: ..., geojson: ...}, ...]
         """
-        return lib.get_geojsons(self.access_token, self.api_host,
-                                region_id, descendant_level)
+        return lib.get_geojsons(
+            self.access_token, self.api_host, region_id, descendant_level
+        )
 
     def get_geojson(self, region_id):
         """Given a region ID, return shape information in geojson.
@@ -343,8 +347,13 @@ class GroClient(object):
         """
         return lib.get_geojson(self.access_token, self.api_host, region_id)
 
-    def get_descendant_regions(self, region_id, descendant_level=None,
-                               include_historical=True, include_details=True):
+    def get_descendant_regions(
+        self,
+        region_id,
+        descendant_level=None,
+        include_historical=True,
+        include_details=True,
+    ):
         """Look up details of all regions of the given level contained by a region.
 
         Given any region by id, get all the descendant regions that are of the specified level.
@@ -385,8 +394,13 @@ class GroClient(object):
 
         """
         return lib.get_descendant_regions(
-            self.access_token, self.api_host,
-            region_id, descendant_level, include_historical, include_details)
+            self.access_token,
+            self.api_host,
+            region_id,
+            descendant_level,
+            include_historical,
+            include_details,
+        )
 
     def get_available_timefrequency(self, **selection):
         """Given a selection, return a list of frequencies and time ranges.
@@ -416,8 +430,9 @@ class GroClient(object):
                     'end_date': '2020-03-09T00:00:00.000Z',
                     'name': u'daily'}, ... ]
         """
-        return lib.get_available_timefrequency(self.access_token, self.api_host,
-                                               **selection)
+        return lib.get_available_timefrequency(
+            self.access_token, self.api_host, **selection
+        )
 
     def get_top(self, entity_type, num_results=5, **selection):
         """Find the data series with the highest cumulative value for the given time range.
@@ -474,7 +489,9 @@ class GroClient(object):
             value the series are ranked by. You may then use the results to call
             :meth:`~.get_data_points` to get the individual time series points.
         """
-        return lib.get_top(self.access_token, self.api_host, entity_type, num_results, **selection)
+        return lib.get_top(
+            self.access_token, self.api_host, entity_type, num_results, **selection
+        )
 
     def get_df(self, show_revisions=False, index_by_series=False):
         """Call :meth:`~.get_data_points` for each saved data series and return as a combined
@@ -496,11 +513,14 @@ class GroClient(object):
         while self._data_series_queue:
             data_series = self._data_series_queue.pop()
             if show_revisions:
-                data_series['show_revisions'] = True
-            self.add_points_to_df(None, data_series, self.get_data_points(**data_series))
+                data_series["show_revisions"] = True
+            self.add_points_to_df(
+                None, data_series, self.get_data_points(**data_series)
+            )
         if index_by_series:
-            indexed_df = self._data_frame.set_index(intersect(DATA_SERIES_UNIQUE_TYPES_ID,
-                                                              self._data_frame.columns))
+            indexed_df = self._data_frame.set_index(
+                intersect(DATA_SERIES_UNIQUE_TYPES_ID, self._data_frame.columns)
+            )
             indexed_df.index.set_names(DATA_SERIES_UNIQUE_TYPES_ID, inplace=True)
             return indexed_df.sort_index()
         return self._data_frame
@@ -521,12 +541,12 @@ class GroClient(object):
         # get_data_points response doesn't include the
         # source_id. We add it as a column, in case we have
         # several selections series which differ only by source id.
-        tmp['source_id'] = data_series['source_id']
-        if 'end_date' in tmp.columns:
+        tmp["source_id"] = data_series["source_id"]
+        if "end_date" in tmp.columns:
             tmp.end_date = pandas.to_datetime(tmp.end_date)
-        if 'start_date' in tmp.columns:
+        if "start_date" in tmp.columns:
             tmp.start_date = pandas.to_datetime(tmp.start_date)
-        if 'reporting_date' in tmp.columns:
+        if "reporting_date" in tmp.columns:
             tmp.reporting_date = pandas.to_datetime(tmp.reporting_date)
 
         if self._data_frame.empty:
@@ -652,11 +672,19 @@ class GroClient(object):
         list of dicts
 
         """
-        data_points = lib.get_data_points(self.access_token, self.api_host, **selections)
+        data_points = lib.get_data_points(
+            self.access_token, self.api_host, **selections
+        )
         # Apply unit conversion if a unit is specified
-        if 'unit_id' in selections:
-            return list(map(functools.partial(self.convert_unit,
-                                              target_unit_id=selections['unit_id']), data_points))
+        if "unit_id" in selections:
+            return list(
+                map(
+                    functools.partial(
+                        self.convert_unit, target_unit_id=selections["unit_id"]
+                    ),
+                    data_points,
+                )
+            )
         # Return data points in input units if not unit is specified
         return data_points
 
@@ -687,13 +715,8 @@ class GroClient(object):
 
         """
 
-        entity_ids = [int(x) for x in gdh_selection.split('-')]
-        selection = dict(zip(DATA_SERIES_UNIQUE_TYPES_ID, entity_ids))
-
-        # add optional pararms to selection
-        for key, value in list(optional_selections.items()):
-            if key not in DATA_SERIES_UNIQUE_TYPES_ID:
-                selection[key] = value
+        entity_ids = [int(x) for x in gdh_selection.split("-")]
+        selection = zip_selections(entity_ids, **optional_selections)
 
         self.add_single_data_series(selection)
         try:
@@ -802,40 +825,46 @@ class GroClient(object):
         :meth:`~.get_data_series`
 
         """
-        result_filter = kwargs.pop('result_filter', lambda x: True)
+        result_filter = kwargs.pop("result_filter", lambda x: True)
         results = []  # [[('item_id',1),('item_id',2),...],[('metric_id" 1),...],...]
         for kw in kwargs:
-            id_key = '{}_id'.format(kw)
-            results.append([
-                (id_key, result['id']) for result in filter(
-                    lambda entity: result_filter({id_key: entity['id']}),
-                    self.search(ENTITY_KEY_TO_TYPE[id_key], kwargs[kw]))
-            ][:cfg.MAX_RESULT_COMBINATION_DEPTH])
+            id_key = "{}_id".format(kw)
+            results.append(
+                [
+                    (id_key, result["id"])
+                    for result in filter(
+                        lambda entity: result_filter({id_key: entity["id"]}),
+                        self.search(ENTITY_KEY_TO_TYPE[id_key], kwargs[kw]),
+                    )
+                ][: cfg.MAX_RESULT_COMBINATION_DEPTH]
+            )
         # Rank by frequency and source, while preserving search ranking in
         # permutations of search results.
         ranking_groups = set()
         for comb in itertools.product(*results):
-            for data_series in self.get_data_series(**dict(comb))[:cfg.MAX_SERIES_PER_COMB]:
+            for data_series in self.get_data_series(**dict(comb))[
+                : cfg.MAX_SERIES_PER_COMB
+            ]:
                 self._logger.debug("Data series: {}".format(data_series))
                 # remove time and frequency to rank them
-                data_series.pop('start_date', None)
-                data_series.pop('end_date', None)
-                data_series.pop('frequency_id', None)
+                data_series.pop("start_date", None)
+                data_series.pop("end_date", None)
+                data_series.pop("frequency_id", None)
                 # remove source to rank them
-                data_series.pop('source_id', None)
-                data_series.pop('source_name', None)
+                data_series.pop("source_id", None)
+                data_series.pop("source_name", None)
                 # metadata is not hashable
-                data_series.pop('metadata', None)
+                data_series.pop("metadata", None)
                 series_hash = frozenset(data_series.items())
                 if series_hash not in ranking_groups:
                     ranking_groups.add(series_hash)
-                    if kwargs.get('start_date'):
-                        data_series['start_date'] = kwargs['start_date']
-                    if kwargs.get('end_date'):
-                        data_series['end_date'] = kwargs['end_date']
+                    if kwargs.get("start_date"):
+                        data_series["start_date"] = kwargs["start_date"]
+                    if kwargs.get("end_date"):
+                        data_series["end_date"] = kwargs["end_date"]
                     for tf in self.get_available_timefrequency(**data_series):
                         ds = dict(data_series)
-                        ds['frequency_id'] = tf['frequency_id']
+                        ds["frequency_id"] = tf["frequency_id"]
                         for data_series in self.rank_series_by_source([ds]):
                             yield data_series
 
@@ -893,9 +922,12 @@ class GroClient(object):
         """
         results = self.search(entity_type, keywords)
         for result in results:
-            self._logger.debug("First result, out of {} {}: {}".format(
-                len(results), entity_type, result['id']))
-            return result['id']
+            self._logger.debug(
+                "First result, out of {} {}: {}".format(
+                    len(results), entity_type, result["id"]
+                )
+            )
+            return result["id"]
 
     def get_provinces(self, country_name):
         """Given the name of a country, find its provinces.
@@ -929,10 +961,14 @@ class GroClient(object):
         :meth:`~.get_descendant_regions`
 
         """
-        for region in self.search_and_lookup('regions', country_name):
-            if region['level'] == lib.REGION_LEVELS['country']:
-                provinces = self.get_descendant_regions(region['id'], lib.REGION_LEVELS['province'])
-                self._logger.debug("Provinces of {}: {}".format(country_name, provinces))
+        for region in self.search_and_lookup("regions", country_name):
+            if region["level"] == lib.REGION_LEVELS["country"]:
+                provinces = self.get_descendant_regions(
+                    region["id"], lib.REGION_LEVELS["province"]
+                )
+                self._logger.debug(
+                    "Provinces of {}: {}".format(country_name, provinces)
+                )
                 return provinces
         return None
 
@@ -951,9 +987,13 @@ class GroClient(object):
             [('item', 'Corn'), ('region', 'China') ...]
 
         """
-        return [(entity_key.split('_')[0],
-                 self.lookup(ENTITY_KEY_TO_TYPE[entity_key], entity_id)['name'])
-                for entity_key, entity_id in selection.items()]
+        return [
+            (
+                entity_key.split("_")[0],
+                self.lookup(ENTITY_KEY_TO_TYPE[entity_key], entity_id)["name"],
+            )
+            for entity_key, entity_id in selection.items()
+        ]
 
     ###
     # Convenience methods that automatically fill in partial selections with random entities
@@ -962,14 +1002,14 @@ class GroClient(object):
         """Pick a random item that has some data associated with it, and a random metric and region
         pair for that item with data available.
         """
-        item_list = list(self.get_available('items').values())
+        item_list = list(self.get_available("items").values())
         num = 0
         while not num:
-            item = item_list[int(len(item_list)*random())]
-            selected_entities = {'itemId':  item['id']}
+            item = item_list[int(len(item_list) * random())]
+            selected_entities = {"itemId": item["id"]}
             entity_list = self.list_available(selected_entities)
             num = len(entity_list)
-        entities = entity_list[int(num*random())]
+        entities = entity_list[int(num * random())]
         self._logger.info("Using randomly selected entities: {}".format(str(entities)))
         selected_entities.update(entities)
         return selected_entities
@@ -980,9 +1020,8 @@ class GroClient(object):
         """
         data_series_list = self.get_data_series(**selected_entities)
         if not data_series_list:
-            raise Exception("No data series available for {}".format(
-                selected_entities))
-        selected_data_series = data_series_list[int(len(data_series_list)*random())]
+            raise Exception("No data series available for {}".format(selected_entities))
+        selected_data_series = data_series_list[int(len(data_series_list) * random())]
         return selected_data_series
 
     # TODO: rename function to "write_..." rather than "print_..."
@@ -990,12 +1029,16 @@ class GroClient(object):
         """Output a data series to a CSV file."""
         self._logger.warning("Using data series: {}".format(str(data_series)))
         self._logger.warning("Outputing to file: {}".format(filename))
-        writer = unicodecsv.writer(open(filename, 'wb'))
+        writer = unicodecsv.writer(open(filename, "wb"))
         for point in self.get_data_points(**data_series):
-            writer.writerow([point['start_date'],
-                             point['end_date'],
-                             point['value'],
-                             self.lookup_unit_abbreviation(point['unit_id'])])
+            writer.writerow(
+                [
+                    point["start_date"],
+                    point["end_date"],
+                    point["value"],
+                    self.lookup_unit_abbreviation(point["unit_id"]),
+                ]
+            )
 
     def convert_unit(self, point, target_unit_id):
         """Convert the data point from one unit to another unit.
@@ -1020,30 +1063,24 @@ class GroClient(object):
             new unit_id. Other properties are unchanged.
 
         """
-        if point.get('unit_id') is None or point.get('unit_id') == target_unit_id:
+        if point.get("unit_id") is None or point.get("unit_id") == target_unit_id:
             return point
-        from_convert_factor = self.lookup(
-            'units', point['unit_id']
-        ).get('baseConvFactor')
-        if not from_convert_factor.get('factor'):
-            raise Exception(
-                'unit_id {} is not convertible'.format(point['unit_id'])
-            )
-        to_convert_factor = self.lookup(
-            'units', target_unit_id
-        ).get('baseConvFactor')
-        if not to_convert_factor.get('factor'):
-            raise Exception(
-                'unit_id {} is not convertible'.format(target_unit_id)
-            )
-        if point.get('value') is not None:
+        from_convert_factor = self.lookup("units", point["unit_id"]).get(
+            "baseConvFactor"
+        )
+        if not from_convert_factor.get("factor"):
+            raise Exception("unit_id {} is not convertible".format(point["unit_id"]))
+        to_convert_factor = self.lookup("units", target_unit_id).get("baseConvFactor")
+        if not to_convert_factor.get("factor"):
+            raise Exception("unit_id {} is not convertible".format(target_unit_id))
+        if point.get("value") is not None:
             value_in_base_unit = (
-                point['value'] * from_convert_factor.get('factor')
-            ) + from_convert_factor.get('offset', 0)
-            point['value'] = float(
-                value_in_base_unit - to_convert_factor.get('offset', 0)
-            ) / to_convert_factor.get('factor')
-        point['unit_id'] = target_unit_id
+                point["value"] * from_convert_factor.get("factor")
+            ) + from_convert_factor.get("offset", 0)
+            point["value"] = float(
+                value_in_base_unit - to_convert_factor.get("offset", 0)
+            ) / to_convert_factor.get("factor")
+        point["unit_id"] = target_unit_id
         return point
 
 
@@ -1067,14 +1104,22 @@ def main():  # pragma: no cover
     parser.add_argument("--metric")
     parser.add_argument("--region")
     parser.add_argument("--partner_region")
-    parser.add_argument("--print_token", action='store_true',
-                        help="Ouput API access token for the given user email and password. "
-                        "Save it in GROAPI_TOKEN environment variable.")
-    parser.add_argument("--token", default=os.environ.get('GROAPI_TOKEN'),
-                        help="Defaults to GROAPI_TOKEN environment variable.")
+    parser.add_argument(
+        "--print_token",
+        action="store_true",
+        help="Ouput API access token for the given user email and password. "
+        "Save it in GROAPI_TOKEN environment variable.",
+    )
+    parser.add_argument(
+        "--token",
+        default=os.environ.get("GROAPI_TOKEN"),
+        help="Defaults to GROAPI_TOKEN environment variable.",
+    )
     args = parser.parse_args()
 
-    assert args.user_email or args.token, "Need --token, or --user_email, or $GROAPI_TOKEN"
+    assert (
+        args.user_email or args.token
+    ), "Need --token, or --user_email, or $GROAPI_TOKEN"
     access_token = None
 
     if args.token:
@@ -1082,18 +1127,30 @@ def main():  # pragma: no cover
     else:
         if not args.user_password:
             args.user_password = getpass.getpass()
-        access_token = lib.get_access_token(API_HOST, args.user_email, args.user_password)
+        access_token = lib.get_access_token(
+            API_HOST, args.user_email, args.user_password
+        )
     if args.print_token:
         print(access_token)
         sys.exit(0)
     client = GroClient(API_HOST, access_token)
 
-    if not args.metric and not args.item and not args.region and not args.partner_region:
+    if (
+        not args.metric
+        and not args.item
+        and not args.region
+        and not args.partner_region
+    ):
         ds = client.pick_random_data_series(client.pick_random_entities())
     else:
-        ds = next(client.find_data_series(
-            item=args.item, metric=args.metric,
-            region=args.region, partner_region=args.partner_region))
+        ds = next(
+            client.find_data_series(
+                item=args.item,
+                metric=args.metric,
+                region=args.region,
+                partner_region=args.partner_region,
+            )
+        )
     client.print_one_data_series(ds, OUTPUT_FILENAME)
 
 
@@ -1117,8 +1174,8 @@ def print_random_data_series(client, selected_entities):  # pragma: no cover
     satisfies the (optional) given selection.
     """
     return client.print_one_data_series(
-        client.pick_random_data_series(selected_entities),
-        OUTPUT_FILENAME)
+        client.pick_random_data_series(selected_entities), OUTPUT_FILENAME
+    )
 
 
 if __name__ == "__main__":  # pragma: no cover
