@@ -14,3 +14,4 @@ omit =
     */*_test.py
     */__*__.py
     api/client/samples/*
+    */mock_data.py
