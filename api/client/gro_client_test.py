@@ -113,7 +113,7 @@ def mock_search(access_token, api_host, entity_type, search_terms):
             if search_terms in entity['name']]
 
 
-def mock_rank_series_by_source(access_token, api_host, selectoions_list):
+def mock_rank_series_by_source(access_token, api_host, selections_list):
     for data_series in mock_data_series:
         yield data_series
 
