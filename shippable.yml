@@ -18,7 +18,6 @@ build:
   ci:
     - shippable_retry pip install .[test]
     # Run doctests
-    - python api/client/utils.py -v
     - python api/client/lib.py -v
     # Create folders for test and code coverage
     - mkdir -p shippable/testresults
