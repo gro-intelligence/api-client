@@ -12,8 +12,10 @@ from datetime import date
 
 from tornado.httpclient import HTTPResponse, HTTPError
 from tornado.concurrent import Future
+from tornado.ioloop import IOLoop
 
 from api.client.batch_client import BatchClient, BatchError
+from api.client.utils import str_camel_to_snake
 
 MOCK_HOST = 'pytest.groclient.url'
 MOCK_TOKEN = 'pytest.groclient.token'
@@ -64,6 +66,7 @@ ERROR_SELECTION = {
     'source_id': 5
 }
 
+
 def mock_rank_series_by_source(access_token, api_host, selections_list):
     for data_series in mock_data_series:
         yield data_series
@@ -71,13 +74,13 @@ def mock_rank_series_by_source(access_token, api_host, selections_list):
 
 def mock_tornado_fetch(request):
     future = Future()
-    error_url = ('https://{}/v2/data?metricId={metric_id}'
-                 '&itemId={item_id}'
-                 '&regionId={region_id}'
-                 '&frequencyId={frequency_id}'
-                 '&sourceId={source_id}'
-                 '&responseType=list_of_series'.format(MOCK_HOST, **ERROR_SELECTION))
-    if request.url == error_url:
+    query_params = {
+        str_camel_to_snake(key): value
+        for key, value in
+        [query_param.split('=')
+         for query_param in request.url.split('?')[1].split('&')]
+    }
+    if int(query_params.get('item_id', 0)) < 0:
         raise HTTPError(400, 'Negative item ids are not allowed', request)
     else:
         response = HTTPResponse(request, 200, buffer=StringIO(json.dumps(mock_list_of_series_points)))
@@ -91,6 +94,9 @@ class GroClientTests(TestCase):
     def setUp(self):
         self.client = BatchClient(MOCK_HOST, MOCK_TOKEN)
         self.assertTrue(isinstance(self.client, BatchClient))
+
+    def tearDown(self):
+        IOLoop.clear_current()
 
     def test_batch_async_get_data_points(self):
         data_points = self.client.batch_async_get_data_points([
@@ -140,6 +146,7 @@ class GroClientTests(TestCase):
         self.assertTrue(isinstance(responses[0], BatchError))
 
     def test_batch_async_get_data_points_map_errors(self):
+
         def raise_exception(idx, query, response, accumulator):
             if isinstance(response, Exception):
                 raise response
@@ -151,19 +158,17 @@ class GroClientTests(TestCase):
                                                     map_result=raise_exception)
 
     def test_get_df(self):
-        client = BatchClient(MOCK_HOST, MOCK_TOKEN)
-        client.add_single_data_series({
+        self.client.add_single_data_series({
             'metric_id': 1,
             'item_id': 2,
             'region_id': 3,
             'frequency_id': 4,
             'source_id': 5
         })
-        df = client.get_df()
+        df = self.client.get_df()
         self.assertEqual(df.iloc[0]['start_date'].date(), date(2017, 1, 1))
         self.assertEqual(df.iloc[0]['end_date'].date(), date(2017, 12, 31))
         self.assertEqual(df.iloc[0]['value'], 40891)
-
 
     def test_batch_async_rank_series_by_source(self):
         list_of_ranked_series_lists = self.client.batch_async_rank_series_by_source(
