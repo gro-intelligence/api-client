@@ -8,16 +8,12 @@ except ImportError:
 import re
 from math import ceil
 
+from api.client.constants import DATA_SERIES_UNIQUE_TYPES_ID
+
 
 @memoize(maxsize=None)
 def str_camel_to_snake(term):
     """Convert a string from camelCase to snake_case.
-
-    >>> str_camel_to_snake('partnerRegionId')
-    'partner_region_id'
-
-    >>> str_camel_to_snake('partner_region_id')
-    'partner_region_id'
 
     Parameters
     ----------
@@ -29,15 +25,14 @@ def str_camel_to_snake(term):
         A new snake_case string
 
     """
-    return re.sub('([a-z0-9])([A-Z])', r'\1_\2', re.sub('(.)([A-Z][a-z]+)', r'\1_\2', term)).lower()
+    return re.sub(
+        "([a-z0-9])([A-Z])", r"\1_\2", re.sub("(.)([A-Z][a-z]+)", r"\1_\2", term)
+    ).lower()
 
 
 @memoize(maxsize=None)
 def str_snake_to_camel(term):
     """Convert a string from snake_case to camelCase.
-
-    >>> str_snake_to_camel('hello_world')
-    'helloWorld'
 
     Parameters
     ----------
@@ -48,18 +43,12 @@ def str_snake_to_camel(term):
     string
 
     """
-    camel = term.split('_')
-    return ''.join(camel[:1] + list([x[0].upper()+x[1:] for x in camel[1:]]))
+    camel = term.split("_")
+    return "".join(camel[:1] + list([x[0].upper() + x[1:] for x in camel[1:]]))
 
 
 def dict_reformat_keys(obj, format_func):
     """Convert a dictionary's keys from one string format to another.
-
-    >>> dict_reformat_keys({'belongsTo': {'metricId': 4}}, str_camel_to_snake)
-    {'belongs_to': {'metricId': 4}}
-
-    >>> dict_reformat_keys({'belongs_to': {'metric_id': 4}}, str_snake_to_camel)
-    {'belongsTo': {'metric_id': 4}}
 
     Parameters
     ----------
@@ -89,29 +78,15 @@ def list_chunk(arr, chunk_size=50):
     -------
     list of lists
 
-    Examples
-    --------
-    >>> list_chunk([1,2,3,4,5,6,7,8], 3)
-    [[1, 2, 3], [4, 5, 6], [7, 8]]
-    >>> list_chunk([1,2,3,4,5,6,7,8,9,10,11], 5)
-    [[1, 2, 3, 4, 5], [6, 7, 8, 9, 10], [11]]
-
     """
-    return [arr[i*chunk_size:(i+1)*chunk_size]
-            for i in range(int(ceil(len(arr)/float(chunk_size))))]
+    return [
+        arr[i * chunk_size : (i + 1) * chunk_size]
+        for i in range(int(ceil(len(arr) / float(chunk_size))))
+    ]
 
 
 def intersect(lhs_list, rhs_list):
     """Return the common elements of two lists
-
-    >>> intersect([1,2,3], [4,5,6])
-    []
-
-    >>> intersect([1,2,3], [4,5,6,2])
-    [2]
-
-    >>> intersect([1,2,3], [1,2,3])
-    [1, 2, 3]
 
     Parameters
     ----------
@@ -129,9 +104,25 @@ def intersect(lhs_list, rhs_list):
     return list(filter(lambda elem: elem in rhs_list, lhs_list))
 
 
-if __name__ == '__main__':
-    # To run doctests:
-    # $ python utils.py -v
-    import doctest
-    doctest.testmod(#raise_on_error=True,  # Set to False for prettier error message
-                    optionflags=doctest.NORMALIZE_WHITESPACE | doctest.ELLIPSIS)
+def zip_selections(entity_ids, **optional_selections):
+    """Take a list of entity_ids and optional named selections and create a "selections" dict
+
+    Parameters
+    ----------
+    entity_ids : list of ints
+        Must be in the order of DATA_SERIES_UNIQUE_TYPES_ID
+    optional_selections : kwargs
+        Additional options to be combined with entity selections. Like `insert_nulls`
+
+    Returns
+    -------
+    dict
+
+    """
+    selection = dict(zip(DATA_SERIES_UNIQUE_TYPES_ID, entity_ids))
+
+    # add optional pararms to selection
+    for key, value in list(optional_selections.items()):
+        if key not in DATA_SERIES_UNIQUE_TYPES_ID:
+            selection[key] = value
+    return selection
