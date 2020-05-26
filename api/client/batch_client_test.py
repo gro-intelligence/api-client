@@ -123,7 +123,7 @@ class GroClientTests(TestCase):
         self.assertEqual(data_points[0][1]['start_date'], '2018-01-01T00:00:00.000Z')
         self.assertEqual(data_points[0][1]['end_date'], '2018-12-31T00:00:00.000Z')
         self.assertEqual(data_points[0][1]['value'], 56789)
-        self.assertEqual(data_points[0][1]['unit_id'], 14)
+        self.assertEqual(data_points[0][1]['unit_id'], 10)
         self.assertEqual(data_points[0][1]['reporting_date'], '2019-03-14T00:00:00.000Z')
 
     def test_batch_async_get_data_points_map_function(self):
