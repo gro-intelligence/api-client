@@ -177,7 +177,6 @@ def mock_get_data_points(access_token, api_host, **selections):
 class GroClientTests(TestCase):
     def setUp(self):
         self.client = GroClient(MOCK_HOST, MOCK_TOKEN)
-        self.client._async_http_client = None  # Force tests to use synchronous http
         self.assertTrue(isinstance(self.client, GroClient))
 
     def test_get_logger(self):
