@@ -58,7 +58,7 @@ def mock_tornado_fetch(request):
     "tornado.httpclient.AsyncHTTPClient.fetch",
     MagicMock(side_effect=mock_tornado_fetch),
 )
-class GroClientTests(TestCase):
+class BatchClientTests(TestCase):
     def setUp(self):
         self.client = BatchClient(MOCK_HOST, MOCK_TOKEN)
         self.assertTrue(isinstance(self.client, BatchClient))
