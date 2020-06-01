@@ -122,8 +122,10 @@ class BatchClient(GroClient):
                     if retry_count > 0:
                         time.sleep(2 ** retry_count)
                     continue
-                elif status_code in [400, 401, 402, 404]:
+                elif status_code in [400, 401, 402, 404, 502]:
                     break  # Do not retry. Go right to raising an Exception.
+                # Exception with status code not mentioned above => go to raising BatchError 
+                break
 
             # Request was successful
             log_request(start_time, retry_count, 'OK', status_code)
