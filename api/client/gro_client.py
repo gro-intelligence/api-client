@@ -766,7 +766,8 @@ class GroClient(object):
         series_hash = frozenset(data_series.items())
         if series_hash not in self._data_series_list:
             self._data_series_list.add(series_hash)
-            self._data_series_queue.append(data_series)
+            # Add a copy of the data series, in case the original is modified
+            self._data_series_queue.append(dict(data_series))
             self._logger.info("Added {}".format(data_series))
         else:
             self._logger.debug("Already added: {}".format(data_series))
