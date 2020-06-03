@@ -145,11 +145,15 @@ def mock_get_top(access_token, api_host, entity_type, num_results, **selection):
 def mock_get_data_points(access_token, api_host, **selections):
     if isinstance(selections["region_id"], int):
         data_point = dict(mock_data_points[0])
+        # set the data_point to use the selected region
+        # other ids in mocked data points may not line up with selected ids
         data_point["region_id"] = selections["region_id"]
         return [data_point]
     elif isinstance(selections["region_id"], list):
         data_points = []
         for idx, region_id in enumerate(selections["region_id"]):
+            # use mock_data_points[0] or mock_data_points[1] as a base depending if
+            # index is even or odd
             data_point = dict(mock_data_points[idx % 2])
             data_point["region_id"] = region_id
             data_points.append(data_point)
@@ -311,15 +315,16 @@ class GroClientTests(TestCase):
         self.assertEqual(len(df), 0)
 
     def test_add_single_data_series(self):
-        selections = dict(mock_data_series[0])
+        selections = dict(mock_data_series[0])  # don't modify test data. Make a copy
         for region_id in [
             mock_data_series[0]["region_id"],
             mock_data_series[1]["region_id"],
         ]:
+            # modify the original selections object
             selections["region_id"] = region_id
+            # if add_single_data_series isn't making a copy of the selections passed in,
+            # then this test should fail since the original reference has been modified.
             self.client.add_single_data_series(selections)
-        print(self.client.get_data_series_list())
-        print("QUEUE", self.client._data_series_queue)
         self.assertEqual(
             len(self.client.get_df().drop_duplicates().region_id.unique()), 2
         )
