@@ -7,6 +7,7 @@ import getpass
 import itertools
 import os
 import sys
+import json
 
 from api.client import cfg, lib
 from api.client.constants import DATA_SERIES_UNIQUE_TYPES_ID, ENTITY_KEY_TO_TYPE
@@ -535,6 +536,12 @@ class GroClient(object):
         data_points : list of dicts
 
         """
+
+        for point in data_points:
+            for key, value in point.items():
+                if isinstance(value, dict):
+                    point[key] = json.dumps(value)
+
         tmp = pandas.DataFrame(data=data_points)
         if tmp.empty:
             return
