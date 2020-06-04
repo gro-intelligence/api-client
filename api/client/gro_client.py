@@ -11,7 +11,7 @@ import json
 
 from api.client import cfg, lib
 from api.client.constants import DATA_SERIES_UNIQUE_TYPES_ID, ENTITY_KEY_TO_TYPE
-from api.client.utils import intersect, zip_selections
+from api.client.utils import intersect, zip_selections, dict_unnest
 
 import pandas
 import unicodecsv
@@ -537,12 +537,7 @@ class GroClient(object):
 
         """
 
-        for point in data_points:
-            for key, value in point.items():
-                if isinstance(value, dict):
-                    point[key] = json.dumps(value)
-
-        tmp = pandas.DataFrame(data=data_points)
+        tmp = pandas.DataFrame(data=[dict_unnest(point) for point in data_points])
         if tmp.empty:
             return
         # get_data_points response doesn't include the
