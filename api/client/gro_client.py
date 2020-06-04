@@ -7,7 +7,6 @@ import getpass
 import itertools
 import os
 import sys
-import json
 
 from api.client import cfg, lib
 from api.client.constants import DATA_SERIES_UNIQUE_TYPES_ID, ENTITY_KEY_TO_TYPE
