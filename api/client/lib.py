@@ -345,10 +345,10 @@ def get_data_call_params(**selection):
     """
     params = get_params_from_selection(**selection)
     for key, value in list(selection.items()):
+        if key == 'show_metadata':
+            params[str_snake_to_camel('show_meta_data')] = value
         if key in ('start_date', 'end_date', 'show_revisions', 'insert_null', 'at_time'):
             params[str_snake_to_camel(key)] = value
-        elif key == 'show_metadata':
-            params['show_meta_data'] = value
     params['responseType'] = 'list_of_series'
     return params
 
