@@ -209,7 +209,7 @@
 
 <span class="kn">from</span> <span class="nn">api.client</span> <span class="kn">import</span> <span class="n">cfg</span><span class="p">,</span> <span class="n">lib</span>
 <span class="kn">from</span> <span class="nn">api.client.constants</span> <span class="kn">import</span> <span class="n">DATA_SERIES_UNIQUE_TYPES_ID</span><span class="p">,</span> <span class="n">ENTITY_KEY_TO_TYPE</span>
-<span class="kn">from</span> <span class="nn">api.client.utils</span> <span class="kn">import</span> <span class="n">intersect</span><span class="p">,</span> <span class="n">zip_selections</span>
+<span class="kn">from</span> <span class="nn">api.client.utils</span> <span class="kn">import</span> <span class="n">intersect</span><span class="p">,</span> <span class="n">zip_selections</span><span class="p">,</span> <span class="n">dict_unnest</span>
 
 <span class="kn">import</span> <span class="nn">pandas</span>
 <span class="kn">import</span> <span class="nn">unicodecsv</span>
@@ -734,7 +734,8 @@
 <span class="sd">        data_points : list of dicts</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">tmp</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">data_points</span><span class="p">)</span>
+
+        <span class="n">tmp</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="p">[</span><span class="n">dict_unnest</span><span class="p">(</span><span class="n">point</span><span class="p">)</span> <span class="k">for</span> <span class="n">point</span> <span class="ow">in</span> <span class="n">data_points</span><span class="p">])</span>
         <span class="k">if</span> <span class="n">tmp</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
             <span class="k">return</span>
         <span class="c1"># get_data_points response doesn&#39;t include the</span>
@@ -958,7 +959,8 @@
         <span class="n">series_hash</span> <span class="o">=</span> <span class="nb">frozenset</span><span class="p">(</span><span class="n">data_series</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
         <span class="k">if</span> <span class="n">series_hash</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_series_list</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_data_series_list</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">series_hash</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_data_series_queue</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">data_series</span><span class="p">)</span>
+            <span class="c1"># Add a copy of the data series, in case the original is modified</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_data_series_queue</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="n">data_series</span><span class="p">))</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Added </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">data_series</span><span class="p">))</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Already added: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">data_series</span><span class="p">))</span>
@@ -1446,7 +1448,6 @@
             <dd><a href="../../../../CLEWS-27163/index.html">CLEWS-27163</a></dd>
             <dd><a href="../../../../CLEWS-27625-fixtures/index.html">CLEWS-27625-fixtures</a></dd>
             <dd><a href="../../../../CLEWS-4539/index.html">CLEWS-4539</a></dd>
-            <dd><a href="../../../../add-single-data-series-reference/index.html">add-single-data-series-reference</a></dd>
             <dd><a href="../../../../analogous_years_modifications/index.html">analogous_years_modifications</a></dd>
             <dd><a href="../../../../black/index.html">black</a></dd>
             <dd><a href="../../../../brazil_soybeans_update/index.html">brazil_soybeans_update</a></dd>
