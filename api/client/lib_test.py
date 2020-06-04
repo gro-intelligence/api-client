@@ -144,6 +144,7 @@ def test_get_data_points(mock_requests_get):
         'reporting_date': None,
         'metric_id': None,
         'item_id': None,
+        'metadata': {},
         'region_id': None,
         'partner_region_id': 0,
         'frequency_id': None,
@@ -157,6 +158,93 @@ def test_get_data_points(mock_requests_get):
                       'frequency_id': 101112, 'source_id': 131415, 'partner_region_id': 161718}
 
     assert lib.get_data_points(MOCK_TOKEN, MOCK_HOST, **selection_dict) == single_series_format_data
+
+
+def test_list_of_series_to_single_series():
+    assert lib.list_of_series_to_single_series([{
+        'series': {
+            'metricId': 1,
+            'itemId': 2,
+            'regionId': 3,
+            'unitId': 4,
+            'inputUnitId': 5,
+            'belongsTo': {'itemId': 22},
+            'metadata': {'includesHistoricalRegion': True}
+        },
+        'data': [
+            ['2001-01-01', '2001-12-31', 123],
+            ['2002-01-01', '2002-12-31', 123, '2012-01-01'],
+            ['2003-01-01', '2003-12-31', 123, None, 15, {'confInterval': 2}]
+        ]
+    }], add_belongs_to=True) == [
+        {'start_date': '2001-01-01',
+         'end_date': '2001-12-31',
+         'value': 123,
+         'unit_id': 4,
+         'metadata': {},
+         'input_unit_id': 4,
+         'input_unit_scale': 1,
+         'reporting_date': None,
+         'metric_id': 1,
+         'item_id': 2,
+         'region_id': 3,
+         'partner_region_id': 0,
+         'frequency_id': None,
+         'belongs_to': {'item_id': 22}},
+        {'start_date': '2002-01-01',
+         'end_date': '2002-12-31',
+         'value': 123,
+         'unit_id': 4,
+         'metadata': {},
+         'input_unit_id': 4,
+         'input_unit_scale': 1,
+         'reporting_date': '2012-01-01',
+         'metric_id': 1,
+         'item_id': 2,
+         'region_id': 3,
+         'partner_region_id': 0,
+         'frequency_id': None,
+         'belongs_to': {'item_id': 22}},
+        {'start_date': '2003-01-01',
+         'end_date': '2003-12-31',
+         'value': 123,
+         'unit_id': 15,
+         'metadata': {'confInterval': 2},
+         'input_unit_id': 15,
+         'input_unit_scale': 1,
+         'reporting_date': None,
+         'metric_id': 1,
+         'item_id': 2,
+         'region_id': 3,
+         'partner_region_id': 0,
+         'frequency_id': None,
+         'belongs_to': {'item_id': 22}},
+    ]
+
+    # test the add_belongs_to kwarg:
+    assert 'belongs_to' in lib.list_of_series_to_single_series([{
+        'series': {'unitId': 4, 'belongsTo': {'itemId': 22}},
+        'data': [['2001-01-01', '2001-12-31', 123]]
+    }], add_belongs_to=True)[0]
+
+    assert 'belongs_to' not in lib.list_of_series_to_single_series([{
+        'series': {'unitId': 4, 'belongsTo': {'itemId': 22}},
+        'data': [['2001-01-01', '2001-12-31', 123]]
+    }], add_belongs_to=False)[0]
+
+    # test the include_historical kwarg:
+    assert len(lib.list_of_series_to_single_series([{
+        'series': {'unitId': 4, 'belongsTo': {'itemId': 22}, 'metadata': {'includesHistoricalRegion': True}},
+        'data': [['2001-01-01', '2001-12-31', 123]]
+    }], include_historical=False)) == 0
+
+    assert len(lib.list_of_series_to_single_series([{
+        'series': {'unitId': 4, 'belongsTo': {'itemId': 22}, 'metadata': {'includesHistoricalRegion': True}},
+        'data': [['2001-01-01', '2001-12-31', 123]]
+    }], include_historical=True)) == 1
+
+    # test invalid input propagation
+    assert lib.list_of_series_to_single_series('test input') == 'test input'
 
 
 @mock.patch('requests.get')
