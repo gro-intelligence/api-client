@@ -447,6 +447,7 @@ def list_of_series_to_single_series(series_list, add_belongs_to=False, include_h
     ...     'end_date': '2001-12-31',
     ...     'value': 123,
     ...     'unit_id': 4,
+    ...     'metadata': {},
     ...     'input_unit_id': 4,
     ...     'input_unit_scale': 1,
     ...     'reporting_date': None,
@@ -460,6 +461,7 @@ def list_of_series_to_single_series(series_list, add_belongs_to=False, include_h
     ...     'end_date': '2002-12-31',
     ...     'value': 123,
     ...     'unit_id': 4,
+    ...     'metadata': {},
     ...     'input_unit_id': 4,
     ...     'input_unit_scale': 1,
     ...     'reporting_date': '2012-01-01',
@@ -473,6 +475,7 @@ def list_of_series_to_single_series(series_list, add_belongs_to=False, include_h
     ...     'end_date': '2003-12-31',
     ...     'value': 123,
     ...     'unit_id': 15,
+    ...     'metadata': {},
     ...     'input_unit_id': 15,
     ...     'input_unit_scale': 1,
     ...     'reporting_date': None,
@@ -481,7 +484,7 @@ def list_of_series_to_single_series(series_list, add_belongs_to=False, include_h
     ...     'region_id': 3,
     ...     'partner_region_id': 0,
     ...     'frequency_id': None,
-    ...     'belongs_to': { 'item_id': 22 } }
+    ...     'belongs_to': { 'item_id': 22 } },
     ... ]
     True
 
