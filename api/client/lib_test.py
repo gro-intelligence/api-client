@@ -144,6 +144,7 @@ def test_get_data_points(mock_requests_get):
         'reporting_date': None,
         'metric_id': None,
         'item_id': None,
+        'metadata': {},
         'region_id': None,
         'partner_region_id': 0,
         'frequency_id': None,
