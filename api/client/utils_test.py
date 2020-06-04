@@ -4,6 +4,7 @@ from api.client.utils import (
     str_camel_to_snake,
     str_snake_to_camel,
     dict_reformat_keys,
+    dict_unnest,
     list_chunk,
     intersect,
     zip_selections,
@@ -28,6 +29,29 @@ class UtilsTests(TestCase):
         self.assertEqual(
             dict_reformat_keys({"belongs_to": {"metric_id": 4}}, str_snake_to_camel),
             {"belongsTo": {"metric_id": 4}},
+        )
+
+    def test_dict_unnest(self):
+        self.assertEqual(
+            dict_unnest({"metric_id": 14, "belongs_to": {"metric_id": 14}}),
+            {"metric_id": 14, "belongs_to_metric_id": 14},
+        )
+
+        self.assertEqual(
+            dict_unnest(
+                {
+                    "metric_id": 14,
+                    "belongs_to": {
+                        "metric_id": 14,
+                        "metadata": {"includes_historical": True},
+                    },
+                }
+            ),
+            {
+                "metric_id": 14,
+                "belongs_to_metric_id": 14,
+                "belongs_to_metadata_includes_historical": True,
+            },
         )
 
     def test_list_chunk(self):
