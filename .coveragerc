@@ -1,0 +1,17 @@
+[paths]
+source =
+   api
+
+[run]
+branch = true
+source = api
+parallel = true
+
+[report]
+show_missing = true
+precision = 2
+omit =
+    */*_test.py
+    */__*__.py
+    api/client/samples/*
+    */mock_data.py
