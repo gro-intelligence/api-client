@@ -20,7 +20,7 @@ except ImportError:
 
 from api.client import cfg, lib
 from api.client.constants import DATA_SERIES_UNIQUE_TYPES_ID, ENTITY_KEY_TO_TYPE
-from api.client.utils import intersect, zip_selections
+from api.client.utils import intersect, zip_selections, dict_unnest
 from api.client.lib import APIError
 
 import pandas
@@ -885,7 +885,8 @@ class GroClient(object):
         data_points : list of dicts
 
         """
-        tmp = pandas.DataFrame(data=data_points)
+
+        tmp = pandas.DataFrame(data=[dict_unnest(point) for point in data_points])
         if tmp.empty:
             return
         # get_data_points response doesn't include the
@@ -1109,7 +1110,8 @@ class GroClient(object):
         series_hash = frozenset(data_series.items())
         if series_hash not in self._data_series_list:
             self._data_series_list.add(series_hash)
-            self._data_series_queue.append(data_series)
+            # Add a copy of the data series, in case the original is modified
+            self._data_series_queue.append(dict(data_series))
             self._logger.info("Added {}".format(data_series))
         else:
             self._logger.debug("Already added: {}".format(data_series))

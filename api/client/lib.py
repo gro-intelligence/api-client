@@ -334,6 +334,7 @@ def get_data_call_params(**selection):
     end_date : string, optional
     show_revisions : boolean, optional
     insert_null : boolean, optional
+    show_metadata : boolean, optional
     at_time : string, optional
 
     Returns
@@ -344,6 +345,8 @@ def get_data_call_params(**selection):
     """
     params = get_params_from_selection(**selection)
     for key, value in list(selection.items()):
+        if key == 'show_metadata':
+            params[str_snake_to_camel('show_meta_data')] = value
         if key in ('start_date', 'end_date', 'show_revisions', 'insert_null', 'at_time'):
             params[str_snake_to_camel(key)] = value
     params['responseType'] = 'list_of_series'
@@ -428,61 +431,7 @@ def get_available_timefrequency(access_token, api_host, **series):
 
 
 def list_of_series_to_single_series(series_list, add_belongs_to=False, include_historical=True):
-    """Convert list_of_series format from API back into the familiar single_series output format.
-
-    >>> list_of_series_to_single_series([{
-    ...     'series': { 'metricId': 1, 'itemId': 2, 'regionId': 3, 'unitId': 4, 'inputUnitId': 5,
-    ...                 'belongsTo': { 'itemId': 22 }
-    ...     },
-    ...     'data': [
-    ...         ['2001-01-01', '2001-12-31', 123],
-    ...         ['2002-01-01', '2002-12-31', 123, '2012-01-01'],
-    ...         ['2003-01-01', '2003-12-31', 123, None, 15, {}]
-    ...     ]
-    ... }], True) == [
-    ...   { 'start_date': '2001-01-01',
-    ...     'end_date': '2001-12-31',
-    ...     'value': 123,
-    ...     'unit_id': 4,
-    ...     'input_unit_id': 4,
-    ...     'input_unit_scale': 1,
-    ...     'reporting_date': None,
-    ...     'metric_id': 1,
-    ...     'item_id': 2,
-    ...     'region_id': 3,
-    ...     'partner_region_id': 0,
-    ...     'frequency_id': None,
-    ...     'belongs_to': { 'item_id': 22 } },
-    ...   { 'start_date': '2002-01-01',
-    ...     'end_date': '2002-12-31',
-    ...     'value': 123,
-    ...     'unit_id': 4,
-    ...     'input_unit_id': 4,
-    ...     'input_unit_scale': 1,
-    ...     'reporting_date': '2012-01-01',
-    ...     'metric_id': 1,
-    ...     'item_id': 2,
-    ...     'region_id': 3,
-    ...     'partner_region_id': 0,
-    ...     'frequency_id': None,
-    ...     'belongs_to': { 'item_id': 22 } },
-    ...   { 'start_date': '2003-01-01',
-    ...     'end_date': '2003-12-31',
-    ...     'value': 123,
-    ...     'unit_id': 15,
-    ...     'input_unit_id': 15,
-    ...     'input_unit_scale': 1,
-    ...     'reporting_date': None,
-    ...     'metric_id': 1,
-    ...     'item_id': 2,
-    ...     'region_id': 3,
-    ...     'partner_region_id': 0,
-    ...     'frequency_id': None,
-    ...     'belongs_to': { 'item_id': 22 } }
-    ... ]
-    True
-
-    """
+    """Convert list_of_series format from API back into the familiar single_series output format."""
     if not isinstance(series_list, list):
         # If the output is an error or None or something else that's not a list, just propagate
         return series_list
@@ -506,6 +455,7 @@ def list_of_series_to_single_series(series_list, add_belongs_to=False, include_h
                 'end_date': point[1],
                 'value': point[2],
                 'unit_id': point[4] if len(point) > 4 else series['series'].get('unitId', None),
+                'metadata': point[5] if len(point) > 5 else {},
                 # input_unit_id and input_unit_scale are deprecated but provided for backwards
                 # compatibility. unit_id should be used instead.
                 'input_unit_id': point[4] if len(point) > 4 else series['series'].get('unitId', None),
