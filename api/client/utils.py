@@ -66,6 +66,33 @@ def dict_reformat_keys(obj, format_func):
     return {format_func(key): value for key, value in obj.items()}
 
 
+def dict_unnest(obj):
+    """Flatten a dictionary containing other dictionaries by concatenating their keys.
+
+    Parameters
+    ----------
+    obj : dict
+        A dictionary, which may or may not contain other dictionaries
+
+    Returns
+    -------
+    dict
+        A new dictionary, which has been reformatted
+
+    """
+    flat_obj = {}
+    for key, value in obj.items():
+        if isinstance(value, dict):
+            for sub_key, sub_value in dict_unnest(value).items():
+                flat_obj["{}_{}".format(key, sub_key)] = sub_value
+        elif isinstance(value, list):
+            for idx, sub_value in enumerate(value):
+                flat_obj["{}_{}".format(key, idx)] = sub_value
+        else:
+            flat_obj[key] = value
+    return flat_obj
+
+
 def list_chunk(arr, chunk_size=50):
     """Chunk an array into chunks of a given max length.
 

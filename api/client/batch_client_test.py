@@ -16,75 +16,14 @@ from tornado.ioloop import IOLoop
 
 from api.client.batch_client import BatchClient, BatchError
 from api.client.utils import str_camel_to_snake
+from api.client.mock_data import (
+    mock_list_of_series_points,
+    mock_data_series,
+    mock_error_selection,
+)
 
 MOCK_HOST = "pytest.groclient.url"
 MOCK_TOKEN = "pytest.groclient.token"
-
-mock_list_of_series_points = [
-    {
-        "series": {
-            "metricId": 860032,
-            "itemId": 274,
-            "regionId": 1215,
-            "partnerRegionId": 0,
-            "frequencyId": 9,
-            "sourceId": 2,
-            "unitId": 14,
-            "belongsTo": {
-                "metricId": 860032,
-                "itemId": 274,
-                "regionId": 1215,
-                "frequencyId": 9,
-                "sourceId": 2,
-            },
-        },
-        "data": [
-            [
-                "2017-01-01T00:00:00.000Z",
-                "2017-12-31T00:00:00.000Z",
-                40891,
-                None,
-                14,
-                {},
-            ],
-            [
-                "2018-01-01T00:00:00.000Z",
-                "2018-12-31T00:00:00.000Z",
-                56789,
-                "2019-03-14T00:00:00.000Z",
-                10,
-                {},
-            ],
-        ],
-    }
-]
-
-mock_data_series = [
-    {
-        "metric_id": 860032,  # TODO: add names
-        "item_id": 274,
-        "region_id": 1215,
-        "partner_region_id": 0,
-        "frequency_id": 9,
-        "source_id": 2,
-    },
-    {
-        "metric_id": 860032,  # TODO: add names
-        "item_id": 274,
-        "region_id": 1216,
-        "partner_region_id": 0,
-        "frequency_id": 9,
-        "source_id": 2,
-    },
-]
-
-ERROR_SELECTION = {
-    "metric_id": 1,
-    "item_id": -15,
-    "region_id": 3,
-    "frequency_id": 4,
-    "source_id": 5,
-}
 
 
 def mock_rank_series_by_source(access_token, api_host, selections_list):
@@ -183,7 +122,7 @@ class BatchClientTests(TestCase):
         self.assertEqual(summation, 97680)
 
     def test_batch_async_get_data_points_bad_request_error(self):
-        responses = self.client.batch_async_get_data_points([ERROR_SELECTION])
+        responses = self.client.batch_async_get_data_points([mock_error_selection])
         self.assertTrue(isinstance(responses[0], BatchError))
 
     def test_batch_async_get_data_points_map_errors(self):
@@ -195,7 +134,7 @@ class BatchClientTests(TestCase):
 
         with self.assertRaises(Exception):
             self.client.batch_async_get_data_points(
-                [ERROR_SELECTION], map_result=raise_exception
+                [mock_error_selection], map_result=raise_exception
             )
 
     def test_get_df(self):
