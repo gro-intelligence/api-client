@@ -77,6 +77,7 @@ class GroClient(object):
         self._data_frame = pandas.DataFrame()
         try:
             self._async_http_client = AsyncHTTPClient()
+            self.ioloop = IOLoop()
         except:
             self._async_http_client = None
 
@@ -248,8 +249,8 @@ class GroClient(object):
                 except Exception:
                     # Cease processing
                     # IOLoop raises "Operation timed out after None seconds"
-                    IOLoop.current().stop()
-                    IOLoop.current().close()
+                    self.ioloop.stop()
+                    self.ioloop.close()
 
         def producer():
             """Immediately enqueue the whole batch of requests."""
@@ -263,11 +264,11 @@ class GroClient(object):
         def main():
             # Start consumer without waiting (since it never finishes).
             for i in range(cfg.MAX_QUERIES_PER_SECOND):
-                IOLoop.current().spawn_callback(consumer)
+                self.ioloop.spawn_callback(consumer)
             producer()  # Wait for producer to put all tasks.
             yield q.join()  # Wait for consumer to finish all tasks.
 
-        IOLoop.current().run_sync(main)
+        self.ioloop.run_sync(main)
         return output_data["result"]
 
     # TODO: deprecate  the following  two methods, standardize  on one
