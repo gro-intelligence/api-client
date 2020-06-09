@@ -537,11 +537,13 @@ def lookup_belongs(access_token, api_host, entity_type, entity_id):
         yield parent_details[str(parent_id)]
 
 
-def get_geo_centre(access_token, api_host, region_id):
-    url = '/'.join(['https:', '', api_host, 'v2/geocentres?regionIds=' +
-                    str(region_id)])
+def get_geo_centre(access_token, api_host, region_id, include_geojson, zoom_level):
+    url = '/'.join(['https:', '', api_host, 'v2/geocentres'])
     headers = {'authorization': 'Bearer ' + access_token}
-    resp = get_data(url, headers)
+    params = {'regionIds': region_id, 'includeGeojson': include_geojson}
+    if include_geojson and zoom_level:
+        params['zoom'] = zoom_level
+    resp = get_data(url, headers, params)
     return resp.json()['data']
 
 
