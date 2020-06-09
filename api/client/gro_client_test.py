@@ -54,10 +54,16 @@ def mock_rank_series_by_source(access_token, api_host, selections_list):
         yield data_series
 
 
-def mock_get_geo_centre(access_token, api_host, region_id):
-    return [
-        {"centre": [45.7228, -112.996], "regionId": 1215, "regionName": "United States"}
-    ]
+def mock_get_geo_centre(access_token, api_host, region_id, include_geojson, zoom_level):
+    if include_geojson:
+        return [
+            {"centre": [45.7228, -112.996], "regionId": 1215, "regionName": "United States",
+             "geojson": '{"type":"GeometryCollection","geometries":[{"type":"MultiPolygon","coordinates":[[[[-155.651382446,20.1647224430001]]]]}]}'}
+        ]
+    else:
+        return [
+            {"centre": [45.7228, -112.996], "regionId": 1215, "regionName": "United States"}
+        ]
 
 
 def mock_get_geojson(access_token, api_host, region_id):
@@ -236,6 +242,12 @@ class GroClientTests(TestCase):
         self.assertTrue(len(centre) == 1)
         self.assertTrue("centre" in centre[0])
         self.assertTrue("regionName" in centre[0])
+        self.assertTrue("geojson" not in centre[0])
+        centre = self.client.get_geo_centre(1215, True)
+        self.assertTrue(len(centre) == 1)
+        self.assertTrue("centre" in centre[0])
+        self.assertTrue("regionName" in centre[0])
+        self.assertTrue("geojson" in centre[0])
 
     def test_get_geojson(self):
         geojson = self.client.get_geojson(1215)
