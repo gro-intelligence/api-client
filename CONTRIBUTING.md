@@ -1,4 +1,4 @@
-# Gro API Client Contributor's Guide
+# Contributor's Guide
 
 ## Install the client library in editable mode
 
