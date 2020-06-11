@@ -6,6 +6,7 @@ numpy
 pandas
 python-dateutil
 pytz
+tornado
 requests
 unicodecsv
 urllib3
