@@ -77,9 +77,11 @@ class GroClient(object):
         self._data_frame = pandas.DataFrame()
         try:
             self._async_http_client = AsyncHTTPClient()
-            self.ioloop = IOLoop()
-        except:
+            self._ioloop = IOLoop()
+        except Exception as e:
+            self._logger.warn('Unable to initialize an event loop. Async methods disabled.')
             self._async_http_client = None
+            self._ioloop = None
 
     def get_logger(self):
         return self._logger
@@ -249,8 +251,8 @@ class GroClient(object):
                 except Exception:
                     # Cease processing
                     # IOLoop raises "Operation timed out after None seconds"
-                    self.ioloop.stop()
-                    self.ioloop.close()
+                    self._ioloop.stop()
+                    self._ioloop.close()
 
         def producer():
             """Immediately enqueue the whole batch of requests."""
@@ -264,11 +266,11 @@ class GroClient(object):
         def main():
             # Start consumer without waiting (since it never finishes).
             for i in range(cfg.MAX_QUERIES_PER_SECOND):
-                self.ioloop.spawn_callback(consumer)
+                self._ioloop.spawn_callback(consumer)
             producer()  # Wait for producer to put all tasks.
             yield q.join()  # Wait for consumer to finish all tasks.
 
-        self.ioloop.run_sync(main)
+        self._ioloop.run_sync(main)
         return output_data["result"]
 
     # TODO: deprecate  the following  two methods, standardize  on one
@@ -854,26 +856,27 @@ class GroClient(object):
             If index_by_series is set, the dataframe is indexed by series.
             See https://developers.gro-intelligence.com/data-series-definition.html
         """
-        if self._async_http_client is not None:
-            self.batch_async_get_data_points(
-                self._data_series_queue,
-                output_list=self._data_frame,
-                map_result=self.add_points_to_df,
+        while self._data_series_queue:
+            data_series = self._data_series_queue.pop()
+            if show_revisions:
+                data_series["show_revisions"] = True
+            self.add_points_to_df(
+                None, data_series, self.get_data_points(**data_series)
             )
-        else:
-            while self._data_series_queue:
-                data_series = self._data_series_queue.pop()
-                if show_revisions:
-                    data_series["show_revisions"] = True
-                self.add_points_to_df(
-                    None, data_series, self.get_data_points(**data_series)
-                )
         if index_by_series:
             indexed_df = self._data_frame.set_index(
                 intersect(DATA_SERIES_UNIQUE_TYPES_ID, self._data_frame.columns)
             )
             indexed_df.index.set_names(DATA_SERIES_UNIQUE_TYPES_ID, inplace=True)
             return indexed_df.sort_index()
+        return self._data_frame
+
+    def async_get_df(self):
+        self.batch_async_get_data_points(
+            self._data_series_queue,
+            output_list=self._data_frame,
+            map_result=self.add_points_to_df,
+        )
         return self._data_frame
 
     def add_points_to_df(self, index, data_series, data_points, *args):
