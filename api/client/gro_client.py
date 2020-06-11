@@ -79,7 +79,9 @@ class GroClient(object):
             self._async_http_client = AsyncHTTPClient()
             self._ioloop = IOLoop()
         except Exception as e:
-            self._logger.warn('Unable to initialize an event loop. Async methods disabled.')
+            self._logger.warn(
+                "Unable to initialize an event loop. Async methods disabled."
+            )
             self._async_http_client = None
             self._ioloop = None
 
@@ -863,12 +865,12 @@ class GroClient(object):
             self.add_points_to_df(
                 None, data_series, self.get_data_points(**data_series)
             )
-        if index_by_series:
-            indexed_df = self._data_frame.set_index(
-                intersect(DATA_SERIES_UNIQUE_TYPES_ID, self._data_frame.columns)
-            )
-            indexed_df.index.set_names(DATA_SERIES_UNIQUE_TYPES_ID, inplace=True)
-            return indexed_df.sort_index()
+        if index_by_series and not self._data_frame.empty:
+            columns = intersect(DATA_SERIES_UNIQUE_TYPES_ID, self._data_frame.columns)
+            if len(columns) > 0:
+                indexed_df = self._data_frame.set_index(columns)
+                indexed_df.index.set_names(DATA_SERIES_UNIQUE_TYPES_ID, inplace=True)
+                return indexed_df.sort_index()
         return self._data_frame
 
     def async_get_df(self):
