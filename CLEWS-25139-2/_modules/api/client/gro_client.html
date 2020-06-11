@@ -279,9 +279,11 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_data_frame</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_async_http_client</span> <span class="o">=</span> <span class="n">AsyncHTTPClient</span><span class="p">()</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">ioloop</span> <span class="o">=</span> <span class="n">IOLoop</span><span class="p">()</span>
-        <span class="k">except</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_ioloop</span> <span class="o">=</span> <span class="n">IOLoop</span><span class="p">()</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s1">&#39;Unable to initialize an event loop. Async methods disabled.&#39;</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_async_http_client</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_ioloop</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="k">def</span> <span class="nf">get_logger</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span>
@@ -451,8 +453,8 @@
                 <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
                     <span class="c1"># Cease processing</span>
                     <span class="c1"># IOLoop raises &quot;Operation timed out after None seconds&quot;</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">ioloop</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">ioloop</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_ioloop</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_ioloop</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
         <span class="k">def</span> <span class="nf">producer</span><span class="p">():</span>
             <span class="sd">&quot;&quot;&quot;Immediately enqueue the whole batch of requests.&quot;&quot;&quot;</span>
@@ -466,11 +468,11 @@
         <span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
             <span class="c1"># Start consumer without waiting (since it never finishes).</span>
             <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">MAX_QUERIES_PER_SECOND</span><span class="p">):</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">ioloop</span><span class="o">.</span><span class="n">spawn_callback</span><span class="p">(</span><span class="n">consumer</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_ioloop</span><span class="o">.</span><span class="n">spawn_callback</span><span class="p">(</span><span class="n">consumer</span><span class="p">)</span>
             <span class="n">producer</span><span class="p">()</span>  <span class="c1"># Wait for producer to put all tasks.</span>
             <span class="k">yield</span> <span class="n">q</span><span class="o">.</span><span class="n">join</span><span class="p">()</span>  <span class="c1"># Wait for consumer to finish all tasks.</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">ioloop</span><span class="o">.</span><span class="n">run_sync</span><span class="p">(</span><span class="n">main</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ioloop</span><span class="o">.</span><span class="n">run_sync</span><span class="p">(</span><span class="n">main</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">output_data</span><span class="p">[</span><span class="s2">&quot;result&quot;</span><span class="p">]</span>
 
     <span class="c1"># TODO: deprecate  the following  two methods, standardize  on one</span>
@@ -1056,20 +1058,13 @@
 <span class="sd">            If index_by_series is set, the dataframe is indexed by series.</span>
 <span class="sd">            See https://developers.gro-intelligence.com/data-series-definition.html</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_async_http_client</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">batch_async_get_data_points</span><span class="p">(</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_data_series_queue</span><span class="p">,</span>
-                <span class="n">output_list</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_data_frame</span><span class="p">,</span>
-                <span class="n">map_result</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">add_points_to_df</span><span class="p">,</span>
+        <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_series_queue</span><span class="p">:</span>
+            <span class="n">data_series</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_series_queue</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">show_revisions</span><span class="p">:</span>
+                <span class="n">data_series</span><span class="p">[</span><span class="s2">&quot;show_revisions&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_points_to_df</span><span class="p">(</span>
+                <span class="kc">None</span><span class="p">,</span> <span class="n">data_series</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_data_points</span><span class="p">(</span><span class="o">**</span><span class="n">data_series</span><span class="p">)</span>
             <span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_series_queue</span><span class="p">:</span>
-                <span class="n">data_series</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_series_queue</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
-                <span class="k">if</span> <span class="n">show_revisions</span><span class="p">:</span>
-                    <span class="n">data_series</span><span class="p">[</span><span class="s2">&quot;show_revisions&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">add_points_to_df</span><span class="p">(</span>
-                    <span class="kc">None</span><span class="p">,</span> <span class="n">data_series</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_data_points</span><span class="p">(</span><span class="o">**</span><span class="n">data_series</span><span class="p">)</span>
-                <span class="p">)</span>
         <span class="k">if</span> <span class="n">index_by_series</span><span class="p">:</span>
             <span class="n">indexed_df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_frame</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span>
                 <span class="n">intersect</span><span class="p">(</span><span class="n">DATA_SERIES_UNIQUE_TYPES_ID</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_frame</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
@@ -1077,6 +1072,14 @@
             <span class="n">indexed_df</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">set_names</span><span class="p">(</span><span class="n">DATA_SERIES_UNIQUE_TYPES_ID</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">indexed_df</span><span class="o">.</span><span class="n">sort_index</span><span class="p">()</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_frame</span></div>
+
+    <span class="k">def</span> <span class="nf">async_get_df</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">batch_async_get_data_points</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_data_series_queue</span><span class="p">,</span>
+            <span class="n">output_list</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_data_frame</span><span class="p">,</span>
+            <span class="n">map_result</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">add_points_to_df</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_frame</span>
 
     <span class="k">def</span> <span class="nf">add_points_to_df</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="n">data_series</span><span class="p">,</span> <span class="n">data_points</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Add the given datapoints to a pandas dataframe.</span>
