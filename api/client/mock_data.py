@@ -6,7 +6,13 @@ mock_entities = {
             "id": 860032,
             "name": "Production Quantity",
             "contains": [],
-            "belongsTo": [],
+            "belongsTo": [119],
+        },
+        860033: {
+            "id": 3341078,
+            "name": "Production Value",
+            "contains": [],
+            "belongsTo": [119],
         }
     },
     "items": {},
