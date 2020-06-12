@@ -1100,13 +1100,11 @@
         <span class="c1"># get_data_points response doesn&#39;t include the</span>
         <span class="c1"># source_id. We add it as a column, in case we have</span>
         <span class="c1"># several selections series which differ only by source id.</span>
-        <span class="n">tmp</span><span class="p">[</span><span class="s2">&quot;source_id&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data_series</span><span class="p">[</span><span class="s2">&quot;source_id&quot;</span><span class="p">]</span>
-        <span class="k">if</span> <span class="s2">&quot;end_date&quot;</span> <span class="ow">in</span> <span class="n">tmp</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
-            <span class="n">tmp</span><span class="o">.</span><span class="n">end_date</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">tmp</span><span class="o">.</span><span class="n">end_date</span><span class="p">)</span>
-        <span class="k">if</span> <span class="s2">&quot;start_date&quot;</span> <span class="ow">in</span> <span class="n">tmp</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
-            <span class="n">tmp</span><span class="o">.</span><span class="n">start_date</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">tmp</span><span class="o">.</span><span class="n">start_date</span><span class="p">)</span>
-        <span class="k">if</span> <span class="s2">&quot;reporting_date&quot;</span> <span class="ow">in</span> <span class="n">tmp</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
-            <span class="n">tmp</span><span class="o">.</span><span class="n">reporting_date</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">tmp</span><span class="o">.</span><span class="n">reporting_date</span><span class="p">)</span>
+        <span class="n">tmp</span><span class="o">.</span><span class="n">source_id</span> <span class="o">=</span> <span class="n">data_series</span><span class="p">[</span><span class="s2">&quot;source_id&quot;</span><span class="p">]</span>
+        <span class="c1"># tmp should always have end_date/start_date/reporting_date as columns if not empty</span>
+        <span class="n">tmp</span><span class="o">.</span><span class="n">end_date</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">tmp</span><span class="o">.</span><span class="n">end_date</span><span class="p">)</span>
+        <span class="n">tmp</span><span class="o">.</span><span class="n">start_date</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">tmp</span><span class="o">.</span><span class="n">start_date</span><span class="p">)</span>
+        <span class="n">tmp</span><span class="o">.</span><span class="n">reporting_date</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">tmp</span><span class="o">.</span><span class="n">reporting_date</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_frame</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_data_frame</span> <span class="o">=</span> <span class="n">tmp</span>
@@ -1325,7 +1323,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Already added: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">data_series</span><span class="p">))</span>
         <span class="k">return</span></div>
 
-<div class="viewcode-block" id="GroClient.find_data_series"><a class="viewcode-back" href="../../../api.html#api.client.gro_client.GroClient.find_data_series">[docs]</a>    <span class="k">def</span> <span class="nf">find_data_series</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="GroClient.find_data_series"><a class="viewcode-back" href="../../../api.html#api.client.gro_client.GroClient.find_data_series">[docs]</a>    <span class="k">def</span> <span class="nf">find_data_series</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">result_filter</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Find data series matching a combination of entities specified by</span>
 <span class="sd">        name and yield them ranked by coverage.</span>
 
@@ -1385,19 +1383,19 @@
 <span class="sd">        :meth:`~.get_data_series`</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">result_filter</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;result_filter&quot;</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="kc">True</span><span class="p">)</span>
         <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># [[(&#39;item_id&#39;,1),(&#39;item_id&#39;,2),...],[(&#39;metric_id&quot; 1),...],...]</span>
         <span class="k">for</span> <span class="n">kw</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
             <span class="n">id_key</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">_id&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">kw</span><span class="p">)</span>
-            <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-                <span class="p">[</span>
-                    <span class="p">(</span><span class="n">id_key</span><span class="p">,</span> <span class="n">result</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">])</span>
-                    <span class="k">for</span> <span class="n">result</span> <span class="ow">in</span> <span class="nb">filter</span><span class="p">(</span>
-                        <span class="k">lambda</span> <span class="n">entity</span><span class="p">:</span> <span class="n">result_filter</span><span class="p">({</span><span class="n">id_key</span><span class="p">:</span> <span class="n">entity</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]}),</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">ENTITY_KEY_TO_TYPE</span><span class="p">[</span><span class="n">id_key</span><span class="p">],</span> <span class="n">kwargs</span><span class="p">[</span><span class="n">kw</span><span class="p">]),</span>
-                    <span class="p">)</span>
-                <span class="p">][:</span> <span class="n">cfg</span><span class="o">.</span><span class="n">MAX_RESULT_COMBINATION_DEPTH</span><span class="p">]</span>
-            <span class="p">)</span>
+            <span class="k">if</span> <span class="n">id_key</span> <span class="ow">in</span> <span class="n">ENTITY_KEY_TO_TYPE</span><span class="p">:</span>
+                <span class="n">type_results</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># [(&#39;item_id&#39;,1),(&#39;item_id&#39;,2),...]</span>
+                <span class="k">for</span> <span class="n">search_result</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">search</span><span class="p">(</span>
+                    <span class="n">ENTITY_KEY_TO_TYPE</span><span class="p">[</span><span class="n">id_key</span><span class="p">],</span> <span class="n">kwargs</span><span class="p">[</span><span class="n">kw</span><span class="p">]</span>
+                <span class="p">)[:</span> <span class="n">cfg</span><span class="o">.</span><span class="n">MAX_RESULT_COMBINATION_DEPTH</span><span class="p">]:</span>
+                    <span class="k">if</span> <span class="n">result_filter</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">result_filter</span><span class="p">(</span>
+                        <span class="p">{</span><span class="n">id_key</span><span class="p">:</span> <span class="n">search_result</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]}</span>
+                    <span class="p">):</span>
+                        <span class="n">type_results</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">id_key</span><span class="p">,</span> <span class="n">search_result</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]))</span>
+                <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">type_results</span><span class="p">)</span>
         <span class="c1"># Rank by frequency and source, while preserving search ranking in</span>
         <span class="c1"># permutations of search results.</span>
         <span class="n">ranking_groups</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
@@ -1410,6 +1408,7 @@
                 <span class="n">data_series</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;start_date&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
                 <span class="n">data_series</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;end_date&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
                 <span class="n">data_series</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;frequency_id&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+                <span class="n">data_series</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;frequency_name&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
                 <span class="c1"># remove source to rank them</span>
                 <span class="n">data_series</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;source_id&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
                 <span class="n">data_series</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;source_name&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
@@ -1806,6 +1805,7 @@
             <dd><a href="../../../../CLEWS-26758-similar_regions/index.html">CLEWS-26758-similar_regions</a></dd>
             <dd><a href="../../../../CLEWS-27183/index.html">CLEWS-27183</a></dd>
             <dd><a href="../../../../CLEWS-27625-fixtures/index.html">CLEWS-27625-fixtures</a></dd>
+            <dd><a href="../../../../CLEWS-28861/index.html">CLEWS-28861</a></dd>
             <dd><a href="../../../../analogous_years_modifications/index.html">analogous_years_modifications</a></dd>
             <dd><a href="../../../../black/index.html">black</a></dd>
             <dd><a href="../../../../brazil_soybeans_update/index.html">brazil_soybeans_update</a></dd>
@@ -1813,6 +1813,7 @@
             <dd><a href="../../../../docs-content-changes/index.html">docs-content-changes</a></dd>
             <dd><a href="../../../../docs-latest-tag/index.html">docs-latest-tag</a></dd>
             <dd><a href="../../../../eliaschneider-patch-1/index.html">eliaschneider-patch-1</a></dd>
+            <dd><a href="../../../../find-data-series-tests/index.html">find-data-series-tests</a></dd>
             <dd><a href="../../../../fix-docs-links/index.html">fix-docs-links</a></dd>
             <dd><a href="../../../../get_region_id_given_lat_lon/index.html">get_region_id_given_lat_lon</a></dd>
             <dd><a href="../../../../lib-test-refactor/index.html">lib-test-refactor</a></dd>
