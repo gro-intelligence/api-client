@@ -339,7 +339,29 @@ class GroClientTests(TestCase):
         # TODO: when duplicates are removed, this should equal 2:
         self.assertEqual(
             len(
-                list(self.client.find_data_series(metric="Production", region="United"))
+                list(
+                    self.client.find_data_series(
+                        metric="Production",
+                        region="United",
+                        start_date="2000-01-01",
+                        end_date="2005-12-31",
+                    )
+                )
+            ),
+            8,
+        )
+
+        # TODO: when duplicates are removed, this should equal 2:
+        def only_accept_production_quantity(search_result):
+            return "metric_id" not in search_result or search_result["metric_id"] == 860032
+        self.assertEqual(
+            len(
+                list(
+                    self.client.find_data_series(
+                        metric="Production",
+                        result_filter=only_accept_production_quantity
+                    )
+                )
             ),
             8,
         )
