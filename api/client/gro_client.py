@@ -1181,19 +1181,19 @@ class GroClient(object):
         :meth:`~.get_data_series`
 
         """
-        result_filter = kwargs.pop("result_filter", lambda x: True)
         results = []  # [[('item_id',1),('item_id',2),...],[('metric_id" 1),...],...]
         for kw in kwargs:
             id_key = "{}_id".format(kw)
-            results.append(
-                [
-                    (id_key, result["id"])
-                    for result in filter(
-                        lambda entity: result_filter({id_key: entity["id"]}),
-                        self.search(ENTITY_KEY_TO_TYPE[id_key], kwargs[kw]),
-                    )
-                ][: cfg.MAX_RESULT_COMBINATION_DEPTH]
-            )
+            if id_key in ENTITY_KEY_TO_TYPE:
+                type_results = []  # [('item_id',1),('item_id',2),...]
+                for search_result in self.search(
+                    ENTITY_KEY_TO_TYPE[id_key], kwargs[kw]
+                )[: cfg.MAX_RESULT_COMBINATION_DEPTH]:
+                    if result_filter is None or result_filter(
+                        {id_key: search_result["id"]}
+                    ):
+                        type_results.append((id_key, search_result["id"]))
+                results.append(type_results)
         # Rank by frequency and source, while preserving search ranking in
         # permutations of search results.
         ranking_groups = set()
