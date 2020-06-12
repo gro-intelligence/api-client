@@ -765,7 +765,7 @@ class GroClient(object):
             self._logger.debug("Already added: {}".format(data_series))
         return
 
-    def find_data_series(self, **kwargs):
+    def find_data_series(self, result_filter=None, **kwargs):
         """Find data series matching a combination of entities specified by
         name and yield them ranked by coverage.
 
@@ -850,6 +850,7 @@ class GroClient(object):
                 data_series.pop("start_date", None)
                 data_series.pop("end_date", None)
                 data_series.pop("frequency_id", None)
+                data_series.pop("frequency_name", None)
                 # remove source to rank them
                 data_series.pop("source_id", None)
                 data_series.pop("source_name", None)
