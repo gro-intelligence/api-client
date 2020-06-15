@@ -546,7 +546,7 @@ def get_geo_centre(access_token, api_host, region_id):
 
 
 @memoize(maxsize=None)
-def get_geojsons(access_token, api_host, region_id, descendant_level=None, zoom_level=7):
+def get_geojsons(access_token, api_host, region_id, descendant_level, zoom_level):
     url = '/'.join(['https:', '', api_host, 'v2/geocentres'])
     params = {'includeGeojson': True, 'regionIds': region_id, 'zoom': zoom_level}
     if descendant_level:
