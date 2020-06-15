@@ -331,8 +331,7 @@ class GroClient(object):
 
         """
         return lib.get_geojsons(
-            self.access_token, self.api_host, region_id, descendant_level
-        )
+            self.access_token, self.api_host, region_id, descendant_level, zoom_level)
 
     def get_geojson(self, region_id):
         """Given a region ID, return shape information in geojson.
