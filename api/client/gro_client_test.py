@@ -55,15 +55,9 @@ def mock_rank_series_by_source(access_token, api_host, selections_list):
 
 
 def mock_get_geo_centre(access_token, api_host, region_id, include_geojson, zoom_level):
-    if include_geojson:
-        return [
-            {"centre": [45.7228, -112.996], "regionId": 1215, "regionName": "United States",
-             "geojson": '{"type":"GeometryCollection","geometries":[{"type":"MultiPolygon","coordinates":[[[[-155.651382446,20.1647224430001]]]]}]}'}
-        ]
-    else:
-        return [
-            {"centre": [45.7228, -112.996], "regionId": 1215, "regionName": "United States"}
-        ]
+    return [
+        {"centre": [45.7228, -112.996], "regionId": 1215, "regionName": "United States"}
+    ]
 
 
 def mock_get_geojson(access_token, api_host, region_id):
@@ -73,6 +67,16 @@ def mock_get_geojson(access_token, api_host, region_id):
             {"type": "MultiPolygon", "coordinates": [[[[-38.394, -4.225]]]]}
         ],
     }
+
+
+def mock_get_geojsons(access_token, api_host, region_id, descendant_level, zoom_level):
+    return [{'region_id': 13051, 'region_name': 'Alabama', 'centre': [32.7933, -86.8278],
+             'geojson': {'type': 'MultiPolygon',
+                         'coordinates': [[[[-88.201896667, 35.0088806150001], [-88.079490661, 35.006961823], [-87.987052917, 35.0075187690001], [-87.610366821, 35.0048713690001]]]]}},
+            {'region_id': 13052, 'region_name': 'Alaska', 'centre': [64.2386, -152.279],
+             'geojson': {'type': 'MultiPolygon',
+                         'coordinates': [[[[-179.07043457, 51.2564086920001], [-179.094436645, 51.2270851140001], [-179.142776489, 51.2288894660001]]]]}}
+    ]
 
 
 def mock_get_descendant_regions(
