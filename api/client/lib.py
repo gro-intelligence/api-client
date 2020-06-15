@@ -538,10 +538,10 @@ def lookup_belongs(access_token, api_host, entity_type, entity_id):
 
 
 def get_geo_centre(access_token, api_host, region_id):
-    url = '/'.join(['https:', '', api_host, 'v2/geocentres'])
+    url = '/'.join(['https:', '', api_host, 'v2/geocentres?regionIds=' +
+                    str(region_id)])
     headers = {'authorization': 'Bearer ' + access_token}
-    params = {'regionIds': region_id, 'includeGeojson': include_geojson}
-    resp = get_data(url, headers, params)
+    resp = get_data(url, headers)
     return resp.json()['data']
 
 
@@ -557,8 +557,8 @@ def get_geojsons(access_token, api_host, region_id, descendant_level=None, zoom_
     return [dict_reformat_keys(r, str_camel_to_snake) for r in resp.json()['data']]
 
 
-def get_geojson(access_token, api_host, region_id):
-    for region in get_geojsons(access_token, api_host, region_id):
+def get_geojson(access_token, api_host, region_id, zoom_level=7):
+    for region in get_geojsons(access_token, api_host, region_id, None, zoom_level):
         return json.loads(region['geojson'])
 
 
