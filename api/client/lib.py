@@ -557,7 +557,7 @@ def get_geojsons(access_token, api_host, region_id, descendant_level, zoom_level
     return [dict_reformat_keys(r, str_camel_to_snake) for r in resp.json()['data']]
 
 
-def get_geojson(access_token, api_host, region_id, zoom_level=7):
+def get_geojson(access_token, api_host, region_id, zoom_level):
     for region in get_geojsons(access_token, api_host, region_id, None, zoom_level):
         return json.loads(region['geojson'])
 
