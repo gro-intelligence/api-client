@@ -537,24 +537,23 @@ def lookup_belongs(access_token, api_host, entity_type, entity_id):
         yield parent_details[str(parent_id)]
 
 
-def get_geo_centre(access_token, api_host, region_id, include_geojson, zoom_level):
+def get_geo_centre(access_token, api_host, region_id):
     url = '/'.join(['https:', '', api_host, 'v2/geocentres'])
     headers = {'authorization': 'Bearer ' + access_token}
     params = {'regionIds': region_id, 'includeGeojson': include_geojson}
-    if include_geojson and zoom_level:
-        params['zoom'] = zoom_level
     resp = get_data(url, headers, params)
     return resp.json()['data']
 
 
 @memoize(maxsize=None)
-def get_geojsons(access_token, api_host, region_id, descendant_level=None):
-    url = '/'.join(['https:', '', api_host, 'v2/geocentres?includeGeojson=True&regionIds={}'.format(
-        region_id)])
+def get_geojsons(access_token, api_host, region_id, descendant_level=None, zoom_level=7):
+    url = '/'.join(['https:', '', api_host, 'v2/geocentres'])
+    params = {'includeGeojson': True, 'regionIds': region_id, 'zoom': zoom_level}
     if descendant_level:
-        url += "&reqRegionLevelId={}&stringify=false".format(descendant_level)
+        params['reqRegionLevelId']= descendant_level
+        params['stringify'] = 'false'
     headers = {'authorization': 'Bearer ' + access_token}
-    resp = get_data(url, headers)
+    resp = get_data(url, headers, params)
     return [dict_reformat_keys(r, str_camel_to_snake) for r in resp.json()['data']]
 
 

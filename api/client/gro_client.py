@@ -288,14 +288,31 @@ class GroClient(object):
             self.access_token, self.api_host, selections_list
         )
 
-    def get_geo_centre(self, region_id, include_geojson=False, zoom_level=None):
+    def get_geo_centre(self, region_id):
         """Given a region ID, return the geographic centre in degrees lat/lon.
 
         Parameters
         ----------
         region_id : integer
-        include_geojson : boolean, optional
-            False by default. If True is specified, shapefile in geojson format will be included.
+
+        Returns
+        -------
+        list of dicts
+
+            Example::
+
+                [{'centre': [ 39.8333, -98.5855 ], 'regionId': 1215, 'regionName': 'United States'}]
+        """
+        return lib.get_geo_centre(self.access_token, self.api_host, region_id)
+
+    def get_geojsons(self, region_id, descendant_level=None, zoom_level=7):
+        """Given a region ID, return shape information in geojson, for the
+        region and all its descendants at the given level (if specified).
+
+        Parameters
+        ----------
+        region_id : integer
+        descendant_level : integer, admin region level (2, 3, 4 or 5)
         zoom_level : integer, optional(allow 1-8)
             Valid if include_geojson equals True. If zoom level is specified and it is greater than 6,
             detailed shapefile will be returned. Otherwise, simplified shapefile will be used by default.
@@ -312,25 +329,6 @@ class GroClient(object):
                     u'geojson': u'{"type":"GeometryCollection","geometries":[{"type":"MultiPolygon","coordinates":[[[[-155.651382446,20.1647224430001], ...]]]}]}'
                 }]
 
-        """
-        return lib.get_geo_centre(self.access_token, self.api_host, region_id, include_geojson, zoom_level)
-
-    def get_geojsons(self, region_id, descendant_level=None):
-        """Given a region ID, return shape information in geojson, for the
-        region and all its descendants at the given level (if specified).
-
-        Parameters
-        ----------
-        region_id : integer
-        descendant_level : integer, admin region level (2, 3, 4 or 5)
-
-        Returns
-        -------
-        a list of dicts
-
-           Example::
-
-               [{region_id: ..., region_name: ..., geojson: ...}, ...]
         """
         return lib.get_geojsons(
             self.access_token, self.api_host, region_id, descendant_level
