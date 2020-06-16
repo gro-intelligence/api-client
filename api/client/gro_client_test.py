@@ -54,19 +54,27 @@ def mock_rank_series_by_source(access_token, api_host, selections_list):
         yield data_series
 
 
-def mock_get_geo_centre(access_token, api_host, region_id, include_geojson, zoom_level):
+def mock_get_geo_centre(access_token, api_host, region_id):
     return [
-        {"centre": [45.7228, -112.996], "regionId": 1215, "regionName": "United States"}
+         {"centre": [45.7228, -112.996], "regionId": 1215, "regionName": "United States"}
     ]
 
 
-def mock_get_geojson(access_token, api_host, region_id):
-    return {
-        "type": "GeometryCollection",
-        "geometries": [
-            {"type": "MultiPolygon", "coordinates": [[[[-38.394, -4.225]]]]}
-        ],
-    }
+def mock_get_geojson(access_token, api_host, region_id, zoom_level):
+    if zoom_level < 7:
+        return {
+            "type": "GeometryCollection",
+            "geometries": [
+                {"type": "MultiPolygon", "coordinates": [[[[-38, -4]]]]}
+            ],
+        }
+    else:
+        return {
+            "type": "GeometryCollection",
+            "geometries": [
+                {"type": "MultiPolygon", "coordinates": [[[[-38.394, -4.225]]]]}
+            ],
+        }
 
 
 def mock_get_geojsons(access_token, api_host, region_id, descendant_level, zoom_level):
@@ -183,6 +191,7 @@ def mock_get_data_points(access_token, api_host, **selections):
     MagicMock(side_effect=mock_rank_series_by_source),
 )
 @patch("api.client.lib.get_geo_centre", MagicMock(side_effect=mock_get_geo_centre))
+@patch("api.client.lib.get_geojsons", MagicMock(side_effect=mock_get_geojsons))
 @patch("api.client.lib.get_geojson", MagicMock(side_effect=mock_get_geojson))
 @patch(
     "api.client.lib.get_descendant_regions",
@@ -197,6 +206,7 @@ def mock_get_data_points(access_token, api_host, **selections):
 class GroClientTests(TestCase):
     def setUp(self):
         self.client = GroClient(MOCK_HOST, MOCK_TOKEN)
+        self.client._async_http_client = None  # Force tests to use synchronous http
         self.assertTrue(isinstance(self.client, GroClient))
 
     def test_get_logger(self):
@@ -246,18 +256,28 @@ class GroClientTests(TestCase):
         self.assertTrue(len(centre) == 1)
         self.assertTrue("centre" in centre[0])
         self.assertTrue("regionName" in centre[0])
-        self.assertTrue("geojson" not in centre[0])
-        centre = self.client.get_geo_centre(1215, True)
-        self.assertTrue(len(centre) == 1)
-        self.assertTrue("centre" in centre[0])
-        self.assertTrue("regionName" in centre[0])
-        self.assertTrue("geojson" in centre[0])
+
+    def test_get_geojsons(self):
+        geojsons = self.client.get_geojsons(1215, 4)
+        self.assertTrue(len(geojsons) == 2)
+        self.assertTrue("region_id" in geojsons[0])
+        self.assertTrue("region_name" in geojsons[0])
+        self.assertTrue("centre" in geojsons[0])
+        self.assertTrue("geojson" in geojsons[0])
+        self.assertTrue("type" in geojsons[0]["geojson"])
+        self.assertTrue("coordinates" in geojsons[0]["geojson"])
 
     def test_get_geojson(self):
         geojson = self.client.get_geojson(1215)
         self.assertTrue("type" in geojson)
         self.assertTrue("type" in geojson["geometries"][0])
         self.assertTrue("coordinates" in geojson["geometries"][0])
+        self.assertTrue(geojson["geometries"][0]['coordinates'][0][0][0] == [-38.394, -4.225])
+        geojson = self.client.get_geojson(1215, 1)
+        self.assertTrue("type" in geojson)
+        self.assertTrue("type" in geojson["geometries"][0])
+        self.assertTrue("coordinates" in geojson["geometries"][0])
+        self.assertTrue(geojson["geometries"][0]['coordinates'][0][0][0] == [-38, -4])
 
     def test_get_descendant_regions(self):
         self.assertTrue("name" in self.client.get_descendant_regions(1215)[0])
@@ -297,11 +317,13 @@ class GroClientTests(TestCase):
         self.assertEqual(df.iloc[0]["start_date"].date(), date(2017, 1, 1))
 
     def test_add_points_to_df(self):
-        self.client.add_points_to_df(
-            None,
-            mock_data_series[0],
-            self.client.get_data_points(**mock_data_series[0]),
-        )
+        self.client.add_points_to_df(None, mock_data_series[0], [])
+        self.assertTrue(self.client.get_df().empty)
+        self.assertTrue(self.client.get_df(show_revisions=True).empty)
+        self.assertTrue(self.client.get_df(index_by_series=True).empty)
+
+        data_points = self.client.get_data_points(**mock_data_series[0])
+        self.client.add_points_to_df(None, mock_data_series[0], data_points)
         self.assertEqual(
             self.client.get_df().iloc[0]["start_date"].date(), date(2017, 1, 1)
         )
@@ -355,7 +377,29 @@ class GroClientTests(TestCase):
         # TODO: when duplicates are removed, this should equal 2:
         self.assertEqual(
             len(
-                list(self.client.find_data_series(metric="Production", region="United"))
+                list(
+                    self.client.find_data_series(
+                        metric="Production",
+                        region="United",
+                        start_date="2000-01-01",
+                        end_date="2005-12-31",
+                    )
+                )
+            ),
+            8,
+        )
+
+        # TODO: when duplicates are removed, this should equal 2:
+        def only_accept_production_quantity(search_result):
+            return "metric_id" not in search_result or search_result["metric_id"] == 860032
+        self.assertEqual(
+            len(
+                list(
+                    self.client.find_data_series(
+                        metric="Production",
+                        result_filter=only_accept_production_quantity
+                    )
+                )
             ),
             8,
         )
