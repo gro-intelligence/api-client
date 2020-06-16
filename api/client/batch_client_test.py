@@ -137,7 +137,7 @@ class BatchClientTests(TestCase):
                 [mock_error_selection], map_result=raise_exception
             )
 
-    def test_get_df(self):
+    def test_async_get_df(self):
         self.client.add_single_data_series(
             {
                 "metric_id": 1,
@@ -147,7 +147,7 @@ class BatchClientTests(TestCase):
                 "source_id": 5,
             }
         )
-        df = self.client.get_df()
+        df = self.client.async_get_df()
         self.assertEqual(df.iloc[0]["start_date"].date(), date(2017, 1, 1))
         self.assertEqual(df.iloc[0]["end_date"].date(), date(2017, 12, 31))
         self.assertEqual(df.iloc[0]["value"], 40891)
