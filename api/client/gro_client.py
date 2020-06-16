@@ -542,13 +542,11 @@ class GroClient(object):
         # get_data_points response doesn't include the
         # source_id. We add it as a column, in case we have
         # several selections series which differ only by source id.
-        tmp["source_id"] = data_series["source_id"]
-        if "end_date" in tmp.columns:
-            tmp.end_date = pandas.to_datetime(tmp.end_date)
-        if "start_date" in tmp.columns:
-            tmp.start_date = pandas.to_datetime(tmp.start_date)
-        if "reporting_date" in tmp.columns:
-            tmp.reporting_date = pandas.to_datetime(tmp.reporting_date)
+        tmp.source_id = data_series["source_id"]
+        # tmp should always have end_date/start_date/reporting_date as columns if not empty
+        tmp.end_date = pandas.to_datetime(tmp.end_date)
+        tmp.start_date = pandas.to_datetime(tmp.start_date)
+        tmp.reporting_date = pandas.to_datetime(tmp.reporting_date)
 
         if self._data_frame.empty:
             self._data_frame = tmp
@@ -767,7 +765,7 @@ class GroClient(object):
             self._logger.debug("Already added: {}".format(data_series))
         return
 
-    def find_data_series(self, **kwargs):
+    def find_data_series(self, result_filter=None, **kwargs):
         """Find data series matching a combination of entities specified by
         name and yield them ranked by coverage.
 
@@ -827,19 +825,19 @@ class GroClient(object):
         :meth:`~.get_data_series`
 
         """
-        result_filter = kwargs.pop("result_filter", lambda x: True)
         results = []  # [[('item_id',1),('item_id',2),...],[('metric_id" 1),...],...]
         for kw in kwargs:
             id_key = "{}_id".format(kw)
-            results.append(
-                [
-                    (id_key, result["id"])
-                    for result in filter(
-                        lambda entity: result_filter({id_key: entity["id"]}),
-                        self.search(ENTITY_KEY_TO_TYPE[id_key], kwargs[kw]),
-                    )
-                ][: cfg.MAX_RESULT_COMBINATION_DEPTH]
-            )
+            if id_key in ENTITY_KEY_TO_TYPE:
+                type_results = []  # [('item_id',1),('item_id',2),...]
+                for search_result in self.search(
+                    ENTITY_KEY_TO_TYPE[id_key], kwargs[kw]
+                )[: cfg.MAX_RESULT_COMBINATION_DEPTH]:
+                    if result_filter is None or result_filter(
+                        {id_key: search_result["id"]}
+                    ):
+                        type_results.append((id_key, search_result["id"]))
+                results.append(type_results)
         # Rank by frequency and source, while preserving search ranking in
         # permutations of search results.
         ranking_groups = set()
@@ -852,6 +850,7 @@ class GroClient(object):
                 data_series.pop("start_date", None)
                 data_series.pop("end_date", None)
                 data_series.pop("frequency_id", None)
+                data_series.pop("frequency_name", None)
                 # remove source to rank them
                 data_series.pop("source_id", None)
                 data_series.pop("source_name", None)
