@@ -187,6 +187,7 @@ def mock_get_data_points(access_token, api_host, **selections):
 class GroClientTests(TestCase):
     def setUp(self):
         self.client = GroClient(MOCK_HOST, MOCK_TOKEN)
+        self.client._async_http_client = None  # Force tests to use synchronous http
         self.assertTrue(isinstance(self.client, GroClient))
 
     def test_get_logger(self):
@@ -281,11 +282,13 @@ class GroClientTests(TestCase):
         self.assertEqual(df.iloc[0]["start_date"].date(), date(2017, 1, 1))
 
     def test_add_points_to_df(self):
-        self.client.add_points_to_df(
-            None,
-            mock_data_series[0],
-            self.client.get_data_points(**mock_data_series[0]),
-        )
+        self.client.add_points_to_df(None, mock_data_series[0], [])
+        self.assertTrue(self.client.get_df().empty)
+        self.assertTrue(self.client.get_df(show_revisions=True).empty)
+        self.assertTrue(self.client.get_df(index_by_series=True).empty)
+
+        data_points = self.client.get_data_points(**mock_data_series[0])
+        self.client.add_points_to_df(None, mock_data_series[0], data_points)
         self.assertEqual(
             self.client.get_df().iloc[0]["start_date"].date(), date(2017, 1, 1)
         )
