@@ -56,17 +56,35 @@ def mock_rank_series_by_source(access_token, api_host, selections_list):
 
 def mock_get_geo_centre(access_token, api_host, region_id):
     return [
-        {"centre": [45.7228, -112.996], "regionId": 1215, "regionName": "United States"}
+         {"centre": [45.7228, -112.996], "regionId": 1215, "regionName": "United States"}
     ]
 
 
-def mock_get_geojson(access_token, api_host, region_id):
-    return {
-        "type": "GeometryCollection",
-        "geometries": [
-            {"type": "MultiPolygon", "coordinates": [[[[-38.394, -4.225]]]]}
-        ],
-    }
+def mock_get_geojson(access_token, api_host, region_id, zoom_level):
+    if zoom_level < 7:
+        return {
+            "type": "GeometryCollection",
+            "geometries": [
+                {"type": "MultiPolygon", "coordinates": [[[[-38, -4]]]]}
+            ],
+        }
+    else:
+        return {
+            "type": "GeometryCollection",
+            "geometries": [
+                {"type": "MultiPolygon", "coordinates": [[[[-38.394, -4.225]]]]}
+            ],
+        }
+
+
+def mock_get_geojsons(access_token, api_host, region_id, descendant_level, zoom_level):
+    return [{'region_id': 13051, 'region_name': 'Alabama', 'centre': [32.7933, -86.8278],
+             'geojson': {'type': 'MultiPolygon',
+                         'coordinates': [[[[-88.201896667, 35.0088806150001], [-88.079490661, 35.006961823], [-87.987052917, 35.0075187690001], [-87.610366821, 35.0048713690001]]]]}},
+            {'region_id': 13052, 'region_name': 'Alaska', 'centre': [64.2386, -152.279],
+             'geojson': {'type': 'MultiPolygon',
+                         'coordinates': [[[[-179.07043457, 51.2564086920001], [-179.094436645, 51.2270851140001], [-179.142776489, 51.2288894660001]]]]}}
+    ]
 
 
 def mock_get_descendant_regions(
@@ -173,6 +191,7 @@ def mock_get_data_points(access_token, api_host, **selections):
     MagicMock(side_effect=mock_rank_series_by_source),
 )
 @patch("api.client.lib.get_geo_centre", MagicMock(side_effect=mock_get_geo_centre))
+@patch("api.client.lib.get_geojsons", MagicMock(side_effect=mock_get_geojsons))
 @patch("api.client.lib.get_geojson", MagicMock(side_effect=mock_get_geojson))
 @patch(
     "api.client.lib.get_descendant_regions",
@@ -238,11 +257,27 @@ class GroClientTests(TestCase):
         self.assertTrue("centre" in centre[0])
         self.assertTrue("regionName" in centre[0])
 
+    def test_get_geojsons(self):
+        geojsons = self.client.get_geojsons(1215, 4)
+        self.assertTrue(len(geojsons) == 2)
+        self.assertTrue("region_id" in geojsons[0])
+        self.assertTrue("region_name" in geojsons[0])
+        self.assertTrue("centre" in geojsons[0])
+        self.assertTrue("geojson" in geojsons[0])
+        self.assertTrue("type" in geojsons[0]["geojson"])
+        self.assertTrue("coordinates" in geojsons[0]["geojson"])
+
     def test_get_geojson(self):
         geojson = self.client.get_geojson(1215)
         self.assertTrue("type" in geojson)
         self.assertTrue("type" in geojson["geometries"][0])
         self.assertTrue("coordinates" in geojson["geometries"][0])
+        self.assertTrue(geojson["geometries"][0]['coordinates'][0][0][0] == [-38.394, -4.225])
+        geojson = self.client.get_geojson(1215, 1)
+        self.assertTrue("type" in geojson)
+        self.assertTrue("type" in geojson["geometries"][0])
+        self.assertTrue("coordinates" in geojson["geometries"][0])
+        self.assertTrue(geojson["geometries"][0]['coordinates'][0][0][0] == [-38, -4])
 
     def test_get_descendant_regions(self):
         self.assertTrue("name" in self.client.get_descendant_regions(1215)[0])
