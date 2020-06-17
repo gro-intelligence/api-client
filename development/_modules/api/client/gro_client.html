@@ -848,12 +848,11 @@
 
 <span class="sd">            Example::</span>
 
-<span class="sd">                [{&#39;centre&#39;: [ 45.7228, -112.996 ], &#39;regionId&#39;: 1215, &#39;regionName&#39;: &#39;United States&#39;}]</span>
-
+<span class="sd">                [{&#39;centre&#39;: [ 39.8333, -98.5855 ], &#39;regionId&#39;: 1215, &#39;regionName&#39;: &#39;United States&#39;}]</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">lib</span><span class="o">.</span><span class="n">get_geo_centre</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_host</span><span class="p">,</span> <span class="n">region_id</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">get_geojsons</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">region_id</span><span class="p">,</span> <span class="n">descendant_level</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">get_geojsons</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">region_id</span><span class="p">,</span> <span class="n">descendant_level</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">zoom_level</span><span class="o">=</span><span class="mi">7</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Given a region ID, return shape information in geojson, for the</span>
 <span class="sd">        region and all its descendants at the given level (if specified).</span>
 
@@ -861,25 +860,35 @@
 <span class="sd">        ----------</span>
 <span class="sd">        region_id : integer</span>
 <span class="sd">        descendant_level : integer, admin region level (2, 3, 4 or 5)</span>
+<span class="sd">        zoom_level : integer, optional(allow 1-8)</span>
+<span class="sd">            Valid if include_geojson equals True. If zoom level is specified and it is less than 6,</span>
+<span class="sd">            simplified shapefile will be returned. Otherwise, detailed shapefile will be used by default.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        a list of dicts</span>
+<span class="sd">        list of dicts</span>
 
-<span class="sd">           Example::</span>
+<span class="sd">            Example::</span>
 
-<span class="sd">               [{region_id: ..., region_name: ..., geojson: ...}, ...]</span>
+<span class="sd">                [{  &#39;centre&#39;: [ 39.8333, -98.5855 ],</span>
+<span class="sd">                    &#39;regionId&#39;: 1215,</span>
+<span class="sd">                    &#39;regionName&#39;: &#39;United States&#39;,</span>
+<span class="sd">                    u&#39;geojson&#39;: u&#39;{&quot;type&quot;:&quot;GeometryCollection&quot;,&quot;geometries&quot;:[{&quot;type&quot;:&quot;MultiPolygon&quot;,&quot;coordinates&quot;:[[[[-155.651382446,20.1647224430001], ...]]]}]}&#39;</span>
+<span class="sd">                }]</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">lib</span><span class="o">.</span><span class="n">get_geojsons</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_host</span><span class="p">,</span> <span class="n">region_id</span><span class="p">,</span> <span class="n">descendant_level</span>
-        <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_host</span><span class="p">,</span> <span class="n">region_id</span><span class="p">,</span> <span class="n">descendant_level</span><span class="p">,</span> <span class="n">zoom_level</span><span class="p">)</span>
 
-<div class="viewcode-block" id="GroClient.get_geojson"><a class="viewcode-back" href="../../../api.html#api.client.gro_client.GroClient.get_geojson">[docs]</a>    <span class="k">def</span> <span class="nf">get_geojson</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">region_id</span><span class="p">):</span>
+<div class="viewcode-block" id="GroClient.get_geojson"><a class="viewcode-back" href="../../../api.html#api.client.gro_client.GroClient.get_geojson">[docs]</a>    <span class="k">def</span> <span class="nf">get_geojson</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">region_id</span><span class="p">,</span> <span class="n">zoom_level</span><span class="o">=</span><span class="mi">7</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Given a region ID, return shape information in geojson.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        region_id : integer</span>
+<span class="sd">        zoom_level : integer, optional(allow 1-8)</span>
+<span class="sd">            Valid if include_geojson equals True. If zoom level is specified and it is less than 6,</span>
+<span class="sd">            simplified shapefile will be returned. Otherwise, detailed shapefile will be used by default.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -892,7 +901,7 @@
 <span class="sd">                                &#39;coordinates&#39;: [[[[-38.394, -4.225], ...]]]}, ...]}</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">lib</span><span class="o">.</span><span class="n">get_geojson</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_host</span><span class="p">,</span> <span class="n">region_id</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">lib</span><span class="o">.</span><span class="n">get_geojson</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_host</span><span class="p">,</span> <span class="n">region_id</span><span class="p">,</span> <span class="n">zoom_level</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="GroClient.get_descendant_regions"><a class="viewcode-back" href="../../../api.html#api.client.gro_client.GroClient.get_descendant_regions">[docs]</a>    <span class="k">def</span> <span class="nf">get_descendant_regions</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
@@ -1799,7 +1808,6 @@
             <dd><a href="../../../../CLEWS-25139-revert/index.html">CLEWS-25139-revert</a></dd>
             <dd><a href="../../../../CLEWS-25726/index.html">CLEWS-25726</a></dd>
             <dd><a href="../../../../CLEWS-26758-similar_regions/index.html">CLEWS-26758-similar_regions</a></dd>
-            <dd><a href="../../../../CLEWS-27183/index.html">CLEWS-27183</a></dd>
             <dd><a href="../../../../CLEWS-27625-fixtures/index.html">CLEWS-27625-fixtures</a></dd>
             <dd><a href="../../../../analogous_years_modifications/index.html">analogous_years_modifications</a></dd>
             <dd><a href="../../../../black/index.html">black</a></dd>
