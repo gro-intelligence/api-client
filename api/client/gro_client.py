@@ -649,12 +649,11 @@ class GroClient(object):
 
             Example::
 
-                [{'centre': [ 45.7228, -112.996 ], 'regionId': 1215, 'regionName': 'United States'}]
-
+                [{'centre': [ 39.8333, -98.5855 ], 'regionId': 1215, 'regionName': 'United States'}]
         """
         return lib.get_geo_centre(self.access_token, self.api_host, region_id)
 
-    def get_geojsons(self, region_id, descendant_level=None):
+    def get_geojsons(self, region_id, descendant_level=None, zoom_level=7):
         """Given a region ID, return shape information in geojson, for the
         region and all its descendants at the given level (if specified).
 
@@ -662,25 +661,35 @@ class GroClient(object):
         ----------
         region_id : integer
         descendant_level : integer, admin region level (2, 3, 4 or 5)
+        zoom_level : integer, optional(allow 1-8)
+            Valid if include_geojson equals True. If zoom level is specified and it is less than 6,
+            simplified shapefile will be returned. Otherwise, detailed shapefile will be used by default.
 
         Returns
         -------
-        a list of dicts
+        list of dicts
 
-           Example::
+            Example::
 
-               [{region_id: ..., region_name: ..., geojson: ...}, ...]
+                [{  'centre': [ 39.8333, -98.5855 ],
+                    'regionId': 1215,
+                    'regionName': 'United States',
+                    u'geojson': u'{"type":"GeometryCollection","geometries":[{"type":"MultiPolygon","coordinates":[[[[-155.651382446,20.1647224430001], ...]]]}]}'
+                }]
+
         """
         return lib.get_geojsons(
-            self.access_token, self.api_host, region_id, descendant_level
-        )
+            self.access_token, self.api_host, region_id, descendant_level, zoom_level)
 
-    def get_geojson(self, region_id):
+    def get_geojson(self, region_id, zoom_level=7):
         """Given a region ID, return shape information in geojson.
 
         Parameters
         ----------
         region_id : integer
+        zoom_level : integer, optional(allow 1-8)
+            Valid if include_geojson equals True. If zoom level is specified and it is less than 6,
+            simplified shapefile will be returned. Otherwise, detailed shapefile will be used by default.
 
         Returns
         -------
@@ -693,7 +702,7 @@ class GroClient(object):
                                 'coordinates': [[[[-38.394, -4.225], ...]]]}, ...]}
 
         """
-        return lib.get_geojson(self.access_token, self.api_host, region_id)
+        return lib.get_geojson(self.access_token, self.api_host, region_id, zoom_level)
 
     def get_descendant_regions(
         self,
