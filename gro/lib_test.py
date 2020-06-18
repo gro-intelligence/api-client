@@ -1,7 +1,7 @@
 import mock
 import numpy as np
 
-from api.client import lib
+from gro import lib
 import platform
 from pkg_resources import get_distribution
 
