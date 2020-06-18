@@ -7,8 +7,8 @@ except ImportError:
 from unittest import TestCase
 from datetime import date
 
-from api.client.gro_client import GroClient
-from api.client.mock_data import mock_entities, mock_data_series, mock_data_points
+from gro import GroClient
+from gro.mock_data import mock_entities, mock_data_series, mock_data_points
 
 MOCK_HOST = "pytest.groclient.url"
 MOCK_TOKEN = "pytest.groclient.token"
