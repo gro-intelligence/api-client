@@ -1,2 +1,2 @@
 from gro import GroClient
-from gro import APIError
+from gro.client import APIError
