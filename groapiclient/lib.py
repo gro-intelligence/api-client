@@ -7,9 +7,9 @@ should appear in the client classes rather than here.
 
 from builtins import str
 from math import ceil
-from gro import cfg
-from gro.constants import REGION_LEVELS
-from gro.utils import dict_reformat_keys, str_snake_to_camel, str_camel_to_snake, list_chunk
+from groapiclient import cfg
+from groapiclient.constants import REGION_LEVELS
+from groapiclient.utils import dict_reformat_keys, str_snake_to_camel, str_camel_to_snake, list_chunk
 import json
 import logging
 import requests

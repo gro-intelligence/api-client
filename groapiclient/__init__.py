@@ -1,2 +1,2 @@
-from gro import GroClient as Client
-from gro import lib
+from groapiclient import GroClient as Client
+from groapiclient import lib
