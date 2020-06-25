@@ -5,7 +5,7 @@ from datetime import datetime
 import math
 import numpy
 import pandas
-from gro import GroClient
+from groapiclient import GroClient
 
 
 class CropModel(GroClient):
