@@ -180,3 +180,33 @@ For `TRMM (3B42RT) <https://app.gro-intelligence.com/dictionary/sources/35>`_, t
 
 
 (1) Huffman, G. J., Bolvin, D. T., & Nelkin, E. J. (2015). Integrated Multi-satellite Retrievals for GPM (IMERG) technical documentation. NASA/GSFC Code, 612(47), 2019.
+
+Computing Mean Values Amid LST Data Gaps
+========================================
+
+As an example, the Figure 1 map below, modeled using MODIS sensor data from the Terra satellite, shows India during a monsoon. The monsoon’s path, generally from the southeast to the northwest, can be seen by the level of cloud cover. 
+
+.. image:: ./_images/LST-India.jpg
+  :align: center
+  :alt: Land Surface Temperature India
+
+Figure 1. Example of high cloud cover (shown as no data in light grey) during a monsoon in India
+
+Gaps in data caused by cloud coverage can cause daily regional aggregated means to also report no data. Gro requires at least 6% of the pixels in a region to have data for an aggregated mean to be reported. Coverage at less than this percentage can cause outlier values, with aggregated means possibly reporting values more than 10 degrees Celsius higher or lower than what would be measured without cloud coverage.
+
+At times, cloud coverage causes gaps that can occur for multiple days in a row (Figure 2). 
+
+.. image:: ./_images/LST-Karur.jpg
+  :align: center
+  :alt: Land Surface Temperature Karur
+ 
+Figure 2. Example of high cloud cover causing missing data points in line charts for a region in India.
+
+Averaging the daily data to longer time steps, such as weekly, smooths the daily variations and allows for easier comparisons of changes over time. But because temperatures can greatly fluctuate from one day to the next, there must be a minimum number of days with data to help minimize the effects of outliers. For land surface temperature data, a minimum of three days with data must be present in order to compute weekly means (Figure 3). 
+
+.. image:: ./_images/LST-Sorochinskiy_rayon.jpg
+  :align: center
+  :alt: Land Surface Temperature Sorochinskiy rayon
+  
+Figure 3. Example of how three days of data (Jan 27-30) will result in a weekly average posted for the week of Jan 27-Feb 2, despite four days of data being missing due to cloud cover. The week of Feb 3-9 has five days with data, which results in a weekly average posted, as well. 
+
