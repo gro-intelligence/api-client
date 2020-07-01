@@ -186,7 +186,7 @@ Computing Mean Values Amid LST Data Gaps
 
 As an example, the Figure 1 map below, modeled using MODIS sensor data from the Terra satellite, shows India during a monsoon. The monsoon’s path, generally from the southeast to the northwest, can be seen by the level of cloud cover. 
 
-.. image:: ./_images/LST-India.jpg
+.. image:: ./_images/LST-India.png
   :align: center
   :alt: Land Surface Temperature India
 
@@ -196,7 +196,7 @@ Gaps in data caused by cloud coverage can cause daily regional aggregated means 
 
 At times, cloud coverage causes gaps that can occur for multiple days in a row (Figure 2). 
 
-.. image:: ./_images/LST-Karur.jpg
+.. image:: ./_images/LST-Karur.png
   :align: center
   :alt: Land Surface Temperature Karur
  
@@ -204,7 +204,7 @@ Figure 2. Example of high cloud cover causing missing data points in line charts
 
 Averaging the daily data to longer time steps, such as weekly, smooths the daily variations and allows for easier comparisons of changes over time. But because temperatures can greatly fluctuate from one day to the next, there must be a minimum number of days with data to help minimize the effects of outliers. For land surface temperature data, a minimum of three days with data must be present in order to compute weekly means (Figure 3). 
 
-.. image:: ./_images/LST-Sorochinskiy_rayon.jpg
+.. image:: ./_images/LST-Sorochinskiy_rayon.png
   :align: center
   :alt: Land Surface Temperature Sorochinskiy rayon
   
