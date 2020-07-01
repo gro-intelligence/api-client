@@ -56,6 +56,26 @@ What do warnings about 'historical' regions mean?
 cases, new regions can have data that extends into the past and overlaps with historical regions. 
 Rather than always excluding the old regions in such cases, we allow the user to choose via the  :code:`include_historical` option in `get_data_points() <api.html#api.client.gro_client.GroClient.get_data_points>`_. This can be useful if for example you are analyzing historical temperatures at the district level in a country where the districts that exist today were only created 5 years ago and but you want 20 years of data. In that case, you can filter out the historical regions to avoid double counting.
 
+Why is daily NDVI changing so much from day to day? And why do some days have no NDVI coverage, especially in winter?
+-----------------------------------------------------------------------------------------------------------------------
+
+The Normalized Difference Vegetation Index (NDVI) relates satellite based observations to vegetation health and condition. However, in the presence of clouds, especially thin cirrus undetected by cloud algorithms, NDVI is artificially dampened. As a result, NDVI has  lower values on days with undetected thin clouds and higher values on days with no cloud cover. The satellite readings are also affected by snow and ice cover, which means NDVI coverage in the winter may be limited for some regions.
+
+To avoid these day-to-day variations in the Sentinel-3A (S3A) and Sentinel-3B (S3B) daily NDVI dataset, Gro users can make use of the MODIS GIMMS 8-day NDVI product, which is based on selecting the maximum NDVI pixel value over an eight-day period. This is a more stable product that minimizes the cloud effect.
+ 
+Why isn’t there 100% coverage every day for daily NDVI?
+--------------------------------------------------------
+
+We cannot achieve 100% global coverage daily because it takes, on average, 1.1 days (26.4 hours) for the S3A and S3B satellites to cover the globe. In addition, since cloud and snow covers are limiting factors, such areas are detected and assigned a “no data” value, further reducing the percentage of daily coverage.
+ 
+Why a threshold and how is it computed to determine district mean?
+-------------------------------------------------------------------
+
+Passive sensors onboard the MODIS Terra and Aqua and S3A and S3B satellites collect a different number of pixels, or samples, each day due to the time it takes for global coverage (1.1 days are required to cover the globe for daily NDVI), processing issues, and/or cloud cover limiting observations. To better represent the signal mean for a district, we set a minimum number of samples, or threshold, that is needed. This is represented as a percentage of the total number of samples for a given day divided by the district area. Our production system will show “no data” when collected samples for a given day are below the threshold.
+
+We compute the threshold by conducting a sensitivity analysis using NDVI data over various districts spread globally for different time frames, changing the number of pixels in a district and analyzing the impact this has on the district mean and associated error. We determined that a 20% threshold for S3A and S3B should be used to compute district mean, which represents a compromise between the need for NDVI global coverage that is significantly affected by cloud, and accuracy of the derived district mean computation. Using a 20% threshold yields an average error of 7%, as compared with NDVI estimate error from most satellite missions of about 5%.
+
+
 
 Account
 =======
