@@ -850,7 +850,7 @@ class GroClient(object):
             self.access_token, self.api_host, entity_type, num_results, **selection
         )
 
-    def get_df(self, show_revisions=False, index_by_series=False):
+    def get_df(self, show_revisions=False, index_by_series=False, index_by_end_date=False):
         """Call :meth:`~.get_data_points` for each saved data series and return as a combined
         dataframe.
 
@@ -866,6 +866,8 @@ class GroClient(object):
             See https://developers.gro-intelligence.com/data-point-definition.html
             If index_by_series is set, the dataframe is indexed by series.
             See https://developers.gro-intelligence.com/data-series-definition.html
+            If index_by_end_date is set, the dataframe is indexed by end date, with the 
+            series values in each column and the entity names shifted to the column headers.
         """
         while self._data_series_queue:
             data_series = self._data_series_queue.pop()
@@ -874,12 +876,39 @@ class GroClient(object):
             self.add_points_to_df(
                 None, data_series, self.get_data_points(**data_series)
             )
-        if index_by_series and not self._data_frame.empty:
+        if (index_by_series or index_by_end_date) and not self._data_frame.empty:
             columns = intersect(DATA_SERIES_UNIQUE_TYPES_ID, self._data_frame.columns)
+            column_names = [c.replace('id', 'name') for c in columns]
             if len(columns) > 0:
-                indexed_df = self._data_frame.set_index(columns)
-                indexed_df.index.set_names(DATA_SERIES_UNIQUE_TYPES_ID, inplace=True)
+                
+                # add entity names to dataframe
+                series_df = pandas.DataFrame([dict(s) for s in self.get_data_series_list()])
+                df_with_names = self._data_frame.merge(series_df[columns + column_names],
+                                                       on=columns)
+                
+                # add unit name
+                unit_lookup = {unit_id:self.lookup('units', unit_id)['name'] \
+                               for unit_id in list(self._data_frame.unit_id.unique())}
+                df_with_names['unit_name'] = df_with_names.unit_id.apply(lambda x: unit_lookup[x])
+                column_names.append('unit_name')
+                
+                #set entity names as index
+                indexed_df = df_with_names.set_index(column_names)
+                indexed_df.index.set_names(column_names, inplace=True)
+                
+                if index_by_end_date:
+                    table_df = indexed_df.pivot_table(values='value', 
+                                                      index='end_date', 
+                                                      columns=indexed_df.index)
+                    table_cols = pandas.MultiIndex.from_tuples(table_df.columns)
+                    table_cols.names = column_names
+                    table_df.columns = table_cols
+                    
+                    return table_df.sort_index()
+                
+                indexed_df.index = indexed_df.index.droplevel('unit_name')
                 return indexed_df.sort_index()
+        
         return self._data_frame
 
     def async_get_df(self):
@@ -1082,9 +1111,15 @@ class GroClient(object):
         entity_ids = [int(x) for x in gdh_selection.split("-")]
         selection = zip_selections(entity_ids, **optional_selections)
 
-        self.add_single_data_series(selection)
+        gdh_series = self.get_data_series(**selection)
+        if (len(gdh_series) > 1):
+            self._logger.warn("Multiple series returned for GDH selection")
+        for series in gdh_series: self.add_single_data_series(series)
+        entity_names = [series[entity_id.replace('id', 'name')] \
+                        for entity_id in DATA_SERIES_UNIQUE_TYPES_ID]
+        
         try:
-            return self.get_df(index_by_series=True).loc[[tuple(entity_ids)], :]
+            return self.get_df(index_by_series=True).loc[[tuple(entity_names)], :]
         except KeyError:
             self._logger.warn("GDH returned no data")
             return pandas.DataFrame()
