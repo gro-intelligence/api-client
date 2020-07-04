@@ -1114,6 +1114,7 @@ class GroClient(object):
         gdh_series = self.get_data_series(**selection)
         if (len(gdh_series) > 1):
             self._logger.warn("Multiple series returned for GDH selection")
+            return pandas.DataFrame()
         for series in gdh_series: self.add_single_data_series(series)
         entity_names = [series[entity_id.replace('id', 'name')] \
                         for entity_id in DATA_SERIES_UNIQUE_TYPES_ID]
