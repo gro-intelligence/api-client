@@ -1,2 +1,2 @@
-from groapiclient import GroClient as BatchClient
-from groapiclient import BatchError
+from groapiclient.client import GroClient as BatchClient
+from groapiclient.client import BatchError
