@@ -1303,7 +1303,7 @@
 <span class="sd">            A list of data_series objects, as returned by :meth:`~.get_data_series`.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_data_series_list</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="p">[</span><span class="nb">dict</span><span class="p">(</span><span class="n">data_series_hash</span><span class="p">)</span> <span class="k">for</span> <span class="n">data_series_hash</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_series_list</span><span class="p">]</span></div>
 
 <div class="viewcode-block" id="GroClient.add_single_data_series"><a class="viewcode-back" href="../../../api.html#api.client.gro_client.GroClient.add_single_data_series">[docs]</a>    <span class="k">def</span> <span class="nf">add_single_data_series</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_series</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Save a data series object to the GroClient&#39;s data_series_list.</span>
@@ -1823,7 +1823,7 @@
             <dd><a href="../../../CLEWS-25726/index.html">CLEWS-25726</a></dd>
             <dd><a href="../../../CLEWS-26758-similar_regions/index.html">CLEWS-26758-similar_regions</a></dd>
             <dd><a href="../../../CLEWS-27625-fixtures/index.html">CLEWS-27625-fixtures</a></dd>
-            <dd><a href="../../../CLEWS-29515/index.html">CLEWS-29515</a></dd>
+            <dd><a href="../../../CLEWS-29521/index.html">CLEWS-29521</a></dd>
             <dd><a href="../../../JGrinst-patch-1/index.html">JGrinst-patch-1</a></dd>
             <dd><a href="../../../analogous_years_modifications/index.html">analogous_years_modifications</a></dd>
             <dd><a href="../../../black/index.html">black</a></dd>
