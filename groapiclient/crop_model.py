@@ -2,10 +2,9 @@ from __future__ import division
 from builtins import map
 from builtins import zip
 from datetime import datetime
-import math
 import numpy
 import pandas
-from groapiclient import GroClient
+from groapiclient.client import GroClient
 
 
 class CropModel(GroClient):
