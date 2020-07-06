@@ -1109,7 +1109,7 @@
         <span class="c1"># get_data_points response doesn&#39;t include the</span>
         <span class="c1"># source_id. We add it as a column, in case we have</span>
         <span class="c1"># several selections series which differ only by source id.</span>
-        <span class="n">tmp</span><span class="o">.</span><span class="n">source_id</span> <span class="o">=</span> <span class="n">data_series</span><span class="p">[</span><span class="s2">&quot;source_id&quot;</span><span class="p">]</span>
+        <span class="n">tmp</span><span class="p">[</span><span class="s2">&quot;source_id&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data_series</span><span class="p">[</span><span class="s2">&quot;source_id&quot;</span><span class="p">]</span>
         <span class="c1"># tmp should always have end_date/start_date/reporting_date as columns if not empty</span>
         <span class="n">tmp</span><span class="o">.</span><span class="n">end_date</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">tmp</span><span class="o">.</span><span class="n">end_date</span><span class="p">)</span>
         <span class="n">tmp</span><span class="o">.</span><span class="n">start_date</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">tmp</span><span class="o">.</span><span class="n">start_date</span><span class="p">)</span>
@@ -1824,7 +1824,6 @@
             <dd><a href="../../../../CLEWS-26758-similar_regions/index.html">CLEWS-26758-similar_regions</a></dd>
             <dd><a href="../../../../CLEWS-27625-fixtures/index.html">CLEWS-27625-fixtures</a></dd>
             <dd><a href="../../../../CLEWS-29521/index.html">CLEWS-29521</a></dd>
-            <dd><a href="../../../../CLEWS-29523/index.html">CLEWS-29523</a></dd>
             <dd><a href="../../../../JGrinst-patch-1/index.html">JGrinst-patch-1</a></dd>
             <dd><a href="../../../../analogous_years_modifications/index.html">analogous_years_modifications</a></dd>
             <dd><a href="../../../../black/index.html">black</a></dd>
