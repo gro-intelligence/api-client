@@ -327,6 +327,9 @@ class GroClientTests(TestCase):
         self.assertEqual(
             self.client.get_df().iloc[0]["start_date"].date(), date(2017, 1, 1)
         )
+        self.assertEqual(
+            self.client.get_df().iloc[0]["source_id"], 2
+        )
 
     def test_get_data_points(self):
         # Gives the point's default unit if unit's not specified:
