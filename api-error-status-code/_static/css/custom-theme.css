@@ -1,0 +1,238 @@
+@import 'theme.css';
+@import 'sidebar.css';
+@import 'banner.css';
+
+
+h1 {
+    font-family: Roboto,Arial,sans-serif;
+    font-weight: 300;
+    font-size: 36px;
+    color: #444447;
+    line-height: 42px;
+}
+
+h2 {
+    font-family: Roboto,Arial,sans-serif;
+    font-weight: 400;
+    font-size: 22px;
+    color: #444447;
+    line-height: 36px;
+}
+
+h3 {
+    font-family: Roboto,Arial,sans-serif;
+    font-weight: 500;
+    font-size: 18px;
+    color: #666669;
+    line-height: 28px;
+}
+
+h4 {
+    font-family: Roboto,Arial,sans-serif;
+    font-weight: 400;
+    font-size: 16px;
+    color: #555558;
+    line-height: 21px;
+}
+
+p {
+    font-family: Roboto,Arial,sans-serif;
+    font-weight: 400;
+    font-size: 16px;
+    color: #666669;
+    line-height: 21px;
+}
+
+ol li{
+    font-family: Roboto,Arial,sans-serif;
+    font-weight:400;
+    font-size: 16px;
+    color: #444447;
+    line-height: 28px;
+}
+
+a {
+    font-family: Roboto,Arial,sans-serif;
+    font-weight: 400;
+    font-size: 16px;
+    color: #00A1C2;
+    line-height: inherit;
+    text-decoration: underline;
+}
+
+a:visited {
+  color: #00A1C2;
+}
+
+a.reference.external:after {
+  font-size: unset !important;
+  vertical-align: initial !important;
+}
+
+img {
+    padding: 26px 0;
+}
+
+.wy-nav-content {
+  border-left: 2px #EEEEF1 solid;
+  max-width: 800px;
+}
+
+.wy-breadcrumbs {
+    font-family: Roboto,Arial,sans-serif;
+}
+
+.rst-breadcrumbs-buttons {
+    display: none;
+}
+
+.wy-breadcrumbs li.wy-breadcrumbs-aside {
+  display: none;
+}
+
+.rst-footer-buttons {
+    display: none;
+}
+
+.rst-content dl:not(.docutils) dt {
+    color: #3C96BA;
+    font-family: Roboto,Arial,sans-serif;
+    border-top: solid 3px #3C96BA;
+    background: rgba(60,150,186,0.15);
+}
+
+.rst-content .viewcode-link, .rst-content .viewcode-back {
+    color: #e31b37;
+}
+
+.highlight .kn {
+    color: #FF0079 !important;
+}
+
+.highlight .s1 {
+    color: #76B166 !important;
+}
+
+.highlight .kc {
+    color: #4AC6AA !important;
+}
+
+.highlight .n {
+    color: #444447 !important;
+}
+
+.highlight .mi {
+    color: #EB904B !important;
+}
+
+.highlight .gp {
+    color: #000003 !important;
+}
+
+.highlight .nn {
+    color: #322285 !important;
+}
+
+.highlight .s2 {
+    color: #e31b37 !important;
+}
+
+#search-results .context {
+    font-family: Roboto,Arial,sans-serif;
+}
+
+.rst-content .highlighted {
+    font-family: Roboto,Arial,sans-serif;
+}
+
+.rst-content ol li {
+  font-family: Roboto,Arial,sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+  color: #666669;
+  line-height: 21px;
+}
+
+
+/* Page Table of Contents */
+.rst-content .section .contents {
+  border-bottom: solid #DDDDE0 1px;
+  margin-bottom: 40px;
+}
+
+.rst-content .section .contents .topic-title {
+  text-transform: uppercase;
+  font-weight: 500;
+  font-size: 18px;
+  margin-bottom: 8px;
+}
+
+.rst-content .section .contents ul li,
+.rst-content .section .contents ul li li {
+  line-height: 25px;
+  list-style: none;
+}
+ 
+.rst-content .section .contents > ul > li {
+  margin-left: 3px;
+}
+
+.rst-content a.toc-backref {
+  text-decoration: inherit;
+  font: inherit;
+}
+
+footer {
+    font-family: Roboto,Arial,sans-serif;
+    font-size: 0;
+}
+
+footer p{
+    font-weight:400;
+    color: #9b9b9e;
+    font-size: 12px;
+}
+
+footer a {
+    display: none;
+}
+
+#text {
+    display: none;
+}
+
+/* Make method links like :meth:`~.get_data_points` not tiny */
+code, .rst-content tt, .rst-content code {
+  font-size: 90% !important;
+  font-weight: 500 !important;
+}
+
+a > code {
+  text-decoration: underline;
+}
+
+.rst-content code.xref {
+  color: #e31b37;
+}
+
+.rst-content a {
+  font-size: inherit;
+}
+
+.caption-text {
+  font-size: 15px;
+  font-weight: 500;
+  color: #555558;
+  text-transform: capitalize;
+}
+
+.rst-content .caption-text {
+  font-family: Roboto,Arial,sans-serif;
+  font-weight: 500;
+  color: #9b9b9e;
+}
+
+/* hide branches from version switcher */
+.rst-other-versions dl:last-child {
+  display: none;
+} 
