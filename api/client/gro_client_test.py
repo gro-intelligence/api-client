@@ -369,8 +369,7 @@ class GroClientTests(TestCase):
 
     def test_get_data_series_list(self):
         self.client.add_single_data_series(mock_data_series[0])
-        for idx, elem in enumerate(self.client.get_data_series_list()[0]):
-            key, value = elem
+        for key, value in self.client.get_data_series_list()[0].items():
             self.assertEqual(value, mock_data_series[0][key])
 
     def test_find_data_series(self):
@@ -408,8 +407,7 @@ class GroClientTests(TestCase):
         # TODO: when duplicates are removed, this should equal 2:
         data_series = self.client.add_data_series(metric="Production", region="United")
         self.assertEqual(data_series, mock_data_series[0])
-        for idx, elem in enumerate(self.client.get_data_series_list()[0]):
-            key, value = elem
+        for key, value in self.client.get_data_series_list()[0].items():
             self.assertEqual(value, mock_data_series[0][key])
 
     def test_search_for_entity(self):
