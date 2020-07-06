@@ -138,7 +138,7 @@ def get_version_info():
     # retrieve python version and api client version
     versions['python-version'] = platform.python_version()
     try:
-        versions['api-client-version'] = get_distribution('gro').version
+        versions['api-client-version'] = get_distribution('groapiclient').version
     except DistributionNotFound:
         # package is not installed
         pass
