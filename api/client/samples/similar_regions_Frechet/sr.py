@@ -41,9 +41,9 @@ class SimilarRegion(object):
                  drop_mode='any_missing'):
         """
         :param metric_properties: A dict containing properties which can be used in the region similarity metric.
-        This is by default defined in mtric.py, but can be adjusted.
+        This is by default defined in metric.py, but can be adjusted.
         :param search_region: region_id to search for similar regions. Default is 0 (entire world).
-        :param update: If 'reload', full reload from Gro API after which local caches are completely overwritten
+        :param update_mode: If 'reload', full reload from Gro API after which local caches are completely overwritten
         If 'no', take only cached data (subjcted to OK_TO_PROCEED_REGION_FRACTION threshold), nothing read from Gro API.
         If 'update', read cached data, then try to read from API whatever is missing.
         :param region_info_reload: If True, reload region info from Gro, otherwise try to use cached (still reload if region not found).
@@ -168,7 +168,7 @@ class SimilarRegion(object):
         ################### Drop incomplete regions #################################
         self.data = pd.DataFrame(self.data,
                             index=pd.MultiIndex.from_product([self.needed_regions,range(1,self.t_int_per_year+1)],
-                                                             names=['region','month']),
+                                                             names=['region','year_period']),
                             columns=self.needed_properties)
         # Subjective decision - what to do with missing data?
         # option #1 - drop any region with ANY missing data in any of variables
