@@ -29,7 +29,7 @@ class APIError(Exception):
         self.retry_count = retry_count
         self.url = url
         self.params = params
-        self.status_code = self.response.status_code
+        self.status_code = response.status_code if hasattr(response, 'status_code') else None
         try:
             json_content = self.response.json()
             # 'error' should be something like 'Not Found' or 'Bad Request'
