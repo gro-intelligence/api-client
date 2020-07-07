@@ -4,7 +4,7 @@
 
 If it is ever unclear what an id number represents, you can use `lookup` to get all the information you'd need. `lookup` works for any of the [data series selection entities](./data-series-definition): `items`, `metrics`, `regions`, `frequencies`, `sources` and also `units`. For example:
 
-### Metrics
+### Items
 
 ```py
 client.lookup('items', 274)
