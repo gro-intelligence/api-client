@@ -67,6 +67,7 @@ The following properties exist for regions only:
 :code:`level`
 -------------
 Region level corresponds to the administrative level of the region:
+
 * level 1: world
 * level 2: continent
 * level 3: country
