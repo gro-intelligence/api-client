@@ -6,7 +6,13 @@ mock_entities = {
             "id": 860032,
             "name": "Production Quantity",
             "contains": [],
-            "belongsTo": [],
+            "belongsTo": [119],
+        },
+        860033: {
+            "id": 3341078,
+            "name": "Production Value",
+            "contains": [],
+            "belongsTo": [119],
         }
     },
     "items": {},
@@ -91,7 +97,7 @@ mock_list_of_series_points = [
             "regionId": 1215,
             "partnerRegionId": 0,
             "frequencyId": 9,
-            "sourceId": 2,
+            # "sourceId": 2,
             "unitId": 14,
             "belongsTo": {
                 "metricId": 860032,
@@ -134,7 +140,7 @@ mock_data_points = [
         "region_id": 1215,
         "partner_region_id": 0,
         "frequency_id": 9,
-        "source_id": 2,
+        # "source_id": 2,
         "belongs_to": {
             "metric_id": 860032,
             "item_id": 274,
@@ -154,7 +160,7 @@ mock_data_points = [
         "region_id": 1216,
         "partner_region_id": 0,
         "frequency_id": 9,
-        "source_id": 2,
+        # "source_id": 2,
         "belongs_to": {
             "metric_id": 860032,
             "item_id": 274,

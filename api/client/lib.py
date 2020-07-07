@@ -29,7 +29,7 @@ class APIError(Exception):
         self.retry_count = retry_count
         self.url = url
         self.params = params
-        self.status_code = self.response.status_code
+        self.status_code = response.status_code if hasattr(response, 'status_code') else None
         try:
             json_content = self.response.json()
             # 'error' should be something like 'Not Found' or 'Bad Request'
@@ -538,26 +538,26 @@ def lookup_belongs(access_token, api_host, entity_type, entity_id):
 
 
 def get_geo_centre(access_token, api_host, region_id):
-    url = '/'.join(['https:', '', api_host, 'v2/geocentres?regionIds=' +
-                    str(region_id)])
+    url = '/'.join(['https:', '', api_host, 'v2/geocentres'])
     headers = {'authorization': 'Bearer ' + access_token}
-    resp = get_data(url, headers)
+    resp = get_data(url, headers, {'regionIds': region_id})
     return resp.json()['data']
 
 
 @memoize(maxsize=None)
-def get_geojsons(access_token, api_host, region_id, descendant_level=None):
-    url = '/'.join(['https:', '', api_host, 'v2/geocentres?includeGeojson=True&regionIds={}'.format(
-        region_id)])
+def get_geojsons(access_token, api_host, region_id, descendant_level, zoom_level):
+    url = '/'.join(['https:', '', api_host, 'v2/geocentres'])
+    params = {'includeGeojson': True, 'regionIds': region_id, 'zoom': zoom_level}
     if descendant_level:
-        url += "&reqRegionLevelId={}&stringify=false".format(descendant_level)
+        params['reqRegionLevelId']= descendant_level
+        params['stringify'] = 'false'
     headers = {'authorization': 'Bearer ' + access_token}
-    resp = get_data(url, headers)
+    resp = get_data(url, headers, params)
     return [dict_reformat_keys(r, str_camel_to_snake) for r in resp.json()['data']]
 
 
-def get_geojson(access_token, api_host, region_id):
-    for region in get_geojsons(access_token, api_host, region_id):
+def get_geojson(access_token, api_host, region_id, zoom_level):
+    for region in get_geojsons(access_token, api_host, region_id, None, zoom_level):
         return json.loads(region['geojson'])
 
 
