@@ -4,7 +4,7 @@ from builtins import zip
 from datetime import datetime
 import numpy
 import pandas
-from groapiclient.client import GroClient
+from groclient.client import GroClient
 
 
 class CropModel(GroClient):
