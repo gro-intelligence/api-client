@@ -907,7 +907,7 @@ class GroClient(object):
         # get_data_points response doesn't include the
         # source_id. We add it as a column, in case we have
         # several selections series which differ only by source id.
-        tmp.source_id = data_series["source_id"]
+        tmp["source_id"] = data_series["source_id"]
         # tmp should always have end_date/start_date/reporting_date as columns if not empty
         tmp.end_date = pandas.to_datetime(tmp.end_date)
         tmp.start_date = pandas.to_datetime(tmp.start_date)
@@ -1101,7 +1101,7 @@ class GroClient(object):
             A list of data_series objects, as returned by :meth:`~.get_data_series`.
 
         """
-        return list(self._data_series_list)
+        return [dict(data_series_hash) for data_series_hash in self._data_series_list]
 
     def add_single_data_series(self, data_series):
         """Save a data series object to the GroClient's data_series_list.
