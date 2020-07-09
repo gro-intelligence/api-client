@@ -378,3 +378,94 @@ def test_get_top(mock_requests_get):
     mock_requests_get.return_value.status_code = 200
     assert lib.get_top(MOCK_TOKEN, MOCK_HOST, 'items', metric_id=14) == mock_response
     assert lib.get_top(MOCK_TOKEN, MOCK_HOST, 'items', num_results=3, metric_id=14) == mock_response
+
+
+@mock.patch('requests.get')
+def test_get_geo_centre(mock_requests_get):
+    US_data = {
+        "regionId": 1215,
+        "regionName": "United States",
+        "centre": [
+            39.8333,
+            -98.5855
+        ]
+    }
+    api_response = {
+        'data': [US_data]
+    }
+    initialize_requests_mocker_and_get_mock_data(mock_requests_get, api_response)
+    assert lib.get_geo_centre(MOCK_TOKEN, MOCK_HOST, 1215) == [US_data]
+
+
+@mock.patch('requests.get')
+def test_get_geo_jsons(mock_requests_get):
+    api_response = {
+        'data': [{
+            "regionId": 13051,
+            "regionName": "Alabama",
+            "centre": [
+                32.7933,
+                -86.8278
+            ],
+            "geojson": {
+                "type": "MultiPolygon",
+                "coordinates": [[[[ -88.201896667, 35.0088806150001]]]]
+            }
+        },
+        {
+            "regionId": 13052,
+            "regionName": "Alaska",
+            "centre": [
+                64.2386,
+                -152.279
+            ],
+            "geojson": {
+                "type": "MultiPolygon",
+                "coordinates": [[[[ -179.07043457, 51.2564086920001]]]]
+            }
+        }]
+    }
+    expected_return = [{
+        "region_id": 13051,
+        "region_name": "Alabama",
+        "centre": [
+            32.7933,
+            -86.8278
+        ],
+        "geojson": {
+            "type": "MultiPolygon",
+            "coordinates": [[[[ -88.201896667, 35.0088806150001]]]]
+        }
+    },
+    {
+        "region_id": 13052,
+        "region_name": "Alaska",
+        "centre": [
+            64.2386,
+            -152.279
+        ],
+        "geojson": {
+            "type": "MultiPolygon",
+            "coordinates": [[[[ -179.07043457, 51.2564086920001]]]]
+        }
+    }]
+    initialize_requests_mocker_and_get_mock_data(mock_requests_get, api_response)
+    assert lib.get_geojsons(MOCK_TOKEN, MOCK_HOST, 1215, None, 7) == expected_return
+
+
+@mock.patch('api.client.lib.get_geojsons')
+def test_get_geo_json(geojsons_mocked):
+    geojsons_mocked.return_value = [{
+        "region_id": 1215,
+        "region_name": "United States",
+        "centre": [
+            39.8333,
+            -98.5855
+        ],
+        "geojson": "{\"type\":\"GeometryCollection\",\"geometries\":[{\"type\":\"MultiPolygon\",\"coordinates\":[[[[-155.651382446,20.1647224430001]]]]}]}"
+    }]
+    expected_return = {
+        'type': 'GeometryCollection',
+        'geometries': [{'type': 'MultiPolygon', 'coordinates': [[[[-155.651382446, 20.1647224430001]]]]}]
+    }
+    assert lib.get_geojson(MOCK_TOKEN, MOCK_HOST, 1215, 7) == expected_return
