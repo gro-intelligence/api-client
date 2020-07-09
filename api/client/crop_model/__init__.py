@@ -1,1 +1,1 @@
-from groapiclient.crop_model import CropModel
+from groclient.crop_model import CropModel

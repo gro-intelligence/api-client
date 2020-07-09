@@ -1,1 +1,1 @@
-from groapiclient.cfg import *
+from groclient.cfg import *

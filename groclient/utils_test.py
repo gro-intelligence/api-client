@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from groapiclient.utils import (
+from groclient.utils import (
     str_camel_to_snake,
     str_snake_to_camel,
     dict_reformat_keys,

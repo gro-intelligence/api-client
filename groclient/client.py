@@ -18,10 +18,10 @@ except ImportError:
     # Python2
     from urllib import urlencode
 
-from groapiclient import cfg, lib
-from groapiclient.constants import DATA_SERIES_UNIQUE_TYPES_ID, ENTITY_KEY_TO_TYPE
-from groapiclient.utils import intersect, zip_selections, dict_unnest
-from groapiclient.lib import APIError
+from groclient import cfg, lib
+from groclient.constants import DATA_SERIES_UNIQUE_TYPES_ID, ENTITY_KEY_TO_TYPE
+from groclient.utils import intersect, zip_selections, dict_unnest
+from groclient.lib import APIError
 
 import pandas
 import unicodecsv

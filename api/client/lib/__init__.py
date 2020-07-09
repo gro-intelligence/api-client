@@ -1,1 +1,1 @@
-from groapiclient.lib import *
+from groclient.lib import *

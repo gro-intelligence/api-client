@@ -1,2 +1,2 @@
-from groapiclient import GroClient
-from groapiclient.client import APIError
+from groclient import GroClient
+from groclient.client import APIError
