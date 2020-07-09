@@ -18,7 +18,7 @@ build:
   ci:
     - shippable_retry pip install .[test]
     # Run doctests
-    - python groapiclient/lib.py -v
+    - python groclient/lib.py -v
     # Create folders for test and code coverage
     - mkdir -p shippable/testresults
     - mkdir -p shippable/codecoverage
@@ -26,7 +26,7 @@ build:
     - >
       pytest
       --junitxml=shippable/testresults/nosetests.xml
-      --cov=groapiclient
+      --cov=groclient
       --cov-report=xml:shippable/codecoverage/coverage.xml
   on_success:
     # Only build docs on the Python 2.7 run. It is unnecessary to run on both 2.x and 3.x - one or
