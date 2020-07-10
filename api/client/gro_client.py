@@ -1137,7 +1137,7 @@ class GroClient(object):
             A list of data_series objects, as returned by :meth:`~.get_data_series`.
 
         """
-        return list(self._data_series_list)
+        return [dict(data_series_hash) for data_series_hash in self._data_series_list]
 
     def add_single_data_series(self, data_series):
         """Save a data series object to the GroClient's data_series_list.
