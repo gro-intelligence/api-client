@@ -850,7 +850,7 @@ class GroClient(object):
             self.access_token, self.api_host, entity_type, num_results, **selection
         )
 
-    def get_df(self, show_revisions=False, index_by_series=False, index_by_end_date=False):
+    def get_df(self, show_revisions=False, index_by_series=False):
         """Call :meth:`~.get_data_points` for each saved data series and return as a combined
         dataframe.
 
@@ -866,8 +866,6 @@ class GroClient(object):
             See https://developers.gro-intelligence.com/data-point-definition.html
             If index_by_series is set, the dataframe is indexed by series.
             See https://developers.gro-intelligence.com/data-series-definition.html
-            If index_by_end_date is set, the dataframe is indexed by end date, with the 
-            series values in each column and the entity names shifted to the column headers.
         """
         while self._data_series_queue:
             data_series = self._data_series_queue.pop()
@@ -876,7 +874,7 @@ class GroClient(object):
             self.add_points_to_df(
                 None, data_series, self.get_data_points(**data_series)
             )
-        if (index_by_series or index_by_end_date) and not self._data_frame.empty:
+        if index_by_series and not self._data_frame.empty:
             columns = intersect(DATA_SERIES_UNIQUE_TYPES_ID, self._data_frame.columns)
             column_names = [c.replace('id', 'name') for c in columns]
             if len(columns) > 0:
@@ -896,17 +894,6 @@ class GroClient(object):
                 indexed_df = df_with_names.set_index(column_names)
                 indexed_df.index.set_names(column_names, inplace=True)
                 
-                if index_by_end_date:
-                    table_df = indexed_df.pivot_table(values='value', 
-                                                      index='end_date', 
-                                                      columns=indexed_df.index)
-                    table_cols = pandas.MultiIndex.from_tuples(table_df.columns)
-                    table_cols.names = column_names
-                    table_df.columns = table_cols
-                    
-                    return table_df.sort_index()
-                
-                indexed_df.index = indexed_df.index.droplevel('unit_name')
                 return indexed_df.sort_index()
         
         return self._data_frame
