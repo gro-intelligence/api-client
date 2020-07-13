@@ -876,26 +876,26 @@ class GroClient(object):
             )
         if index_by_series and not self._data_frame.empty:
             columns = intersect(DATA_SERIES_UNIQUE_TYPES_ID, self._data_frame.columns)
-            column_names = [c.replace('id', 'name') for c in columns]
             if len(columns) > 0:
-                
-                # add entity names to dataframe
+                # add entity names to the dataframe
                 series_df = pandas.DataFrame([dict(s) for s in self.get_data_series_list()])
-                df_with_names = self._data_frame.merge(series_df[columns + column_names],
-                                                       on=columns)
-                
-                # add unit name
-                unit_lookup = {unit_id:self.lookup('units', unit_id)['name'] \
-                               for unit_id in list(self._data_frame.unit_id.unique())}
-                df_with_names['unit_name'] = df_with_names.unit_id.apply(lambda x: unit_lookup[x])
-                column_names.append('unit_name')
-                
-                #set entity names as index
-                indexed_df = df_with_names.set_index(column_names)
-                indexed_df.index.set_names(column_names, inplace=True)
-                
+                name_columns = []
+                for col in columns:
+                    name_col = col.replace('id', 'name')
+                    name_columns.append(name_col)
+                    # lookup names if not available in the series list (e.g. if input is GDH)
+                    if name_col not in series_df.columns or series_df[name_col].isna().any():
+                        entity_lookup = {entity_id: self.lookup(ENTITY_KEY_TO_TYPE[col], entity_id)['name'] \
+                                   for entity_id in list(series_df[col].unique())}
+                        series_df[name_col] = series_df[col].apply(lambda x: entity_lookup[x])
+
+                df_with_names = self._data_frame.merge(series_df[columns + name_columns],
+                                                       on=columns, copy=False)
+
+                indexed_df = df_with_names.set_index(columns)
+                indexed_df.index.set_names(DATA_SERIES_UNIQUE_TYPES_ID, inplace=True)
+
                 return indexed_df.sort_index()
-        
         return self._data_frame
 
     def async_get_df(self):
