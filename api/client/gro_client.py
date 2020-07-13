@@ -895,6 +895,11 @@ class GroClient(object):
                 indexed_df = df_with_names.set_index(columns)
                 indexed_df.index.set_names(DATA_SERIES_UNIQUE_TYPES_ID, inplace=True)
 
+                # move entity names to column headers
+                indexed_cols = pandas.MultiIndex.from_frame(indexed_df[name_columns])
+                indexed_df.drop(name_columns, axis=1, inplace=True)
+                indexed_df = pandas.concat([indexed_df], keys=indexed_cols, axis=1)
+                indexed_df.columns.names = name_columns + ['entities']
                 return indexed_df.sort_index()
         return self._data_frame
 
