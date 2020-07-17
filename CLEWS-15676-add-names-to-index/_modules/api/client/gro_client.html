@@ -1055,7 +1055,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_host</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">,</span> <span class="n">num_results</span><span class="p">,</span> <span class="o">**</span><span class="n">selection</span>
         <span class="p">)</span></div>
 
-<div class="viewcode-block" id="GroClient.get_df"><a class="viewcode-back" href="../../../api.html#api.client.gro_client.GroClient.get_df">[docs]</a>    <span class="k">def</span> <span class="nf">get_df</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">show_revisions</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">index_by_series</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">index_by_end_date</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="GroClient.get_df"><a class="viewcode-back" href="../../../api.html#api.client.gro_client.GroClient.get_df">[docs]</a>    <span class="k">def</span> <span class="nf">get_df</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">show_revisions</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">index_by_series</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Call :meth:`~.get_data_points` for each saved data series and return as a combined</span>
 <span class="sd">        dataframe.</span>
 
@@ -1071,8 +1071,6 @@
 <span class="sd">            See https://developers.gro-intelligence.com/data-point-definition.html</span>
 <span class="sd">            If index_by_series is set, the dataframe is indexed by series.</span>
 <span class="sd">            See https://developers.gro-intelligence.com/data-series-definition.html</span>
-<span class="sd">            If index_by_end_date is set, the dataframe is indexed by end date, with the </span>
-<span class="sd">            series values in each column and the entity names shifted to the column headers.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_series_queue</span><span class="p">:</span>
             <span class="n">data_series</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_series_queue</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
@@ -1081,39 +1079,33 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">add_points_to_df</span><span class="p">(</span>
                 <span class="kc">None</span><span class="p">,</span> <span class="n">data_series</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_data_points</span><span class="p">(</span><span class="o">**</span><span class="n">data_series</span><span class="p">)</span>
             <span class="p">)</span>
-        <span class="k">if</span> <span class="p">(</span><span class="n">index_by_series</span> <span class="ow">or</span> <span class="n">index_by_end_date</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_frame</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">index_by_series</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_frame</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
             <span class="n">columns</span> <span class="o">=</span> <span class="n">intersect</span><span class="p">(</span><span class="n">DATA_SERIES_UNIQUE_TYPES_ID</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_frame</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
-            <span class="n">column_names</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">columns</span><span class="p">]</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">columns</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-                
-                <span class="c1"># add entity names to dataframe</span>
+                <span class="c1"># add entity names to the dataframe</span>
                 <span class="n">series_df</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([</span><span class="nb">dict</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_data_series_list</span><span class="p">()])</span>
-                <span class="n">df_with_names</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_frame</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">series_df</span><span class="p">[</span><span class="n">columns</span> <span class="o">+</span> <span class="n">column_names</span><span class="p">],</span>
-                                                       <span class="n">on</span><span class="o">=</span><span class="n">columns</span><span class="p">)</span>
-                
-                <span class="c1"># add unit name</span>
-                <span class="n">unit_lookup</span> <span class="o">=</span> <span class="p">{</span><span class="n">unit_id</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">lookup</span><span class="p">(</span><span class="s1">&#39;units&#39;</span><span class="p">,</span> <span class="n">unit_id</span><span class="p">)[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> \
-                               <span class="k">for</span> <span class="n">unit_id</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_data_frame</span><span class="o">.</span><span class="n">unit_id</span><span class="o">.</span><span class="n">unique</span><span class="p">())}</span>
-                <span class="n">df_with_names</span><span class="p">[</span><span class="s1">&#39;unit_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_with_names</span><span class="o">.</span><span class="n">unit_id</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">unit_lookup</span><span class="p">[</span><span class="n">x</span><span class="p">])</span>
-                <span class="n">column_names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;unit_name&#39;</span><span class="p">)</span>
-                
-                <span class="c1">#set entity names as index</span>
-                <span class="n">indexed_df</span> <span class="o">=</span> <span class="n">df_with_names</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="n">column_names</span><span class="p">)</span>
-                <span class="n">indexed_df</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">set_names</span><span class="p">(</span><span class="n">column_names</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-                
-                <span class="k">if</span> <span class="n">index_by_end_date</span><span class="p">:</span>
-                    <span class="n">table_df</span> <span class="o">=</span> <span class="n">indexed_df</span><span class="o">.</span><span class="n">pivot_table</span><span class="p">(</span><span class="n">values</span><span class="o">=</span><span class="s1">&#39;value&#39;</span><span class="p">,</span> 
-                                                      <span class="n">index</span><span class="o">=</span><span class="s1">&#39;end_date&#39;</span><span class="p">,</span> 
-                                                      <span class="n">columns</span><span class="o">=</span><span class="n">indexed_df</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
-                    <span class="n">table_cols</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">MultiIndex</span><span class="o">.</span><span class="n">from_tuples</span><span class="p">(</span><span class="n">table_df</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
-                    <span class="n">table_cols</span><span class="o">.</span><span class="n">names</span> <span class="o">=</span> <span class="n">column_names</span>
-                    <span class="n">table_df</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">table_cols</span>
-                    
-                    <span class="k">return</span> <span class="n">table_df</span><span class="o">.</span><span class="n">sort_index</span><span class="p">()</span>
-                
-                <span class="n">indexed_df</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">indexed_df</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">droplevel</span><span class="p">(</span><span class="s1">&#39;unit_name&#39;</span><span class="p">)</span>
+                <span class="n">name_columns</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">columns</span><span class="p">:</span>
+                    <span class="n">name_col</span> <span class="o">=</span> <span class="n">col</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">)</span>
+                    <span class="n">name_columns</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">name_col</span><span class="p">)</span>
+                    <span class="c1"># lookup names if not available in the series list (e.g. if input is GDH)</span>
+                    <span class="k">if</span> <span class="n">name_col</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">series_df</span><span class="o">.</span><span class="n">columns</span> <span class="ow">or</span> <span class="n">series_df</span><span class="p">[</span><span class="n">name_col</span><span class="p">]</span><span class="o">.</span><span class="n">isna</span><span class="p">()</span><span class="o">.</span><span class="n">any</span><span class="p">():</span>
+                        <span class="n">entity_lookup</span> <span class="o">=</span> <span class="p">{</span><span class="n">entity_id</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">lookup</span><span class="p">(</span><span class="n">ENTITY_KEY_TO_TYPE</span><span class="p">[</span><span class="n">col</span><span class="p">],</span> <span class="n">entity_id</span><span class="p">)[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> \
+                                   <span class="k">for</span> <span class="n">entity_id</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">series_df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">())}</span>
+                        <span class="n">series_df</span><span class="p">[</span><span class="n">name_col</span><span class="p">]</span> <span class="o">=</span> <span class="n">series_df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">entity_lookup</span><span class="p">[</span><span class="n">x</span><span class="p">])</span>
+
+                <span class="n">df_with_names</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_frame</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">series_df</span><span class="p">[</span><span class="n">columns</span> <span class="o">+</span> <span class="n">name_columns</span><span class="p">],</span>
+                                                       <span class="n">on</span><span class="o">=</span><span class="n">columns</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+                <span class="n">indexed_df</span> <span class="o">=</span> <span class="n">df_with_names</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="n">columns</span><span class="p">)</span>
+                <span class="n">indexed_df</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">set_names</span><span class="p">(</span><span class="n">DATA_SERIES_UNIQUE_TYPES_ID</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+                <span class="c1"># move entity names to column headers</span>
+                <span class="n">indexed_cols</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">MultiIndex</span><span class="o">.</span><span class="n">from_frame</span><span class="p">(</span><span class="n">indexed_df</span><span class="p">[</span><span class="n">name_columns</span><span class="p">])</span>
+                <span class="n">indexed_df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">name_columns</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                <span class="n">indexed_df</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">indexed_df</span><span class="p">],</span> <span class="n">keys</span><span class="o">=</span><span class="n">indexed_cols</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+                <span class="n">indexed_df</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">names</span> <span class="o">=</span> <span class="n">name_columns</span> <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;entities&#39;</span><span class="p">]</span>
                 <span class="k">return</span> <span class="n">indexed_df</span><span class="o">.</span><span class="n">sort_index</span><span class="p">()</span>
-        
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_frame</span></div>
 
     <span class="k">def</span> <span class="nf">async_get_df</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -1316,16 +1308,9 @@
         <span class="n">entity_ids</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">gdh_selection</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">)]</span>
         <span class="n">selection</span> <span class="o">=</span> <span class="n">zip_selections</span><span class="p">(</span><span class="n">entity_ids</span><span class="p">,</span> <span class="o">**</span><span class="n">optional_selections</span><span class="p">)</span>
 
-        <span class="n">gdh_series</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_data_series</span><span class="p">(</span><span class="o">**</span><span class="n">selection</span><span class="p">)</span>
-        <span class="k">if</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">gdh_series</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Multiple series returned for GDH selection&quot;</span><span class="p">)</span>
-            <span class="k">return</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
-        <span class="k">for</span> <span class="n">series</span> <span class="ow">in</span> <span class="n">gdh_series</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_single_data_series</span><span class="p">(</span><span class="n">series</span><span class="p">)</span>
-        <span class="n">entity_names</span> <span class="o">=</span> <span class="p">[</span><span class="n">series</span><span class="p">[</span><span class="n">entity_id</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">)]</span> \
-                        <span class="k">for</span> <span class="n">entity_id</span> <span class="ow">in</span> <span class="n">DATA_SERIES_UNIQUE_TYPES_ID</span><span class="p">]</span>
-        
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_single_data_series</span><span class="p">(</span><span class="n">selection</span><span class="p">)</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_df</span><span class="p">(</span><span class="n">index_by_series</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">loc</span><span class="p">[[</span><span class="nb">tuple</span><span class="p">(</span><span class="n">entity_names</span><span class="p">)],</span> <span class="p">:]</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_df</span><span class="p">(</span><span class="n">index_by_series</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">loc</span><span class="p">[[</span><span class="nb">tuple</span><span class="p">(</span><span class="n">entity_ids</span><span class="p">)],</span> <span class="p">:]</span>
         <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;GDH returned no data&quot;</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
@@ -1342,7 +1327,7 @@
 <span class="sd">            A list of data_series objects, as returned by :meth:`~.get_data_series`.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_data_series_list</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="p">[</span><span class="nb">dict</span><span class="p">(</span><span class="n">data_series_hash</span><span class="p">)</span> <span class="k">for</span> <span class="n">data_series_hash</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_series_list</span><span class="p">]</span></div>
 
 <div class="viewcode-block" id="GroClient.add_single_data_series"><a class="viewcode-back" href="../../../api.html#api.client.gro_client.GroClient.add_single_data_series">[docs]</a>    <span class="k">def</span> <span class="nf">add_single_data_series</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_series</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Save a data series object to the GroClient&#39;s data_series_list.</span>
@@ -1862,6 +1847,7 @@
             <dd><a href="../../../../CLEWS-25726/index.html">CLEWS-25726</a></dd>
             <dd><a href="../../../../CLEWS-26758-similar_regions/index.html">CLEWS-26758-similar_regions</a></dd>
             <dd><a href="../../../../CLEWS-27620-Brazil-Sugar-GPM-GFS/index.html">CLEWS-27620-Brazil-Sugar-GPM-GFS</a></dd>
+            <dd><a href="../../../../CLEWS-27620-Brazil-Sugar-GPM-GFS-Integration/index.html">CLEWS-27620-Brazil-Sugar-GPM-GFS-Integration</a></dd>
             <dd><a href="../../../../CLEWS-27625-fixtures/index.html">CLEWS-27625-fixtures</a></dd>
             <dd><a href="../../../../CLEWS-29522/index.html">CLEWS-29522</a></dd>
             <dd><a href="../../../../analogous_years_modifications/index.html">analogous_years_modifications</a></dd>
