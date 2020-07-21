@@ -3,7 +3,7 @@ import re
 from datetime import timedelta, datetime
 from api.client.gro_client import GroClient
 
-LAG_REGEX = SOURCE_LAG_SPLIT_REGEX = re.compile(r'([-]*[1-9]\d*[ymdh])')
+LAG_REGEX = re.compile(r'([-]*[1-9]\d*[ymdh])')
 TIME_UNITS = {'d': 'days', 'm': 'months', 'y': 'years'}
 
 def time_delta_from_lag(lag):
