@@ -16,7 +16,8 @@ build:
   cache_dir_list:
     - /root/.cache/pip
   ci:
-    - shippable_retry pip install .[test]
+    - shippable_retry pip install .
+    - shippable_retry pip install -r requirements-test.txt
     # Run doctests
     - python api/client/lib.py -v
     # Create folders for test and code coverage
