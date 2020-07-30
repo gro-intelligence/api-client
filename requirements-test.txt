@@ -4,7 +4,7 @@ dtw==1.3.3
 matplotlib
 mock
 numpy<=v1.16.6  # last version to support python 2
-pandas>=0.25.0,<1.1.0 # pandas dropna is buggy in 0.24.0, see https://github.com/blue-yonder/tsfresh/issues/485 and https://github.com/pandas-dev/pandas/issues/25087
+pandas>=0.23.0,!=0.24.*,<1.1.0 # pandas dropna is buggy in 0.24.0, see https://github.com/blue-yonder/tsfresh/issues/485 and https://github.com/pandas-dev/pandas/issues/25087
 pytest
 pytest-cov==2.9.0
 scikit-learn<0.21.0  # last version to support Python 2
