@@ -50,6 +50,7 @@ def create_test_data_for_get_data():
 
 @mock.patch('api.client.gro_client.GroClient.get_df', return_value=create_test_data_for_get_data())
 def test_get_data(test_data_1):
+    print('test_data_1', test_data_1)
     client = GroClient('mock_website', 'mock_access_token')
     start_date_bound = '2019-08-01T00:00:00.000Z'
     expected = pd.DataFrame(pd.DataFrame({'end_date': pd.to_datetime(['2019-08-01T00:00:00.000Z',
@@ -68,6 +69,8 @@ def test_get_data(test_data_1):
                                                     2.39664378851418, 1.10551943121531,
                                                     1.10551943121531, 1.10551943121531]}))
     expected.index = expected['end_date']
+    expected = expected.asfreq('D')
+
     test_data = get_transform_data.get_data(client, 'metric_id', 'item_id', 'region_id',
                                             'source_id', 'frequency_id', start_date_bound)
     assert_frame_equal(test_data, expected)
