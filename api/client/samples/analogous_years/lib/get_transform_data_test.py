@@ -50,7 +50,6 @@ def create_test_data_for_get_data():
 
 @mock.patch('api.client.gro_client.GroClient.get_df', return_value=create_test_data_for_get_data())
 def test_get_data(test_data_1):
-    print('test_data_1', test_data_1)
     client = GroClient('mock_website', 'mock_access_token')
     start_date_bound = '2019-08-01T00:00:00.000Z'
     expected = pd.DataFrame(pd.DataFrame({'end_date': pd.to_datetime(['2019-08-01T00:00:00.000Z',
