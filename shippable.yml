@@ -16,8 +16,7 @@ build:
   cache_dir_list:
     - /root/.cache/pip
   ci:
-    - shippable_retry pip install -U pip
-    - shippable_retry pip install .[test] --use-feature=2020-resolver
+    - shippable_retry pip install .[test]
     # Run doctests
     - python api/client/lib.py -v
     # Create folders for test and code coverage

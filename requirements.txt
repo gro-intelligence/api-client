@@ -3,7 +3,7 @@ certifi
 chardet
 future
 numpy
-pandas>=0.24.0
+pandas
 python-dateutil
 pytz
 requests
