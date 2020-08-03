@@ -28,6 +28,10 @@ build:
       --junitxml=shippable/testresults/nosetests.xml
       --cov=api
       --cov-report=xml:shippable/codecoverage/coverage.xml
+    - >
+      if [ "$SHIPPABLE_PYTHON_VERSION" == "3.7" ]; then
+        shippable_retry pip install -r api/client/samples/analogous_years/requirements.txt && pytest api/client/samples/analogous_years/
+      fi;
   on_success:
     # Only build docs on the Python 2.7 run. It is unnecessary to run on both 2.x and 3.x - one or
     # the other should suffice. However, as of this writing
