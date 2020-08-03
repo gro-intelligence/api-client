@@ -68,6 +68,8 @@ def test_get_data(test_data_1):
                                                     2.39664378851418, 1.10551943121531,
                                                     1.10551943121531, 1.10551943121531]}))
     expected.index = expected['end_date']
+    expected = expected.asfreq('D')
+
     test_data = get_transform_data.get_data(client, 'metric_id', 'item_id', 'region_id',
                                             'source_id', 'frequency_id', start_date_bound)
     assert_frame_equal(test_data, expected)
