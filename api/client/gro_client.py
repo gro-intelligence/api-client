@@ -885,8 +885,10 @@ class GroClient(object):
                     name_columns.append(name_col)
                     # lookup names if not available in the series list (e.g. if input is GDH)
                     if name_col not in series_df.columns or series_df[name_col].isna().any():
-                        entity_lookup = {entity_id: self.lookup(ENTITY_KEY_TO_TYPE[col], entity_id)['name'] \
-                                   for entity_id in list(series_df[col].unique())}
+                        entity_lookup = {
+                            entity_id: self.lookup(ENTITY_KEY_TO_TYPE[col], entity_id)['name']
+                            for entity_id in list(series_df[col].unique())
+                        }
                         series_df[name_col] = series_df[col].apply(lambda x: entity_lookup[x])
 
                 df_with_names = self._data_frame.merge(series_df[columns + name_columns],
@@ -898,8 +900,9 @@ class GroClient(object):
                 # move entity names to column headers
                 indexed_cols = pandas.MultiIndex.from_frame(indexed_df[name_columns])
                 indexed_df.drop(name_columns, axis=1, inplace=True)
-                indexed_df = pandas.concat([indexed_df], keys=indexed_cols, axis=1)
-                indexed_df.columns.names = name_columns + ['entities']
+
+                # indexed_df = pandas.concat([indexed_df], keys=indexed_cols, axis=1)
+                # indexed_df.columns.names = name_columns + ['entities']
                 return indexed_df.sort_index()
         return self._data_frame
 

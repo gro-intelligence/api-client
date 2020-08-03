@@ -23,14 +23,15 @@ def mock_list_available(access_token, api_host, selected_entities):
 
 
 def mock_lookup(access_token, api_host, entity_type, entity_ids):
-    if isinstance(entity_ids, int):
-        # Raises a KeyError if the requested entity hasn't been mocked:
-        return mock_entities[entity_type][entity_ids]
-    else:
+    try:
+        entity_ids = list(entity_ids)
         return {
             str(entity_id): mock_entities[entity_type][entity_id]
             for entity_id in entity_ids
         }
+    except TypeError:
+        # Raises a KeyError if the requested entity hasn't been mocked:
+        return mock_entities[entity_type][entity_ids]
 
 
 def mock_get_allowed_units(access_token, api_host, metric_id, item_id):
