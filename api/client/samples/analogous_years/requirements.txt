@@ -1,6 +1,6 @@
 dateparser
 dtw==1.3.3
-pandas>=0.25.0, # 0.24 has dropna() issues
+pandas>=0.25.0 # 0.24 has dropna() issues
 seaborn
 scikit-learn
 scipy
