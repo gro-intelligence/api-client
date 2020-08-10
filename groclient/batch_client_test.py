@@ -14,9 +14,10 @@ from tornado.httpclient import HTTPResponse, HTTPError
 from tornado.concurrent import Future
 from tornado.ioloop import IOLoop
 
-from api.client.batch_client import BatchClient, BatchError
-from api.client.utils import str_camel_to_snake
-from api.client.mock_data import (
+from groclient import GroClient as BatchClient
+from groclient.client import BatchError
+from groclient.utils import str_camel_to_snake
+from groclient.mock_data import (
     mock_list_of_series_points,
     mock_data_series,
     mock_error_selection,
