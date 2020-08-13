@@ -1,0 +1,17 @@
+[paths]
+source =
+   groclient
+
+[run]
+branch = true
+source = groclient
+parallel = true
+
+[report]
+show_missing = true
+precision = 2
+omit =
+    */*_test.py
+    */__*__.py
+    api/client/samples/*
+    */mock_data.py
