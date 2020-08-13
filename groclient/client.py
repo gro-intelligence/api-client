@@ -850,7 +850,10 @@ class GroClient(object):
             self.access_token, self.api_host, entity_type, num_results, **selection
         )
 
-    def get_df(self, show_revisions=False, index_by_series=False):
+    def get_df(self,
+               show_revisions=False,
+               include_names=True,
+               index_by_series=False):
         """Call :meth:`~.get_data_points` for each saved data series and return as a combined
         dataframe.
 
@@ -874,19 +877,31 @@ class GroClient(object):
             self.add_points_to_df(
                 None, data_series, self.get_data_points(**data_series)
             )
+
+        df = self._data_frame.copy()
+
+        if include_names:
+            def get_name(entity_type_id, entity_id):
+                return self.lookup(ENTITY_KEY_TO_TYPE[entity_type_id], entity_id)['name']
+
+            for entity_type_id in DATA_SERIES_UNIQUE_TYPES_ID:
+                name_col = entity_type_id.replace('_id', '_name')
+                df[name_col] = df[entity_type_id].apply(partial(get_name, entity_type_id))
+
         if index_by_series and not self._data_frame.empty:
             idx_columns = intersect(DATA_SERIES_UNIQUE_TYPES_ID, self._data_frame.columns)
-            indexed_df = self._data_frame.copy()
 
             def get_name(entity_type_id, entity_id):
                 return self.lookup(ENTITY_KEY_TO_TYPE[entity_type_id], entity_id)['name']
 
             for entity_type_id in list(idx_columns):
                 name_col = entity_type_id.replace('_id', '_name')
-                indexed_df[name_col] = indexed_df[entity_type_id].apply(partial(get_name, entity_type_id))
-            return indexed_df.set_index(idx_columns).sort_index()
+                df[name_col] = df[entity_type_id].apply(partial(get_name, entity_type_id))
 
-        return self._data_frame
+            df.set_index(idx_columns, inplace=True)
+            df.sort_index(inplace=True)
+
+        return df
 
     def async_get_df(self):
         self.batch_async_get_data_points(
@@ -1056,7 +1071,7 @@ class GroClient(object):
         # Return data points in input units if not unit is specified
         return data_points
 
-    def GDH(self, gdh_selection, **optional_selections):
+    def GDH(self, gdh_selection, index_by_names=False, **optional_selections):
         """Wrapper for :meth:`~.get_data_points`. with alternative input and output style.
 
         The data series selection to retrieve is encoded in a
@@ -1088,7 +1103,12 @@ class GroClient(object):
 
         self.add_single_data_series(selection)
         try:
-            return self.get_df(index_by_series=True).loc[[tuple(entity_ids)], :]
+            df = self.get_df(include_names=True, index_by_series=True).loc[[tuple(entity_ids)], :]
+            if index_by_names:
+                df.set_index([entity_type_id.replace('_id', '_name')
+                              for entity_type_id in df.index.names],
+                             inplace=True)
+            return df
         except KeyError:
             self._logger.warn("GDH returned no data")
             return pandas.DataFrame()
