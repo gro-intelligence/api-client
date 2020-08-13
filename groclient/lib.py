@@ -7,9 +7,9 @@ should appear in the client classes rather than here.
 
 from builtins import str
 from math import ceil
-from api.client import cfg
-from api.client.constants import REGION_LEVELS
-from api.client.utils import dict_reformat_keys, str_snake_to_camel, str_camel_to_snake, list_chunk
+from groclient import cfg
+from groclient.constants import REGION_LEVELS
+from groclient.utils import dict_reformat_keys, str_snake_to_camel, str_camel_to_snake, list_chunk
 import json
 import logging
 import requests
@@ -29,7 +29,7 @@ class APIError(Exception):
         self.retry_count = retry_count
         self.url = url
         self.params = params
-        self.status_code = self.response.status_code
+        self.status_code = response.status_code if hasattr(response, 'status_code') else None
         try:
             json_content = self.response.json()
             # 'error' should be something like 'Not Found' or 'Bad Request'
@@ -138,7 +138,7 @@ def get_version_info():
     # retrieve python version and api client version
     versions['python-version'] = platform.python_version()
     try:
-        versions['api-client-version'] = get_distribution('gro').version
+        versions['api-client-version'] = get_distribution('groclient').version
     except DistributionNotFound:
         # package is not installed
         pass
@@ -334,6 +334,7 @@ def get_data_call_params(**selection):
     end_date : string, optional
     show_revisions : boolean, optional
     insert_null : boolean, optional
+    show_metadata : boolean, optional
     at_time : string, optional
 
     Returns
@@ -344,6 +345,8 @@ def get_data_call_params(**selection):
     """
     params = get_params_from_selection(**selection)
     for key, value in list(selection.items()):
+        if key == 'show_metadata':
+            params[str_snake_to_camel('show_meta_data')] = value
         if key in ('start_date', 'end_date', 'show_revisions', 'insert_null', 'at_time'):
             params[str_snake_to_camel(key)] = value
     params['responseType'] = 'list_of_series'
@@ -428,61 +431,7 @@ def get_available_timefrequency(access_token, api_host, **series):
 
 
 def list_of_series_to_single_series(series_list, add_belongs_to=False, include_historical=True):
-    """Convert list_of_series format from API back into the familiar single_series output format.
-
-    >>> list_of_series_to_single_series([{
-    ...     'series': { 'metricId': 1, 'itemId': 2, 'regionId': 3, 'unitId': 4, 'inputUnitId': 5,
-    ...                 'belongsTo': { 'itemId': 22 }
-    ...     },
-    ...     'data': [
-    ...         ['2001-01-01', '2001-12-31', 123],
-    ...         ['2002-01-01', '2002-12-31', 123, '2012-01-01'],
-    ...         ['2003-01-01', '2003-12-31', 123, None, {}]
-    ...     ]
-    ... }], True) == [
-    ...   { 'start_date': '2001-01-01',
-    ...     'end_date': '2001-12-31',
-    ...     'value': 123,
-    ...     'unit_id': 4,
-    ...     'input_unit_id': 4,
-    ...     'input_unit_scale': 1,
-    ...     'reporting_date': None,
-    ...     'metric_id': 1,
-    ...     'item_id': 2,
-    ...     'region_id': 3,
-    ...     'partner_region_id': 0,
-    ...     'frequency_id': None,
-    ...     'belongs_to': { 'item_id': 22 } },
-    ...   { 'start_date': '2002-01-01',
-    ...     'end_date': '2002-12-31',
-    ...     'value': 123,
-    ...     'unit_id': 4,
-    ...     'input_unit_id': 4,
-    ...     'input_unit_scale': 1,
-    ...     'reporting_date': '2012-01-01',
-    ...     'metric_id': 1,
-    ...     'item_id': 2,
-    ...     'region_id': 3,
-    ...     'partner_region_id': 0,
-    ...     'frequency_id': None,
-    ...     'belongs_to': { 'item_id': 22 } },
-    ...   { 'start_date': '2003-01-01',
-    ...     'end_date': '2003-12-31',
-    ...     'value': 123,
-    ...     'unit_id': 4,
-    ...     'input_unit_id': 4,
-    ...     'input_unit_scale': 1,
-    ...     'reporting_date': None,
-    ...     'metric_id': 1,
-    ...     'item_id': 2,
-    ...     'region_id': 3,
-    ...     'partner_region_id': 0,
-    ...     'frequency_id': None,
-    ...     'belongs_to': { 'item_id': 22 } }
-    ... ]
-    True
-
-    """
+    """Convert list_of_series format from API back into the familiar single_series output format."""
     if not isinstance(series_list, list):
         # If the output is an error or None or something else that's not a list, just propagate
         return series_list
@@ -505,12 +454,11 @@ def list_of_series_to_single_series(series_list, add_belongs_to=False, include_h
                 'start_date': point[0],
                 'end_date': point[1],
                 'value': point[2],
-                # list_of_series has unit_id in the series attributes currently. Does
-                # not allow for mixed units in the same series
-                'unit_id': series['series'].get('unitId', None),
+                'unit_id': point[4] if len(point) > 4 else series['series'].get('unitId', None),
+                'metadata': point[5] if len(point) > 5 else {},
                 # input_unit_id and input_unit_scale are deprecated but provided for backwards
                 # compatibility. unit_id should be used instead.
-                'input_unit_id': series['series'].get('unitId', None),
+                'input_unit_id': point[4] if len(point) > 4 else series['series'].get('unitId', None),
                 'input_unit_scale': 1,
                 # If a point does not have reporting_date, use None
                 'reporting_date': point[3] if len(point) > 3 else None,
@@ -590,26 +538,26 @@ def lookup_belongs(access_token, api_host, entity_type, entity_id):
 
 
 def get_geo_centre(access_token, api_host, region_id):
-    url = '/'.join(['https:', '', api_host, 'v2/geocentres?regionIds=' +
-                    str(region_id)])
+    url = '/'.join(['https:', '', api_host, 'v2/geocentres'])
     headers = {'authorization': 'Bearer ' + access_token}
-    resp = get_data(url, headers)
+    resp = get_data(url, headers, {'regionIds': region_id})
     return resp.json()['data']
 
 
 @memoize(maxsize=None)
-def get_geojsons(access_token, api_host, region_id, descendant_level=None):
-    url = '/'.join(['https:', '', api_host, 'v2/geocentres?includeGeojson=True&regionIds={}'.format(
-        region_id)])
+def get_geojsons(access_token, api_host, region_id, descendant_level, zoom_level):
+    url = '/'.join(['https:', '', api_host, 'v2/geocentres'])
+    params = {'includeGeojson': True, 'regionIds': region_id, 'zoom': zoom_level}
     if descendant_level:
-        url += "&reqRegionLevelId={}&stringify=false".format(descendant_level)
+        params['reqRegionLevelId']= descendant_level
+        params['stringify'] = 'false'
     headers = {'authorization': 'Bearer ' + access_token}
-    resp = get_data(url, headers)
+    resp = get_data(url, headers, params)
     return [dict_reformat_keys(r, str_camel_to_snake) for r in resp.json()['data']]
 
 
-def get_geojson(access_token, api_host, region_id):
-    for region in get_geojsons(access_token, api_host, region_id):
+def get_geojson(access_token, api_host, region_id, zoom_level):
+    for region in get_geojsons(access_token, api_host, region_id, None, zoom_level):
         return json.loads(region['geojson'])
 
 
