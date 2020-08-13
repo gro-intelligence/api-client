@@ -1,14 +1,14 @@
 import mock
 import numpy as np
 
-from api.client import lib
+from groclient import lib
 import platform
 from pkg_resources import get_distribution
 
 MOCK_HOST = 'pytest.groclient.url'
 MOCK_TOKEN = 'pytest.groclient.token'
 PYTHON_VERSION = platform.python_version()
-API_CLIENT_VERSION = get_distribution('gro').version
+API_CLIENT_VERSION = get_distribution('groclient').version
 
 LOOKUP_MAP = {
     'metrics': {},

@@ -1,10 +1,10 @@
 [paths]
 source =
-   api
+   groclient
 
 [run]
 branch = true
-source = api
+source = groclient
 parallel = true
 
 [report]
