@@ -2,7 +2,7 @@ from __future__ import print_function
 from builtins import str
 from random import random
 import argparse
-import functools
+from functools import partial
 import getpass
 import itertools
 import os
@@ -875,35 +875,18 @@ class GroClient(object):
                 None, data_series, self.get_data_points(**data_series)
             )
         if index_by_series and not self._data_frame.empty:
-            columns = intersect(DATA_SERIES_UNIQUE_TYPES_ID, self._data_frame.columns)
-            if len(columns) > 0:
-                # add entity names to the dataframe
-                series_df = pandas.DataFrame([dict(s) for s in self.get_data_series_list()])
-                name_columns = []
-                for col in columns:
-                    name_col = col.replace('id', 'name')
-                    name_columns.append(name_col)
-                    # lookup names if not available in the series list (e.g. if input is GDH)
-                    if name_col not in series_df.columns or series_df[name_col].isna().any():
-                        entity_lookup = {
-                            entity_id: self.lookup(ENTITY_KEY_TO_TYPE[col], entity_id)['name']
-                            for entity_id in list(series_df[col].unique())
-                        }
-                        series_df[name_col] = series_df[col].apply(lambda x: entity_lookup[x])
+            idx_columns = intersect(DATA_SERIES_UNIQUE_TYPES_ID, self._data_frame.columns)
+            indexed_df = self._data_frame.copy()
 
-                df_with_names = self._data_frame.merge(series_df[columns + name_columns],
-                                                       on=columns, copy=False)
+            def get_name(entity_type_id, entity_id):
+                return self.lookup(ENTITY_KEY_TO_TYPE[entity_type_id], entity_id)['name']
 
-                indexed_df = df_with_names.set_index(columns)
-                indexed_df.index.set_names(DATA_SERIES_UNIQUE_TYPES_ID, inplace=True)
+            for entity_type_id in list(idx_columns):
+                name_col = entity_type_id.replace('_id', '_name')
+                indexed_df[name_col] = indexed_df[entity_type_id].apply(partial(get_name, entity_type_id))
+                idx_columns.append(name_col)
+            return indexed_df.set_index(idx_columns).sort_index()
 
-                # move entity names to column headers
-                indexed_cols = pandas.MultiIndex.from_frame(indexed_df[name_columns])
-                indexed_df.drop(name_columns, axis=1, inplace=True)
-
-                # indexed_df = pandas.concat([indexed_df], keys=indexed_cols, axis=1)
-                # indexed_df.columns.names = name_columns + ['entities']
-                return indexed_df.sort_index()
         return self._data_frame
 
     def async_get_df(self):
@@ -1067,9 +1050,7 @@ class GroClient(object):
         if "unit_id" in selections:
             return list(
                 map(
-                    functools.partial(
-                        self.convert_unit, target_unit_id=selections["unit_id"]
-                    ),
+                    partial(self.convert_unit, target_unit_id=selections["unit_id"]),
                     data_points,
                 )
             )
@@ -1108,7 +1089,7 @@ class GroClient(object):
 
         self.add_single_data_series(selection)
         try:
-            return self.get_df(index_by_series=True).loc[[tuple(entity_ids)], :]
+            return self.get_df(index_by_series=True)#.loc[[tuple(entity_ids)], :]
         except KeyError:
             self._logger.warn("GDH returned no data")
             return pandas.DataFrame()
