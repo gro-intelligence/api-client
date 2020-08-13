@@ -884,7 +884,6 @@ class GroClient(object):
             for entity_type_id in list(idx_columns):
                 name_col = entity_type_id.replace('_id', '_name')
                 indexed_df[name_col] = indexed_df[entity_type_id].apply(partial(get_name, entity_type_id))
-                idx_columns.append(name_col)
             return indexed_df.set_index(idx_columns).sort_index()
 
         return self._data_frame
@@ -1089,7 +1088,7 @@ class GroClient(object):
 
         self.add_single_data_series(selection)
         try:
-            return self.get_df(index_by_series=True)#.loc[[tuple(entity_ids)], :]
+            return self.get_df(index_by_series=True).loc[[tuple(entity_ids)], :]
         except KeyError:
             self._logger.warn("GDH returned no data")
             return pandas.DataFrame()
