@@ -8,7 +8,7 @@ except ImportError:
 import re
 from math import ceil
 
-from api.client.constants import DATA_SERIES_UNIQUE_TYPES_ID
+from groclient.constants import DATA_SERIES_UNIQUE_TYPES_ID
 
 
 @memoize(maxsize=None)

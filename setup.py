@@ -17,7 +17,7 @@ with open("requirements-docs.txt", "r") as docs_requirements_file:
     docs_requirements = docs_requirements_file.read()
 
 setuptools.setup(
-    name="gro",
+    name="groclient",
     description="Python client library for accessing Gro Intelligence's "
                 "agricultural data platform",
     long_description=long_description,
@@ -37,6 +37,6 @@ setuptools.setup(
     test_suite='pytest',
     tests_require=test_requirements,
     entry_points={
-        'console_scripts': ['gro_client=api.client.gro_client:main']
+        'console_scripts': ['gro_client=groclient.client:main']
     }
 )
