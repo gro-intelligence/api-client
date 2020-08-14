@@ -1106,7 +1106,8 @@ class GroClient(object):
         try:
             df = self.get_df(include_names=True, index_by_series=True).loc[[tuple(entity_ids)], :]
             df.set_index([entity_type_id.replace('_id', '_name')
-                          for entity_type_id in df.index.names],
+                          for entity_type_id in intersect(DATA_SERIES_UNIQUE_TYPES_ID,
+                                                          df.index.names)],
                          inplace=True)
             return df
         except KeyError:
