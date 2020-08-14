@@ -1,7 +1,5 @@
 import os, glob
-import tempfile
 import pickle
-import logging
 from datetime import date
 
 import numpy as np
@@ -20,10 +18,7 @@ API_HOST = 'api.gro-intelligence.com'
 ACCESS_TOKEN = os.environ['GROAPI_TOKEN']
 
 """ Cache dir and file names """
-# cache directory should already exist when SR object is created (otherwise /tmp will be used)
-CACHE_PATH = "sr_cache"
 REGION_INFO_CACHE = "region_info"
-DATA_CACHE = "region_data_"
 PICKLE_PROTOCOL = 4
 REGIONS_PER_QUERY = 100
 MAX_RETRY_FAILED_REGIONS = 3
@@ -32,27 +27,16 @@ OK_TO_PROCEED_REGION_FRACTION = 0.1 # we want at least 10% of all desired region
 class SimilarRegion(object):
 
     def __init__(self, metric_properties,
-                 search_region=0,
-                 update_mode="no",
-                 data_dir=None,
-                 region_info_reload=False,
+                 data_dir="/tmp/similar_regions_cache",
                  t_int_per_year=52,
-                 metric_instance=None,
-                 drop_mode='any_missing'):
+                 metric_instance=None):
         """
         :param metric_properties: A dict containing properties which can be used in the region similarity metric.
         This is by default defined in metric.py, but can be adjusted.
-        :param search_region: region_id to search for similar regions. Default is 0 (entire world).
-        :param update_mode: If 'reload', full reload from Gro API after which local caches are completely overwritten
-        If 'no', take only cached data (subjcted to OK_TO_PROCEED_REGION_FRACTION threshold), nothing read from Gro API.
-        If 'update', read cached data, then try to read from API whatever is missing.
-        :param region_info_reload: If True, reload region info from Gro, otherwise try to use cached (still reload if region not found).
         :param t_int_per_year: into how many intervals to split calendar year when generating distributions from raw data.
         Default is 52 (roughly weekly). High values (such as 365 - daily) lead to greater storage requirements and not recommended
         :param metric_instance: A {property:weight} dictionary stating specific properties and their weights to use for this run.
         If not provided, all properties from metric_properties are used with equal weights
-        :param drop_mode: If 'any_missing', drop all regions which do nor have full set of valid datapoints
-        (i.e. t_int_per_year data points for each property). If 'fully_missing', drop region only if there is less than 2 valid datapoints
         """
         self.data = None
         self.t_int_per_year = t_int_per_year
@@ -61,10 +45,6 @@ class SimilarRegion(object):
         self.available_regions = []
         self.available_properties = []
         self._logger = get_default_logger()
-        self._logger.setLevel(logging.INFO)
-        update=update_mode
-
-        # extract needed parameters from inputs
         self.metric_properties = metric_properties
         self.needed_properties = sorted(list(set(metric_properties.keys())))
         if metric_instance is not None:
@@ -74,92 +54,85 @@ class SimilarRegion(object):
         else:
             self.metric_instance = dict(zip(self.metric_properties.keys(),[1.0]*len(self.metric_properties)))
             
-        if data_dir:
-            self.data_dir = data_dir
-        elif os.path.isdir(CACHE_PATH) and os.access(CACHE_PATH, os.W_OK):
-            self.data_dir = CACHE_PATH
-        else:
-            # no access to CACHE_PATH - likely doesn't exist => attempt to create directory
-            try:
-                os.mkdir(CACHE_PATH)
-                self.data_dir = CACHE_PATH
-            except:
-                # last resort
-                self.data_dir = tempfile.gettempdir()
+        self.data_dir = data_dir
+        if not os.path.isdir(self.data_dir):
+            os.mkdir(self.data_dir)
+        assert os.access(self.data_dir, os.W_OK), "Need write permission on {}".format(self.data_dir)
         
-        self._logger.info("*********Creating similar region object with *******\n\tregion {}\n\tupdate_mode {}\n\tdata_dir {}\n\tregion_info_reload {}\n\tt_int_per_year {}\n".format(search_region,update_mode,self.data_dir,region_info_reload,t_int_per_year))
-
         self.client = BatchClient(API_HOST, ACCESS_TOKEN)
-        
-        ################ Dealing with region information (load from cache or API) ################
+
+    def _load_region_info(self, search_region=0):
+        """Dealing with region information (load from cache or API)
+
+        :param search_region: region_id to search for similar regions. Default is 0 (entire world).
+        """
         self.region_info = {}
         info_path = os.path.join(self.data_dir, REGION_INFO_CACHE)
         if os.path.isfile(info_path):
             self._logger.info("Reading region info from cache {}".format(info_path))
             with open(info_path, 'rb') as f:
                 self.region_info = pickle.load(f)
-        if region_info_reload or search_region not in self.region_info:
+        if search_region not in self.region_info:
             ri = [self.client.lookup('regions', search_region)] # include top-level region itself
             for l in range(5,ri[0]['level'],-1):
-                self._logger.info("Loading region info for geo level {}".format(l))
+                self._logger.info("Loading region info for region {} at level {}".format(search_region, l))
                 ri += self.client.get_descendant_regions(search_region,descendant_level=l,
                                                               include_historical=False,
                                                               include_details=True)
-            #reformat as dict with region_id as key
-            self.region_info = dict(zip([item['id'] for item in ri], ri))
-
-            # immediately save region_info
-            # might overwrite a large cache if it was storing "parallel" region (cache was Asia but asking for US)
+            # update region_info with search_region and re-save
+            self.region_info.update(dict(zip([region['id'] for region in ri], ri)))
             with open(info_path, 'wb') as f:
                 self._logger.info("Saving region info file {}".format(info_path))
                 pickle.dump(self.region_info,f)    
-        else:
-            # We might have too many regions in the info cache - this happens if cache was filled for a parent
-            # of region currently requested (filled for entire world but we want only US, for example)
-            top_info = self.region_info[search_region]
-            self._logger.info("Search region is present in cache of size {}".format(len(self.region_info)))
-            level = top_info['level'] # can only have 2/3/4/5
-            to_include = [search_region]
-            ri = {search_region:top_info}
-            while level<5:
-                to_include = [r for r in [j for r in to_include for j in self.region_info[r]['contains']] 
-                              if self.region_info.get(r,{'level':-1})['level']==level+1]
-                ri.update({r:self.region_info[r] for r in to_include})
-                level += 1
-            self.region_info = ri
-            self._logger.info("Trimmed region info to {} items".format(len(self.region_info)))
+
+        # We might have too many regions in the info cache - this happens if cache was filled for a parent
+        # of region currently requested (filled for entire world but we want only US, for example)
+        top_info = self.region_info[search_region]
+        self._logger.info("Search region is present in cache of size {}".format(len(self.region_info)))
+        level = top_info['level'] # can only have 2/3/4/5
+        to_include = [search_region]
+        ri = {search_region:top_info}
+        while level<5:
+            to_include = [r for r in [j for r in to_include for j in self.region_info[r]['contains']] 
+                          if self.region_info.get(r,{'level':-1})['level']==level+1]
+            ri.update({r:self.region_info[r] for r in to_include})
+            level += 1
+        self.region_info = ri
+        self._logger.info("Trimmed region info to {} items".format(len(self.region_info)))
         self.needed_regions = sorted(self.region_info.keys())
         self.needed_properties = sorted(self.metric_instance.keys())
-        
-        ##################### Data download ################################################
-        self.data = np.zeros((len(self.needed_regions)*t_int_per_year, len(self.metric_instance)))
+
+    def _load_data(self, drop_mode='any_missing'):
+        """Data download. Get data for each needed property. Local cache is used and updated as needed.
+
+        :param drop_mode: If 'any_missing', drop all regions which do nor have full set of valid datapoints
+        (i.e. t_int_per_year data points for each property). If 'fully_missing', drop region only if there is less than 2 valid datapoints
+
+        """
+        self.data = np.zeros((len(self.needed_regions)*self.t_int_per_year, len(self.metric_instance)))
         self.data[:] = np.nan
         for (prop_i, prop_name) in enumerate(self.needed_properties):
             self.prop_data = self.data[:,prop_i] # alias to specific column of the data matrix
-            prop_path = os.path.join(self.data_dir, prop_name+'_'+str(t_int_per_year)+'.npz')
+            prop_path = os.path.join(self.data_dir, prop_name+'_'+str(self.t_int_per_year)+'.npz')
             missing_regions = self.needed_regions
             prop_data_cached = np.array(())
             prop_regions = []
-            if update != 'reload':
-                if os.path.isfile(prop_path):                    
-                    self._logger.info("Reading property {} from cache {} ...".format(prop_name, prop_path))    
-                    with np.load(prop_path,allow_pickle=True) as prop_file:
-                        prop_data_cached = prop_file['data']
-                        prop_regions = list(prop_file['regions'])
-                    self._logger.info("Merging in cached info ...")
-                    self._merge_into_prop_data(prop_data_cached,prop_regions)
-                    self._logger.info("done")
-                missing_regions = sorted(set(self.needed_regions) - set(prop_regions))
-                if update == 'no':
-                    self._logger.warning("Property {} is missing {} regions out of desired {} and no updates requested".
-                                         format(prop_name, len(missing_regions),len(self.needed_regions)))
-                    missing_regions = []
-                    
-                    
+            if os.path.isfile(prop_path):                    
+                self._logger.info("Reading property {} from cache {} ...".format(prop_name, prop_path))    
+                with np.load(prop_path,allow_pickle=True) as prop_file:
+                    prop_data_cached = prop_file['data']
+                    prop_regions = list(prop_file['regions'])
+                self._logger.info("Merging in cached info ...")
+                self._merge_into_prop_data(prop_data_cached,prop_regions)
+                self._logger.info("done")
+            missing_regions = sorted(set(self.needed_regions) - set(prop_regions))
             # actual download
             if missing_regions:
+                self._logger.warning("Property {} is missing {}/{} regions".
+                                     format(prop_name, len(missing_regions),len(self.needed_regions)))
                 valid_data, valid_regions = self._load_property_for_regions(prop_name, missing_regions)
                 if valid_regions:
+                    self._logger.info("Saving updated data to {}".format(prop_name, prop_path))
                     np.savez_compressed(prop_path,
                                 data = np.concatenate([prop_data_cached,valid_data],axis=0),
                                 regions = prop_regions+valid_regions)
@@ -220,7 +193,6 @@ class SimilarRegion(object):
             # always report true stds - might want to include them in properties.py as 'norm' on later runs 
             self._logger.info("Data standard deviation for {} is {}".format(c,stdev))
             self.data[c] *= np.sqrt(self.metric_instance[c]) / self.metric_properties[c]['properties'].get("norm",stdev)
-                
             # will use to split dataset into time series and pit parts
             col_type = self.metric_properties[c]["properties"]["type"]
             if col_type == "pit":
@@ -396,7 +368,8 @@ class SimilarRegion(object):
         self._logger.info("Getting data series for {} regions in {} queries for property {}".
                           format(n_reg, n_queries, prop_name))
         load_bar = tqdm(total=n_reg)
-        # Sending out all queries    
+        # Sending out all queries
+        self._logger.debug('Queries: {}'.format(queries))
         self.client.batch_async_get_data_points(queries, map_result=map_response)
         load_bar.close()
         valid_data = valid_data/data_counters # division by zero where we do not have data
