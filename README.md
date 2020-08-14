@@ -57,4 +57,4 @@ gro_client --metric="Production Quantity mass" --item="Corn" --region="United St
 
 The `gro_client` command line interface does a keyword search for the inputs and finds a random matching data series. It displays the data series it picked in the command line and writes the data points out to a file in the current directory called `gro_client_output.csv`. This tool is useful for simple queries, but anything more complex should be done using the provided Python packages.
 
-Further documentation can be found in the [api/client/](api/client) directory and on our [wiki](https://github.com/gro-intelligence/api-client/wiki).
+Further documentation can be found on the Gro Developers site at <developers.gro-intelligence.com>.

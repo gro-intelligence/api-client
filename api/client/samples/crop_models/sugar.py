@@ -22,7 +22,7 @@ import argparse
 import getpass
 import sys
 import unicodecsv
-import api.client.lib
+import groclient.lib
 import os
 from api.client.crop_model import CropModel
 
@@ -43,7 +43,7 @@ def main():
     else:
         if not args.user_password:
             args.user_password = getpass.getpass()
-        access_token = api.client.lib.get_access_token(API_HOST, args.user_email, args.user_password)
+        access_token = groclient.lib.get_access_token(API_HOST, args.user_email, args.user_password)
     if args.print_token:
         print(access_token)
         sys.exit(0)

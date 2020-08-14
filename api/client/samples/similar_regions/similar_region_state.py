@@ -6,7 +6,7 @@ import numpy as np
 import os
 from tqdm import tqdm
 
-import api.client.lib
+import groclient.lib
 from api.client.samples.similar_regions import transform
 
 CACHE_PATH = "similar_region_state_cache"
@@ -21,7 +21,7 @@ class SimilarRegionState(object):
 
     def __init__(self, region_properties, regions_to_compare, client, data_dir=None, no_download=False):
         self.client = client
-        self._logger = api.client.lib.get_default_logger()
+        self._logger = groclient.lib.get_default_logger()
 
         # Figure out temporary directory
         if data_dir:
