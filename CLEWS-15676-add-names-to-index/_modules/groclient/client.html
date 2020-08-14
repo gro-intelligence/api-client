@@ -1099,7 +1099,7 @@
             <span class="k">def</span> <span class="nf">get_name</span><span class="p">(</span><span class="n">entity_type_id</span><span class="p">,</span> <span class="n">entity_id</span><span class="p">):</span>
                 <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">lookup</span><span class="p">(</span><span class="n">ENTITY_KEY_TO_TYPE</span><span class="p">[</span><span class="n">entity_type_id</span><span class="p">],</span> <span class="n">entity_id</span><span class="p">)[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span>
 
-            <span class="k">for</span> <span class="n">entity_type_id</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">idx_columns</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">entity_type_id</span> <span class="ow">in</span> <span class="n">idx_columns</span><span class="p">:</span>
                 <span class="n">name_col</span> <span class="o">=</span> <span class="n">entity_type_id</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;_id&#39;</span><span class="p">,</span> <span class="s1">&#39;_name&#39;</span><span class="p">)</span>
                 <span class="n">df</span><span class="p">[</span><span class="n">name_col</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">entity_type_id</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">partial</span><span class="p">(</span><span class="n">get_name</span><span class="p">,</span> <span class="n">entity_type_id</span><span class="p">))</span>
 
@@ -1276,7 +1276,7 @@
         <span class="c1"># Return data points in input units if not unit is specified</span>
         <span class="k">return</span> <span class="n">data_points</span></div>
 
-    <span class="k">def</span> <span class="nf">GDH</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gdh_selection</span><span class="p">,</span> <span class="n">index_by_names</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">optional_selections</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">GDH</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gdh_selection</span><span class="p">,</span> <span class="o">**</span><span class="n">optional_selections</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Wrapper for :meth:`~.get_data_points`. with alternative input and output style.</span>
 
 <span class="sd">        The data series selection to retrieve is encoded in a</span>
@@ -1299,7 +1299,8 @@
 <span class="sd">        ------</span>
 <span class="sd">        pandas.DataFrame</span>
 
-<span class="sd">            the subset of the main DataFrame :meth:`~.get_df`. with the requested series.</span>
+<span class="sd">            The subset of the main DataFrame :meth:`~.get_df`. with the requested series,</span>
+<span class="sd">            indexed by the names of the selections.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
 
@@ -1309,10 +1310,10 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">add_single_data_series</span><span class="p">(</span><span class="n">selection</span><span class="p">)</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_df</span><span class="p">(</span><span class="n">include_names</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">index_by_series</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">loc</span><span class="p">[[</span><span class="nb">tuple</span><span class="p">(</span><span class="n">entity_ids</span><span class="p">)],</span> <span class="p">:]</span>
-            <span class="k">if</span> <span class="n">index_by_names</span><span class="p">:</span>
-                <span class="n">df</span><span class="o">.</span><span class="n">set_index</span><span class="p">([</span><span class="n">entity_type_id</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;_id&#39;</span><span class="p">,</span> <span class="s1">&#39;_name&#39;</span><span class="p">)</span>
-                              <span class="k">for</span> <span class="n">entity_type_id</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">names</span><span class="p">],</span>
-                             <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">df</span><span class="o">.</span><span class="n">set_index</span><span class="p">([</span><span class="n">entity_type_id</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;_id&#39;</span><span class="p">,</span> <span class="s1">&#39;_name&#39;</span><span class="p">)</span>
+                          <span class="k">for</span> <span class="n">entity_type_id</span> <span class="ow">in</span> <span class="n">intersect</span><span class="p">(</span><span class="n">DATA_SERIES_UNIQUE_TYPES_ID</span><span class="p">,</span>
+                                                          <span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">names</span><span class="p">)],</span>
+                         <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">df</span>
         <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;GDH returned no data&quot;</span><span class="p">)</span>
