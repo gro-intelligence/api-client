@@ -12,7 +12,7 @@ be initialized as follows:
 
 .. code-block:: python
 
-  from api.client.gro_client import GroClient
+  from groclient import GroClient
 
   client = GroClient('api.gro-intelligence.com', '<YOUR_TOKEN>')
 

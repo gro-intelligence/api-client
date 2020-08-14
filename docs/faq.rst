@@ -86,7 +86,7 @@ How do I verify connectivity with Gro API?
 To check your basic connectivity, e.g. whether your corporate firewall allows access to Gro API servers, you can using a Gro API client function that doesn't require authentication, such as lookup(). For example:
 ::
 
-  from api.client.lib import lib
+  from groclient.lib import lib
   lib.lookup('', 'api.gro-intelligence.com', 'items', 1)
 
 

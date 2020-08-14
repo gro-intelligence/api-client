@@ -13,7 +13,7 @@ import seaborn as sns
 import numpy as np
 import pandas as pd
 
-from api.client.gro_client import GroClient
+from groclient import GroClient
 from api.client.samples.analogous_years.lib import \
     distance_matrix, \
     feature_extractions, \

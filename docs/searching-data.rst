@@ -54,7 +54,7 @@ Instead of searching for all the individual entity IDs required to create a data
 To look up all descendants of region 1029 (Brazil) that are of level 4 (provinces):
 ::
 
-  from api.client.lib import REGION_LEVELS
+  from groclient.lib import REGION_LEVELS
   provinces_of_brazil = client.get_descendant_regions(1029, REGION_LEVELS['province'])
 
 
@@ -76,13 +76,13 @@ Using the :code:`lookup()` method, you can get an entity's list of direct childr
 To look up all descendants of region 1029 (Brazil) that are of level 4 (provinces):
 ::
 
-  from api.client.lib import REGION_LEVELS
+  from groclient.lib import REGION_LEVELS
   provinces_of_brazil = client.get_descendant_regions(1029, REGION_LEVELS['province'])
 
 To look up all descendants of region 1029 (Brazil) that are of level 5 (districts):
 ::
 
-  from api.client.lib import REGION_LEVELS
+  from groclient.lib import REGION_LEVELS
   provinces_of_brazil = client.get_descendant_regions(1029, REGION_LEVELS['district'])
 
 For more information on region levels, please refer to the `Special properties of regions <./gro-ontology#special-properties-for-regions>`_ section of `Gro Ontology <./gro-ontology>`_

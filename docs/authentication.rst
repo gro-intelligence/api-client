@@ -5,7 +5,7 @@ Authentication
 .. contents:: Table of Contents
   :local:
 
-To work with the Gro API, you need an authentication token. This token needs to be sent along with every request made to the API. This is typically done by using one of the included Client classes (:code:`Client`, :code:`GroClient`, :code:`BatchClient`, or :code:`CropModel`): you provide your access token when creating the object, and then every API request made thereafter automatically includes the token.
+To work with the Gro API, you need an authentication token. This token needs to be sent along with every request made to the API. This is typically done by using one of the included Client classes (:code:`GroClient` or :code:`CropModel`): you provide your access token when creating the object, and then every API request made thereafter automatically includes the token.
 
 Retrieving a token
 ==================
@@ -59,7 +59,7 @@ If you would like to programmatically retrieve your active token, you may use th
 
 ::
 
-  from api.client.lib import get_access_token
+  from groclient.lib import get_access_token
   API_HOST = 'api.gro-intelligence.com'
   EMAIL = 'example@example.com'
   PASSWORD = 'password123'

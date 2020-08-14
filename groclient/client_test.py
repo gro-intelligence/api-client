@@ -178,31 +178,31 @@ def mock_get_data_points(access_token, api_host, **selections):
         return data_points
 
 
-@patch("api.client.lib.get_available", MagicMock(side_effect=mock_get_available))
-@patch("api.client.lib.list_available", MagicMock(side_effect=mock_list_available))
-@patch("api.client.lib.lookup", MagicMock(side_effect=mock_lookup))
+@patch("groclient.lib.get_available", MagicMock(side_effect=mock_get_available))
+@patch("groclient.lib.list_available", MagicMock(side_effect=mock_list_available))
+@patch("groclient.lib.lookup", MagicMock(side_effect=mock_lookup))
 @patch(
-    "api.client.lib.get_allowed_units", MagicMock(side_effect=mock_get_allowed_units)
+    "groclient.lib.get_allowed_units", MagicMock(side_effect=mock_get_allowed_units)
 )
-@patch("api.client.lib.get_data_series", MagicMock(side_effect=mock_get_data_series))
-@patch("api.client.lib.search", MagicMock(side_effect=mock_search))
+@patch("groclient.lib.get_data_series", MagicMock(side_effect=mock_get_data_series))
+@patch("groclient.lib.search", MagicMock(side_effect=mock_search))
 @patch(
-    "api.client.lib.rank_series_by_source",
+    "groclient.lib.rank_series_by_source",
     MagicMock(side_effect=mock_rank_series_by_source),
 )
-@patch("api.client.lib.get_geo_centre", MagicMock(side_effect=mock_get_geo_centre))
-@patch("api.client.lib.get_geojsons", MagicMock(side_effect=mock_get_geojsons))
-@patch("api.client.lib.get_geojson", MagicMock(side_effect=mock_get_geojson))
+@patch("groclient.lib.get_geo_centre", MagicMock(side_effect=mock_get_geo_centre))
+@patch("groclient.lib.get_geojsons", MagicMock(side_effect=mock_get_geojsons))
+@patch("groclient.lib.get_geojson", MagicMock(side_effect=mock_get_geojson))
 @patch(
-    "api.client.lib.get_descendant_regions",
+    "groclient.lib.get_descendant_regions",
     MagicMock(side_effect=mock_get_descendant_regions),
 )
 @patch(
-    "api.client.lib.get_available_timefrequency",
+    "groclient.lib.get_available_timefrequency",
     MagicMock(side_effect=mock_get_available_timefrequency),
 )
-@patch("api.client.lib.get_top", MagicMock(side_effect=mock_get_top))
-@patch("api.client.lib.get_data_points", MagicMock(side_effect=mock_get_data_points))
+@patch("groclient.lib.get_top", MagicMock(side_effect=mock_get_top))
+@patch("groclient.lib.get_data_points", MagicMock(side_effect=mock_get_data_points))
 class GroClientTests(TestCase):
     def setUp(self):
         self.client = GroClient(MOCK_HOST, MOCK_TOKEN)

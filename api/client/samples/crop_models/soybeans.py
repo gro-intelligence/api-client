@@ -16,7 +16,7 @@ import argparse
 import os
 import sys
 
-import api.client.lib
+import groclient.lib
 from api.client.crop_model import CropModel
 
 

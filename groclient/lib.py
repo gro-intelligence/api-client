@@ -1,8 +1,8 @@
 """Base module for making API requests.
 
-Client, GroClient, CropModel, and BatchClient all build on top of endpoints
-exposed in this module. Helper functions or shims or derivative functionality
-should appear in the client classes rather than here.
+GroClient and CropModel build on top of endpoints exposed in this module.
+Helper functions or shims or derivative functionality should appear in the client classes rather
+than here.
 """
 
 from builtins import str
