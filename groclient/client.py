@@ -880,7 +880,7 @@ class GroClient(object):
 
         df = self._data_frame.copy()
 
-        if include_names:
+        if include_names and not df.empty:
             def get_name(entity_type_id, entity_id):
                 return self.lookup(ENTITY_KEY_TO_TYPE[entity_type_id], entity_id)['name']
 
@@ -888,8 +888,8 @@ class GroClient(object):
                 name_col = entity_type_id.replace('_id', '_name')
                 df[name_col] = df[entity_type_id].apply(partial(get_name, entity_type_id))
 
-        if index_by_series and not self._data_frame.empty:
-            idx_columns = intersect(DATA_SERIES_UNIQUE_TYPES_ID, self._data_frame.columns)
+        if index_by_series and not df.empty:
+            idx_columns = intersect(DATA_SERIES_UNIQUE_TYPES_ID, df.columns)
 
             def get_name(entity_type_id, entity_id):
                 return self.lookup(ENTITY_KEY_TO_TYPE[entity_type_id], entity_id)['name']
