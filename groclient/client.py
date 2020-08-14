@@ -894,7 +894,7 @@ class GroClient(object):
             def get_name(entity_type_id, entity_id):
                 return self.lookup(ENTITY_KEY_TO_TYPE[entity_type_id], entity_id)['name']
 
-            for entity_type_id in list(idx_columns):
+            for entity_type_id in idx_columns:
                 name_col = entity_type_id.replace('_id', '_name')
                 df[name_col] = df[entity_type_id].apply(partial(get_name, entity_type_id))
 
@@ -1071,7 +1071,7 @@ class GroClient(object):
         # Return data points in input units if not unit is specified
         return data_points
 
-    def GDH(self, gdh_selection, index_by_names=False, **optional_selections):
+    def GDH(self, gdh_selection, **optional_selections):
         """Wrapper for :meth:`~.get_data_points`. with alternative input and output style.
 
         The data series selection to retrieve is encoded in a
@@ -1094,7 +1094,8 @@ class GroClient(object):
         ------
         pandas.DataFrame
 
-            the subset of the main DataFrame :meth:`~.get_df`. with the requested series.
+            The subset of the main DataFrame :meth:`~.get_df`. with the requested series,
+            indexed by the names of the selections.
 
         """
 
@@ -1104,10 +1105,9 @@ class GroClient(object):
         self.add_single_data_series(selection)
         try:
             df = self.get_df(include_names=True, index_by_series=True).loc[[tuple(entity_ids)], :]
-            if index_by_names:
-                df.set_index([entity_type_id.replace('_id', '_name')
-                              for entity_type_id in df.index.names],
-                             inplace=True)
+            df.set_index([entity_type_id.replace('_id', '_name')
+                          for entity_type_id in df.index.names],
+                         inplace=True)
             return df
         except KeyError:
             self._logger.warn("GDH returned no data")
