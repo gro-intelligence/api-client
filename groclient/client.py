@@ -1184,6 +1184,8 @@ class GroClient(object):
         """
         results = []  # [[('item_id',1),('item_id',2),...],[('metric_id" 1),...],...]
         for kw in kwargs:
+            if kwargs.get(kw) is None:
+                continue
             id_key = "{}_id".format(kw)
             if id_key in ENTITY_KEY_TO_TYPE:
                 type_results = []  # [('item_id',1),('item_id',2),...]
@@ -1224,7 +1226,7 @@ class GroClient(object):
                         ds = dict(data_series)
                         ds["frequency_id"] = tf["frequency_id"]
                         for data_series in self.rank_series_by_source([ds]):
-                            yield data_series
+                            yield self.get_data_series(**data_series)[0]
 
     def add_data_series(self, **kwargs):
         """Adds the top result of :meth:`~.find_data_series` to the saved data series list.
@@ -1352,51 +1354,6 @@ class GroClient(object):
             )
             for entity_key, entity_id in selection.items()
         ]
-
-    ###
-    # Convenience methods that automatically fill in partial selections with random entities
-    ###
-    def pick_random_entities(self):  # pragma: no cover
-        """Pick a random item that has some data associated with it, and a random metric and region
-        pair for that item with data available.
-        """
-        item_list = list(self.get_available("items").values())
-        num = 0
-        while not num:
-            item = item_list[int(len(item_list) * random())]
-            selected_entities = {"itemId": item["id"]}
-            entity_list = self.list_available(selected_entities)
-            num = len(entity_list)
-        entities = entity_list[int(num * random())]
-        self._logger.info("Using randomly selected entities: {}".format(str(entities)))
-        selected_entities.update(entities)
-        return selected_entities
-
-    def pick_random_data_series(self, selected_entities):  # pragma: no cover
-        """Given a selection of tentities, pick a random available data series the given selection
-        of entities.
-        """
-        data_series_list = self.get_data_series(**selected_entities)
-        if not data_series_list:
-            raise Exception("No data series available for {}".format(selected_entities))
-        selected_data_series = data_series_list[int(len(data_series_list) * random())]
-        return selected_data_series
-
-    # TODO: rename function to "write_..." rather than "print_..."
-    def print_one_data_series(self, data_series, filename):  # pragma: no cover
-        """Output a data series to a CSV file."""
-        self._logger.warning("Using data series: {}".format(str(data_series)))
-        self._logger.warning("Outputing to file: {}".format(filename))
-        writer = unicodecsv.writer(open(filename, "wb"))
-        for point in self.get_data_points(**data_series):
-            writer.writerow(
-                [
-                    point["start_date"],
-                    point["end_date"],
-                    point["value"],
-                    self.lookup_unit_abbreviation(point["unit_id"]),
-                ]
-            )
 
     def convert_unit(self, point, target_unit_id):
         """Convert the data point from one unit to another unit.
