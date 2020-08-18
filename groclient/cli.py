@@ -9,8 +9,6 @@ import groclient.lib
 import groclient.cfg
 from groclient import GroClient
 
-OUTPUT_FILENAME = "gro_client_output.csv"
-
 
 def pick_random_data_series(client):  # pragma: no cover
     """Given a selection of entities, pick a random available data series the given selection
