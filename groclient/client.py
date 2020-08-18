@@ -884,7 +884,7 @@ class GroClient(object):
             def get_name(entity_type_id, entity_id):
                 return self.lookup(ENTITY_KEY_TO_TYPE[entity_type_id], entity_id)['name']
 
-            for entity_type_id in DATA_SERIES_UNIQUE_TYPES_ID:
+            for entity_type_id in DATA_SERIES_UNIQUE_TYPES_ID + ['unit_id']:
                 name_col = entity_type_id.replace('_id', '_name')
                 df[name_col] = df[entity_type_id].apply(partial(get_name, entity_type_id))
 

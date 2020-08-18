@@ -29,7 +29,8 @@ ENTITY_KEY_TO_TYPE = {
     'region_id': 'regions',
     'partner_region_id': 'regions',
     'source_id': 'sources',
-    'frequency_id': 'frequencies'
+    'frequency_id': 'frequencies',
+    'unit_id': 'units'
 }
 
 DATA_POINTS_UNIQUE_COLS = DATA_SERIES_UNIQUE_TYPES_ID + [
