@@ -61,10 +61,10 @@ class SimilarRegion(object):
         
         self.client = BatchClient(API_HOST, ACCESS_TOKEN)
 
-    def _load_region_info(self, search_region=0):
+    def _load_region_info(self, root_region_ids):
         """Dealing with region information (load from cache or API)
 
-        :param search_region: region_id to search for similar regions. Default is 0 (entire world).
+        :param search_region: root region_id to search for similar regions. Default is 0 (entire world).
         """
         self.region_info = {}
         info_path = os.path.join(self.data_dir, REGION_INFO_CACHE)
@@ -72,32 +72,40 @@ class SimilarRegion(object):
             self._logger.info("Reading region info from cache {}".format(info_path))
             with open(info_path, 'rb') as f:
                 self.region_info = pickle.load(f)
-        if search_region not in self.region_info:
-            ri = [self.client.lookup('regions', search_region)] # include top-level region itself
-            for l in range(5,ri[0]['level'],-1):
-                self._logger.info("Loading region info for region {} at level {}".format(search_region, l))
-                ri += self.client.get_descendant_regions(search_region,descendant_level=l,
-                                                              include_historical=False,
-                                                              include_details=True)
-            # update region_info with search_region and re-save
-            self.region_info.update(dict(zip([region['id'] for region in ri], ri)))
+
+        resave = False
+        for search_region in root_region_ids:
+            if search_region not in self.region_info:
+                ri = [self.client.lookup('regions', search_region)] # include top-level region itself
+                for l in range(5,ri[0]['level'],-1):
+                    self._logger.info("Loading region info for region {} at level {}".format(search_region, l))
+                    ri += self.client.get_descendant_regions(search_region,descendant_level=l,
+                                                             include_historical=False,
+                                                             include_details=True)
+                # update region_info with search_region and re-save
+                self.region_info.update(dict(zip([region['id'] for region in ri], ri)))
+                resave = True
+        if resave:
             with open(info_path, 'wb') as f:
                 self._logger.info("Saving region info file {}".format(info_path))
                 pickle.dump(self.region_info,f)    
 
         # We might have too many regions in the info cache - this happens if cache was filled for a parent
         # of region currently requested (filled for entire world but we want only US, for example)
-        top_info = self.region_info[search_region]
-        self._logger.info("Search region is present in cache of size {}".format(len(self.region_info)))
-        level = top_info['level'] # can only have 2/3/4/5
-        to_include = [search_region]
-        ri = {search_region:top_info}
-        while level<5:
-            to_include = [r for r in [j for r in to_include for j in self.region_info[r]['contains']] 
-                          if self.region_info.get(r,{'level':-1})['level']==level+1]
-            ri.update({r:self.region_info[r] for r in to_include})
-            level += 1
-        self.region_info = ri
+        regions_to_keep = {}
+        for search_region in root_region_ids:
+            top_info = self.region_info[search_region]
+            self._logger.info("region {} is present region in cache of size {}".format(
+                search_region, len(self.region_info)))
+            level = top_info['level'] # can only have 2/3/4/5 (TODO: not necessarily, include 8)
+            to_include = [search_region]
+            regions_to_keep[search_region] = top_info
+            while level<5:
+                to_include = [r for r in [j for r in to_include for j in self.region_info[r]['contains']] 
+                              if self.region_info.get(r,{'level':-1})['level']==level+1]
+                regions_to_keep.update({r:self.region_info[r] for r in to_include})
+                level += 1
+        self.region_info = regions_to_keep
         self._logger.info("Trimmed region info to {} items".format(len(self.region_info)))
         self.needed_regions = sorted(self.region_info.keys())
         self.needed_properties = sorted(self.metric_instance.keys())
@@ -466,20 +474,26 @@ class SimilarRegion(object):
         means1 = self.data[idx1,:self.n_pit+self.n_ts]
         means2 = self.data[idx2,:self.n_pit+self.n_ts]
         s_dist = np.sqrt(max(0,full_dist**2 - np.sum((means1-means2)**2)))
-        distances = dict([('total',full_dist), ('covar',s_dist)]+[(p,np.abs(means1[i]-means2[i])) for (i,p) in enumerate(self.needed_properties)])
+        distances = dict([('total',full_dist), ('covar',s_dist)] + \
+                         [(p,np.abs(means1[i]-means2[i])) \
+                          for (i,p) in enumerate(self.needed_properties)])
         return distances
 
-    def similar_to(self, region_id, number_of_regions=10, requested_level=None, detailed_distance=False):
+    def similar_to(self, region_id, number_of_regions=10, requested_level=None, detailed_distance=False,
+                   compare_to=0):
         """
         Attempt to look up the given name and find similar regions.
         :param region_id: a Gro region id representing the reference region you want to find similar regions to.
         :param number_of_regions: number of most similar matches to return
         :param requested_level: level of returned regions (3-country,4-province,5-district)
+        :param compare_to: the root region_id of the regions to compare to (default 0 which is World)
         :return: a generator of the most similar regions as a list in the form
         {'#': 0, 'id': 123, 'name': "abc", 'dist': 1.23, 'parent': (12,"def",,)}
         """
-        assert region_id in self.available_regions, "This region is not available in your configuration or it lacks coverage in the chosen region properties."
-        
+        # update and/or prune region data for the current comparison
+        self._load_region_info([region_id, compare_to])
+        self._load_data()
+
         # called when self.data is simple np.array
         # BallTree expects array of points but we always search neighbors of just one => reshape
         x = self.data[self.region_index[region_id]].reshape(1, -1)
