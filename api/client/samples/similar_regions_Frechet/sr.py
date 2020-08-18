@@ -407,6 +407,7 @@ class SimilarRegion(object):
                         # (for example 'start_date': '2017-01-01T00:00:00.000Z')
                         # ugly date conversion, but this is inner loop, strptime is too slow here
                         # TODO: python 3.7 has fromisoformat which is supposedly much faster than strptime
+                        # TODO: also try pandas.to_datetime()
                         y = int(datapoint["start_date"][:4])
                         m = int(datapoint["start_date"][5:7])
                         d = int(datapoint["start_date"][8:10])
