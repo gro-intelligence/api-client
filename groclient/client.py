@@ -891,13 +891,6 @@ class GroClient(object):
         if index_by_series and not df.empty:
             idx_columns = intersect(DATA_SERIES_UNIQUE_TYPES_ID, df.columns)
 
-            def get_name(entity_type_id, entity_id):
-                return self.lookup(ENTITY_KEY_TO_TYPE[entity_type_id], entity_id)['name']
-
-            for entity_type_id in idx_columns:
-                name_col = entity_type_id.replace('_id', '_name')
-                df[name_col] = df[entity_type_id].apply(partial(get_name, entity_type_id))
-
             df.set_index(idx_columns, inplace=True)
             df.sort_index(inplace=True)
 
