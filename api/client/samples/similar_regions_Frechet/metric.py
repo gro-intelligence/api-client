@@ -39,7 +39,7 @@ metric_instance = {
     'soil_water_capacity_100cm':1.0
 }
 
-metric_description = {
+metric_properties = {
     "soil_moisture": {
         "api_data": {
             'metric_id': 15531082,
