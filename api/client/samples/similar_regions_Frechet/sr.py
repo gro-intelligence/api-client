@@ -1,15 +1,17 @@
-import numpy as np
-import os
-import pandas as pd
+import os, glob
 import pickle
 from datetime import date
+
+import numpy as np
 from scipy.linalg import sqrtm
-from sklearn.neighbors import BallTree, DistanceMetric
+import pandas as pd
 from tqdm import tqdm
 
+from sklearn.neighbors import BallTree, DistanceMetric
 from api.client.batch_client import BatchClient, BatchError
 from api.client.lib import get_default_logger
-from api.client.samples.similar_regions_Frechet.metric import metric_properties as default_metric_properties
+#from api.client.samples.similar_regions.similar_region_state import SimilarRegionState
+from sklearn.metrics.pairwise import euclidean_distances
 
 """ API Config """
 API_HOST = 'api.gro-intelligence.com'
@@ -24,7 +26,7 @@ OK_TO_PROCEED_REGION_FRACTION = 0.1 # we want at least 10% of all desired region
 
 class SimilarRegion(object):
 
-    def __init__(self, metric_properties=None,
+    def __init__(self, metric_properties,
                  data_dir="/tmp/similar_regions_cache",
                  t_int_per_year=52,
                  metric_instance=None):
@@ -43,11 +45,8 @@ class SimilarRegion(object):
         self.available_regions = []
         self.available_properties = []
         self._logger = get_default_logger()
-        if metric_properties:
-            self.metric_properties = metric_properties
-        else:
-            self.metric_properties = default_metric_properties
-        self.needed_properties = sorted(list(set(self.metric_properties.keys())))
+        self.metric_properties = metric_properties
+        self.needed_properties = sorted(list(set(metric_properties.keys())))
         if metric_instance is not None:
             unresolved_items = [item for item in metric_instance if item not in self.metric_properties]
             assert not unresolved_items, "Found items {} in metric instance not present in metric description".format(unresolved_items)
