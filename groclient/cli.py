@@ -1,13 +1,51 @@
+from random import random
 import argparse
 import getpass
 import os
 import sys
+import unicodecsv
 
 import groclient.lib
 import groclient.cfg
 from groclient import GroClient
 
-OUTPUT_FILENAME = "gro_client_output.csv"
+
+def pick_random_data_series(client):  # pragma: no cover
+    """Pick a random available data series."""
+    data_series_list = client.get_data_series()
+    random_data_series = data_series_list[int(len(data_series_list) * random())]
+    return random_data_series
+
+
+def print_one_data_series(client, data_series):  # pragma: no cover
+    """Output the data points of a data series to stdout."""
+    # Print the "name" of the series:
+    print('{} {} of {} in {}:'.format(data_series['frequency_name'],
+                                      data_series['metric_name'],
+                                      data_series['item_name'],
+                                      data_series['region_name']))
+    # Print the data points:
+    for point in client.get_data_points(**data_series):
+        print('{}-{}: {} {}'.format(point["start_date"],
+                                    point["end_date"],
+                                    point["value"],
+                                    client.lookup_unit_abbreviation(point["unit_id"])))
+
+
+def write_one_data_series(client, data_series, filename):  # pragma: no cover
+    """Output the data points of a data series to a CSV file."""
+    client.get_logger().warning("Using data series: {}".format(str(data_series)))
+    client.get_logger().warning("Outputing to file: {}".format(filename))
+    writer = unicodecsv.writer(open(filename, "wb"))
+    for point in client.get_data_points(**data_series):
+        writer.writerow(
+            [
+                point["start_date"],
+                point["end_date"],
+                point["value"],
+                client.lookup_unit_abbreviation(point["unit_id"]),
+            ]
+        )
 
 
 def main():  # pragma: no cover
@@ -30,6 +68,7 @@ def main():  # pragma: no cover
     parser.add_argument("--metric")
     parser.add_argument("--region")
     parser.add_argument("--partner_region")
+    parser.add_argument("--file")
     parser.add_argument(
         "--print_token",
         action="store_true",
@@ -74,14 +113,23 @@ def main():  # pragma: no cover
         and not args.region
         and not args.partner_region
     ):
-        ds = client.pick_random_data_series(client.pick_random_entities())
+        data_series = pick_random_data_series(client)
     else:
-        ds = next(
+        data_series = next(
             client.find_data_series(
                 item=args.item,
                 metric=args.metric,
                 region=args.region,
                 partner_region=args.partner_region,
-            )
+            ),
+            None
         )
-    client.print_one_data_series(ds, OUTPUT_FILENAME)
+
+    if data_series is None:
+        print("No data series found.")
+        return
+
+    if args.file is not None:
+        write_one_data_series(client, data_series, args.file)
+    else:
+        print_one_data_series(client, data_series)
