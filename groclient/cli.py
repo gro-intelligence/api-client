@@ -121,8 +121,13 @@ def main():  # pragma: no cover
                 metric=args.metric,
                 region=args.region,
                 partner_region=args.partner_region,
-            )
+            ),
+            None
         )
+
+    if data_series is None:
+        print("No data series found.")
+        return
 
     if args.file is not None:
         write_one_data_series(client, data_series, args.file)
