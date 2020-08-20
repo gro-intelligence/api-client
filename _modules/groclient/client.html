@@ -203,12 +203,8 @@
 <span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span>
 <span class="kn">from</span> <span class="nn">builtins</span> <span class="kn">import</span> <span class="nb">str</span>
 <span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">random</span>
-<span class="kn">import</span> <span class="nn">argparse</span>
 <span class="kn">import</span> <span class="nn">functools</span>
-<span class="kn">import</span> <span class="nn">getpass</span>
 <span class="kn">import</span> <span class="nn">itertools</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">time</span>
 <span class="kn">import</span> <span class="nn">json</span>
 
@@ -232,10 +228,6 @@
 <span class="kn">from</span> <span class="nn">tornado.httpclient</span> <span class="kn">import</span> <span class="n">AsyncHTTPClient</span><span class="p">,</span> <span class="n">HTTPRequest</span><span class="p">,</span> <span class="n">HTTPError</span>
 <span class="kn">from</span> <span class="nn">tornado.ioloop</span> <span class="kn">import</span> <span class="n">IOLoop</span>
 <span class="kn">from</span> <span class="nn">tornado.queues</span> <span class="kn">import</span> <span class="n">Queue</span>
-
-
-<span class="n">API_HOST</span> <span class="o">=</span> <span class="s2">&quot;api.gro-intelligence.com&quot;</span>
-<span class="n">OUTPUT_FILENAME</span> <span class="o">=</span> <span class="s2">&quot;gro_client_output.csv&quot;</span>
 
 
 <span class="k">class</span> <span class="nc">BatchError</span><span class="p">(</span><span class="n">APIError</span><span class="p">):</span>
@@ -1650,104 +1642,6 @@
             <span class="p">)</span> <span class="o">/</span> <span class="n">to_convert_factor</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;factor&quot;</span><span class="p">)</span>
         <span class="n">point</span><span class="p">[</span><span class="s2">&quot;unit_id&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">target_unit_id</span>
         <span class="k">return</span> <span class="n">point</span>
-
-
-<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>  <span class="c1"># pragma: no cover</span>
-    <span class="sd">&quot;&quot;&quot;Basic Gro API command line interface.</span>
-
-<span class="sd">    Note that results are chosen randomly from matching selections, and so results are not</span>
-<span class="sd">    deterministic. This tool is useful for simple queries, but anything more complex should be done</span>
-<span class="sd">    using the provided Python packages.</span>
-
-<span class="sd">    Usage examples:</span>
-<span class="sd">        gro_client --item=soybeans  --region=brazil --partner_region china --metric export</span>
-<span class="sd">        gro_client --item=sesame --region=ethiopia</span>
-<span class="sd">        gro_client --user_email=john.doe@example.com  --print_token</span>
-<span class="sd">    For more information use --help</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;Gro API command line interface&quot;</span><span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--user_email&quot;</span><span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--user_password&quot;</span><span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--item&quot;</span><span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--metric&quot;</span><span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--region&quot;</span><span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--partner_region&quot;</span><span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-        <span class="s2">&quot;--print_token&quot;</span><span class="p">,</span>
-        <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span>
-        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Ouput API access token for the given user email and password. &quot;</span>
-        <span class="s2">&quot;Save it in GROAPI_TOKEN environment variable.&quot;</span><span class="p">,</span>
-    <span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-        <span class="s2">&quot;--token&quot;</span><span class="p">,</span>
-        <span class="n">default</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;GROAPI_TOKEN&quot;</span><span class="p">),</span>
-        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Defaults to GROAPI_TOKEN environment variable.&quot;</span><span class="p">,</span>
-    <span class="p">)</span>
-    <span class="n">args</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>
-
-    <span class="k">assert</span> <span class="p">(</span>
-        <span class="n">args</span><span class="o">.</span><span class="n">user_email</span> <span class="ow">or</span> <span class="n">args</span><span class="o">.</span><span class="n">token</span>
-    <span class="p">),</span> <span class="s2">&quot;Need --token, or --user_email, or $GROAPI_TOKEN&quot;</span>
-    <span class="n">access_token</span> <span class="o">=</span> <span class="kc">None</span>
-
-    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">token</span><span class="p">:</span>
-        <span class="n">access_token</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">token</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">args</span><span class="o">.</span><span class="n">user_password</span><span class="p">:</span>
-            <span class="n">args</span><span class="o">.</span><span class="n">user_password</span> <span class="o">=</span> <span class="n">getpass</span><span class="o">.</span><span class="n">getpass</span><span class="p">()</span>
-        <span class="n">access_token</span> <span class="o">=</span> <span class="n">lib</span><span class="o">.</span><span class="n">get_access_token</span><span class="p">(</span>
-            <span class="n">API_HOST</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">user_email</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">user_password</span>
-        <span class="p">)</span>
-    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">print_token</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">access_token</span><span class="p">)</span>
-        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-    <span class="n">client</span> <span class="o">=</span> <span class="n">GroClient</span><span class="p">(</span><span class="n">API_HOST</span><span class="p">,</span> <span class="n">access_token</span><span class="p">)</span>
-
-    <span class="k">if</span> <span class="p">(</span>
-        <span class="ow">not</span> <span class="n">args</span><span class="o">.</span><span class="n">metric</span>
-        <span class="ow">and</span> <span class="ow">not</span> <span class="n">args</span><span class="o">.</span><span class="n">item</span>
-        <span class="ow">and</span> <span class="ow">not</span> <span class="n">args</span><span class="o">.</span><span class="n">region</span>
-        <span class="ow">and</span> <span class="ow">not</span> <span class="n">args</span><span class="o">.</span><span class="n">partner_region</span>
-    <span class="p">):</span>
-        <span class="n">ds</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">pick_random_data_series</span><span class="p">(</span><span class="n">client</span><span class="o">.</span><span class="n">pick_random_entities</span><span class="p">())</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">ds</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span>
-            <span class="n">client</span><span class="o">.</span><span class="n">find_data_series</span><span class="p">(</span>
-                <span class="n">item</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">item</span><span class="p">,</span>
-                <span class="n">metric</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">metric</span><span class="p">,</span>
-                <span class="n">region</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">region</span><span class="p">,</span>
-                <span class="n">partner_region</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">partner_region</span><span class="p">,</span>
-            <span class="p">)</span>
-        <span class="p">)</span>
-    <span class="n">client</span><span class="o">.</span><span class="n">print_one_data_series</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">OUTPUT_FILENAME</span><span class="p">)</span>
-
-
-<span class="k">def</span> <span class="nf">get_df</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="o">**</span><span class="n">selected_entities</span><span class="p">):</span>  <span class="c1"># pragma: no cover</span>
-    <span class="sd">&quot;&quot;&quot;Deprecated: use the corresponding method in GroClient instead.&quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">client</span><span class="o">.</span><span class="n">get_data_points</span><span class="p">(</span><span class="o">**</span><span class="n">selected_entities</span><span class="p">))</span>
-
-
-<span class="k">def</span> <span class="nf">search_for_entity</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">,</span> <span class="n">keywords</span><span class="p">):</span>  <span class="c1"># pragma: no cover</span>
-    <span class="sd">&quot;&quot;&quot;Deprecated: use the corresponding method in GroClient instead.&quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">client</span><span class="o">.</span><span class="n">search_for_entity</span><span class="p">(</span><span class="n">entity_type</span><span class="p">,</span> <span class="n">keywords</span><span class="p">)</span>
-
-
-<span class="k">def</span> <span class="nf">pick_random_entities</span><span class="p">(</span><span class="n">client</span><span class="p">):</span>  <span class="c1"># pragma: no cover</span>
-    <span class="sd">&quot;&quot;&quot;Deprecated: use the corresponding method in GroClient instead.&quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">client</span><span class="o">.</span><span class="n">pick_random_entities</span><span class="p">()</span>
-
-
-<span class="k">def</span> <span class="nf">print_random_data_series</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="n">selected_entities</span><span class="p">):</span>  <span class="c1"># pragma: no cover</span>
-    <span class="sd">&quot;&quot;&quot;Example which prints out a CSV of a random data series that</span>
-<span class="sd">    satisfies the (optional) given selection.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">client</span><span class="o">.</span><span class="n">print_one_data_series</span><span class="p">(</span>
-        <span class="n">client</span><span class="o">.</span><span class="n">pick_random_data_series</span><span class="p">(</span><span class="n">selected_entities</span><span class="p">),</span> <span class="n">OUTPUT_FILENAME</span>
-    <span class="p">)</span>
-
-
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
-    <span class="n">main</span><span class="p">()</span>
 </pre></div>
 
            </div>
@@ -1826,7 +1720,6 @@
             <dd><a href="../../CLEWS-27625-fixtures/index.html">CLEWS-27625-fixtures</a></dd>
             <dd><a href="../../CLEWS-29522/index.html">CLEWS-29522</a></dd>
             <dd><a href="../../CLEWS-29688/index.html">CLEWS-29688</a></dd>
-            <dd><a href="../../CLEWS-29688-cli-refactor/index.html">CLEWS-29688-cli-refactor</a></dd>
             <dd><a href="../../CLEWS-29688-fix/index.html">CLEWS-29688-fix</a></dd>
             <dd><a href="../../analogous_years_modifications/index.html">analogous_years_modifications</a></dd>
             <dd><a href="../../black/index.html">black</a></dd>
