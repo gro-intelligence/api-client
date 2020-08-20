@@ -11,20 +11,20 @@ from groclient import GroClient
 
 
 def pick_random_data_series(client):  # pragma: no cover
-    """Given a selection of entities, pick a random available data series the given selection
-    of entities.
-    """
+    """Pick a random available data series."""
     data_series_list = client.get_data_series()
     random_data_series = data_series_list[int(len(data_series_list) * random())]
     return random_data_series
 
 
 def print_one_data_series(client, data_series):  # pragma: no cover
-    """Output a data series to stdout."""
+    """Output the data points of a data series to stdout."""
+    # Print the "name" of the series:
     print('{} {} of {} in {}:'.format(data_series['frequency_name'],
                                       data_series['metric_name'],
                                       data_series['item_name'],
                                       data_series['region_name']))
+    # Print the data points:
     for point in client.get_data_points(**data_series):
         print('{}-{}: {} {}'.format(point["start_date"],
                                     point["end_date"],
@@ -33,7 +33,7 @@ def print_one_data_series(client, data_series):  # pragma: no cover
 
 
 def write_one_data_series(client, data_series, filename):  # pragma: no cover
-    """Output a data series to a CSV file."""
+    """Output the data points of a data series to a CSV file."""
     client.get_logger().warning("Using data series: {}".format(str(data_series)))
     client.get_logger().warning("Outputing to file: {}".format(filename))
     writer = unicodecsv.writer(open(filename, "wb"))
