@@ -80,7 +80,12 @@ def main():  # pragma: no cover
         default=os.environ.get("GROAPI_TOKEN"),
         help="Defaults to GROAPI_TOKEN environment variable.",
     )
+    parser.add_argument("--version", action="store_true")
     args = parser.parse_args()
+
+    if args.version:
+        print(groclient.lib.get_version_info().get('api-client-version'))
+        return
 
     assert (
         args.user_email or args.token
@@ -95,9 +100,11 @@ def main():  # pragma: no cover
         access_token = groclient.lib.get_access_token(
             groclient.cfg.API_HOST, args.user_email, args.user_password
         )
+
     if args.print_token:
         print(access_token)
-        sys.exit(0)
+        return
+
     client = GroClient(groclient.cfg.API_HOST, access_token)
 
     if (
