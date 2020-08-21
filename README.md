@@ -50,6 +50,6 @@ Navigate to [api/client/samples/](api/client/samples/) folder and try executing 
     gro_client --metric="Production Quantity mass" --item="Corn" --region="United States" --user_email="email@example.com"
     ```
 
-    The `gro_client` command line interface does a keyword search for the inputs and finds a random matching data series. It displays the data series it picked in the command line and writes the data points out to a file in the current directory called `gro_client_output.csv`. This tool is useful for simple queries, but anything more complex should be done using the provided Python packages.
+    The `gro_client` command line interface does a keyword search for the inputs and finds a random matching data series. It displays the data series it picked and the data points to the console. This tool is useful for simple queries, but anything more complex should be done using the provided Python packages.
 
 Further documentation can be found on the Gro Developers site at <developers.gro-intelligence.com>.
