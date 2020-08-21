@@ -1,12 +1,8 @@
 from __future__ import print_function
 from builtins import str
 from random import random
-import argparse
 import functools
-import getpass
 import itertools
-import os
-import sys
 import time
 import json
 
@@ -30,10 +26,6 @@ from tornado.escape import json_decode
 from tornado.httpclient import AsyncHTTPClient, HTTPRequest, HTTPError
 from tornado.ioloop import IOLoop
 from tornado.queues import Queue
-
-
-API_HOST = "api.gro-intelligence.com"
-OUTPUT_FILENAME = "gro_client_output.csv"
 
 
 class BatchError(APIError):
@@ -1192,6 +1184,8 @@ class GroClient(object):
         """
         results = []  # [[('item_id',1),('item_id',2),...],[('metric_id" 1),...],...]
         for kw in kwargs:
+            if kwargs.get(kw) is None:
+                continue
             id_key = "{}_id".format(kw)
             if id_key in ENTITY_KEY_TO_TYPE:
                 type_results = []  # [('item_id',1),('item_id',2),...]
@@ -1232,7 +1226,7 @@ class GroClient(object):
                         ds = dict(data_series)
                         ds["frequency_id"] = tf["frequency_id"]
                         for data_series in self.rank_series_by_source([ds]):
-                            yield data_series
+                            yield self.get_data_series(**data_series)[0]
 
     def add_data_series(self, **kwargs):
         """Adds the top result of :meth:`~.find_data_series` to the saved data series list.
@@ -1361,51 +1355,6 @@ class GroClient(object):
             for entity_key, entity_id in selection.items()
         ]
 
-    ###
-    # Convenience methods that automatically fill in partial selections with random entities
-    ###
-    def pick_random_entities(self):  # pragma: no cover
-        """Pick a random item that has some data associated with it, and a random metric and region
-        pair for that item with data available.
-        """
-        item_list = list(self.get_available("items").values())
-        num = 0
-        while not num:
-            item = item_list[int(len(item_list) * random())]
-            selected_entities = {"itemId": item["id"]}
-            entity_list = self.list_available(selected_entities)
-            num = len(entity_list)
-        entities = entity_list[int(num * random())]
-        self._logger.info("Using randomly selected entities: {}".format(str(entities)))
-        selected_entities.update(entities)
-        return selected_entities
-
-    def pick_random_data_series(self, selected_entities):  # pragma: no cover
-        """Given a selection of tentities, pick a random available data series the given selection
-        of entities.
-        """
-        data_series_list = self.get_data_series(**selected_entities)
-        if not data_series_list:
-            raise Exception("No data series available for {}".format(selected_entities))
-        selected_data_series = data_series_list[int(len(data_series_list) * random())]
-        return selected_data_series
-
-    # TODO: rename function to "write_..." rather than "print_..."
-    def print_one_data_series(self, data_series, filename):  # pragma: no cover
-        """Output a data series to a CSV file."""
-        self._logger.warning("Using data series: {}".format(str(data_series)))
-        self._logger.warning("Outputing to file: {}".format(filename))
-        writer = unicodecsv.writer(open(filename, "wb"))
-        for point in self.get_data_points(**data_series):
-            writer.writerow(
-                [
-                    point["start_date"],
-                    point["end_date"],
-                    point["value"],
-                    self.lookup_unit_abbreviation(point["unit_id"]),
-                ]
-            )
-
     def convert_unit(self, point, target_unit_id):
         """Convert the data point from one unit to another unit.
 
@@ -1448,101 +1397,3 @@ class GroClient(object):
             ) / to_convert_factor.get("factor")
         point["unit_id"] = target_unit_id
         return point
-
-
-def main():  # pragma: no cover
-    """Basic Gro API command line interface.
-
-    Note that results are chosen randomly from matching selections, and so results are not
-    deterministic. This tool is useful for simple queries, but anything more complex should be done
-    using the provided Python packages.
-
-    Usage examples:
-        gro_client --item=soybeans  --region=brazil --partner_region china --metric export
-        gro_client --item=sesame --region=ethiopia
-        gro_client --user_email=john.doe@example.com  --print_token
-    For more information use --help
-    """
-    parser = argparse.ArgumentParser(description="Gro API command line interface")
-    parser.add_argument("--user_email")
-    parser.add_argument("--user_password")
-    parser.add_argument("--item")
-    parser.add_argument("--metric")
-    parser.add_argument("--region")
-    parser.add_argument("--partner_region")
-    parser.add_argument(
-        "--print_token",
-        action="store_true",
-        help="Ouput API access token for the given user email and password. "
-        "Save it in GROAPI_TOKEN environment variable.",
-    )
-    parser.add_argument(
-        "--token",
-        default=os.environ.get("GROAPI_TOKEN"),
-        help="Defaults to GROAPI_TOKEN environment variable.",
-    )
-    args = parser.parse_args()
-
-    assert (
-        args.user_email or args.token
-    ), "Need --token, or --user_email, or $GROAPI_TOKEN"
-    access_token = None
-
-    if args.token:
-        access_token = args.token
-    else:
-        if not args.user_password:
-            args.user_password = getpass.getpass()
-        access_token = lib.get_access_token(
-            API_HOST, args.user_email, args.user_password
-        )
-    if args.print_token:
-        print(access_token)
-        sys.exit(0)
-    client = GroClient(API_HOST, access_token)
-
-    if (
-        not args.metric
-        and not args.item
-        and not args.region
-        and not args.partner_region
-    ):
-        ds = client.pick_random_data_series(client.pick_random_entities())
-    else:
-        ds = next(
-            client.find_data_series(
-                item=args.item,
-                metric=args.metric,
-                region=args.region,
-                partner_region=args.partner_region,
-            )
-        )
-    client.print_one_data_series(ds, OUTPUT_FILENAME)
-
-
-def get_df(client, **selected_entities):  # pragma: no cover
-    """Deprecated: use the corresponding method in GroClient instead."""
-    return pandas.DataFrame(client.get_data_points(**selected_entities))
-
-
-def search_for_entity(client, entity_type, keywords):  # pragma: no cover
-    """Deprecated: use the corresponding method in GroClient instead."""
-    return client.search_for_entity(entity_type, keywords)
-
-
-def pick_random_entities(client):  # pragma: no cover
-    """Deprecated: use the corresponding method in GroClient instead."""
-    return client.pick_random_entities()
-
-
-def print_random_data_series(client, selected_entities):  # pragma: no cover
-    """Example which prints out a CSV of a random data series that
-    satisfies the (optional) given selection.
-    """
-    return client.print_one_data_series(
-        client.pick_random_data_series(selected_entities), OUTPUT_FILENAME
-    )
-
-
-if __name__ == "__main__":  # pragma: no cover
-    main()
