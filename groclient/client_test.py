@@ -355,7 +355,7 @@ class GroClientTests(TestCase):
         df = self.client.GDH("860032-274-1215-0-2-9", insert_nulls=True, metric_id=1)
         self.assertEqual(len(df), 0)
 
-    def test_add_single_data_series(self):
+    def test_add_single_data_series_adds_copy(self):
         selections = dict(mock_data_series[0])  # don't modify test data. Make a copy
         for region_id in [
             mock_data_series[0]["region_id"],
@@ -369,6 +369,11 @@ class GroClientTests(TestCase):
         self.assertEqual(
             len(self.client.get_df().drop_duplicates().region_id.unique()), 2
         )
+
+    def test_add_single_data_series_allows_metadata(self):
+        selections = dict(mock_data_series[0])
+        selections['metadata'] = {'includes_historical_region': True}
+        self.client.add_single_data_series(selections)
 
     def test_get_data_series_list(self):
         self.client.add_single_data_series(mock_data_series[0])
