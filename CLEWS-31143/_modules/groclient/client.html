@@ -1314,8 +1314,7 @@
 <span class="sd">        None</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">series_hash</span> <span class="o">=</span> <span class="nb">frozenset</span><span class="p">([</span><span class="n">pair</span> <span class="k">for</span> <span class="n">pair</span> <span class="ow">in</span> <span class="n">data_series</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
-                                 <span class="k">if</span> <span class="n">pair</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="n">DATA_SERIES_UNIQUE_TYPES_ID</span><span class="p">])</span>
+        <span class="n">series_hash</span> <span class="o">=</span> <span class="nb">frozenset</span><span class="p">(</span><span class="n">dict_unnest</span><span class="p">(</span><span class="n">data_series</span><span class="p">)</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
         <span class="k">if</span> <span class="n">series_hash</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_series_list</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_data_series_list</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">series_hash</span><span class="p">)</span>
             <span class="c1"># Add a copy of the data series, in case the original is modified</span>
