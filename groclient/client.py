@@ -1109,8 +1109,7 @@ class GroClient(object):
         None
 
         """
-        series_hash = frozenset([pair for pair in data_series.items()
-                                 if pair[0] in DATA_SERIES_UNIQUE_TYPES_ID])
+        series_hash = frozenset(dict_unnest(data_series).items())
         if series_hash not in self._data_series_list:
             self._data_series_list.add(series_hash)
             # Add a copy of the data series, in case the original is modified
