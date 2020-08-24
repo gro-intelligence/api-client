@@ -374,6 +374,7 @@ class GroClientTests(TestCase):
         selections = dict(mock_data_series[0])
         selections['metadata'] = {'includes_historical_region': True}
         self.client.add_single_data_series(selections)
+        self.assertEqual(len(self.client.get_df().item_id), 1)
 
     def test_get_data_series_list(self):
         self.client.add_single_data_series(mock_data_series[0])
