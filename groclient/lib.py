@@ -6,9 +6,8 @@ should appear in the client classes rather than here.
 """
 
 from builtins import str
-from math import ceil
 from groclient import cfg
-from groclient.constants import REGION_LEVELS
+from groclient.constants import REGION_LEVELS, DATA_SERIES_UNIQUE_TYPES_ID
 from groclient.utils import dict_reformat_keys, str_snake_to_camel, str_camel_to_snake, list_chunk
 import json
 import logging
@@ -404,19 +403,30 @@ def get_source_ranking(access_token, api_host, series):
 
 
 def rank_series_by_source(access_token, api_host, series_list):
+    series_map = {}
     for series in series_list:
+        series_key = '.'.join([series.get(type_id)
+                               for type_id in DATA_SERIES_UNIQUE_TYPES_ID
+                               if type_id != 'source_id']
+        if series_key in series_map:
+            series_map[series_key] = {}
+        series_map[series_key][series['source_id']] = series
+
+    for series_key, series_by_source_id in series_list.items():
         try:
-            # Remove source if selected, to consider all sources.
-            series.pop('source_name', None)
-            series.pop('source_id', None)
-            source_ids = get_source_ranking(access_token, api_host, series)
+            series_without_source = {
+                type_id: int(series_key.split('.')[idx])
+                for idx, type_id in enumerate(DATA_SERIES_UNIQUE_TYPES_ID)
+                if type_id != 'source_id'
+            }
+            source_ids = get_source_ranking(access_token,
+                                            api_host,
+                                            series_without_source)
         except ValueError:
             continue  # empty response
         for source_id in source_ids:
-            # Make a copy to avoid passing the same reference each time.
-            series_with_source = dict(series)
-            series_with_source['source_id'] = source_id
-            yield series_with_source
+            if source_id in series_by_source_id:
+                yield series_by_source_id[source_id]
 
 
 def get_available_timefrequency(access_token, api_host, **series):
