@@ -201,8 +201,6 @@
 
 <h1>Source code for groclient.client</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span>
-<span class="kn">from</span> <span class="nn">builtins</span> <span class="kn">import</span> <span class="nb">str</span>
-<span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">random</span>
 <span class="kn">import</span> <span class="nn">functools</span>
 <span class="kn">import</span> <span class="nn">itertools</span>
 <span class="kn">import</span> <span class="nn">time</span>
@@ -222,7 +220,6 @@
 <span class="kn">from</span> <span class="nn">groclient.lib</span> <span class="kn">import</span> <span class="n">APIError</span>
 
 <span class="kn">import</span> <span class="nn">pandas</span>
-<span class="kn">import</span> <span class="nn">unicodecsv</span>
 <span class="kn">from</span> <span class="nn">tornado</span> <span class="kn">import</span> <span class="n">gen</span>
 <span class="kn">from</span> <span class="nn">tornado.escape</span> <span class="kn">import</span> <span class="n">json_decode</span>
 <span class="kn">from</span> <span class="nn">tornado.httpclient</span> <span class="kn">import</span> <span class="n">AsyncHTTPClient</span><span class="p">,</span> <span class="n">HTTPRequest</span><span class="p">,</span> <span class="n">HTTPError</span>
@@ -1314,7 +1311,7 @@
 <span class="sd">        None</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">series_hash</span> <span class="o">=</span> <span class="nb">frozenset</span><span class="p">(</span><span class="n">data_series</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
+        <span class="n">series_hash</span> <span class="o">=</span> <span class="nb">frozenset</span><span class="p">(</span><span class="n">dict_unnest</span><span class="p">(</span><span class="n">data_series</span><span class="p">)</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
         <span class="k">if</span> <span class="n">series_hash</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_series_list</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_data_series_list</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">series_hash</span><span class="p">)</span>
             <span class="c1"># Add a copy of the data series, in case the original is modified</span>
@@ -1678,7 +1675,6 @@
             <dd><a href="../../../CLEWS-27625-fixtures/index.html">CLEWS-27625-fixtures</a></dd>
             <dd><a href="../../../CLEWS-29522/index.html">CLEWS-29522</a></dd>
             <dd><a href="../../../CLEWS-29688/index.html">CLEWS-29688</a></dd>
-            <dd><a href="../../../CLEWS-31143/index.html">CLEWS-31143</a></dd>
             <dd><a href="../../../analogous_years_modifications/index.html">analogous_years_modifications</a></dd>
             <dd><a href="../../../black/index.html">black</a></dd>
             <dd><a href="../../../brazil_soybeans_update/index.html">brazil_soybeans_update</a></dd>
