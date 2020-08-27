@@ -1,9 +1,12 @@
+import platform
+from pkg_resources import get_distribution
+
 import mock
 import numpy as np
 
 from groclient import lib
-import platform
-from pkg_resources import get_distribution
+from groclient.utils import dict_assign
+from groclient.constants import DATA_SERIES_UNIQUE_TYPES_ID
 
 MOCK_HOST = 'pytest.groclient.url'
 MOCK_TOKEN = 'pytest.groclient.token'
@@ -298,28 +301,40 @@ def test_get_source_ranking(mock_requests_get):
 @mock.patch('requests.get')
 def test_rank_series_by_source(mock_requests_get):
     # for each series selection, mock ranking of 3 source ids
-    mock_return = [11, 22, 33]
+    mock_return = [11, 123, 33]
     mock_requests_get.return_value.json.return_value = mock_return
     mock_requests_get.return_value.status_code = 200
 
-    a = {'metric_id': 2540047,
-         'item_id': 3457,
-         'region_id': 13474,
-         'partner_region_id': 56789,
-         'source_id': 123,
-         'source_name': 'dontcare',
-         'frequency_id': 9,
-         'metadata': {'historical': True}}
+    full_data_series = {
+        'metric_id': 2540047,
+        'item_id': 3457,
+        'region_id': 13474,
+        'partner_region_id': 56789,
+        'source_id': 123,
+        'source_name': 'dontcare',
+        'frequency_id': 9,
+        'start_date': '2020-01-01',
+        'end_date': '2020-05-01',
+        'metadata': {'historical': True}
+    }
 
-    b = {'metric_id': 2540047,
-         'item_id': 1457,
-         'region_id': 13474}
-    c = list(lib.rank_series_by_source(MOCK_TOKEN, MOCK_HOST, [a, b]))
+    partial_selections = {
+        'metric_id': 2540047,
+        'item_id': 1457,
+        'region_id': 13474
+    }
 
-    assert(len(c) == 6)
-    for x in c:
-        assert 'source_name' not in x
-    assert mock_return + mock_return == [x['source_id'] for x in c]
+    expected = [
+        {type_id: full_data_series[type_id] for type_id in DATA_SERIES_UNIQUE_TYPES_ID},
+        dict_assign(partial_selections, 'source_id', mock_return[0]),
+        dict_assign(partial_selections, 'source_id', mock_return[1]),
+        dict_assign(partial_selections, 'source_id', mock_return[2])
+    ]
+    for idx, series in enumerate(lib.rank_series_by_source(MOCK_TOKEN,
+                                                           MOCK_HOST,
+                                                           [full_data_series,
+                                                            partial_selections])):
+        assert series == expected[idx]
 
 
 def lookup_mock(MOCK_TOKEN, MOCK_HOST, entity_type, entity_ids):
