@@ -432,7 +432,9 @@ def rank_series_by_source(access_token, api_host, selections_list):
         except ValueError:
             continue  # empty response
         for source_id in source_ids:
-            if source_id in series_by_source_id or None in series_by_source_id:
+            if source_id in series_by_source_id:
+                yield series_by_source_id[source_id]
+            if None in series_by_source_id:
                 yield dict_assign(series_without_source, 'source_id', source_id)
 
 
