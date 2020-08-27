@@ -325,7 +325,7 @@ def test_rank_series_by_source(mock_requests_get):
     }
 
     expected = [
-        {type_id: full_data_series[type_id] for type_id in DATA_SERIES_UNIQUE_TYPES_ID},
+        full_data_series,
         dict_assign(partial_selections, 'source_id', mock_return[0]),
         dict_assign(partial_selections, 'source_id', mock_return[1]),
         dict_assign(partial_selections, 'source_id', mock_return[2])
