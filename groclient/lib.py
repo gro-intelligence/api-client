@@ -7,8 +7,13 @@ should appear in the client classes rather than here.
 
 from builtins import str
 from groclient import cfg
+from collections import OrderedDict
 from groclient.constants import REGION_LEVELS, DATA_SERIES_UNIQUE_TYPES_ID
-from groclient.utils import dict_reformat_keys, str_snake_to_camel, str_camel_to_snake, list_chunk
+from groclient.utils import (dict_reformat_keys,
+                             str_snake_to_camel,
+                             str_camel_to_snake,
+                             list_chunk,
+                             dict_assign)
 import json
 import logging
 import requests
@@ -402,22 +407,24 @@ def get_source_ranking(access_token, api_host, series):
     return get_data(url, headers, params).json()
 
 
-def rank_series_by_source(access_token, api_host, series_list):
-    series_map = {}
-    for series in series_list:
-        series_key = '.'.join([series.get(type_id)
+def rank_series_by_source(access_token, api_host, selections_list):
+    series_map = OrderedDict()
+    for selection in selections_list:
+        series_key = '.'.join([str(selection.get(type_id))
                                for type_id in DATA_SERIES_UNIQUE_TYPES_ID
-                               if type_id != 'source_id']
-        if series_key in series_map:
+                               if type_id != 'source_id'])
+        if series_key not in series_map:
             series_map[series_key] = {}
-        series_map[series_key][series['source_id']] = series
+        elif None in series_map[series_key]:
+            continue
+        series_map[series_key][selection.get('source_id')] = selection
 
-    for series_key, series_by_source_id in series_list.items():
+    for series_key, series_by_source_id in series_map.items():
         try:
             series_without_source = {
                 type_id: int(series_key.split('.')[idx])
                 for idx, type_id in enumerate(DATA_SERIES_UNIQUE_TYPES_ID)
-                if type_id != 'source_id'
+                if type_id != 'source_id' and series_key.split('.')[idx] != 'None'
             }
             source_ids = get_source_ranking(access_token,
                                             api_host,
@@ -425,8 +432,8 @@ def rank_series_by_source(access_token, api_host, series_list):
         except ValueError:
             continue  # empty response
         for source_id in source_ids:
-            if source_id in series_by_source_id:
-                yield series_by_source_id[source_id]
+            if source_id in series_by_source_id or None in series_by_source_id:
+                yield dict_assign(series_without_source, 'source_id', source_id)
 
 
 def get_available_timefrequency(access_token, api_host, **series):
