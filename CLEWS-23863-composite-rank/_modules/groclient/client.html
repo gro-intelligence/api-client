@@ -205,6 +205,7 @@
 <h1>Source code for groclient.client</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span>
 <span class="kn">import</span> <span class="nn">functools</span>
+<span class="kn">from</span> <span class="nn">groclient.cfg</span> <span class="kn">import</span> <span class="n">MAX_RESULT_COMBINATION_DEPTH</span>
 <span class="kn">import</span> <span class="nn">itertools</span>
 <span class="kn">import</span> <span class="nn">time</span>
 <span class="kn">import</span> <span class="nn">json</span>
@@ -218,7 +219,7 @@
     <span class="kn">from</span> <span class="nn">urllib</span> <span class="kn">import</span> <span class="n">urlencode</span>
 
 <span class="kn">from</span> <span class="nn">groclient</span> <span class="kn">import</span> <span class="n">cfg</span><span class="p">,</span> <span class="n">lib</span>
-<span class="kn">from</span> <span class="nn">groclient.constants</span> <span class="kn">import</span> <span class="n">DATA_SERIES_UNIQUE_TYPES_ID</span><span class="p">,</span> <span class="n">ENTITY_KEY_TO_TYPE</span>
+<span class="kn">from</span> <span class="nn">groclient.constants</span> <span class="kn">import</span> <span class="n">DATA_SERIES_UNIQUE_TYPES_ID</span><span class="p">,</span> <span class="n">ENTITY_KEY_TO_TYPE</span><span class="p">,</span> <span class="n">ENTITY_TYPES_PLURAL</span>
 <span class="kn">from</span> <span class="nn">groclient.utils</span> <span class="kn">import</span> <span class="n">intersect</span><span class="p">,</span> <span class="n">zip_selections</span><span class="p">,</span> <span class="n">dict_unnest</span>
 <span class="kn">from</span> <span class="nn">groclient.lib</span> <span class="kn">import</span> <span class="n">APIError</span>
 
@@ -1384,51 +1385,34 @@
 <span class="sd">        :meth:`~.get_data_series`</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># [[(&#39;item_id&#39;,1),(&#39;item_id&#39;,2),...],[(&#39;metric_id&quot; 1),...],...]</span>
-        <span class="k">for</span> <span class="n">kw</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">kw</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="k">continue</span>
-            <span class="n">id_key</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">_id&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">kw</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">id_key</span> <span class="ow">in</span> <span class="n">ENTITY_KEY_TO_TYPE</span><span class="p">:</span>
-                <span class="n">type_results</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># [(&#39;item_id&#39;,1),(&#39;item_id&#39;,2),...]</span>
-                <span class="k">for</span> <span class="n">search_result</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">search</span><span class="p">(</span>
-                    <span class="n">ENTITY_KEY_TO_TYPE</span><span class="p">[</span><span class="n">id_key</span><span class="p">],</span> <span class="n">kwargs</span><span class="p">[</span><span class="n">kw</span><span class="p">]</span>
-                <span class="p">)[:</span> <span class="n">cfg</span><span class="o">.</span><span class="n">MAX_RESULT_COMBINATION_DEPTH</span><span class="p">]:</span>
-                    <span class="k">if</span> <span class="n">result_filter</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">result_filter</span><span class="p">(</span>
-                        <span class="p">{</span><span class="n">id_key</span><span class="p">:</span> <span class="n">search_result</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]}</span>
-                    <span class="p">):</span>
-                        <span class="n">type_results</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">id_key</span><span class="p">,</span> <span class="n">search_result</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]))</span>
-                <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">type_results</span><span class="p">)</span>
-        <span class="c1"># Rank by frequency and source, while preserving search ranking in</span>
-        <span class="c1"># permutations of search results.</span>
-        <span class="n">ranking_groups</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
-        <span class="k">for</span> <span class="n">comb</span> <span class="ow">in</span> <span class="n">itertools</span><span class="o">.</span><span class="n">product</span><span class="p">(</span><span class="o">*</span><span class="n">results</span><span class="p">):</span>
-            <span class="k">for</span> <span class="n">data_series</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_data_series</span><span class="p">(</span><span class="o">**</span><span class="nb">dict</span><span class="p">(</span><span class="n">comb</span><span class="p">))[</span>
-                <span class="p">:</span> <span class="n">cfg</span><span class="o">.</span><span class="n">MAX_SERIES_PER_COMB</span>
-            <span class="p">]:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Data series: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">data_series</span><span class="p">))</span>
-                <span class="c1"># remove time and frequency to rank them</span>
-                <span class="n">data_series</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;start_date&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-                <span class="n">data_series</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;end_date&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-                <span class="n">data_series</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;frequency_id&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-                <span class="n">data_series</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;frequency_name&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-                <span class="c1"># remove source to rank them</span>
-                <span class="n">data_series</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;source_id&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-                <span class="n">data_series</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;source_name&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-                <span class="c1"># metadata is not hashable</span>
-                <span class="n">data_series</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;metadata&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-                <span class="n">series_hash</span> <span class="o">=</span> <span class="nb">frozenset</span><span class="p">(</span><span class="n">data_series</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
-                <span class="k">if</span> <span class="n">series_hash</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">ranking_groups</span><span class="p">:</span>
-                    <span class="n">ranking_groups</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">series_hash</span><span class="p">)</span>
-                    <span class="k">if</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;start_date&quot;</span><span class="p">):</span>
-                        <span class="n">data_series</span><span class="p">[</span><span class="s2">&quot;start_date&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;start_date&quot;</span><span class="p">]</span>
-                    <span class="k">if</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;end_date&quot;</span><span class="p">):</span>
-                        <span class="n">data_series</span><span class="p">[</span><span class="s2">&quot;end_date&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;end_date&quot;</span><span class="p">]</span>
-                    <span class="k">for</span> <span class="n">tf</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_available_timefrequency</span><span class="p">(</span><span class="o">**</span><span class="n">data_series</span><span class="p">):</span>
-                        <span class="n">ds</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">data_series</span><span class="p">)</span>
-                        <span class="n">ds</span><span class="p">[</span><span class="s2">&quot;frequency_id&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">tf</span><span class="p">[</span><span class="s2">&quot;frequency_id&quot;</span><span class="p">]</span>
-                        <span class="k">for</span> <span class="n">data_series</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">rank_series_by_source</span><span class="p">([</span><span class="n">ds</span><span class="p">]):</span>
-                            <span class="k">yield</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_data_series</span><span class="p">(</span><span class="o">**</span><span class="n">data_series</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span></div>
+        <span class="n">possible_selections</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">rankings</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">type_singular</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;metric&#39;</span><span class="p">,</span> <span class="s1">&#39;item&#39;</span><span class="p">,</span> <span class="s1">&#39;region&#39;</span><span class="p">,</span> <span class="s1">&#39;partner_region&#39;</span><span class="p">]:</span>
+            <span class="n">type_plural</span> <span class="o">=</span> <span class="n">type_singular</span> <span class="o">+</span> <span class="s1">&#39;s&#39;</span>
+            <span class="n">search_type</span> <span class="o">=</span> <span class="n">type_plural</span> <span class="k">if</span> <span class="n">type_plural</span> <span class="o">!=</span> <span class="s1">&#39;partner_regions&#39;</span> <span class="k">else</span> <span class="s1">&#39;regions&#39;</span>
+            <span class="k">if</span> <span class="n">type_singular</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+                <span class="n">possible_selections</span><span class="p">[</span><span class="n">type_plural</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">search</span><span class="p">(</span>
+                    <span class="n">search_type</span><span class="p">,</span>
+                    <span class="n">kwargs</span><span class="p">[</span><span class="n">type_singular</span><span class="p">]</span>
+                <span class="p">)[:</span><span class="n">MAX_RESULT_COMBINATION_DEPTH</span><span class="p">]</span>
+                <span class="n">rankings</span><span class="p">[</span><span class="n">type_plural</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="n">entity_id</span><span class="p">:</span> <span class="p">(</span><span class="n">idx</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">possible_selections</span><span class="p">[</span><span class="n">type_plural</span><span class="p">]))</span>
+                    <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">entity_id</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">possible_selections</span><span class="p">[</span><span class="n">type_plural</span><span class="p">])</span>
+                <span class="p">}</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">ordered_entities</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_available</span><span class="p">(</span><span class="n">type_plural</span><span class="p">)</span>
+                <span class="n">rankings</span><span class="p">[</span><span class="n">type_plural</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="n">entity_id</span><span class="p">:</span> <span class="p">(</span><span class="n">idx</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">ordered_entities</span><span class="p">))</span>
+                    <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">entity_id</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">ordered_entities</span><span class="p">)</span>
+                <span class="p">}</span>
+        <span class="n">plural_to_id</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="n">ENTITY_TYPES_PLURAL</span><span class="p">[:</span><span class="mi">4</span><span class="p">],</span> <span class="n">DATA_SERIES_UNIQUE_TYPES_ID</span><span class="p">[:</span><span class="mi">4</span><span class="p">])</span>
+        <span class="n">selection_type_ids</span> <span class="o">=</span> <span class="p">[</span><span class="n">plural_to_id</span><span class="p">[</span><span class="n">type_plural</span><span class="p">]</span>
+                              <span class="k">for</span> <span class="n">type_plural</span> <span class="ow">in</span> <span class="n">possible_selections</span><span class="o">.</span><span class="n">keys</span><span class="p">()]</span>
+        <span class="k">for</span> <span class="n">selection_ids</span> <span class="ow">in</span> <span class="n">product</span><span class="p">(</span><span class="n">possible_selections</span><span class="o">.</span><span class="n">values</span><span class="p">()):</span>
+            
+            <span class="n">data_series_list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_data_series</span><span class="p">(</span><span class="o">**</span><span class="nb">zip</span><span class="p">(</span><span class="n">selection_type_ids</span><span class="p">,</span> <span class="n">selection_ids</span><span class="p">))</span></div>
+
+
 
 <div class="viewcode-block" id="GroClient.add_data_series"><a class="viewcode-back" href="../../api.html#api.client.gro_client.GroClient.add_data_series">[docs]</a>    <span class="k">def</span> <span class="nf">add_data_series</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Adds the top result of :meth:`~.find_data_series` to the saved data series list.</span>
@@ -1679,6 +1663,7 @@
             <dd><a href="../../../CLEWS-27625-fixtures/index.html">CLEWS-27625-fixtures</a></dd>
             <dd><a href="../../../CLEWS-29522/index.html">CLEWS-29522</a></dd>
             <dd><a href="../../../CLEWS-29688/index.html">CLEWS-29688</a></dd>
+            <dd><a href="../../../JGrinst-backtest-link/index.html">JGrinst-backtest-link</a></dd>
             <dd><a href="../../../analogous_years_modifications/index.html">analogous_years_modifications</a></dd>
             <dd><a href="../../../black/index.html">black</a></dd>
             <dd><a href="../../../brazil_soybeans_update/index.html">brazil_soybeans_update</a></dd>
