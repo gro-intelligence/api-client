@@ -12,7 +12,7 @@ Why is it that when I use client.search() to find metrics/items/regions I'm inte
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 :code:`client.search()` provides a way to search across everything we have identified and defined in our ontology. Sometimes data doesn't exist for a particular result for a number of reasons, most commonly because we may have defined new entries in preparation for an incoming source which is undergoing testing. 
-`find_data_series() <api.html#api.client.gro_client.GroClient.find_data_series>`_
+`find_data_series() <api.html#groclient.GroClient.find_data_series>`_
 will tell you what data is actually available by performing searches for combinations of items, metrics and regions. You can intersect the results from those two functions to find things programmatically, or you can use the web application at https://app.gro-intelligence.com to explore what data is available, intersected already.
 
 What does 'sourceLag' mean when I use client.lookup() to inspect a source's details?
@@ -33,7 +33,7 @@ and end dates selected are March 15 to May 15, and the data happens to
 be monthly on calendar months, it will include points for [Mar 1, Mar
 31], [Apr 1, Apr 30], [May 1, May 31]. 
 
-Thus, when calling `get_data_points() <api.html#api.client.gro_client.GroClient.get_data_points>`_ specifying a start_date for the series restricts the query to any point where "point_end_date >= series_start_date," and a series end_date restricts it to any point where "point_start_date <= series_end_date".
+Thus, when calling `get_data_points() <api.html#groclient.GroClient.get_data_points>`_ specifying a start_date for the series restricts the query to any point where "point_end_date >= series_start_date," and a series end_date restricts it to any point where "point_start_date <= series_end_date".
 
 
 Data Coverage
@@ -54,7 +54,7 @@ What do warnings about 'historical' regions mean?
 
 `Historical regions <gro-ontology#historical>`_ behave just like other regions. Any data that exists can be accessed the same way as data for any region in Gro.  Generally historical regions will only have data corresponding to the time periods when they existed. But in some
 cases, new regions can have data that extends into the past and overlaps with historical regions. 
-Rather than always excluding the old regions in such cases, we allow the user to choose via the  :code:`include_historical` option in `get_data_points() <api.html#api.client.gro_client.GroClient.get_data_points>`_. This can be useful if for example you are analyzing historical temperatures at the district level in a country where the districts that exist today were only created 5 years ago and but you want 20 years of data. In that case, you can filter out the historical regions to avoid double counting.
+Rather than always excluding the old regions in such cases, we allow the user to choose via the  :code:`include_historical` option in `get_data_points() <api.html#groclient.GroClient.get_data_points>`_. This can be useful if for example you are analyzing historical temperatures at the district level in a country where the districts that exist today were only created 5 years ago and but you want 20 years of data. In that case, you can filter out the historical regions to avoid double counting.
 
 Why is daily NDVI changing so much from day to day? And why do some days have no NDVI coverage, especially in winter?
 -----------------------------------------------------------------------------------------------------------------------
@@ -86,7 +86,7 @@ How do I verify connectivity with Gro API?
 To check your basic connectivity, e.g. whether your corporate firewall allows access to Gro API servers, you can using a Gro API client function that doesn't require authentication, such as lookup(). For example:
 ::
 
-  from api.client.lib import lib
+  from groclient.lib import lib
   lib.lookup('', 'api.gro-intelligence.com', 'items', 1)
 
 
