@@ -13,16 +13,16 @@ Note that the search functions work with any of the following entity types:
 
 See Also
 --------
-api.client.lib.search()
-api.client.lib.search_and_lookup()
-api.client.lib.get_data_series()
+groclient.GroClient.search()
+groclient.GroClient.search_and_lookup()
+groclient.GroClient.get_data_series()
 https://github.com/gro-intelligence/api-client/wiki/Entities-Definition
 https://github.com/gro-intelligence/api-client/wiki/Data-Series-Definition
 
 """
 
 import os
-from api.client.gro_client import GroClient
+from groclient import GroClient
 
 API_HOST = 'api.gro-intelligence.com'
 ACCESS_TOKEN = os.environ['GROAPI_TOKEN']

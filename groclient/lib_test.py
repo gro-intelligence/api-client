@@ -258,8 +258,8 @@ def test_search(mock_requests_get):
     assert lib.search(MOCK_TOKEN, MOCK_HOST, 'items', 'test123') == mock_data
 
 
-@mock.patch('api.client.lib.lookup')
-@mock.patch('api.client.lib.search')
+@mock.patch('groclient.lib.lookup')
+@mock.patch('groclient.lib.search')
 def test_search_and_lookup(search_mocked, lookup_mocked):
     # Set up
     # mock return values
@@ -274,7 +274,7 @@ def test_search_and_lookup(search_mocked, lookup_mocked):
     ]
 
 
-@mock.patch('api.client.lib.lookup')
+@mock.patch('groclient.lib.lookup')
 @mock.patch('requests.get')
 def test_lookup_belongs(mock_requests_get, lookup_mocked):
     mock_requests_get.return_value.json.return_value = {'data': {'1': [3]}}
@@ -345,7 +345,7 @@ def lookup_mock(MOCK_TOKEN, MOCK_HOST, entity_type, entity_ids):
                 for entity_id in entity_ids}
 
 
-@mock.patch('api.client.lib.lookup')
+@mock.patch('groclient.lib.lookup')
 @mock.patch('requests.get')
 def test_descendant_regions(mock_requests_get, lookup_mocked):
     mock_requests_get.return_value.json.return_value = {'data': {'3': [1, 2]}}
@@ -471,7 +471,7 @@ def test_get_geo_jsons(mock_requests_get):
     assert lib.get_geojsons(MOCK_TOKEN, MOCK_HOST, 1215, None, 7) == expected_return
 
 
-@mock.patch('api.client.lib.get_geojsons')
+@mock.patch('groclient.lib.get_geojsons')
 def test_get_geo_json(geojsons_mocked):
     geojsons_mocked.return_value = [{
         "region_id": 1215,
