@@ -1,6 +1,4 @@
 from __future__ import print_function
-from builtins import str
-from random import random
 import functools
 import itertools
 import time
@@ -20,7 +18,6 @@ from groclient.utils import intersect, zip_selections, dict_unnest
 from groclient.lib import APIError
 
 import pandas
-import unicodecsv
 from tornado import gen
 from tornado.escape import json_decode
 from tornado.httpclient import AsyncHTTPClient, HTTPRequest, HTTPError
@@ -1112,7 +1109,7 @@ class GroClient(object):
         None
 
         """
-        series_hash = frozenset(data_series.items())
+        series_hash = frozenset(dict_unnest(data_series).items())
         if series_hash not in self._data_series_list:
             self._data_series_list.add(series_hash)
             # Add a copy of the data series, in case the original is modified
