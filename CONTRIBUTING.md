@@ -5,7 +5,7 @@
 First, make sure you do not have the client library installed already:
 
 ```sh
-$ pip uninstall gro
+$ pip uninstall groclient
 ```
 
 Then, clone the repo and install your cloned copy in editable mode (`-e`)

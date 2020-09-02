@@ -3,7 +3,7 @@ from dateutil.parser import parse
 from functools import partial
 import os
 
-from api.client.gro_client import GroClient
+from groclient import GroClient
 
 from api.client.samples.analogous_years.lib import final_ranks_computation
 
