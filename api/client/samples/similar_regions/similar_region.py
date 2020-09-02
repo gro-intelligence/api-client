@@ -1,8 +1,8 @@
 import numpy as np
 import os
 from sklearn.neighbors import BallTree
-from api.client.batch_client import BatchClient
-from api.client.lib import get_default_logger
+from groclient import GroClient
+from groclient.lib import get_default_logger
 from api.client.samples.similar_regions.similar_region_state import SimilarRegionState
 from sklearn.metrics.pairwise import euclidean_distances
 
@@ -19,7 +19,7 @@ class SimilarRegion(object):
         :param regions_to_compare: Default is None. This is a list of region IDs against which we want to do the
         similarity computation. If none specified, do this for all regions where we have _any_ data.
         """
-        self.client = BatchClient(API_HOST, ACCESS_TOKEN)
+        self.client = GroClient(API_HOST, ACCESS_TOKEN)
         self._logger = get_default_logger()
         if not regions_to_compare:
             regions_to_compare = self._regions_avail_for_selection(region_properties)
