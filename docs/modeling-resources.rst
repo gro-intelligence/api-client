@@ -149,7 +149,7 @@ Listed below are Gro's existing models. Each available link will download backte
 
   <ul class="simple">
   <li><a href="https://s3.amazonaws.com/groprod/yield_model_backtest/US_corn_backtest_2001_to_2017.zip" target="_blank"><code class="download"><span class="pre"></span>US Corn</code></a></li>
-  <li><a href="<https://s3.amazonaws.com/groprod/yield_model_backtest/US_soybeans_backtest_2001_to_2017.zip" target="_blank"><code class="download"><span class="pre"></span>US Soybeans</code></a></li>
+  <li><a href="https://s3.amazonaws.com/groprod/yield_model_backtest/US_soybeans_backtest_2001_to_2017.zip" target="_blank"><code class="download"><span class="pre"></span>US Soybeans</code></a></li>
   <li><a href="https://s3.amazonaws.com/groprod/yield_model_backtest/Argentina_soybeans_backtest_2001_to_2017.zip" target="_blank"><code class="download"><span class="pre"></span>Argentina Soybeans</code></a></li>
   <li><a href="https://s3.amazonaws.com/groprod/yield_model_backtest/Brazil_soybeans_backtest_2001_to_2018.zip" target="_blank"><code class="download"><span class="pre"></span>Brazil Soybeans</code></a></li>
   <li><a href="https://s3.amazonaws.com/groprod/yield_model_backtest/India_wheat_backtest_2001_to_2017.zip" target="_blank"><code class="download"><span class="pre"></span>India Wheat</code></a></li>
