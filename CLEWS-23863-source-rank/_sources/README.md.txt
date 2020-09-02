@@ -2,9 +2,9 @@
 
 ## Add/Modify Content
 
-Create a *.md file or *.rst file in this /docs directory, and they will be added as new pages automatically.
+Create a \*.md file or \*.rst file in this /docs directory, and they will be added as new pages automatically.
 
-The API reference page, [api.rst](api.rst) uses [sphinx.ext.autodoc](http://www.sphinx-doc.org/en/master/usage/extensions/autodoc.html) to automatically pull docstrings from `lib`, `GroClient`, `CropModel`, and `BatchClient`, so any function docstrings added or modified in those modules will be updated in the documentation. All other pages are manually written.
+The API reference page, [api.rst](api.rst) uses [sphinx.ext.autodoc](http://www.sphinx-doc.org/en/master/usage/extensions/autodoc.html) to automatically pull docstrings from `GroClient` and `CropModel`, so any function docstrings added or modified in those modules will be updated in the documentation. All other pages are manually written.
 
 ## Build docs locally
 
