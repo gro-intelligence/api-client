@@ -31,7 +31,7 @@ Each specific entity will have an `id`, `name`, and various other properties. Fo
 
 IDs are unique within a particular entity type, i.e., there's only one item with id = 270.
 
-The above information can be retrieved using the :meth:`api.client.gro_client.GroClient.lookup` function:
+The above information can be retrieved using the :meth:`groclient.GroClient.lookup` function:
 
 .. code-block:: python
 
