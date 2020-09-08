@@ -156,6 +156,7 @@ Listed below are Gro's existing models. Each available link will download backte
   <li><a href="https://groprod.s3.amazonaws.com/yield_model_backtest/Wheat_Ukraine_backtest_2001_to_2017.zip" target="_blank"><code class="download"><span class="pre"></span>Ukraine Wheat</code></a></li>
   <li><a href="https://groprod.s3.amazonaws.com/yield_model_backtest/Winter+wheat_Russia_backtest_2001_to_2018.zip" target="_blank"><code class="download"><span class="pre"></span>Russia Wheat (Beta)</code></a></li>
   <li><a href="https://s3.amazonaws.com/groprod/yield_model_backtest/Winter+wheat_United_States_backtest_2002_to_2018.zip" target="_blank"><code class="download"><span class="pre"></span>US Hard Red Winter Wheat</code></a></li>
+  <li><a href="s3://groprod/yield_model_backtest/Canada_Spring_wheat_backtest_2001_to_2019.zip" target="_blank"><code class="download"><span class="pre"></span>Canada Spring Wheat</code></a></li>
   </ul>
 
 NOTE: Our "beta" models have run for less than one full season. At this stage, each model has been fully backtested at monthly frequency across a whole crop season. However, the beta models are still under active development, so the inputs and parameters to the models might change during the current season.
