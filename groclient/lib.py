@@ -9,11 +9,7 @@ from builtins import str
 from groclient import cfg
 from collections import OrderedDict
 from groclient.constants import REGION_LEVELS, DATA_SERIES_UNIQUE_TYPES_ID
-from groclient.utils import (dict_reformat_keys,
-                             str_snake_to_camel,
-                             str_camel_to_snake,
-                             list_chunk,
-                             dict_assign)
+import groclient.utils
 import json
 import logging
 import requests
@@ -52,7 +48,7 @@ class APIError(Exception):
 def get_default_logger():
     """Get a logging object using the default log level set in cfg.
 
-    https://docs.python.org/3/library/logging.html
+    http://docs.python.org/3/library/logging.html
 
     Returns
     -------
@@ -72,7 +68,7 @@ def get_access_token(api_host, user_email, user_password, logger=None):
     Parameters
     ----------
     api_host : string
-        The API host's url, excluding 'https://'
+        The API host's url, excluding 'http://'
         ex. 'api.gro-intelligence.com'
     user_email : string
         Email address associated with user's Gro account
@@ -91,7 +87,7 @@ def get_access_token(api_host, user_email, user_password, logger=None):
     if not logger:
         logger = get_default_logger()
     while retry_count <= cfg.MAX_RETRIES:
-        get_api_token = requests.post('https://' + api_host + '/api-token',
+        get_api_token = requests.post('http://' + api_host + '/api-token',
                                       data={'email': user_email,
                                             'password': user_password})
         if get_api_token.status_code == 200:
@@ -131,7 +127,7 @@ def redirect(old_params, migration):
     for migration_key in migration:
         split_mig_key = migration_key.split('_')
         if split_mig_key[0] == 'new':
-            param_key = str_snake_to_camel('_'.join([split_mig_key[1], 'id']))
+            param_key = groclient.utils.str_snake_to_camel('_'.join([split_mig_key[1], 'id']))
             new_params[param_key] = migration[migration_key]
     return new_params
 
@@ -217,7 +213,7 @@ def get_data(url, headers, params=None, logger=None):
 
 @memoize(maxsize=None)
 def get_allowed_units(access_token, api_host, metric_id, item_id):
-    url = '/'.join(['https:', '', api_host, 'v2/units/allowed'])
+    url = '/'.join(['http:', '', api_host, 'v2/units/allowed'])
     headers = {'authorization': 'Bearer ' + access_token}
     params = {'metricIds': metric_id}
     if item_id:
@@ -228,16 +224,16 @@ def get_allowed_units(access_token, api_host, metric_id, item_id):
 
 @memoize(maxsize=None)
 def get_available(access_token, api_host, entity_type):
-    url = '/'.join(['https:', '', api_host, 'v2', entity_type])
+    url = '/'.join(['http:', '', api_host, 'v2', entity_type])
     headers = {'authorization': 'Bearer ' + access_token}
     resp = get_data(url, headers)
     return resp.json()['data']
 
 
 def list_available(access_token, api_host, selected_entities):
-    url = '/'.join(['https:', '', api_host, 'v2/entities/list'])
+    url = '/'.join(['http:', '', api_host, 'v2/entities/list'])
     headers = {'authorization': 'Bearer ' + access_token}
-    params = dict([(str_snake_to_camel(key), value)
+    params = dict([(groclient.utils.str_snake_to_camel(key), value)
                    for (key, value) in list(selected_entities.items())])
     resp = get_data(url, headers, params)
     try:
@@ -248,7 +244,7 @@ def list_available(access_token, api_host, selected_entities):
 
 @memoize(maxsize=None)
 def lookup_single(access_token, api_host, entity_type, entity_id):
-    url = '/'.join(['https:', '', api_host, 'v2', entity_type])
+    url = '/'.join(['http:', '', api_host, 'v2', entity_type])
     headers = {'authorization': 'Bearer ' + access_token}
     params = {'ids': [entity_id]}
     resp = get_data(url, headers, params)
@@ -259,10 +255,10 @@ def lookup_single(access_token, api_host, entity_type, entity_id):
 
 
 def lookup_batch(access_token, api_host, entity_type, entity_ids):
-    url = '/'.join(['https:', '', api_host, 'v2', entity_type])
+    url = '/'.join(['http:', '', api_host, 'v2', entity_type])
     headers = {'authorization': 'Bearer ' + access_token}
     all_results = {}
-    for id_batch in list_chunk(entity_ids):
+    for id_batch in groclient.utils.list_chunk(entity_ids):
         params = {'ids': id_batch}
         resp = get_data(url, headers, params)
         result = resp.json()['data']
@@ -312,7 +308,7 @@ def get_params_from_selection(**selection):
     for key, value in list(selection.items()):
         if key in ('region_id', 'partner_region_id', 'item_id', 'metric_id',
                    'source_id', 'frequency_id', 'start_date', 'end_date'):
-            params[str_snake_to_camel(key)] = value
+            params[groclient.utils.str_snake_to_camel(key)] = value
     return params
 
 
@@ -350,16 +346,16 @@ def get_data_call_params(**selection):
     params = get_params_from_selection(**selection)
     for key, value in list(selection.items()):
         if key == 'show_metadata':
-            params[str_snake_to_camel('show_meta_data')] = value
+            params[groclient.utils.str_snake_to_camel('show_meta_data')] = value
         if key in ('start_date', 'end_date', 'show_revisions', 'insert_null', 'at_time'):
-            params[str_snake_to_camel(key)] = value
+            params[groclient.utils.str_snake_to_camel(key)] = value
     params['responseType'] = 'list_of_series'
     return params
 
 
 def get_data_series(access_token, api_host, **selection):
     logger = get_default_logger()
-    url = '/'.join(['https:', '', api_host, 'v2/data_series/list'])
+    url = '/'.join(['http:', '', api_host, 'v2/data_series/list'])
     headers = {'authorization': 'Bearer ' + access_token}
     params = get_params_from_selection(**selection)
     resp = get_data(url, headers, params)
@@ -368,14 +364,14 @@ def get_data_series(access_token, api_host, **selection):
         if any((series.get('metadata', {}).get('includes_historical_region', False))
                 for series in response):
             logger.warning('Data series have some historical regions, '
-                           'see https://developers.gro-intelligence.com/faq.html')
+                           'see http://developers.gro-intelligence.com/faq.html')
         return response
     except KeyError:
         raise Exception(resp.text)
 
 
 def get_top(access_token, api_host, entity_type, num_results=5, **selection):
-    url = '/'.join(['https:', '', api_host, 'v2/top/{}'.format(entity_type)])
+    url = '/'.join(['http:', '', api_host, 'v2/top/{}'.format(entity_type)])
     headers = {'authorization': 'Bearer ' + access_token}
     params = get_params_from_selection(**selection)
     params['n'] = num_results
@@ -402,7 +398,7 @@ def get_source_ranking(access_token, api_host, series):
     """
     params = dict((make_key(k), v) for k, v in iter(list(
         get_params_from_selection(**series).items())))
-    url = '/'.join(['https:', '', api_host, 'v2/available/sources'])
+    url = '/'.join(['http:', '', api_host, 'v2/available/sources'])
     headers = {'authorization': 'Bearer ' + access_token}
     return get_data(url, headers, params).json()
 
@@ -435,18 +431,19 @@ def rank_series_by_source(access_token, api_host, selections_list):
             if source_id in series_by_source_id:
                 yield series_by_source_id[source_id]
             if None in series_by_source_id:
-                yield dict_assign(series_without_source, 'source_id', source_id)
+                yield groclient.utils.dict_assign(series_without_source, 'source_id', source_id)
 
 
 def get_available_timefrequency(access_token, api_host, **series):
     params = dict((make_key(k), v) for k, v in iter(list(
         get_params_from_selection(**series).items())))
-    url = '/'.join(['https:', '', api_host, 'v2/available/time-frequencies'])
+    url = '/'.join(['http:', '', api_host, 'v2/available/time-frequencies'])
     headers = {'authorization': 'Bearer ' + access_token}
     response = get_data(url, headers, params)
     if response.status_code == 204:
         return []
-    return [dict_reformat_keys(tf, str_camel_to_snake) for tf in response.json()]
+    return [groclient.utils.dict_reformat_keys(tf, groclient.utils.str_camel_to_snake)
+            for tf in response.json()]
 
 
 def list_of_series_to_single_series(series_list, add_belongs_to=False, include_historical=True):
@@ -466,8 +463,8 @@ def list_of_series_to_single_series(series_list, add_belongs_to=False, include_h
         # All the belongsTo keys are in camelCase. Convert them to snake_case.
         # Only need to do this once per series, so do this outside of the list
         # comprehension and save to a variable to avoid duplicate work:
-        belongs_to = dict_reformat_keys(series.get('series', {}).get('belongsTo', {}),
-                                        str_camel_to_snake)
+        belongs_to = groclient.utils.dict_reformat_keys(series.get('series', {}).get('belongsTo', {}),
+                                                        groclient.utils.str_camel_to_snake)
         for point in series.get('data', []):
             formatted_point = {
                 'start_date': point[0],
@@ -500,7 +497,7 @@ def list_of_series_to_single_series(series_list, add_belongs_to=False, include_h
 
 def get_data_points(access_token, api_host, **selection):
     headers = {'authorization': 'Bearer ' + access_token}
-    url = '/'.join(['https:', '', api_host, 'v2/data'])
+    url = '/'.join(['http:', '', api_host, 'v2/data'])
     params = get_data_call_params(**selection)
     resp = get_data(url, headers, params)
     include_historical = selection.get('include_historical', True)
@@ -526,7 +523,7 @@ def universal_search(access_token, api_host, search_terms):
             [[5604, 'item'], [10204, 'item'], [410032, 'metric'], ....]
 
     """
-    url_pieces = ['https:', '', api_host, 'v2/search']
+    url_pieces = ['http:', '', api_host, 'v2/search']
     url = '/'.join(url_pieces)
     headers = {'authorization': 'Bearer ' + access_token}
     resp = get_data(url, headers, {'q': search_terms})
@@ -535,7 +532,7 @@ def universal_search(access_token, api_host, search_terms):
 
 @memoize(maxsize=None)
 def search(access_token, api_host, entity_type, search_terms):
-    url = '/'.join(['https:', '', api_host, 'v2/search', entity_type])
+    url = '/'.join(['http:', '', api_host, 'v2/search', entity_type])
     headers = {'authorization': 'Bearer ' + access_token}
     resp = get_data(url, headers, {'q': search_terms})
     return resp.json()
@@ -557,7 +554,7 @@ def lookup_belongs(access_token, api_host, entity_type, entity_id):
 
 
 def get_geo_centre(access_token, api_host, region_id):
-    url = '/'.join(['https:', '', api_host, 'v2/geocentres'])
+    url = '/'.join(['http:', '', api_host, 'v2/geocentres'])
     headers = {'authorization': 'Bearer ' + access_token}
     resp = get_data(url, headers, {'regionIds': region_id})
     return resp.json()['data']
@@ -565,14 +562,15 @@ def get_geo_centre(access_token, api_host, region_id):
 
 @memoize(maxsize=None)
 def get_geojsons(access_token, api_host, region_id, descendant_level, zoom_level):
-    url = '/'.join(['https:', '', api_host, 'v2/geocentres'])
+    url = '/'.join(['http:', '', api_host, 'v2/geocentres'])
     params = {'includeGeojson': True, 'regionIds': region_id, 'zoom': zoom_level}
     if descendant_level:
         params['reqRegionLevelId']= descendant_level
         params['stringify'] = 'false'
     headers = {'authorization': 'Bearer ' + access_token}
     resp = get_data(url, headers, params)
-    return [dict_reformat_keys(r, str_camel_to_snake) for r in resp.json()['data']]
+    return [groclient.utils.dict_reformat_keys(r, groclient.utils.str_camel_to_snake)
+            for r in resp.json()['data']]
 
 
 def get_geojson(access_token, api_host, region_id, zoom_level):
@@ -582,7 +580,7 @@ def get_geojson(access_token, api_host, region_id, zoom_level):
 
 def get_descendant_regions(access_token, api_host, region_id,
                            descendant_level=None, include_historical=True, include_details=True):
-    url = '/'.join(['https:', '', api_host, 'v2/regions/contains'])
+    url = '/'.join(['http:', '', api_host, 'v2/regions/contains'])
     headers = {'authorization': 'Bearer ' + access_token}
     params = {'ids': [region_id]}
     if descendant_level:
