@@ -48,7 +48,7 @@ class APIError(Exception):
 def get_default_logger():
     """Get a logging object using the default log level set in cfg.
 
-    http://docs.python.org/3/library/logging.html
+    https://docs.python.org/3/library/logging.html
 
     Returns
     -------
@@ -68,7 +68,7 @@ def get_access_token(api_host, user_email, user_password, logger=None):
     Parameters
     ----------
     api_host : string
-        The API host's url, excluding 'http://'
+        The API host's url, excluding 'https://'
         ex. 'api.gro-intelligence.com'
     user_email : string
         Email address associated with user's Gro account
@@ -87,7 +87,7 @@ def get_access_token(api_host, user_email, user_password, logger=None):
     if not logger:
         logger = get_default_logger()
     while retry_count <= cfg.MAX_RETRIES:
-        get_api_token = requests.post('http://' + api_host + '/api-token',
+        get_api_token = requests.post('https://' + api_host + '/api-token',
                                       data={'email': user_email,
                                             'password': user_password})
         if get_api_token.status_code == 200:
@@ -213,7 +213,7 @@ def get_data(url, headers, params=None, logger=None):
 
 @memoize(maxsize=None)
 def get_allowed_units(access_token, api_host, metric_id, item_id):
-    url = '/'.join(['http:', '', api_host, 'v2/units/allowed'])
+    url = '/'.join(['https:', '', api_host, 'v2/units/allowed'])
     headers = {'authorization': 'Bearer ' + access_token}
     params = {'metricIds': metric_id}
     if item_id:
@@ -224,14 +224,14 @@ def get_allowed_units(access_token, api_host, metric_id, item_id):
 
 @memoize(maxsize=None)
 def get_available(access_token, api_host, entity_type):
-    url = '/'.join(['http:', '', api_host, 'v2', entity_type])
+    url = '/'.join(['https:', '', api_host, 'v2', entity_type])
     headers = {'authorization': 'Bearer ' + access_token}
     resp = get_data(url, headers)
     return resp.json()['data']
 
 
 def list_available(access_token, api_host, selected_entities):
-    url = '/'.join(['http:', '', api_host, 'v2/entities/list'])
+    url = '/'.join(['https:', '', api_host, 'v2/entities/list'])
     headers = {'authorization': 'Bearer ' + access_token}
     params = dict([(groclient.utils.str_snake_to_camel(key), value)
                    for (key, value) in list(selected_entities.items())])
@@ -244,7 +244,7 @@ def list_available(access_token, api_host, selected_entities):
 
 @memoize(maxsize=None)
 def lookup_single(access_token, api_host, entity_type, entity_id):
-    url = '/'.join(['http:', '', api_host, 'v2', entity_type])
+    url = '/'.join(['https:', '', api_host, 'v2', entity_type])
     headers = {'authorization': 'Bearer ' + access_token}
     params = {'ids': [entity_id]}
     resp = get_data(url, headers, params)
@@ -255,7 +255,7 @@ def lookup_single(access_token, api_host, entity_type, entity_id):
 
 
 def lookup_batch(access_token, api_host, entity_type, entity_ids):
-    url = '/'.join(['http:', '', api_host, 'v2', entity_type])
+    url = '/'.join(['https:', '', api_host, 'v2', entity_type])
     headers = {'authorization': 'Bearer ' + access_token}
     all_results = {}
     for id_batch in groclient.utils.list_chunk(entity_ids):
@@ -355,7 +355,7 @@ def get_data_call_params(**selection):
 
 def get_data_series(access_token, api_host, **selection):
     logger = get_default_logger()
-    url = '/'.join(['http:', '', api_host, 'v2/data_series/list'])
+    url = '/'.join(['https:', '', api_host, 'v2/data_series/list'])
     headers = {'authorization': 'Bearer ' + access_token}
     params = get_params_from_selection(**selection)
     resp = get_data(url, headers, params)
@@ -364,14 +364,14 @@ def get_data_series(access_token, api_host, **selection):
         if any((series.get('metadata', {}).get('includes_historical_region', False))
                 for series in response):
             logger.warning('Data series have some historical regions, '
-                           'see http://developers.gro-intelligence.com/faq.html')
+                           'see https://developers.gro-intelligence.com/faq.html')
         return response
     except KeyError:
         raise Exception(resp.text)
 
 
 def get_top(access_token, api_host, entity_type, num_results=5, **selection):
-    url = '/'.join(['http:', '', api_host, 'v2/top/{}'.format(entity_type)])
+    url = '/'.join(['https:', '', api_host, 'v2/top/{}'.format(entity_type)])
     headers = {'authorization': 'Bearer ' + access_token}
     params = get_params_from_selection(**selection)
     params['n'] = num_results
@@ -398,7 +398,7 @@ def get_source_ranking(access_token, api_host, series):
     """
     params = dict((make_key(k), v) for k, v in iter(list(
         get_params_from_selection(**series).items())))
-    url = '/'.join(['http:', '', api_host, 'v2/available/sources'])
+    url = '/'.join(['https:', '', api_host, 'v2/available/sources'])
     headers = {'authorization': 'Bearer ' + access_token}
     return get_data(url, headers, params).json()
 
@@ -437,7 +437,7 @@ def rank_series_by_source(access_token, api_host, selections_list):
 def get_available_timefrequency(access_token, api_host, **series):
     params = dict((make_key(k), v) for k, v in iter(list(
         get_params_from_selection(**series).items())))
-    url = '/'.join(['http:', '', api_host, 'v2/available/time-frequencies'])
+    url = '/'.join(['https:', '', api_host, 'v2/available/time-frequencies'])
     headers = {'authorization': 'Bearer ' + access_token}
     response = get_data(url, headers, params)
     if response.status_code == 204:
@@ -497,7 +497,7 @@ def list_of_series_to_single_series(series_list, add_belongs_to=False, include_h
 
 def get_data_points(access_token, api_host, **selection):
     headers = {'authorization': 'Bearer ' + access_token}
-    url = '/'.join(['http:', '', api_host, 'v2/data'])
+    url = '/'.join(['https:', '', api_host, 'v2/data'])
     params = get_data_call_params(**selection)
     resp = get_data(url, headers, params)
     include_historical = selection.get('include_historical', True)
@@ -523,7 +523,7 @@ def universal_search(access_token, api_host, search_terms):
             [[5604, 'item'], [10204, 'item'], [410032, 'metric'], ....]
 
     """
-    url_pieces = ['http:', '', api_host, 'v2/search']
+    url_pieces = ['https:', '', api_host, 'v2/search']
     url = '/'.join(url_pieces)
     headers = {'authorization': 'Bearer ' + access_token}
     resp = get_data(url, headers, {'q': search_terms})
@@ -532,7 +532,7 @@ def universal_search(access_token, api_host, search_terms):
 
 @memoize(maxsize=None)
 def search(access_token, api_host, entity_type, search_terms):
-    url = '/'.join(['http:', '', api_host, 'v2/search', entity_type])
+    url = '/'.join(['https:', '', api_host, 'v2/search', entity_type])
     headers = {'authorization': 'Bearer ' + access_token}
     resp = get_data(url, headers, {'q': search_terms})
     return resp.json()
@@ -554,7 +554,7 @@ def lookup_belongs(access_token, api_host, entity_type, entity_id):
 
 
 def get_geo_centre(access_token, api_host, region_id):
-    url = '/'.join(['http:', '', api_host, 'v2/geocentres'])
+    url = '/'.join(['https:', '', api_host, 'v2/geocentres'])
     headers = {'authorization': 'Bearer ' + access_token}
     resp = get_data(url, headers, {'regionIds': region_id})
     return resp.json()['data']
@@ -562,7 +562,7 @@ def get_geo_centre(access_token, api_host, region_id):
 
 @memoize(maxsize=None)
 def get_geojsons(access_token, api_host, region_id, descendant_level, zoom_level):
-    url = '/'.join(['http:', '', api_host, 'v2/geocentres'])
+    url = '/'.join(['https:', '', api_host, 'v2/geocentres'])
     params = {'includeGeojson': True, 'regionIds': region_id, 'zoom': zoom_level}
     if descendant_level:
         params['reqRegionLevelId']= descendant_level
@@ -580,7 +580,7 @@ def get_geojson(access_token, api_host, region_id, zoom_level):
 
 def get_descendant_regions(access_token, api_host, region_id,
                            descendant_level=None, include_historical=True, include_details=True):
-    url = '/'.join(['http:', '', api_host, 'v2/regions/contains'])
+    url = '/'.join(['https:', '', api_host, 'v2/regions/contains'])
     headers = {'authorization': 'Bearer ' + access_token}
     params = {'ids': [region_id]}
     if descendant_level:
