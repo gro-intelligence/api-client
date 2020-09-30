@@ -73,6 +73,11 @@ class GroClient(object):
             )
             self._async_http_client = None
             self._ioloop = None
+        
+    def __del__(self):
+        self._async_http_client.close()
+        self._ioloop.stop()
+        self._ioloop.close()
 
     def get_logger(self):
         return self._logger
