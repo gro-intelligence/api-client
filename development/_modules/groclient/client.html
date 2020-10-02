@@ -275,6 +275,11 @@
             <span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_async_http_client</span> <span class="o">=</span> <span class="kc">None</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_ioloop</span> <span class="o">=</span> <span class="kc">None</span>
+        
+    <span class="k">def</span> <span class="fm">__del__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_async_http_client</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ioloop</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ioloop</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
     <span class="k">def</span> <span class="nf">get_logger</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span>
@@ -1690,7 +1695,6 @@
             <dd><a href="../../../revert-210-CLEWS-25139-py2/index.html">revert-210-CLEWS-25139-py2</a></dd>
             <dd><a href="../../../simplify-quickstart/index.html">simplify-quickstart</a></dd>
             <dd><a href="../../../simulate_reporting_date/index.html">simulate_reporting_date</a></dd>
-            <dd><a href="../../../teardown-async-loop/index.html">teardown-async-loop</a></dd>
         </dl>
     </div>
 </div>
