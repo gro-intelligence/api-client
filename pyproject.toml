@@ -3,6 +3,14 @@ name = "groclient"
 version = "1.0.0"
 description = "Python client library for accessing Gro Intelligence's agricultural data platform"
 authors = ["John Ward <john.ward@gro-intelligence.com>"]
+readme = "README.md"
+homepage = "https://www.gro-intelligence.com/products/gro-api"
+repository = "https://github.com/gro-intelligence/api-client"
+documentation = "https://developers.gro-intelligence.com/"
+packages = [ { include = "groclient" } ]
+
+[tool.poetry.scripts]
+gro_client = 'groclient.__main__:main'
 
 [tool.poetry.dependencies]
 python = ">=3.6.1,<4.0"
@@ -15,6 +23,9 @@ tornado = "^6.0.4"
 mock = "^4.0.2"
 pytest = "^6.1.0"
 pytest-cov = "^2.10.1"
+
+[tool.poetry.extras]
+docs = ["sphinx==1.5.6", "recommonmark", "sphinx_rtd_theme", "sphinxcontrib-versioning"]
 
 [build-system]
 requires = ["poetry-core>=1.0.0", "poetry-dynamic-versioning"]
