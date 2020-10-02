@@ -1,0 +1,25 @@
+[tool.poetry]
+name = "groclient"
+version = "1.0.0"
+description = "Python client library for accessing Gro Intelligence's agricultural data platform"
+authors = ["John Ward <john.ward@gro-intelligence.com>"]
+
+[tool.poetry.dependencies]
+python = ">=3.6.1,<4.0"
+numpy = "^1.19.2"
+requests = "^2.24.0"
+pandas = "^1.1.2"
+tornado = "^6.0.4"
+
+[tool.poetry.dev-dependencies]
+mock = "^4.0.2"
+pytest = "^6.1.0"
+pytest-cov = "^2.10.1"
+
+[build-system]
+requires = ["poetry-core>=1.0.0", "poetry-dynamic-versioning"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry-dynamic-versioning]
+enable = true
+vcs = "git"
