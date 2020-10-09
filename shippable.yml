@@ -16,24 +16,26 @@ build:
   cache_dir_list:
     - /root/.cache/pip
   ci:
-    - shippable_retry pip install .
-    - shippable_retry pip install -r requirements-test.txt
+    - shippable_retry pip install poetry
+    - shippable_retry poetry install
     # Run doctests
-    - python groclient/lib.py -v
+    - poetry run python groclient/lib.py -v
     # Create folders for test and code coverage
     - mkdir -p shippable/testresults
     - mkdir -p shippable/codecoverage
     # Run test and code coverage and output results to the right folder
     - >
-      pytest
+      poetry run pytest
       --junitxml=shippable/testresults/nosetests.xml
       --cov=groclient
       --cov-report=xml:shippable/codecoverage/coverage.xml
+    # - >
+    #   shippable_retry pip install -r api/client/samples/analogous_years/requirements.txt &&
+    #   pytest api/client/samples/analogous_years/
+    - echo $IS_RELEASE
+    - echo $BRANCH
     - >
-      shippable_retry pip install -r api/client/samples/analogous_years/requirements.txt &&
-      pytest api/client/samples/analogous_years/
-    - >
-      if [ "$IS_RELEASE" ] || [ "$BRANCH" == "development" ]; then
+      if [ $IS_RELEASE ] || [ $BRANCH == "development" ]; then
         poetry build &&
         poetry publish -r testpypi --username=__token__ --password="$PYPI_TOKEN"
       fi;
@@ -45,7 +47,7 @@ build:
     # an older 3.x version to the build matrix just to support docs.
     - >
       if [ "$SHIPPABLE_PYTHON_VERSION" == "2.7" ]; then
-        shippable_retry pip install .[docs] &&
+        shippable_retry poetry install -E docs &&
         git config --global user.email "api-documentation@gro-intelligence.com" &&
         git config --global user.name "Gro Intelligence" &&
         git remote set-url origin git@github.com:$REPO_FULL_NAME.git &&
