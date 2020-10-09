@@ -8,8 +8,10 @@ branches:
     - gh-pages
 
 env:
-  - GROAPI_TOKEN=dummytoken
-  - secure: 3t2LN1D8s4LDdgM1GZgGX9uLZa2l/LU92ByV3fyGI2b+qbhppZzhGTAClRSyHWFtLCRXRCxQRrJyP44ktsPTaN7cKaFKHX8iV22GI1LfXXL0n6fMwuJgxvqUO3plGHtC6aTQuYSVxVqdklcN8vyZR/wdS0jDKfTQF8RzOZmKRjQ0Je6za1FHE4Eyl88NXspMxv/g9ywfs3uTVKjpyPvQDvMk3h+6ZDrBr9L6KxXzu3XLxb9Tsu97WXKLXXPq6Cxww6bZFzUZPQLlox5ILvVIV4A642Ul9MJUToIYg7gyV+e64d3Lg/4SlnxmARDcndo79+lDIsSpbbRTfY99MxQs8BgrBeyIIghatWEfOSYBzWe6Z18ttyeTwA5bm5+tBx8qDgOUleHQWXmLz29Xmx6uq5PylgSYvJND1qDaxaws8J0mibf5mEnoUILYzyjN8TdlJHhs2/9IZvkrxqDb4Q7f+J3dYSF52JAkPJdWyKF4qQYgKCo6yKj7zCVSKqIwwss20zDBfBoFh52dquumwI9A8VHhHDXV3lyArGB3vA6jE1zznwK9B0WNmd2NOkrOCM1+ROUyoFeZfBsHb4hSZUUihUBqaxe6ihd+PRhlOxSuxwjlW8ftIL0wmHiB6YYjkmCkdiSKrDL3lTkX7tX+vq7uc/Fy4tjz2zoOw2nYxhLHjUw=
+  global:
+    - GROAPI_TOKEN: dummytoken
+    - secure: "3t2LN1D8s4LDdgM1GZgGX9uLZa2l/LU92ByV3fyGI2b+qbhppZzhGTAClRSyHWFtLCRXRCxQRrJyP44ktsPTaN7cKaFKHX8iV22GI1LfXXL0n6fMwuJgxvqUO3plGHtC6aTQuYSVxVqdklcN8vyZR/wdS0jDKfTQF8RzOZmKRjQ0Je6za1FHE4Eyl88NXspMxv/g9ywfs3uTVKjpyPvQDvMk3h+6ZDrBr9L6KxXzu3XLxb9Tsu97WXKLXXPq6Cxww6bZFzUZPQLlox5ILvVIV4A642Ul9MJUToIYg7gyV+e64d3Lg/4SlnxmARDcndo79+lDIsSpbbRTfY99MxQs8BgrBeyIIghatWEfOSYBzWe6Z18ttyeTwA5bm5+tBx8qDgOUleHQWXmLz29Xmx6uq5PylgSYvJND1qDaxaws8J0mibf5mEnoUILYzyjN8TdlJHhs2/9IZvkrxqDb4Q7f+J3dYSF52JAkPJdWyKF4qQYgKCo6yKj7zCVSKqIwwss20zDBfBoFh52dquumwI9A8VHhHDXV3lyArGB3vA6jE1zznwK9B0WNmd2NOkrOCM1+ROUyoFeZfBsHb4hSZUUihUBqaxe6ihd+PRhlOxSuxwjlW8ftIL0wmHiB6YYjkmCkdiSKrDL3lTkX7tX+vq7uc/Fy4tjz2zoOw2nYxhLHjUw="
+
 
 build:
   cache: true
@@ -32,14 +34,15 @@ build:
     # - >
     #   shippable_retry pip install -r api/client/samples/analogous_years/requirements.txt &&
     #   pytest api/client/samples/analogous_years/
+  on_success:
     - echo $IS_RELEASE
     - echo $BRANCH
-    - >
+    - > # push to PyPI
       if [ $IS_RELEASE ] || [ $BRANCH == "development" ]; then
         poetry build &&
+        poetry config repositories.testpypi https://test.pypi.org/legacy/ &&
         poetry publish -r testpypi --username=__token__ --password="$PYPI_TOKEN"
       fi;
-  on_success:
     # Only build docs on the Python 2.7 run. It is unnecessary to run on both 2.x and 3.x - one or
     # the other should suffice. However, as of this writing
     # https://github.com/sphinx-contrib/sphinxcontrib-versioning does not support the latest 3.x
