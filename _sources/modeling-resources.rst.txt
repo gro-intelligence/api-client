@@ -5,29 +5,29 @@ Modeling Resources
 .. contents:: Table of Contents
   :local:
 
-Gro Crop Masks
+Gro Crop Cover
 ==============
 
-Gro's proprietary high resolution crop masks are currently used in the `Gro yield models <https://gro-intelligence.com/gro-models>`_. These have proven very successful i.e. more accurate for yield modeling than the best available alternatives. Gro does not plan on developing a yield model for every crop or region in the world, so our models will always be limited to the regions and crops where we can help push the envelope. Our crop masks are not yet directly available to users in the Gro web app and the API, but will be very soon!
+Gro's proprietary high-resolution crop covers are currently used in the `Gro yield models <https://gro-intelligence.com/gro-models>`_. These have proven very successful i.e. more accurate for yield modeling than the best available alternatives. Gro does not plan on developing a yield model for every crop or region in the world, so our models will always be limited to the regions and crops where we can help push the envelope. Users can access our crop covers in the `Gro web app _<https://app.gro-intelligence.com/displays/jdOQrvERw>`_ and the API, or from the download links below. In the web app and API, users can interact with detailed cropland covers that indicate the intensity of crop cover for a particular pixel. Below users can download .tif files of low and high-confidence crop covers which represent, as a binary value, whether a crop is growing in a specific pixel.
 
 Methodology
 -----------
 
-Crop masks for past seasons
+Crop covers for past seasons
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-In order to remove irrelevant data pixels (i.e., pixels that are not representative of the crop in study), we create/derive crop specific masks for each past crop season, as `described here <https://www.gro-intelligence.com/blog/want-to-build-a-yield-model-heres-your-first-step>`_ (see also `Creating a basic customizable framework for crop detection using Landsat imagery <https://www.tandfonline.com/doi/abs/10.1080/2150704X.2016.1252471>`_. This is necessary for each year, due to crop rotations and other changes in the area where crops are planted. Moreover, even with per-season masks, there is an additional challenge for in-season crop yield forecasting, because the current season crop mask is usually not available until the beginning of the following year.
+In order to remove irrelevant data pixels (i.e., pixels that are not representative of the crop in study), we create/derive crop specific covers for each past crop season, as `described here <https://www.gro-intelligence.com/blog/want-to-build-a-yield-model-heres-your-first-step>`_ (see also `Creating a basic customizable framework for crop detection using Landsat imagery <https://www.tandfonline.com/doi/abs/10.1080/2150704X.2016.1252471>`_. This is necessary for each year, due to crop rotations and other changes in the area where crops are planted. Moreover, even with per-season covers, there is an additional challenge for in-season crop yield forecasting, because the current season crop cover is usually not available until the beginning of the following year.
 
-In-season crop mask
+In-season crop cover
 ^^^^^^^^^^^^^^^^^^^
 
-For current season forecasting, since we're starting well before the growing period, there is no universal approach that provides the best mask. Instead, we use the series of masks for prior seasons to create a few different masks for the current season. Together, these current season masks can be thought of as providing supersets and subsets of the true planted area. The combination of the various masks provides the information needed for yield forecasting purposes.
+For current season forecasting, since we're starting well before the growing period, there is no universal approach that provides the best cover. Instead, we use the series of covers for prior seasons to create a few different covers for the current season. Together, these current season covers can be thought of as providing supersets and subsets of the true planted area. The combination of the various covers provides the information needed for yield forecasting purposes.
 
-For any mask, the following current season masks are created:
+For any cover, the following current season covers are created:
 
-* a **low-confidence** version is created by an OR of the years, i.e., choosing pixels that have been the crop in question for at least one year in the history of the cropland data layers. In other words, the low-confidence mask answers the question "was the crop planted here in 2000 or in 2001 or in 2002 ...". This can be thought of as an upper bound of the true area. Or equivalently, for each pixel, a prediction with high recall and low precision.
+* a **low-confidence** version is created by an OR of the years, i.e., choosing pixels that have been the crop in question for at least one year in the history of the cropland data layers. In other words, the low-confidence cover answers the question "was the crop planted here in 2000 or in 2001 or in 2002 ...". This can be thought of as an upper bound of the true area. Or equivalently, for each pixel, a prediction with high recall and low precision.
 
-* a **high-confidence** mask version is created by an AND of the years, i.e., selecting pixels that have always been the crop in question over the entire history of the prior season masks, so long as that region has been in the data layers. In other words, it answers the question "was the crop planted here in 2000 and in 2001 and in 2002 …" This it can be seen as a lower bound of the true area. Or equivalently, for each pixel, a prediction with low recall and high precision.
+* a **high-confidence** cover version is created by an AND of the years, i.e., selecting pixels that have always been the crop in question over the entire history of the prior season covers, so long as that region has been in the data layers. In other words, it answers the question "was the crop planted here in 2000 and in 2001 and in 2002 …" This it can be seen as a lower bound of the true area. Or equivalently, for each pixel, a prediction with low recall and high precision.
 
 Additional refinements:
 
@@ -36,11 +36,11 @@ Additional refinements:
 US Corn
 -------
 
-Yearly corn masks (binary) were extracted from USDA NASS Cropland Data Layers (CDL) for the US Corn Belt, which includes 10 states: Illinois, Indiana, Iowa, Kansas, Minnesota, Missouri, Nebraska, Ohio, South Dakota, and Wisconsin, from 1999 to 2015. Note that not all states were covered in the yearly masks prior to 2008 due to growing coverage of NASS CDL from 1999 to 2008.
+Yearly corn covers (binary) were extracted from USDA NASS Cropland Data Layers (CDL) for the US Corn Belt, which includes 10 states: Illinois, Indiana, Iowa, Kansas, Minnesota, Missouri, Nebraska, Ohio, South Dakota, and Wisconsin, from 1999 to 2015. Note that not all states were covered in the yearly covers prior to 2008 due to growing coverage of NASS CDL from 1999 to 2008.
 
-A low-confidence mask and a high-confidence mask were made from those yearly crop masks. Each of them was further clumped to remove erroneous pixels, which gave us two more static corn masks.
+A low-confidence cover and a high-confidence cover were made from those yearly crop covers. Each of them was further clumped to remove erroneous pixels, which gave us two more static corn covers.
 
-Click the links below to download TIF files of in-season masks:
+Click the links below to download TIF files of in-season covers:
 
 .. raw:: html 
 
@@ -54,11 +54,11 @@ Click the links below to download TIF files of in-season masks:
 US Soy
 ------
 
-Yearly soy masks were extracted from the NASS CDL the same way as corn, except that the entire contiguous US was included. In this case we end up using only one mask:
+Yearly soy covers were extracted from the NASS CDL the same way as corn, except that the entire contiguous US was included. In this case we end up using only one cover:
 
-We start in 2008, because including years prior to 2008 reduces the accuracy for yield modeling purposes. A high-confidence mask is not used, as it was found to not help the yield modeling accuracy. Both of these observations seem to reflect the fact that, in the US, the areas where soybeans are planted have been changing relatively more than the corn areas, which makes older crop masks less informative in this case.
+We start in 2008, because including years prior to 2008 reduces the accuracy for yield modeling purposes. A high-confidence cover is not used, as it was found to not help the yield modeling accuracy. Both of these observations seem to reflect the fact that, in the US, the areas where soybeans are planted have been changing relatively more than the corn areas, which makes older crop covers less informative in this case.
 
-Click the link below to download TIF files of in-season masks:
+Click the link below to download TIF files of in-season covers:
 
 .. raw:: html 
   
@@ -69,7 +69,7 @@ Click the link below to download TIF files of in-season masks:
 Argentina Soy
 -------------
 
-Argentina does not have an equivalent of the US CDL data, so annual soybean masks had to be created by Gro. These masks were created annually and ranged from 2007-2016 using the following methodology.
+Argentina does not have an equivalent of the US CDL data, so annual soybean covers had to be created by Gro. These covers were created annually and ranged from 2007-2016 using the following methodology.
 
 The signals for classification of soy in Argentina were from optical sensors from Landsat 5, 7, and 8 along with Sentinel-2. First, a set of false color images were created from the shortwave infrared (SWIR ~1.62µm) band, near infrared (NIR ~0.85µm) band, and visible red (Red ~0.66µm) band. which were temporally classified using the crop calendars in Gro for the primary season of soybean production over the country. These were divided into two images, one taking the median pixel value over the time period that planting occurred and the other taking the median pixel value over the time period when growth occurred. The false color image was created. This was done because studies have shown that SWIR-NIR-Red false color composites accurately discriminate between vegetation, soil, and water due to the spectral properties of the channels.
 
@@ -77,9 +77,9 @@ After this was completed, the false color images were transformed from a normal 
 
 Once those unidentifiable crops have been found, a simple ratio was used to identify soy from other crops. For the case of soy, we use a simple ratio of: SWIR/Red values from the growing season, where SWIR represents the shortwave infrared band (~1.62µm) and Red represents the red band in the visible spectrum (~0.66µm). High values of this simple ratio were shown to be very distinctive at identifying soy when validated against the NASS Cropland Data Layers in the US.
 
-A low-confidence mask and a high-confidence mask were made from those yearly crop masks. Each of them were further clumped to remove erroneous pixels, which gave us two more static soy masks.
+A low-confidence cover and a high-confidence cover were made from those yearly crop covers. Each of them were further clumped to remove erroneous pixels, which gave us two more static soy covers.
 
-Click the links below to download TIF files of in-season masks:
+Click the links below to download TIF files of in-season covers:
 
 .. raw:: html 
 
@@ -93,15 +93,15 @@ Click the links below to download TIF files of in-season masks:
 India Wheat
 -----------
 
-Since India does not have the equivalent of NASS CDL available to the public, we use a technique similar to the one used for Argentina. The masks were also classified annually and span years 2007-2017. The methodology was refined slightly in three ways:
+Since India does not have the equivalent of NASS CDL available to the public, we use a technique similar to the one used for Argentina. The covers were also classified annually and span years 2007-2017. The methodology was refined slightly in three ways:
 
-* Instead of using a single crop calendar for the entire country, crop calendars specific to individual states were used to create the planting and growth phase images. Subsequently, the corresponding years were mosaicked together before the creation of the confidence masks.
-* The simple ratio of SWIR/Red was not used for the identification of wheat. Instead, when comparing images to CDL masks in the US the combination that most closely identified with wheat was the high end of Hue&ast;NDVI&ast;NDWI during the growth phase.
+* Instead of using a single crop calendar for the entire country, crop calendars specific to individual states were used to create the planting and growth phase images. Subsequently, the corresponding years were mosaicked together before the creation of the confidence covers.
+* The simple ratio of SWIR/Red was not used for the identification of wheat. Instead, when comparing images to CDL covers in the US the combination that most closely identified with wheat was the high end of Hue&ast;NDVI&ast;NDWI during the growth phase.
 * The final change that was made was the addition of eliminating pixels that were on a slope that was greater than 10°.
 
-A low-confidence mask and a high-confidence mask were made from those yearly crop masks. Each of them were further clumped to remove erroneous pixels, which gave us two more static wheat masks.
+A low-confidence cover and a high-confidence cover were made from those yearly crop covers. Each of them were further clumped to remove erroneous pixels, which gave us two more static wheat covers.
 
-Click the links below to download TIF files of in-season masks:
+Click the links below to download TIF files of in-season covers:
 
 .. raw:: html 
 
