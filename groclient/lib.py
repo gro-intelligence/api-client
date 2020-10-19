@@ -23,6 +23,20 @@ except ImportError:
     from backports.functools_lru_cache import lru_cache as memoize
 
 
+# Interpreter and API client library version information.
+#
+# This is global so we only call get_distribution() once at module load time.
+# This is a workaround for a curious bug: in specific situations, calling
+# get_distribution() while tornado's event loop is running seems to result in
+# GroClient's __del__ method running while the object is still in scope,
+# resulting in `fetch() called on closed AsyncHTTPClient` errors upon
+# subsequent uses of _async_http_client.
+_VERSIONS = { 'python-version': platform.python_version() }
+try:
+    _VERSIONS['api-client-version'] = get_distribution('groclient').version
+except DistributionNotFound:
+    pass
+
 class APIError(Exception):
     def __init__(self, response, retry_count, url, params):
         self.response = response
@@ -133,16 +147,7 @@ def redirect(old_params, migration):
 
 
 def get_version_info():
-    versions = dict()
-
-    # retrieve python version and api client version
-    versions['python-version'] = platform.python_version()
-    try:
-        versions['api-client-version'] = get_distribution('groclient').version
-    except DistributionNotFound:
-        # package is not installed
-        pass
-    return versions
+    return _VERSIONS.copy()
 
 
 def get_data(url, headers, params=None, logger=None):
