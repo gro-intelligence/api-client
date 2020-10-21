@@ -1,4 +1,4 @@
 sphinx==1.5.6
 recommonmark
 sphinx_rtd_theme
-sphinx-versions
+sphinxcontrib-versioning
