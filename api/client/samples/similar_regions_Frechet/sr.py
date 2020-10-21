@@ -1,231 +1,114 @@
-import numpy as np
-import os
-import pandas as pd
+import os, glob
+import tempfile
 import pickle
+import logging
 from datetime import date
+
+import numpy as np
 from scipy.linalg import sqrtm
-from sklearn.neighbors import BallTree, DistanceMetric
+import pandas as pd
 from tqdm import tqdm
 
+from sklearn.neighbors import BallTree, DistanceMetric
 from api.client.batch_client import BatchClient, BatchError
 from api.client.lib import get_default_logger
-from api.client.samples.similar_regions_Frechet.metric import metric_properties as default_metric_properties
+#from api.client.samples.similar_regions.similar_region_state import SimilarRegionState
+from sklearn.metrics.pairwise import euclidean_distances
 
 """ API Config """
 API_HOST = 'api.gro-intelligence.com'
 ACCESS_TOKEN = os.environ['GROAPI_TOKEN']
 
 """ Cache dir and file names """
+# cache directory should already exist when SR object is created (otherwise /tmp will be used)
+CACHE_PATH = "sr_cache"
 REGION_INFO_CACHE = "region_info"
+DATA_CACHE = "region_data_"
+
 PICKLE_PROTOCOL = 4
 REGIONS_PER_QUERY = 100
 MAX_RETRY_FAILED_REGIONS = 3
 OK_TO_PROCEED_REGION_FRACTION = 0.1 # we want at least 10% of all desired region present in the final data matrix
 
+##############################
+# These were constructor parameters but changes to global constants to reduce number of options
+#
+# Into how many intervals to split calendar year when generating distributions from raw data.
+# Default is 52 (roughly weekly). High values (such as 365 - daily) lead to greater storage requirements and not recommended
+T_INT_PER_YEAR = 52
+# If 'any_missing', drop all regions which do nor have full set of valid datapoints
+# (i.e. t_int_per_year data points for each property). If 'fully_missing', drop region only if there is less than 2 valid datapoints
+DROP_MODE = 'any_missing'
+# If True, reload region info from Gro, otherwise try to use cached (still reload if region not found).
+REGION_INFO_RELOAD = False
+
 class SimilarRegion(object):
 
-    def __init__(self, metric_properties=None,
-                 data_dir="/tmp/similar_regions_cache",
-                 t_int_per_year=52,
+    def __init__(self, metric_properties,
+                 update_mode="no",
+                 data_dir=None,
                  metric_instance=None):
         """
         :param metric_properties: A dict containing properties which can be used in the region similarity metric.
         This is by default defined in metric.py, but can be adjusted.
-        :param t_int_per_year: into how many intervals to split calendar year when generating distributions from raw data.
-        Default is 52 (roughly weekly). High values (such as 365 - daily) lead to greater storage requirements and not recommended
+        :param update_mode: If 'reload', full reload from Gro API after which local caches are completely overwritten
+        If 'no', take only cached data (subjcted to OK_TO_PROCEED_REGION_FRACTION threshold), nothing read from Gro API.
+        If 'update', read cached data, then try to read from API whatever is missing.
+
         :param metric_instance: A {property:weight} dictionary stating specific properties and their weights to use for this run.
         If not provided, all properties from metric_properties are used with equal weights
         """
-        self.data = None
-        self.t_int_per_year = t_int_per_year
+        self.t_int_per_year = T_INT_PER_YEAR
         self.t_int_days = 365 / self.t_int_per_year # number of days in single t interval (can be float)
-        self.to_retry = []
-        self.available_regions = []
+
         self.available_properties = []
         self._logger = get_default_logger()
-        if metric_properties:
-            self.metric_properties = metric_properties
-        else:
-            self.metric_properties = default_metric_properties
-        self.needed_properties = sorted(list(set(self.metric_properties.keys())))
+        #self._logger.setLevel(logging.INFO)
+        self.update=update_mode
+
+        # extract needed parameters from inputs
+        self.metric_properties = metric_properties
+        #self.needed_properties = sorted(list(set(metric_properties.keys())))
         if metric_instance is not None:
             unresolved_items = [item for item in metric_instance if item not in self.metric_properties]
             assert not unresolved_items, "Found items {} in metric instance not present in metric description".format(unresolved_items)
             self.metric_instance = metric_instance
         else:
             self.metric_instance = dict(zip(self.metric_properties.keys(),[1.0]*len(self.metric_properties)))
-            
-        self.data_dir = data_dir
-        if not os.path.isdir(self.data_dir):
-            os.mkdir(self.data_dir)
-        assert os.access(self.data_dir, os.W_OK), "Need write permission on {}".format(self.data_dir)
-        
-        self.client = BatchClient(API_HOST, ACCESS_TOKEN)
-
-    def _load_region_info(self, root_region_ids):
-        """Dealing with region information (load from cache or API)
-
-        :param search_region: root region_id to search for similar regions. Default is 0 (entire world).
-        """
-        self.region_info = {}
-        info_path = os.path.join(self.data_dir, REGION_INFO_CACHE)
-        if os.path.isfile(info_path):
-            self._logger.info("Reading region info from cache {}".format(info_path))
-            with open(info_path, 'rb') as f:
-                self.region_info = pickle.load(f)
-
-        resave = False
-        for search_region in root_region_ids:
-            if search_region not in self.region_info:
-                ri = [self.client.lookup('regions', search_region)] # include top-level region itself
-                for l in range(5,ri[0]['level'],-1):
-                    self._logger.info("Loading region info for region {} at level {}".format(search_region, l))
-                    ri += self.client.get_descendant_regions(search_region,descendant_level=l,
-                                                             include_historical=False,
-                                                             include_details=True)
-                # update region_info with search_region and re-save
-                self.region_info.update(dict(zip([region['id'] for region in ri], ri)))
-                resave = True
-        if resave:
-            with open(info_path, 'wb') as f:
-                self._logger.info("Saving region info file {}".format(info_path))
-                pickle.dump(self.region_info,f)    
-
-        # We might have too many regions in the info cache - this happens if cache was filled for a parent
-        # of region currently requested (filled for entire world but we want only US, for example)
-        regions_to_keep = {}
-        for search_region in root_region_ids:
-            top_info = self.region_info[search_region]
-            self._logger.info("region {} is present region in cache of size {}".format(
-                search_region, len(self.region_info)))
-            level = top_info['level'] # can only have 2/3/4/5 (TODO: not necessarily, include 8)
-            to_include = [search_region]
-            regions_to_keep[search_region] = top_info
-            while level<5:
-                to_include = [r for r in [j for r in to_include for j in self.region_info[r]['contains']] 
-                              if self.region_info.get(r,{'level':-1})['level']==level+1]
-                regions_to_keep.update({r:self.region_info[r] for r in to_include})
-                level += 1
-        self.region_info = regions_to_keep
-        self._logger.info("Trimmed region info to {} items".format(len(self.region_info)))
-        self.needed_regions = sorted(self.region_info.keys())
         self.needed_properties = sorted(self.metric_instance.keys())
-
-    def _load_data(self, drop_mode='any_missing'):
-        """Data download. Get data for each needed property. Local cache is used and updated as needed.
-
-        :param drop_mode: If 'any_missing', drop all regions which do nor have full set of valid datapoints
-        (i.e. t_int_per_year data points for each property). If 'fully_missing', drop region only if there is less than 2 valid datapoints
-
-        """
-        self.data = np.zeros((len(self.needed_regions)*self.t_int_per_year, len(self.metric_instance)))
-        self.data[:] = np.nan
-        for (prop_i, prop_name) in enumerate(self.needed_properties):
-            self.prop_data = self.data[:,prop_i] # alias to specific column of the data matrix
-            prop_path = os.path.join(self.data_dir, prop_name+'_'+str(self.t_int_per_year)+'.npz')
-            missing_regions = self.needed_regions
-            prop_data_cached = np.array(())
-            prop_regions = []
-            if os.path.isfile(prop_path):                    
-                self._logger.info("Reading property {} from cache {} ...".format(prop_name, prop_path))    
-                with np.load(prop_path,allow_pickle=True) as prop_file:
-                    prop_data_cached = prop_file['data']
-                    prop_regions = list(prop_file['regions'])
-                self._logger.info("Merging in cached info ...")
-                self._merge_into_prop_data(prop_data_cached,prop_regions)
-                self._logger.info("done")
-            missing_regions = sorted(set(self.needed_regions) - set(prop_regions))
-            # actual download
-            if missing_regions:
-                self._logger.warning("Property {} is missing {}/{} regions".
-                                     format(prop_name, len(missing_regions),len(self.needed_regions)))
-                valid_data, valid_regions = self._load_property_for_regions(prop_name, missing_regions)
-                if valid_regions:
-                    self._logger.info("Saving updated data to {}".format(prop_name, prop_path))
-                    np.savez_compressed(prop_path,
-                                data = np.concatenate([prop_data_cached,valid_data],axis=0),
-                                regions = prop_regions+valid_regions)
-                    self._merge_into_prop_data(valid_data, valid_regions)
-                    
-        ################### Drop incomplete regions #################################
-        self.data = pd.DataFrame(self.data,
-                            index=pd.MultiIndex.from_product([self.needed_regions,range(1,self.t_int_per_year+1)],
-                                                             names=['region','year_period']),
-                            columns=self.needed_properties)
-        # Subjective decision - what to do with missing data?
-        # option #1 - drop any region with ANY missing data in any of variables
-        # option #2 - drop any region with FULLY missing data in at lest one variable
-        # option #3 - fill in missing data with averages 
-        # #3 is problematic since particular region can be VERY different from global average
-        # and doing this more locally is rather complicated (have to use geographic proximity info)
-        # Let's just drop all regions which have ANY missing values (i.e. missing soil moisture in Dec
-        # is sufficient to be dropped). This is by far the simplest but possibly a bit extreme.
-        # as it puts burden on the user to select well-populated variables for his metrics.
-        # Might want to revisit later
-        self._logger.info("Dropping regions with insufficient data ...")
-        if drop_mode == 'any_missing':
-            # take only those with full count for all properties
-            tmp = (self.data.groupby(level='region').count() == self.t_int_per_year).all(axis=1)
-        elif drop_mode == 'fully_missing':
-            # take those where we have at least some valid data, i.e. at least two points with all properties filled
-            # (one such point is insufficient for std calculation)
-            # will have nan's is the data, so will do dropna before covariance computation
-            # some regions will be of lower quality, so use this mode with care
-            tmp=(~self.data.isna()).all(axis=1).groupby(level='region').sum() >= 2
-            #tmp = (self.data.groupby(level='region').count() > 0).all(axis=1)
+        
+        if data_dir:
+            self.data_dir = data_dir
+        elif os.path.isdir(CACHE_PATH) and os.access(CACHE_PATH, os.W_OK):
+            self.data_dir = CACHE_PATH
         else:
-            assert False, "Unknown drop_mode"
-        self.data = self.data.loc[self.data.index.isin(tmp[tmp].index,level='region')].sort_index()
-        self.available_regions = sorted(list(self.data.index.get_level_values('region').unique()))
-        self.num_regions = len(self.available_regions)
-        
-        self.region_index = dict(zip(self.available_regions,range(self.num_regions)))
-        self.prop_index = dict(zip(self.needed_properties,range(len(self.needed_properties))))
-        
-        self._logger.info("{} regions remains".format(self.num_regions))
-        assert self.num_regions > OK_TO_PROCEED_REGION_FRACTION*len(self.needed_regions), "Less than {}% of desired regions has full data. Bailing out.".format(OK_TO_PROCEED_REGION_FRACTION*100)
-        
-        ################### Normalization/weighting ################
-        # If provided with user weight/norm const for given property,
-        # use these, otherwise take 1/data std respectively
-        # This brings all data to the space over which we will compute distance
-        
-        # Note that us taking sqrt of user-provided weight here assumes user wants something like
-        # dist^2 = \sum w_user_i*(x_i - y_i)^2 (non-squared w_user_i here)
-        # Also, pit (point-in-time) properties are still replicated across all time points
-        # but will have the same std as non-replicated set
-        self._logger.info("Normalization/weighting ...")
-        self.pit_properties = []
-        self.ts_properties = []
-        for c in self.data.columns:
-            stdev = self.data[c].std()
-            # always report true stds - might want to include them in properties.py as 'norm' on later runs 
-            self._logger.info("Data standard deviation for {} is {}".format(c,stdev))
-            self.data[c] *= np.sqrt(self.metric_instance[c]) / self.metric_properties[c]['properties'].get("norm",stdev)
-            # will use to split dataset into time series and pit parts
-            col_type = self.metric_properties[c]["properties"]["type"]
-            if col_type == "pit":
-                self.pit_properties.append(c)
-            else:
-                self.ts_properties.append(c)
-                
-        self.n_pit = len(self.pit_properties)
-        self.n_ts = len(self.ts_properties)
+            # no access to CACHE_PATH - likely doesn't exist => attempt to create directory
+            try:
+                os.mkdir(CACHE_PATH)
+                self.data_dir = CACHE_PATH
+            except:
+                # last resort
+                self.data_dir = tempfile.gettempdir()
 
-        # Reformat data single into single row per region.
-        # First n_prop columns are means (for pit it will be values themselves, for ts - yearly means),
-        # followed by n_ts*n_ts giving covar matrix of time series properties
-        # (matrix is symmetric, so wasting space but makes life easier)
-        self._logger.info("Computing means/covars and reformatting ...")
-        # do not dropna when computing  means - probably get better averages this way
-        data_means = self.data.groupby(level='region').mean()
-        #ts_means = self.data[self.ts_properties].groupby(level='region').mean()
-        if self.n_ts > 0:
-            # dropna keeps only valid points for given region if drop_mode=fully_missing (no-op f drop_mode=any_missing)
-            covars = self.data.dropna()[self.ts_properties].groupby(level='region').cov().unstack(level=1)
-            self.data = np.concatenate([data_means.values,covars.values], axis=1)
-        else:
-            self.data = data_means.values
+        self.client = BatchClient(API_HOST, ACCESS_TOKEN)
+        self.search_region = -999 # not built, will trigger build on first call to similar_to
+        
+    def build(self, search_region=0):
+        self.data = None
+        self.to_retry = []
+        self.available_regions = []
+        
+        self._logger.info("*********(Re)building similar region object with *******\n\tregion {}\n\tupdate_mode {}\n\tdata_dir {}\n\tt_int_per_year {}\n".format(search_region,self.update,self.data_dir,self.t_int_per_year))
+        
+        self._initialize_regions(search_region)
+        
+        self._data_download(self.update)
+        
+        self._drop_incomplete()
+        
+        self._normalize()
+        
+        self._reformat()
             
         ##################### Region similarity metric ##############
         # DistanceMetric allows only specific function signature (copy-pasted from docs):
@@ -276,10 +159,178 @@ class SimilarRegion(object):
             if level_data.size > 0:
                 self.balls_on_level[level] = BallTree(level_data, metric=self.metric_object, leaf_size=2)
         self._logger.info("DONE")
-        
+        self.search_region = search_region        
+        return
+    
+    def _initialize_regions(self, search_region):
+        ################ Dealing with region information (load from cache or API) ################
+        self.region_info = {}
+        info_path = os.path.join(self.data_dir, REGION_INFO_CACHE)
+        if os.path.isfile(info_path):
+            self._logger.info("Reading region info from cache {}".format(info_path))
+            with open(info_path, 'rb') as f:
+                self.region_info = pickle.load(f)
+        if REGION_INFO_RELOAD or search_region not in self.region_info:
+            ri = [self.client.lookup('regions', search_region)] # include top-level region itself
+            for l in range(5,ri[0]['level'],-1):
+                self._logger.info("Loading region info for geo level {}".format(l))
+                ri += self.client.get_descendant_regions(search_region,descendant_level=l,
+                                                              include_historical=False,
+                                                              include_details=True)
+            #reformat as dict with region_id as key
+            self.region_info = dict(zip([item['id'] for item in ri], ri))
+
+            # immediately save region_info
+            # might overwrite a large cache if it was storing "parallel" region (cache was Asia but asking for US)
+            with open(info_path, 'wb') as f:
+                self._logger.info("Saving region info file {}".format(info_path))
+                pickle.dump(self.region_info,f)    
+        else:
+            # We might have too many regions in the info cache - this happens if cache was filled for a parent
+            # of region currently requested (filled for entire world but we want only US, for example)
+            top_info = self.region_info[search_region]
+            self._logger.info("Search region is present in cache of size {}".format(len(self.region_info)))
+            level = top_info['level'] # can only have 2/3/4/5
+            to_include = [search_region]
+            ri = {search_region:top_info}
+            while level<5:
+                to_include = [r for r in [j for r in to_include for j in self.region_info[r]['contains']] 
+                              if self.region_info.get(r,{'level':-1})['level']==level+1]
+                ri.update({r:self.region_info[r] for r in to_include})
+                level += 1
+            self.region_info = ri
+            self._logger.info("Trimmed region info to {} items".format(len(self.region_info)))
+        self.needed_regions = sorted(self.region_info.keys())
         return
 
+    def _data_download(self, update):
+        ##################### Data download ################################################
+        self.data = np.zeros((len(self.needed_regions)*self.t_int_per_year, len(self.metric_instance)))
+        self.data[:] = np.nan
+        for (prop_i, prop_name) in enumerate(self.needed_properties):
+            self.prop_data = self.data[:,prop_i] # alias to specific column of the data matrix
+            prop_path = os.path.join(self.data_dir, prop_name+'_'+str(self.t_int_per_year)+'.npz')
+            missing_regions = self.needed_regions
+            prop_data_cached = np.array(())
+            prop_regions = []
+            if update != 'reload':
+                if os.path.isfile(prop_path):                    
+                    self._logger.info("Reading property {} from cache {} ...".format(prop_name, prop_path))    
+                    with np.load(prop_path,allow_pickle=True) as prop_file:
+                        prop_data_cached = prop_file['data']
+                        prop_regions = list(prop_file['regions'])
+                    self._logger.info("Merging in cached info ...")
+                    self._merge_into_prop_data(prop_data_cached,prop_regions)
+                    self._logger.info("done")
+                missing_regions = sorted(set(self.needed_regions) - set(prop_regions))
+                if update == 'no':
+                    self._logger.warning("Property {} is missing {} regions out of desired {} and no updates requested".
+                                         format(prop_name, len(missing_regions),len(self.needed_regions)))
+                    missing_regions = []
+                    
+                    
+            # actual download
+            if missing_regions:
+                valid_data, valid_regions = self._load_property_for_regions(prop_name, missing_regions)
+                if valid_regions:
+                    np.savez_compressed(prop_path,
+                                data = np.concatenate([prop_data_cached,valid_data],axis=0),
+                                regions = prop_regions+valid_regions)
+                    self._merge_into_prop_data(valid_data, valid_regions)
+        return
+        
+    def _drop_incomplete(self):
+        ################### Drop incomplete regions #################################
+        self.data = pd.DataFrame(self.data,
+                            index=pd.MultiIndex.from_product([self.needed_regions,range(1,self.t_int_per_year+1)],
+                                                             names=['region','year_period']),
+                            columns=self.needed_properties)
+        # Subjective decision - what to do with missing data?
+        # option #1 - drop any region with ANY missing data in any of variables
+        # option #2 - drop any region with FULLY missing data in at lest one variable
+        # option #3 - fill in missing data with averages 
+        # #3 is problematic since particular region can be VERY different from global average
+        # and doing this more locally is rather complicated (have to use geographic proximity info)
+        # Let's just drop all regions which have ANY missing values (i.e. missing soil moisture in Dec
+        # is sufficient to be dropped). This is by far the simplest but possibly a bit extreme.
+        # as it puts burden on the user to select well-populated variables for his metrics.
+        # Might want to revisit later
+        self._logger.info("Dropping regions with insufficient data ...")
+        if DROP_MODE == 'any_missing':
+            # take only those with full count for all properties
+            tmp = (self.data.groupby(level='region').count() == self.t_int_per_year).all(axis=1)
+        elif DROP_MODE == 'fully_missing':
+            # take those where we have at least some valid data, i.e. at least two points with all properties filled
+            # (one such point is insufficient for std calculation)
+            # will have nan's is the data, so will do dropna before covariance computation
+            # some regions will be of lower quality, so use this mode with care
+            tmp=(~self.data.isna()).all(axis=1).groupby(level='region').sum() >= 2
+            #tmp = (self.data.groupby(level='region').count() > 0).all(axis=1)
+        else:
+            assert False, "Unknown DROP_MODE"
+        self.data = self.data.loc[self.data.index.isin(tmp[tmp].index,level='region')].sort_index()
+        self.available_regions = sorted(list(self.data.index.get_level_values('region').unique()))
+        self.num_regions = len(self.available_regions)
+        
+        self.region_index = dict(zip(self.available_regions,range(self.num_regions)))
+        self.prop_index = dict(zip(self.needed_properties,range(len(self.needed_properties))))
+        
+        self._logger.info("{} regions remains".format(self.num_regions))
+        assert self.num_regions > OK_TO_PROCEED_REGION_FRACTION*len(self.needed_regions), "Less than {}% of desired regions has full data. Bailing out.".format(OK_TO_PROCEED_REGION_FRACTION*100)
+        return
+
+    def _normalize(self):
+        ################### Normalization/weighting ################
+        # If provided with user weight/norm const for given property,
+        # use these, otherwise take 1/data std respectively
+        # This brings all data to the space over which we will compute distance
+        
+        # Note that us taking sqrt of user-provided weight here assumes user wants something like
+        # dist^2 = \sum w_user_i*(x_i - y_i)^2 (non-squared w_user_i here)
+        # Also, pit (point-in-time) properties are still replicated across all time points
+        # but will have the same std as non-replicated set
+        self._logger.info("Normalization/weighting ...")
+        self.pit_properties = []
+        self.ts_properties = []
+        self.full_scaling = {} # keep these in case we need to deal with seed regions outside search region
+        self.past_seeds = {} # invalidate seed region cache since scaling might be about to change
+        for c in self.data.columns:
+            stdev = self.data[c].std()
+            # always report true stds - might want to include them in properties.py as 'norm' on later runs 
+            self._logger.info("Data standard deviation for {} is {}".format(c,stdev))
+            self.full_scaling[c] = np.sqrt(self.metric_instance[c]) / self.metric_properties[c]['properties'].get("norm",stdev)
+            self.data[c] *= self.full_scaling[c]
                 
+            # will use to split dataset into time series and pit parts
+            col_type = self.metric_properties[c]["properties"]["type"]
+            if col_type == "pit":
+                self.pit_properties.append(c)
+            else:
+                self.ts_properties.append(c)
+                
+        self.n_pit = len(self.pit_properties)
+        self.n_ts = len(self.ts_properties)
+        return
+
+    def _reformat(self):
+        ########################## Reformat data into single row per region.##############
+        # First n_prop columns are means (for pit it will be values themselves, for ts - yearly means),
+        # followed by n_ts*n_ts giving covar matrix of time series properties
+        # (matrix is symmetric, so wasting space but makes life easier)
+        self._logger.info("Computing means/covars and reformatting ...")
+        # do not dropna when computing  means - probably get better averages this way
+        data_means = self.data.groupby(level='region').mean()
+        #ts_means = self.data[self.ts_properties].groupby(level='region').mean()
+        if self.n_ts > 0:
+            # dropna keeps only valid points for given region if drop_mode=fully_missing (no-op f drop_mode=any_missing)
+            covars = self.data.dropna()[self.ts_properties].groupby(level='region').cov().unstack(level=1)
+            self.data = np.concatenate([data_means.values,covars.values], axis=1)
+        else:
+            self.data = data_means.values
+        return
+        
+        
+        
     def _merge_into_prop_data(self, from_data, from_regions):
         # map region to its location in the original list (and therefore from_data array)
         from_map = dict(zip(from_regions,range(len(from_regions))))
@@ -377,8 +428,7 @@ class SimilarRegion(object):
         self._logger.info("Getting data series for {} regions in {} queries for property {}".
                           format(n_reg, n_queries, prop_name))
         load_bar = tqdm(total=n_reg)
-        # Sending out all queries
-        self._logger.debug('Queries: {}'.format(queries))
+        # Sending out all queries    
         self.client.batch_async_get_data_points(queries, map_result=map_response)
         load_bar.close()
         valid_data = valid_data/data_counters # division by zero where we do not have data
@@ -416,7 +466,6 @@ class SimilarRegion(object):
                         # (for example 'start_date': '2017-01-01T00:00:00.000Z')
                         # ugly date conversion, but this is inner loop, strptime is too slow here
                         # TODO: python 3.7 has fromisoformat which is supposedly much faster than strptime
-                        # TODO: also try pandas.to_datetime()
                         y = int(datapoint["start_date"][:4])
                         m = int(datapoint["start_date"][5:7])
                         d = int(datapoint["start_date"][8:10])
@@ -475,29 +524,70 @@ class SimilarRegion(object):
         means1 = self.data[idx1,:self.n_pit+self.n_ts]
         means2 = self.data[idx2,:self.n_pit+self.n_ts]
         s_dist = np.sqrt(max(0,full_dist**2 - np.sum((means1-means2)**2)))
-        distances = dict([('total',full_dist), ('covar',s_dist)] + \
-                         [(p,np.abs(means1[i]-means2[i])) \
-                          for (i,p) in enumerate(self.needed_properties)])
+        distances = dict([('total',full_dist), ('covar',s_dist)]+[(p,np.abs(means1[i]-means2[i])) for (i,p) in enumerate(self.needed_properties)])
         return distances
-
-    def similar_to(self, region_id, number_of_regions=10, requested_level=None, detailed_distance=False,
-                   compare_to=0):
+    
+    def _get_distances_means(self, means1, idx2, full_dist):
+        """ Same as above but takes means of seed region as argument instead of its index into data array
+            (useful for seed regions outside search region)
+        """
+        means2 = self.data[idx2,:self.n_pit+self.n_ts]
+        s_dist = np.sqrt(max(0,full_dist**2 - np.sum((means1-means2)**2)))
+        distances = dict([('total',full_dist), ('covar',s_dist)]+[(p,np.abs(means1[i]-means2[i])) for (i,p) in enumerate(self.needed_properties)])
+        return distances
+    
+    def similar_to(self, region_id, compare_to=0, number_of_regions=10, requested_level=None, detailed_distance=False):
         """
         Attempt to look up the given name and find similar regions.
         :param region_id: a Gro region id representing the reference region you want to find similar regions to.
+        :param compare_to: the root region_id of the regions to compare to (default 0 which is World)
         :param number_of_regions: number of most similar matches to return
         :param requested_level: level of returned regions (3-country,4-province,5-district)
-        :param compare_to: the root region_id of the regions to compare to (default 0 which is World)
         :return: a generator of the most similar regions as a list in the form
         {'#': 0, 'id': 123, 'name': "abc", 'dist': 1.23, 'parent': (12,"def",,)}
         """
-        # update and/or prune region data for the current comparison
-        self._load_region_info([region_id, compare_to])
-        self._load_data()
-
-        # called when self.data is simple np.array
-        # BallTree expects array of points but we always search neighbors of just one => reshape
-        x = self.data[self.region_index[region_id]].reshape(1, -1)
+        if self.search_region != compare_to:
+            self.build(compare_to)
+            
+        # To change search region, user should construct new SR object
+        # but we want to allow searches with seed region outside serach region,
+        # say, seed region in South America but search region is Africa
+        #
+        # For simplicity, in such cases always download data for the seed region from the system directly (ignore cache)
+        if region_id not in self.available_regions:
+            self._logger.info("seed region {} is outside search region".format(region_id))
+            x = self.past_seeds.get(region_id)
+            if x is None:
+                seed_region_means = []
+                seed_region_ts = pd.DataFrame(columns=self.ts_properties)
+                for prop_name in self.needed_properties:
+                    valid_data, valid_regions = self._load_property_for_regions(prop_name, [region_id])
+                    # seed region should have all required data - bail out if anything missing
+                    if not valid_regions:
+                        self._logger.error("could not get {} data for requested seed region {}".format(prop_name, region_id))
+                        return
+                    valid_data *= self.full_scaling[prop_name]
+                    # neen mean regardless - for pit will be the same as (duplicated) value
+                    seed_region_means.append(valid_data.mean())
+                    if prop_name in self.ts_properties:
+                        seed_region_ts[prop_name] = valid_data
+                # once all properties are collected, generate full data row for seed region
+                if self.n_ts > 0:
+                    seed_region_covar = seed_region_ts[self.ts_properties].cov().unstack()
+                    seed_region_data = np.concatenate([np.array(seed_region_means),seed_region_covar.values])
+                else:
+                    seed_region_data = np.array(seed_region_means)
+                x = seed_region_data.reshape(1,-1)
+                self.past_seeds[region_id] = x
+            else:
+                self._logger.info("but was found in seed region cache")
+            #print(x[0])
+        else:
+            # seed region present in the data => just get corresponding row
+            
+            # called when self.data is simple np.array
+            # BallTree expects array of points but we always search neighbors of just one => reshape
+            x = self.data[self.region_index[region_id]].reshape(1, -1)
         
         # distances and regions (as indexes into self.data)
         # Always use single lookup region - use [0] of the result
@@ -514,8 +604,10 @@ class SimilarRegion(object):
         sim_regions = [idx_to_region[i] for i in neighbour_idxs[0]]
         sim_dists = sim_dists[0]
         if detailed_distance:
-            r_idx = self.region_index[region_id]
-            sim_dists = [self._get_distances(r_idx, self.region_index[r], sim_dists[i])
+            #r_idx = self.region_index[region_id]
+            #sim_dists = [self._get_distances(r_idx, self.region_index[r], sim_dists[i])
+            #             for (i,r) in enumerate(sim_regions)]
+            sim_dists = [self._get_distances_means(x[0][:self.n_pit+self.n_ts], self.region_index[r], sim_dists[i])
                          for (i,r) in enumerate(sim_regions)]
         self._logger.info("Found {} regions most similar to '{}'.".format(len(sim_regions), region_id))
         
