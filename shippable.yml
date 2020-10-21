@@ -38,8 +38,14 @@ build:
     # https://github.com/sphinx-contrib/sphinxcontrib-versioning does not support the latest 3.x
     # versions, which we do want to run unit tests on. That is why 2.x is used, rather than adding
     # an older 3.x version to the build matrix just to support docs.
+    #
+    # 2020-10-21 update: sphinxcontrib-versioning is nondeterministically
+    # throwing UnicodeDecode errors, preventing PRs from being merged. While
+    # the library claims to only support up to Python 3.5, it also hasn't been
+    # updated since 2016. It works while manually testing with Python 3.7, so
+    # we're using 3.7 via Shippable to avoid the UnicodeDecode errors.
     - >
-      if [ "$SHIPPABLE_PYTHON_VERSION" == "2.7" ]; then
+      if [ "$SHIPPABLE_PYTHON_VERSION" == "3.7" ]; then
         shippable_retry pip install .[docs] &&
         git config --global user.email "api-documentation@gro-intelligence.com" &&
         git config --global user.name "Gro Intelligence" &&
