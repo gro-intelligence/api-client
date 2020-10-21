@@ -10,8 +10,6 @@ from groclient.constants import DATA_SERIES_UNIQUE_TYPES_ID
 
 MOCK_HOST = 'pytest.groclient.url'
 MOCK_TOKEN = 'pytest.groclient.token'
-PYTHON_VERSION = platform.python_version()
-API_CLIENT_VERSION = get_distribution('groclient').version
 
 LOOKUP_MAP = {
     'metrics': {},
