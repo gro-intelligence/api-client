@@ -15,6 +15,7 @@ import logging
 import requests
 import time
 import platform
+import ast
 from pkg_resources import get_distribution, DistributionNotFound
 try:
     # functools are native in Python 3.2.3+
@@ -423,7 +424,7 @@ def rank_series_by_source(access_token, api_host, selections_list):
     for series_key, series_by_source_id in series_map.items():
         try:
             series_without_source = {
-                type_id: int(series_key.split('.')[idx])
+                type_id: ast.literal_eval(series_key.split('.')[idx])
                 for idx, type_id in enumerate(DATA_SERIES_UNIQUE_TYPES_ID)
                 if type_id != 'source_id' and series_key.split('.')[idx] != 'None'
             }
