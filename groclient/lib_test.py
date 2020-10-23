@@ -315,23 +315,23 @@ def test_rank_series_by_source(mock_requests_get):
         'end_date': '2020-05-01',
         'metadata': {'historical': True}
     }
-
-    partial_selections = {
+    # input selection should allow a list of ids
+    partial_selection = {
         'metric_id': 2540047,
         'item_id': 1457,
-        'region_id': 13474
+        'region_id': [13474,13475]
     }
 
     expected = [
         full_data_series,
-        dict_assign(partial_selections, 'source_id', mock_return[0]),
-        dict_assign(partial_selections, 'source_id', mock_return[1]),
-        dict_assign(partial_selections, 'source_id', mock_return[2])
+        dict_assign(partial_selection, 'source_id', mock_return[0]),
+        dict_assign(partial_selection, 'source_id', mock_return[1]),
+        dict_assign(partial_selection, 'source_id', mock_return[2])
     ]
     for idx, series in enumerate(lib.rank_series_by_source(MOCK_TOKEN,
                                                            MOCK_HOST,
                                                            [full_data_series,
-                                                            partial_selections])):
+                                                            partial_selection])):
         assert series == expected[idx]
 
 
