@@ -424,7 +424,7 @@ def rank_series_by_source(access_token, api_host, selections_list):
         series_without_source = {
             type_id: json.loads(series_key.split('.')[idx])
             for idx, type_id in enumerate(DATA_SERIES_UNIQUE_TYPES_ID)
-            if type_id != 'source_id' and series_key.split('.')[idx] != 'None'
+            if type_id != 'source_id' and series_key.split('.')[idx] != 'null'
         }
         source_ids = get_source_ranking(access_token,
                                         api_host,
