@@ -22,3 +22,6 @@ docs/_build/
 
 # Vagrant
 r-client/.vagrant/
+
+# Emacs
+*~
