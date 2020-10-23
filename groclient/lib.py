@@ -411,7 +411,7 @@ def get_source_ranking(access_token, api_host, series):
 def rank_series_by_source(access_token, api_host, selections_list):
     series_map = OrderedDict()
     for selection in selections_list:
-        series_key = '.'.join([str(selection.get(type_id))
+        series_key = '.'.join([json.dumps(selection.get(type_id))
                                for type_id in DATA_SERIES_UNIQUE_TYPES_ID
                                if type_id != 'source_id'])
         if series_key not in series_map:
