@@ -1,3 +1,27 @@
-__pycache__
+# standard python stuff
+__pycache__/
 *.py[cod]
-venv
+.env/
+.venv/
+env/
+venv/
+
+# VSCode
+.vscode/
+*.code-workspace
+
+# IntelliJ
+*.iml
+.idea/
+
+# OS X
+.DS_Store
+
+# sphinx output
+docs/_build/
+
+# Vagrant
+r-client/.vagrant/
+
+# Emacs
+*~
