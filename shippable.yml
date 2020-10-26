@@ -15,7 +15,9 @@ build:
   cache_dir_list:
     - /root/.cache/pip
   ci:
-    - pip install -U pip
+    - python -c "import sys;print(sys.path)"
+    - pwd
+    - ls -lA
     - pip install poetry
     - poetry install -vvv
     # Run doctests
