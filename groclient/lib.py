@@ -426,9 +426,13 @@ def rank_series_by_source(access_token, api_host, selections_list):
             for idx, type_id in enumerate(DATA_SERIES_UNIQUE_TYPES_ID)
             if type_id != 'source_id' and series_key.split('.')[idx] != 'null'
         }
-        source_ids = get_source_ranking(access_token,
-                                        api_host,
-                                        series_without_source)
+        try:
+            source_ids = get_source_ranking(access_token,
+                                            api_host,
+                                            series_without_source)
+        # Catch "no content" response from get_source_ranking()
+        except ValueError:
+            continue  # empty response
 
         for source_id in source_ids:
             if source_id in series_by_source_id:
