@@ -1,7 +1,6 @@
 language: python
 
 python:
-  - 2.7
   - 3.7
 
 branches:
@@ -16,8 +15,9 @@ build:
   cache_dir_list:
     - /root/.cache/pip
   ci:
-    - shippable_retry pip install poetry
-    - shippable_retry poetry install -vvv
+    - pip install -U pip
+    - pip install poetry
+    - poetry install -vvv
     # Run doctests
     - poetry run python groclient/lib.py -v
     # Create folders for test and code coverage
