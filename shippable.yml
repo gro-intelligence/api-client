@@ -17,7 +17,7 @@ build:
     - /root/.cache/pip
   ci:
     - shippable_retry pip install poetry
-    - shippable_retry poetry install
+    - shippable_retry poetry install -vvv
     # Run doctests
     - poetry run python groclient/lib.py -v
     # Create folders for test and code coverage
