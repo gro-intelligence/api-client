@@ -429,6 +429,14 @@ optional = false
 python-versions = ">= 3.5"
 
 [[package]]
+name = "unicodecsv"
+version = "0.14.1"
+description = "Python2's stdlib csv module is nice, but it doesn't support unicode. This module is a drop-in replacement which *does*."
+category = "main"
+optional = false
+python-versions = "*"
+
+[[package]]
 name = "urllib3"
 version = "1.25.11"
 description = "HTTP library with thread-safe connection pooling, file post, and more."
@@ -459,7 +467,7 @@ docs = ["sphinx", "recommonmark", "sphinx_rtd_theme", "sphinxcontrib-versioning"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.6"
-content-hash = "5cb3d4127d903df6738a38ad3b267ac903c393d98fe7e4a0bcbf33c908a165d6"
+content-hash = "408e438568cb2c68c5b9d71ab3bce7196bf2a7ea83a372adb8214ea02864972b"
 
 [metadata.files]
 alabaster = [
@@ -726,6 +734,9 @@ tornado = [
     {file = "tornado-6.0.4-cp38-cp38-win32.whl", hash = "sha256:22aed82c2ea340c3771e3babc5ef220272f6fd06b5108a53b4976d0d722bcd52"},
     {file = "tornado-6.0.4-cp38-cp38-win_amd64.whl", hash = "sha256:c58d56003daf1b616336781b26d184023ea4af13ae143d9dda65e31e534940b9"},
     {file = "tornado-6.0.4.tar.gz", hash = "sha256:0fe2d45ba43b00a41cd73f8be321a44936dc1aba233dee979f17a042b83eb6dc"},
+]
+unicodecsv = [
+    {file = "unicodecsv-0.14.1.tar.gz", hash = "sha256:018c08037d48649a0412063ff4eda26eaa81eff1546dbffa51fa5293276ff7fc"},
 ]
 urllib3 = [
     {file = "urllib3-1.25.11-py2.py3-none-any.whl", hash = "sha256:f5321fbe4bf3fefa0efd0bfe7fb14e90909eb62a48ccda331726b4319897dd5e"},
