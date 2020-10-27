@@ -707,8 +707,6 @@ class GroClient(object):
     ):
         """Look up details of all entities level contained by an item/metric/regions.
 
-        Given any region by id, get all the descendant regions that are of the specified level.
-
         Parameters
         ----------
         entity_type : { 'metrics', 'items', 'regions' }
