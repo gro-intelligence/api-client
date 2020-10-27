@@ -27,12 +27,16 @@ setuptools.setup(
     python_requires=">=2.7.12, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*, <4",
     install_requires=requirements,
     extras_require={
+        'package': ['wheel', 'twine'],
         'docs': docs_requirements,
         'test': test_requirements
     },
     # root must be current directory
     # otherwise, use_scm_version = {"root": path, "relative_to": __file__}
-    use_scm_version=True,
+    use_scm_version= {
+        # Disable local_scheme because PyPI doesn't support it.
+        'local_scheme': 'no-local-version',
+    },
     setup_requires=pytest_runner + ['setuptools_scm'],
     test_suite='pytest',
     tests_require=test_requirements,

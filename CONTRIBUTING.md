@@ -25,3 +25,23 @@ To run unit tests, install the testing requirements and then execute with pytest
 $ pip install ./api-client[test]
 $ pytest --cov
 ```
+
+## Packaging
+
+```sh
+$ pip install '.[package]'
+$ rm -rf dist && python setup.py sdist bdist_wheel --universal
+```
+
+Upload to PyPI (upload to TestPyPI with `-r testpypi`):
+
+```sh
+$ twine upload -u __token__ -p <pypi-token> dist/*
+```
+
+You can install from TestPyPI for testing purposes (probably in separate new
+virtual environment) like so:
+
+```sh
+$ pip install -i https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple groclient==<some-specific-version>
+```

@@ -6,6 +6,13 @@ __pycache__/
 env/
 venv/
 
+# packging
+.coverage
+.eggs
+*.egg-info/
+build/
+dist/
+
 # VSCode
 .vscode/
 *.code-workspace
