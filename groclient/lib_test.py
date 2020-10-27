@@ -355,30 +355,30 @@ def lookup_mock(MOCK_TOKEN, MOCK_HOST, entity_type, entity_ids):
 
 @mock.patch('groclient.lib.lookup')
 @mock.patch('requests.get')
-def test_descendant_regions(mock_requests_get, lookup_mocked):
+def test_get_descendant(mock_requests_get, lookup_mocked):
     mock_requests_get.return_value.json.return_value = {'data': {'4': [1, 2, 3]}}
     mock_requests_get.return_value.status_code = 200
     lookup_mocked.side_effect = lookup_mock
 
-    assert lib.get_descendant_regions(MOCK_TOKEN, MOCK_HOST, 4) == [
-        {'id': 1, 'name': 'item 1', 'contains': [], 'belongsTo': [3], 'def': 'def1'},
-        {'id': 2, 'name': 'item 2', 'contains': [], 'belongsTo': [3], 'def': 'def2'},
-        {'id': 3, 'name': 'parent', 'contains': [], 'belongsTo': [4], 'def': 'def3'}
+    assert lib.get_descendant(MOCK_TOKEN, MOCK_HOST, 'items', 4) == [
+        {'id': 1, 'name': 'item 1', 'contains': [], 'belongsTo': [3], 'definition': 'def1'},
+        {'id': 2, 'name': 'item 2', 'contains': [], 'belongsTo': [3], 'definition': 'def2'},
+        {'id': 3, 'name': 'parent', 'contains': [1, 2], 'belongsTo': [4], 'definition': 'def3'}
     ]
     
-    assert lib.get_descendant_regions(MOCK_TOKEN, MOCK_HOST, 4, include_details=True) == [
-        {'id': 1, 'name': 'item 1', 'contains': [], 'belongsTo': [3], 'def': 'def1'},
-        {'id': 2, 'name': 'item 2', 'contains': [], 'belongsTo': [3], 'def': 'def2'},
-        {'id': 3, 'name': 'parent', 'contains': [], 'belongsTo': [4], 'def': 'def3'}
+    assert lib.get_descendant(MOCK_TOKEN, MOCK_HOST, 'metrics', 4, include_details=True) == [
+        {'id': 1, 'name': 'metric 1', 'contains': [], 'belongsTo': [3], 'definition': 'def1'},
+        {'id': 2, 'name': 'metric 2', 'contains': [], 'belongsTo': [3], 'definition': 'def2'},
+        {'id': 3, 'name': 'parent', 'contains': [1, 2], 'belongsTo': [4], 'definition': 'def3'}
     ]
 
-    assert lib.get_descendant_regions(MOCK_TOKEN, MOCK_HOST, 4, include_details=False) == [
-        {'id': 1}, {'id': 2}, {'id': 4}
+    assert lib.get_descendant(MOCK_TOKEN, MOCK_HOST, 'items', 4, include_details=False) == [
+        {'id': 1}, {'id': 2}, {'id': 3}
     ]
 
     mock_requests_get.return_value.json.return_value = {'data': {'4': [3]}}
-    assert lib.get_descendant_regions(MOCK_TOKEN, MOCK_HOST, 4, distance=1) == [
-        {'id': 3, 'name': 'parent', 'contains': [], 'belongsTo': [4], 'def': 'def3'}
+    assert lib.get_descendant(MOCK_TOKEN, MOCK_HOST, 'items', 4, distance=1) == [
+        {'id': 3, 'name': 'parent', 'contains': [1, 2], 'belongsTo': [4], 'definition': 'def3'}
     ]
 
     
