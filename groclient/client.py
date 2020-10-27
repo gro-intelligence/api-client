@@ -698,6 +698,58 @@ class GroClient(object):
         """
         return lib.get_geojson(self.access_token, self.api_host, region_id, zoom_level)
 
+    def get_descendant(
+        self,
+        entity_type,
+        entity_id,
+        distance=None,
+        include_details=True,
+    ):
+        """Look up details of all entities level contained by an item/metric/regions.
+
+        Given any region by id, get all the descendant regions that are of the specified level.
+
+        Parameters
+        ----------
+        entity_type : { 'metrics', 'items', 'regions' }
+        entity_id : integer
+        distance: integer, optional
+            Return all entity contained to entity_id at maximum distance.
+            If not provided, get all descendants.
+        include_details : boolean, optional
+            True by default. Will perform a lookup() on each descendant  to find name,
+            definition, etc. If this option is set to False, only ids of descendant
+            entities will be returned, which makes execution significantly faster.
+
+        Returns
+        -------
+        list of dicts
+
+            Example::
+
+                [{
+                    'id': 134,
+                    'name': 'Cattle hides, wet-salted',
+                    'definition': 'Hides and skins of domesticated cattle—animals ...',
+                } , {
+                    'id': 382,
+                    'name': 'Calf skins, wet-salted',
+                    'definition': 'Wet-salted hides and skins of calves—animals of ...'
+                }, ...]
+
+            See output of :meth:`~.lookup`
+
+        """
+        return lib.get_descendant(
+            self.access_token,
+            self.api_host,
+            entity_type,
+            entity_id,
+            distance,
+            include_details,
+        )
+
+
     def get_descendant_regions(
         self,
         region_id,
