@@ -705,7 +705,11 @@ class GroClient(object):
         distance=None,
         include_details=True,
     ):
-        """Look up details of all entities level contained by an item/metric/regions.
+        """Given an item/metric/region id return all ids contained in the graph, and their relative details
+
+        Similar to :meth:~.get_descendant_regions, but also works on items and metrics. This method has 
+        a distance parameter (which returns all nested child entities) instead of a descendant_level 
+        parameter (which only returns child entities at a given depth/level).
 
         Parameters
         ----------
@@ -728,11 +732,11 @@ class GroClient(object):
                 [{
                     'id': 134,
                     'name': 'Cattle hides, wet-salted',
-                    'definition': 'Hides and skins of domesticated cattle—animals ...',
+                    'definition': 'Hides and skins of domesticated cattle-animals ...',
                 } , {
                     'id': 382,
                     'name': 'Calf skins, wet-salted',
-                    'definition': 'Wet-salted hides and skins of calves—animals of ...'
+                    'definition': 'Wet-salted hides and skins of calves-animals of ...'
                 }, ...]
 
             See output of :meth:`~.lookup`
