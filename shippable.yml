@@ -9,7 +9,10 @@ branches:
     - gh-pages
 
 env:
-  - GROAPI_TOKEN=dummytoken
+  global:
+    - GROAPI_TOKEN=dummytoken
+    # PyPI tokens.
+    - secure: JzfuyfFYn5JmDknnMODIjOsNDiiHbwsW6BMsa9FapBE5r2/Va5XX/XZTgA5AGQNveE/7xweb8mZeQ0h9f8C7gQOwyPqyZpgRkB2vKtjp6pQ7WKzm4ty8J99SNchlL5njEENdkOcdW/YSXHspk4INrfkM0otC/7VU5xLMgRQdMzPC1jOnXY28JnMobwvbAHjxAVPKbkO4CbE0Vvia3bc28d8pxf3YTNP6yrHYQAOL20t5T7xKEx0okQg4P5WmGNwqxeOQA8kTWy4lUblIrEUIqGvsBagx4aYUjfClHV8S+unO0mk54V2B9U3o14ysEdHYaQcTTZ+3Ywd9803JfVpBld/Ug+Y55RjDcoQcGs0xUFkrzUiwqplx9Ms1WT3lB+i2tv6SYGjNnTQpRBGgLgOn0AKiB/S89h0OI8kNzRubN3ziv5ZNFdtob3PRmpFg6nc60AiT7gnAsCqvcfMu2kPnaLR9o5O34mXkjWcUv24bOo6UWaEWDRFqwdkwYUAK7ljEL+gsJOew/O54+c9bq2En65vsBubbW9RqK53Fhtqcsi8nQdYnL2/OHni7aKAGdYqajRbqkUHsFLnOGMBys+gMgpM2VgBZFR3e57wVr831fgNs5iQb0j9zKl5FZUfCtAY/4CHEkLBcUziGXgg3zV9BzqO9laJaScDagZba2EJMJKkR2ah4GCfKvAZ8mobcd0ZDGEUjjs7lvgL2pTE6JkFo3wXaXsGgacYPcCRp5aDuh1V/Ux/htSk9RUdAUXAevb/e5ei+p6IDvM1nJp/W86JdRUbz5UKNshopexlwYWOqX3BAgIReMa+QJuUcK0rfZXTAVg6cYwn8sl669WhH4+MeJvc/i/DlY0GmyKkgB3JfwEhYJeqzbTuBnKspODOYNKEm2aQs/t/Lo/HHhEzmMTqxKtULp16L72uiYWLK98EEllxCW0XvUsbeFBA8GiGt0fQqZR5b7xgwqfHS4k54UgjldxOnLGZpM+DqqMEy0Td3dsPkb9zqHOO1aNg7DvDL6enB
 
 build:
   cache: true
@@ -33,22 +36,25 @@ build:
         shippable_retry pip install -r api/client/samples/analogous_years/requirements.txt && pytest api/client/samples/analogous_years/
       fi;
   on_success:
-    # Only build docs on the Python 2.7 run. It is unnecessary to run on both 2.x and 3.x - one or
-    # the other should suffice. However, as of this writing
-    # https://github.com/sphinx-contrib/sphinxcontrib-versioning does not support the latest 3.x
-    # versions, which we do want to run unit tests on. That is why 2.x is used, rather than adding
-    # an older 3.x version to the build matrix just to support docs.
-    #
-    # 2020-10-21 update: sphinxcontrib-versioning is nondeterministically
-    # throwing UnicodeDecode errors, preventing PRs from being merged. While
-    # the library claims to only support up to Python 3.5, it also hasn't been
-    # updated since 2016. It works while manually testing with Python 3.7, so
-    # we're using 3.7 via Shippable to avoid the UnicodeDecode errors.
-    - >
+    - > # Build docs with sphinx and push to gh-pages.
       if [ "$SHIPPABLE_PYTHON_VERSION" == "3.7" ]; then
         shippable_retry pip install .[docs] &&
         git config --global user.email "api-documentation@gro-intelligence.com" &&
         git config --global user.name "Gro Intelligence" &&
         git remote set-url origin git@github.com:$REPO_FULL_NAME.git &&
         ssh-agent bash -c 'ssh-add /tmp/ssh/00_sub; sphinx-versioning push -r development docs gh-pages .';
+      fi;
+    - > # Upload new TestPyPI package.
+      if [ "$SHIPPABLE_PYTHON_VERSION" == "3.7" ]; then
+        shippable_retry pip install .[package] &&
+        rm -rf dist/ &&
+        python setup.py sdist bdist_wheel --universal &&
+        twine upload -u __token__ -p $TESTPYPI_TOKEN -r testpypi
+      fi;
+    - > # Upload new PyPI package for releases.
+      if [ "$SHIPPABLE_PYTHON_VERSION" == "3.7" ] && [ $IS_RELEASE == "true" ]; then
+        shippable_retry pip install .[package] &&
+        rm -rf dist/ &&
+        python setup.py sdist bdist_wheel --universal &&
+        twine upload -u __token__ -p $PYPI_TOKEN
       fi;
