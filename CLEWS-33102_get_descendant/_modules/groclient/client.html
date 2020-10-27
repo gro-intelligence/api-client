@@ -910,7 +910,11 @@
         <span class="n">distance</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">include_details</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
     <span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Look up details of all entities level contained by an item/metric/regions.</span>
+        <span class="sd">&quot;&quot;&quot;Given an item/metric/region id return all ids contained in the graph, and their relative details</span>
+
+<span class="sd">        Similar to :meth:~.get_descendant_regions, but also works on items and metrics. This method has </span>
+<span class="sd">        a distance parameter (which returns all nested child entities) instead of a descendant_level </span>
+<span class="sd">        parameter (which only returns child entities at a given depth/level).</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -933,11 +937,11 @@
 <span class="sd">                [{</span>
 <span class="sd">                    &#39;id&#39;: 134,</span>
 <span class="sd">                    &#39;name&#39;: &#39;Cattle hides, wet-salted&#39;,</span>
-<span class="sd">                    &#39;definition&#39;: &#39;Hides and skins of domesticated cattle—animals ...&#39;,</span>
+<span class="sd">                    &#39;definition&#39;: &#39;Hides and skins of domesticated cattle-animals ...&#39;,</span>
 <span class="sd">                } , {</span>
 <span class="sd">                    &#39;id&#39;: 382,</span>
 <span class="sd">                    &#39;name&#39;: &#39;Calf skins, wet-salted&#39;,</span>
-<span class="sd">                    &#39;definition&#39;: &#39;Wet-salted hides and skins of calves—animals of ...&#39;</span>
+<span class="sd">                    &#39;definition&#39;: &#39;Wet-salted hides and skins of calves-animals of ...&#39;</span>
 <span class="sd">                }, ...]</span>
 
 <span class="sd">            See output of :meth:`~.lookup`</span>
