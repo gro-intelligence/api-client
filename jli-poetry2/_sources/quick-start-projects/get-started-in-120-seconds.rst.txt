@@ -30,7 +30,7 @@ Step 2: Run the code in a notebook
 
   ::
 
-    !pip install git+https://github.com/gro-intelligence/api-client.git
+    !pip install groclient
 
   Then click the "Run Cell" button to the left of the cell.
   In Colab, it will look like this:
