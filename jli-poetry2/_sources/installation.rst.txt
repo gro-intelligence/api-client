@@ -22,7 +22,7 @@ To find the location on your filesystem where the Gro package has been installed
 
 ::
 
-  pip show gro
+  pip show groclient
 
 
 
