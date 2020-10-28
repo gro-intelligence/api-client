@@ -38,7 +38,11 @@ build:
       poetry run pytest api/client/samples/analogous_years/
   on_success:
     # Build package.
-    - poetry build
+    # Note: We need to install versioning library outside of the poetry venv.
+    # See note in CONTRIBUTING.md
+    - >
+      pip install poetry-dynamic-versioning &&
+      poetry build
     # Build docs and push to gh-pages.
     - >
       shippable_retry poetry install -E docs &&
