@@ -1,4 +1,4 @@
-import os, glob
+import os
 import tempfile
 import pickle
 import logging
@@ -369,7 +369,56 @@ class SimilarRegion(object):
         #    except:
         #        # we do not need this region
         #        continue
-               
+        
+    def _load_property_from_file(self, prop_name, path_prefix):
+        # Reads data from region_name.prop_name.csv file
+        # Three columns expected: start_date,end_date and value. To maintain uniform format,
+        # his is expected even for static properties, but for these we
+        # simply take value from the first line, the rest of the file is ignored
+        
+        full_path = path_prefix + '.'+prop_name+'.csv'
+        # will return array of long-term averages for each time interval within a year, even for static
+        result = np.zeros(self.t_int_per_year)
+        try:
+            raw_data = pd.read_csv(full_path, parse_dates=[0,1], infer_datetime_format=True)
+        except Exception as e:
+            self._logger.error("Can not get data from file {}: {}".format(full_path, str(e)))
+            return None, [] # empty list signals no data            
+
+        if prop_name in self.ts_properties:
+            # this is re-implementation of the code in _fill_block
+            # where it was done for a single value
+            nt = raw_data.shape[0]
+            fractions = np.zeros((nt,self.t_int_per_year))
+            raw_data['start_doy'] = raw_data['start_date'].dt.dayofyear
+            raw_data['end_doy'] = raw_data['end_date'].dt.dayofyear
+            start_f = ((raw_data['start_doy']-1)/self.t_int_days).clip(upper=self.t_int_per_year-1e-9)
+            end_f = (raw_data['end_doy']/self.t_int_days).clip(upper=self.t_int_per_year-1e-9)
+            (start_interval,start_fraction) = np.divmod(start_f.values,1)
+            (end_interval,end_fraction) = np.divmod(end_f.values,1)
+            start_interval = start_interval.astype(int)
+            end_interval = end_interval.astype(int)
+            start_fraction = 1-start_fraction
+            fractions[range(nt),start_interval] += start_fraction
+            fractions[range(nt),end_interval] += end_fraction
+            # adjust lines contributing to a single interval
+            fractions = np.where(np.tile(start_interval==end_interval,(self.t_int_per_year,1)).T & (fractions>0),
+                                 fractions-1, fractions) 
+                
+            # fills in ones strictly between start_interval and end_intervals (not ends)
+            mask = np.tile(np.array(range(self.t_int_per_year)),[nt,1])
+            mask = (mask>start_interval.reshape(-1,1)) & (mask<end_interval.reshape(-1,1))
+            fractions[mask] = 1 
+            # We remove data points crossing year boundary (revisit later?)
+            # and average raw data according to contributions of each line to each interval
+            # result will have nan's for intervals with no coverage (division by zero warnings expected in this case)
+            counters = fractions[start_interval<=end_interval,:].sum(axis=0)
+            result = (raw_data['value'].values.reshape(-1,1)*fractions)[start_interval<=end_interval,:].sum(axis=0) / counters
+        else:
+            result += raw_data['value'].iloc[0]
+        return result, [-1] # return any non-empty list (contains actual region list for database read)
+        
+        
     def _load_property_for_regions(self, prop_name, regions_list, track_na=True, depth=0):
         is_ts = self.metric_properties[prop_name]["properties"]["type"] == "timeseries"
         query = self.metric_properties[prop_name]["api_data"]
@@ -483,7 +532,7 @@ class SimilarRegion(object):
                         # but end_f = 30/30.4 for day 30. So single day 30 maps to [29,30]/30.4
                         # (fully inside interval 0) but 31 is partially split between intervals 0 and 1
                         # -1e-9 makes sure end boundary is strictly inside interval (also handles leap years)
-                        start_f = (start_doy-1)/self.t_int_days
+                        start_f = min(self.t_int_per_year-1e-9, (start_doy-1)/self.t_int_days)
                         end_f = min(self.t_int_per_year-1e-9, end_doy/self.t_int_days)
                         (start_interval,start_fraction) = divmod(start_f,1)
                         (end_interval,end_fraction) = divmod(end_f,1)
@@ -540,6 +589,7 @@ class SimilarRegion(object):
         """
         Attempt to look up the given name and find similar regions.
         :param region_id: a Gro region id representing the reference region you want to find similar regions to.
+            If a string is given, it is interpreted as a prefix path for a set of .csv per-property files for a seed region
         :param compare_to: the root region_id of the regions to compare to (default 0 which is World)
         :param number_of_regions: number of most similar matches to return
         :param requested_level: level of returned regions (3-country,4-province,5-district)
@@ -561,7 +611,11 @@ class SimilarRegion(object):
                 seed_region_means = []
                 seed_region_ts = pd.DataFrame(columns=self.ts_properties)
                 for prop_name in self.needed_properties:
-                    valid_data, valid_regions = self._load_property_for_regions(prop_name, [region_id])
+                    # if string is given load from a file
+                    if isinstance(region_id, str):
+                        valid_data, valid_regions = self._load_property_from_file(prop_name, region_id)
+                    else:
+                        valid_data, valid_regions = self._load_property_for_regions(prop_name, [region_id])
                     # seed region should have all required data - bail out if anything missing
                     if not valid_regions:
                         self._logger.error("could not get {} data for requested seed region {}".format(prop_name, region_id))
