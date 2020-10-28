@@ -68,12 +68,12 @@ class GroClient(object):
             self._async_http_client = AsyncHTTPClient()
             self._ioloop = IOLoop()
         except Exception as e:
-            self._logger.warn(
+            self._logger.warning(
                 "Unable to initialize an event loop. Async methods disabled."
             )
             self._async_http_client = None
             self._ioloop = None
-        
+
     def __del__(self):
         self._async_http_client.close()
         self._ioloop.stop()
@@ -1135,7 +1135,7 @@ class GroClient(object):
         try:
             return self.get_df(index_by_series=True).loc[[tuple(entity_ids)], :]
         except KeyError:
-            self._logger.warn("GDH returned no data")
+            self._logger.warning("GDH returned no data")
             return pandas.DataFrame()
 
     def get_data_series_list(self):
