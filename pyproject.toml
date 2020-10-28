@@ -1,0 +1,38 @@
+[tool.poetry]
+name = "groclient"
+# Note: we use poetry-dynamic-versioning to set the version from git tags.
+# TODO(jli): actually configure it
+version = "0.0.0"
+description = "Python client library for accessing Gro Intelligence's agricultural data platform"
+authors = ["Gro Intelligence developers <dev@gro-intelligence.com>"]
+readme = "README.md"
+homepage = "https://www.gro-intelligence.com/products/gro-api"
+repository = "https://github.com/gro-intelligence/api-client"
+documentation = "https://developers.gro-intelligence.com/"
+
+[tool.poetry.scripts]
+gro_client = 'groclient.__main__:main'
+
+[tool.poetry.dependencies]
+python = "^3.6"
+numpy = "*"
+requests = "*"
+pandas = "*"
+tornado = "*"
+unicodecsv = "*"
+sphinx = { version = "1.5.6", optional = true }
+recommonmark = { version = "*", optional = true }
+sphinx_rtd_theme = { version = "*", optional = true }
+sphinxcontrib-versioning = { version = "*", optional = true }
+
+[tool.poetry.dev-dependencies]
+mock = "*"
+pytest = "*"
+pytest-cov = "*"
+
+[tool.poetry.extras]
+docs = ["sphinx", "recommonmark", "sphinx_rtd_theme", "sphinxcontrib-versioning"]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
