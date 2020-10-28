@@ -14,6 +14,9 @@ venv/
 *.iml
 .idea/
 
+# Emacs
+*~
+
 # OS X
 .DS_Store
 
@@ -23,5 +26,5 @@ docs/_build/
 # Vagrant
 r-client/.vagrant/
 
-# Emacs
-*~
+# poetry build output
+dist/
