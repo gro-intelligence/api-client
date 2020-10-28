@@ -9,6 +9,7 @@ readme = "README.md"
 homepage = "https://www.gro-intelligence.com/products/gro-api"
 repository = "https://github.com/gro-intelligence/api-client"
 documentation = "https://developers.gro-intelligence.com/"
+license = "MIT"
 
 [tool.poetry.scripts]
 gro_client = 'groclient.__main__:main'
