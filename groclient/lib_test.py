@@ -12,8 +12,18 @@ MOCK_HOST = 'pytest.groclient.url'
 MOCK_TOKEN = 'pytest.groclient.token'
 
 LOOKUP_MAP = {
-    'metrics': {},
-    'items': {},
+    'metrics': {
+        '1': {'id': 1, 'name': 'metric 1', 'contains': [], 'belongsTo': [3], 'definition': 'def1'},
+        '2': {'id': 2, 'name': 'metric 2', 'contains': [], 'belongsTo': [3], 'definition': 'def2'},
+        '3': {'id': 3, 'name': 'parent', 'contains': [1, 2], 'belongsTo': [4], 'definition': 'def3'},
+        '4': {'id': 4, 'name': 'ancestor', 'contains': [3], 'belongsTo': [], 'definition': 'def4'}
+    },
+    'items': {
+        '1': {'id': 1, 'name': 'item 1', 'contains': [], 'belongsTo': [3], 'definition': 'def1'},
+        '2': {'id': 2, 'name': 'item 2', 'contains': [], 'belongsTo': [3], 'definition': 'def2'},
+        '3': {'id': 3, 'name': 'parent', 'contains': [1, 2], 'belongsTo': [4], 'definition': 'def3'},
+        '4': {'id': 4, 'name': 'ancestor', 'contains': [3], 'belongsTo': [], 'definition': 'def4'}
+    },
     'regions': {
         '1': {'id': 1, 'name': 'region 1', 'contains': [], 'belongsTo': [3], 'historical': True},
         '2': {'id': 2, 'name': 'region 2', 'contains': [], 'belongsTo': [3], 'historical': False},
@@ -342,6 +352,36 @@ def lookup_mock(MOCK_TOKEN, MOCK_HOST, entity_type, entity_ids):
         return {str(entity_id): LOOKUP_MAP[entity_type][str(entity_id)]
                 for entity_id in entity_ids}
 
+
+@mock.patch('groclient.lib.lookup')
+@mock.patch('requests.get')
+def test_get_descendant(mock_requests_get, lookup_mocked):
+    mock_requests_get.return_value.json.return_value = {'data': {'4': [1, 2, 3]}}
+    mock_requests_get.return_value.status_code = 200
+    lookup_mocked.side_effect = lookup_mock
+
+    assert lib.get_descendant(MOCK_TOKEN, MOCK_HOST, 'items', 4) == [
+        {'id': 1, 'name': 'item 1', 'contains': [], 'belongsTo': [3], 'definition': 'def1'},
+        {'id': 2, 'name': 'item 2', 'contains': [], 'belongsTo': [3], 'definition': 'def2'},
+        {'id': 3, 'name': 'parent', 'contains': [1, 2], 'belongsTo': [4], 'definition': 'def3'}
+    ]
+    
+    assert lib.get_descendant(MOCK_TOKEN, MOCK_HOST, 'metrics', 4, include_details=True) == [
+        {'id': 1, 'name': 'metric 1', 'contains': [], 'belongsTo': [3], 'definition': 'def1'},
+        {'id': 2, 'name': 'metric 2', 'contains': [], 'belongsTo': [3], 'definition': 'def2'},
+        {'id': 3, 'name': 'parent', 'contains': [1, 2], 'belongsTo': [4], 'definition': 'def3'}
+    ]
+
+    assert lib.get_descendant(MOCK_TOKEN, MOCK_HOST, 'items', 4, include_details=False) == [
+        {'id': 1}, {'id': 2}, {'id': 3}
+    ]
+
+    mock_requests_get.return_value.json.return_value = {'data': {'4': [3]}}
+    assert lib.get_descendant(MOCK_TOKEN, MOCK_HOST, 'items', 4, distance=1) == [
+        {'id': 3, 'name': 'parent', 'contains': [1, 2], 'belongsTo': [4], 'definition': 'def3'}
+    ]
+
+    
 
 @mock.patch('groclient.lib.lookup')
 @mock.patch('requests.get')
