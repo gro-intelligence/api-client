@@ -15,6 +15,7 @@ Install the latest package from `PyPI <https://pypi.org/>`:
   pip install groclient
 
 Notes:
+
 * Even if you are using `Anaconda <https://www.anaconda.com/>`_, the API Client install should still be performed using pip and *not* `conda <https://docs.conda.io/en/latest/>`_.
 * If you're unable to access PyPI, you can install the latest code from Github: :code:`pip install git+https://github.com/gro-intelligence/api-client.git`
 
