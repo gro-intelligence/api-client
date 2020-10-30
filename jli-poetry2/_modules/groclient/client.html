@@ -903,6 +903,61 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">lib</span><span class="o">.</span><span class="n">get_geojson</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_host</span><span class="p">,</span> <span class="n">region_id</span><span class="p">,</span> <span class="n">zoom_level</span><span class="p">)</span></div>
 
+    <span class="k">def</span> <span class="nf">get_descendant</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">entity_type</span><span class="p">,</span>
+        <span class="n">entity_id</span><span class="p">,</span>
+        <span class="n">distance</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">include_details</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Given an item, metric or region, returns all its descendants i.e. </span>
+<span class="sd">        entities that are &quot;contained&quot; in the given entity</span>
+
+<span class="sd">        Similar to :meth:~.get_descendant_regions, but also works on items and metrics. This method has </span>
+<span class="sd">        a distance parameter (which returns all nested child entities) instead of a descendant_level </span>
+<span class="sd">        parameter (which only returns child entities at a given depth/level).</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        entity_type : { &#39;metrics&#39;, &#39;items&#39;, &#39;regions&#39; }</span>
+<span class="sd">        entity_id : integer</span>
+<span class="sd">        distance: integer, optional</span>
+<span class="sd">            Return all entity contained to entity_id at maximum distance.</span>
+<span class="sd">            If not provided, get all descendants.</span>
+<span class="sd">        include_details : boolean, optional</span>
+<span class="sd">            True by default. Will perform a lookup() on each descendant  to find name,</span>
+<span class="sd">            definition, etc. If this option is set to False, only ids of descendant</span>
+<span class="sd">            entities will be returned, which makes execution significantly faster.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        list of dicts</span>
+
+<span class="sd">            Example::</span>
+
+<span class="sd">                [{</span>
+<span class="sd">                    &#39;id&#39;: 134,</span>
+<span class="sd">                    &#39;name&#39;: &#39;Cattle hides, wet-salted&#39;,</span>
+<span class="sd">                    &#39;definition&#39;: &#39;Hides and skins of domesticated cattle-animals ...&#39;,</span>
+<span class="sd">                } , {</span>
+<span class="sd">                    &#39;id&#39;: 382,</span>
+<span class="sd">                    &#39;name&#39;: &#39;Calf skins, wet-salted&#39;,</span>
+<span class="sd">                    &#39;definition&#39;: &#39;Wet-salted hides and skins of calves-animals of ...&#39;</span>
+<span class="sd">                }, ...]</span>
+
+<span class="sd">            See output of :meth:`~.lookup`</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">lib</span><span class="o">.</span><span class="n">get_descendant</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">api_host</span><span class="p">,</span>
+            <span class="n">entity_type</span><span class="p">,</span>
+            <span class="n">entity_id</span><span class="p">,</span>
+            <span class="n">distance</span><span class="p">,</span>
+            <span class="n">include_details</span><span class="p">,</span>
+        <span class="p">)</span>
+
+
 <div class="viewcode-block" id="GroClient.get_descendant_regions"><a class="viewcode-back" href="../../api.html#groclient.GroClient.get_descendant_regions">[docs]</a>    <span class="k">def</span> <span class="nf">get_descendant_regions</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">region_id</span><span class="p">,</span>
@@ -1665,12 +1720,10 @@
             <dd><a href="../../../CLEWS-15676-add-names-to-index/index.html">CLEWS-15676-add-names-to-index</a></dd>
             <dd><a href="../../../CLEWS-15762/index.html">CLEWS-15762</a></dd>
             <dd><a href="../../../CLEWS-15764/index.html">CLEWS-15764</a></dd>
-            <dd><a href="../../../CLEWS-15766/index.html">CLEWS-15766</a></dd>
             <dd><a href="../../../CLEWS-16751/index.html">CLEWS-16751</a></dd>
             <dd><a href="../../../CLEWS-16955-units/index.html">CLEWS-16955-units</a></dd>
             <dd><a href="../../../CLEWS-17015/index.html">CLEWS-17015</a></dd>
             <dd><a href="../../../CLEWS-19063/index.html">CLEWS-19063</a></dd>
-            <dd><a href="../../../CLEWS-19840/index.html">CLEWS-19840</a></dd>
             <dd><a href="../../../CLEWS-19840-3/index.html">CLEWS-19840-3</a></dd>
             <dd><a href="../../../CLEWS-22288/index.html">CLEWS-22288</a></dd>
             <dd><a href="../../../CLEWS-23237_revision_get_df/index.html">CLEWS-23237_revision_get_df</a></dd>
@@ -1685,20 +1738,15 @@
             <dd><a href="../../../CLEWS-29688/index.html">CLEWS-29688</a></dd>
             <dd><a href="../../../analogous_years_modifications/index.html">analogous_years_modifications</a></dd>
             <dd><a href="../../../black/index.html">black</a></dd>
-            <dd><a href="../../../brazil_soybeans_update/index.html">brazil_soybeans_update</a></dd>
             <dd><a href="../../../development/index.html">development</a></dd>
             <dd><a href="../../../docs-content-changes/index.html">docs-content-changes</a></dd>
             <dd><a href="../../../docs-latest-tag/index.html">docs-latest-tag</a></dd>
             <dd><a href="../../../drought/index.html">drought</a></dd>
-            <dd><a href="../../../eliaschneider-patch-1/index.html">eliaschneider-patch-1</a></dd>
-            <dd><a href="../../../fix-docs-links/index.html">fix-docs-links</a></dd>
             <dd><a href="../../../get_region_id_given_lat_lon/index.html">get_region_id_given_lat_lon</a></dd>
             <dd><a href="../../../jli-deprecation-25136/index.html">jli-deprecation-25136</a></dd>
             <dd><a href="client.html">jli-poetry2</a></dd>
             <dd><a href="../../../lib-test-refactor/index.html">lib-test-refactor</a></dd>
             <dd><a href="../../../nemo/index.html">nemo</a></dd>
-            <dd><a href="../../../nemozen-path-1/index.html">nemozen-path-1</a></dd>
-            <dd><a href="../../../prevented_plant/index.html">prevented_plant</a></dd>
             <dd><a href="../../../revert-210-CLEWS-25139-py2/index.html">revert-210-CLEWS-25139-py2</a></dd>
             <dd><a href="../../../simplify-quickstart/index.html">simplify-quickstart</a></dd>
             <dd><a href="../../../simulate_reporting_date/index.html">simulate_reporting_date</a></dd>
