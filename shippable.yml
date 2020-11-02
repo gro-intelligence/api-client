@@ -51,15 +51,20 @@ build:
       git remote set-url origin git@github.com:$REPO_FULL_NAME.git &&
       ssh-agent bash -c 'ssh-add /tmp/ssh/00_sub; poetry run sphinx-versioning push -r development docs gh-pages .'
     # Publish new development updates to TestPyPI.
+    # TODO(jli): for some reason, shippable builds are failing due to the PyPI
+    # tokens being undefined. commenting this for now, will attempt to add it
+    # back later.
     - >
       if [ "$BRANCH" == "development" ]; then
         poetry config repositories.testpypi https://test.pypi.org/legacy/ &&
-        poetry publish -u __token__ -p $TESTPYPI_TOKEN -r testpypi
+        echo "TODO: publish to TestPyPI"
+        # poetry publish -u __token__ -p $TESTPYPI_TOKEN -r testpypi
       fi
     # Publish new releases to PyPI.
     # Note: requires configuring Shippable for release webhooks:
     # http://docs.shippable.com/ci/trigger-job/#configuring-build-triggers
     - >
       if [ $IS_RELEASE == "true" ]; then
-        poetry publish -u __token__ -p $PYPI_TOKEN
+        echo "TODO: publish to PyPI"
+        # poetry publish -u __token__ -p $PYPI_TOKEN
       fi
