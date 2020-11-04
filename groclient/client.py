@@ -1445,12 +1445,12 @@ class GroClient(object):
         to_convert_factor = self.lookup("units", target_unit_id).get("baseConvFactor")
         if not to_convert_factor.get("factor"):
             raise Exception("unit_id {} is not convertible".format(target_unit_id))
+
         if point.get("value") is not None:
-            value_in_base_unit = (
-                point["value"] * from_convert_factor.get("factor")
-            ) + from_convert_factor.get("offset", 0)
-            point["value"] = float(
-                value_in_base_unit - to_convert_factor.get("offset", 0)
-            ) / to_convert_factor.get("factor")
+            point["value"] = lib.compute_value(point["value"], from_convert_factor, to_convert_factor)
+        if point.get("metadata") is not None:
+            for attr in ["conf_interval", "confInterval"]:
+                if point["metadata"].get(attr) is not None:
+                    point["metadata"][attr] = lib.compute_value(point["metadata"][attr], from_convert_factor, to_convert_factor)
         point["unit_id"] = target_unit_id
         return point
