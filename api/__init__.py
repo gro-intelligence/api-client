@@ -14,5 +14,5 @@ logger.warning('''
     And replace any other imports from `api.client.*` with imports from
     `groclient.*` instead.
 
-    Please reach out to dev@gro-intelligence.com if you need any help!
+    Please reach out to api-support@gro-intelligence.com if you need any help!
 ''')
