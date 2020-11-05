@@ -150,7 +150,7 @@ def get_version_info():
     return _VERSIONS.copy()
 
 
-def compute_value(value, from_convert_factor, to_convert_factor):
+def convert_value(value, from_convert_factor, to_convert_factor):
     value_in_base_unit = (
         value * from_convert_factor.get("factor")
     ) + from_convert_factor.get("offset", 0)
