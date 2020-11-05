@@ -1448,9 +1448,7 @@ class GroClient(object):
 
         if point.get("value") is not None:
             point["value"] = lib.convert_value(point["value"], from_convert_factor, to_convert_factor)
-        if point.get("metadata") is not None:
-            for attr in ["conf_interval", "confInterval"]:
-                if point["metadata"].get(attr) is not None:
-                    point["metadata"][attr] = lib.convert_value(point["metadata"][attr], from_convert_factor, to_convert_factor)
+        if point.get("metadata") is not None and point["metadata"].get("conf_interval") is not None:
+            point["metadata"]["conf_interval"] = lib.convert_value(point["metadata"]["conf_interval"], from_convert_factor, to_convert_factor)
         point["unit_id"] = target_unit_id
         return point
