@@ -150,6 +150,16 @@ def get_version_info():
     return _VERSIONS.copy()
 
 
+def convert_value(value, from_convert_factor, to_convert_factor):
+    value_in_base_unit = (
+        value * from_convert_factor.get("factor")
+    ) + from_convert_factor.get("offset", 0)
+
+    return float(
+        value_in_base_unit - to_convert_factor.get("offset", 0)
+    ) / to_convert_factor.get("factor")
+
+
 def get_data(url, headers, params=None, logger=None):
     """General 'make api request' function.
 
