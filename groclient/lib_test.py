@@ -220,7 +220,7 @@ def test_list_of_series_to_single_series():
          'end_date': '2003-12-31',
          'value': 123,
          'unit_id': 15,
-         'metadata': {'confInterval': 2},
+         'metadata': {'conf_interval': 2},
          'input_unit_id': 15,
          'input_unit_scale': 1,
          'reporting_date': None,
