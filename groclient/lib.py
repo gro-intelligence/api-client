@@ -150,6 +150,16 @@ def get_version_info():
     return _VERSIONS.copy()
 
 
+def convert_value(value, from_convert_factor, to_convert_factor):
+    value_in_base_unit = (
+        value * from_convert_factor.get("factor")
+    ) + from_convert_factor.get("offset", 0)
+
+    return float(
+        value_in_base_unit - to_convert_factor.get("offset", 0)
+    ) / to_convert_factor.get("factor")
+
+
 def get_data(url, headers, params=None, logger=None):
     """General 'make api request' function.
 
@@ -493,6 +503,9 @@ def list_of_series_to_single_series(series_list, add_belongs_to=False, include_h
                 'frequency_id': series['series'].get('frequencyId', None)
                 # 'source_id': series['series'].get('sourceId', None), TODO: add source to output
             }
+            if formatted_point['metadata'].get('confInterval') is not None:
+                formatted_point['metadata']['conf_interval'] = formatted_point['metadata'].pop('confInterval')
+
             if add_belongs_to:
                 # belongs_to is consistent with the series the user requested. So if an
                 # expansion happened on the server side, the user can reconstruct what

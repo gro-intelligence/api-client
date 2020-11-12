@@ -479,6 +479,14 @@ class GroClientTests(TestCase):
             self.client.convert_unit({"value": 1, "unit_id": 37}, 36),
             {"value": -17.5, "unit_id": 36},
         )
+        self.assertEqual(
+            self.client.convert_unit({"value": 20, "unit_id": 10, "metadata": {"conf_interval": 2}}, 14),
+            {"value": 0.02, "metadata": {"conf_interval": 0.002}, "unit_id": 14},
+        )
+        self.assertEqual(
+            self.client.convert_unit({"value": 20, "unit_id": 10, "metadata": {}}, 14),
+            {"value": 0.02, "metadata": {}, "unit_id": 14},
+        )
 
         self.assertEqual(self.client.convert_unit({}, 36), {})
 
