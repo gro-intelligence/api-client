@@ -13,10 +13,12 @@ Client library for accessing Gro Intelligence's agricultural data platform.
 ## Install Gro API client packages
 
 ```sh
-pip install git+https://github.com/gro-intelligence/api-client.git
+pip install groclient
 ```
 
 Note that even if you are using [Anaconda](https://www.anaconda.com/), the API Client install should still be performed using pip and not [conda](https://docs.conda.io/en/latest/).
+
+If you're unable to access PyPI, you can install the latest code from Github: `pip install git+https://github.com/gro-intelligence/api-client.git`
 
 ## Gro API authentication token
 
