@@ -205,21 +205,33 @@
 <h1>Documentation<a class="headerlink" href="#documentation" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="add-modify-content">
 <h2>Add/Modify Content<a class="headerlink" href="#add-modify-content" title="Permalink to this headline">¶</a></h2>
-<p>Create a *.md file or *.rst file in this /docs directory, and they will be added as new pages automatically.</p>
-<p>The API reference page, <a class="reference external" href="api.rst">api.rst</a> uses <a class="reference external" href="http://www.sphinx-doc.org/en/master/usage/extensions/autodoc.html">sphinx.ext.autodoc</a> to automatically pull docstrings from <code class="docutils literal"><span class="pre">GroClient</span></code> and <code class="docutils literal"><span class="pre">CropModel</span></code>, so any function docstrings added or modified in those modules will be updated in the documentation. All other pages are manually written.</p>
+<p>Create a *.md file or *.rst file in this /docs directory, and they will be
+added as new pages automatically.</p>
+<p>The API reference page, <a class="reference external" href="api.rst">api.rst</a> uses
+<a class="reference external" href="http://www.sphinx-doc.org/en/master/usage/extensions/autodoc.html">sphinx.ext.autodoc</a>
+to automatically pull docstrings from <code class="docutils literal"><span class="pre">GroClient</span></code> and <code class="docutils literal"><span class="pre">CropModel</span></code>, so any
+function docstrings added or modified in those modules will be updated in the
+documentation. All other pages are manually written.</p>
 </div>
 <div class="section" id="build-docs-locally">
 <h2>Build docs locally<a class="headerlink" href="#build-docs-locally" title="Permalink to this headline">¶</a></h2>
-<p>From the project root (<code class="docutils literal"><span class="pre">api-client/</span></code>) run the below command:</p>
-<div class="highlight-sh"><div class="highlight"><pre><span></span>sphinx-versioning build docs docs/_build/html
-</pre></div>
-</div>
-<p>It should generate html in <code class="docutils literal"><span class="pre">api-client/docs/_build/html</span></code> that you can open up and view in a web browser.</p>
+<ul class="simple">
+<li>Install Poetry (see <code class="docutils literal"><span class="pre">CONTRIBUTING.md</span></code>).</li>
+<li><code class="docutils literal"><span class="pre">poetry</span> <span class="pre">install</span> <span class="pre">-E</span> <span class="pre">docs</span></code> to install extra dependencies.</li>
+<li><code class="docutils literal"><span class="pre">poetry</span> <span class="pre">run</span> <span class="pre">sphinx-versioning</span> <span class="pre">build</span> <span class="pre">docs</span> <span class="pre">docs/_build/html</span></code> to build the docs.</li>
+</ul>
+<p>This should generate html output in <code class="docutils literal"><span class="pre">api-client/docs/_build/html</span></code> that you can
+open up and view in a web browser.</p>
 </div>
 <div class="section" id="automatic-builds">
 <h2>Automatic builds<a class="headerlink" href="#automatic-builds" title="Permalink to this headline">¶</a></h2>
-<p>Every time continuous integration runs it should be re-building the documentation for any currently-open branches and pushing the result to the <code class="docutils literal"><span class="pre">gh-pages</span></code> branch. If you edit any documentation pages or docstrings, it should be a part of the Pull Request review process that you navigate to your feature branch&#8216;s built documentation and verify that the changes are as intended.</p>
-<p>If anything in continuous integration fails, the documentation building step is skipped.</p>
+<p>Every time continuous integration runs it should be re-building the
+documentation for any currently-open branches and pushing the result to the
+<code class="docutils literal"><span class="pre">gh-pages</span></code> branch. If you edit any documentation pages or docstrings, it should
+be a part of the Pull Request review process that you navigate to your feature
+branch&#8216;s built documentation and verify that the changes are as intended.</p>
+<p>If anything in continuous integration fails, the documentation building step is
+skipped.</p>
 </div>
 </div>
 
@@ -299,7 +311,6 @@
             <dd><a href="development/README.html">development</a></dd>
             <dd><a href="docs-latest-tag/README.html">docs-latest-tag</a></dd>
             <dd><a href="drought/README.html">drought</a></dd>
-            <dd><a href="jli-poetry2/README.html">jli-poetry2</a></dd>
             <dd><a href="lib-test-refactor/README.html">lib-test-refactor</a></dd>
             <dd><a href="nemo/README.html">nemo</a></dd>
             <dd><a href="simplify-quickstart/README.html">simplify-quickstart</a></dd>
