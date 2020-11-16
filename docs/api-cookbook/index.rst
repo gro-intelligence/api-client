@@ -11,5 +11,5 @@ The recipes have been organized into key themes of the data workflow.
 .. toctree::
     :caption: Table of Contents
     :maxdepth: 1
-
-    Discover <data-discovery-recipes>
+    
+    Discover <data-discovery-recipes/index>
