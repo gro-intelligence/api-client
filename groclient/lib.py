@@ -23,6 +23,20 @@ except ImportError:
     from backports.functools_lru_cache import lru_cache as memoize
 
 
+# Interpreter and API client library version information.
+#
+# This is global so we only call get_distribution() once at module load time.
+# This is a workaround for a curious bug: in specific situations, calling
+# get_distribution() while tornado's event loop is running seems to result in
+# GroClient's __del__ method running while the object is still in scope,
+# resulting in `fetch() called on closed AsyncHTTPClient` errors upon
+# subsequent uses of _async_http_client.
+_VERSIONS = { 'python-version': platform.python_version() }
+try:
+    _VERSIONS['api-client-version'] = get_distribution('groclient').version
+except DistributionNotFound:
+    pass
+
 class APIError(Exception):
     def __init__(self, response, retry_count, url, params):
         self.response = response
@@ -133,16 +147,17 @@ def redirect(old_params, migration):
 
 
 def get_version_info():
-    versions = dict()
+    return _VERSIONS.copy()
 
-    # retrieve python version and api client version
-    versions['python-version'] = platform.python_version()
-    try:
-        versions['api-client-version'] = get_distribution('groclient').version
-    except DistributionNotFound:
-        # package is not installed
-        pass
-    return versions
+
+def convert_value(value, from_convert_factor, to_convert_factor):
+    value_in_base_unit = (
+        value * from_convert_factor.get("factor")
+    ) + from_convert_factor.get("offset", 0)
+
+    return float(
+        value_in_base_unit - to_convert_factor.get("offset", 0)
+    ) / to_convert_factor.get("factor")
 
 
 def get_data(url, headers, params=None, logger=None):
@@ -406,7 +421,7 @@ def get_source_ranking(access_token, api_host, series):
 def rank_series_by_source(access_token, api_host, selections_list):
     series_map = OrderedDict()
     for selection in selections_list:
-        series_key = '.'.join([str(selection.get(type_id))
+        series_key = '.'.join([json.dumps(selection.get(type_id))
                                for type_id in DATA_SERIES_UNIQUE_TYPES_ID
                                if type_id != 'source_id'])
         if series_key not in series_map:
@@ -416,17 +431,19 @@ def rank_series_by_source(access_token, api_host, selections_list):
         series_map[series_key][selection.get('source_id')] = selection
 
     for series_key, series_by_source_id in series_map.items():
+        series_without_source = {
+            type_id: json.loads(series_key.split('.')[idx])
+            for idx, type_id in enumerate(DATA_SERIES_UNIQUE_TYPES_ID)
+            if type_id != 'source_id' and series_key.split('.')[idx] != 'null'
+        }
         try:
-            series_without_source = {
-                type_id: int(series_key.split('.')[idx])
-                for idx, type_id in enumerate(DATA_SERIES_UNIQUE_TYPES_ID)
-                if type_id != 'source_id' and series_key.split('.')[idx] != 'None'
-            }
             source_ids = get_source_ranking(access_token,
                                             api_host,
                                             series_without_source)
+        # Catch "no content" response from get_source_ranking()
         except ValueError:
             continue  # empty response
+
         for source_id in source_ids:
             if source_id in series_by_source_id:
                 yield series_by_source_id[source_id]
@@ -486,6 +503,9 @@ def list_of_series_to_single_series(series_list, add_belongs_to=False, include_h
                 'frequency_id': series['series'].get('frequencyId', None)
                 # 'source_id': series['series'].get('sourceId', None), TODO: add source to output
             }
+            if formatted_point['metadata'].get('confInterval') is not None:
+                formatted_point['metadata']['conf_interval'] = formatted_point['metadata'].pop('confInterval')
+
             if add_belongs_to:
                 # belongs_to is consistent with the series the user requested. So if an
                 # expansion happened on the server side, the user can reconstruct what
@@ -576,6 +596,26 @@ def get_geojsons(access_token, api_host, region_id, descendant_level, zoom_level
 def get_geojson(access_token, api_host, region_id, zoom_level):
     for region in get_geojsons(access_token, api_host, region_id, None, zoom_level):
         return json.loads(region['geojson'])
+
+
+def get_descendant(access_token, api_host, entity_type, entity_id, distance=None,
+                   include_details=True):
+    url = '/'.join(['https:', '', api_host, 'v2/{}/contains'.format(entity_type)])
+    headers = {'authorization': 'Bearer ' + access_token}
+    params = {'ids': [entity_id]}
+    if distance:
+        params['distance'] = distance
+    else:
+        params['distance'] = -1
+
+    resp = get_data(url, headers, params)
+    descendant_entity_ids = resp.json()['data'][str(entity_id)]
+
+    if include_details:
+        entity_details = lookup(access_token, api_host, entity_type, descendant_entity_ids)
+        return [entity_details[str(child_entity_id)] for child_entity_id in descendant_entity_ids]
+
+    return [{'id': descendant_entity_id} for descendant_entity_id in descendant_entity_ids]
 
 
 def get_descendant_regions(access_token, api_host, region_id,

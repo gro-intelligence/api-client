@@ -68,12 +68,12 @@ class GroClient(object):
             self._async_http_client = AsyncHTTPClient()
             self._ioloop = IOLoop()
         except Exception as e:
-            self._logger.warn(
+            self._logger.warning(
                 "Unable to initialize an event loop. Async methods disabled."
             )
             self._async_http_client = None
             self._ioloop = None
-        
+
     def __del__(self):
         self._async_http_client.close()
         self._ioloop.stop()
@@ -698,6 +698,61 @@ class GroClient(object):
         """
         return lib.get_geojson(self.access_token, self.api_host, region_id, zoom_level)
 
+    def get_descendant(
+        self,
+        entity_type,
+        entity_id,
+        distance=None,
+        include_details=True,
+    ):
+        """Given an item, metric or region, returns all its descendants i.e. 
+        entities that are "contained" in the given entity
+
+        Similar to :meth:~.get_descendant_regions, but also works on items and metrics. This method has 
+        a distance parameter (which returns all nested child entities) instead of a descendant_level 
+        parameter (which only returns child entities at a given depth/level).
+
+        Parameters
+        ----------
+        entity_type : { 'metrics', 'items', 'regions' }
+        entity_id : integer
+        distance: integer, optional
+            Return all entity contained to entity_id at maximum distance.
+            If not provided, get all descendants.
+        include_details : boolean, optional
+            True by default. Will perform a lookup() on each descendant  to find name,
+            definition, etc. If this option is set to False, only ids of descendant
+            entities will be returned, which makes execution significantly faster.
+
+        Returns
+        -------
+        list of dicts
+
+            Example::
+
+                [{
+                    'id': 134,
+                    'name': 'Cattle hides, wet-salted',
+                    'definition': 'Hides and skins of domesticated cattle-animals ...',
+                } , {
+                    'id': 382,
+                    'name': 'Calf skins, wet-salted',
+                    'definition': 'Wet-salted hides and skins of calves-animals of ...'
+                }, ...]
+
+            See output of :meth:`~.lookup`
+
+        """
+        return lib.get_descendant(
+            self.access_token,
+            self.api_host,
+            entity_type,
+            entity_id,
+            distance,
+            include_details,
+        )
+
+
     def get_descendant_regions(
         self,
         region_id,
@@ -1080,7 +1135,7 @@ class GroClient(object):
         try:
             return self.get_df(index_by_series=True).loc[[tuple(entity_ids)], :]
         except KeyError:
-            self._logger.warn("GDH returned no data")
+            self._logger.warning("GDH returned no data")
             return pandas.DataFrame()
 
     def get_data_series_list(self):
@@ -1390,12 +1445,10 @@ class GroClient(object):
         to_convert_factor = self.lookup("units", target_unit_id).get("baseConvFactor")
         if not to_convert_factor.get("factor"):
             raise Exception("unit_id {} is not convertible".format(target_unit_id))
+
         if point.get("value") is not None:
-            value_in_base_unit = (
-                point["value"] * from_convert_factor.get("factor")
-            ) + from_convert_factor.get("offset", 0)
-            point["value"] = float(
-                value_in_base_unit - to_convert_factor.get("offset", 0)
-            ) / to_convert_factor.get("factor")
+            point["value"] = lib.convert_value(point["value"], from_convert_factor, to_convert_factor)
+        if point.get("metadata") is not None and point["metadata"].get("conf_interval") is not None:
+            point["metadata"]["conf_interval"] = lib.convert_value(point["metadata"]["conf_interval"], from_convert_factor, to_convert_factor)
         point["unit_id"] = target_unit_id
         return point

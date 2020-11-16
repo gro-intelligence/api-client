@@ -51,11 +51,10 @@ Get data series
 ===============
 
 Instead of searching for all the individual entity IDs required to create a data series, the :meth:`groclient.GroClient.get_data_series` method will return a list of all the data series available for the filters you have supplied. For example, if you are interested in Russian Oats you could use the following code to find out all the available data series that have "Oats" (item_id = 327) as the item and "Russia" (region_id = 1168) as the region:
-To look up all descendants of region 1029 (Brazil) that are of level 4 (provinces):
+
 ::
 
-  from groclient.lib import REGION_LEVELS
-  provinces_of_brazil = client.get_descendant_regions(1029, REGION_LEVELS['province'])
+  client.get_data_series(item_id='327',region_id='1168')
 
 
 Lookup contains
