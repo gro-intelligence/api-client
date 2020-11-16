@@ -31,6 +31,13 @@ With the Gro API Client, you have the power to:
     Understanding Data Responses <understanding-data-responses>
 
 .. toctree::
+    :caption: API Cookbook
+    :maxdepth: 1
+
+    Introduction <api-cookbook/introduction>
+    Data Discovery Recipes <api-cookbook/data-discovery-recipes>
+
+.. toctree::
     :caption: Gro Data: Key Concepts
     :maxdepth: 1
 
