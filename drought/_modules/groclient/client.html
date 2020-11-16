@@ -273,12 +273,12 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_async_http_client</span> <span class="o">=</span> <span class="n">AsyncHTTPClient</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_ioloop</span> <span class="o">=</span> <span class="n">IOLoop</span><span class="p">()</span>
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
                 <span class="s2">&quot;Unable to initialize an event loop. Async methods disabled.&quot;</span>
             <span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_async_http_client</span> <span class="o">=</span> <span class="kc">None</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_ioloop</span> <span class="o">=</span> <span class="kc">None</span>
-        
+
     <span class="k">def</span> <span class="fm">__del__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_async_http_client</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_ioloop</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
@@ -903,6 +903,61 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">lib</span><span class="o">.</span><span class="n">get_geojson</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_host</span><span class="p">,</span> <span class="n">region_id</span><span class="p">,</span> <span class="n">zoom_level</span><span class="p">)</span></div>
 
+    <span class="k">def</span> <span class="nf">get_descendant</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">entity_type</span><span class="p">,</span>
+        <span class="n">entity_id</span><span class="p">,</span>
+        <span class="n">distance</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">include_details</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Given an item, metric or region, returns all its descendants i.e. </span>
+<span class="sd">        entities that are &quot;contained&quot; in the given entity</span>
+
+<span class="sd">        Similar to :meth:~.get_descendant_regions, but also works on items and metrics. This method has </span>
+<span class="sd">        a distance parameter (which returns all nested child entities) instead of a descendant_level </span>
+<span class="sd">        parameter (which only returns child entities at a given depth/level).</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        entity_type : { &#39;metrics&#39;, &#39;items&#39;, &#39;regions&#39; }</span>
+<span class="sd">        entity_id : integer</span>
+<span class="sd">        distance: integer, optional</span>
+<span class="sd">            Return all entity contained to entity_id at maximum distance.</span>
+<span class="sd">            If not provided, get all descendants.</span>
+<span class="sd">        include_details : boolean, optional</span>
+<span class="sd">            True by default. Will perform a lookup() on each descendant  to find name,</span>
+<span class="sd">            definition, etc. If this option is set to False, only ids of descendant</span>
+<span class="sd">            entities will be returned, which makes execution significantly faster.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        list of dicts</span>
+
+<span class="sd">            Example::</span>
+
+<span class="sd">                [{</span>
+<span class="sd">                    &#39;id&#39;: 134,</span>
+<span class="sd">                    &#39;name&#39;: &#39;Cattle hides, wet-salted&#39;,</span>
+<span class="sd">                    &#39;definition&#39;: &#39;Hides and skins of domesticated cattle-animals ...&#39;,</span>
+<span class="sd">                } , {</span>
+<span class="sd">                    &#39;id&#39;: 382,</span>
+<span class="sd">                    &#39;name&#39;: &#39;Calf skins, wet-salted&#39;,</span>
+<span class="sd">                    &#39;definition&#39;: &#39;Wet-salted hides and skins of calves-animals of ...&#39;</span>
+<span class="sd">                }, ...]</span>
+
+<span class="sd">            See output of :meth:`~.lookup`</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">lib</span><span class="o">.</span><span class="n">get_descendant</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">api_host</span><span class="p">,</span>
+            <span class="n">entity_type</span><span class="p">,</span>
+            <span class="n">entity_id</span><span class="p">,</span>
+            <span class="n">distance</span><span class="p">,</span>
+            <span class="n">include_details</span><span class="p">,</span>
+        <span class="p">)</span>
+
+
 <div class="viewcode-block" id="GroClient.get_descendant_regions"><a class="viewcode-back" href="../../api.html#groclient.GroClient.get_descendant_regions">[docs]</a>    <span class="k">def</span> <span class="nf">get_descendant_regions</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">region_id</span><span class="p">,</span>
@@ -1285,7 +1340,7 @@
         <span class="k">try</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_df</span><span class="p">(</span><span class="n">index_by_series</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">loc</span><span class="p">[[</span><span class="nb">tuple</span><span class="p">(</span><span class="n">entity_ids</span><span class="p">)],</span> <span class="p">:]</span>
         <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;GDH returned no data&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;GDH returned no data&quot;</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
 
 <div class="viewcode-block" id="GroClient.get_data_series_list"><a class="viewcode-back" href="../../api.html#groclient.GroClient.get_data_series_list">[docs]</a>    <span class="k">def</span> <span class="nf">get_data_series_list</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -1595,13 +1650,11 @@
         <span class="n">to_convert_factor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lookup</span><span class="p">(</span><span class="s2">&quot;units&quot;</span><span class="p">,</span> <span class="n">target_unit_id</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;baseConvFactor&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">to_convert_factor</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;factor&quot;</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;unit_id </span><span class="si">{}</span><span class="s2"> is not convertible&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">target_unit_id</span><span class="p">))</span>
+
         <span class="k">if</span> <span class="n">point</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;value&quot;</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">value_in_base_unit</span> <span class="o">=</span> <span class="p">(</span>
-                <span class="n">point</span><span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="n">from_convert_factor</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;factor&quot;</span><span class="p">)</span>
-            <span class="p">)</span> <span class="o">+</span> <span class="n">from_convert_factor</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;offset&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
-            <span class="n">point</span><span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span>
-                <span class="n">value_in_base_unit</span> <span class="o">-</span> <span class="n">to_convert_factor</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;offset&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
-            <span class="p">)</span> <span class="o">/</span> <span class="n">to_convert_factor</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;factor&quot;</span><span class="p">)</span>
+            <span class="n">point</span><span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">lib</span><span class="o">.</span><span class="n">convert_value</span><span class="p">(</span><span class="n">point</span><span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">],</span> <span class="n">from_convert_factor</span><span class="p">,</span> <span class="n">to_convert_factor</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">point</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;metadata&quot;</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">point</span><span class="p">[</span><span class="s2">&quot;metadata&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;conf_interval&quot;</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">point</span><span class="p">[</span><span class="s2">&quot;metadata&quot;</span><span class="p">][</span><span class="s2">&quot;conf_interval&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">lib</span><span class="o">.</span><span class="n">convert_value</span><span class="p">(</span><span class="n">point</span><span class="p">[</span><span class="s2">&quot;metadata&quot;</span><span class="p">][</span><span class="s2">&quot;conf_interval&quot;</span><span class="p">],</span> <span class="n">from_convert_factor</span><span class="p">,</span> <span class="n">to_convert_factor</span><span class="p">)</span>
         <span class="n">point</span><span class="p">[</span><span class="s2">&quot;unit_id&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">target_unit_id</span>
         <span class="k">return</span> <span class="n">point</span>
 </pre></div>
