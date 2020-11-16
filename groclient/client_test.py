@@ -87,6 +87,26 @@ def mock_get_geojsons(access_token, api_host, region_id, descendant_level, zoom_
     ]
 
 
+def mock_get_descendant(
+    access_token,
+    api_host,
+    entity_type,
+    entity_id,
+    distance,
+    include_details,
+):
+
+    childs = [
+            child
+            for child in mock_entities[entity_type].values()
+            if 119 in child["belongsTo"]
+        ]
+    if include_details:
+        return childs
+    else:
+        return [{"id": child["id"]} for child in childs]
+
+
 def mock_get_descendant_regions(
     access_token,
     api_host,
@@ -193,6 +213,7 @@ def mock_get_data_points(access_token, api_host, **selections):
 @patch("groclient.lib.get_geo_centre", MagicMock(side_effect=mock_get_geo_centre))
 @patch("groclient.lib.get_geojsons", MagicMock(side_effect=mock_get_geojsons))
 @patch("groclient.lib.get_geojson", MagicMock(side_effect=mock_get_geojson))
+@patch("groclient.lib.get_descendant", MagicMock(side_effect=mock_get_descendant))
 @patch(
     "groclient.lib.get_descendant_regions",
     MagicMock(side_effect=mock_get_descendant_regions),
@@ -278,6 +299,13 @@ class GroClientTests(TestCase):
         self.assertTrue("type" in geojson["geometries"][0])
         self.assertTrue("coordinates" in geojson["geometries"][0])
         self.assertTrue(geojson["geometries"][0]['coordinates'][0][0][0] == [-38, -4])
+
+    def test_get_descendant(self):
+        self.assertTrue("name" in self.client.get_descendant('metrics', 119)[0])
+        self.assertTrue(
+            "name"
+            not in self.client.get_descendant('metrics', 119, include_details=False)[0]
+        )
 
     def test_get_descendant_regions(self):
         self.assertTrue("name" in self.client.get_descendant_regions(1215)[0])
@@ -450,6 +478,14 @@ class GroClientTests(TestCase):
         self.assertEqual(
             self.client.convert_unit({"value": 1, "unit_id": 37}, 36),
             {"value": -17.5, "unit_id": 36},
+        )
+        self.assertEqual(
+            self.client.convert_unit({"value": 20, "unit_id": 10, "metadata": {"conf_interval": 2}}, 14),
+            {"value": 0.02, "metadata": {"conf_interval": 0.002}, "unit_id": 14},
+        )
+        self.assertEqual(
+            self.client.convert_unit({"value": 20, "unit_id": 10, "metadata": {}}, 14),
+            {"value": 0.02, "metadata": {}, "unit_id": 14},
         )
 
         self.assertEqual(self.client.convert_unit({}, 36), {})
