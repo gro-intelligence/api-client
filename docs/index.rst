@@ -34,7 +34,7 @@ With the Gro API Client, you have the power to:
     :caption: API Cookbook
     :maxdepth: 1
 
-    Introduction <api-cookbook/introduction>
+    Introduction <api-cookbook/index>
     Data Discovery Recipes <api-cookbook/data-discovery-recipes>
 
 .. toctree::
