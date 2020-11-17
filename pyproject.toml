@@ -19,7 +19,7 @@ packages = [
 gro_client = 'groclient.__main__:main'
 
 [tool.poetry.dependencies]
-python = "^3.6"
+python = "^3.6.1"
 numpy = "*"
 requests = "*"
 pandas = "*"
@@ -29,7 +29,7 @@ sphinx = { version = "1.5.6", optional = true }
 recommonmark = { version = "*", optional = true }
 sphinx_rtd_theme = { version = "*", optional = true }
 sphinxcontrib-versioning = { version = "*", optional = true }
-nbsphinx = "*"
+nbsphinx = { version = "*", optional = true }
 
 [tool.poetry.dev-dependencies]
 mock = "*"
