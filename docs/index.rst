@@ -35,7 +35,7 @@ With the Gro API Client, you have the power to:
     :maxdepth: 1
 
     Introduction <api-cookbook/index>
-    Data Discovery Recipes <api-cookbook/data-discovery-recipes>
+    Data Discovery Recipes <api-cookbook/data-discovery-recipes/index>
 
 .. toctree::
     :caption: Gro Data: Key Concepts
