@@ -29,6 +29,7 @@ sphinx = { version = "1.5.6", optional = true }
 recommonmark = { version = "*", optional = true }
 sphinx_rtd_theme = { version = "*", optional = true }
 sphinxcontrib-versioning = { version = "*", optional = true }
+nbsphinx = "*"
 
 [tool.poetry.dev-dependencies]
 mock = "*"
@@ -36,7 +37,7 @@ pytest = "*"
 pytest-cov = "*"
 
 [tool.poetry.extras]
-docs = ["sphinx", "recommonmark", "sphinx_rtd_theme", "sphinxcontrib-versioning"]
+docs = ["sphinx", "recommonmark", "sphinx_rtd_theme", "sphinxcontrib-versioning", "nbsphinx"]
 
 [build-system]
 requires = ["poetry-core>=1.0.0", "poetry-dynamic-versioning"]
