@@ -36,7 +36,8 @@ extensions = [
     'sphinx.ext.extlinks',
     'sphinx.ext.napoleon',
     'sphinx.ext.viewcode',
-    'recommonmark'
+    'recommonmark',
+    'sphinx_multiversion'
 ]
 
 source_suffix = {
