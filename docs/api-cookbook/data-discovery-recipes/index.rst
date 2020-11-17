@@ -8,4 +8,4 @@ The API recipes here are focused on helping you find the data you want. These bi
     :caption: Table of Contents
     :maxdepth: 1
     
-    How do I find all of the data series related to a particular crop or item? <discover_all_data_series_related_to_a_specific_item.ipynb>
+    How do I find all of the data series related to a particular crop or item? <discover_all_data_series_related_to_a_specific_item>
