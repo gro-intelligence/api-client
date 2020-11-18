@@ -1,15 +1,15 @@
 """Base module for making API requests.
 
-Client, GroClient, CropModel, and BatchClient all build on top of endpoints
-exposed in this module. Helper functions or shims or derivative functionality
-should appear in the client classes rather than here.
+GroClient and CropModel build on top of endpoints exposed in this module.
+Helper functions or shims or derivative functionality should appear in the client classes rather
+than here.
 """
 
 from builtins import str
-from math import ceil
 from groclient import cfg
-from groclient.constants import REGION_LEVELS
-from groclient.utils import dict_reformat_keys, str_snake_to_camel, str_camel_to_snake, list_chunk
+from collections import OrderedDict
+from groclient.constants import REGION_LEVELS, DATA_SERIES_UNIQUE_TYPES_ID
+import groclient.utils
 import json
 import logging
 import requests
@@ -22,6 +22,20 @@ try:
 except ImportError:
     from backports.functools_lru_cache import lru_cache as memoize
 
+
+# Interpreter and API client library version information.
+#
+# This is global so we only call get_distribution() once at module load time.
+# This is a workaround for a curious bug: in specific situations, calling
+# get_distribution() while tornado's event loop is running seems to result in
+# GroClient's __del__ method running while the object is still in scope,
+# resulting in `fetch() called on closed AsyncHTTPClient` errors upon
+# subsequent uses of _async_http_client.
+_VERSIONS = { 'python-version': platform.python_version() }
+try:
+    _VERSIONS['api-client-version'] = get_distribution('groclient').version
+except DistributionNotFound:
+    pass
 
 class APIError(Exception):
     def __init__(self, response, retry_count, url, params):
@@ -127,22 +141,23 @@ def redirect(old_params, migration):
     for migration_key in migration:
         split_mig_key = migration_key.split('_')
         if split_mig_key[0] == 'new':
-            param_key = str_snake_to_camel('_'.join([split_mig_key[1], 'id']))
+            param_key = groclient.utils.str_snake_to_camel('_'.join([split_mig_key[1], 'id']))
             new_params[param_key] = migration[migration_key]
     return new_params
 
 
 def get_version_info():
-    versions = dict()
+    return _VERSIONS.copy()
 
-    # retrieve python version and api client version
-    versions['python-version'] = platform.python_version()
-    try:
-        versions['api-client-version'] = get_distribution('groclient').version
-    except DistributionNotFound:
-        # package is not installed
-        pass
-    return versions
+
+def convert_value(value, from_convert_factor, to_convert_factor):
+    value_in_base_unit = (
+        value * from_convert_factor.get("factor")
+    ) + from_convert_factor.get("offset", 0)
+
+    return float(
+        value_in_base_unit - to_convert_factor.get("offset", 0)
+    ) / to_convert_factor.get("factor")
 
 
 def get_data(url, headers, params=None, logger=None):
@@ -233,7 +248,7 @@ def get_available(access_token, api_host, entity_type):
 def list_available(access_token, api_host, selected_entities):
     url = '/'.join(['https:', '', api_host, 'v2/entities/list'])
     headers = {'authorization': 'Bearer ' + access_token}
-    params = dict([(str_snake_to_camel(key), value)
+    params = dict([(groclient.utils.str_snake_to_camel(key), value)
                    for (key, value) in list(selected_entities.items())])
     resp = get_data(url, headers, params)
     try:
@@ -258,7 +273,7 @@ def lookup_batch(access_token, api_host, entity_type, entity_ids):
     url = '/'.join(['https:', '', api_host, 'v2', entity_type])
     headers = {'authorization': 'Bearer ' + access_token}
     all_results = {}
-    for id_batch in list_chunk(entity_ids):
+    for id_batch in groclient.utils.list_chunk(entity_ids):
         params = {'ids': id_batch}
         resp = get_data(url, headers, params)
         result = resp.json()['data']
@@ -308,7 +323,7 @@ def get_params_from_selection(**selection):
     for key, value in list(selection.items()):
         if key in ('region_id', 'partner_region_id', 'item_id', 'metric_id',
                    'source_id', 'frequency_id', 'start_date', 'end_date'):
-            params[str_snake_to_camel(key)] = value
+            params[groclient.utils.str_snake_to_camel(key)] = value
     return params
 
 
@@ -346,9 +361,9 @@ def get_data_call_params(**selection):
     params = get_params_from_selection(**selection)
     for key, value in list(selection.items()):
         if key == 'show_metadata':
-            params[str_snake_to_camel('show_meta_data')] = value
+            params[groclient.utils.str_snake_to_camel('show_meta_data')] = value
         if key in ('start_date', 'end_date', 'show_revisions', 'insert_null', 'at_time'):
-            params[str_snake_to_camel(key)] = value
+            params[groclient.utils.str_snake_to_camel(key)] = value
     params['responseType'] = 'list_of_series'
     return params
 
@@ -403,20 +418,37 @@ def get_source_ranking(access_token, api_host, series):
     return get_data(url, headers, params).json()
 
 
-def rank_series_by_source(access_token, api_host, series_list):
-    for series in series_list:
+def rank_series_by_source(access_token, api_host, selections_list):
+    series_map = OrderedDict()
+    for selection in selections_list:
+        series_key = '.'.join([json.dumps(selection.get(type_id))
+                               for type_id in DATA_SERIES_UNIQUE_TYPES_ID
+                               if type_id != 'source_id'])
+        if series_key not in series_map:
+            series_map[series_key] = {}
+        elif None in series_map[series_key]:
+            continue
+        series_map[series_key][selection.get('source_id')] = selection
+
+    for series_key, series_by_source_id in series_map.items():
+        series_without_source = {
+            type_id: json.loads(series_key.split('.')[idx])
+            for idx, type_id in enumerate(DATA_SERIES_UNIQUE_TYPES_ID)
+            if type_id != 'source_id' and series_key.split('.')[idx] != 'null'
+        }
         try:
-            # Remove source if selected, to consider all sources.
-            series.pop('source_name', None)
-            series.pop('source_id', None)
-            source_ids = get_source_ranking(access_token, api_host, series)
+            source_ids = get_source_ranking(access_token,
+                                            api_host,
+                                            series_without_source)
+        # Catch "no content" response from get_source_ranking()
         except ValueError:
             continue  # empty response
+
         for source_id in source_ids:
-            # Make a copy to avoid passing the same reference each time.
-            series_with_source = dict(series)
-            series_with_source['source_id'] = source_id
-            yield series_with_source
+            if source_id in series_by_source_id:
+                yield series_by_source_id[source_id]
+            if None in series_by_source_id:
+                yield groclient.utils.dict_assign(series_without_source, 'source_id', source_id)
 
 
 def get_available_timefrequency(access_token, api_host, **series):
@@ -427,7 +459,8 @@ def get_available_timefrequency(access_token, api_host, **series):
     response = get_data(url, headers, params)
     if response.status_code == 204:
         return []
-    return [dict_reformat_keys(tf, str_camel_to_snake) for tf in response.json()]
+    return [groclient.utils.dict_reformat_keys(tf, groclient.utils.str_camel_to_snake)
+            for tf in response.json()]
 
 
 def list_of_series_to_single_series(series_list, add_belongs_to=False, include_historical=True):
@@ -447,8 +480,8 @@ def list_of_series_to_single_series(series_list, add_belongs_to=False, include_h
         # All the belongsTo keys are in camelCase. Convert them to snake_case.
         # Only need to do this once per series, so do this outside of the list
         # comprehension and save to a variable to avoid duplicate work:
-        belongs_to = dict_reformat_keys(series.get('series', {}).get('belongsTo', {}),
-                                        str_camel_to_snake)
+        belongs_to = groclient.utils.dict_reformat_keys(series.get('series', {}).get('belongsTo', {}),
+                                                        groclient.utils.str_camel_to_snake)
         for point in series.get('data', []):
             formatted_point = {
                 'start_date': point[0],
@@ -470,6 +503,9 @@ def list_of_series_to_single_series(series_list, add_belongs_to=False, include_h
                 'frequency_id': series['series'].get('frequencyId', None)
                 # 'source_id': series['series'].get('sourceId', None), TODO: add source to output
             }
+            if formatted_point['metadata'].get('confInterval') is not None:
+                formatted_point['metadata']['conf_interval'] = formatted_point['metadata'].pop('confInterval')
+
             if add_belongs_to:
                 # belongs_to is consistent with the series the user requested. So if an
                 # expansion happened on the server side, the user can reconstruct what
@@ -553,12 +589,33 @@ def get_geojsons(access_token, api_host, region_id, descendant_level, zoom_level
         params['stringify'] = 'false'
     headers = {'authorization': 'Bearer ' + access_token}
     resp = get_data(url, headers, params)
-    return [dict_reformat_keys(r, str_camel_to_snake) for r in resp.json()['data']]
+    return [groclient.utils.dict_reformat_keys(r, groclient.utils.str_camel_to_snake)
+            for r in resp.json()['data']]
 
 
 def get_geojson(access_token, api_host, region_id, zoom_level):
     for region in get_geojsons(access_token, api_host, region_id, None, zoom_level):
         return json.loads(region['geojson'])
+
+
+def get_descendant(access_token, api_host, entity_type, entity_id, distance=None,
+                   include_details=True):
+    url = '/'.join(['https:', '', api_host, 'v2/{}/contains'.format(entity_type)])
+    headers = {'authorization': 'Bearer ' + access_token}
+    params = {'ids': [entity_id]}
+    if distance:
+        params['distance'] = distance
+    else:
+        params['distance'] = -1
+
+    resp = get_data(url, headers, params)
+    descendant_entity_ids = resp.json()['data'][str(entity_id)]
+
+    if include_details:
+        entity_details = lookup(access_token, api_host, entity_type, descendant_entity_ids)
+        return [entity_details[str(child_entity_id)] for child_entity_id in descendant_entity_ids]
+
+    return [{'id': descendant_entity_id} for descendant_entity_id in descendant_entity_ids]
 
 
 def get_descendant_regions(access_token, api_host, region_id,

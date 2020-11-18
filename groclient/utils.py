@@ -93,6 +93,29 @@ def dict_unnest(obj):
     return flat_obj
 
 
+def dict_assign(obj, key, value):
+    """Chainable dictionary assignment. Returns a copy.
+
+    Parameters
+    ----------
+    obj : dict
+        A dictionary
+    key : string
+        Which attribute to set. May be a new attribute, or overwriting an existing one
+    value
+        A value of any type
+
+    Returns
+    -------
+    dict
+        A new dictionary, with the given attribute set to the given value
+
+    """
+    new_dict = dict(obj)
+    new_dict[key] = value
+    return new_dict
+
+
 def list_chunk(arr, chunk_size=50):
     """Chunk an array into chunks of a given max length.
 

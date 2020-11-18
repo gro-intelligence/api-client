@@ -1,3 +1,6 @@
+# TODO(jli): after moving to poetry and migrating users to using the pip
+# package, i think we can remove setup.py and all requirements.txt files.
+
 import setuptools
 import sys
 
@@ -24,7 +27,7 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     url="https://github.com/gro-intelligence/api-client",
     packages=setuptools.find_packages(),
-    python_requires=">=2.7.12, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*, <4",
+    python_requires=">=3.6, <4",
     install_requires=requirements,
     extras_require={
         'docs': docs_requirements,
@@ -37,6 +40,6 @@ setuptools.setup(
     test_suite='pytest',
     tests_require=test_requirements,
     entry_points={
-        'console_scripts': ['gro_client=groclient.client:main']
+        'console_scripts': ['gro_client=groclient.__main__:main']
     }
 )
