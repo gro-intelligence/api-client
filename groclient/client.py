@@ -1,12 +1,6 @@
 from __future__ import print_function
-from builtins import str
-from random import random
-import argparse
 import functools
-import getpass
 import itertools
-import os
-import sys
 import time
 import json
 
@@ -24,16 +18,11 @@ from groclient.utils import intersect, zip_selections, dict_unnest
 from groclient.lib import APIError
 
 import pandas
-import unicodecsv
 from tornado import gen
 from tornado.escape import json_decode
 from tornado.httpclient import AsyncHTTPClient, HTTPRequest, HTTPError
 from tornado.ioloop import IOLoop
 from tornado.queues import Queue
-
-
-API_HOST = "api.gro-intelligence.com"
-OUTPUT_FILENAME = "gro_client_output.csv"
 
 
 class BatchError(APIError):
@@ -79,11 +68,16 @@ class GroClient(object):
             self._async_http_client = AsyncHTTPClient()
             self._ioloop = IOLoop()
         except Exception as e:
-            self._logger.warn(
+            self._logger.warning(
                 "Unable to initialize an event loop. Async methods disabled."
             )
             self._async_http_client = None
             self._ioloop = None
+
+    def __del__(self):
+        self._async_http_client.close()
+        self._ioloop.stop()
+        self._ioloop.close()
 
     def get_logger(self):
         return self._logger
@@ -704,6 +698,61 @@ class GroClient(object):
         """
         return lib.get_geojson(self.access_token, self.api_host, region_id, zoom_level)
 
+    def get_descendant(
+        self,
+        entity_type,
+        entity_id,
+        distance=None,
+        include_details=True,
+    ):
+        """Given an item, metric or region, returns all its descendants i.e. 
+        entities that are "contained" in the given entity
+
+        Similar to :meth:~.get_descendant_regions, but also works on items and metrics. This method has 
+        a distance parameter (which returns all nested child entities) instead of a descendant_level 
+        parameter (which only returns child entities at a given depth/level).
+
+        Parameters
+        ----------
+        entity_type : { 'metrics', 'items', 'regions' }
+        entity_id : integer
+        distance: integer, optional
+            Return all entity contained to entity_id at maximum distance.
+            If not provided, get all descendants.
+        include_details : boolean, optional
+            True by default. Will perform a lookup() on each descendant  to find name,
+            definition, etc. If this option is set to False, only ids of descendant
+            entities will be returned, which makes execution significantly faster.
+
+        Returns
+        -------
+        list of dicts
+
+            Example::
+
+                [{
+                    'id': 134,
+                    'name': 'Cattle hides, wet-salted',
+                    'definition': 'Hides and skins of domesticated cattle-animals ...',
+                } , {
+                    'id': 382,
+                    'name': 'Calf skins, wet-salted',
+                    'definition': 'Wet-salted hides and skins of calves-animals of ...'
+                }, ...]
+
+            See output of :meth:`~.lookup`
+
+        """
+        return lib.get_descendant(
+            self.access_token,
+            self.api_host,
+            entity_type,
+            entity_id,
+            distance,
+            include_details,
+        )
+
+
     def get_descendant_regions(
         self,
         region_id,
@@ -1086,7 +1135,7 @@ class GroClient(object):
         try:
             return self.get_df(index_by_series=True).loc[[tuple(entity_ids)], :]
         except KeyError:
-            self._logger.warn("GDH returned no data")
+            self._logger.warning("GDH returned no data")
             return pandas.DataFrame()
 
     def get_data_series_list(self):
@@ -1120,7 +1169,7 @@ class GroClient(object):
         None
 
         """
-        series_hash = frozenset(data_series.items())
+        series_hash = frozenset(dict_unnest(data_series).items())
         if series_hash not in self._data_series_list:
             self._data_series_list.add(series_hash)
             # Add a copy of the data series, in case the original is modified
@@ -1192,6 +1241,8 @@ class GroClient(object):
         """
         results = []  # [[('item_id',1),('item_id',2),...],[('metric_id" 1),...],...]
         for kw in kwargs:
+            if kwargs.get(kw) is None:
+                continue
             id_key = "{}_id".format(kw)
             if id_key in ENTITY_KEY_TO_TYPE:
                 type_results = []  # [('item_id',1),('item_id',2),...]
@@ -1232,7 +1283,7 @@ class GroClient(object):
                         ds = dict(data_series)
                         ds["frequency_id"] = tf["frequency_id"]
                         for data_series in self.rank_series_by_source([ds]):
-                            yield data_series
+                            yield self.get_data_series(**data_series)[0]
 
     def add_data_series(self, **kwargs):
         """Adds the top result of :meth:`~.find_data_series` to the saved data series list.
@@ -1361,51 +1412,6 @@ class GroClient(object):
             for entity_key, entity_id in selection.items()
         ]
 
-    ###
-    # Convenience methods that automatically fill in partial selections with random entities
-    ###
-    def pick_random_entities(self):  # pragma: no cover
-        """Pick a random item that has some data associated with it, and a random metric and region
-        pair for that item with data available.
-        """
-        item_list = list(self.get_available("items").values())
-        num = 0
-        while not num:
-            item = item_list[int(len(item_list) * random())]
-            selected_entities = {"itemId": item["id"]}
-            entity_list = self.list_available(selected_entities)
-            num = len(entity_list)
-        entities = entity_list[int(num * random())]
-        self._logger.info("Using randomly selected entities: {}".format(str(entities)))
-        selected_entities.update(entities)
-        return selected_entities
-
-    def pick_random_data_series(self, selected_entities):  # pragma: no cover
-        """Given a selection of tentities, pick a random available data series the given selection
-        of entities.
-        """
-        data_series_list = self.get_data_series(**selected_entities)
-        if not data_series_list:
-            raise Exception("No data series available for {}".format(selected_entities))
-        selected_data_series = data_series_list[int(len(data_series_list) * random())]
-        return selected_data_series
-
-    # TODO: rename function to "write_..." rather than "print_..."
-    def print_one_data_series(self, data_series, filename):  # pragma: no cover
-        """Output a data series to a CSV file."""
-        self._logger.warning("Using data series: {}".format(str(data_series)))
-        self._logger.warning("Outputing to file: {}".format(filename))
-        writer = unicodecsv.writer(open(filename, "wb"))
-        for point in self.get_data_points(**data_series):
-            writer.writerow(
-                [
-                    point["start_date"],
-                    point["end_date"],
-                    point["value"],
-                    self.lookup_unit_abbreviation(point["unit_id"]),
-                ]
-            )
-
     def convert_unit(self, point, target_unit_id):
         """Convert the data point from one unit to another unit.
 
@@ -1439,110 +1445,10 @@ class GroClient(object):
         to_convert_factor = self.lookup("units", target_unit_id).get("baseConvFactor")
         if not to_convert_factor.get("factor"):
             raise Exception("unit_id {} is not convertible".format(target_unit_id))
+
         if point.get("value") is not None:
-            value_in_base_unit = (
-                point["value"] * from_convert_factor.get("factor")
-            ) + from_convert_factor.get("offset", 0)
-            point["value"] = float(
-                value_in_base_unit - to_convert_factor.get("offset", 0)
-            ) / to_convert_factor.get("factor")
+            point["value"] = lib.convert_value(point["value"], from_convert_factor, to_convert_factor)
+        if point.get("metadata") is not None and point["metadata"].get("conf_interval") is not None:
+            point["metadata"]["conf_interval"] = lib.convert_value(point["metadata"]["conf_interval"], from_convert_factor, to_convert_factor)
         point["unit_id"] = target_unit_id
         return point
-
-
-def main():  # pragma: no cover
-    """Basic Gro API command line interface.
-
-    Note that results are chosen randomly from matching selections, and so results are not
-    deterministic. This tool is useful for simple queries, but anything more complex should be done
-    using the provided Python packages.
-
-    Usage examples:
-        gro_client --item=soybeans  --region=brazil --partner_region china --metric export
-        gro_client --item=sesame --region=ethiopia
-        gro_client --user_email=john.doe@example.com  --print_token
-    For more information use --help
-    """
-    parser = argparse.ArgumentParser(description="Gro API command line interface")
-    parser.add_argument("--user_email")
-    parser.add_argument("--user_password")
-    parser.add_argument("--item")
-    parser.add_argument("--metric")
-    parser.add_argument("--region")
-    parser.add_argument("--partner_region")
-    parser.add_argument(
-        "--print_token",
-        action="store_true",
-        help="Ouput API access token for the given user email and password. "
-        "Save it in GROAPI_TOKEN environment variable.",
-    )
-    parser.add_argument(
-        "--token",
-        default=os.environ.get("GROAPI_TOKEN"),
-        help="Defaults to GROAPI_TOKEN environment variable.",
-    )
-    args = parser.parse_args()
-
-    assert (
-        args.user_email or args.token
-    ), "Need --token, or --user_email, or $GROAPI_TOKEN"
-    access_token = None
-
-    if args.token:
-        access_token = args.token
-    else:
-        if not args.user_password:
-            args.user_password = getpass.getpass()
-        access_token = lib.get_access_token(
-            API_HOST, args.user_email, args.user_password
-        )
-    if args.print_token:
-        print(access_token)
-        sys.exit(0)
-    client = GroClient(API_HOST, access_token)
-
-    if (
-        not args.metric
-        and not args.item
-        and not args.region
-        and not args.partner_region
-    ):
-        ds = client.pick_random_data_series(client.pick_random_entities())
-    else:
-        ds = next(
-            client.find_data_series(
-                item=args.item,
-                metric=args.metric,
-                region=args.region,
-                partner_region=args.partner_region,
-            )
-        )
-    client.print_one_data_series(ds, OUTPUT_FILENAME)
-
-
-def get_df(client, **selected_entities):  # pragma: no cover
-    """Deprecated: use the corresponding method in GroClient instead."""
-    return pandas.DataFrame(client.get_data_points(**selected_entities))
-
-
-def search_for_entity(client, entity_type, keywords):  # pragma: no cover
-    """Deprecated: use the corresponding method in GroClient instead."""
-    return client.search_for_entity(entity_type, keywords)
-
-
-def pick_random_entities(client):  # pragma: no cover
-    """Deprecated: use the corresponding method in GroClient instead."""
-    return client.pick_random_entities()
-
-
-def print_random_data_series(client, selected_entities):  # pragma: no cover
-    """Example which prints out a CSV of a random data series that
-    satisfies the (optional) given selection.
-    """
-    return client.print_one_data_series(
-        client.pick_random_data_series(selected_entities), OUTPUT_FILENAME
-    )
-
-
-if __name__ == "__main__":  # pragma: no cover
-    main()

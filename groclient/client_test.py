@@ -87,6 +87,26 @@ def mock_get_geojsons(access_token, api_host, region_id, descendant_level, zoom_
     ]
 
 
+def mock_get_descendant(
+    access_token,
+    api_host,
+    entity_type,
+    entity_id,
+    distance,
+    include_details,
+):
+
+    childs = [
+            child
+            for child in mock_entities[entity_type].values()
+            if 119 in child["belongsTo"]
+        ]
+    if include_details:
+        return childs
+    else:
+        return [{"id": child["id"]} for child in childs]
+
+
 def mock_get_descendant_regions(
     access_token,
     api_host,
@@ -178,31 +198,32 @@ def mock_get_data_points(access_token, api_host, **selections):
         return data_points
 
 
-@patch("api.client.lib.get_available", MagicMock(side_effect=mock_get_available))
-@patch("api.client.lib.list_available", MagicMock(side_effect=mock_list_available))
-@patch("api.client.lib.lookup", MagicMock(side_effect=mock_lookup))
+@patch("groclient.lib.get_available", MagicMock(side_effect=mock_get_available))
+@patch("groclient.lib.list_available", MagicMock(side_effect=mock_list_available))
+@patch("groclient.lib.lookup", MagicMock(side_effect=mock_lookup))
 @patch(
-    "api.client.lib.get_allowed_units", MagicMock(side_effect=mock_get_allowed_units)
+    "groclient.lib.get_allowed_units", MagicMock(side_effect=mock_get_allowed_units)
 )
-@patch("api.client.lib.get_data_series", MagicMock(side_effect=mock_get_data_series))
-@patch("api.client.lib.search", MagicMock(side_effect=mock_search))
+@patch("groclient.lib.get_data_series", MagicMock(side_effect=mock_get_data_series))
+@patch("groclient.lib.search", MagicMock(side_effect=mock_search))
 @patch(
-    "api.client.lib.rank_series_by_source",
+    "groclient.lib.rank_series_by_source",
     MagicMock(side_effect=mock_rank_series_by_source),
 )
-@patch("api.client.lib.get_geo_centre", MagicMock(side_effect=mock_get_geo_centre))
-@patch("api.client.lib.get_geojsons", MagicMock(side_effect=mock_get_geojsons))
-@patch("api.client.lib.get_geojson", MagicMock(side_effect=mock_get_geojson))
+@patch("groclient.lib.get_geo_centre", MagicMock(side_effect=mock_get_geo_centre))
+@patch("groclient.lib.get_geojsons", MagicMock(side_effect=mock_get_geojsons))
+@patch("groclient.lib.get_geojson", MagicMock(side_effect=mock_get_geojson))
+@patch("groclient.lib.get_descendant", MagicMock(side_effect=mock_get_descendant))
 @patch(
-    "api.client.lib.get_descendant_regions",
+    "groclient.lib.get_descendant_regions",
     MagicMock(side_effect=mock_get_descendant_regions),
 )
 @patch(
-    "api.client.lib.get_available_timefrequency",
+    "groclient.lib.get_available_timefrequency",
     MagicMock(side_effect=mock_get_available_timefrequency),
 )
-@patch("api.client.lib.get_top", MagicMock(side_effect=mock_get_top))
-@patch("api.client.lib.get_data_points", MagicMock(side_effect=mock_get_data_points))
+@patch("groclient.lib.get_top", MagicMock(side_effect=mock_get_top))
+@patch("groclient.lib.get_data_points", MagicMock(side_effect=mock_get_data_points))
 class GroClientTests(TestCase):
     def setUp(self):
         self.client = GroClient(MOCK_HOST, MOCK_TOKEN)
@@ -278,6 +299,13 @@ class GroClientTests(TestCase):
         self.assertTrue("type" in geojson["geometries"][0])
         self.assertTrue("coordinates" in geojson["geometries"][0])
         self.assertTrue(geojson["geometries"][0]['coordinates'][0][0][0] == [-38, -4])
+
+    def test_get_descendant(self):
+        self.assertTrue("name" in self.client.get_descendant('metrics', 119)[0])
+        self.assertTrue(
+            "name"
+            not in self.client.get_descendant('metrics', 119, include_details=False)[0]
+        )
 
     def test_get_descendant_regions(self):
         self.assertTrue("name" in self.client.get_descendant_regions(1215)[0])
@@ -355,7 +383,7 @@ class GroClientTests(TestCase):
         df = self.client.GDH("860032-274-1215-0-2-9", insert_nulls=True, metric_id=1)
         self.assertEqual(len(df), 0)
 
-    def test_add_single_data_series(self):
+    def test_add_single_data_series_adds_copy(self):
         selections = dict(mock_data_series[0])  # don't modify test data. Make a copy
         for region_id in [
             mock_data_series[0]["region_id"],
@@ -369,6 +397,12 @@ class GroClientTests(TestCase):
         self.assertEqual(
             len(self.client.get_df().drop_duplicates().region_id.unique()), 2
         )
+
+    def test_add_single_data_series_allows_metadata(self):
+        selections = dict(mock_data_series[0])
+        selections['metadata'] = {'includes_historical_region': True}
+        self.client.add_single_data_series(selections)
+        self.assertEqual(len(self.client.get_df().item_id), 1)
 
     def test_get_data_series_list(self):
         self.client.add_single_data_series(mock_data_series[0])
@@ -444,6 +478,14 @@ class GroClientTests(TestCase):
         self.assertEqual(
             self.client.convert_unit({"value": 1, "unit_id": 37}, 36),
             {"value": -17.5, "unit_id": 36},
+        )
+        self.assertEqual(
+            self.client.convert_unit({"value": 20, "unit_id": 10, "metadata": {"conf_interval": 2}}, 14),
+            {"value": 0.02, "metadata": {"conf_interval": 0.002}, "unit_id": 14},
+        )
+        self.assertEqual(
+            self.client.convert_unit({"value": 20, "unit_id": 10, "metadata": {}}, 14),
+            {"value": 0.02, "metadata": {}, "unit_id": 14},
         )
 
         self.assertEqual(self.client.convert_unit({}, 36), {})

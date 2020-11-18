@@ -40,7 +40,7 @@ Search
 ======
 
 
-As described in the `Data Series Definition <./data-series-definition>`_ page, a data series in Gro is a unique combination of the entities: item, metric, region, partner_region (optional), frequency, and source. To find the specific entity you would like to retrieve data for, you can use a variety of search methods. For example, :meth:`api.client.gro_client.GroClient.search` will return a list of IDs that match your search term. If you want to understand the differences between various search results, you may find the :meth:`api.client.gro_client.GroClient.search_and_lookup` method more helpful.
+As described in the `Data Series Definition <./data-series-definition>`_ page, a data series in Gro is a unique combination of the entities: item, metric, region, partner_region (optional), frequency, and source. To find the specific entity you would like to retrieve data for, you can use a variety of search methods. For example, :meth:`groclient.GroClient.search` will return a list of IDs that match your search term. If you want to understand the differences between various search results, you may find the :meth:`groclient.GroClient.search_and_lookup` method more helpful.
 
 :code:`client.search_and_lookup('items','Corn')` will yield a list of all items that contain "corn" in their name, along with supporting information like id, name, and ids of other items contained by a given item.
 
@@ -50,12 +50,11 @@ Note: the above query will return a `generator <https://wiki.python.org/moin/Gen
 Get data series
 ===============
 
-Instead of searching for all the individual entity IDs required to create a data series, the :meth:`api.client.gro_client.GroClient.get_data_series` method will return a list of all the data series available for the filters you have supplied. For example, if you are interested in Russian Oats you could use the following code to find out all the available data series that have "Oats" (item_id = 327) as the item and "Russia" (region_id = 1168) as the region:
-To look up all descendants of region 1029 (Brazil) that are of level 4 (provinces):
+Instead of searching for all the individual entity IDs required to create a data series, the :meth:`groclient.GroClient.get_data_series` method will return a list of all the data series available for the filters you have supplied. For example, if you are interested in Russian Oats you could use the following code to find out all the available data series that have "Oats" (item_id = 327) as the item and "Russia" (region_id = 1168) as the region:
+
 ::
 
-  from api.client.lib import REGION_LEVELS
-  provinces_of_brazil = client.get_descendant_regions(1029, REGION_LEVELS['province'])
+  client.get_data_series(item_id='327',region_id='1168')
 
 
 Lookup contains
@@ -65,24 +64,24 @@ Our ontology is defined in terms of a graph, with metrics/items/regions containi
 
   client.lookup('items', 10009)['contains']
 
-will return a list of items ids for items that are cereals (item_id = 10009): :code:`[..., 274, 422, ...]`. Once you have those ids, you can use the :meth:`api.client.gro_client.GroClient.lookup` function on each one to find more info, like their names, e.g.: :code:`client.lookup('items', 274)['name']` will return `Corn`.
+will return a list of items ids for items that are cereals (item_id = 10009): :code:`[..., 274, 422, ...]`. Once you have those ids, you can use the :meth:`groclient.GroClient.lookup` function on each one to find more info, like their names, e.g.: :code:`client.lookup('items', 274)['name']` will return `Corn`.
 
 
 Get descendants
 ===============
 
-Using the :code:`lookup()` method, you can get an entity's list of direct children (i.e. country→provinces). However, you may want all of the lower level regions that belong to a higher level region (i.e. country→provinces, districts, coordinates, etc.). To do this, there's a helper function which also gives the option of filtering by region level: :meth:`api.client.gro_client.GroClient.get_descendant_regions`
+Using the :code:`lookup()` method, you can get an entity's list of direct children (i.e. country→provinces). However, you may want all of the lower level regions that belong to a higher level region (i.e. country→provinces, districts, coordinates, etc.). To do this, there's a helper function which also gives the option of filtering by region level: :meth:`groclient.GroClient.get_descendant_regions`
 
 To look up all descendants of region 1029 (Brazil) that are of level 4 (provinces):
 ::
 
-  from api.client.lib import REGION_LEVELS
+  from groclient.lib import REGION_LEVELS
   provinces_of_brazil = client.get_descendant_regions(1029, REGION_LEVELS['province'])
 
 To look up all descendants of region 1029 (Brazil) that are of level 5 (districts):
 ::
 
-  from api.client.lib import REGION_LEVELS
+  from groclient.lib import REGION_LEVELS
   provinces_of_brazil = client.get_descendant_regions(1029, REGION_LEVELS['district'])
 
 For more information on region levels, please refer to the `Special properties of regions <./gro-ontology#special-properties-for-regions>`_ section of `Gro Ontology <./gro-ontology>`_
@@ -91,7 +90,7 @@ For more information on region levels, please refer to the `Special properties o
 Lookup belongs
 ==============
 
-If you want to find "what entities contain the given entity?" there is a method, :meth:`api.client.gro_client.GroClient.lookup_belongs` that just does that. For example:
+If you want to find "what entities contain the given entity?" there is a method, :meth:`groclient.GroClient.lookup_belongs` that just does that. For example:
 ::
 
   UNITED_STATES = 1215
