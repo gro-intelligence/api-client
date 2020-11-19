@@ -10,8 +10,8 @@ import pandas as pd
 from tqdm import tqdm
 
 from sklearn.neighbors import BallTree, DistanceMetric
-from api.client.batch_client import BatchClient, BatchError
-from api.client.lib import get_default_logger
+from groclient.client import GroClient, BatchError
+from groclient.lib import get_default_logger
 #from api.client.samples.similar_regions.similar_region_state import SimilarRegionState
 from sklearn.metrics.pairwise import euclidean_distances
 
@@ -63,7 +63,6 @@ class SimilarRegion(object):
 
         self.available_properties = []
         self._logger = get_default_logger()
-        #self._logger.setLevel(logging.INFO)
         self.update=update_mode
 
         # extract needed parameters from inputs
@@ -90,7 +89,7 @@ class SimilarRegion(object):
                 # last resort
                 self.data_dir = tempfile.gettempdir()
 
-        self.client = BatchClient(API_HOST, ACCESS_TOKEN)
+        self.client = GroClient(API_HOST, ACCESS_TOKEN)
         self.search_region = -999 # not built, will trigger build on first call to similar_to
         
     def build(self, search_region=0):
