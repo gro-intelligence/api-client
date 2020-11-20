@@ -465,7 +465,8 @@ class SimilarRegion(object):
         # Sending out all queries
         self.client.batch_async_get_data_points(queries, map_result=map_response)
         load_bar.close()
-        valid_data = valid_data/data_counters # division by zero where we do not have data
+        data_counters[data_counters == 0] = np.nan # avoid division by zero warning, where no data
+        valid_data = valid_data/data_counters
         #valid_data = valid_data[np.isfinite(valid_data)]
         # cut off the actually filled-in part (valid regions only)
         valid_data=valid_data[:len(valid_regions)*self.t_int_per_year]
