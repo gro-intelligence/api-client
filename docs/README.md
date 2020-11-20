@@ -23,15 +23,15 @@ open up and view in a web browser.
 
 ## Automatic builds
 
-Every time continuous integration runs it should be re-building the
-documentation for any currently-open branches and pushing the result to the
-`gh-pages` branch. If you edit any documentation pages or docstrings, it should
-be a part of the Pull Request review process that you navigate to your feature
-branch's built documentation and verify that the changes are as intended.
+Every time continuous integration runs, it re-builds the documentation for any
+currently-open branches and pushes the result to the `gh-pages` branch (even
+for unmerged pull requests). If you edit any documentation pages or docstrings,
+navigate to your feature branch's documentation and verify that the changes are
+as intended.
 
-Note that branches aren't listed in the version-selector widget (since we don't
-want to show it to external users), but you can navigate directly to it:
+Branches aren't listed in the version-selector widget (since we don't want to
+show them to external users). You have to edit the URL manually:
 `https://developers.gro-intelligence.com/<YOUR-BRANCH-NAME-HERE>/index.html`
 
 If anything in continuous integration fails, the documentation building step is
-skipped.
+skipped. CI calls `bin/sphinx_push_ghpages.sh` to build and push the docs.
