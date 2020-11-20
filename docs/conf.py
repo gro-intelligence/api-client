@@ -85,16 +85,15 @@ html_static_path = ['_static', '_images']
 
 master_doc = 'index'
 
-# Do not delete these files:
-scv_grm_exclude = ('README.md', '.gitignore', '.nojekyll', 'CNAME', 'shippable.yml*')
-scv_show_banner = True
-scv_banner_main_ref = 'development'
-scv_root_ref = 'development'
+# sphinx-multiversion options
 
-# still build other branches, but hide the version selectors in _static/css/custom-theme.css.
-# Uncomment this line to stop building them altogether:
-# scv_whitelist_branches = ('development',)
+# v1.40.6 (from 2019-12-19) is the first version with finalized docs style.
+# so, we ignore all other releases that preceded that.
+smv_tag_whitelist = r'^v(?!1\.40\.[012345]).+$'
 
-# Omit versions before docs style was finalized
-# TODO: https://stackoverflow.com/questions/26141851/let-sphinx-use-version-from-setup-py
-scv_whitelist_tags = (re.compile(r'^(?!.*(v1.40.0|v1.40.1|v1.40.2|v1.40.3|v1.40.4|v1.40.5)).*$'),)
+### need alternative solution:
+# # causes git rm -rf '.' to run on destination branch rel_dest. these files are
+# # excluded from the deletion though.
+# scv_grm_exclude = ('README.md', '.gitignore', '.nojekyll', 'CNAME')
+# # what the root is. don't think multiversion has this.
+# scv_root_ref = 'development'

@@ -1,0 +1,24 @@
+{#
+See https://holzhaus.github.io/sphinx-multiversion/master/templates.html#version-banners
+
+TODO(jli): The example above nicely links to the latest *released* version,
+rather than development. That's probably the way to go, since almost all users
+should be using our PyPI package. However, the 'latest_version' variable seems
+to be hardcoded to "master". Would be great if it actually used the latest
+released tag instead.
+
+Also see: https://github.com/Holzhaus/sphinx-multiversion/issues/58
+#}
+
+{% extends "!page.html" %}
+{% block body %}
+{% if current_version and current_version.name != 'development' %}
+<p class="version-banner">
+  <strong>Note:</strong>
+  This document is for an older version of the Gro API Client.
+  Please see the <a href="{{ vpathto('development') }}">latest documentation</a>.
+</p>
+{% endif %}
+{{ super() }}
+{% endblock %}%
+
