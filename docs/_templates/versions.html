@@ -1,4 +1,9 @@
-/* via https://holzhaus.github.io/sphinx-multiversion/master/templates.html#readthedocs-theme */
+{#
+Based on https://holzhaus.github.io/sphinx-multiversion/master/templates.html#readthedocs-theme
+This is the template for the version-selector widget at the bottom left corner.
+We list the tags as "Releases", and we include the "development" branch at the
+end of the list.
+#}
 {%- if current_version %}
 <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
   <span class="rst-current-version" data-toggle="rst-current-version">
@@ -9,19 +14,19 @@
   <div class="rst-other-versions">
     {%- if versions.tags %}
     <dl>
-      <dt>Tags</dt>
+      <dt>Releases</dt>
       {%- for item in versions.tags %}
       <dd><a href="{{ item.url }}">{{ item.name }}</a></dd>
       {%- endfor %}
-    </dl>
-    {%- endif %}
-    /* note: branches are generated, but hidden via css */
-    {%- if versions.branches %}
-    <dl>
-      <dt>Branches</dt>
-      {%- for item in versions.branches %}
-      <dd><a href="{{ item.url }}">{{ item.name }}</a></dd>
-      {%- endfor %}
+
+      {# we also list the development branch here so that it's always accessible. #}
+      {%- if versions.branches %}
+        {%- for item in versions.branches %}
+          {%- if item.name == 'development' %}
+            <dd><a href="{{ item.url }}">{{ item.name }}</a></dd>
+          {%- endif %}
+        {%- endfor %}
+      {%- endif %}
     </dl>
     {%- endif %}
   </div>
