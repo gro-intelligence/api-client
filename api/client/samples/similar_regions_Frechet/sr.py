@@ -19,12 +19,7 @@ from sklearn.metrics.pairwise import euclidean_distances
 API_HOST = 'api.gro-intelligence.com'
 ACCESS_TOKEN = os.environ['GROAPI_TOKEN']
 
-""" Cache dir and file names """
-# cache directory should already exist when SR object is created (otherwise /tmp will be used)
-CACHE_PATH = "sr_cache"
-REGION_INFO_CACHE = "region_info"
-DATA_CACHE = "region_data_"
-
+REGION_INFO_CACHE = "region_info.pickle"
 PICKLE_PROTOCOL = 4
 REGIONS_PER_QUERY = 100
 MAX_RETRY_FAILED_REGIONS = 3
@@ -46,7 +41,7 @@ class SimilarRegion(object):
 
     def __init__(self, metric_properties,
                  update_mode="no",
-                 data_dir=None,
+                 data_dir="similar_regions_cache",
                  metric_instance=None):
         """
         :param metric_properties: A dict containing properties which can be used in the region similarity metric.
@@ -61,13 +56,11 @@ class SimilarRegion(object):
         self.t_int_per_year = T_INT_PER_YEAR
         self.t_int_days = 365 / self.t_int_per_year # number of days in single t interval (can be float)
 
-        self.available_properties = []
         self._logger = get_default_logger()
-        self.update=update_mode
+        self.update = update_mode
 
         # extract needed parameters from inputs
         self.metric_properties = metric_properties
-        #self.needed_properties = sorted(list(set(metric_properties.keys())))
         if metric_instance is not None:
             unresolved_items = [item for item in metric_instance if item not in self.metric_properties]
             assert not unresolved_items, "Found items {} in metric instance not present in metric description".format(unresolved_items)
@@ -77,20 +70,16 @@ class SimilarRegion(object):
         self.needed_properties = sorted(self.metric_instance.keys())
         
         if data_dir:
+            if not os.path.isdir(data_dir):
+                os.mkdir(data_dir)
             self.data_dir = data_dir
-        elif os.path.isdir(CACHE_PATH) and os.access(CACHE_PATH, os.W_OK):
-            self.data_dir = CACHE_PATH
         else:
-            # no access to CACHE_PATH - likely doesn't exist => attempt to create directory
-            try:
-                os.mkdir(CACHE_PATH)
-                self.data_dir = CACHE_PATH
-            except:
-                # last resort
-                self.data_dir = tempfile.gettempdir()
+            self.data_dir = tempfile.gettempdir()
+
+        self._logger.debug('Using {} as data_dir'.format(self.data_dir))
 
         self.client = GroClient(API_HOST, ACCESS_TOKEN)
-        self.search_region = -999 # not built, will trigger build on first call to similar_to
+        self.search_region = None
         
     def build(self, search_region=0):
         self.data = None
