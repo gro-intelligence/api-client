@@ -26,17 +26,20 @@
 
 
 # Just an example. This is intended to be define in the user code
-metric_instance = {
-    'soil_moisture':1.0,
-    'rainfall':1.0,
-    'land_surface_temperature':1.0,
-    'cation_exchange_30cm':1.0,
-    'ph_h2o_30cm':1.0,
-    'sand_30cm':1.0,
-    'silt_30cm':1.0,
-    'clay_30cm':1.0,
-    'organic_carbon_content_fine_earth_30cm':1.0,
-    'soil_water_capacity_100cm':1.0
+# Here soil properties are down-weighted so that
+# the seven of them together have the same weight as one of the time series
+
+metric_weights = {
+    'soil_moisture': 1.0,
+    'rainfall': 1.0,
+    'land_surface_temperature': 1.0,
+    'cation_exchange_30cm': 1.0/7,
+    'ph_h2o_30cm': 1.0/7,
+    'sand_30cm': 1.0/7,
+    'silt_30cm': 1.0/7,
+    'clay_30cm': 1.0/7,
+    'organic_carbon_content_fine_earth_30cm': 1.0/7,
+    'soil_water_capacity_100cm': 1.0/7
 }
 
 metric_properties = {

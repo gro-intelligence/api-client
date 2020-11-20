@@ -1,7 +1,6 @@
 import os
 import tempfile
 import pickle
-import logging
 from datetime import date
 
 import numpy as np
@@ -41,15 +40,23 @@ class SimilarRegion(object):
 
     def __init__(self, metric_properties,
                  data_dir="similar_regions_cache",
-                 metric_instance=None):
-        """
-        :param metric_properties: A dict containing properties which can be used in the region similarity metric.
-        This is by default defined in metric.py, but can be adjusted.
+                 metric_weights=None):
+        """Initialize the object. No data is downloaded at this stage, only
+        when build is called separately.
 
-        :param data_dir: directory to use as a data cache. If not specified, a temp dir is created.
+        :param metric_properties: A dict containing properties which
+        can be used in the region similarity metric.  This is by
+        default defined in metric.py, but can be adjusted.
 
-        :param metric_instance: A {property:weight} dictionary stating specific properties and their weights to use for this run.
-        If not provided, all properties from metric_properties are used with equal weights
+        :param data_dir: directory to use as a data cache. If not
+        specified, a temp dir is created.
+
+        :param metric_weights: A {property: weight} dictionary stating
+        specific properties and their weights to use for this run. The
+        properties must be a subset of those in metric_properties.  If
+        not provided, all properties from metric_properties are used
+        with equal weights.
+
         """
         self.t_int_per_year = T_INT_PER_YEAR
         self.t_int_days = 365 / self.t_int_per_year # number of days in single t interval (can be float)
@@ -58,13 +65,13 @@ class SimilarRegion(object):
 
         # extract needed parameters from inputs
         self.metric_properties = metric_properties
-        if metric_instance is not None:
-            unresolved_items = [item for item in metric_instance if item not in self.metric_properties]
+        if metric_weights is not None:
+            unresolved_items = [item for item in metric_weights if item not in self.metric_properties]
             assert not unresolved_items, "Found items {} in metric instance not present in metric description".format(unresolved_items)
-            self.metric_instance = metric_instance
+            self.metric_weights = metric_weights
         else:
-            self.metric_instance = dict(zip(self.metric_properties.keys(),[1.0]*len(self.metric_properties)))
-        self.needed_properties = sorted(self.metric_instance.keys())
+            self.metric_weights = dict(zip(self.metric_properties.keys(),[1.0]*len(self.metric_properties)))
+        self.needed_properties = sorted(self.metric_weights.keys())
 
         if data_dir:
             if not os.path.isdir(data_dir):
@@ -191,7 +198,7 @@ class SimilarRegion(object):
 
     def _data_download(self):
         ##################### Data download ################################################
-        self.data = np.zeros((len(self.needed_regions)*self.t_int_per_year, len(self.metric_instance)))
+        self.data = np.zeros((len(self.needed_regions)*self.t_int_per_year, len(self.metric_weights)))
         self.data[:] = np.nan
         for (prop_i, prop_name) in enumerate(self.needed_properties):
             self.prop_data = self.data[:,prop_i] # alias to specific column of the data matrix
@@ -276,7 +283,7 @@ class SimilarRegion(object):
             stdev = self.data[c].std()
             # always report true stds - might want to include them in properties.py as 'norm' on later runs
             self._logger.info("Data standard deviation for {} is {}".format(c,stdev))
-            self.full_scaling[c] = np.sqrt(self.metric_instance[c]) / self.metric_properties[c]['properties'].get("norm",stdev)
+            self.full_scaling[c] = np.sqrt(self.metric_weights[c]) / self.metric_properties[c]['properties'].get("norm",stdev)
             self.data[c] *= self.full_scaling[c]
 
             # will use to split dataset into time series and pit parts
@@ -465,7 +472,7 @@ class SimilarRegion(object):
 
         # have a list of (un)processed queries and a bunch of random regins we did not received any data for
         if not self.finished and depth < MAX_RETRY_FAILED_REGIONS:
-            self._logger.info("retry {} failed regions at depth {}...".format(len(self.to_retry), depth))
+            self._logger.info("Retry {} failed regions at depth {}...".format(len(self.to_retry), depth))
             (extra_data,extra_regions) = self._load_property_for_regions(prop_name, self.to_retry, track_na=False, depth=depth+1)
             valid_data = np.concatenate([valid_data,extra_data], axis=0)
             valid_regions += extra_regions
