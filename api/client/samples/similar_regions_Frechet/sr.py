@@ -1,6 +1,5 @@
 import os
 import tempfile
-import pickle
 from datetime import date
 
 import numpy as np
@@ -18,8 +17,6 @@ from sklearn.metrics.pairwise import euclidean_distances
 API_HOST = 'api.gro-intelligence.com'
 ACCESS_TOKEN = os.environ['GROAPI_TOKEN']
 
-REGION_INFO_CACHE = "region_info.pickle"
-PICKLE_PROTOCOL = 4
 REGIONS_PER_QUERY = 100
 MAX_RETRY_FAILED_REGIONS = 3
 OK_TO_PROCEED_REGION_FRACTION = 0.1 # we want at least 10% of all desired region present in the final data matrix
@@ -85,15 +82,23 @@ class SimilarRegion(object):
         self.client = GroClient(API_HOST, ACCESS_TOKEN)
         self.search_region = None
 
-    def build(self, search_region=0):
+    def build(self, search_region=0, region_levels=[3,4,5]):
+        """Get data and build distance metric objects for the given search
+        region.  The regions will be all the descendants of the given
+        root region at the given region_levels. For definition of
+        region levels see
+        https://developers.gro-intelligence.com/gro-ontology.html#special-properties-for-regions
+
+        """
         self.data = None
         self.to_retry = []
         self.available_regions = []
 
-        self._logger.info("(Re)building similar region object with region {} data_dir {} t_int_per_year {}".format(
-            search_region, self.data_dir, self.t_int_per_year))
+        self._logger.info("(Re)building similar region object with " \
+                          "region={}, levels={}, data_dir={}, t_int_per_year={}".format(
+                              search_region, region_levels, self.data_dir, self.t_int_per_year))
 
-        self._initialize_regions(search_region)
+        self._initialize_regions(search_region, region_levels)
 
         self._data_download()
 
@@ -145,7 +150,7 @@ class SimilarRegion(object):
         # separate ball trees to process requests on givel level
         # shouldn't generally make separate data copies since region_id's are organized with countries < provinces < districts
         # so data for each level should be continuous arrays
-        for level in [3,4,5]:
+        for level in region_levels:
             self.regions_on_level[level] = [r for r in self.available_regions if self.region_info[r]['level']==level]
             level_data = self.data[[self.region_index[r] for r in self.regions_on_level[level]],:]
             self._logger.info(" level {}, {} regions".format(level, len(self.regions_on_level[level])))
@@ -155,44 +160,16 @@ class SimilarRegion(object):
         self.search_region = search_region
         return
 
-    def _initialize_regions(self, search_region):
-        ################ Dealing with region information (load from cache or API) ################
-        self.region_info = {}
-        info_path = os.path.join(self.data_dir, REGION_INFO_CACHE)
-        if os.path.isfile(info_path):
-            self._logger.info("Reading region info from cache {}".format(info_path))
-            with open(info_path, 'rb') as f:
-                self.region_info = pickle.load(f)
-        if REGION_INFO_RELOAD or search_region not in self.region_info:
-            ri = [self.client.lookup('regions', search_region)] # include top-level region itself
-            for l in range(5,ri[0]['level'],-1):
-                self._logger.info("Loading region info for geo level {}".format(l))
-                ri += self.client.get_descendant_regions(search_region,descendant_level=l,
-                                                              include_historical=False,
-                                                              include_details=True)
-            #reformat as dict with region_id as key
-            self.region_info = dict(zip([item['id'] for item in ri], ri))
-
-            # immediately save region_info
-            # might overwrite a large cache if it was storing "parallel" region (cache was Asia but asking for US)
-            with open(info_path, 'wb') as f:
-                self._logger.info("Saving region info file {}".format(info_path))
-                pickle.dump(self.region_info,f)
-        else:
-            # We might have too many regions in the info cache - this happens if cache was filled for a parent
-            # of region currently requested (filled for entire world but we want only US, for example)
-            top_info = self.region_info[search_region]
-            self._logger.info("Search region is present in cache of size {}".format(len(self.region_info)))
-            level = top_info['level'] # can only have 2/3/4/5
-            to_include = [search_region]
-            ri = {search_region:top_info}
-            while level<5:
-                to_include = [r for r in [j for r in to_include for j in self.region_info[r]['contains']]
-                              if self.region_info.get(r,{'level':-1})['level']==level+1]
-                ri.update({r:self.region_info[r] for r in to_include})
-                level += 1
-            self.region_info = ri
-            self._logger.info("Trimmed region info to {} items".format(len(self.region_info)))
+    def _initialize_regions(self, root_region_id, region_levels):
+        """Initialize static information about regions to search in."""
+        ri = [self.client.lookup('regions', root_region_id)] # include top-level region itself
+        for l in region_levels:
+            self._logger.info("Loading region info for geo level {}".format(l))
+            ri += self.client.get_descendant_regions(root_region_id, descendant_level=l,
+                                                     include_historical=False,
+                                                     include_details=True)
+        # reformat as dict with region_id as key
+        self.region_info = dict(zip([item['id'] for item in ri], ri))
         self.needed_regions = sorted(self.region_info.keys())
         return
 
@@ -583,7 +560,7 @@ class SimilarRegion(object):
         {'#': 0, 'id': 123, 'name': "abc", 'dist': 1.23, 'parent': (12,"def",,)}
         """
         if self.search_region != compare_to:
-            self.build(compare_to)
+            self.build(compare_to, [requested_level])
 
         # To change search region, user should construct new SR object
         # but we want to allow searches with seed region outside serach region,
@@ -653,29 +630,17 @@ class SimilarRegion(object):
 
         for ranking, sr_id in enumerate(sim_regions):
             info = self.region_info[sr_id]
-
-            # Choose parent one level up from this region
-            parent_info = {"name": "", "id": ""}
-            for r in info['belongsTo']:
-                # in case there is no parent at correct level we will just take the last
-                try:
-                    parent_info = self.region_info[r]
-                    if parent_info['level'] == region_level-1:
-                        break
-                except:
-                    continue
-
-            # try to find grandparent in region info, just take the first id parent belongs to
-            # this works ok for grandparents which are at least countries if parent on needed level was found
-            try:
-                gp_id = self.region_info[parent_info['id']]['belongsTo'][0]
-                gp_info = self.region_info[gp_id]
-            except:
-                gp_info = {"name": "", "id": ""}
-
+            parents_info = []
+            grand_parents_info = []
+            for parent in self.client.lookup_belongs('regions', sr_id):
+                # a region may have more than one parent, it's not a tree
+                parents_info.append((parent['id'], parent['name']))
+                for grand_parent in self.client.lookup_belongs('regions', parent['id']):
+                    grand_parents_info.append((grand_parent["id"], grand_parent["name"]))
             data_point = {"#": ranking,
                           "id": sr_id,
                           "name": info['name'],
                           "dist": sim_dists[ranking],
-                          "parent": (parent_info["id"], parent_info["name"], gp_info["id"], gp_info["name"])}
+                          "parents": parents_info,
+                          "grand_parents": grand_parents_info}
             yield data_point
