@@ -158,7 +158,7 @@ class GroClient(object):
                     else e
                 )
                 log_request(start_time, retry_count, error_msg, status_code)
-                if status_code in [429, 500, 503, 504]:
+                if status_code in [429, 500, 502, 503, 504]:
                     # First retry is immediate.
                     # After that, exponential backoff before retrying.
                     if retry_count > 0:
