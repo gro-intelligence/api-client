@@ -242,7 +242,7 @@ class SimilarRegion(object):
         self.region_index = dict(zip(self.available_regions,range(self.num_regions)))
         self.prop_index = dict(zip(self.needed_properties,range(len(self.needed_properties))))
 
-        self._logger.info("{} regions remains".format(self.num_regions))
+        self._logger.info("{} regions remain.".format(self.num_regions))
         assert self.num_regions > OK_TO_PROCEED_REGION_FRACTION*len(self.needed_regions), \
             "Less than {}% of desired regions has full data. Bailing out.".format(OK_TO_PROCEED_REGION_FRACTION*100)
         return
@@ -415,12 +415,12 @@ class SimilarRegion(object):
         # self.data should already have space allocated for all data
         def map_response(idx, _, response, *args):
             r_idx = regions_list[idx*REGIONS_PER_QUERY:(idx+1)*REGIONS_PER_QUERY]
-            # if entire response is invalid, assume this query should probably be rerun
-            # => don't add to processed list. Should pay attention to messages if None is legitimate (will repeat on resume)
-            if (response is None) or (type(response) is BatchError) or (len(response) == 0):
+            # Add to to_retry if there's an API error. If there's no API error but the response is empty,
+            # that means the data does not exist e.g. because the region is outside the coverage of the source.
+            if type(response) is BatchError:
                 self.finished = False
-                self._logger.info("Could not get data for query {} for regions {} to {}: {}".format(
-                    idx, r_idx[0], r_idx[-1], response))
+                self._logger.info("Could not get data for query {} for {} regions (HTTP {}), will retry".format(
+                    idx, len(r_idx), response.status_code))
                 self.to_retry += r_idx
                 return
             for r in r_idx:
@@ -432,8 +432,7 @@ class SimilarRegion(object):
                 if self._fill_block(resp, prop_name, len(valid_regions)*self.t_int_per_year, valid_data, data_counters, track_na):
                     valid_regions.append(r)
                 else:
-                    self._logger.debug("Did not get any {} for region {}".format(prop_name,r))
-                    self.to_retry.append(r)
+                    self._logger.debug("No data for {} for region {}".format(prop_name,r))
                 load_bar.update()
                 processed_q.append(idx)
             return
@@ -458,7 +457,7 @@ class SimilarRegion(object):
             valid_data = np.concatenate([valid_data,extra_data], axis=0)
             valid_regions += extra_regions
 
-        return (valid_data,valid_regions)
+        return (valid_data, valid_regions)
 
     ##############################
     # fills corresponding block of data/data_counters (starting from idx) from API response
@@ -569,7 +568,7 @@ class SimilarRegion(object):
         #
         # For simplicity, in such cases always download data for the seed region from the system directly (ignore cache)
         if region_id not in self.available_regions:
-            self._logger.info("seed region {} is outside search region".format(region_id))
+            self._logger.info("Getting data for seed region {}...".format(region_id))
             x = self.past_seeds.get(region_id)
             if x is None:
                 seed_region_means = []
@@ -582,7 +581,7 @@ class SimilarRegion(object):
                         valid_data, valid_regions = self._load_property_for_regions(prop_name, [region_id])
                     # seed region should have all required data - bail out if anything missing
                     if not valid_regions:
-                        self._logger.error("could not get {} data for requested seed region {}".format(prop_name, region_id))
+                        self._logger.error("Could not get {} data for requested seed region {}".format(prop_name, region_id))
                         return
                     valid_data *= self.full_scaling[prop_name]
                     # neen mean regardless - for pit will be the same as (duplicated) value
@@ -620,7 +619,7 @@ class SimilarRegion(object):
         if detailed_distance:
             sim_dists = [self._get_distances_means(x[0][:self.n_pit+self.n_ts], self.region_index[r], sim_dists[i])
                          for (i,r) in enumerate(sim_regions)]
-        self._logger.info("Found {} regions most similar to '{}'.".format(len(sim_regions), region_id))
+        self._logger.info("Found {} regions most similar to {} in {}.".format(len(sim_regions), region_id, compare_to))
 
         for ranking, sr_id in enumerate(sim_regions):
             info = self.region_info[sr_id]
