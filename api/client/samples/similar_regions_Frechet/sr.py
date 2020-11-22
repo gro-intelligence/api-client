@@ -167,7 +167,7 @@ class SimilarRegion(object):
 
     def _initialize_regions(self, root_region_id, region_levels):
         """Initialize static information about regions to search in."""
-        ri = [self.client.lookup('regions', root_region_id)] # include top-level region itself
+        ri = []
         for l in region_levels:
             self._logger.info("Loading region info for region level {}".format(l))
             ri += self.client.get_descendant_regions(root_region_id, descendant_level=l,
