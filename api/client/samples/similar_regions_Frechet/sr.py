@@ -1,5 +1,6 @@
 import os
 import tempfile
+import logging
 from datetime import date
 
 import numpy as np
@@ -10,7 +11,6 @@ from tqdm import tqdm
 from sklearn.neighbors import BallTree, DistanceMetric
 from groclient.client import GroClient, BatchError
 from groclient.lib import get_default_logger
-#from api.client.samples.similar_regions.similar_region_state import SimilarRegionState
 from sklearn.metrics.pairwise import euclidean_distances
 
 """ API Config """
@@ -21,14 +21,16 @@ REGIONS_PER_QUERY = 100
 MAX_RETRY_FAILED_REGIONS = 3
 OK_TO_PROCEED_REGION_FRACTION = 0.1 # we want at least 10% of all desired region present in the final data matrix
 
-##############################
-# These were constructor parameters but changes to global constants to reduce number of options
-#
-# Into how many intervals to split calendar year when generating distributions from raw data.
-# Default is 52 (roughly weekly). High values (such as 365 - daily) lead to greater storage requirements and not recommended
+# Into how many intervals to split calendar year when generating
+# distributions from raw data. Default is 52 (roughly weekly). High
+# values (such as 365 - daily) lead to greater storage requirements
+# and not recommended
 T_INT_PER_YEAR = 52
-# If 'any_missing', drop all regions which do nor have full set of valid datapoints
-# (i.e. t_int_per_year data points for each property). If 'fully_missing', drop region only if there is less than 2 valid datapoints
+
+# If 'any_missing', drop all regions which do nor have full set of
+# valid datapoints (i.e. t_int_per_year data points for each
+# property). If 'fully_missing', drop region only if there is less
+# than 2 valid datapoints
 DROP_MODE = 'any_missing'
 
 
@@ -57,7 +59,7 @@ class SimilarRegion(object):
         self.t_int_per_year = T_INT_PER_YEAR
         self.t_int_days = 365 / self.t_int_per_year # number of days in single t interval (can be float)
 
-        self._logger = get_default_logger()
+        self._logger = logging.getLogger(__name__)
 
         # extract needed parameters from inputs
         self.metric_properties = metric_properties
@@ -443,7 +445,6 @@ class SimilarRegion(object):
         load_bar.close()
         data_counters[data_counters == 0] = np.nan # avoid division by zero warning, where no data
         valid_data = valid_data/data_counters
-        #valid_data = valid_data[np.isfinite(valid_data)]
         # cut off the actually filled-in part (valid regions only)
         valid_data=valid_data[:len(valid_regions)*self.t_int_per_year]
 
