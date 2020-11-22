@@ -30,8 +30,7 @@ T_INT_PER_YEAR = 52
 # If 'any_missing', drop all regions which do nor have full set of valid datapoints
 # (i.e. t_int_per_year data points for each property). If 'fully_missing', drop region only if there is less than 2 valid datapoints
 DROP_MODE = 'any_missing'
-# If True, reload region info from Gro, otherwise try to use cached (still reload if region not found).
-REGION_INFO_RELOAD = False
+
 
 class SimilarRegion(object):
 
@@ -156,7 +155,7 @@ class SimilarRegion(object):
             self._logger.info(" level {}, {} regions".format(level, len(self.regions_on_level[level])))
             if level_data.size > 0:
                 self.balls_on_level[level] = BallTree(level_data, metric=self.metric_object, leaf_size=2)
-        self._logger.info("DONE")
+        self._logger.info("Done")
         self.search_region = search_region
         return
 
@@ -168,6 +167,7 @@ class SimilarRegion(object):
             ri += self.client.get_descendant_regions(root_region_id, descendant_level=l,
                                                      include_historical=False,
                                                      include_details=True)
+
         # reformat as dict with region_id as key
         self.region_info = dict(zip([item['id'] for item in ri], ri))
         self.needed_regions = sorted(self.region_info.keys())
@@ -184,7 +184,7 @@ class SimilarRegion(object):
             prop_regions = []
             if os.path.isfile(prop_path):
                 self._logger.info("Reading property {} from cache {} ...".format(prop_name, prop_path))
-                with np.load(prop_path,allow_pickle=True) as prop_file:
+                with np.load(prop_path, allow_pickle=True) as prop_file:
                     prop_data_cached = prop_file['data']
                     prop_regions = list(prop_file['regions'])
                 self._logger.info("Merging in cached info ...")
@@ -238,7 +238,8 @@ class SimilarRegion(object):
         self.prop_index = dict(zip(self.needed_properties,range(len(self.needed_properties))))
 
         self._logger.info("{} regions remains".format(self.num_regions))
-        assert self.num_regions > OK_TO_PROCEED_REGION_FRACTION*len(self.needed_regions), "Less than {}% of desired regions has full data. Bailing out.".format(OK_TO_PROCEED_REGION_FRACTION*100)
+        assert self.num_regions > OK_TO_PROCEED_REGION_FRACTION*len(self.needed_regions), \
+            "Less than {}% of desired regions has full data. Bailing out.".format(OK_TO_PROCEED_REGION_FRACTION*100)
         return
 
     def _normalize(self):
@@ -413,11 +414,9 @@ class SimilarRegion(object):
             # => don't add to processed list. Should pay attention to messages if None is legitimate (will repeat on resume)
             if (response is None) or (type(response) is BatchError) or (len(response) == 0):
                 self.finished = False
-                self._logger.info("Received None or BatchError as response to query {} for regions {} to {}".
-                                  format(idx,r_idx[0],r_idx[-1]))
+                self._logger.info("Could not get data for query {} for regions {} to {}: {}".format(
+                    idx, r_idx[0], r_idx[-1], response))
                 self.to_retry += r_idx
-                if type(response) is BatchError:
-                    self._logger.info("received BatchError(response, retry_count, url, params): {}".format(response))
                 return
             for r in r_idx:
                 # try/exept to avoid crash on invalid data, just pass None to _fill_block to deal with it properly
@@ -436,7 +435,7 @@ class SimilarRegion(object):
 
         #***********************
 
-        self._logger.info("Getting data series for {} regions in {} queries for property {}".
+        self._logger.warning("Getting data series for {} regions in {} batch(es) for property {}".
                           format(n_reg, n_queries, prop_name))
         load_bar = tqdm(total=n_reg)
         # Sending out all queries
@@ -450,7 +449,7 @@ class SimilarRegion(object):
 
         # have a list of (un)processed queries and a bunch of random regins we did not received any data for
         if not self.finished and depth < MAX_RETRY_FAILED_REGIONS:
-            self._logger.info("Retry {} failed regions at depth {}...".format(len(self.to_retry), depth))
+            self._logger.warning("Retrying data for {} failed regions, attempt {}...".format(len(self.to_retry), depth+1))
             (extra_data,extra_regions) = self._load_property_for_regions(prop_name, self.to_retry, track_na=False, depth=depth+1)
             valid_data = np.concatenate([valid_data,extra_data], axis=0)
             valid_regions += extra_regions
@@ -462,7 +461,6 @@ class SimilarRegion(object):
     # returns True if actual data were received, False for empty/None response
     def _fill_block(self, response, prop_name, idx, data, data_counters, track_na=True):
         res = True
-        #print("fb ", data.shape, idx)
         if response is None or len(response) == 0 or (len(response) == 1 and response[0] == {}):
             # no data on this region/property. let's fill it with nan
             data[idx:idx+self.t_int_per_year] = np.nan
@@ -528,7 +526,6 @@ class SimilarRegion(object):
                     data_counters[idx:idx+self.t_int_per_year] += 1
         return res
 
-
     def _get_distances(self, idx1, idx2, full_dist):
         """ Returns the distances in each property for the two given rows
             Distances are in the final space, i.e. incorporate all aplied normalization/weighting
@@ -548,7 +545,7 @@ class SimilarRegion(object):
         distances = dict([('total',full_dist), ('covar',s_dist)]+[(p,np.abs(means1[i]-means2[i])) for (i,p) in enumerate(self.needed_properties)])
         return distances
 
-    def similar_to(self, region_id, compare_to=0, number_of_regions=10, requested_level=None, detailed_distance=False):
+    def similar_to(self, region_id, compare_to=0, number_of_regions=10, requested_level=5, detailed_distance=False):
         """
         Attempt to look up the given name and find similar regions.
         :param region_id: a Gro region id representing the reference region you want to find similar regions to.
@@ -598,7 +595,6 @@ class SimilarRegion(object):
                 self.past_seeds[region_id] = x
             else:
                 self._logger.info("but was found in seed region cache")
-            #print(x[0])
         else:
             # seed region present in the data => just get corresponding row
 
@@ -609,21 +605,15 @@ class SimilarRegion(object):
         # distances and regions (as indexes into self.data)
         # Always use single lookup region - use [0] of the result
         max_num_regions = self.num_regions
-        if requested_level:
-            ball = self.balls_on_level.get(requested_level)
-            assert ball, "No region data on requested level {}".format(requested_level)
-            idx_to_region = self.regions_on_level[requested_level]
-            max_num_regions = len(idx_to_region)
-        else:
-            ball = self.ball
-            idx_to_region = self.available_regions
+        ball = self.balls_on_level.get(requested_level)
+        assert ball, "No region data on requested level {}".format(requested_level)
+        idx_to_region = self.regions_on_level[requested_level]
+        max_num_regions = len(idx_to_region)
+
         sim_dists, neighbour_idxs = ball.query(x, k = min(number_of_regions, max_num_regions))
         sim_regions = [idx_to_region[i] for i in neighbour_idxs[0]]
         sim_dists = sim_dists[0]
         if detailed_distance:
-            #r_idx = self.region_index[region_id]
-            #sim_dists = [self._get_distances(r_idx, self.region_index[r], sim_dists[i])
-            #             for (i,r) in enumerate(sim_regions)]
             sim_dists = [self._get_distances_means(x[0][:self.n_pit+self.n_ts], self.region_index[r], sim_dists[i])
                          for (i,r) in enumerate(sim_regions)]
         self._logger.info("Found {} regions most similar to '{}'.".format(len(sim_regions), region_id))
