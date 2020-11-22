@@ -60,6 +60,9 @@ class SimilarRegion(object):
         self.t_int_days = 365 / self.t_int_per_year # number of days in single t interval (can be float)
 
         self._logger = logging.getLogger(__name__)
+        if not self._logger.handlers:
+            stderr_handler = logging.StreamHandler()
+            self._logger.addHandler(stderr_handler)
 
         # extract needed parameters from inputs
         self.metric_properties = metric_properties
