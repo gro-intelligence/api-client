@@ -1,6 +1,7 @@
 import os
 import tempfile
 import logging
+import math
 from datetime import date
 
 import numpy as np
@@ -168,7 +169,7 @@ class SimilarRegion(object):
         """Initialize static information about regions to search in."""
         ri = [self.client.lookup('regions', root_region_id)] # include top-level region itself
         for l in region_levels:
-            self._logger.info("Loading region info for geo level {}".format(l))
+            self._logger.info("Loading region info for region level {}".format(l))
             ri += self.client.get_descendant_regions(root_region_id, descendant_level=l,
                                                      include_historical=False,
                                                      include_details=True)
@@ -387,12 +388,12 @@ class SimilarRegion(object):
         return result, [-1] # return any non-empty list (contains actual region list for database read)
 
 
-    def _load_property_for_regions(self, prop_name, regions_list, track_na=True, depth=0):
+    def _load_property_for_regions(self, prop_name, regions_list, track_na=True, depth=0, batch_size=REGIONS_PER_QUERY):
         is_ts = self.metric_properties[prop_name]["properties"]["type"] == "timeseries"
         query = self.metric_properties[prop_name]["api_data"]
         queries = []
         n_reg = len(regions_list)
-        n_queries =  n_reg // REGIONS_PER_QUERY + (n_reg % REGIONS_PER_QUERY != 0)
+        n_queries =  n_reg // batch_size + (n_reg % batch_size != 0)
 
         # allocate full size, but is being filled in in order of quert completion
         valid_data = np.zeros(n_reg*self.t_int_per_year)
@@ -406,20 +407,20 @@ class SimilarRegion(object):
 
         for q in range(n_queries):
             copy_of_metric = dict(query)
-            # ok for last index to exeed list length min(n_reg, (q+1)*REGIONS_PER_QUERY) is used
-            copy_of_metric["region_id"] = regions_list[q*REGIONS_PER_QUERY:(q+1)*REGIONS_PER_QUERY]
+            # ok for last index to exeed list length min(n_reg, (q+1)*batch_size) is used
+            copy_of_metric["region_id"] = regions_list[q*batch_size:(q+1)*batch_size]
             queries.append(copy_of_metric)
 
         #********************
         # function to process API responce to given query
         # self.data should already have space allocated for all data
         def map_response(idx, _, response, *args):
-            r_idx = regions_list[idx*REGIONS_PER_QUERY:(idx+1)*REGIONS_PER_QUERY]
+            r_idx = regions_list[idx*batch_size:(idx+1)*batch_size]
             # Add to to_retry if there's an API error. If there's no API error but the response is empty,
             # that means the data does not exist e.g. because the region is outside the coverage of the source.
             if type(response) is BatchError:
                 self.finished = False
-                self._logger.info("Could not get data for query {} for {} regions (HTTP {}), will retry".format(
+                self._logger.debug("Could not get data for query {} for {} regions (HTTP {}), will retry".format(
                     idx, len(r_idx), response.status_code))
                 self.to_retry += r_idx
                 return
@@ -451,12 +452,21 @@ class SimilarRegion(object):
         valid_data=valid_data[:len(valid_regions)*self.t_int_per_year]
 
         # have a list of (un)processed queries and a bunch of random regins we did not received any data for
-        if not self.finished and depth < MAX_RETRY_FAILED_REGIONS:
-            self._logger.warning("Retrying data for {} failed regions, attempt {}...".format(len(self.to_retry), depth+1))
-            (extra_data,extra_regions) = self._load_property_for_regions(prop_name, self.to_retry, track_na=False, depth=depth+1)
-            valid_data = np.concatenate([valid_data,extra_data], axis=0)
-            valid_regions += extra_regions
-
+        if not self.finished:
+            if depth < MAX_RETRY_FAILED_REGIONS:
+                self._logger.debug("Retrying data for {} failed regions, attempt {}...".format(len(self.to_retry), depth+1))
+                # A single "bad" region spoils the whole batch, so we retry with exponentially decreasing batch size.
+                new_batch_size = math.ceil(min(batch_size, len(self.to_retry))/2)
+                (extra_data,extra_regions) = self._load_property_for_regions(
+                    prop_name, self.to_retry, track_na=False, depth=depth+1, batch_size=new_batch_size)
+                valid_data = np.concatenate([valid_data,extra_data], axis=0)
+                valid_regions += extra_regions
+            else:
+                self._logger.debug("Giving up on region(s): {}".format(self.to_retry))
+                if len(self.to_retry) > 1 and new_batch_size > 1:
+                    # Since we cache data, each rerun will retry only the failed ones with smaller batch sizes
+                    # Eventually get data for all "good" regions and isolate "bad" regions individually.
+                    self._logger.debug("You may still be able to get data for some of them by re-running.")
         return (valid_data, valid_regions)
 
     ##############################
