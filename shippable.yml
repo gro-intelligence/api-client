@@ -59,7 +59,7 @@ build:
     # We only want to publish a new package when PRs are actually accepted and
     # merged, which is why we check $IS_PULL_REQUEST.
     - >
-      if [ "$BRANCH" == "development" && "$IS_PULL_REQUEST" == "false" ]; then
+      if [ "$BRANCH" == "development" -a "$IS_PULL_REQUEST" == "false" ]; then
         poetry config repositories.testpypi https://test.pypi.org/legacy/ &&
         poetry publish -u __token__ -p $TESTPYPI_TOKEN -r testpypi
       fi
