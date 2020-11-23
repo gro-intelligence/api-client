@@ -2,9 +2,9 @@
 
 Gro's expansive data covers regions across the entire world. This depth of data enables powerful comparisons and contrasts between individual districts or even entire countries. This Similar Regions application offers a simple approach for quickly computing similarities between selected regions.
 
-Calling two regions “similar” is, of course, a fuzzy term and presupposes a lot of assumptions about what can be considered similar. Working in the context of agriculture, key factors affecting similarity between two regions can commonly be recognized as temperature, rainfall, and soil moisture, among many others.
+Calling two regions “similar” is, of course, a fuzzy term and presupposes a lot of assumptions about what can be considered similar. Working in the context of agriculture, key factors affecting similarity between two regions are temperature, rainfall, and soil moisture, among many others.
 
-To showcase one such approach, suppose you were interested in finding all the “similar” regions to a given region `a`. This Similar Regions application will evaluate how similar `a` is to each region in a given set of regions `B`. The application will then return an ordered list of `B`. The properties used to compare `a` with `B` are by default temperature, soil moisture, and rainfall and a number of soil properties, but these can be changed to any of the available metrics in Gro.
+Suppose you were interested in finding all the “similar” regions to a given region `a`. This Similar Regions application will evaluate how similar `a` is to each region in a given set of regions `B`. The application will then return an ordered list of `B`. The properties used to compare `a` with `B` are by default temperature, soil moisture, and rainfall and a number of soil properties, but these can be changed to any of the available metrics in Gro.
 
 ### Usage:
 
@@ -24,11 +24,15 @@ Suppose we want to get the 10 US states that are most similar to Wisconsin.  We 
 	print(result)
 ```
 
-The fourth line (the call to similar_to) will take some time depending on the amount of cached data and the number of regions you’ve specified. The output should show you that the region most similar to Wisconsin is of course, Wisconsin, and then a number of other similar states.
+The call to `similar_to` will take some time depending on the amount of cached data and the number of regions you’ve specified. The output should show you that the region most similar to Wisconsin is of course, Wisconsin, and then a number of other similar states.
 
-If we wanted to compare Wisconsin to provinces in Europe instead of the USA, we would use `compare_to=14`.
+### Specifying regions
 
-To expand our search to all provinces in the world, we would just omit compare_to, but we still leave the region level as `4`.  This will now take longer since the model is getting data for the ~3.5k provinces in the whole world (instead of just 50 states), which takes about 30-45 minutes on a ~100Mbps  internet connection.
+You can find region ids to use by browsing the [regions in the Gro dictionary](https://app.gro-intelligence.com/dictionary/regions/0) or by exploring data series in [Gro](https://app.gro-intelligence.com/dictionary/regions/14), the web app.  Besides region ids, you will also need to know the [region levels defined in the Gro ontology](https://developers.gro-intelligence.com/gro-ontology.html#special-properties-for-regions).
+
+If we wanted to compare Wisconsin to provinces in [Europe](https://app.gro-intelligence.com/dictionary/regions/14) instead of the [USA](https://app.gro-intelligence.com/dictionary/regions/1215), we would use `compare_to=14`.
+
+To expand our search to all provinces in the world, we would just omit compare_to, but we still leave the region level as `4`.  This will now take longer since the model is getting data for the ~3.5k provinces in the whole world (instead of just 50 states), which takes about 30 minutes on a ~100Mbps  internet connection.
 
 If we wanted to compare it to countries instead of provinces we would change the region_level from `4` to `3`, and for  districts we would use region level `5`.
 
