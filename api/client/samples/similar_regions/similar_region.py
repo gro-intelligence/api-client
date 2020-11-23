@@ -630,17 +630,12 @@ class SimilarRegion(object):
 
         for ranking, sr_id in enumerate(sim_regions):
             info = self.region_info[sr_id]
-            parents_info = []
-            grand_parents_info = []
+            data_point = {'rank': ranking, 'id': sr_id, 'name': info['name'], 'dist': sim_dists[ranking]}
+            # A region may have more than one parent, it's not a tree. Take first one.
             for parent in self.client.lookup_belongs('regions', sr_id):
-                # a region may have more than one parent, it's not a tree
-                parents_info.append((parent['id'], parent['name']))
+                data_point['parent'] = {'id': parent['id'], 'name': parent['name']}
                 for grand_parent in self.client.lookup_belongs('regions', parent['id']):
-                    grand_parents_info.append((grand_parent["id"], grand_parent["name"]))
-            data_point = {"#": ranking,
-                          "id": sr_id,
-                          "name": info['name'],
-                          "dist": sim_dists[ranking],
-                          "parents": parents_info,
-                          "grand_parents": grand_parents_info}
+                    data_point['grand_parent'] = {'id': grand_parent['id'], 'name': grand_parent['name']}
+                    break
+                break
             yield data_point
