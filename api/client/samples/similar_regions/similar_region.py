@@ -388,7 +388,7 @@ class SimilarRegion(object):
         return result, [-1] # return any non-empty list (contains actual region list for database read)
 
 
-    def _load_property_for_regions(self, prop_name, regions_list, track_na=True, depth=0, batch_size=REGIONS_PER_QUERY):
+    def _load_property_for_regions(self, prop_name, regions_list, depth=0, batch_size=REGIONS_PER_QUERY):
         is_ts = self.metric_properties[prop_name]["properties"]["type"] == "timeseries"
         query = self.metric_properties[prop_name]["api_data"]
         queries = []
@@ -430,7 +430,7 @@ class SimilarRegion(object):
                     resp = [{key:item[key] for key in ['start_date', 'end_date','value']} for item in response if item['region_id']==r]
                 except:
                     resp = None
-                if self._fill_block(resp, prop_name, len(valid_regions)*self.t_int_per_year, valid_data, data_counters, track_na):
+                if self._fill_block(resp, prop_name, len(valid_regions)*self.t_int_per_year, valid_data, data_counters):
                     valid_regions.append(r)
                 else:
                     self._logger.debug("No data for {} for region {}".format(prop_name,r))
@@ -458,7 +458,7 @@ class SimilarRegion(object):
                 # A single "bad" region spoils the whole batch, so we retry with exponentially decreasing batch size.
                 new_batch_size = math.ceil(min(batch_size, len(self.to_retry))/2)
                 (extra_data,extra_regions) = self._load_property_for_regions(
-                    prop_name, self.to_retry, track_na=False, depth=depth+1, batch_size=new_batch_size)
+                    prop_name, self.to_retry, depth=depth+1, batch_size=new_batch_size)
                 valid_data = np.concatenate([valid_data,extra_data], axis=0)
                 valid_regions += extra_regions
             else:
@@ -472,7 +472,7 @@ class SimilarRegion(object):
     ##############################
     # fills corresponding block of data/data_counters (starting from idx) from API response
     # returns True if actual data were received, False for empty/None response
-    def _fill_block(self, response, prop_name, idx, data, data_counters, track_na=True):
+    def _fill_block(self, response, prop_name, idx, data, data_counters):
         res = True
         if response is None or len(response) == 0 or (len(response) == 1 and response[0] == {}):
             # no data on this region/property. let's fill it with nan
