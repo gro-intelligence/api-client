@@ -20,7 +20,7 @@ be initialized as follows:
 Get data points
 ===============
 
-:code:`get_data_points(**selection)` is the most basic method for retrieving data. The `code snippets <searching-data#code-snippets>`_ feature covered earlier provides you with a fully completed `get_data_points()` query, such as:
+:code:`get_data_points(**selection)` is the most basic method for retrieving data. The `code snippets <./searching-data#code-snippets>`_ feature covered earlier provides you with a fully completed `get_data_points()` query, such as:
 
 .. code-block:: python
 
@@ -65,7 +65,7 @@ The easiest way to do that is to use :code:`add_data_series()`, e.g.:
 
 Note that :code:`add_data_series()` combines searching for combinations of entities by name, finding the best possible data series for that combination, and adding it to the client. In the above example, each :code:`add_data_series()` call finds several possible series (5 series for area harvested and 6 for production quantity respectively), and adds the highest ranked one for each.  For more information on how series are ranked see :meth:`groclient.GroClient.rank_series_by_source`.
 
-If you want to directly control the series selection, you can also take a specific selection - discovered, perhaps, via `code snippets <./searching-data.html#code-snippets>`_, or using :meth:`groclient.GroClient.find_data_series` and then add that series directly with the
+If you want to directly control the series selection, you can also take a specific selection - discovered, perhaps, via `code snippets <./searching-data#code-snippets>`_, or using :meth:`groclient.GroClient.find_data_series` and then add that series directly with the
 :code:`add_single_data_series()` method, e.g.:
 
 .. code-block:: python
