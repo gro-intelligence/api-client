@@ -5,20 +5,20 @@ import math
 from datetime import date
 
 import numpy as np
-from scipy.linalg import sqrtm
 import pandas as pd
+
+from scipy.linalg import sqrtm
+from sklearn.neighbors import BallTree, DistanceMetric
 from tqdm import tqdm
 
-from sklearn.neighbors import BallTree, DistanceMetric
 from groclient.client import GroClient, BatchError
 from groclient.lib import get_default_logger
-from sklearn.metrics.pairwise import euclidean_distances
 
 """ API Config """
 API_HOST = 'api.gro-intelligence.com'
 ACCESS_TOKEN = os.environ['GROAPI_TOKEN']
 
-REGIONS_PER_QUERY = 100
+REGIONS_PER_QUERY = 32
 MAX_RETRY_FAILED_REGIONS = 3
 OK_TO_PROCEED_REGION_FRACTION = 0.1 # we want at least 10% of all desired region present in the final data matrix
 
