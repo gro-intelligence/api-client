@@ -6,10 +6,6 @@ Calling two regions “similar” is, of course, a fuzzy term and presupposes a 
 
 To showcase one such approach, suppose you were interested in finding all the “similar” regions to a given region `a`. This Similar Regions application will evaluate how similar `a` is to each region in a given set of regions `B`. The application will then return an ordered list of `B`. The properties used to compare `a` with `B` are by default temperature, soil moisture, and rainfall and a number of soil properties, but these can be changed to any of the available metrics in Gro.
 
-### Implementation/Technical Details:
-
-For a general technical overview of the approach taken, please take a read through the blog post available here: [TODO: insert blog post link].
-
 ### Usage:
 
 #### Interactively:
@@ -32,9 +28,11 @@ The fourth line (the call to similar_to) will take some time depending on the am
 
 If we wanted to compare Wisconsin to provinces in Europe instead of the USA, we would use `compare_to=14`.
 
-To expand our search to all provinces in the world, we would just omit compare_to, but we still leave the region level as `4`.  This will now take longer since the model is getting data for the ~3.5k provinces in the whole world, instead of just 50 states.
+To expand our search to all provinces in the world, we would just omit compare_to, but we still leave the region level as `4`.  This will now take longer since the model is getting data for the ~3.5k provinces in the whole world (instead of just 50 states), which takes about 30-45 minutes on a ~100Mbps  internet connection.
 
 If we wanted to compare it to countries instead of provinces we would change the region_level from `4` to `3`, and for  districts we would use region level `5`.
+
+If `compare_to=0` (the whole world), and `requested_level=5` (districts), it will get 20+ years of daily data for 3 data series, plus 7 static data series, for ~45k regions, which is approximately *1 billion data points*. This takes up to 3 hours on a ~100Mbps internet connection.
 
 
 #### Programmatically:
@@ -49,6 +47,4 @@ The file metric.py defines the properties we are using to compare the regions, v
 
 ### Data volume and cache:
 
-This application uses a lot of data from the Gro API. If `compare_to=0` (the whole world), and `requested_level=5` (districts), it will get 20 years of daily data for 3 data series, plus 7 static data series, for 45,000 regions, which is approximately *1 billion data points*.
-
-Setting a persistent local cache via `data_dir` is highly recommended to avoid unnecessarily repeat downloads from the Gro API.
+This application uses a lot of data from the Gro API, up to ~1 billion data points in some cases as noted above. Setting a persistent local cache via `data_dir` is highly recommended to avoid unnecessary repeat downloads from the Gro API.
