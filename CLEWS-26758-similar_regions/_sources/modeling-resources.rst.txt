@@ -8,18 +8,18 @@ Modeling Resources
 Gro Crop Cover
 ==============
 
-Gro's proprietary high-resolution crop covers are currently used in the `Gro yield models <https://gro-intelligence.com/gro-models>`_. These have proven very successful i.e. more accurate for yield modeling than the best available alternatives. Gro does not plan on developing a yield model for every crop or region in the world, so our models will always be limited to the regions and crops where we can help push the envelope. Users can access our crop covers in the `Gro web app _<https://app.gro-intelligence.com/displays/jdOQrvERw>`_ and the API, or from the download links below. In the web app and API, users can interact with detailed cropland covers that indicate the intensity of crop cover for a particular pixel. Below users can download .tif files of low and high-confidence crop covers which represent, as a binary value, whether a crop is growing in a specific pixel.
+Gro's proprietary high-resolution crop covers are currently used in the `Gro yield models <https://gro-intelligence.com/gro-models>`_. These have proven very successful i.e. more accurate for yield modeling than the best available alternatives. Gro does not plan on developing a yield model for every crop or region in the world, so our models will always be limited to the regions and crops where we can help push the envelope. Users can access our crop covers in the `Gro web app <https://app.gro-intelligence.com/displays/jdOQrvERw>`_ and the API, or from the download links below. In the web app and API, users can interact with detailed cropland covers that indicate the intensity of crop cover for a particular pixel. Below users can download .tif files of low and high-confidence crop covers which represent, as a binary value, whether a crop is growing in a specific pixel.
 
 Methodology
 -----------
 
 Crop covers for past seasons
-^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 In order to remove irrelevant data pixels (i.e., pixels that are not representative of the crop in study), we create/derive crop specific covers for each past crop season, as `described here <https://www.gro-intelligence.com/blog/want-to-build-a-yield-model-heres-your-first-step>`_ (see also `Creating a basic customizable framework for crop detection using Landsat imagery <https://www.tandfonline.com/doi/abs/10.1080/2150704X.2016.1252471>`_. This is necessary for each year, due to crop rotations and other changes in the area where crops are planted. Moreover, even with per-season covers, there is an additional challenge for in-season crop yield forecasting, because the current season crop cover is usually not available until the beginning of the following year.
 
 In-season crop cover
-^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^
 
 For current season forecasting, since we're starting well before the growing period, there is no universal approach that provides the best cover. Instead, we use the series of covers for prior seasons to create a few different covers for the current season. Together, these current season covers can be thought of as providing supersets and subsets of the true planted area. The combination of the various covers provides the information needed for yield forecasting purposes.
 
@@ -42,7 +42,7 @@ A low-confidence cover and a high-confidence cover were made from those yearly c
 
 Click the links below to download TIF files of in-season covers:
 
-.. raw:: html 
+.. raw:: html
 
   <ul class="simple">
   <li><a href="https://s3.amazonaws.com/groprod/gro_crop_masks/us_corn/USCorn_LC_99_15.tif" target="_blank"><code class="download"><span class="pre"></span>low confidence</code></a></li>
@@ -60,8 +60,8 @@ We start in 2008, because including years prior to 2008 reduces the accuracy for
 
 Click the link below to download TIF files of in-season covers:
 
-.. raw:: html 
-  
+.. raw:: html
+
   <ul class="simple">
   <li><a href="https://s3.amazonaws.com/groprod/gro_crop_masks/us_soy/USSoy_LC_08_17.tif" target="_blank"><code class="download"><span class="pre"></span>low confidence</code></a></li>
   </ul>
@@ -81,7 +81,7 @@ A low-confidence cover and a high-confidence cover were made from those yearly c
 
 Click the links below to download TIF files of in-season covers:
 
-.. raw:: html 
+.. raw:: html
 
   <ul class="simple">
   <li><a href="https://s3.amazonaws.com/groprod/gro_crop_masks/argentina_soy/ArgLC07_16.tif" target="_blank"><code class="download"><span class="pre"></span>low confidence</code></a></li>
@@ -103,7 +103,7 @@ A low-confidence cover and a high-confidence cover were made from those yearly c
 
 Click the links below to download TIF files of in-season covers:
 
-.. raw:: html 
+.. raw:: html
 
   <ul class="simple">
   <li><a href="https://s3.amazonaws.com/groprod/gro_crop_masks/india_wheat/IndiaWheat_07_17_LC_1b.tif" target="_blank"><code class="download"><span class="pre"></span>low confidence</code></a></li>
@@ -145,7 +145,7 @@ Models
 
 Listed below are Gro's existing models. Each available link will download backtest data (daily frequency) for a whole crop season.
 
-.. raw:: html 
+.. raw:: html
 
   <ul class="simple">
   <li><a href="https://s3.amazonaws.com/groprod/yield_model_backtest/US_corn_backtest_2001_to_2017.zip" target="_blank"><code class="download"><span class="pre"></span>US Corn</code></a></li>
@@ -185,7 +185,7 @@ For `TRMM (3B42RT) <https://app.gro-intelligence.com/dictionary/sources/35>`_, t
 Computing Mean Values Amid LST Data Gaps
 ========================================
 
-As an example, the Figure 1 map below, modeled using MODIS sensor data from the Terra satellite, shows India during a monsoon. The monsoon’s path, generally from the southeast to the northwest, can be seen by the level of cloud cover. 
+As an example, the Figure 1 map below, modeled using MODIS sensor data from the Terra satellite, shows India during a monsoon. The monsoon’s path, generally from the southeast to the northwest, can be seen by the level of cloud cover.
 
 .. image:: ./_images/LST-India.png
   :align: center
@@ -195,19 +195,19 @@ Figure 1. Example of high cloud cover (shown as no data in light grey) during a 
 
 Gaps in data caused by cloud coverage can cause daily regional aggregated means to also report no data. Gro requires at least 6% of the pixels in a region to have data for an aggregated mean to be reported. Coverage at less than this percentage can cause outlier values, with aggregated means possibly reporting values more than 10 degrees Celsius higher or lower than what would be measured without cloud coverage.
 
-At times, cloud coverage causes gaps that can occur for multiple days in a row (Figure 2). 
+At times, cloud coverage causes gaps that can occur for multiple days in a row (Figure 2).
 
 .. image:: ./_images/LST-Karur.png
   :align: center
   :alt: Land Surface Temperature Karur
- 
+
 Figure 2. Example of high cloud cover causing missing data points in line charts for a region in India.
 
-Averaging the daily data to longer time steps, such as weekly, smooths the daily variations and allows for easier comparisons of changes over time. But because temperatures can greatly fluctuate from one day to the next, there must be a minimum number of days with data to help minimize the effects of outliers. For land surface temperature data, a minimum of three days with data must be present in order to compute weekly means (Figure 3). 
+Averaging the daily data to longer time steps, such as weekly, smooths the daily variations and allows for easier comparisons of changes over time. But because temperatures can greatly fluctuate from one day to the next, there must be a minimum number of days with data to help minimize the effects of outliers. For land surface temperature data, a minimum of three days with data must be present in order to compute weekly means (Figure 3).
 
 .. image:: ./_images/LST-Sorochinskiy_rayon.png
   :align: center
   :alt: Land Surface Temperature Sorochinskiy rayon
-  
-Figure 3. Example of how three days of data (Jan 27-30) will result in a weekly average posted for the week of Jan 27-Feb 2, despite four days of data being missing due to cloud cover. The week of Feb 3-9 has five days with data, which results in a weekly average posted, as well. 
+
+Figure 3. Example of how three days of data (Jan 27-30) will result in a weekly average posted for the week of Jan 27-Feb 2, despite four days of data being missing due to cloud cover. The week of Feb 3-9 has five days with data, which results in a weekly average posted, as well.
 
