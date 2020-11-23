@@ -85,7 +85,7 @@ class SimilarRegion(object):
         self._logger.debug('Using {} as data_dir'.format(self.data_dir))
 
         self.client = GroClient(API_HOST, ACCESS_TOKEN)
-        self.search_region = None
+        self.already_built = set()
 
     def build(self, search_region=0, region_levels=[3,4,5]):
         """Get data and build distance metric objects for the given search
@@ -161,8 +161,9 @@ class SimilarRegion(object):
             self._logger.info(" level {}, {} regions".format(level, len(self.regions_on_level[level])))
             if level_data.size > 0:
                 self.balls_on_level[level] = BallTree(level_data, metric=self.metric_object, leaf_size=2)
+            self.already_built.add((search_region, level))
+
         self._logger.info("Done")
-        self.search_region = search_region
         return
 
     def _initialize_regions(self, root_region_id, region_levels):
@@ -569,15 +570,12 @@ class SimilarRegion(object):
         :return: a generator of the most similar regions as a list in the form
         {'#': 0, 'id': 123, 'name': "abc", 'dist': 1.23, 'parent': (12,"def",,)}
         """
-        if self.search_region != compare_to:
+        if (compare_to, requested_level) not in self.already_built:
             self.build(compare_to, [requested_level])
 
-        # To change search region, user should construct new SR object
-        # but we want to allow searches with seed region outside serach region,
-        # say, seed region in South America but search region is Africa
-        #
-        # For simplicity, in such cases always download data for the seed region from the system directly (ignore cache)
         if region_id not in self.available_regions:
+            # TODO: move initialize_regions() outside build() so we can just add seed region_id to self.needed_regions and
+            # call build() afterwards
             self._logger.info("Getting data for seed region {}...".format(region_id))
             x = self.past_seeds.get(region_id)
             if x is None:
@@ -610,7 +608,6 @@ class SimilarRegion(object):
                 self._logger.info("but was found in seed region cache")
         else:
             # seed region present in the data => just get corresponding row
-
             # called when self.data is simple np.array
             # BallTree expects array of points but we always search neighbors of just one => reshape
             x = self.data[self.region_index[region_id]].reshape(1, -1)
