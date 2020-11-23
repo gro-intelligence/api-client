@@ -11,7 +11,7 @@ Exploring What's Available
 Why is it that when I use client.search() to find metrics/items/regions I'm interested in, sometimes client.get_data_series() doesn't have any data for those metrics/items/regions?
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-:code:`client.search()` provides a way to search across everything we have identified and defined in our ontology. Sometimes data doesn't exist for a particular result for a number of reasons, most commonly because we may have defined new entries in preparation for an incoming source which is undergoing testing. 
+:code:`client.search()` provides a way to search across everything we have identified and defined in our ontology. Sometimes data doesn't exist for a particular result for a number of reasons, most commonly because we may have defined new entries in preparation for an incoming source which is undergoing testing.
 `find_data_series() <api.html#groclient.GroClient.find_data_series>`_
 will tell you what data is actually available by performing searches for combinations of items, metrics and regions. You can intersect the results from those two functions to find things programmatically, or you can use the web application at https://app.gro-intelligence.com to explore what data is available, intersected already.
 
@@ -24,14 +24,14 @@ Data Retrieval
 ==============
 
 I specified an end_date when calling get_data_points(). Why am I getting points with other end_dates?
-----------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------
 
 start_date and end_date specify a time interval. When retrieving a
 series, it is interpreted *inclusively* i.e. it will include points
 that are fully or partially in the desired interval. Thus if the start
 and end dates selected are March 15 to May 15, and the data happens to
 be monthly on calendar months, it will include points for [Mar 1, Mar
-31], [Apr 1, Apr 30], [May 1, May 31]. 
+31], [Apr 1, Apr 30], [May 1, May 31].
 
 Thus, when calling `get_data_points() <api.html#groclient.GroClient.get_data_points>`_ specifying a start_date for the series restricts the query to any point where "point_end_date >= series_start_date," and a series end_date restricts it to any point where "point_start_date <= series_end_date".
 
@@ -53,7 +53,7 @@ What do warnings about 'historical' regions mean?
 -------------------------------------------------------------------
 
 `Historical regions <gro-ontology#historical>`_ behave just like other regions. Any data that exists can be accessed the same way as data for any region in Gro.  Generally historical regions will only have data corresponding to the time periods when they existed. But in some
-cases, new regions can have data that extends into the past and overlaps with historical regions. 
+cases, new regions can have data that extends into the past and overlaps with historical regions.
 Rather than always excluding the old regions in such cases, we allow the user to choose via the  :code:`include_historical` option in `get_data_points() <api.html#groclient.GroClient.get_data_points>`_. This can be useful if for example you are analyzing historical temperatures at the district level in a country where the districts that exist today were only created 5 years ago and but you want 20 years of data. In that case, you can filter out the historical regions to avoid double counting.
 
 Why is daily NDVI changing so much from day to day? And why do some days have no NDVI coverage, especially in winter?
@@ -62,12 +62,12 @@ Why is daily NDVI changing so much from day to day? And why do some days have no
 The Normalized Difference Vegetation Index (NDVI) relates satellite based observations to vegetation health and condition. However, in the presence of clouds, especially thin cirrus undetected by cloud algorithms, NDVI is artificially dampened. As a result, NDVI has  lower values on days with undetected thin clouds and higher values on days with no cloud cover. The satellite readings are also affected by snow and ice cover, which means NDVI coverage in the winter may be limited for some regions.
 
 To avoid these day-to-day variations in the Sentinel-3A (S3A) and Sentinel-3B (S3B) daily NDVI dataset, Gro users can make use of the MODIS GIMMS 8-day NDVI product, which is based on selecting the maximum NDVI pixel value over an eight-day period. This is a more stable product that minimizes the cloud effect.
- 
+
 Why isn’t there 100% coverage every day for daily NDVI?
 --------------------------------------------------------
 
 We cannot achieve 100% global coverage daily because it takes, on average, 1.1 days (26.4 hours) for the S3A and S3B satellites to cover the globe. In addition, since cloud and snow covers are limiting factors, such areas are detected and assigned a “no data” value, further reducing the percentage of daily coverage.
- 
+
 Why a threshold and how is it computed to determine district mean?
 -------------------------------------------------------------------
 
@@ -96,7 +96,7 @@ How do I get authenticated access to Gro API?
 You must get an `authentication token <authentication#retrieving-a-token>`_ from your Gro account.
 
 Why am I getting a 401 Unauthorized error when I try to use my Gro username and login?
--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------
 
 A Gro account gives you access to the web application at app.gro-intelligence.com. API access is sold as an add-on product you need to be activated for. To learn more about getting an API account, contact our sales team using the link at `gro-intelligence.com/products/gro-api <https://www.gro-intelligence.com/products/gro-api>`_
 

@@ -1,8 +1,14 @@
+:orphan:
+
+..
+	:orphan: is to suppress the warning "document isn't included in any toctree".
+	This page is linked to from prerequisites/index.rst.
+
 Prerequisite Software Package Installation
 ##########################################
 
 The following links are provided for guidance on installing the prerequisite software.
- 
+
 MacOS and Linux
 ===============
 
@@ -19,9 +25,9 @@ Anaconda
 --------
 1. Download Anaconda with Python 3.5 or above from `anaconda.com <https://www.anaconda.com/distribution/>`_ Support for Python 2.7.13 or above is also maintained, but with `its End of Life <https://mail.python.org/pipermail/python-dev/2018-March/152348.html>`_, it is recommended you start with Python 3.
 2. Install Git from `git-scm.com <https://git-scm.com/download/win>`_. Proceed with the default options.
-3. See `additional information <./anaconda-additional-information>`_ related to Anaconda if Anaconda is not installed in the default directory (C:\Users\<your-username>) or if your environment uses a proxy or firewall in connections to the internet.
+3. See `additional information <./anaconda-additional-information>`_ related to Anaconda if Anaconda is not installed in the default directory (C:\\Users\\<your-username>) or if your environment uses a proxy or firewall in connections to the internet.
 
-Non-Anaconda 
+Non-Anaconda
 ------------
 #. Powershell (should come default with Windows)
 #. Download Python version 3.5 or above from `python.org <https://www.python.org/downloads/windows/>`_. Support for Python 2.7.13 or above is also maintained, but with `its End of Life <https://mail.python.org/pipermail/python-dev/2018-March/152348.html>`_, it is recommended you start with Python 3.
@@ -30,5 +36,5 @@ Non-Anaconda
    .. image:: ../_images/python3-path.PNG
     :align: center
     :alt: Add python to path installer
-  
+
 #. Install Git from `git-scm.com <https://git-scm.com/download/win>`_. Proceed with the default options.
