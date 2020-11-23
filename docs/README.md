@@ -15,7 +15,8 @@ documentation. All other pages are manually written.
 
 - Install Poetry (see `CONTRIBUTING.md`).
 - `poetry install -E docs` to install extra dependencies.
-- `poetry run sphinx-versioning build docs docs/_build/html` to build the docs.
+- `rm -r docs/_build/html && poetry run sphinx-build -W --keep-going docs
+  docs/_build/html` to build the docs for your current branch.
 
 This should generate html output in `api-client/docs/_build/html` that you can
 open up and view in a web browser.
@@ -27,6 +28,10 @@ documentation for any currently-open branches and pushing the result to the
 `gh-pages` branch. If you edit any documentation pages or docstrings, it should
 be a part of the Pull Request review process that you navigate to your feature
 branch's built documentation and verify that the changes are as intended.
+
+Note that branches aren't listed in the version-selector widget (since we don't
+want to show it to external users), but you can navigate directly to it:
+`https://developers.gro-intelligence.com/<YOUR-BRANCH-NAME-HERE>/index.html`
 
 If anything in continuous integration fails, the documentation building step is
 skipped.
