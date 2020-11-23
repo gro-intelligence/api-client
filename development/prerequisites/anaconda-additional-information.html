@@ -203,38 +203,46 @@
 
 <div class="section" id="anaconda-additional-information">
 <h1>Anaconda Additional Information<a class="headerlink" href="#anaconda-additional-information" title="Permalink to this headline">¶</a></h1>
-<ol class="arabic simple">
-<li><dl class="first docutils">
-<dt>If your username includes spaces, as is common on Windows systems, you are not allowed to install Anaconda in the default path (C:Users&lt;your-username&gt;Anaconda3)</dt>
-<dd><ol class="first last arabic">
+<ol class="arabic">
+<li><p class="first">If your username includes spaces, as is common on Windows systems, you are not allowed to install Anaconda in the default path (C:Users&lt;your-username&gt;Anaconda3)</p>
+<blockquote>
+<div><ol class="loweralpha simple">
 <li>See this <a class="reference external" href="https://docs.anaconda.com/anaconda/user-guide/faq/#distribution-faq-windows-folder">Anaconda link</a> for additional information.</li>
 </ol>
-</dd>
-</dl>
+</div></blockquote>
 </li>
-<li><dl class="first docutils">
-<dt>If you install Anaconda outside of the default path, then you will need to update the config for the jupyter notebook default directory as outlined below:</dt>
-<dd><ol class="first last arabic">
-<li>Go to the default path (C:Users/&lt;your-username&gt;)</li>
-<li>Open the .jupyter folder (pay attention to the ‘dot’ before the name)</li>
-<li>Open the following file using a text editor: jupyter_notebook_config.py</li>
-<li><dl class="first docutils">
-<dt>Edit the following line</dt>
-<dd><code class="code docutils literal"><span class="pre">#c.NotebookApp.notebook_dir</span> <span class="pre">=</span> <span class="pre">u&quot;</span></code>
-change it to:
-<code class="code docutils literal"><span class="pre">c.NotebookApp.notebook_dir</span> <span class="pre">=</span> <span class="pre">'C:\Your\Path'</span></code>
-Note: Be careful not to leave an empty space in the line when you delete the ‘#’ character, the first character on that line is ‘c’</dd>
-</dl>
+<li><p class="first">If you install Anaconda outside of the default path, then you will need to update the config for the jupyter notebook default directory as outlined below:</p>
+<blockquote>
+<div><ol class="loweralpha">
+<li><p class="first">Go to the default path (C:Users/&lt;your-username&gt;)</p>
 </li>
-<li>Save the file</li>
-<li>Relaunch Anaconda Navigator</li>
-<li>Launch jupyter notebook</li>
+<li><p class="first">Open the &#8216;.jupyter&#8217; folder (note the period &#8216;.&#8217; before the word &#8216;jupyter&#8217;)</p>
+</li>
+<li><p class="first">Open the following file using a text editor: jupyter_notebook_config.py</p>
+</li>
+<li><p class="first">Change the following line:</p>
+<blockquote>
+<div><div class="line-block">
+<div class="line"><code class="code docutils literal"><span class="pre">#c.NotebookApp.notebook_dir</span> <span class="pre">=</span> <span class="pre">u&quot;</span></code></div>
+<div class="line">to:</div>
+<div class="line"><code class="code docutils literal"><span class="pre">c.NotebookApp.notebook_dir</span> <span class="pre">=</span> <span class="pre">'C:\Your\Path'</span></code></div>
+<div class="line">Note: Be careful not to leave an empty space in the line when you delete the &#8216;#&#8217; character, the first character on that line is &#8216;c&#8217;.</div>
+</div>
+</div></blockquote>
+</li>
+<li><p class="first">Save the file</p>
+</li>
+<li><p class="first">Relaunch Anaconda Navigator</p>
+</li>
+<li><p class="first">Launch jupyter notebook</p>
+</li>
 </ol>
-</dd>
-</dl>
+</div></blockquote>
 </li>
-<li>See the following link from Anaconda if you have a <a class="reference external" href="https://docs.anaconda.com/anaconda/user-guide/tasks/proxy/">proxy</a></li>
-<li>See the following link from Anaconda if you have a <a class="reference external" href="https://docs.anaconda.com/anaconda-enterprise-4/ae-and-nav/#configuring-firewall-settings">firewall</a></li>
+<li><p class="first">See the following link from Anaconda if you have a <a class="reference external" href="https://docs.anaconda.com/anaconda/user-guide/tasks/proxy/">proxy</a></p>
+</li>
+<li><p class="first">See the following link from Anaconda if you have a <a class="reference external" href="https://docs.anaconda.com/anaconda-enterprise-4/ae-and-nav/#configuring-firewall-settings">firewall</a></p>
+</li>
 </ol>
 </div>
 
@@ -250,7 +258,7 @@ Note: Be careful not to leave an empty space in the line when you delete the ‘
   <div role="contentinfo">
     <p>
         
-        &copy; Copyright 2019, Gro Intelligence
+        &copy; Copyright 2020, Gro Intelligence
 
     </p>
   </div>
@@ -312,7 +320,6 @@ Note: Be careful not to leave an empty space in the line when you delete the ‘
             <dd><a href="../../CLEWS-27625-fixtures/prerequisites/anaconda-additional-information.html">CLEWS-27625-fixtures</a></dd>
             <dd><a href="anaconda-additional-information.html">development</a></dd>
             <dd><a href="../../docs-latest-tag/index.html">docs-latest-tag</a></dd>
-            <dd><a href="../../jli-docscleanup/prerequisites/anaconda-additional-information.html">jli-docscleanup</a></dd>
             <dd><a href="../../jli-shippablefix/prerequisites/anaconda-additional-information.html">jli-shippablefix</a></dd>
             <dd><a href="../../lib-test-refactor/prerequisites/anaconda-additional-information.html">lib-test-refactor</a></dd>
             <dd><a href="../../nemo/index.html">nemo</a></dd>
