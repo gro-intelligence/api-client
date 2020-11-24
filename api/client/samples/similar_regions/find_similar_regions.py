@@ -10,6 +10,8 @@ def main():
                         help="region id of the region to which you want to find similar regions")
     parser.add_argument("--csv_output", action='store_true',
                         help="save the output to a csv with filename 'region_id.csv'")
+    parser.add_argument("--compare_to", default=0, type=int,
+                        help="root region_id of the regions to compare to (default 0 which is World)")
     parser.add_argument("--region_level", default=4, type=int,
                         help="which region level to find similar regions at (3 = country, 4 = province, 5 = district)")
     parser.add_argument("--number_of_regions", default=10, type=int,
@@ -24,7 +26,7 @@ def main():
         csv_writer = None
 
     sim = SimilarRegion(metric_properties, data_dir=args.data_dir, metric_weights=metric_weights)
-    for output in sim.similar_to(args.region_id, number_of_regions=args.number_of_regions, requested_level=args.region_level):
+    for output in sim.similar_to(args.region_id, compare_to=args.compare_to, number_of_regions=args.number_of_regions, requested_level=args.region_level):
         if args.csv_output:
             if not csv_writer:
                 csv_writer = csv.DictWriter(f, fieldnames= output.keys(),
