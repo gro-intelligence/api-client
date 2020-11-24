@@ -9,7 +9,7 @@ Installation
 Conda/Anaconda users
 ====================
 
-The Gro API client is available via the `conda-forge channel https://anaconda.org/conda-forge/groclient>`_.
+The Gro API client is available via the `conda-forge channel <https://anaconda.org/conda-forge/groclient>`_.
 
 ::
 
