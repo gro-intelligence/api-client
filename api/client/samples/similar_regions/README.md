@@ -1,14 +1,24 @@
 ## Similar Regions
 
-Gro's expansive data covers regions across the entire world. This depth of data enables powerful comparisons and contrasts between individual districts or even entire countries. This Similar Regions application offers a simple approach for quickly computing similarities between selected regions.
+Gro's expansive data covers regions across the entire world. This enables powerful comparisons and contrasts between regions at many levels of granularity. The Similar Regions application offers a simple approach for quickly finding regions that are most similar to a particular seed region, in terms of agricultiral potential.
 
-Calling two regions “similar” is, of course, a fuzzy term and presupposes a lot of assumptions about what can be considered similar. Working in the context of agriculture, key factors affecting similarity between two regions are temperature, rainfall, and soil moisture, among many others.
+Suppose you were interested in finding regions “similar” to a given region `a`. For example `a` may be a district that is known to "good" for growing some particular crop. You want to find all the regions that could be most suitable for the same crop in another part of the world.  You can use this application will evaluate how similar `a` is to each region in a another set of regions `B` and return a ranke dlist of the regions in `B`.
 
-Suppose you were interested in finding all the “similar” regions to a given region `a`. This Similar Regions application will evaluate how similar `a` is to each region in a given set of regions `B`. The application will then return an ordered list of `B`. The properties used to compare `a` with `B` are by default temperature, soil moisture, and rainfall and a number of soil properties, but these can be changed to any of the available metrics in Gro.
+### Data used in the comparison
 
-### Usage:
+Calling two regions “similar” is, of course, a fuzzy term and presupposes a lot about what matters. Here we are interested in the fundamental agricultural potential of the land. Thus the comparisons use data related to the climate and the soil.
 
-#### Interactively:
+By default we use daily Land Surface Temperature, Rainfall, Soil Moisture and 7 static soil properties (acidity, organic carbon content, clay, silt, sand, water capacity, and cation exchange).
+
+This is specified in `metric_properties` and `metric_weights` dictionaries in [metric.py](metric.py). Feel free to explore other available item/metric combinations on the Gro web app and add them.
+
+### Data volume and cache
+
+This application uses a lot of data from the Gro API depending on the search area and granularity, e.g. up to ~1 billion data points when working at the district level for the whole world. Setting a persistent local cache via `data_dir` is highly recommended to avoid unnecessary repeat downloads from the Gro API.
+
+### Usage
+
+#### Interactively
 
 Suppose we want to get the 10 US states that are most similar to Wisconsin.  We will run SimilarRegions restricted to US states only.
 
@@ -28,7 +38,7 @@ The call to `similar_to` will take some time depending on the amount of cached d
 
 ### Specifying regions
 
-You can find region ids to use by browsing the [regions in the Gro dictionary](https://app.gro-intelligence.com/dictionary/regions/0) or by exploring data series in [Gro](https://app.gro-intelligence.com/dictionary/regions/14), the web app.  Besides region ids, you will also need to know the [region levels defined in the Gro ontology](https://developers.gro-intelligence.com/gro-ontology.html#special-properties-for-regions).
+Regions can be districts, provinces, countries, continents, or even the whole world. You can find region ids to use by browsing the [regions in the Gro dictionary](https://app.gro-intelligence.com/dictionary/regions/0) or by exploring data series in [Gro](https://app.gro-intelligence.com), the web app.  Besides region ids, you will also need to know the [region levels defined in the Gro ontology](https://developers.gro-intelligence.com/gro-ontology.html#special-properties-for-regions).
 
 If we wanted to compare Wisconsin to provinces in [Europe](https://app.gro-intelligence.com/dictionary/regions/14) instead of the [USA](https://app.gro-intelligence.com/dictionary/regions/1215), we would use `compare_to=14`.
 
@@ -36,7 +46,7 @@ To expand our search to all provinces in the world, we would just omit compare_t
 
 If we wanted to compare it to countries instead of provinces we would change the region_level from `4` to `3`, and for  districts we would use region level `5`.
 
-If `compare_to=0` (the whole world), and `requested_level=5` (districts), it will get 20+ years of daily data for 3 data series, plus 7 static data series, for ~45k regions, which is approximately *1 billion data points*. This takes up to 3 hours on a ~100Mbps internet connection.
+If`compare_to=0` (the whole world), and `requested_level=5` (districts), it will get 20+ years of daily data for 3 data series, plus 7 static data series, for ~45k regions, which is approximately *1 billion data points*. This takes up to 3 hours on a ~100Mbps internet connection.
 
 
 #### Programmatically:
@@ -44,11 +54,3 @@ If `compare_to=0` (the whole world), and `requested_level=5` (districts), it wil
 Incorporate Similar Regions into your own python code with ease. Similarly to above, you simply must import the library and specify the region properties to be used in the comparison. Please take a look at the “find_similar_regions.py” file for an intuitive but simple example of such an integration, or run the following example:
 
 `python find_similar_regions.py  --region_id=13101 --data_dir=/tmp/similar_regions_cache`
-
-### Data used in the comparison:
-
-The file metric.py defines the properties we are using to compare the regions, via the `metric_properties` and `metric_weights` dictionaries. By default we use daily Land Surface Temperature, Rainfall, Soil Moisture and 7 static soil properties  such as soil acidity, organic carbon content, etc. These were picked because they are fundamental properties relevant to the agricultural potential of the region. Feel free to explore other available item/metric combinations on the Gro web app and add these to metric.py.
-
-### Data volume and cache:
-
-This application uses a lot of data from the Gro API, up to ~1 billion data points in some cases as noted above. Setting a persistent local cache via `data_dir` is highly recommended to avoid unnecessary repeat downloads from the Gro API.
