@@ -14,7 +14,7 @@ This data is used to place the regions in a high-dimensional metric space where 
 
 ## Data volume and cache
 
-This application may use a lot of data from the Gro API depending on the search area and granularity, e.g. up to ~1 billion data points when working at the district level for the whole world. Setting a persistent local cache via `data_dir` is highly recommended to avoid unnecessary repeat downloads from the Gro API.
+This application may use a lot of data from the Gro API depending on the search area and granularity, e.g. up to ~1 billion data points when working at the district level for the whole world. Setting a persistent local cache via `data_dir` is highly recommended to avoid unnecessary repeat downloads from the Gro API. The cache will incrementally update on each run if additional data is needed for e.g. new regions or metrics. To force a re-download of all data, delete the files in data_dir or use a different directory.
 
 ## Usage
 
