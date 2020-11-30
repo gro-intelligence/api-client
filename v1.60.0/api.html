@@ -210,9 +210,9 @@
 <h1>API Reference<a class="headerlink" href="#api-reference" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="basic-exploration">
 <h2>Basic Exploration<a class="headerlink" href="#basic-exploration" title="Permalink to this headline">¶</a></h2>
-<dl class="method">
+<dl class="py method">
 <dt id="api.client.gro_client.GroClient.lookup">
-<code class="sig-prename descclassname">GroClient.</code><code class="sig-name descname">lookup</code><span class="sig-paren">(</span><em class="sig-param">entity_type</em>, <em class="sig-param">entity_id</em><span class="sig-paren">)</span><a class="headerlink" href="#api.client.gro_client.GroClient.lookup" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">GroClient.</code><code class="sig-name descname">lookup</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">entity_type</span></em>, <em class="sig-param"><span class="n">entity_id</span></em><span class="sig-paren">)</span><a class="headerlink" href="#api.client.gro_client.GroClient.lookup" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieve details about a given id of type entity_type.</p>
 <p><a class="reference external" href="https://developers.gro-intelligence.com/gro-ontology.html">https://developers.gro-intelligence.com/gro-ontology.html</a></p>
 <dl class="field-list simple">
@@ -239,9 +239,9 @@
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="api.client.gro_client.GroClient.search">
-<code class="sig-prename descclassname">GroClient.</code><code class="sig-name descname">search</code><span class="sig-paren">(</span><em class="sig-param">entity_type</em>, <em class="sig-param">search_terms</em><span class="sig-paren">)</span><a class="headerlink" href="#api.client.gro_client.GroClient.search" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">GroClient.</code><code class="sig-name descname">search</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">entity_type</span></em>, <em class="sig-param"><span class="n">search_terms</span></em><span class="sig-paren">)</span><a class="headerlink" href="#api.client.gro_client.GroClient.search" title="Permalink to this definition">¶</a></dt>
 <dd><p>Search for the given search term. Better matches appear first.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -263,9 +263,9 @@
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="api.client.gro_client.GroClient.search_and_lookup">
-<code class="sig-prename descclassname">GroClient.</code><code class="sig-name descname">search_and_lookup</code><span class="sig-paren">(</span><em class="sig-param">entity_type</em>, <em class="sig-param">search_terms</em>, <em class="sig-param">num_results=10</em><span class="sig-paren">)</span><a class="headerlink" href="#api.client.gro_client.GroClient.search_and_lookup" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">GroClient.</code><code class="sig-name descname">search_and_lookup</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">entity_type</span></em>, <em class="sig-param"><span class="n">search_terms</span></em>, <em class="sig-param"><span class="n">num_results</span><span class="o">=</span><span class="default_value">10</span></em><span class="sig-paren">)</span><a class="headerlink" href="#api.client.gro_client.GroClient.search_and_lookup" title="Permalink to this definition">¶</a></dt>
 <dd><p>Search for the given search terms and look up their details.</p>
 <p>For each result, yield a dict of the entity and it’s properties.</p>
 <dl class="field-list">
@@ -291,9 +291,9 @@ the best match for the given search term(s).</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="api.client.gro_client.GroClient.search_for_entity">
-<code class="sig-prename descclassname">GroClient.</code><code class="sig-name descname">search_for_entity</code><span class="sig-paren">(</span><em class="sig-param">entity_type</em>, <em class="sig-param">keywords</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/gro_client.html#GroClient.search_for_entity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.gro_client.GroClient.search_for_entity" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">GroClient.</code><code class="sig-name descname">search_for_entity</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">entity_type</span></em>, <em class="sig-param"><span class="n">keywords</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/gro_client.html#GroClient.search_for_entity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.gro_client.GroClient.search_for_entity" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the first result of entity_type that matches the given keywords.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -311,9 +311,9 @@ the best match for the given search term(s).</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="api.client.gro_client.GroClient.get_data_series">
-<code class="sig-prename descclassname">GroClient.</code><code class="sig-name descname">get_data_series</code><span class="sig-paren">(</span><em class="sig-param">**selection</em><span class="sig-paren">)</span><a class="headerlink" href="#api.client.gro_client.GroClient.get_data_series" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">GroClient.</code><code class="sig-name descname">get_data_series</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">**</span><span class="n">selection</span></em><span class="sig-paren">)</span><a class="headerlink" href="#api.client.gro_client.GroClient.get_data_series" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get available data series for the given selections.</p>
 <p><a class="reference external" href="https://developers.gro-intelligence.com/data-series-definition.html">https://developers.gro-intelligence.com/data-series-definition.html</a></p>
 <dl class="field-list simple">
@@ -347,9 +347,9 @@ the best match for the given search term(s).</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="api.client.gro_client.GroClient.find_data_series">
-<code class="sig-prename descclassname">GroClient.</code><code class="sig-name descname">find_data_series</code><span class="sig-paren">(</span><em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/gro_client.html#GroClient.find_data_series"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.gro_client.GroClient.find_data_series" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">GroClient.</code><code class="sig-name descname">find_data_series</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/gro_client.html#GroClient.find_data_series"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.gro_client.GroClient.find_data_series" title="Permalink to this definition">¶</a></dt>
 <dd><p>Find the best possible  data series matching a combination of entities specified by name.</p>
 <p>Example:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">next</span><span class="p">(</span><span class="n">client</span><span class="o">.</span><span class="n">find_data_series</span><span class="p">(</span><span class="n">item</span><span class="o">=</span><span class="s2">&quot;Corn&quot;</span><span class="p">,</span>
@@ -394,9 +394,9 @@ find available data series for all possible combinations of the entities, and
 </div>
 <div class="section" id="data-retrieval">
 <h2>Data Retrieval<a class="headerlink" href="#data-retrieval" title="Permalink to this headline">¶</a></h2>
-<dl class="method">
+<dl class="py method">
 <dt id="api.client.gro_client.GroClient.get_data_points">
-<code class="sig-prename descclassname">GroClient.</code><code class="sig-name descname">get_data_points</code><span class="sig-paren">(</span><em class="sig-param">**selections</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/gro_client.html#GroClient.get_data_points"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.gro_client.GroClient.get_data_points" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">GroClient.</code><code class="sig-name descname">get_data_points</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">**</span><span class="n">selections</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/gro_client.html#GroClient.get_data_points"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.gro_client.GroClient.get_data_points" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get all the data points for a given selection.</p>
 <p><a class="reference external" href="https://developers.gro-intelligence.com/data-point-definition.html">https://developers.gro-intelligence.com/data-point-definition.html</a></p>
 <p>Example:</p>
@@ -509,9 +509,9 @@ that does not have data.</p></li>
 </div>
 <div class="section" id="geographic">
 <h2>Geographic<a class="headerlink" href="#geographic" title="Permalink to this headline">¶</a></h2>
-<dl class="method">
+<dl class="py method">
 <dt id="api.client.gro_client.GroClient.get_geojson">
-<code class="sig-prename descclassname">GroClient.</code><code class="sig-name descname">get_geojson</code><span class="sig-paren">(</span><em class="sig-param">region_id</em><span class="sig-paren">)</span><a class="headerlink" href="#api.client.gro_client.GroClient.get_geojson" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">GroClient.</code><code class="sig-name descname">get_geojson</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">region_id</span></em><span class="sig-paren">)</span><a class="headerlink" href="#api.client.gro_client.GroClient.get_geojson" title="Permalink to this definition">¶</a></dt>
 <dd><p>Given a region ID, return a geojson shape information</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -532,9 +532,9 @@ that does not have data.</p></li>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="api.client.gro_client.GroClient.get_descendant_regions">
-<code class="sig-prename descclassname">GroClient.</code><code class="sig-name descname">get_descendant_regions</code><span class="sig-paren">(</span><em class="sig-param">region_id</em>, <em class="sig-param">descendant_level=None</em>, <em class="sig-param">include_historical=True</em>, <em class="sig-param">include_details=True</em><span class="sig-paren">)</span><a class="headerlink" href="#api.client.gro_client.GroClient.get_descendant_regions" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">GroClient.</code><code class="sig-name descname">get_descendant_regions</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">region_id</span></em>, <em class="sig-param"><span class="n">descendant_level</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">include_historical</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">include_details</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#api.client.gro_client.GroClient.get_descendant_regions" title="Permalink to this definition">¶</a></dt>
 <dd><p>Look up details of all regions of the given level contained by a region.</p>
 <p>Given any region by id, get all the descendant regions that are of the specified level.</p>
 <dl class="field-list simple">
@@ -574,9 +574,9 @@ regions will be returned, which makes execution significantly faster.</p></li>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="api.client.gro_client.GroClient.get_provinces">
-<code class="sig-prename descclassname">GroClient.</code><code class="sig-name descname">get_provinces</code><span class="sig-paren">(</span><em class="sig-param">country_name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/gro_client.html#GroClient.get_provinces"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.gro_client.GroClient.get_provinces" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">GroClient.</code><code class="sig-name descname">get_provinces</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">country_name</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/gro_client.html#GroClient.get_provinces"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.gro_client.GroClient.get_provinces" title="Permalink to this definition">¶</a></dt>
 <dd><p>Given the name of a country, find its provinces.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -613,9 +613,9 @@ regions will be returned, which makes execution significantly faster.</p></li>
 </div>
 <div class="section" id="advanced-exploration">
 <h2>Advanced Exploration<a class="headerlink" href="#advanced-exploration" title="Permalink to this headline">¶</a></h2>
-<dl class="method">
+<dl class="py method">
 <dt id="api.client.gro_client.GroClient.lookup_belongs">
-<code class="sig-prename descclassname">GroClient.</code><code class="sig-name descname">lookup_belongs</code><span class="sig-paren">(</span><em class="sig-param">entity_type</em>, <em class="sig-param">entity_id</em><span class="sig-paren">)</span><a class="headerlink" href="#api.client.gro_client.GroClient.lookup_belongs" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">GroClient.</code><code class="sig-name descname">lookup_belongs</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">entity_type</span></em>, <em class="sig-param"><span class="n">entity_id</span></em><span class="sig-paren">)</span><a class="headerlink" href="#api.client.gro_client.GroClient.lookup_belongs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Look up details of entities containing the given entity.</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters</dt>
@@ -638,9 +638,9 @@ regions will be returned, which makes execution significantly faster.</p></li>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="api.client.gro_client.GroClient.rank_series_by_source">
-<code class="sig-prename descclassname">GroClient.</code><code class="sig-name descname">rank_series_by_source</code><span class="sig-paren">(</span><em class="sig-param">series_list</em><span class="sig-paren">)</span><a class="headerlink" href="#api.client.gro_client.GroClient.rank_series_by_source" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">GroClient.</code><code class="sig-name descname">rank_series_by_source</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">series_list</span></em><span class="sig-paren">)</span><a class="headerlink" href="#api.client.gro_client.GroClient.rank_series_by_source" title="Permalink to this definition">¶</a></dt>
 <dd><p>Given a list of series selections, for each unique combination excluding source, expand
 to all available sources and return them in ranked order. The order corresponds to how well
 that source covers the selection (metrics, items, regions, and time range and frequency).</p>
@@ -657,9 +657,9 @@ that source covers the selection (metrics, items, regions, and time range and fr
 </div>
 <div class="section" id="pandas-utils">
 <h2>Pandas Utils<a class="headerlink" href="#pandas-utils" title="Permalink to this headline">¶</a></h2>
-<dl class="method">
+<dl class="py method">
 <dt id="api.client.gro_client.GroClient.get_df">
-<code class="sig-prename descclassname">GroClient.</code><code class="sig-name descname">get_df</code><span class="sig-paren">(</span><em class="sig-param">show_revisions=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/gro_client.html#GroClient.get_df"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.gro_client.GroClient.get_df" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">GroClient.</code><code class="sig-name descname">get_df</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">show_revisions</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/gro_client.html#GroClient.get_df"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.gro_client.GroClient.get_df" title="Permalink to this definition">¶</a></dt>
 <dd><p>Call <a class="reference internal" href="#api.client.gro_client.GroClient.get_data_points" title="api.client.gro_client.GroClient.get_data_points"><code class="xref py py-meth docutils literal notranslate"><span class="pre">get_data_points()</span></code></a> for each saved data series and return as a combined
 dataframe.</p>
 <p>Note you must have first called either <a class="reference internal" href="#api.client.gro_client.GroClient.add_data_series" title="api.client.gro_client.GroClient.add_data_series"><code class="xref py py-meth docutils literal notranslate"><span class="pre">add_data_series()</span></code></a> or
@@ -677,9 +677,9 @@ See <a class="reference external" href="https://developers.gro-intelligence.com/
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="api.client.gro_client.GroClient.add_data_series">
-<code class="sig-prename descclassname">GroClient.</code><code class="sig-name descname">add_data_series</code><span class="sig-paren">(</span><em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/gro_client.html#GroClient.add_data_series"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.gro_client.GroClient.add_data_series" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">GroClient.</code><code class="sig-name descname">add_data_series</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/gro_client.html#GroClient.add_data_series"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.gro_client.GroClient.add_data_series" title="Permalink to this definition">¶</a></dt>
 <dd><p>Adds the top result of <a class="reference internal" href="#api.client.gro_client.GroClient.find_data_series" title="api.client.gro_client.GroClient.find_data_series"><code class="xref py py-meth docutils literal notranslate"><span class="pre">find_data_series()</span></code></a> to the saved data series list.</p>
 <p>For use with <a class="reference internal" href="#api.client.gro_client.GroClient.get_df" title="api.client.gro_client.GroClient.get_df"><code class="xref py py-meth docutils literal notranslate"><span class="pre">get_df()</span></code></a>.</p>
 <dl class="field-list simple">
@@ -706,9 +706,9 @@ See <a class="reference external" href="https://developers.gro-intelligence.com/
 </div>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="api.client.gro_client.GroClient.add_single_data_series">
-<code class="sig-prename descclassname">GroClient.</code><code class="sig-name descname">add_single_data_series</code><span class="sig-paren">(</span><em class="sig-param">data_series</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/gro_client.html#GroClient.add_single_data_series"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.gro_client.GroClient.add_single_data_series" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">GroClient.</code><code class="sig-name descname">add_single_data_series</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data_series</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/gro_client.html#GroClient.add_single_data_series"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.gro_client.GroClient.add_single_data_series" title="Permalink to this definition">¶</a></dt>
 <dd><p>Save a data series object to the GroClient’s data_series_list.</p>
 <p>For use with <a class="reference internal" href="#api.client.gro_client.GroClient.get_df" title="api.client.gro_client.GroClient.get_df"><code class="xref py py-meth docutils literal notranslate"><span class="pre">get_df()</span></code></a>.</p>
 <dl class="field-list simple">
@@ -726,7 +726,7 @@ See <a class="reference external" href="https://developers.gro-intelligence.com/
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="api.client.gro_client.GroClient.get_data_series_list">
 <code class="sig-prename descclassname">GroClient.</code><code class="sig-name descname">get_data_series_list</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/gro_client.html#GroClient.get_data_series_list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.gro_client.GroClient.get_data_series_list" title="Permalink to this definition">¶</a></dt>
 <dd><p>Inspect the current list of saved data series contained in the GroClient.</p>
@@ -745,9 +745,9 @@ See <a class="reference external" href="https://developers.gro-intelligence.com/
 </div>
 <div class="section" id="crop-modeling">
 <h2>Crop Modeling<a class="headerlink" href="#crop-modeling" title="Permalink to this headline">¶</a></h2>
-<dl class="method">
+<dl class="py method">
 <dt id="api.client.crop_model.CropModel.compute_weights">
-<code class="sig-prename descclassname">CropModel.</code><code class="sig-name descname">compute_weights</code><span class="sig-paren">(</span><em class="sig-param">crop_name</em>, <em class="sig-param">metric_name</em>, <em class="sig-param">regions</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/crop_model.html#CropModel.compute_weights"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.crop_model.CropModel.compute_weights" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">CropModel.</code><code class="sig-name descname">compute_weights</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">crop_name</span></em>, <em class="sig-param"><span class="n">metric_name</span></em>, <em class="sig-param"><span class="n">regions</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/crop_model.html#CropModel.compute_weights"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.crop_model.CropModel.compute_weights" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute a vector of ‘weights’ that can be used for crop-weighted
 average across regions, as in <a class="reference internal" href="#api.client.crop_model.CropModel.compute_crop_weighted_series" title="api.client.crop_model.CropModel.compute_crop_weighted_series"><code class="xref py py-meth docutils literal notranslate"><span class="pre">compute_crop_weighted_series()</span></code></a>.</p>
 <p>For each region, the weight of is the mean value over time, of
@@ -782,9 +782,9 @@ the two regions, when averaged across all time.</p>
 </div>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="api.client.crop_model.CropModel.compute_crop_weighted_series">
-<code class="sig-prename descclassname">CropModel.</code><code class="sig-name descname">compute_crop_weighted_series</code><span class="sig-paren">(</span><em class="sig-param">weighting_crop_name</em>, <em class="sig-param">weighting_metric_name</em>, <em class="sig-param">item_name</em>, <em class="sig-param">metric_name</em>, <em class="sig-param">regions</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/crop_model.html#CropModel.compute_crop_weighted_series"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.crop_model.CropModel.compute_crop_weighted_series" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">CropModel.</code><code class="sig-name descname">compute_crop_weighted_series</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">weighting_crop_name</span></em>, <em class="sig-param"><span class="n">weighting_metric_name</span></em>, <em class="sig-param"><span class="n">item_name</span></em>, <em class="sig-param"><span class="n">metric_name</span></em>, <em class="sig-param"><span class="n">regions</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/crop_model.html#CropModel.compute_crop_weighted_series"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.crop_model.CropModel.compute_crop_weighted_series" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute the ‘crop-weighted average’ of the series for the given
 item and metric, across regions. The weight of a region is the
 fraction of the value of the weighting series represented by
@@ -820,9 +820,9 @@ by the crop weight for that region.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="api.client.crop_model.CropModel.compute_gdd">
-<code class="sig-prename descclassname">CropModel.</code><code class="sig-name descname">compute_gdd</code><span class="sig-paren">(</span><em class="sig-param">tmin_series</em>, <em class="sig-param">tmax_series</em>, <em class="sig-param">base_temperature</em>, <em class="sig-param">start_date</em>, <em class="sig-param">end_date</em>, <em class="sig-param">min_temporal_coverage</em>, <em class="sig-param">upper_temperature_cap</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/crop_model.html#CropModel.compute_gdd"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.crop_model.CropModel.compute_gdd" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">CropModel.</code><code class="sig-name descname">compute_gdd</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">tmin_series</span></em>, <em class="sig-param"><span class="n">tmax_series</span></em>, <em class="sig-param"><span class="n">base_temperature</span></em>, <em class="sig-param"><span class="n">start_date</span></em>, <em class="sig-param"><span class="n">end_date</span></em>, <em class="sig-param"><span class="n">min_temporal_coverage</span></em>, <em class="sig-param"><span class="n">upper_temperature_cap</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/crop_model.html#CropModel.compute_gdd"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.crop_model.CropModel.compute_gdd" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute Growing Degree Days value from specific data series.</p>
 <p>This function performs the low-level computation used in <a class="reference internal" href="#api.client.crop_model.CropModel.growing_degree_days" title="api.client.crop_model.CropModel.growing_degree_days"><code class="xref py py-meth docutils literal notranslate"><span class="pre">growing_degree_days()</span></code></a>.</p>
 <dl class="field-list simple">
@@ -852,9 +852,9 @@ e.g. {metric_id: 1, item_id: 2, region_id: 3, source_id: 4, frequency_id: 5}</p>
 </div>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="api.client.crop_model.CropModel.growing_degree_days">
-<code class="sig-prename descclassname">CropModel.</code><code class="sig-name descname">growing_degree_days</code><span class="sig-paren">(</span><em class="sig-param">region_name</em>, <em class="sig-param">base_temperature</em>, <em class="sig-param">start_date</em>, <em class="sig-param">end_date</em>, <em class="sig-param">min_temporal_coverage=1.0</em>, <em class="sig-param">upper_temperature_cap=inf</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/crop_model.html#CropModel.growing_degree_days"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.crop_model.CropModel.growing_degree_days" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">CropModel.</code><code class="sig-name descname">growing_degree_days</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">region_name</span></em>, <em class="sig-param"><span class="n">base_temperature</span></em>, <em class="sig-param"><span class="n">start_date</span></em>, <em class="sig-param"><span class="n">end_date</span></em>, <em class="sig-param"><span class="n">min_temporal_coverage</span><span class="o">=</span><span class="default_value">1.0</span></em>, <em class="sig-param"><span class="n">upper_temperature_cap</span><span class="o">=</span><span class="default_value">inf</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/crop_model.html#CropModel.growing_degree_days"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.crop_model.CropModel.growing_degree_days" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get Growing Degree Days (GDD) for a region.</p>
 <p>Growing degree days (GDD) are a weather-based indicator that
 allows for assessing crop phenology and crop development,

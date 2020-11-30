@@ -201,9 +201,9 @@
 <p>Client, GroClient, CropModel, and BatchClient all build on top of endpoints
 exposed in this module. Helper functions or shims or derivative functionality
 should appear in the client classes rather than here.</p>
-<dl class="function">
+<dl class="py function">
 <dt id="api.client.lib.get_access_token">
-<code class="sig-prename descclassname">api.client.lib.</code><code class="sig-name descname">get_access_token</code><span class="sig-paren">(</span><em class="sig-param">api_host</em>, <em class="sig-param">user_email</em>, <em class="sig-param">user_password</em>, <em class="sig-param">logger=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/lib.html#get_access_token"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.lib.get_access_token" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">api.client.lib.</code><code class="sig-name descname">get_access_token</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">api_host</span></em>, <em class="sig-param"><span class="n">user_email</span></em>, <em class="sig-param"><span class="n">user_password</span></em>, <em class="sig-param"><span class="n">logger</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/lib.html#get_access_token"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.lib.get_access_token" title="Permalink to this definition">¶</a></dt>
 <dd><p>Request an access token.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -225,9 +225,9 @@ Otherwise get_default_logger() will be used.</p></li>
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py function">
 <dt id="api.client.lib.get_available">
-<code class="sig-prename descclassname">api.client.lib.</code><code class="sig-name descname">get_available</code><a class="reference internal" href="_modules/api/client/lib.html#get_available"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.lib.get_available" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">api.client.lib.</code><code class="sig-name descname">get_available</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">access_token</span></em>, <em class="sig-param"><span class="n">api_host</span></em>, <em class="sig-param"><span class="n">entity_type</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/lib.html#get_available"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.lib.get_available" title="Permalink to this definition">¶</a></dt>
 <dd><p>List the first 5000 available entities of the given type.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -253,9 +253,9 @@ Otherwise get_default_logger() will be used.</p></li>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="api.client.lib.get_data">
-<code class="sig-prename descclassname">api.client.lib.</code><code class="sig-name descname">get_data</code><span class="sig-paren">(</span><em class="sig-param">url</em>, <em class="sig-param">headers</em>, <em class="sig-param">params=None</em>, <em class="sig-param">logger=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/lib.html#get_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.lib.get_data" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">api.client.lib.</code><code class="sig-name descname">get_data</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">url</span></em>, <em class="sig-param"><span class="n">headers</span></em>, <em class="sig-param"><span class="n">params</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">logger</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/lib.html#get_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.lib.get_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>General ‘make api request’ function.</p>
 <p>Assigns headers and builds in retries and logging.</p>
 <dl class="field-list simple">
@@ -276,9 +276,9 @@ Otherwise get_default_logger() will be used.</p></li>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="api.client.lib.get_data_call_params">
-<code class="sig-prename descclassname">api.client.lib.</code><code class="sig-name descname">get_data_call_params</code><span class="sig-paren">(</span><em class="sig-param">**selection</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/lib.html#get_data_call_params"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.lib.get_data_call_params" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">api.client.lib.</code><code class="sig-name descname">get_data_call_params</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">**</span><span class="n">selection</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/lib.html#get_data_call_params"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.lib.get_data_call_params" title="Permalink to this definition">¶</a></dt>
 <dd><p>Construct http request params from dict of entity selections.</p>
 <p>For use with get_data_points().</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">get_data_call_params</span><span class="p">(</span>
@@ -312,9 +312,9 @@ Otherwise get_default_logger() will be used.</p></li>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="api.client.lib.get_data_points">
-<code class="sig-prename descclassname">api.client.lib.</code><code class="sig-name descname">get_data_points</code><span class="sig-paren">(</span><em class="sig-param">access_token</em>, <em class="sig-param">api_host</em>, <em class="sig-param">**selection</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/lib.html#get_data_points"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.lib.get_data_points" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">api.client.lib.</code><code class="sig-name descname">get_data_points</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">access_token</span></em>, <em class="sig-param"><span class="n">api_host</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">selection</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/lib.html#get_data_points"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.lib.get_data_points" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get all the data points for a given selection.</p>
 <p><a class="reference external" href="https://github.com/gro-intelligence/api-client/wiki/Data-Point-Definition">https://github.com/gro-intelligence/api-client/wiki/Data-Point-Definition</a></p>
 <dl class="field-list simple">
@@ -362,9 +362,9 @@ that does not have data.</p></li>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="api.client.lib.get_data_series">
-<code class="sig-prename descclassname">api.client.lib.</code><code class="sig-name descname">get_data_series</code><span class="sig-paren">(</span><em class="sig-param">access_token</em>, <em class="sig-param">api_host</em>, <em class="sig-param">**selection</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/lib.html#get_data_series"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.lib.get_data_series" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">api.client.lib.</code><code class="sig-name descname">get_data_series</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">access_token</span></em>, <em class="sig-param"><span class="n">api_host</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">selection</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/lib.html#get_data_series"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.lib.get_data_series" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get available data series for the given selections.</p>
 <p><a class="reference external" href="https://github.com/gro-intelligence/api-client/wiki/Data-Series-Definition">https://github.com/gro-intelligence/api-client/wiki/Data-Series-Definition</a></p>
 <dl class="field-list simple">
@@ -399,7 +399,7 @@ that does not have data.</p></li>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="api.client.lib.get_default_logger">
 <code class="sig-prename descclassname">api.client.lib.</code><code class="sig-name descname">get_default_logger</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/lib.html#get_default_logger"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.lib.get_default_logger" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get a logging object using the default log level set in cfg.</p>
@@ -414,9 +414,9 @@ that does not have data.</p></li>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="api.client.lib.get_descendant_regions">
-<code class="sig-prename descclassname">api.client.lib.</code><code class="sig-name descname">get_descendant_regions</code><span class="sig-paren">(</span><em class="sig-param">access_token</em>, <em class="sig-param">api_host</em>, <em class="sig-param">region_id</em>, <em class="sig-param">descendant_level=False</em>, <em class="sig-param">include_historical=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/lib.html#get_descendant_regions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.lib.get_descendant_regions" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">api.client.lib.</code><code class="sig-name descname">get_descendant_regions</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">access_token</span></em>, <em class="sig-param"><span class="n">api_host</span></em>, <em class="sig-param"><span class="n">region_id</span></em>, <em class="sig-param"><span class="n">descendant_level</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">include_historical</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/lib.html#get_descendant_regions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.lib.get_descendant_regions" title="Permalink to this definition">¶</a></dt>
 <dd><p>Look up details of regions of the given level contained by a region.</p>
 <p>Given any region by id, recursively get all the descendant regions
 that are of the specified level.</p>
@@ -458,9 +458,9 @@ levels.</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="api.client.lib.get_geo_centre">
-<code class="sig-prename descclassname">api.client.lib.</code><code class="sig-name descname">get_geo_centre</code><span class="sig-paren">(</span><em class="sig-param">access_token</em>, <em class="sig-param">api_host</em>, <em class="sig-param">region_id</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/lib.html#get_geo_centre"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.lib.get_geo_centre" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">api.client.lib.</code><code class="sig-name descname">get_geo_centre</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">access_token</span></em>, <em class="sig-param"><span class="n">api_host</span></em>, <em class="sig-param"><span class="n">region_id</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/lib.html#get_geo_centre"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.lib.get_geo_centre" title="Permalink to this definition">¶</a></dt>
 <dd><p>Given a region ID, return the geographic centre in degrees lat/lon.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -483,9 +483,9 @@ levels.</p>
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py function">
 <dt id="api.client.lib.get_geojson">
-<code class="sig-prename descclassname">api.client.lib.</code><code class="sig-name descname">get_geojson</code><a class="reference internal" href="_modules/api/client/lib.html#get_geojson"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.lib.get_geojson" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">api.client.lib.</code><code class="sig-name descname">get_geojson</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">access_token</span></em>, <em class="sig-param"><span class="n">api_host</span></em>, <em class="sig-param"><span class="n">region_id</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/lib.html#get_geojson"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.lib.get_geojson" title="Permalink to this definition">¶</a></dt>
 <dd><p>Given a region ID, return a geojson shape information</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -511,9 +511,9 @@ levels.</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="api.client.lib.get_params_from_selection">
-<code class="sig-prename descclassname">api.client.lib.</code><code class="sig-name descname">get_params_from_selection</code><span class="sig-paren">(</span><em class="sig-param">**selection</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/lib.html#get_params_from_selection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.lib.get_params_from_selection" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">api.client.lib.</code><code class="sig-name descname">get_params_from_selection</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">**</span><span class="n">selection</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/lib.html#get_params_from_selection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.lib.get_params_from_selection" title="Permalink to this definition">¶</a></dt>
 <dd><p>Construct http request params from dict of entity selections.</p>
 <p>For use with get_data_series() and rank_series_by_source().</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">get_params_from_selection</span><span class="p">(</span>
@@ -544,9 +544,9 @@ levels.</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="api.client.lib.get_source_ranking">
-<code class="sig-prename descclassname">api.client.lib.</code><code class="sig-name descname">get_source_ranking</code><span class="sig-paren">(</span><em class="sig-param">access_token</em>, <em class="sig-param">api_host</em>, <em class="sig-param">series</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/lib.html#get_source_ranking"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.lib.get_source_ranking" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">api.client.lib.</code><code class="sig-name descname">get_source_ranking</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">access_token</span></em>, <em class="sig-param"><span class="n">api_host</span></em>, <em class="sig-param"><span class="n">series</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/lib.html#get_source_ranking"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.lib.get_source_ranking" title="Permalink to this definition">¶</a></dt>
 <dd><p>Given a series, return a list of ranked sources.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -562,9 +562,9 @@ levels.</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="api.client.lib.list_available">
-<code class="sig-prename descclassname">api.client.lib.</code><code class="sig-name descname">list_available</code><span class="sig-paren">(</span><em class="sig-param">access_token</em>, <em class="sig-param">api_host</em>, <em class="sig-param">selected_entities</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/lib.html#list_available"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.lib.list_available" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">api.client.lib.</code><code class="sig-name descname">list_available</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">access_token</span></em>, <em class="sig-param"><span class="n">api_host</span></em>, <em class="sig-param"><span class="n">selected_entities</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/lib.html#list_available"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.lib.list_available" title="Permalink to this definition">¶</a></dt>
 <dd><p>List available entities given some selected entities.</p>
 <p>Given one or more selections, return entities combinations that have
 data for the given selections.</p>
@@ -600,9 +600,9 @@ source_id, frequency_id</p>
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py function">
 <dt id="api.client.lib.lookup">
-<code class="sig-prename descclassname">api.client.lib.</code><code class="sig-name descname">lookup</code><a class="reference internal" href="_modules/api/client/lib.html#lookup"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.lib.lookup" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">api.client.lib.</code><code class="sig-name descname">lookup</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">access_token</span></em>, <em class="sig-param"><span class="n">api_host</span></em>, <em class="sig-param"><span class="n">entity_type</span></em>, <em class="sig-param"><span class="n">entity_id</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/lib.html#lookup"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.lib.lookup" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieve details about a given id of type entity_type.</p>
 <p><a class="reference external" href="https://github.com/gro-intelligence/api-client/wiki/Entities-Definition">https://github.com/gro-intelligence/api-client/wiki/Entities-Definition</a></p>
 <dl class="field-list simple">
@@ -631,9 +631,9 @@ source_id, frequency_id</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="api.client.lib.lookup_belongs">
-<code class="sig-prename descclassname">api.client.lib.</code><code class="sig-name descname">lookup_belongs</code><span class="sig-paren">(</span><em class="sig-param">access_token</em>, <em class="sig-param">api_host</em>, <em class="sig-param">entity_type</em>, <em class="sig-param">entity_id</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/lib.html#lookup_belongs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.lib.lookup_belongs" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">api.client.lib.</code><code class="sig-name descname">lookup_belongs</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">access_token</span></em>, <em class="sig-param"><span class="n">api_host</span></em>, <em class="sig-param"><span class="n">entity_type</span></em>, <em class="sig-param"><span class="n">entity_id</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/lib.html#lookup_belongs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.lib.lookup_belongs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Look up details of entities containing the given entity.</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters</dt>
@@ -658,9 +658,9 @@ source_id, frequency_id</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="api.client.lib.rank_series_by_source">
-<code class="sig-prename descclassname">api.client.lib.</code><code class="sig-name descname">rank_series_by_source</code><span class="sig-paren">(</span><em class="sig-param">access_token</em>, <em class="sig-param">api_host</em>, <em class="sig-param">series_list</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/lib.html#rank_series_by_source"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.lib.rank_series_by_source" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">api.client.lib.</code><code class="sig-name descname">rank_series_by_source</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">access_token</span></em>, <em class="sig-param"><span class="n">api_host</span></em>, <em class="sig-param"><span class="n">series_list</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/lib.html#rank_series_by_source"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.lib.rank_series_by_source" title="Permalink to this definition">¶</a></dt>
 <dd><p>Given a list of series selections, for each unique combination
 excluding source, expand to all available sources and return them
 in ranked order.  The orders corresponds to how well that source
@@ -680,9 +680,9 @@ frequency).</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="api.client.lib.redirect">
-<code class="sig-prename descclassname">api.client.lib.</code><code class="sig-name descname">redirect</code><span class="sig-paren">(</span><em class="sig-param">old_params</em>, <em class="sig-param">migration</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/lib.html#redirect"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.lib.redirect" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">api.client.lib.</code><code class="sig-name descname">redirect</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">old_params</span></em>, <em class="sig-param"><span class="n">migration</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/lib.html#redirect"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.lib.redirect" title="Permalink to this definition">¶</a></dt>
 <dd><p>Update query parameters to follow a redirection response from the API.</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">redirect</span><span class="p">(</span>
 <span class="gp">... </span>    <span class="p">{</span><span class="s1">&#39;metricId&#39;</span><span class="p">:</span> <span class="mi">14</span><span class="p">,</span> <span class="s1">&#39;sourceId&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;itemId&#39;</span><span class="p">:</span> <span class="mi">145</span><span class="p">},</span>
@@ -709,9 +709,9 @@ redirection instructions provided by the API</p>
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py function">
 <dt id="api.client.lib.search">
-<code class="sig-prename descclassname">api.client.lib.</code><code class="sig-name descname">search</code><a class="reference internal" href="_modules/api/client/lib.html#search"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.lib.search" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">api.client.lib.</code><code class="sig-name descname">search</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">access_token</span></em>, <em class="sig-param"><span class="n">api_host</span></em>, <em class="sig-param"><span class="n">entity_type</span></em>, <em class="sig-param"><span class="n">search_terms</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/lib.html#search"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.lib.search" title="Permalink to this definition">¶</a></dt>
 <dd><p>Search for the given search term. Better matches appear first.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -735,9 +735,9 @@ redirection instructions provided by the API</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="api.client.lib.search_and_lookup">
-<code class="sig-prename descclassname">api.client.lib.</code><code class="sig-name descname">search_and_lookup</code><span class="sig-paren">(</span><em class="sig-param">access_token</em>, <em class="sig-param">api_host</em>, <em class="sig-param">entity_type</em>, <em class="sig-param">search_terms</em>, <em class="sig-param">num_results=10</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/lib.html#search_and_lookup"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.lib.search_and_lookup" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">api.client.lib.</code><code class="sig-name descname">search_and_lookup</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">access_token</span></em>, <em class="sig-param"><span class="n">api_host</span></em>, <em class="sig-param"><span class="n">entity_type</span></em>, <em class="sig-param"><span class="n">search_terms</span></em>, <em class="sig-param"><span class="n">num_results</span><span class="o">=</span><span class="default_value">10</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/lib.html#search_and_lookup"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.lib.search_and_lookup" title="Permalink to this definition">¶</a></dt>
 <dd><p>Search for the given search terms and look up their details.</p>
 <p>For each result, yield a dict of the entity and it’s properties:
 { ‘id’: &lt;integer id of entity, unique within this entity type&gt;,</p>
@@ -770,9 +770,9 @@ the best match for the given search term(s).</p>
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py function">
 <dt id="api.client.lib.snake_to_camel">
-<code class="sig-prename descclassname">api.client.lib.</code><code class="sig-name descname">snake_to_camel</code><a class="reference internal" href="_modules/api/client/lib.html#snake_to_camel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.lib.snake_to_camel" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">api.client.lib.</code><code class="sig-name descname">snake_to_camel</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">term</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/lib.html#snake_to_camel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.lib.snake_to_camel" title="Permalink to this definition">¶</a></dt>
 <dd><p>Convert a string from snake_case to camelCase.</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">snake_to_camel</span><span class="p">(</span><span class="s1">&#39;hello_world&#39;</span><span class="p">)</span>
 <span class="go">&#39;helloWorld&#39;</span>
@@ -791,9 +791,9 @@ the best match for the given search term(s).</p>
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py function">
 <dt id="api.client.lib.universal_search">
-<code class="sig-prename descclassname">api.client.lib.</code><code class="sig-name descname">universal_search</code><a class="reference internal" href="_modules/api/client/lib.html#universal_search"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.lib.universal_search" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">api.client.lib.</code><code class="sig-name descname">universal_search</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">access_token</span></em>, <em class="sig-param"><span class="n">api_host</span></em>, <em class="sig-param"><span class="n">search_terms</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/lib.html#universal_search"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.lib.universal_search" title="Permalink to this definition">¶</a></dt>
 <dd><p>Search across all entity types for the given terms.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -819,35 +819,35 @@ the best match for the given search term(s).</p>
 </div>
 <div class="section" id="client">
 <h2>Client<a class="headerlink" href="#client" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
+<dl class="py class">
 <dt id="api.client.Client">
-<em class="property">class </em><code class="sig-prename descclassname">api.client.</code><code class="sig-name descname">Client</code><span class="sig-paren">(</span><em class="sig-param">api_host</em>, <em class="sig-param">access_token</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client.html#Client"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.Client" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">api.client.</code><code class="sig-name descname">Client</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">api_host</span></em>, <em class="sig-param"><span class="n">access_token</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client.html#Client"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.Client" title="Permalink to this definition">¶</a></dt>
 <dd><p>API client with stateful authentication for lib functions.</p>
 </dd></dl>
 
 </div>
 <div class="section" id="groclient">
 <h2>GroClient<a class="headerlink" href="#groclient" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
+<dl class="py class">
 <dt id="api.client.gro_client.GroClient">
-<em class="property">class </em><code class="sig-prename descclassname">api.client.gro_client.</code><code class="sig-name descname">GroClient</code><span class="sig-paren">(</span><em class="sig-param">api_host</em>, <em class="sig-param">access_token</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/gro_client.html#GroClient"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.gro_client.GroClient" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">api.client.gro_client.</code><code class="sig-name descname">GroClient</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">api_host</span></em>, <em class="sig-param"><span class="n">access_token</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/gro_client.html#GroClient"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.gro_client.GroClient" title="Permalink to this definition">¶</a></dt>
 <dd><p>An extension of the Client class with extra convenience methods for some common operations.</p>
 <p>Extra functionality includes:
 - Automatic conversion of units
 - Finding data series using entity names rather than ids
 - Exploration shortcuts for filling in partial selections
 - Saving data series in a data frame for repeated use</p>
-<dl class="method">
+<dl class="py method">
 <dt id="api.client.gro_client.GroClient.add_data_series">
-<code class="sig-name descname">add_data_series</code><span class="sig-paren">(</span><em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/gro_client.html#GroClient.add_data_series"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.gro_client.GroClient.add_data_series" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">add_data_series</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/gro_client.html#GroClient.add_data_series"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.gro_client.GroClient.add_data_series" title="Permalink to this definition">¶</a></dt>
 <dd><p>Search for entities matching the given names, find data series for
 the given combination, and add them to this objects list of
 series.</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="api.client.gro_client.GroClient.convert_unit">
-<code class="sig-name descname">convert_unit</code><span class="sig-paren">(</span><em class="sig-param">point</em>, <em class="sig-param">target_unit_id</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/gro_client.html#GroClient.convert_unit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.gro_client.GroClient.convert_unit" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">convert_unit</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">point</span></em>, <em class="sig-param"><span class="n">target_unit_id</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/gro_client.html#GroClient.convert_unit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.gro_client.GroClient.convert_unit" title="Permalink to this definition">¶</a></dt>
 <dd><p>Convert the data point from one unit to another unit.</p>
 <p>If original or target unit is non-convertible, throw an error.</p>
 <dl class="field-list simple">
@@ -868,9 +868,9 @@ new unit_id. Other properties are unchanged.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="api.client.gro_client.GroClient.find_data_series">
-<code class="sig-name descname">find_data_series</code><span class="sig-paren">(</span><em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/gro_client.html#GroClient.find_data_series"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.gro_client.GroClient.find_data_series" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">find_data_series</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/gro_client.html#GroClient.find_data_series"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.gro_client.GroClient.find_data_series" title="Permalink to this definition">¶</a></dt>
 <dd><p>Search for entities matching the given names, find data series for
 the given combination.</p>
 <dl class="field-list simple">
@@ -883,9 +883,9 @@ the given combination.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="api.client.gro_client.GroClient.get_data_points">
-<code class="sig-name descname">get_data_points</code><span class="sig-paren">(</span><em class="sig-param">**selections</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/gro_client.html#GroClient.get_data_points"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.gro_client.GroClient.get_data_points" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_data_points</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">**</span><span class="n">selections</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/gro_client.html#GroClient.get_data_points"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.gro_client.GroClient.get_data_points" title="Permalink to this definition">¶</a></dt>
 <dd><p>Extend the Client’s get_data_points method to add unit conversion.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -902,20 +902,20 @@ the unit you wish to convert all points to.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="api.client.gro_client.GroClient.get_df">
 <code class="sig-name descname">get_df</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/gro_client.html#GroClient.get_df"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.gro_client.GroClient.get_df" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the content of all data series in a Pandas frame.</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="api.client.gro_client.GroClient.pick_random_data_series">
-<code class="sig-name descname">pick_random_data_series</code><span class="sig-paren">(</span><em class="sig-param">selected_entities</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/gro_client.html#GroClient.pick_random_data_series"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.gro_client.GroClient.pick_random_data_series" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">pick_random_data_series</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">selected_entities</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/gro_client.html#GroClient.pick_random_data_series"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.gro_client.GroClient.pick_random_data_series" title="Permalink to this definition">¶</a></dt>
 <dd><p>Given a selection of tentities, pick a random available data series
 the given selection of entities.</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="api.client.gro_client.GroClient.pick_random_entities">
 <code class="sig-name descname">pick_random_entities</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/gro_client.html#GroClient.pick_random_entities"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.gro_client.GroClient.pick_random_entities" title="Permalink to this definition">¶</a></dt>
 <dd><p>Pick a random item that has some data associated with it, and a
@@ -923,15 +923,15 @@ random metric and region pair for that item with data
 available.</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="api.client.gro_client.GroClient.print_one_data_series">
-<code class="sig-name descname">print_one_data_series</code><span class="sig-paren">(</span><em class="sig-param">data_series</em>, <em class="sig-param">filename</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/gro_client.html#GroClient.print_one_data_series"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.gro_client.GroClient.print_one_data_series" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">print_one_data_series</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data_series</span></em>, <em class="sig-param"><span class="n">filename</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/gro_client.html#GroClient.print_one_data_series"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.gro_client.GroClient.print_one_data_series" title="Permalink to this definition">¶</a></dt>
 <dd><p>Output a data series to a CSV file.</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="api.client.gro_client.GroClient.search_for_entity">
-<code class="sig-name descname">search_for_entity</code><span class="sig-paren">(</span><em class="sig-param">entity_type</em>, <em class="sig-param">keywords</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/gro_client.html#GroClient.search_for_entity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.gro_client.GroClient.search_for_entity" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">search_for_entity</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">entity_type</span></em>, <em class="sig-param"><span class="n">keywords</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/gro_client.html#GroClient.search_for_entity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.gro_client.GroClient.search_for_entity" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the first result of entity_type (which is items, metrics or
 regions) that matches the given keywords.</p>
 </dd></dl>
@@ -941,21 +941,21 @@ regions) that matches the given keywords.</p>
 </div>
 <div class="section" id="crop-model">
 <h2>Crop Model<a class="headerlink" href="#crop-model" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
+<dl class="py class">
 <dt id="api.client.crop_model.CropModel">
-<em class="property">class </em><code class="sig-prename descclassname">api.client.crop_model.</code><code class="sig-name descname">CropModel</code><span class="sig-paren">(</span><em class="sig-param">api_host</em>, <em class="sig-param">access_token</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/crop_model.html#CropModel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.crop_model.CropModel" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="method">
+<em class="property">class </em><code class="sig-prename descclassname">api.client.crop_model.</code><code class="sig-name descname">CropModel</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">api_host</span></em>, <em class="sig-param"><span class="n">access_token</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/crop_model.html#CropModel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.crop_model.CropModel" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="py method">
 <dt id="api.client.crop_model.CropModel.compute_crop_weighted_series">
-<code class="sig-name descname">compute_crop_weighted_series</code><span class="sig-paren">(</span><em class="sig-param">weighting_crop_name</em>, <em class="sig-param">weighting_metric_name</em>, <em class="sig-param">item_name</em>, <em class="sig-param">metric_name</em>, <em class="sig-param">regions</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/crop_model.html#CropModel.compute_crop_weighted_series"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.crop_model.CropModel.compute_crop_weighted_series" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">compute_crop_weighted_series</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">weighting_crop_name</span></em>, <em class="sig-param"><span class="n">weighting_metric_name</span></em>, <em class="sig-param"><span class="n">item_name</span></em>, <em class="sig-param"><span class="n">metric_name</span></em>, <em class="sig-param"><span class="n">regions</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/crop_model.html#CropModel.compute_crop_weighted_series"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.crop_model.CropModel.compute_crop_weighted_series" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add the data series for the given item_name and metric_name to this
 model. Compute the weighted version of the series for each
 region in regions. The weight of a region is the fraction of
 the value of the weighting series represented by that region.</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="api.client.crop_model.CropModel.compute_weights">
-<code class="sig-name descname">compute_weights</code><span class="sig-paren">(</span><em class="sig-param">crop_name</em>, <em class="sig-param">metric_name</em>, <em class="sig-param">regions</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/crop_model.html#CropModel.compute_weights"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.crop_model.CropModel.compute_weights" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">compute_weights</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">crop_name</span></em>, <em class="sig-param"><span class="n">metric_name</span></em>, <em class="sig-param"><span class="n">regions</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/crop_model.html#CropModel.compute_weights"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.crop_model.CropModel.compute_weights" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add the weighting data series to this model. Compute the weights,
 which is the mean value for each region in regions, normalized
 to add up to 1.0 across regions. Returns a list of weights
@@ -967,19 +967,19 @@ corresponding to the regions.</p>
 </div>
 <div class="section" id="batch-client">
 <h2>Batch Client<a class="headerlink" href="#batch-client" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
+<dl class="py class">
 <dt id="api.client.batch_client.BatchClient">
-<em class="property">class </em><code class="sig-prename descclassname">api.client.batch_client.</code><code class="sig-name descname">BatchClient</code><span class="sig-paren">(</span><em class="sig-param">api_host</em>, <em class="sig-param">access_token</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/batch_client.html#BatchClient"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.batch_client.BatchClient" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">api.client.batch_client.</code><code class="sig-name descname">BatchClient</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">api_host</span></em>, <em class="sig-param"><span class="n">access_token</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/batch_client.html#BatchClient"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.batch_client.BatchClient" title="Permalink to this definition">¶</a></dt>
 <dd><p>API client with support for batch asynchronous queries.</p>
-<dl class="method">
+<dl class="py method">
 <dt id="api.client.batch_client.BatchClient.async_rank_series_by_source">
-<code class="sig-name descname">async_rank_series_by_source</code><span class="sig-paren">(</span><em class="sig-param">**selection</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/batch_client.html#BatchClient.async_rank_series_by_source"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.batch_client.BatchClient.async_rank_series_by_source" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">async_rank_series_by_source</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">**</span><span class="n">selection</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/batch_client.html#BatchClient.async_rank_series_by_source"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.batch_client.BatchClient.async_rank_series_by_source" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get all sources, in ranked order, for a given selection.</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="api.client.batch_client.BatchClient.batch_async_queue">
-<code class="sig-name descname">batch_async_queue</code><span class="sig-paren">(</span><em class="sig-param">func</em>, <em class="sig-param">batched_args</em>, <em class="sig-param">output_list</em>, <em class="sig-param">map_result</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/batch_client.html#BatchClient.batch_async_queue"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.batch_client.BatchClient.batch_async_queue" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">batch_async_queue</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">func</span></em>, <em class="sig-param"><span class="n">batched_args</span></em>, <em class="sig-param"><span class="n">output_list</span></em>, <em class="sig-param"><span class="n">map_result</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/batch_client.html#BatchClient.batch_async_queue"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.batch_client.BatchClient.batch_async_queue" title="Permalink to this definition">¶</a></dt>
 <dd><p>Asynchronously call func.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -995,16 +995,16 @@ corresponding to the regions.</p>
 :return:</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="api.client.batch_client.BatchClient.get_data">
-<code class="sig-name descname">get_data</code><span class="sig-paren">(</span><em class="sig-param">url</em>, <em class="sig-param">headers</em>, <em class="sig-param">params=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/batch_client.html#BatchClient.get_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.batch_client.BatchClient.get_data" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_data</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">url</span></em>, <em class="sig-param"><span class="n">headers</span></em>, <em class="sig-param"><span class="n">params</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/batch_client.html#BatchClient.get_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.batch_client.BatchClient.get_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>General ‘make api request’ function.</p>
 <p>Assigns headers and builds in retries and logging.</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="api.client.batch_client.BatchClient.get_data_points">
-<code class="sig-name descname">get_data_points</code><span class="sig-paren">(</span><em class="sig-param">**selection</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/batch_client.html#BatchClient.get_data_points"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.batch_client.BatchClient.get_data_points" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_data_points</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">**</span><span class="n">selection</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/client/batch_client.html#BatchClient.get_data_points"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#api.client.batch_client.BatchClient.get_data_points" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get all the data points for a given selection, which is some or all
 of: item_id, metric_id, region_id, frequency_id, source_id,
 partner_region_id. Additional arguments are allowed and ignored.</p>
