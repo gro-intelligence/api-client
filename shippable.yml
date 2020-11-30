@@ -37,6 +37,8 @@ build:
     - >
       shippable_retry poetry install -E docs &&
       poetry run sphinx-build -W --keep-going docs docs/_build/html
+    # Check for broken links in the docs.
+    - poetry run sphinx-build -b linkcheck docs docs/_build/linkcheck
     # Build docs and push to gh-pages.
     # Note: git remote set-url is for setting a git url instead of an https
     # one, which is needed so Shippable can be authenticated to push changes.
