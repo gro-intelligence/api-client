@@ -61,7 +61,7 @@ git add .
 # - this logic differs from sphinxcontrib-versioning slightly. SCV ignores
 #   searchindex.js but not .buildinfo. I didn't notice searchindex.js being
 #   regenerated unnecessarily, but did see that happening with .buildinfo files.
-CHANGED=$(git diff HEAD --no-ext-diff --name-status | grep -v '^M\t.*\.doctrees/'  | grep -v '^M\t.*\.buildinfo$' || true)
+CHANGED=$(git diff HEAD --no-ext-diff --name-status | grep -v '^M.*\.doctrees/' | grep -v '^M.*\.buildinfo$' || true)
 if [ -z "$CHANGED" ]; then
   echo -e "\n-> no changes, done!"
   exit 0
