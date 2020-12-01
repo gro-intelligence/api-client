@@ -1,7 +1,9 @@
 
 
+
+
 <!DOCTYPE html>
-<html class="writer-html4" lang="en" >
+<html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
   
@@ -13,7 +15,6 @@
   
   <link rel="stylesheet" href="../_static/css/custom-theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/banner.css" type="text/css" />
 
   
   
@@ -26,20 +27,11 @@
   <![endif]-->
   
     
-      <script type="text/javascript">
-          var DOCUMENTATION_OPTIONS = {
-              URL_ROOT:'../',
-              VERSION:'',
-              LANGUAGE:'None',
-              COLLAPSE_INDEX:false,
-              FILE_SUFFIX:'.html',
-              HAS_SOURCE:  true,
-              SOURCELINK_SUFFIX: '.txt'
-          };
-      </script>
-        <script type="text/javascript" src="../_static/jquery.js"></script>
-        <script type="text/javascript" src="../_static/underscore.js"></script>
-        <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
@@ -195,24 +187,23 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  
+
+<p class="version-banner">
+  <strong>Note:</strong>
+  This document is for an older version of the Gro API Client.
+  Please see the <a href="../../development/prerequisites/software-packages-prereqs.html">latest documentation</a>.
+</p>
 
 
-    
-    
-
-
-
-    <p class="scv-banner scv-sphinx_rtd_theme"><a href="../../development/prerequisites/software-packages-prereqs.html"><b>Warning:</b> This document is for the development version of Gro API Client. The main version is development.</a></p>
-<div class="section" id="prerequisite-software-package-installation">
+  <div class="section" id="prerequisite-software-package-installation">
 <h1>Prerequisite Software Package Installation<a class="headerlink" href="#prerequisite-software-package-installation" title="Permalink to this headline">¶</a></h1>
 <p>The following links are provided for guidance on installing the prerequisite software.</p>
 <div class="section" id="macos-and-linux">
 <h2>MacOS and Linux<a class="headerlink" href="#macos-and-linux" title="Permalink to this headline">¶</a></h2>
 <ol class="arabic simple">
-<li>git <a class="reference external" href="https://git-scm.com/book/en/v2/Getting-Started-Installing-Git">Installation instructions</a></li>
-<li>python version 3.5 or above from <a class="reference external" href="https://www.python.org">https://www.python.org</a>. Support for Python 2.7.13 or above is also maintained, but with its <a class="reference external" href="https://mail.python.org/pipermail/python-dev/2018-March/152348.html">End of Life</a>, Python 3 is recommended.</li>
-<li>MacOS comes with an old version of python 2 which is incompatible with the Gro API client. See the following link for <a class="reference external" href="https://docs.python-guide.org/starting/install3/osx/">installing Python 3 on MacOS</a> without disrupting the base install</li>
+<li><p>git <a class="reference external" href="https://git-scm.com/book/en/v2/Getting-Started-Installing-Git">Installation instructions</a></p></li>
+<li><p>python version 3.5 or above from <a class="reference external" href="https://www.python.org">https://www.python.org</a>. Support for Python 2.7.13 or above is also maintained, but with its <a class="reference external" href="https://mail.python.org/pipermail/python-dev/2018-March/152348.html">End of Life</a>, Python 3 is recommended.</p></li>
+<li><p>MacOS comes with an old version of python 2 which is incompatible with the Gro API client. See the following link for <a class="reference external" href="https://docs.python-guide.org/starting/install3/osx/">installing Python 3 on MacOS</a> without disrupting the base install</p></li>
 </ol>
 </div>
 <div class="section" id="windows">
@@ -221,27 +212,25 @@
 <div class="section" id="anaconda">
 <h3>Anaconda<a class="headerlink" href="#anaconda" title="Permalink to this headline">¶</a></h3>
 <ol class="arabic simple">
-<li>Download Anaconda with Python 3.5 or above from <a class="reference external" href="https://www.anaconda.com/distribution/">anaconda.com</a> Support for Python 2.7.13 or above is also maintained, but with <a class="reference external" href="https://mail.python.org/pipermail/python-dev/2018-March/152348.html">its End of Life</a>, it is recommended you start with Python 3.</li>
-<li>Install Git from <a class="reference external" href="https://git-scm.com/download/win">git-scm.com</a>. Proceed with the default options.</li>
-<li>See <a class="reference external" href="./anaconda-additional-information">additional information</a> related to Anaconda if Anaconda is not installed in the default directory (C:Users&lt;your-username&gt;) or if your environment uses a proxy or firewall in connections to the internet.</li>
+<li><p>Download Anaconda with Python 3.5 or above from <a class="reference external" href="https://www.anaconda.com/distribution/">anaconda.com</a> Support for Python 2.7.13 or above is also maintained, but with <a class="reference external" href="https://mail.python.org/pipermail/python-dev/2018-March/152348.html">its End of Life</a>, it is recommended you start with Python 3.</p></li>
+<li><p>Install Git from <a class="reference external" href="https://git-scm.com/download/win">git-scm.com</a>. Proceed with the default options.</p></li>
+<li><p>See <a class="reference external" href="./anaconda-additional-information">additional information</a> related to Anaconda if Anaconda is not installed in the default directory (C:Users&lt;your-username&gt;) or if your environment uses a proxy or firewall in connections to the internet.</p></li>
 </ol>
 </div>
 <div class="section" id="non-anaconda">
 <h3>Non-Anaconda<a class="headerlink" href="#non-anaconda" title="Permalink to this headline">¶</a></h3>
 <ol class="arabic">
-<li><p class="first">Powershell (should come default with Windows)</p>
-</li>
-<li><p class="first">Download Python version 3.5 or above from <a class="reference external" href="https://www.python.org/downloads/windows/">python.org</a>. Support for Python 2.7.13 or above is also maintained, but with <a class="reference external" href="https://mail.python.org/pipermail/python-dev/2018-March/152348.html">its End of Life</a>, it is recommended you start with Python 3.</p>
-</li>
-<li><p class="first">Install both Python and pip to PATH either in the installer (enable component during the installation) or manually. The easiest way to do this is to make sure the below is checked during installation:</p>
+<li><p>Powershell (should come default with Windows)</p></li>
+<li><p>Download Python version 3.5 or above from <a class="reference external" href="https://www.python.org/downloads/windows/">python.org</a>. Support for Python 2.7.13 or above is also maintained, but with <a class="reference external" href="https://mail.python.org/pipermail/python-dev/2018-March/152348.html">its End of Life</a>, it is recommended you start with Python 3.</p></li>
+<li><p>Install both Python and pip to PATH either in the installer (enable component during the installation) or manually. The easiest way to do this is to make sure the below is checked during installation:</p>
 <img alt="Add python to path installer" class="align-center" src="../_images/python3-path.PNG" />
 </li>
-<li><p class="first">Install Git from <a class="reference external" href="https://git-scm.com/download/win">git-scm.com</a>. Proceed with the default options.</p>
-</li>
+<li><p>Install Git from <a class="reference external" href="https://git-scm.com/download/win">git-scm.com</a>. Proceed with the default options.</p></li>
 </ol>
 </div>
 </div>
 </div>
+
 
 
            </div>
@@ -255,7 +244,7 @@
   <div role="contentinfo">
     <p>
         
-        &copy; Copyright 2019, Gro Intelligence
+        &copy; Copyright 2020, Gro Intelligence
 
     </p>
   </div>
@@ -278,47 +267,33 @@
   </div>
   
 <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
-    <span class="rst-current-version" data-toggle="rst-current-version">
-        <span class="fa fa-book"> Other Versions</span>
-        v: CLEWS-27625-fixtures
-        <span class="fa fa-caret-down"></span>
-    </span>
-    <div class="rst-other-versions">
-        <dl>
-            <dt>Tags</dt>
-            <dd><a href="../../v1.40.6/index.html">v1.40.6</a></dd>
-            <dd><a href="../../v1.56.0/index.html">v1.56.0</a></dd>
-            <dd><a href="../../v1.56.1/index.html">v1.56.1</a></dd>
-            <dd><a href="../../v1.56.2/index.html">v1.56.2</a></dd>
-            <dd><a href="../../v1.60.0/index.html">v1.60.0</a></dd>
-            <dd><a href="../../v1.60.1/index.html">v1.60.1</a></dd>
-            <dd><a href="../../v1.71.0/index.html">v1.71.0</a></dd>
-            <dd><a href="../../v1.76.0/prerequisites/software-packages-prereqs.html">v1.76.0</a></dd>
-            <dd><a href="../../v1.77.0/prerequisites/software-packages-prereqs.html">v1.77.0</a></dd>
-            <dd><a href="../../v1.77.1/prerequisites/software-packages-prereqs.html">v1.77.1</a></dd>
-            <dd><a href="../../v1.82.0/prerequisites/software-packages-prereqs.html">v1.82.0</a></dd>
-            <dd><a href="../../v1.83.0/prerequisites/software-packages-prereqs.html">v1.83.0</a></dd>
-            <dd><a href="../../v1.98.0/prerequisites/software-packages-prereqs.html">v1.98.0</a></dd>
-        </dl>
-        <dl>
-            <dt>Branches</dt>
-            <dd><a href="../../CLEWS-15676-add-names-to-index/prerequisites/software-packages-prereqs.html">CLEWS-15676-add-names-to-index</a></dd>
-            <dd><a href="../../CLEWS-16955-units/index.html">CLEWS-16955-units</a></dd>
-            <dd><a href="../../CLEWS-19063/index.html">CLEWS-19063</a></dd>
-            <dd><a href="../../CLEWS-19840-3/index.html">CLEWS-19840-3</a></dd>
-            <dd><a href="../../CLEWS-22288/index.html">CLEWS-22288</a></dd>
-            <dd><a href="../../CLEWS-23863/index.html">CLEWS-23863</a></dd>
-            <dd><a href="../../CLEWS-23863-composite-rank/prerequisites/software-packages-prereqs.html">CLEWS-23863-composite-rank</a></dd>
-            <dd><a href="software-packages-prereqs.html">CLEWS-27625-fixtures</a></dd>
-            <dd><a href="../../development/prerequisites/software-packages-prereqs.html">development</a></dd>
-            <dd><a href="../../jli-requirecleandocs/prerequisites/software-packages-prereqs.html">jli-requirecleandocs</a></dd>
-            <dd><a href="../../lib-test-refactor/prerequisites/software-packages-prereqs.html">lib-test-refactor</a></dd>
-            <dd><a href="../../simplify-quickstart/index.html">simplify-quickstart</a></dd>
-            <dd><a href="../../simulate_reporting_date/prerequisites/software-packages-prereqs.html">simulate_reporting_date</a></dd>
-        </dl>
-    </div>
-</div>
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    <span class="fa fa-book"> Other Versions</span>
+    v: CLEWS-27625-fixtures
+    <span class="fa fa-caret-down"></span>
+  </span>
+  <div class="rst-other-versions">
+    <dl>
+      <dt>Releases</dt>
+      <dd><a href="../../v1.40.6/index.html">v1.40.6</a></dd>
+      <dd><a href="../../v1.56.0/index.html">v1.56.0</a></dd>
+      <dd><a href="../../v1.56.1/index.html">v1.56.1</a></dd>
+      <dd><a href="../../v1.56.2/index.html">v1.56.2</a></dd>
+      <dd><a href="../../v1.60.0/index.html">v1.60.0</a></dd>
+      <dd><a href="../../v1.60.1/index.html">v1.60.1</a></dd>
+      <dd><a href="../../v1.71.0/index.html">v1.71.0</a></dd>
+      <dd><a href="../../v1.76.0/prerequisites/software-packages-prereqs.html">v1.76.0</a></dd>
+      <dd><a href="../../v1.77.0/prerequisites/software-packages-prereqs.html">v1.77.0</a></dd>
+      <dd><a href="../../v1.77.1/prerequisites/software-packages-prereqs.html">v1.77.1</a></dd>
+      <dd><a href="../../v1.82.0/prerequisites/software-packages-prereqs.html">v1.82.0</a></dd>
+      <dd><a href="../../v1.83.0/prerequisites/software-packages-prereqs.html">v1.83.0</a></dd>
+      <dd><a href="../../v1.98.0/prerequisites/software-packages-prereqs.html">v1.98.0</a></dd>
 
+      
+            <dd><a href="../../development/prerequisites/software-packages-prereqs.html">development</a></dd>
+    </dl>
+  </div>
+</div>
 
   <script type="text/javascript">
       jQuery(function () {

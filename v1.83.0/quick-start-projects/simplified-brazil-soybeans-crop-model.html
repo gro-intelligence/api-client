@@ -1,7 +1,9 @@
 
 
+
+
 <!DOCTYPE html>
-<html class="writer-html4" lang="en" >
+<html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
   
@@ -13,7 +15,6 @@
   
   <link rel="stylesheet" href="../_static/css/custom-theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/banner.css" type="text/css" />
 
   
   
@@ -26,20 +27,11 @@
   <![endif]-->
   
     
-      <script type="text/javascript">
-          var DOCUMENTATION_OPTIONS = {
-              URL_ROOT:'../',
-              VERSION:'',
-              LANGUAGE:'None',
-              COLLAPSE_INDEX:false,
-              FILE_SUFFIX:'.html',
-              HAS_SOURCE:  true,
-              SOURCELINK_SUFFIX: '.txt'
-          };
-      </script>
-        <script type="text/javascript" src="../_static/jquery.js"></script>
-        <script type="text/javascript" src="../_static/underscore.js"></script>
-        <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
@@ -208,20 +200,20 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  
+
+<p class="version-banner">
+  <strong>Note:</strong>
+  This document is for an older version of the Gro API Client.
+  Please see the <a href="../../development/quick-start-projects/simplified-brazil-soybeans-crop-model.html">latest documentation</a>.
+</p>
 
 
-    
-    
-
-
-
-    <p class="scv-banner scv-sphinx_rtd_theme"><a href="../../development/quick-start-projects/simplified-brazil-soybeans-crop-model.html"><b>Warning:</b> This document is for an old version of Gro API Client. The main version is development.</a></p>
-<div class="section" id="brazil-soybeans">
+  <div class="section" id="brazil-soybeans">
 <h1>Brazil Soybeans<a class="headerlink" href="#brazil-soybeans" title="Permalink to this headline">¶</a></h1>
-<p>See the <a class="reference external" href="https://github.com/gro-intelligence/api-client/blob/development/api/client/samples/crop_models">Brazil Soybeans</a> example in the crop models folder for a longer, more detailed demonstration of many of the API&#8217;s capabilities in the form of a Jupyter notebook.</p>
-<p>This notebook demonstrates the <cite>CropModel</cite> class and its <code class="code docutils literal"><span class="pre">compute_crop_weighted_series()</span></code> method in action. In this example, NDVI (<a class="reference external" href="https://app.gro-intelligence.com/dictionary/items/321">normalized difference vegetation index</a>) for provinces in Brazil is weighted against each province&#8217;s historical soybean production to put the latest NDVI values into context.</p>
+<p>See the <a class="reference external" href="https://github.com/gro-intelligence/api-client/blob/development/api/client/samples/crop_models">Brazil Soybeans</a> example in the crop models folder for a longer, more detailed demonstration of many of the API’s capabilities in the form of a Jupyter notebook.</p>
+<p>This notebook demonstrates the <cite>CropModel</cite> class and its <code class="code docutils literal notranslate"><span class="pre">compute_crop_weighted_series()</span></code> method in action. In this example, NDVI (<a class="reference external" href="https://app.gro-intelligence.com/dictionary/items/321">normalized difference vegetation index</a>) for provinces in Brazil is weighted against each province’s historical soybean production to put the latest NDVI values into context.</p>
 </div>
+
 
 
            </div>
@@ -244,7 +236,7 @@
   <div role="contentinfo">
     <p>
         
-        &copy; Copyright 2019, Gro Intelligence
+        &copy; Copyright 2020, Gro Intelligence
 
     </p>
   </div>
@@ -267,47 +259,33 @@
   </div>
   
 <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
-    <span class="rst-current-version" data-toggle="rst-current-version">
-        <span class="fa fa-book"> Other Versions</span>
-        v: v1.83.0
-        <span class="fa fa-caret-down"></span>
-    </span>
-    <div class="rst-other-versions">
-        <dl>
-            <dt>Tags</dt>
-            <dd><a href="../../v1.40.6/index.html">v1.40.6</a></dd>
-            <dd><a href="../../v1.56.0/index.html">v1.56.0</a></dd>
-            <dd><a href="../../v1.56.1/index.html">v1.56.1</a></dd>
-            <dd><a href="../../v1.56.2/index.html">v1.56.2</a></dd>
-            <dd><a href="../../v1.60.0/index.html">v1.60.0</a></dd>
-            <dd><a href="../../v1.60.1/index.html">v1.60.1</a></dd>
-            <dd><a href="../../v1.71.0/index.html">v1.71.0</a></dd>
-            <dd><a href="../../v1.76.0/quick-start-projects/simplified-brazil-soybeans-crop-model.html">v1.76.0</a></dd>
-            <dd><a href="../../v1.77.0/quick-start-projects/simplified-brazil-soybeans-crop-model.html">v1.77.0</a></dd>
-            <dd><a href="../../v1.77.1/quick-start-projects/simplified-brazil-soybeans-crop-model.html">v1.77.1</a></dd>
-            <dd><a href="../../v1.82.0/quick-start-projects/simplified-brazil-soybeans-crop-model.html">v1.82.0</a></dd>
-            <dd><a href="simplified-brazil-soybeans-crop-model.html">v1.83.0</a></dd>
-            <dd><a href="../../v1.98.0/quick-start-projects/simplified-brazil-soybeans-crop-model.html">v1.98.0</a></dd>
-        </dl>
-        <dl>
-            <dt>Branches</dt>
-            <dd><a href="../../CLEWS-15676-add-names-to-index/quick-start-projects/simplified-brazil-soybeans-crop-model.html">CLEWS-15676-add-names-to-index</a></dd>
-            <dd><a href="../../CLEWS-16955-units/index.html">CLEWS-16955-units</a></dd>
-            <dd><a href="../../CLEWS-19063/index.html">CLEWS-19063</a></dd>
-            <dd><a href="../../CLEWS-19840-3/index.html">CLEWS-19840-3</a></dd>
-            <dd><a href="../../CLEWS-22288/index.html">CLEWS-22288</a></dd>
-            <dd><a href="../../CLEWS-23863/index.html">CLEWS-23863</a></dd>
-            <dd><a href="../../CLEWS-23863-composite-rank/quick-start-projects/simplified-brazil-soybeans-crop-model.html">CLEWS-23863-composite-rank</a></dd>
-            <dd><a href="../../CLEWS-27625-fixtures/quick-start-projects/simplified-brazil-soybeans-crop-model.html">CLEWS-27625-fixtures</a></dd>
-            <dd><a href="../../development/quick-start-projects/simplified-brazil-soybeans-crop-model.html">development</a></dd>
-            <dd><a href="../../jli-requirecleandocs/quick-start-projects/simplified-brazil-soybeans-crop-model.html">jli-requirecleandocs</a></dd>
-            <dd><a href="../../lib-test-refactor/quick-start-projects/simplified-brazil-soybeans-crop-model.html">lib-test-refactor</a></dd>
-            <dd><a href="../../simplify-quickstart/index.html">simplify-quickstart</a></dd>
-            <dd><a href="../../simulate_reporting_date/quick-start-projects/simplified-brazil-soybeans-crop-model.html">simulate_reporting_date</a></dd>
-        </dl>
-    </div>
-</div>
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    <span class="fa fa-book"> Other Versions</span>
+    v: v1.83.0
+    <span class="fa fa-caret-down"></span>
+  </span>
+  <div class="rst-other-versions">
+    <dl>
+      <dt>Releases</dt>
+      <dd><a href="../../v1.40.6/index.html">v1.40.6</a></dd>
+      <dd><a href="../../v1.56.0/index.html">v1.56.0</a></dd>
+      <dd><a href="../../v1.56.1/index.html">v1.56.1</a></dd>
+      <dd><a href="../../v1.56.2/index.html">v1.56.2</a></dd>
+      <dd><a href="../../v1.60.0/index.html">v1.60.0</a></dd>
+      <dd><a href="../../v1.60.1/index.html">v1.60.1</a></dd>
+      <dd><a href="../../v1.71.0/index.html">v1.71.0</a></dd>
+      <dd><a href="../../v1.76.0/quick-start-projects/simplified-brazil-soybeans-crop-model.html">v1.76.0</a></dd>
+      <dd><a href="../../v1.77.0/quick-start-projects/simplified-brazil-soybeans-crop-model.html">v1.77.0</a></dd>
+      <dd><a href="../../v1.77.1/quick-start-projects/simplified-brazil-soybeans-crop-model.html">v1.77.1</a></dd>
+      <dd><a href="../../v1.82.0/quick-start-projects/simplified-brazil-soybeans-crop-model.html">v1.82.0</a></dd>
+      <dd><a href="simplified-brazil-soybeans-crop-model.html">v1.83.0</a></dd>
+      <dd><a href="../../v1.98.0/quick-start-projects/simplified-brazil-soybeans-crop-model.html">v1.98.0</a></dd>
 
+      
+            <dd><a href="../../development/quick-start-projects/simplified-brazil-soybeans-crop-model.html">development</a></dd>
+    </dl>
+  </div>
+</div>
 
   <script type="text/javascript">
       jQuery(function () {

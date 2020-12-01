@@ -1,7 +1,9 @@
 
 
+
+
 <!DOCTYPE html>
-<html class="writer-html4" lang="en" >
+<html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
   
@@ -13,7 +15,6 @@
   
   <link rel="stylesheet" href="_static/css/custom-theme.css" type="text/css" />
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="_static/banner.css" type="text/css" />
 
   
   
@@ -26,20 +27,11 @@
   <![endif]-->
   
     
-      <script type="text/javascript">
-          var DOCUMENTATION_OPTIONS = {
-              URL_ROOT:'./',
-              VERSION:'',
-              LANGUAGE:'None',
-              COLLAPSE_INDEX:false,
-              FILE_SUFFIX:'.html',
-              HAS_SOURCE:  true,
-              SOURCELINK_SUFFIX: '.txt'
-          };
-      </script>
-        <script type="text/javascript" src="_static/jquery.js"></script>
-        <script type="text/javascript" src="_static/underscore.js"></script>
-        <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
@@ -206,30 +198,30 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  
+
+<p class="version-banner">
+  <strong>Note:</strong>
+  This document is for an older version of the Gro API Client.
+  Please see the <a href="../development/data-series-definition.html">latest documentation</a>.
+</p>
 
 
-    
-    
-
-
-
-    <p class="scv-banner scv-sphinx_rtd_theme"><a href="../development/data-series-definition.html"><b>Warning:</b> This document is for an old version of Gro API Client. The main version is development.</a></p>
-<div class="section" id="data-series-definition">
+  <div class="section" id="data-series-definition">
 <h1>Data Series Definition<a class="headerlink" href="#data-series-definition" title="Permalink to this headline">¶</a></h1>
-<p>Gro defines a &#8220;data series&#8220; as a series of data points over time.
+<p>Gro defines a “data series” as a series of data points over time.
 Each data series is defined by a unique selection of:</p>
 <ul class="simple">
-<li><code class="docutils literal"><span class="pre">metric</span></code></li>
-<li><code class="docutils literal"><span class="pre">item</span></code></li>
-<li><code class="docutils literal"><span class="pre">region</span></code></li>
-<li><code class="docutils literal"><span class="pre">partner_region</span></code> (optional)</li>
-<li><code class="docutils literal"><span class="pre">frequency</span></code></li>
-<li><code class="docutils literal"><span class="pre">source</span></code></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">metric</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">item</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">region</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">partner_region</span></code> (optional)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">frequency</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">source</span></code></p></li>
 </ul>
-<p>For example, if you select <code class="docutils literal"><span class="pre">item=Wheat</span></code>, <code class="docutils literal"><span class="pre">metric=Production</span> <span class="pre">Quantity</span> <span class="pre">(mass)</span></code>, <code class="docutils literal"><span class="pre">region=India</span></code>, <code class="docutils literal"><span class="pre">frequency=Annual</span></code>, <code class="docutils literal"><span class="pre">source=FAO</span></code>, that would be one data series. Partner_region is optional and used only in series that represent a flow between two places, e.g. if the metric is exports, the region would be the exporter and the partner_region would be the importer.</p>
-<p>To get all the available data series for a given selection of entities, use the <code class="docutils literal"><span class="pre">get_data_series</span></code> function as described in the <a class="reference external" href="./searching-data.html#get-data-series">Searching Data</a> section.</p>
+<p>For example, if you select <code class="docutils literal notranslate"><span class="pre">item=Wheat</span></code>, <code class="docutils literal notranslate"><span class="pre">metric=Production</span> <span class="pre">Quantity</span> <span class="pre">(mass)</span></code>, <code class="docutils literal notranslate"><span class="pre">region=India</span></code>, <code class="docutils literal notranslate"><span class="pre">frequency=Annual</span></code>, <code class="docutils literal notranslate"><span class="pre">source=FAO</span></code>, that would be one data series. Partner_region is optional and used only in series that represent a flow between two places, e.g. if the metric is exports, the region would be the exporter and the partner_region would be the importer.</p>
+<p>To get all the available data series for a given selection of entities, use the <code class="docutils literal notranslate"><span class="pre">get_data_series</span></code> function as described in the <a class="reference external" href="./searching-data.html#get-data-series">Searching Data</a> section.</p>
 </div>
+
 
 
            </div>
@@ -252,7 +244,7 @@ Each data series is defined by a unique selection of:</p>
   <div role="contentinfo">
     <p>
         
-        &copy; Copyright 2019, Gro Intelligence
+        &copy; Copyright 2020, Gro Intelligence
 
     </p>
   </div>
@@ -275,47 +267,33 @@ Each data series is defined by a unique selection of:</p>
   </div>
   
 <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
-    <span class="rst-current-version" data-toggle="rst-current-version">
-        <span class="fa fa-book"> Other Versions</span>
-        v: v1.77.0
-        <span class="fa fa-caret-down"></span>
-    </span>
-    <div class="rst-other-versions">
-        <dl>
-            <dt>Tags</dt>
-            <dd><a href="../v1.40.6/data-series-definition.html">v1.40.6</a></dd>
-            <dd><a href="../v1.56.0/data-series-definition.html">v1.56.0</a></dd>
-            <dd><a href="../v1.56.1/data-series-definition.html">v1.56.1</a></dd>
-            <dd><a href="../v1.56.2/data-series-definition.html">v1.56.2</a></dd>
-            <dd><a href="../v1.60.0/data-series-definition.html">v1.60.0</a></dd>
-            <dd><a href="../v1.60.1/data-series-definition.html">v1.60.1</a></dd>
-            <dd><a href="../v1.71.0/data-series-definition.html">v1.71.0</a></dd>
-            <dd><a href="../v1.76.0/data-series-definition.html">v1.76.0</a></dd>
-            <dd><a href="data-series-definition.html">v1.77.0</a></dd>
-            <dd><a href="../v1.77.1/data-series-definition.html">v1.77.1</a></dd>
-            <dd><a href="../v1.82.0/data-series-definition.html">v1.82.0</a></dd>
-            <dd><a href="../v1.83.0/data-series-definition.html">v1.83.0</a></dd>
-            <dd><a href="../v1.98.0/data-series-definition.html">v1.98.0</a></dd>
-        </dl>
-        <dl>
-            <dt>Branches</dt>
-            <dd><a href="../CLEWS-15676-add-names-to-index/data-series-definition.html">CLEWS-15676-add-names-to-index</a></dd>
-            <dd><a href="../CLEWS-16955-units/index.html">CLEWS-16955-units</a></dd>
-            <dd><a href="../CLEWS-19063/data-series-definition.html">CLEWS-19063</a></dd>
-            <dd><a href="../CLEWS-19840-3/data-series-definition.html">CLEWS-19840-3</a></dd>
-            <dd><a href="../CLEWS-22288/index.html">CLEWS-22288</a></dd>
-            <dd><a href="../CLEWS-23863/data-series-definition.html">CLEWS-23863</a></dd>
-            <dd><a href="../CLEWS-23863-composite-rank/data-series-definition.html">CLEWS-23863-composite-rank</a></dd>
-            <dd><a href="../CLEWS-27625-fixtures/data-series-definition.html">CLEWS-27625-fixtures</a></dd>
-            <dd><a href="../development/data-series-definition.html">development</a></dd>
-            <dd><a href="../jli-requirecleandocs/data-series-definition.html">jli-requirecleandocs</a></dd>
-            <dd><a href="../lib-test-refactor/data-series-definition.html">lib-test-refactor</a></dd>
-            <dd><a href="../simplify-quickstart/data-series-definition.html">simplify-quickstart</a></dd>
-            <dd><a href="../simulate_reporting_date/data-series-definition.html">simulate_reporting_date</a></dd>
-        </dl>
-    </div>
-</div>
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    <span class="fa fa-book"> Other Versions</span>
+    v: v1.77.0
+    <span class="fa fa-caret-down"></span>
+  </span>
+  <div class="rst-other-versions">
+    <dl>
+      <dt>Releases</dt>
+      <dd><a href="../v1.40.6/data-series-definition.html">v1.40.6</a></dd>
+      <dd><a href="../v1.56.0/data-series-definition.html">v1.56.0</a></dd>
+      <dd><a href="../v1.56.1/data-series-definition.html">v1.56.1</a></dd>
+      <dd><a href="../v1.56.2/data-series-definition.html">v1.56.2</a></dd>
+      <dd><a href="../v1.60.0/data-series-definition.html">v1.60.0</a></dd>
+      <dd><a href="../v1.60.1/data-series-definition.html">v1.60.1</a></dd>
+      <dd><a href="../v1.71.0/data-series-definition.html">v1.71.0</a></dd>
+      <dd><a href="../v1.76.0/data-series-definition.html">v1.76.0</a></dd>
+      <dd><a href="data-series-definition.html">v1.77.0</a></dd>
+      <dd><a href="../v1.77.1/data-series-definition.html">v1.77.1</a></dd>
+      <dd><a href="../v1.82.0/data-series-definition.html">v1.82.0</a></dd>
+      <dd><a href="../v1.83.0/data-series-definition.html">v1.83.0</a></dd>
+      <dd><a href="../v1.98.0/data-series-definition.html">v1.98.0</a></dd>
 
+      
+            <dd><a href="../development/data-series-definition.html">development</a></dd>
+    </dl>
+  </div>
+</div>
 
   <script type="text/javascript">
       jQuery(function () {

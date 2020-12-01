@@ -1,7 +1,9 @@
 
 
+
+
 <!DOCTYPE html>
-<html class="writer-html4" lang="en" >
+<html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
   
@@ -13,7 +15,6 @@
   
   <link rel="stylesheet" href="../_static/css/custom-theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/banner.css" type="text/css" />
 
   
   
@@ -26,20 +27,11 @@
   <![endif]-->
   
     
-      <script type="text/javascript">
-          var DOCUMENTATION_OPTIONS = {
-              URL_ROOT:'../',
-              VERSION:'',
-              LANGUAGE:'None',
-              COLLAPSE_INDEX:false,
-              FILE_SUFFIX:'.html',
-              HAS_SOURCE:  true,
-              SOURCELINK_SUFFIX: '.txt'
-          };
-      </script>
-        <script type="text/javascript" src="../_static/jquery.js"></script>
-        <script type="text/javascript" src="../_static/underscore.js"></script>
-        <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
@@ -195,56 +187,45 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  
 
 
-
-
-
-<div class="section" id="anaconda-additional-information">
+  <div class="section" id="anaconda-additional-information">
 <h1>Anaconda Additional Information<a class="headerlink" href="#anaconda-additional-information" title="Permalink to this headline">¶</a></h1>
 <ol class="arabic">
-<li><p class="first">If your username includes spaces, as is common on Windows systems, you are not allowed to install Anaconda in the default path (C:Users&lt;your-username&gt;Anaconda3)</p>
+<li><p>If your username includes spaces, as is common on Windows systems, you are not allowed to install Anaconda in the default path (C:Users&lt;your-username&gt;Anaconda3)</p>
 <blockquote>
 <div><ol class="loweralpha simple">
-<li>See this <a class="reference external" href="https://docs.anaconda.com/anaconda/user-guide/faq/#distribution-faq-windows-folder">Anaconda link</a> for additional information.</li>
+<li><p>See this <a class="reference external" href="https://docs.anaconda.com/anaconda/user-guide/faq/#distribution-faq-windows-folder">Anaconda link</a> for additional information.</p></li>
 </ol>
 </div></blockquote>
 </li>
-<li><p class="first">If you install Anaconda outside of the default path, then you will need to update the config for the jupyter notebook default directory as outlined below:</p>
+<li><p>If you install Anaconda outside of the default path, then you will need to update the config for the jupyter notebook default directory as outlined below:</p>
 <blockquote>
 <div><ol class="loweralpha">
-<li><p class="first">Go to the default path (C:Users/&lt;your-username&gt;)</p>
-</li>
-<li><p class="first">Open the &#8216;.jupyter&#8217; folder (note the period &#8216;.&#8217; before the word &#8216;jupyter&#8217;)</p>
-</li>
-<li><p class="first">Open the following file using a text editor: jupyter_notebook_config.py</p>
-</li>
-<li><p class="first">Change the following line:</p>
+<li><p>Go to the default path (C:Users/&lt;your-username&gt;)</p></li>
+<li><p>Open the ‘.jupyter’ folder (note the period ‘.’ before the word ‘jupyter’)</p></li>
+<li><p>Open the following file using a text editor: jupyter_notebook_config.py</p></li>
+<li><p>Change the following line:</p>
 <blockquote>
 <div><div class="line-block">
-<div class="line"><code class="code docutils literal"><span class="pre">#c.NotebookApp.notebook_dir</span> <span class="pre">=</span> <span class="pre">u&quot;</span></code></div>
+<div class="line"><code class="code docutils literal notranslate"><span class="pre">#c.NotebookApp.notebook_dir</span> <span class="pre">=</span> <span class="pre">u&quot;</span></code></div>
 <div class="line">to:</div>
-<div class="line"><code class="code docutils literal"><span class="pre">c.NotebookApp.notebook_dir</span> <span class="pre">=</span> <span class="pre">'C:\Your\Path'</span></code></div>
-<div class="line">Note: Be careful not to leave an empty space in the line when you delete the &#8216;#&#8217; character, the first character on that line is &#8216;c&#8217;.</div>
+<div class="line"><code class="code docutils literal notranslate"><span class="pre">c.NotebookApp.notebook_dir</span> <span class="pre">=</span> <span class="pre">'C:\Your\Path'</span></code></div>
+<div class="line">Note: Be careful not to leave an empty space in the line when you delete the ‘#’ character, the first character on that line is ‘c’.</div>
 </div>
 </div></blockquote>
 </li>
-<li><p class="first">Save the file</p>
-</li>
-<li><p class="first">Relaunch Anaconda Navigator</p>
-</li>
-<li><p class="first">Launch jupyter notebook</p>
-</li>
+<li><p>Save the file</p></li>
+<li><p>Relaunch Anaconda Navigator</p></li>
+<li><p>Launch jupyter notebook</p></li>
 </ol>
 </div></blockquote>
 </li>
-<li><p class="first">See the following link from Anaconda if you have a <a class="reference external" href="https://docs.anaconda.com/anaconda/user-guide/tasks/proxy/">proxy</a></p>
-</li>
-<li><p class="first">See the following link from Anaconda if you have a <a class="reference external" href="https://docs.anaconda.com/anaconda-enterprise-4/ae-and-nav/#configuring-firewall-settings">firewall</a></p>
-</li>
+<li><p>See the following link from Anaconda if you have a <a class="reference external" href="https://docs.anaconda.com/anaconda/user-guide/tasks/proxy/">proxy</a></p></li>
+<li><p>See the following link from Anaconda if you have a <a class="reference external" href="https://docs.anaconda.com/anaconda-enterprise-4/ae-and-nav/#configuring-firewall-settings">firewall</a></p></li>
 </ol>
 </div>
+
 
 
            </div>
@@ -281,47 +262,33 @@
   </div>
   
 <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
-    <span class="rst-current-version" data-toggle="rst-current-version">
-        <span class="fa fa-book"> Other Versions</span>
-        v: development
-        <span class="fa fa-caret-down"></span>
-    </span>
-    <div class="rst-other-versions">
-        <dl>
-            <dt>Tags</dt>
-            <dd><a href="../../v1.40.6/index.html">v1.40.6</a></dd>
-            <dd><a href="../../v1.56.0/index.html">v1.56.0</a></dd>
-            <dd><a href="../../v1.56.1/index.html">v1.56.1</a></dd>
-            <dd><a href="../../v1.56.2/index.html">v1.56.2</a></dd>
-            <dd><a href="../../v1.60.0/index.html">v1.60.0</a></dd>
-            <dd><a href="../../v1.60.1/index.html">v1.60.1</a></dd>
-            <dd><a href="../../v1.71.0/index.html">v1.71.0</a></dd>
-            <dd><a href="../../v1.76.0/prerequisites/anaconda-additional-information.html">v1.76.0</a></dd>
-            <dd><a href="../../v1.77.0/prerequisites/anaconda-additional-information.html">v1.77.0</a></dd>
-            <dd><a href="../../v1.77.1/prerequisites/anaconda-additional-information.html">v1.77.1</a></dd>
-            <dd><a href="../../v1.82.0/prerequisites/anaconda-additional-information.html">v1.82.0</a></dd>
-            <dd><a href="../../v1.83.0/prerequisites/anaconda-additional-information.html">v1.83.0</a></dd>
-            <dd><a href="../../v1.98.0/prerequisites/anaconda-additional-information.html">v1.98.0</a></dd>
-        </dl>
-        <dl>
-            <dt>Branches</dt>
-            <dd><a href="../../CLEWS-15676-add-names-to-index/prerequisites/anaconda-additional-information.html">CLEWS-15676-add-names-to-index</a></dd>
-            <dd><a href="../../CLEWS-16955-units/index.html">CLEWS-16955-units</a></dd>
-            <dd><a href="../../CLEWS-19063/index.html">CLEWS-19063</a></dd>
-            <dd><a href="../../CLEWS-19840-3/index.html">CLEWS-19840-3</a></dd>
-            <dd><a href="../../CLEWS-22288/index.html">CLEWS-22288</a></dd>
-            <dd><a href="../../CLEWS-23863/index.html">CLEWS-23863</a></dd>
-            <dd><a href="../../CLEWS-23863-composite-rank/prerequisites/anaconda-additional-information.html">CLEWS-23863-composite-rank</a></dd>
-            <dd><a href="../../CLEWS-27625-fixtures/prerequisites/anaconda-additional-information.html">CLEWS-27625-fixtures</a></dd>
-            <dd><a href="anaconda-additional-information.html">development</a></dd>
-            <dd><a href="../../jli-requirecleandocs/prerequisites/anaconda-additional-information.html">jli-requirecleandocs</a></dd>
-            <dd><a href="../../lib-test-refactor/prerequisites/anaconda-additional-information.html">lib-test-refactor</a></dd>
-            <dd><a href="../../simplify-quickstart/index.html">simplify-quickstart</a></dd>
-            <dd><a href="../../simulate_reporting_date/prerequisites/anaconda-additional-information.html">simulate_reporting_date</a></dd>
-        </dl>
-    </div>
-</div>
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    <span class="fa fa-book"> Other Versions</span>
+    v: development
+    <span class="fa fa-caret-down"></span>
+  </span>
+  <div class="rst-other-versions">
+    <dl>
+      <dt>Releases</dt>
+      <dd><a href="../../v1.40.6/index.html">v1.40.6</a></dd>
+      <dd><a href="../../v1.56.0/index.html">v1.56.0</a></dd>
+      <dd><a href="../../v1.56.1/index.html">v1.56.1</a></dd>
+      <dd><a href="../../v1.56.2/index.html">v1.56.2</a></dd>
+      <dd><a href="../../v1.60.0/index.html">v1.60.0</a></dd>
+      <dd><a href="../../v1.60.1/index.html">v1.60.1</a></dd>
+      <dd><a href="../../v1.71.0/index.html">v1.71.0</a></dd>
+      <dd><a href="../../v1.76.0/prerequisites/anaconda-additional-information.html">v1.76.0</a></dd>
+      <dd><a href="../../v1.77.0/prerequisites/anaconda-additional-information.html">v1.77.0</a></dd>
+      <dd><a href="../../v1.77.1/prerequisites/anaconda-additional-information.html">v1.77.1</a></dd>
+      <dd><a href="../../v1.82.0/prerequisites/anaconda-additional-information.html">v1.82.0</a></dd>
+      <dd><a href="../../v1.83.0/prerequisites/anaconda-additional-information.html">v1.83.0</a></dd>
+      <dd><a href="../../v1.98.0/prerequisites/anaconda-additional-information.html">v1.98.0</a></dd>
 
+      
+            <dd><a href="anaconda-additional-information.html">development</a></dd>
+    </dl>
+  </div>
+</div>
 
   <script type="text/javascript">
       jQuery(function () {

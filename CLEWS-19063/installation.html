@@ -1,7 +1,9 @@
 
 
+
+
 <!DOCTYPE html>
-<html class="writer-html4" lang="en" >
+<html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
   
@@ -13,7 +15,6 @@
   
   <link rel="stylesheet" href="_static/css/custom-theme.css" type="text/css" />
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="_static/banner.css" type="text/css" />
 
   
   
@@ -26,20 +27,11 @@
   <![endif]-->
   
     
-      <script type="text/javascript">
-          var DOCUMENTATION_OPTIONS = {
-              URL_ROOT:'./',
-              VERSION:'',
-              LANGUAGE:'None',
-              COLLAPSE_INDEX:false,
-              FILE_SUFFIX:'.html',
-              HAS_SOURCE:  true,
-              SOURCELINK_SUFFIX: '.txt'
-          };
-      </script>
-        <script type="text/javascript" src="_static/jquery.js"></script>
-        <script type="text/javascript" src="_static/underscore.js"></script>
-        <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
@@ -47,12 +39,25 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Authentication" href="authentication.html" />
-    <link rel="prev" title="Prerequisites" href="prerequisites.html" /> 
+    <link rel="prev" title="Prerequisites" href="prerequisites.html" />
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-5VHQ76P');</script>
+    <!-- End Google Tag Manager -->
+
 </head>
 
 <body class="wy-body-for-nav">
 
-   
+  
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5VHQ76P"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+
   <div class="wy-grid-for-nav">
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
@@ -61,7 +66,7 @@
           
 
           
-            <a href="index.html" class="icon icon-home" alt="Documentation Home"> Gro API Client
+            <a href="index.html">
           
 
           
@@ -97,154 +102,28 @@
             
               <p class="caption"><span class="caption-text">Getting Started</span></p>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="prerequisites.html">Prerequisites</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="prerequisites.html#macos-and-linux">MacOS and Linux</a></li>
-<li class="toctree-l2"><a class="reference internal" href="prerequisites.html#windows">Windows</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="prerequisites.html#anaconda">Anaconda</a></li>
-<li class="toctree-l3"><a class="reference internal" href="prerequisites.html#non-anaconda">Non-Anaconda</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Installation</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#install-with-pip">Install with pip</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#inspect-the-package">Inspect the package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#stay-updated">Stay updated</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="authentication.html">Authentication</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="authentication.html#retrieving-a-token">Retrieving a token</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="authentication.html#option-1-using-the-web-app-recommended">Option 1: Using the Web App (Recommended)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="authentication.html#option-2-using-the-gro-client-command-line-interface">Option 2: Using the gro_client Command Line Interface</a></li>
-<li class="toctree-l3"><a class="reference internal" href="authentication.html#option-3-using-the-get-access-token-function">Option 3: Using the <code class="docutils literal"><span class="pre">get_access_token()</span></code> Function</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="authentication.html#expiring-regenerating-tokens">Expiring/Regenerating Tokens</a></li>
-<li class="toctree-l2"><a class="reference internal" href="authentication.html#saving-your-token-as-an-environment-variable">Saving your token as an environment variable</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="authentication.html#for-windows-10">For Windows 10</a></li>
-<li class="toctree-l3"><a class="reference internal" href="authentication.html#for-mac-and-linux">For Mac and Linux</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="quickstart-examples.html">Quickstart Examples</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="quickstart-examples.html#get-started-in-120-seconds">Get Started in 120 Seconds</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="quickstart-examples.html#step-1-get-your-api-token">Step 1: Get your API token</a></li>
-<li class="toctree-l3"><a class="reference internal" href="quickstart-examples.html#step-2-run-the-code-in-a-notebook">Step 2: Run the code in a notebook</a></li>
-<li class="toctree-l3"><a class="reference internal" href="quickstart-examples.html#step-3-bonus-round">Step 3: Bonus Round</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="quickstart-examples.html#quickstart-py">Quickstart.py</a></li>
-<li class="toctree-l2"><a class="reference internal" href="quickstart-examples.html#brazil-soybeans">Brazil Soybeans</a></li>
-<li class="toctree-l2"><a class="reference internal" href="quickstart-examples.html#gro-client-tool">gro_client tool</a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="prerequisites.html">Prerequisites</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="authentication.html">Authentication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quickstart-examples.html">Quickstart Examples</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Using the API Client</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="api.html">API Reference</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="api.html#basic-exploration">Basic Exploration</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api.html#data-retrieval">Data Retrieval</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api.html#geographic">Geographic</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api.html#advanced-exploration">Advanced Exploration</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api.html#pandas-utils">Pandas Utils</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api.html#crop-modeling">Crop Modeling</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="searching-data.html">Searching Data</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="searching-data.html#code-snippets">Code snippets</a></li>
-<li class="toctree-l2"><a class="reference internal" href="searching-data.html#search">Search</a></li>
-<li class="toctree-l2"><a class="reference internal" href="searching-data.html#get-data-series">Get data series</a></li>
-<li class="toctree-l2"><a class="reference internal" href="searching-data.html#lookup-contains">Lookup contains</a></li>
-<li class="toctree-l2"><a class="reference internal" href="searching-data.html#get-descendants">Get descendants</a></li>
-<li class="toctree-l2"><a class="reference internal" href="searching-data.html#lookup-belongs">Lookup belongs</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="querying-data.html">Querying Data</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="querying-data.html#get-data-points">Get data points</a></li>
-<li class="toctree-l2"><a class="reference internal" href="querying-data.html#get-data-frame">Get data frame</a></li>
-<li class="toctree-l2"><a class="reference internal" href="querying-data.html#show-revisions">Show revisions</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="understanding-data-responses.html">Understanding Data Responses</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="understanding-data-responses.html#look-up">Look up</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="understanding-data-responses.html#metrics">Metrics</a></li>
-<li class="toctree-l3"><a class="reference internal" href="understanding-data-responses.html#frequencies">Frequencies</a></li>
-<li class="toctree-l3"><a class="reference internal" href="understanding-data-responses.html#units">Units</a></li>
-</ul>
-</li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="searching-data.html">Searching Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="querying-data.html">Querying Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="understanding-data-responses.html">Understanding Data Responses</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Gro Data: Key Concepts</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="gro-ontology.html">Gro Ontology</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="gro-ontology.html#entity-fields">Entity fields</a></li>
-<li class="toctree-l2"><a class="reference internal" href="gro-ontology.html#entity-relationships-contains">Entity Relationships: Contains</a></li>
-<li class="toctree-l2"><a class="reference internal" href="gro-ontology.html#special-properties-for-regions">Special Properties for Regions</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="gro-ontology.html#level"><code class="docutils literal"><span class="pre">level</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="gro-ontology.html#latitude-and-longitude"><code class="docutils literal"><span class="pre">latitude</span></code> and <code class="docutils literal"><span class="pre">longitude</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="gro-ontology.html">Gro Ontology</a></li>
 <li class="toctree-l1"><a class="reference internal" href="data-series-definition.html">Data Series Definition</a></li>
 <li class="toctree-l1"><a class="reference internal" href="data-point-definition.html">Data Point Definition</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Additional Resources</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="faq.html">FAQ</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="faq.html#exploring-what-s-available">Exploring What&#8216;s Available</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="faq.html#why-is-it-that-when-i-use-client-search-to-find-metrics-items-regions-i-m-interested-in-sometimes-client-get-data-series-doesn-t-have-any-data-for-those-metrics-items-regions">Why is it that when I use client.search() to find metrics/items/regions I&#8216;m interested in, sometimes client.get_data_series() doesn&#8216;t have any data for those metrics/items/regions?</a></li>
-<li class="toctree-l3"><a class="reference internal" href="faq.html#what-does-sourcelag-mean-when-i-use-client-lookup-to-inspect-a-source-s-details">What does &#8216;sourceLag&#8216; mean when I use client.lookup() to inspect a source&#8216;s details?</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="faq.html#data-retrieval">Data Retrieval</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="faq.html#i-specified-an-end-date-when-calling-get-data-points-but-i-am-getting-points-with-other-end-dates">I specified an end_date when calling get_data_points(), but I am getting points with other end_dates</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="faq.html#data-coverage">Data Coverage</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="faq.html#why-is-there-no-satellite-rainfall-data-in-northern-latitudes-sometimes">Why is there no satellite rainfall data in northern latitudes sometimes?</a></li>
-<li class="toctree-l3"><a class="reference internal" href="faq.html#why-are-there-some-gaps-in-the-soil-moisture-data">Why are there some gaps in the soil moisture data?</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="faq.html#account">Account</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="faq.html#how-do-i-verify-connectivity-with-gro-api">How do I verify connectivity with Gro API?</a></li>
-<li class="toctree-l3"><a class="reference internal" href="faq.html#how-do-i-get-authenticated-access-to-gro-api">How do I get authenticated access to Gro API?</a></li>
-<li class="toctree-l3"><a class="reference internal" href="faq.html#i-tried-using-my-gro-username-and-login-but-am-getting-a-401-unauthorized-error">I tried using my Gro username and login but am getting a 401 Unauthorized error</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="faq.html#gro-models">Gro Models</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="faq.html#do-your-predictive-models-only-run-during-the-crop-season">Do your predictive models only run during the crop season?</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="other.html">Other</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="other.html#gro-crop-masks">Gro Crop Masks</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="other.html#methodology">Methodology</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="other.html#crop-masks-for-past-seasons">Crop masks for past seasons</a></li>
-<li class="toctree-l4"><a class="reference internal" href="other.html#in-season-crop-mask">In-season crop mask</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="other.html#us-corn">US Corn</a></li>
-<li class="toctree-l3"><a class="reference internal" href="other.html#us-soy">US Soy</a></li>
-<li class="toctree-l3"><a class="reference internal" href="other.html#argentina-soy">Argentina Soy</a></li>
-<li class="toctree-l3"><a class="reference internal" href="other.html#india-wheat">India Wheat</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="other.html#gro-yield-model-backtest-data">Gro Yield Model Backtest Data</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="other.html#file-formats">File Formats</a></li>
-<li class="toctree-l3"><a class="reference internal" href="other.html#download-the-data-by-model">Download the Data by Model</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="other.html#models">Models</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="other.html#radio-frequency-interference-effects-on-smos">Radio Frequency Interference Effects On SMOS</a></li>
-<li class="toctree-l2"><a class="reference internal" href="other.html#trmm-and-gpm-spatial-extents">TRMM and GPM spatial extents</a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="faq.html">FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="other.html">Other</a></li>
 </ul>
 
             
@@ -319,21 +198,20 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  
+
+<p class="version-banner">
+  <strong>Note:</strong>
+  This document is for an older version of the Gro API Client.
+  Please see the <a href="../development/installation.html">latest documentation</a>.
+</p>
 
 
-    
-    
-
-
-
-    <p class="scv-banner scv-sphinx_rtd_theme"><a href="../development/installation.html"><b>Warning:</b> This document is for the development version of Gro API Client. The main version is development.</a></p>
-<div class="section" id="installation">
+  <div class="section" id="installation">
 <h1>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h1>
 <p>Now that you have downloaded the base system requirements, you will need to install the packages for the Gro API Client.</p>
 <div class="section" id="install-with-pip">
 <h2>Install with pip<a class="headerlink" href="#install-with-pip" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-sh"><div class="highlight"><pre><span></span>pip install git+https://github.com/gro-intelligence/api-client.git
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>pip install git+https://github.com/gro-intelligence/api-client.git
 </pre></div>
 </div>
 <p>Note: even if you are using <a class="reference external" href="https://www.anaconda.com/">Anaconda</a>, the API Client install should still be performed using pip and <em>not</em> <a class="reference external" href="https://docs.conda.io/en/latest/">conda</a>.</p>
@@ -341,18 +219,19 @@
 <div class="section" id="inspect-the-package">
 <h2>Inspect the package<a class="headerlink" href="#inspect-the-package" title="Permalink to this headline">¶</a></h2>
 <p>To find the location on your filesystem where the Gro package has been installed and to see the version you have installed you can use the query:</p>
-<div class="highlight-sh"><div class="highlight"><pre><span></span>pip show gro
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>pip show gro
 </pre></div>
 </div>
 </div>
 <div class="section" id="stay-updated">
 <h2>Stay updated<a class="headerlink" href="#stay-updated" title="Permalink to this headline">¶</a></h2>
 <p>To ensure that you have the latest client version with newest features, you can use the following command:</p>
-<div class="highlight-sh"><div class="highlight"><pre><span></span>pip install --upgrade git+https://github.com/gro-intelligence/api-client.git
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>pip install --upgrade git+https://github.com/gro-intelligence/api-client.git
 </pre></div>
 </div>
 </div>
 </div>
+
 
 
            </div>
@@ -375,7 +254,7 @@
   <div role="contentinfo">
     <p>
         
-        &copy; Copyright 2019, Gro Intelligence
+        &copy; Copyright 2020, Gro Intelligence
 
     </p>
   </div>
@@ -398,47 +277,33 @@
   </div>
   
 <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
-    <span class="rst-current-version" data-toggle="rst-current-version">
-        <span class="fa fa-book"> Other Versions</span>
-        v: CLEWS-19063
-        <span class="fa fa-caret-down"></span>
-    </span>
-    <div class="rst-other-versions">
-        <dl>
-            <dt>Tags</dt>
-            <dd><a href="../v1.40.6/installation.html">v1.40.6</a></dd>
-            <dd><a href="../v1.56.0/installation.html">v1.56.0</a></dd>
-            <dd><a href="../v1.56.1/installation.html">v1.56.1</a></dd>
-            <dd><a href="../v1.56.2/installation.html">v1.56.2</a></dd>
-            <dd><a href="../v1.60.0/installation.html">v1.60.0</a></dd>
-            <dd><a href="../v1.60.1/installation.html">v1.60.1</a></dd>
-            <dd><a href="../v1.71.0/installation.html">v1.71.0</a></dd>
-            <dd><a href="../v1.76.0/installation.html">v1.76.0</a></dd>
-            <dd><a href="../v1.77.0/installation.html">v1.77.0</a></dd>
-            <dd><a href="../v1.77.1/installation.html">v1.77.1</a></dd>
-            <dd><a href="../v1.82.0/installation.html">v1.82.0</a></dd>
-            <dd><a href="../v1.83.0/installation.html">v1.83.0</a></dd>
-            <dd><a href="../v1.98.0/installation.html">v1.98.0</a></dd>
-        </dl>
-        <dl>
-            <dt>Branches</dt>
-            <dd><a href="../CLEWS-15676-add-names-to-index/installation.html">CLEWS-15676-add-names-to-index</a></dd>
-            <dd><a href="../CLEWS-16955-units/index.html">CLEWS-16955-units</a></dd>
-            <dd><a href="installation.html">CLEWS-19063</a></dd>
-            <dd><a href="../CLEWS-19840-3/installation.html">CLEWS-19840-3</a></dd>
-            <dd><a href="../CLEWS-22288/index.html">CLEWS-22288</a></dd>
-            <dd><a href="../CLEWS-23863/installation.html">CLEWS-23863</a></dd>
-            <dd><a href="../CLEWS-23863-composite-rank/installation.html">CLEWS-23863-composite-rank</a></dd>
-            <dd><a href="../CLEWS-27625-fixtures/installation.html">CLEWS-27625-fixtures</a></dd>
-            <dd><a href="../development/installation.html">development</a></dd>
-            <dd><a href="../jli-requirecleandocs/installation.html">jli-requirecleandocs</a></dd>
-            <dd><a href="../lib-test-refactor/installation.html">lib-test-refactor</a></dd>
-            <dd><a href="../simplify-quickstart/installation.html">simplify-quickstart</a></dd>
-            <dd><a href="../simulate_reporting_date/installation.html">simulate_reporting_date</a></dd>
-        </dl>
-    </div>
-</div>
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    <span class="fa fa-book"> Other Versions</span>
+    v: CLEWS-19063
+    <span class="fa fa-caret-down"></span>
+  </span>
+  <div class="rst-other-versions">
+    <dl>
+      <dt>Releases</dt>
+      <dd><a href="../v1.40.6/installation.html">v1.40.6</a></dd>
+      <dd><a href="../v1.56.0/installation.html">v1.56.0</a></dd>
+      <dd><a href="../v1.56.1/installation.html">v1.56.1</a></dd>
+      <dd><a href="../v1.56.2/installation.html">v1.56.2</a></dd>
+      <dd><a href="../v1.60.0/installation.html">v1.60.0</a></dd>
+      <dd><a href="../v1.60.1/installation.html">v1.60.1</a></dd>
+      <dd><a href="../v1.71.0/installation.html">v1.71.0</a></dd>
+      <dd><a href="../v1.76.0/installation.html">v1.76.0</a></dd>
+      <dd><a href="../v1.77.0/installation.html">v1.77.0</a></dd>
+      <dd><a href="../v1.77.1/installation.html">v1.77.1</a></dd>
+      <dd><a href="../v1.82.0/installation.html">v1.82.0</a></dd>
+      <dd><a href="../v1.83.0/installation.html">v1.83.0</a></dd>
+      <dd><a href="../v1.98.0/installation.html">v1.98.0</a></dd>
 
+      
+            <dd><a href="../development/installation.html">development</a></dd>
+    </dl>
+  </div>
+</div>
 
   <script type="text/javascript">
       jQuery(function () {
