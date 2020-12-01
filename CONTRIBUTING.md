@@ -63,9 +63,9 @@ Our packages on PyPI and TestPyPI:
 
 **Notes:**
 
-- Shippable is configured to automatically publish to PyPI for new releases and
-  TestPyPI whenever new PRs are merged to the `development` branch, so you
-  normally shouldn't need to run these commands manually.
+- Shippable is configured to automatically publish to PyPI whenever new
+  releases are tagged on GitHub (and to TestPyPI whenever new PRs are merged
+  to `development`), so you normally shouldn't need to run these commands manually.
 - We use
   [poetry-dynamic-versioning](https://github.com/mtkennerly/poetry-dynamic-versioning)
   to automatically set the package version based on Git tags. If building
@@ -104,3 +104,32 @@ Then add `-r testpypi` to the publish command:
 ```sh
 poetry publish -r testpypi --username __token__ --password <pypi-token-value-here>
 ```
+
+### Conda package details
+
+`groclient` is available for Conda/Anaconda users via the [Conda
+Forge](https://conda-forge.org/) channel. The developer documentation
+includes [installation instructions for Conda
+users](https://developers.gro-intelligence.com/installation.html).
+
+The groclient conda package is configured via the
+[conda-forge/groclient-feedstock](https://github.com/conda-forge/groclient-feedstock)
+GitHub repo, which is maintained by Gro team members. (See [conda-forge
+docs](https://conda-forge.org/docs/maintainer/updating_pkgs.html#updating-the-maintainer-list)
+and [PR#4](https://github.com/conda-forge/groclient-feedstock/pull/4) for how
+to add more people to be maintainers.)
+
+Our feedstock repo is automatically maintained for the most part. We've
+[configured](https://github.com/conda-forge/groclient-feedstock/pull/3) the
+conda forge bot to automatically publish new packages to Conda when there are
+new version released to PyPI.
+
+Other relevant resources:
+
+- Background on Conda: https://jakevdp.github.io/blog/2016/08/25/conda-myths-and-misconceptions/
+- The groclient package on Conda: https://anaconda.org/conda-forge/groclient
+- Added groclient to conda-forge here: https://github.com/conda-forge/staged-recipes/pull/13255
+  - The conda-forge "recipe" was [auto-generated using
+    grayskull](https://github.com/conda-forge/staged-recipes#grayskull---recipe-generator-for-python-packages-on-pypi)
+    based on our PyPI package.
+  - Our conda-forge "feedstock" repo: https://github.com/conda-forge/groclient-feedstock
