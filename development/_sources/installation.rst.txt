@@ -6,6 +6,17 @@ Installation
   :local:
 
 
+Conda/Anaconda users
+====================
+
+The Gro API client is available via the `conda-forge channel <https://anaconda.org/conda-forge/groclient>`_.
+
+::
+
+  conda config --add channels conda-forge
+  conda install groclient
+
+
 Install with pip
 ================
 
@@ -17,7 +28,6 @@ Install the latest package from `PyPI <https://pypi.org/>`_:
 
 Notes:
 
-* Even if you are using `Anaconda <https://www.anaconda.com/>`_, the API Client install should still be performed using pip and *not* `conda <https://docs.conda.io/en/latest/>`_.
 * If you're unable to access PyPI, you can install the latest code from Github: :code:`pip install git+https://github.com/gro-intelligence/api-client.git`
 
 
