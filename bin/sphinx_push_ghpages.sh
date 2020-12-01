@@ -14,8 +14,7 @@ PAGES_BRANCH=gh-pages
 ROOT_REF=development
 # Files to keep in the repo. Analogous to scv_grm_exclude:
 # https://sphinxcontrib-versioning.readthedocs.io/en/latest/settings.html#cmdoption-e
-# TODO: add shippable.yml to gh-pages branch to disable CI
-KEEP_FILES=(.nojekyll CNAME README.md)
+KEEP_FILES=(.nojekyll CNAME README.md shippable.yml)
 
 # get origin repo. assumes fetch and pull locations are the same.
 REPO=$(git remote -v | grep origin | awk 'NR==1 { print $2 }')
