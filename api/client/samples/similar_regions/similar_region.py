@@ -150,11 +150,11 @@ class SimilarRegion(object):
         self._logger.info("Constructing BallTrees...")
         self.metric_object = DistanceMetric.get_metric('pyfunc', **{'func':dist_function})
         self.ball = BallTree(self.data, metric=self.metric_object, leaf_size=2)
+        # TODO: don't reset the following dicts, keep ball trees and regions keyed by (search_region, level) instead of
+        # only level for more reuse
         self.balls_on_level = {}
         self.regions_on_level = {}
-        # separate ball trees to process requests on givel level
-        # shouldn't generally make separate data copies since region_id's are organized with countries < provinces < districts
-        # so data for each level should be continuous arrays
+        self.already_built = set()
         for level in region_levels:
             self.regions_on_level[level] = [r for r in self.available_regions if self.region_info[r]['level']==level]
             level_data = self.data[[self.region_index[r] for r in self.regions_on_level[level]],:]
@@ -444,8 +444,9 @@ class SimilarRegion(object):
         self._logger.warning("Getting data series for {} regions in {} batch(es) for property {}".
                           format(n_reg, n_queries, prop_name))
         load_bar = tqdm(total=n_reg)
-        # Sending out all queries
-        self.client.batch_async_get_data_points(queries, map_result=map_response)
+        # Sending out all queries -- use fresh client instance to avoid mixing async connection pools between runs
+        data_client = GroClient(API_HOST, ACCESS_TOKEN)
+        data_client.batch_async_get_data_points(queries, map_result=map_response)
         load_bar.close()
         data_counters[data_counters == 0] = np.nan # avoid division by zero warning, where no data
         valid_data = valid_data/data_counters
