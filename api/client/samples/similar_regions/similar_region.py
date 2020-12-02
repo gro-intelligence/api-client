@@ -444,8 +444,9 @@ class SimilarRegion(object):
         self._logger.warning("Getting data series for {} regions in {} batch(es) for property {}".
                           format(n_reg, n_queries, prop_name))
         load_bar = tqdm(total=n_reg)
-        # Sending out all queries
-        self.client.batch_async_get_data_points(queries, map_result=map_response)
+        # Sending out all queries -- use fresh client instance to avoid mixing async connection pools between runs
+        data_client = GroClient(API_HOST, ACCESS_TOKEN)
+        data_client.batch_async_get_data_points(queries, map_result=map_response)
         load_bar.close()
         data_counters[data_counters == 0] = np.nan # avoid division by zero warning, where no data
         valid_data = valid_data/data_counters
