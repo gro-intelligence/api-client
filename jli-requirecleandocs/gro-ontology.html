@@ -1,9 +1,7 @@
 
 
-
-
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html4" lang="en" >
 <head>
   <meta charset="utf-8">
   
@@ -15,6 +13,7 @@
   
   <link rel="stylesheet" href="_static/css/custom-theme.css" type="text/css" />
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/banner.css" type="text/css" />
 
   
   
@@ -27,11 +26,20 @@
   <![endif]-->
   
     
-      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-        <script src="_static/jquery.js"></script>
-        <script src="_static/underscore.js"></script>
-        <script src="_static/doctools.js"></script>
-        <script src="_static/language_data.js"></script>
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'./',
+              VERSION:'',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
@@ -198,26 +206,26 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-
-<p class="version-banner">
-  <strong>Note:</strong>
-  This document is for an older version of the Gro API Client.
-  Please see the <a href="../development/gro-ontology.html">latest documentation</a>.
-</p>
+  
 
 
-  <div class="section" id="gro-ontology">
+    
+    
+
+
+
+    <p class="scv-banner scv-sphinx_rtd_theme"><a href="../development/gro-ontology.html"><b>Warning:</b> This document is for the development version of Gro API Client. The main version is development.</a></p>
+<div class="section" id="gro-ontology">
 <h1>Gro Ontology<a class="headerlink" href="#gro-ontology" title="Permalink to this headline">¶</a></h1>
 <div class="contents local topic" id="table-of-contents">
 <p class="topic-title">Table of Contents</p>
 <ul class="simple">
-<li><p><a class="reference internal" href="#entity-fields" id="id1">Entity fields</a></p></li>
-<li><p><a class="reference internal" href="#entity-relationships-contains" id="id2">Entity Relationships: Contains</a></p></li>
-<li><p><a class="reference internal" href="#special-properties-for-regions" id="id3">Special Properties for Regions</a></p>
-<ul>
-<li><p><a class="reference internal" href="#level" id="id4"><code class="code docutils literal notranslate"><span class="pre">level</span></code></a></p></li>
-<li><p><a class="reference internal" href="#latitude-and-longitude" id="id5"><code class="code docutils literal notranslate"><span class="pre">latitude</span></code> and <code class="code docutils literal notranslate"><span class="pre">longitude</span></code></a></p></li>
-<li><p><a class="reference internal" href="#historical" id="id6"><code class="code docutils literal notranslate"><span class="pre">historical</span></code></a></p></li>
+<li><a class="reference internal" href="#entity-fields" id="id1">Entity fields</a></li>
+<li><a class="reference internal" href="#entity-relationships-contains" id="id2">Entity Relationships: Contains</a></li>
+<li><a class="reference internal" href="#special-properties-for-regions" id="id3">Special Properties for Regions</a><ul>
+<li><a class="reference internal" href="#level" id="id4"><code class="code docutils literal"><span class="pre">level</span></code></a></li>
+<li><a class="reference internal" href="#latitude-and-longitude" id="id5"><code class="code docutils literal"><span class="pre">latitude</span></code> and <code class="code docutils literal"><span class="pre">longitude</span></code></a></li>
+<li><a class="reference internal" href="#historical" id="id6"><code class="code docutils literal"><span class="pre">historical</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -225,38 +233,38 @@
 <p>Gro has brought the world of agricultural data into a single ontology. This ontology classifies all data into a limited set of entities.</p>
 <p>The entity types around which the data is organized in Gro are:</p>
 <ul class="simple">
-<li><p>items – what the data is about (e.g., Rice, Sugar, Rainfall, etc.).</p></li>
-<li><p>metrics – how the data is measured (e.g., Production, Precipitation, etc.).</p></li>
-<li><p>regions – where the data is from/about (e.g., a country, a weather station, a city etc.). Some data such as trade flows might have a partner region.</p></li>
-<li><p>frequencies – e.g., daily, weekly etc.</p></li>
-<li><p>sources – the organization or sub-organization that generates the data (e.g., USDA PS&amp;D).</p></li>
-<li><p>units – the units in which the data is presented (e.g., tonnes, liters, etc.).</p></li>
+<li>items &#8211; what the data is about (e.g., Rice, Sugar, Rainfall, etc.).</li>
+<li>metrics &#8211; how the data is measured (e.g., Production, Precipitation, etc.).</li>
+<li>regions &#8211; where the data is from/about (e.g., a country, a weather station, a city etc.). Some data such as trade flows might have a partner region.</li>
+<li>frequencies &#8211; e.g., daily, weekly etc.</li>
+<li>sources &#8211; the organization or sub-organization that generates the data (e.g., USDA PS&amp;D).</li>
+<li>units &#8211; the units in which the data is presented (e.g., tonnes, liters, etc.).</li>
 </ul>
 <div class="section" id="entity-fields">
 <h2><a class="toc-backref" href="#id1">Entity fields</a><a class="headerlink" href="#entity-fields" title="Permalink to this headline">¶</a></h2>
-<p>Each specific entity will have an <cite>id</cite>, <cite>name</cite>, and various other properties. For example, “Soybeans” is a specific item with <cite>id = 270</cite> and the following information</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s1">&#39;contains&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1737</span><span class="p">,</span> <span class="mi">7401</span><span class="p">,</span> <span class="mi">7578</span><span class="p">,</span> <span class="mi">7579</span><span class="p">,</span> <span class="mi">5136</span><span class="p">,</span> <span class="mi">5021</span><span class="p">,</span> <span class="mi">5135</span><span class="p">,</span> <span class="mi">5137</span><span class="p">,</span> <span class="mi">12418</span><span class="p">,</span> <span class="mi">5776</span><span class="p">,</span> <span class="mi">5777</span><span class="p">,</span> <span class="mi">3035</span><span class="p">,</span> <span class="mi">3036</span><span class="p">,</span> <span class="mi">9312</span><span class="p">,</span> <span class="mi">9284</span><span class="p">,</span> <span class="mi">6330</span><span class="p">,</span> <span class="mi">7577</span><span class="p">,</span> <span class="mi">12728</span><span class="p">,</span> <span class="mi">12729</span><span class="p">,</span> <span class="mi">12730</span><span class="p">,</span> <span class="mi">12731</span><span class="p">,</span> <span class="mi">12732</span><span class="p">,</span> <span class="mi">12733</span><span class="p">,</span> <span class="mi">12734</span><span class="p">,</span> <span class="mi">12735</span><span class="p">,</span> <span class="mi">12736</span><span class="p">,</span> <span class="mi">12737</span><span class="p">,</span> <span class="mi">10134</span><span class="p">],</span>
+<p>Each specific entity will have an <cite>id</cite>, <cite>name</cite>, and various other properties. For example, &#8220;Soybeans&#8221; is a specific item with <cite>id = 270</cite> and the following information</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s1">&#39;contains&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1737</span><span class="p">,</span> <span class="mi">7401</span><span class="p">,</span> <span class="mi">7578</span><span class="p">,</span> <span class="mi">7579</span><span class="p">,</span> <span class="mi">5136</span><span class="p">,</span> <span class="mi">5021</span><span class="p">,</span> <span class="mi">5135</span><span class="p">,</span> <span class="mi">5137</span><span class="p">,</span> <span class="mi">12418</span><span class="p">,</span> <span class="mi">5776</span><span class="p">,</span> <span class="mi">5777</span><span class="p">,</span> <span class="mi">3035</span><span class="p">,</span> <span class="mi">3036</span><span class="p">,</span> <span class="mi">9312</span><span class="p">,</span> <span class="mi">9284</span><span class="p">,</span> <span class="mi">6330</span><span class="p">,</span> <span class="mi">7577</span><span class="p">,</span> <span class="mi">12728</span><span class="p">,</span> <span class="mi">12729</span><span class="p">,</span> <span class="mi">12730</span><span class="p">,</span> <span class="mi">12731</span><span class="p">,</span> <span class="mi">12732</span><span class="p">,</span> <span class="mi">12733</span><span class="p">,</span> <span class="mi">12734</span><span class="p">,</span> <span class="mi">12735</span><span class="p">,</span> <span class="mi">12736</span><span class="p">,</span> <span class="mi">12737</span><span class="p">,</span> <span class="mi">10134</span><span class="p">],</span>
   <span class="s1">&#39;definition&#39;</span><span class="p">:</span> <span class="s1">&#39;The seeds and harvested crops of plants belonging to the species &lt;i&gt;Glycine max&lt;/i&gt; that are used in the production of oil and both human and livestock consumption.&#39;</span><span class="p">,</span>
   <span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="mi">270</span><span class="p">,</span>
   <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Soybeans&#39;</span> <span class="p">}</span>
 </pre></div>
 </div>
-<p>IDs are unique within a particular entity type, i.e., there’s only one item with id = 270.</p>
-<p>The above information can be retrieved using the <a class="reference internal" href="api.html#groclient.GroClient.lookup" title="groclient.GroClient.lookup"><code class="xref py py-meth docutils literal notranslate"><span class="pre">groclient.GroClient.lookup()</span></code></a> function:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">client</span><span class="o">.</span><span class="n">lookup</span><span class="p">(</span><span class="s1">&#39;items&#39;</span><span class="p">,</span> <span class="mi">270</span><span class="p">)</span>
+<p>IDs are unique within a particular entity type, i.e., there&#8217;s only one item with id = 270.</p>
+<p>The above information can be retrieved using the <a class="reference internal" href="api.html#groclient.GroClient.lookup" title="groclient.GroClient.lookup"><code class="xref py py-meth docutils literal"><span class="pre">groclient.GroClient.lookup()</span></code></a> function:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">client</span><span class="o">.</span><span class="n">lookup</span><span class="p">(</span><span class="s1">&#39;items&#39;</span><span class="p">,</span> <span class="mi">270</span><span class="p">)</span>
 </pre></div>
 </div>
 <p><a class="reference external" href="understanding-data-responses#lookup">See this Getting Started section for help on finding entities by name or by id.</a></p>
 </div>
 <div class="section" id="entity-relationships-contains">
 <h2><a class="toc-backref" href="#id2">Entity Relationships: Contains</a><a class="headerlink" href="#entity-relationships-contains" title="Permalink to this headline">¶</a></h2>
-<p>Items, metrics, and regions have a property called <cite>contains</cite>, which is an array of the other entities that it contains, or that belong to it. For example, the item “Cereals” contains the items “Wheat,” “Corn,” etc.</p>
-<p>Variations of the <cite>client.lookup(type, id)</cite> function can help you understand what a given entity contains or belongs to. For example, the following will return a list of items that are contained within the item “Cereals” (item_id: 10009):</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">client</span><span class="o">.</span><span class="n">lookup</span><span class="p">(</span><span class="s1">&#39;items&#39;</span><span class="p">,</span> <span class="mi">10009</span><span class="p">)[</span><span class="s1">&#39;contains&#39;</span><span class="p">]</span>
+<p>Items, metrics, and regions have a property called <cite>contains</cite>, which is an array of the other entities that it contains, or that belong to it. For example, the item &#8220;Cereals&#8221; contains the items &#8220;Wheat,&#8221; &#8220;Corn,&#8221; etc.</p>
+<p>Variations of the <cite>client.lookup(type, id)</cite> function can help you understand what a given entity contains or belongs to. For example, the following will return a list of items that are contained within the item &#8220;Cereals&#8221; (item_id: 10009):</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">client</span><span class="o">.</span><span class="n">lookup</span><span class="p">(</span><span class="s1">&#39;items&#39;</span><span class="p">,</span> <span class="mi">10009</span><span class="p">)[</span><span class="s1">&#39;contains&#39;</span><span class="p">]</span>
 </pre></div>
 </div>
-<p>And, in the opposite direction, the following will return a list of regions “California” (region_id: 13055) belongs to.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">client</span><span class="o">.</span><span class="n">lookup_belongs</span><span class="p">(</span><span class="s1">&#39;regions&#39;</span><span class="p">,</span> <span class="mi">13055</span><span class="p">)</span>
+<p>And, in the opposite direction, the following will return a list of regions &#8220;California&#8221; (region_id: 13055) belongs to.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">client</span><span class="o">.</span><span class="n">lookup_belongs</span><span class="p">(</span><span class="s1">&#39;regions&#39;</span><span class="p">,</span> <span class="mi">13055</span><span class="p">)</span>
 </pre></div>
 </div>
 <p><a class="reference external" href="searching-data#lookup-contains">See this Getting Started section for navigation of relationships between entities.</a></p>
@@ -265,29 +273,29 @@
 <h2><a class="toc-backref" href="#id3">Special Properties for Regions</a><a class="headerlink" href="#special-properties-for-regions" title="Permalink to this headline">¶</a></h2>
 <p>The following properties exist for regions only:</p>
 <div class="section" id="level">
-<h3><a class="toc-backref" href="#id4"><code class="code docutils literal notranslate"><span class="pre">level</span></code></a><a class="headerlink" href="#level" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id4"><code class="code docutils literal"><span class="pre">level</span></code></a><a class="headerlink" href="#level" title="Permalink to this headline">¶</a></h3>
 <p>Region level corresponds to the administrative level of the region:</p>
 <ul class="simple">
-<li><p>level 1: world</p></li>
-<li><p>level 2: continent</p></li>
-<li><p>level 3: country</p></li>
-<li><p>level 4: provinces</p></li>
-<li><p>level 5: districts</p></li>
-<li><p>level 6: city</p></li>
-<li><p>level 7: market</p></li>
-<li><p>level 8: other arbitrary regions</p></li>
-<li><p>level 9: point-location</p></li>
+<li>level 1: world</li>
+<li>level 2: continent</li>
+<li>level 3: country</li>
+<li>level 4: provinces</li>
+<li>level 5: districts</li>
+<li>level 6: city</li>
+<li>level 7: market</li>
+<li>level 8: other arbitrary regions</li>
+<li>level 9: point-location</li>
 </ul>
 </div>
 <div class="section" id="latitude-and-longitude">
-<h3><a class="toc-backref" href="#id5"><code class="code docutils literal notranslate"><span class="pre">latitude</span></code> and <code class="code docutils literal notranslate"><span class="pre">longitude</span></code></a><a class="headerlink" href="#latitude-and-longitude" title="Permalink to this headline">¶</a></h3>
-<p>For point-locations (i.e., region level 9), these properties correspond to the location’s coordinates. More generally for other regions, these properties correspond to the coordinates of the geographic center of the region.</p>
-<p>The <code class="code docutils literal notranslate"><span class="pre">lookup()</span></code> function will return the <code class="code docutils literal notranslate"><span class="pre">latitude</span></code> and <code class="code docutils literal notranslate"><span class="pre">longitude</span></code> of a region. For example, you can find the geographic center of Nairobi <code class="code docutils literal notranslate"><span class="pre">region_id=13474</span></code> with the following query:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">client</span><span class="o">.</span><span class="n">lookup</span><span class="p">(</span><span class="s1">&#39;regions&#39;</span><span class="p">,</span> <span class="mi">13474</span><span class="p">)</span>
+<h3><a class="toc-backref" href="#id5"><code class="code docutils literal"><span class="pre">latitude</span></code> and <code class="code docutils literal"><span class="pre">longitude</span></code></a><a class="headerlink" href="#latitude-and-longitude" title="Permalink to this headline">¶</a></h3>
+<p>For point-locations (i.e., region level 9), these properties correspond to the location&#8217;s coordinates. More generally for other regions, these properties correspond to the coordinates of the geographic center of the region.</p>
+<p>The <code class="code docutils literal"><span class="pre">lookup()</span></code> function will return the <code class="code docutils literal"><span class="pre">latitude</span></code> and <code class="code docutils literal"><span class="pre">longitude</span></code> of a region. For example, you can find the geographic center of Nairobi <code class="code docutils literal"><span class="pre">region_id=13474</span></code> with the following query:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">client</span><span class="o">.</span><span class="n">lookup</span><span class="p">(</span><span class="s1">&#39;regions&#39;</span><span class="p">,</span> <span class="mi">13474</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Which has the result:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s1">&#39;contains&#39;</span><span class="p">:</span> <span class="p">[</span> <span class="mi">142828</span><span class="p">,</span> <span class="mi">142830</span><span class="p">,</span> <span class="mi">1000272</span><span class="p">,</span> <span class="mi">142836</span><span class="p">,</span> <span class="mi">142831</span><span class="p">,</span> <span class="mi">142834</span><span class="p">,</span> <span class="mi">142838</span><span class="p">,</span> <span class="mi">142833</span><span class="p">,</span> <span class="mi">142837</span><span class="p">,</span> <span class="mi">143105</span><span class="p">,</span> <span class="mi">143103</span><span class="p">,</span> <span class="mi">142829</span><span class="p">,</span> <span class="mi">142835</span><span class="p">,</span> <span class="mi">143104</span><span class="p">,</span> <span class="mi">143102</span><span class="p">,</span> <span class="mi">143106</span><span class="p">,</span> <span class="mi">143101</span><span class="p">,</span> <span class="mi">142832</span> <span class="p">],</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s1">&#39;contains&#39;</span><span class="p">:</span> <span class="p">[</span> <span class="mi">142828</span><span class="p">,</span> <span class="mi">142830</span><span class="p">,</span> <span class="mi">1000272</span><span class="p">,</span> <span class="mi">142836</span><span class="p">,</span> <span class="mi">142831</span><span class="p">,</span> <span class="mi">142834</span><span class="p">,</span> <span class="mi">142838</span><span class="p">,</span> <span class="mi">142833</span><span class="p">,</span> <span class="mi">142837</span><span class="p">,</span> <span class="mi">143105</span><span class="p">,</span> <span class="mi">143103</span><span class="p">,</span> <span class="mi">142829</span><span class="p">,</span> <span class="mi">142835</span><span class="p">,</span> <span class="mi">143104</span><span class="p">,</span> <span class="mi">143102</span><span class="p">,</span> <span class="mi">143106</span><span class="p">,</span> <span class="mi">143101</span><span class="p">,</span> <span class="mi">142832</span> <span class="p">],</span>
   <span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="mi">13474</span><span class="p">,</span>
   <span class="s1">&#39;latitude&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">1.29359</span><span class="p">,</span>
   <span class="s1">&#39;level&#39;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
@@ -297,14 +305,14 @@
 </div>
 </div>
 <div class="section" id="historical">
-<h3><a class="toc-backref" href="#id6"><code class="code docutils literal notranslate"><span class="pre">historical</span></code></a><a class="headerlink" href="#historical" title="Permalink to this headline">¶</a></h3>
-<p>Regions with <code class="code docutils literal notranslate"><span class="pre">historical</span></code> set to <code class="code docutils literal notranslate"><span class="pre">True</span></code> are administrative regions (e.g. countries, provinces, disricts) that no longer exist
+<h3><a class="toc-backref" href="#id6"><code class="code docutils literal"><span class="pre">historical</span></code></a><a class="headerlink" href="#historical" title="Permalink to this headline">¶</a></h3>
+<p>Regions with <code class="code docutils literal"><span class="pre">historical</span></code> set to <code class="code docutils literal"><span class="pre">True</span></code> are administrative regions (e.g. countries, provinces, disricts) that no longer exist
 adminstratively in the real world. However, data can be accessed for those regions like all regions. For example:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">client</span><span class="o">.</span><span class="n">lookup</span><span class="p">(</span><span class="s1">&#39;regions&#39;</span><span class="p">,</span><span class="mi">1262</span><span class="p">)</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">client</span><span class="o">.</span><span class="n">lookup</span><span class="p">(</span><span class="s1">&#39;regions&#39;</span><span class="p">,</span><span class="mi">1262</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>which has the result:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;contains&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1226</span><span class="p">,</span> <span class="mi">1228</span><span class="p">],</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;contains&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1226</span><span class="p">,</span> <span class="mi">1228</span><span class="p">],</span>
  <span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="mi">1262</span><span class="p">,</span>
  <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="sa">u</span><span class="s1">&#39;Serbia and Kosovo&#39;</span><span class="p">,</span>
  <span class="s1">&#39;level&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
@@ -314,7 +322,6 @@ adminstratively in the real world. However, data can be accessed for those regio
 </div>
 </div>
 </div>
-
 
 
            </div>
@@ -360,33 +367,48 @@ adminstratively in the real world. However, data can be accessed for those regio
   </div>
   
 <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
-  <span class="rst-current-version" data-toggle="rst-current-version">
-    <span class="fa fa-book"> Other Versions</span>
-    v: jli-requirecleandocs
-    <span class="fa fa-caret-down"></span>
-  </span>
-  <div class="rst-other-versions">
-    <dl>
-      <dt>Releases</dt>
-      <dd><a href="../v1.40.6/gro-ontology.html">v1.40.6</a></dd>
-      <dd><a href="../v1.56.0/gro-ontology.html">v1.56.0</a></dd>
-      <dd><a href="../v1.56.1/gro-ontology.html">v1.56.1</a></dd>
-      <dd><a href="../v1.56.2/gro-ontology.html">v1.56.2</a></dd>
-      <dd><a href="../v1.60.0/gro-ontology.html">v1.60.0</a></dd>
-      <dd><a href="../v1.60.1/gro-ontology.html">v1.60.1</a></dd>
-      <dd><a href="../v1.71.0/gro-ontology.html">v1.71.0</a></dd>
-      <dd><a href="../v1.76.0/gro-ontology.html">v1.76.0</a></dd>
-      <dd><a href="../v1.77.0/gro-ontology.html">v1.77.0</a></dd>
-      <dd><a href="../v1.77.1/gro-ontology.html">v1.77.1</a></dd>
-      <dd><a href="../v1.82.0/gro-ontology.html">v1.82.0</a></dd>
-      <dd><a href="../v1.83.0/gro-ontology.html">v1.83.0</a></dd>
-      <dd><a href="../v1.98.0/gro-ontology.html">v1.98.0</a></dd>
-
-      
+    <span class="rst-current-version" data-toggle="rst-current-version">
+        <span class="fa fa-book"> Other Versions</span>
+        v: jli-requirecleandocs
+        <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+        <dl>
+            <dt>Tags</dt>
+            <dd><a href="../v1.40.6/gro-ontology.html">v1.40.6</a></dd>
+            <dd><a href="../v1.56.0/gro-ontology.html">v1.56.0</a></dd>
+            <dd><a href="../v1.56.1/gro-ontology.html">v1.56.1</a></dd>
+            <dd><a href="../v1.56.2/gro-ontology.html">v1.56.2</a></dd>
+            <dd><a href="../v1.60.0/gro-ontology.html">v1.60.0</a></dd>
+            <dd><a href="../v1.60.1/gro-ontology.html">v1.60.1</a></dd>
+            <dd><a href="../v1.71.0/gro-ontology.html">v1.71.0</a></dd>
+            <dd><a href="../v1.76.0/gro-ontology.html">v1.76.0</a></dd>
+            <dd><a href="../v1.77.0/gro-ontology.html">v1.77.0</a></dd>
+            <dd><a href="../v1.77.1/gro-ontology.html">v1.77.1</a></dd>
+            <dd><a href="../v1.82.0/gro-ontology.html">v1.82.0</a></dd>
+            <dd><a href="../v1.83.0/gro-ontology.html">v1.83.0</a></dd>
+            <dd><a href="../v1.98.0/gro-ontology.html">v1.98.0</a></dd>
+        </dl>
+        <dl>
+            <dt>Branches</dt>
+            <dd><a href="../CLEWS-15676-add-names-to-index/gro-ontology.html">CLEWS-15676-add-names-to-index</a></dd>
+            <dd><a href="../CLEWS-16955-units/index.html">CLEWS-16955-units</a></dd>
+            <dd><a href="../CLEWS-19063/gro-ontology.html">CLEWS-19063</a></dd>
+            <dd><a href="../CLEWS-19840-3/gro-ontology.html">CLEWS-19840-3</a></dd>
+            <dd><a href="../CLEWS-22288/index.html">CLEWS-22288</a></dd>
+            <dd><a href="../CLEWS-23863/gro-ontology.html">CLEWS-23863</a></dd>
+            <dd><a href="../CLEWS-23863-composite-rank/gro-ontology.html">CLEWS-23863-composite-rank</a></dd>
+            <dd><a href="../CLEWS-26758-similar_regions/gro-ontology.html">CLEWS-26758-similar_regions</a></dd>
+            <dd><a href="../CLEWS-27625-fixtures/gro-ontology.html">CLEWS-27625-fixtures</a></dd>
             <dd><a href="../development/gro-ontology.html">development</a></dd>
-    </dl>
-  </div>
+            <dd><a href="gro-ontology.html">jli-requirecleandocs</a></dd>
+            <dd><a href="../lib-test-refactor/gro-ontology.html">lib-test-refactor</a></dd>
+            <dd><a href="../simplify-quickstart/gro-ontology.html">simplify-quickstart</a></dd>
+            <dd><a href="../simulate_reporting_date/gro-ontology.html">simulate_reporting_date</a></dd>
+        </dl>
+    </div>
 </div>
+
 
   <script type="text/javascript">
       jQuery(function () {

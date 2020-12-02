@@ -1,9 +1,7 @@
 
 
-
-
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html4" lang="en" >
 <head>
   <meta charset="utf-8">
   
@@ -15,6 +13,7 @@
   
   <link rel="stylesheet" href="_static/css/custom-theme.css" type="text/css" />
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/banner.css" type="text/css" />
 
   
   
@@ -27,11 +26,20 @@
   <![endif]-->
   
     
-      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-        <script src="_static/jquery.js"></script>
-        <script src="_static/underscore.js"></script>
-        <script src="_static/doctools.js"></script>
-        <script src="_static/language_data.js"></script>
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'./',
+              VERSION:'',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
@@ -198,24 +206,24 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-
-<p class="version-banner">
-  <strong>Note:</strong>
-  This document is for an older version of the Gro API Client.
-  Please see the <a href="../development/index.html">latest documentation</a>.
-</p>
+  
 
 
-  <div class="section" id="prerequisites">
+    
+    
+
+
+
+    <p class="scv-banner scv-sphinx_rtd_theme"><b>Warning:</b> This document is for the development version of Gro API Client.</p>
+<div class="section" id="prerequisites">
 <h1>Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this headline">¶</a></h1>
 <div class="contents local topic" id="table-of-contents">
 <p class="topic-title">Table of Contents</p>
 <ul class="simple">
-<li><p><a class="reference internal" href="#macos-and-linux" id="id3">MacOS and Linux</a></p></li>
-<li><p><a class="reference internal" href="#windows" id="id4">Windows</a></p>
-<ul>
-<li><p><a class="reference internal" href="#anaconda" id="id5">Anaconda</a></p></li>
-<li><p><a class="reference internal" href="#non-anaconda" id="id6">Non-Anaconda</a></p></li>
+<li><a class="reference internal" href="#macos-and-linux" id="id3">MacOS and Linux</a></li>
+<li><a class="reference internal" href="#windows" id="id4">Windows</a><ul>
+<li><a class="reference internal" href="#anaconda" id="id5">Anaconda</a></li>
+<li><a class="reference internal" href="#non-anaconda" id="id6">Non-Anaconda</a></li>
 </ul>
 </li>
 </ul>
@@ -224,8 +232,8 @@
 <div class="section" id="macos-and-linux">
 <h2><a class="toc-backref" href="#id3">MacOS and Linux</a><a class="headerlink" href="#macos-and-linux" title="Permalink to this headline">¶</a></h2>
 <ol class="arabic simple">
-<li><p>git <a class="reference external" href="https://git-scm.com/book/en/v2/Getting-Started-Installing-Git">Installation instructions</a></p></li>
-<li><p>python version 3.5 or above from <a class="reference external" href="https://www.python.org">https://www.python.org</a>. Support for Python 2.7.13 or above is also maintained, but with its <a class="reference external" href="https://mail.python.org/pipermail/python-dev/2018-March/152348.html">End of Life</a> soon approaching, Python 3 is recommended.</p></li>
+<li>git <a class="reference external" href="https://git-scm.com/book/en/v2/Getting-Started-Installing-Git">Installation instructions</a></li>
+<li>python version 3.5 or above from <a class="reference external" href="https://www.python.org">https://www.python.org</a>. Support for Python 2.7.13 or above is also maintained, but with its <a class="reference external" href="https://mail.python.org/pipermail/python-dev/2018-March/152348.html">End of Life</a> soon approaching, Python 3 is recommended.</li>
 </ol>
 </div>
 <div class="section" id="windows">
@@ -234,24 +242,26 @@
 <div class="section" id="anaconda">
 <h3><a class="toc-backref" href="#id5">Anaconda</a><a class="headerlink" href="#anaconda" title="Permalink to this headline">¶</a></h3>
 <ol class="arabic simple">
-<li><p>Download Anaconda with Python 3.5 or above from <a class="reference external" href="https://www.anaconda.com/distribution/">anaconda.com</a> Support for Python 2.7.13 or above is also maintained, but with <a class="reference external" href="https://mail.python.org/pipermail/python-dev/2018-March/152348.html">its End of Life</a> soon approaching, it is recommended you start with Python 3.</p></li>
-<li><p>Install Git from <a class="reference external" href="https://git-scm.com/download/win">git-scm.com</a>. Proceed with the default options.</p></li>
+<li>Download Anaconda with Python 3.5 or above from <a class="reference external" href="https://www.anaconda.com/distribution/">anaconda.com</a> Support for Python 2.7.13 or above is also maintained, but with <a class="reference external" href="https://mail.python.org/pipermail/python-dev/2018-March/152348.html">its End of Life</a> soon approaching, it is recommended you start with Python 3.</li>
+<li>Install Git from <a class="reference external" href="https://git-scm.com/download/win">git-scm.com</a>. Proceed with the default options.</li>
 </ol>
 </div>
 <div class="section" id="non-anaconda">
 <h3><a class="toc-backref" href="#id6">Non-Anaconda</a><a class="headerlink" href="#non-anaconda" title="Permalink to this headline">¶</a></h3>
 <ol class="arabic">
-<li><p>Powershell (should come default with Windows)</p></li>
-<li><p>Download Python version 3.5 or above from <a class="reference external" href="https://www.python.org/downloads/windows/">python.org</a>. Support for Python 2.7.13 or above is also maintained, but with <a class="reference external" href="https://mail.python.org/pipermail/python-dev/2018-March/152348.html">its End of Life</a> soon approaching, it is recommended you start with Python 3.</p></li>
-<li><p>Install both Python and pip to PATH either in the installer (enable component during the installation) or manually. The easiest way to do this is to make sure the below is checked during installation:</p>
+<li><p class="first">Powershell (should come default with Windows)</p>
+</li>
+<li><p class="first">Download Python version 3.5 or above from <a class="reference external" href="https://www.python.org/downloads/windows/">python.org</a>. Support for Python 2.7.13 or above is also maintained, but with <a class="reference external" href="https://mail.python.org/pipermail/python-dev/2018-March/152348.html">its End of Life</a> soon approaching, it is recommended you start with Python 3.</p>
+</li>
+<li><p class="first">Install both Python and pip to PATH either in the installer (enable component during the installation) or manually. The easiest way to do this is to make sure the below is checked during installation:</p>
 <img alt="Add python to path installer" class="align-center" src="https://raw.githubusercontent.com/gro-intelligence/api-client/development/readme_add_python_to_path_installer.png" />
 </li>
-<li><p>Install Git from <a class="reference external" href="https://git-scm.com/download/win">git-scm.com</a>. Proceed with the default options.</p></li>
+<li><p class="first">Install Git from <a class="reference external" href="https://git-scm.com/download/win">git-scm.com</a>. Proceed with the default options.</p>
+</li>
 </ol>
 </div>
 </div>
 </div>
-
 
 
            </div>
@@ -274,7 +284,7 @@
   <div role="contentinfo">
     <p>
         
-        &copy; Copyright 2020, Gro Intelligence
+        &copy; Copyright 2019, Gro Intelligence
 
     </p>
   </div>
@@ -297,33 +307,48 @@
   </div>
   
 <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
-  <span class="rst-current-version" data-toggle="rst-current-version">
-    <span class="fa fa-book"> Other Versions</span>
-    v: CLEWS-19840-3
-    <span class="fa fa-caret-down"></span>
-  </span>
-  <div class="rst-other-versions">
-    <dl>
-      <dt>Releases</dt>
-      <dd><a href="../v1.40.6/prerequisites.html">v1.40.6</a></dd>
-      <dd><a href="../v1.56.0/prerequisites.html">v1.56.0</a></dd>
-      <dd><a href="../v1.56.1/prerequisites.html">v1.56.1</a></dd>
-      <dd><a href="../v1.56.2/prerequisites.html">v1.56.2</a></dd>
-      <dd><a href="../v1.60.0/prerequisites.html">v1.60.0</a></dd>
-      <dd><a href="../v1.60.1/prerequisites.html">v1.60.1</a></dd>
-      <dd><a href="../v1.71.0/prerequisites.html">v1.71.0</a></dd>
-      <dd><a href="../v1.76.0/index.html">v1.76.0</a></dd>
-      <dd><a href="../v1.77.0/index.html">v1.77.0</a></dd>
-      <dd><a href="../v1.77.1/index.html">v1.77.1</a></dd>
-      <dd><a href="../v1.82.0/index.html">v1.82.0</a></dd>
-      <dd><a href="../v1.83.0/index.html">v1.83.0</a></dd>
-      <dd><a href="../v1.98.0/index.html">v1.98.0</a></dd>
-
-      
+    <span class="rst-current-version" data-toggle="rst-current-version">
+        <span class="fa fa-book"> Other Versions</span>
+        v: CLEWS-19840-3
+        <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+        <dl>
+            <dt>Tags</dt>
+            <dd><a href="../v1.40.6/prerequisites.html">v1.40.6</a></dd>
+            <dd><a href="../v1.56.0/prerequisites.html">v1.56.0</a></dd>
+            <dd><a href="../v1.56.1/prerequisites.html">v1.56.1</a></dd>
+            <dd><a href="../v1.56.2/prerequisites.html">v1.56.2</a></dd>
+            <dd><a href="../v1.60.0/prerequisites.html">v1.60.0</a></dd>
+            <dd><a href="../v1.60.1/prerequisites.html">v1.60.1</a></dd>
+            <dd><a href="../v1.71.0/prerequisites.html">v1.71.0</a></dd>
+            <dd><a href="../v1.76.0/index.html">v1.76.0</a></dd>
+            <dd><a href="../v1.77.0/index.html">v1.77.0</a></dd>
+            <dd><a href="../v1.77.1/index.html">v1.77.1</a></dd>
+            <dd><a href="../v1.82.0/index.html">v1.82.0</a></dd>
+            <dd><a href="../v1.83.0/index.html">v1.83.0</a></dd>
+            <dd><a href="../v1.98.0/index.html">v1.98.0</a></dd>
+        </dl>
+        <dl>
+            <dt>Branches</dt>
+            <dd><a href="../CLEWS-15676-add-names-to-index/index.html">CLEWS-15676-add-names-to-index</a></dd>
+            <dd><a href="../CLEWS-16955-units/index.html">CLEWS-16955-units</a></dd>
+            <dd><a href="../CLEWS-19063/prerequisites.html">CLEWS-19063</a></dd>
+            <dd><a href="prerequisites.html">CLEWS-19840-3</a></dd>
+            <dd><a href="../CLEWS-22288/index.html">CLEWS-22288</a></dd>
+            <dd><a href="../CLEWS-23863/prerequisites.html">CLEWS-23863</a></dd>
+            <dd><a href="../CLEWS-23863-composite-rank/index.html">CLEWS-23863-composite-rank</a></dd>
+            <dd><a href="../CLEWS-26758-similar_regions/index.html">CLEWS-26758-similar_regions</a></dd>
+            <dd><a href="../CLEWS-27625-fixtures/index.html">CLEWS-27625-fixtures</a></dd>
             <dd><a href="../development/index.html">development</a></dd>
-    </dl>
-  </div>
+            <dd><a href="../jli-requirecleandocs/index.html">jli-requirecleandocs</a></dd>
+            <dd><a href="../lib-test-refactor/index.html">lib-test-refactor</a></dd>
+            <dd><a href="../simplify-quickstart/prerequisites.html">simplify-quickstart</a></dd>
+            <dd><a href="../simulate_reporting_date/index.html">simulate_reporting_date</a></dd>
+        </dl>
+    </div>
 </div>
+
 
   <script type="text/javascript">
       jQuery(function () {

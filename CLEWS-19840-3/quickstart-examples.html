@@ -1,9 +1,7 @@
 
 
-
-
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html4" lang="en" >
 <head>
   <meta charset="utf-8">
   
@@ -15,6 +13,7 @@
   
   <link rel="stylesheet" href="_static/css/custom-theme.css" type="text/css" />
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/banner.css" type="text/css" />
 
   
   
@@ -27,11 +26,20 @@
   <![endif]-->
   
     
-      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-        <script src="_static/jquery.js"></script>
-        <script src="_static/underscore.js"></script>
-        <script src="_static/doctools.js"></script>
-        <script src="_static/language_data.js"></script>
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'./',
+              VERSION:'',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
@@ -198,29 +206,29 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-
-<p class="version-banner">
-  <strong>Note:</strong>
-  This document is for an older version of the Gro API Client.
-  Please see the <a href="../development/index.html">latest documentation</a>.
-</p>
+  
 
 
-  <div class="section" id="quickstart-examples">
+    
+    
+
+
+
+    <p class="scv-banner scv-sphinx_rtd_theme"><b>Warning:</b> This document is for the development version of Gro API Client.</p>
+<div class="section" id="quickstart-examples">
 <h1>Quickstart Examples<a class="headerlink" href="#quickstart-examples" title="Permalink to this headline">¶</a></h1>
 <div class="contents local topic" id="table-of-contents">
 <p class="topic-title">Table of Contents</p>
 <ul class="simple">
-<li><p><a class="reference internal" href="#get-started-in-120-seconds" id="id2">Get Started in 120 Seconds</a></p>
-<ul>
-<li><p><a class="reference internal" href="#step-1-get-your-api-token" id="id3">Step 1: Get your API token</a></p></li>
-<li><p><a class="reference internal" href="#step-2-run-the-code-in-a-notebook" id="id4">Step 2: Run the code in a notebook</a></p></li>
-<li><p><a class="reference internal" href="#step-3-bonus-round" id="id5">Step 3: Bonus Round</a></p></li>
+<li><a class="reference internal" href="#get-started-in-120-seconds" id="id2">Get Started in 120 Seconds</a><ul>
+<li><a class="reference internal" href="#step-1-get-your-api-token" id="id3">Step 1: Get your API token</a></li>
+<li><a class="reference internal" href="#step-2-run-the-code-in-a-notebook" id="id4">Step 2: Run the code in a notebook</a></li>
+<li><a class="reference internal" href="#step-3-bonus-round" id="id5">Step 3: Bonus Round</a></li>
 </ul>
 </li>
-<li><p><a class="reference internal" href="#quickstart-py" id="id6">Quickstart.py</a></p></li>
-<li><p><a class="reference internal" href="#brazil-soybeans" id="id7">Brazil Soybeans</a></p></li>
-<li><p><a class="reference internal" href="#gro-client-tool" id="id8">gro_client tool</a></p></li>
+<li><a class="reference internal" href="#quickstart-py" id="id6">Quickstart.py</a></li>
+<li><a class="reference internal" href="#brazil-soybeans" id="id7">Brazil Soybeans</a></li>
+<li><a class="reference internal" href="#gro-client-tool" id="id8">gro_client tool</a></li>
 </ul>
 </div>
 <p>Now that you have installed the basic requirements, you can start pulling data. Try out the examples below, or navigate to the <a class="reference external" href="https://github.com/gro-intelligence/api-client/blob/development/api/client/samples">api/client/samples</a> folder for more options.</p>
@@ -230,53 +238,53 @@
 <div class="section" id="step-1-get-your-api-token">
 <h3><a class="toc-backref" href="#id3">Step 1: Get your API token</a><a class="headerlink" href="#step-1-get-your-api-token" title="Permalink to this headline">¶</a></h3>
 <ol class="arabic simple">
-<li><p>Login to your Gro web app account at <a class="reference external" href="https://app.gro-intelligence.com">https://app.gro-intelligence.com</a></p></li>
-<li><p>Open the Account button in the bottom left corner of the app.</p></li>
+<li>Login to your Gro web app account at <a class="reference external" href="https://app.gro-intelligence.com">https://app.gro-intelligence.com</a></li>
+<li>Open the Account button in the bottom left corner of the app.</li>
 </ol>
 <blockquote>
 <div><img alt="Account button" class="align-center" src="_images/account-button.PNG" />
 </div></blockquote>
 <ol class="arabic simple" start="3">
-<li><p>Navigate to the API tab.</p></li>
+<li>Navigate to the API tab.</li>
 </ol>
 <blockquote>
 <div><img alt="Account api section" class="align-center" src="_images/account-api-section.PNG" />
 </div></blockquote>
 <ol class="arabic simple" start="4">
-<li><p>Copy your token.</p></li>
+<li>Copy your token.</li>
 </ol>
 </div>
 <div class="section" id="step-2-run-the-code-in-a-notebook">
 <h3><a class="toc-backref" href="#id4">Step 2: Run the code in a notebook</a><a class="headerlink" href="#step-2-run-the-code-in-a-notebook" title="Permalink to this headline">¶</a></h3>
 <ol class="arabic simple">
-<li><p>Navigate to <a class="reference external" href="https://colab.research.google.com/">Google Colab</a>, or launch Jupyter Notebook from your command line with the command <code class="code docutils literal notranslate"><span class="pre">jupyter</span> <span class="pre">notebook</span></code>.</p></li>
-<li><p>Copy the below code and paste it into the first cell.</p></li>
+<li>Navigate to <a class="reference external" href="https://colab.research.google.com/">Google Colab</a>, or launch Jupyter Notebook from your command line with the command <code class="code docutils literal"><span class="pre">jupyter</span> <span class="pre">notebook</span></code>.</li>
+<li>Copy the below code and paste it into the first cell.</li>
 </ol>
 <blockquote>
-<div><div class="highlight-default notranslate"><div class="highlight"><pre><span></span>!pip install git+https://github.com/gro-intelligence/api-client.git
+<div><div class="highlight-default"><div class="highlight"><pre><span></span>!pip install git+https://github.com/gro-intelligence/api-client.git
 </pre></div>
 </div>
-<p>Then click the “Run Cell” button to the left of the cell.
+<p>Then click the &#8220;Run Cell&#8221; button to the left of the cell.
 In Colab, it will look like this:</p>
 <img alt="Colab run button" class="align-center" src="_images/colab-run-button.PNG" />
 <p>In Jupyter Notebook, it looks like this:</p>
 <img alt="Jupyter run button" class="align-center" src="_images/jupyter-run-button.PNG" />
 </div></blockquote>
 <ol class="arabic simple" start="3">
-<li><p>Add another cell with the “+ Code” button, then copy the below code and paste it into the second cell.</p></li>
+<li>Add another cell with the &#8220;+ Code&#8221; button, then copy the below code and paste it into the second cell.</li>
 </ol>
 <blockquote>
-<div><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">api.client.gro_client</span> <span class="kn">import</span> <span class="n">GroClient</span>
+<div><div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">api.client.gro_client</span> <span class="kn">import</span> <span class="n">GroClient</span>
 <span class="n">client</span> <span class="o">=</span> <span class="n">GroClient</span><span class="p">(</span><span class="s1">&#39;api.gro-intelligence.com&#39;</span><span class="p">,</span> <span class="s1">&#39;&lt;YOUR_TOKEN&gt;&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div></blockquote>
 <ol class="arabic simple" start="4">
-<li><p>Replace the text &lt;YOUR_TOKEN&gt; with the token you copied from step one. Then click the “Run Cell” button to the left of the cell.</p></li>
-<li><p>Add one more cell with the “+ Code” button, then copy the below code and paste it into the third cell.</p></li>
+<li>Replace the text &lt;YOUR_TOKEN&gt; with the token you copied from step one. Then click the &#8220;Run Cell&#8221; button to the left of the cell.</li>
+<li>Add one more cell with the &#8220;+ Code&#8221; button, then copy the below code and paste it into the third cell.</li>
 </ol>
 <blockquote>
-<div><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Rice, milled - Area Harvested (area) - Kenya (USDA PS&amp;D)</span>
+<div><div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1"># Rice, milled - Area Harvested (area) - Kenya (USDA PS&amp;D)</span>
 <span class="n">client</span><span class="o">.</span><span class="n">get_data_points</span><span class="p">(</span><span class="o">**</span><span class="p">{</span>
   <span class="s1">&#39;metric_id&#39;</span><span class="p">:</span> <span class="mi">570001</span><span class="p">,</span>
   <span class="s1">&#39;item_id&#39;</span><span class="p">:</span> <span class="mi">392</span><span class="p">,</span>
@@ -288,33 +296,33 @@ In Colab, it will look like this:</p>
 </div>
 </div></blockquote>
 <ol class="arabic simple" start="6">
-<li><p>Click the “Run Cell” button to the left of the cell, and that’s it! You should now see the data in the response.</p></li>
+<li>Click the &#8220;Run Cell&#8221; button to the left of the cell, and that&#8217;s it! You should now see the data in the response.</li>
 </ol>
 </div>
 <div class="section" id="step-3-bonus-round">
 <h3><a class="toc-backref" href="#id5">Step 3: Bonus Round</a><a class="headerlink" href="#step-3-bonus-round" title="Permalink to this headline">¶</a></h3>
 <ol class="arabic simple">
-<li><p>Go to the Gro <a class="reference external" href="https://app.gro-intelligence.com">web app</a> and choose a chart that you like.</p></li>
-<li><p>Click the dropdown arrow in the top right of the chart.</p></li>
+<li>Go to the Gro <a class="reference external" href="https://app.gro-intelligence.com">web app</a> and choose a chart that you like.</li>
+<li>Click the dropdown arrow in the top right of the chart.</li>
 </ol>
 <blockquote>
 <div><img alt="Chart dropdown" class="align-center" src="_images/chart-dropdown.PNG" />
 </div></blockquote>
 <ol class="arabic simple" start="3">
-<li><p>Click Export, and then click API Client Code Snippets.</p></li>
+<li>Click Export, and then click API Client Code Snippets.</li>
 </ol>
 <blockquote>
 <div><img alt="Export code snippet" class="align-center" src="_images/export-code-snippet.PNG" />
 </div></blockquote>
 <ol class="arabic simple" start="4">
-<li><p>Copy to code from the pop up window.</p></li>
+<li>Copy to code from the pop up window.</li>
 </ol>
 <blockquote>
 <div><img alt="Code snippet window" class="align-center" src="_images/code-snippet-window.PNG" />
 </div></blockquote>
 <ol class="arabic simple" start="5">
-<li><p>Add another cell with the “+ Code” button, then paste the code you just copied.</p></li>
-<li><p>Click the “Run Cell” button to the left of the call. Congrats! You’ve just discovered data in the web app and then pulled it via the API client.</p></li>
+<li>Add another cell with the &#8220;+ Code&#8221; button, then paste the code you just copied.</li>
+<li>Click the &#8220;Run Cell&#8221; button to the left of the call. Congrats! You&#8217;ve just discovered data in the web app and then pulled it via the API client.</li>
 </ol>
 <blockquote>
 <div><img alt="Snippet response ![snippet-response]" class="align-center" src="_images/snippet-response.PNG" />
@@ -323,28 +331,27 @@ In Colab, it will look like this:</p>
 </div>
 <div class="section" id="quickstart-py">
 <h2><a class="toc-backref" href="#id6">Quickstart.py</a><a class="headerlink" href="#quickstart-py" title="Permalink to this headline">¶</a></h2>
-<p><a class="reference external" href="https://github.com/gro-intelligence/api-client/blob/development/api/client/samples/quick_start.py">quick_start.py</a> is a simple script that creates an authenticated <code class="code docutils literal notranslate"><span class="pre">GroClient</span></code> object and uses the <code class="code docutils literal notranslate"><span class="pre">get_data_series()</span></code> and <code class="code docutils literal notranslate"><span class="pre">get_data_points()</span></code> methods to find Area Harvested series for Ukrainian Wheat from a variety of different sources, and outputs the time series points to a CSV file. You will likely want to revisit this script as a starting point for building your own scripts.</p>
-<p>Note that the script assumes you have your authentication token set to a <code class="code docutils literal notranslate"><span class="pre">GROAPI_TOKEN</span></code> environment variable <a class="reference external" href="./authentication#saving-your-token-as-an-environment-variable">see Saving your token as an environment variable</a>. If you don’t wish to use environment variables, you can modify the sample script to set <code class="code docutils literal notranslate"><span class="pre">ACCESS_TOKEN</span></code> in some other way.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ python quick_start.py
+<p><a class="reference external" href="https://github.com/gro-intelligence/api-client/blob/development/api/client/samples/quick_start.py">quick_start.py</a> is a simple script that creates an authenticated <code class="code docutils literal"><span class="pre">GroClient</span></code> object and uses the <code class="code docutils literal"><span class="pre">get_data_series()</span></code> and <code class="code docutils literal"><span class="pre">get_data_points()</span></code> methods to find Area Harvested series for Ukrainian Wheat from a variety of different sources, and outputs the time series points to a CSV file. You will likely want to revisit this script as a starting point for building your own scripts.</p>
+<p>Note that the script assumes you have your authentication token set to a <code class="code docutils literal"><span class="pre">GROAPI_TOKEN</span></code> environment variable <a class="reference external" href="./authentication#saving-your-token-as-an-environment-variable">see Saving your token as an environment variable</a>. If you don&#8217;t wish to use environment variables, you can modify the sample script to set <code class="code docutils literal"><span class="pre">ACCESS_TOKEN</span></code> in some other way.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>$ python quick_start.py
 </pre></div>
 </div>
-<p>If the API client is installed and your authentication token is set, a CSV file called <code class="code docutils literal notranslate"><span class="pre">gro_client_output.csv</span></code> should be created in the directory where the script was run.</p>
+<p>If the API client is installed and your authentication token is set, a CSV file called <code class="code docutils literal"><span class="pre">gro_client_output.csv</span></code> should be created in the directory where the script was run.</p>
 </div>
 <div class="section" id="brazil-soybeans">
 <h2><a class="toc-backref" href="#id7">Brazil Soybeans</a><a class="headerlink" href="#brazil-soybeans" title="Permalink to this headline">¶</a></h2>
-<p>See the <a class="reference external" href="https://github.com/gro-intelligence/api-client/blob/development/api/client/samples/crop_models">Brazil Soybeans</a> example in the crop models folder for a longer, more detailed demonstration of many of the API’s capabilities in the form of a Jupyter notebook.</p>
-<p>This notebook demonstrates the <cite>CropModel</cite> class and its <code class="code docutils literal notranslate"><span class="pre">compute_crop_weighted_series()</span></code> method in action. In this example, NDVI (<a class="reference external" href="https://app.gro-intelligence.com/dictionary/items/321">normalized difference vegetation index</a>) for provinces in Brazil is weighted against each province’s historical soybean production to put the latest NDVI values into context.</p>
+<p>See the <a class="reference external" href="https://github.com/gro-intelligence/api-client/blob/development/api/client/samples/crop_models">Brazil Soybeans</a> example in the crop models folder for a longer, more detailed demonstration of many of the API&#8217;s capabilities in the form of a Jupyter notebook.</p>
+<p>This notebook demonstrates the <cite>CropModel</cite> class and its <code class="code docutils literal"><span class="pre">compute_crop_weighted_series()</span></code> method in action. In this example, NDVI (<a class="reference external" href="https://app.gro-intelligence.com/dictionary/items/321">normalized difference vegetation index</a>) for provinces in Brazil is weighted against each province&#8217;s historical soybean production to put the latest NDVI values into context.</p>
 </div>
 <div class="section" id="gro-client-tool">
 <h2><a class="toc-backref" href="#id8">gro_client tool</a><a class="headerlink" href="#gro-client-tool" title="Permalink to this headline">¶</a></h2>
 <p>You can also use the included gro_client tool as a quick way to request a single data series right on the command line. Try the following:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">gro_client</span> <span class="o">--</span><span class="n">metric</span><span class="o">=</span><span class="s2">&quot;Production Quantity mass&quot;</span> <span class="o">--</span><span class="n">item</span><span class="o">=</span><span class="s2">&quot;Corn&quot;</span> <span class="o">--</span><span class="n">region</span><span class="o">=</span><span class="s2">&quot;United States&quot;</span> <span class="o">--</span><span class="n">user_email</span><span class="o">=</span><span class="s2">&quot;email@example.com&quot;</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">gro_client</span> <span class="o">--</span><span class="n">metric</span><span class="o">=</span><span class="s2">&quot;Production Quantity mass&quot;</span> <span class="o">--</span><span class="n">item</span><span class="o">=</span><span class="s2">&quot;Corn&quot;</span> <span class="o">--</span><span class="n">region</span><span class="o">=</span><span class="s2">&quot;United States&quot;</span> <span class="o">--</span><span class="n">user_email</span><span class="o">=</span><span class="s2">&quot;email@example.com&quot;</span>
 </pre></div>
 </div>
 <p>The gro_client command line interface does a keyword search for the inputs and finds a random matching data series. It displays the data series it picked in the command line and writes the data points out to a file in the current directory called gro_client_output.csv. This tool is useful for simple queries, but anything more complex should be done using the Python packages.</p>
 </div>
 </div>
-
 
 
            </div>
@@ -367,7 +374,7 @@ In Colab, it will look like this:</p>
   <div role="contentinfo">
     <p>
         
-        &copy; Copyright 2020, Gro Intelligence
+        &copy; Copyright 2019, Gro Intelligence
 
     </p>
   </div>
@@ -390,33 +397,48 @@ In Colab, it will look like this:</p>
   </div>
   
 <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
-  <span class="rst-current-version" data-toggle="rst-current-version">
-    <span class="fa fa-book"> Other Versions</span>
-    v: CLEWS-19840-3
-    <span class="fa fa-caret-down"></span>
-  </span>
-  <div class="rst-other-versions">
-    <dl>
-      <dt>Releases</dt>
-      <dd><a href="../v1.40.6/quickstart-examples.html">v1.40.6</a></dd>
-      <dd><a href="../v1.56.0/quickstart-examples.html">v1.56.0</a></dd>
-      <dd><a href="../v1.56.1/quickstart-examples.html">v1.56.1</a></dd>
-      <dd><a href="../v1.56.2/quickstart-examples.html">v1.56.2</a></dd>
-      <dd><a href="../v1.60.0/quickstart-examples.html">v1.60.0</a></dd>
-      <dd><a href="../v1.60.1/quickstart-examples.html">v1.60.1</a></dd>
-      <dd><a href="../v1.71.0/quickstart-examples.html">v1.71.0</a></dd>
-      <dd><a href="../v1.76.0/index.html">v1.76.0</a></dd>
-      <dd><a href="../v1.77.0/index.html">v1.77.0</a></dd>
-      <dd><a href="../v1.77.1/index.html">v1.77.1</a></dd>
-      <dd><a href="../v1.82.0/index.html">v1.82.0</a></dd>
-      <dd><a href="../v1.83.0/index.html">v1.83.0</a></dd>
-      <dd><a href="../v1.98.0/index.html">v1.98.0</a></dd>
-
-      
+    <span class="rst-current-version" data-toggle="rst-current-version">
+        <span class="fa fa-book"> Other Versions</span>
+        v: CLEWS-19840-3
+        <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+        <dl>
+            <dt>Tags</dt>
+            <dd><a href="../v1.40.6/quickstart-examples.html">v1.40.6</a></dd>
+            <dd><a href="../v1.56.0/quickstart-examples.html">v1.56.0</a></dd>
+            <dd><a href="../v1.56.1/quickstart-examples.html">v1.56.1</a></dd>
+            <dd><a href="../v1.56.2/quickstart-examples.html">v1.56.2</a></dd>
+            <dd><a href="../v1.60.0/quickstart-examples.html">v1.60.0</a></dd>
+            <dd><a href="../v1.60.1/quickstart-examples.html">v1.60.1</a></dd>
+            <dd><a href="../v1.71.0/quickstart-examples.html">v1.71.0</a></dd>
+            <dd><a href="../v1.76.0/index.html">v1.76.0</a></dd>
+            <dd><a href="../v1.77.0/index.html">v1.77.0</a></dd>
+            <dd><a href="../v1.77.1/index.html">v1.77.1</a></dd>
+            <dd><a href="../v1.82.0/index.html">v1.82.0</a></dd>
+            <dd><a href="../v1.83.0/index.html">v1.83.0</a></dd>
+            <dd><a href="../v1.98.0/index.html">v1.98.0</a></dd>
+        </dl>
+        <dl>
+            <dt>Branches</dt>
+            <dd><a href="../CLEWS-15676-add-names-to-index/index.html">CLEWS-15676-add-names-to-index</a></dd>
+            <dd><a href="../CLEWS-16955-units/index.html">CLEWS-16955-units</a></dd>
+            <dd><a href="../CLEWS-19063/quickstart-examples.html">CLEWS-19063</a></dd>
+            <dd><a href="quickstart-examples.html">CLEWS-19840-3</a></dd>
+            <dd><a href="../CLEWS-22288/index.html">CLEWS-22288</a></dd>
+            <dd><a href="../CLEWS-23863/quickstart-examples.html">CLEWS-23863</a></dd>
+            <dd><a href="../CLEWS-23863-composite-rank/index.html">CLEWS-23863-composite-rank</a></dd>
+            <dd><a href="../CLEWS-26758-similar_regions/index.html">CLEWS-26758-similar_regions</a></dd>
+            <dd><a href="../CLEWS-27625-fixtures/index.html">CLEWS-27625-fixtures</a></dd>
             <dd><a href="../development/index.html">development</a></dd>
-    </dl>
-  </div>
+            <dd><a href="../jli-requirecleandocs/index.html">jli-requirecleandocs</a></dd>
+            <dd><a href="../lib-test-refactor/index.html">lib-test-refactor</a></dd>
+            <dd><a href="../simplify-quickstart/quickstart-examples.html">simplify-quickstart</a></dd>
+            <dd><a href="../simulate_reporting_date/index.html">simulate_reporting_date</a></dd>
+        </dl>
+    </div>
 </div>
+
 
   <script type="text/javascript">
       jQuery(function () {

@@ -1,9 +1,7 @@
 
 
-
-
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html4" lang="en" >
 <head>
   <meta charset="utf-8">
   
@@ -15,6 +13,7 @@
   
   <link rel="stylesheet" href="../_static/css/custom-theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/banner.css" type="text/css" />
 
   
   
@@ -27,11 +26,20 @@
   <![endif]-->
   
     
-      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script src="../_static/jquery.js"></script>
-        <script src="../_static/underscore.js"></script>
-        <script src="../_static/doctools.js"></script>
-        <script src="../_static/language_data.js"></script>
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../',
+              VERSION:'',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
@@ -187,18 +195,19 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-
-<p class="version-banner">
-  <strong>Note:</strong>
-  This document is for an older version of the Gro API Client.
-  Please see the <a href="../../development/prerequisites/gro-api-corporate-proxy.html">latest documentation</a>.
-</p>
+  
 
 
-  <div class="section" id="using-gro-api-behind-a-corporate-proxy">
+    
+    
+
+
+
+    <p class="scv-banner scv-sphinx_rtd_theme"><a href="../../development/prerequisites/gro-api-corporate-proxy.html"><b>Warning:</b> This document is for the development version of Gro API Client. The main version is development.</a></p>
+<div class="section" id="using-gro-api-behind-a-corporate-proxy">
 <h1>Using Gro API behind a Corporate Proxy<a class="headerlink" href="#using-gro-api-behind-a-corporate-proxy" title="Permalink to this headline">¶</a></h1>
 <p>The Gro API uses the requests package to communicate with the Gro Servers. If you are behind a corporate proxy, you may see the error message below:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>requests.exceptions.ProxyError: HTTPSConnectionPool … (Caused by ProxyError(&#39;Cannot connect to proxy.&#39;, OSError(&#39;Tunnel connection failed: 407 Proxy Authentication Required&#39;)))
+<div class="highlight-python"><div class="highlight"><pre><span></span>requests.exceptions.ProxyError: HTTPSConnectionPool … (Caused by ProxyError(&#39;Cannot connect to proxy.&#39;, OSError(&#39;Tunnel connection failed: 407 Proxy Authentication Required&#39;)))
 </pre></div>
 </div>
 <div class="section" id="set-an-environment-variable">
@@ -208,20 +217,24 @@
 <h3>Windows<a class="headerlink" href="#windows" title="Permalink to this headline">¶</a></h3>
 <p>To change environment variables on Windows:</p>
 <ol class="arabic">
-<li><p>In the Start menu, search for “env”.</p></li>
-<li><p>Select “Edit Environment Variables for your account”</p></li>
-<li><p>Select “Environment Variables…”</p></li>
-<li><p>Press “New…”</p></li>
-<li><p>Add two variables <code class="code docutils literal notranslate"><span class="pre">http_proxy</span></code> and <code class="code docutils literal notranslate"><span class="pre">https_proxy</span></code> both with the same value depending on the type of proxy:</p>
+<li><p class="first">In the Start menu, search for “env”.</p>
+</li>
+<li><p class="first">Select “Edit Environment Variables for your account”</p>
+</li>
+<li><p class="first">Select “Environment Variables…”</p>
+</li>
+<li><p class="first">Press “New…”</p>
+</li>
+<li><p class="first">Add two variables <code class="code docutils literal"><span class="pre">http_proxy</span></code> and <code class="code docutils literal"><span class="pre">https_proxy</span></code> both with the same value depending on the type of proxy:</p>
 <ol class="arabic">
-<li><p>Unauthenticated Proxy:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">http_proxy</span><span class="o">=</span><span class="s2">&quot;http://your-proxy-domain:&lt;port&gt;&quot;</span>
+<li><p class="first">Unauthenticated Proxy:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">http_proxy</span><span class="o">=</span><span class="s2">&quot;http://your-proxy-domain:&lt;port&gt;&quot;</span>
 <span class="n">https_proxy</span><span class="o">=</span><span class="s2">&quot;http://your-proxy-domain:&lt;port&gt;&quot;</span>
 </pre></div>
 </div>
 </li>
-<li><p>Authenticated Proxy:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">http_proxy</span><span class="o">=</span><span class="s2">&quot;http://username:password@corp.com:&lt;port&gt;&quot;</span>
+<li><p class="first">Authenticated Proxy:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">http_proxy</span><span class="o">=</span><span class="s2">&quot;http://username:password@corp.com:&lt;port&gt;&quot;</span>
 <span class="n">https_proxy</span><span class="o">=</span><span class="s2">&quot;http://username:password@corp.com:&lt;port&gt;&quot;</span>
 </pre></div>
 </div>
@@ -234,50 +247,50 @@
 <h3>MacOS / Linux<a class="headerlink" href="#macos-linux" title="Permalink to this headline">¶</a></h3>
 <p>You can set an environment variable for temporary or permanent use. If you need a variable for just one time, you can set it up using terminal.</p>
 <ol class="arabic">
-<li><p>Temporarily change the environment variables by running <code class="code docutils literal notranslate"><span class="pre">export</span> <span class="pre">variable_name=variable_value</span></code> from the terminal prompt depending on the type of proxy:</p>
+<li><p class="first">Temporarily change the environment variables by running <code class="code docutils literal"><span class="pre">export</span> <span class="pre">variable_name=variable_value</span></code> from the terminal prompt depending on the type of proxy:</p>
 <ol class="arabic">
-<li><p>Unauthenticated Proxy:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">export</span> <span class="n">http_proxy</span><span class="o">=</span><span class="s2">&quot;http://your-proxy-domain:&lt;port&gt;&quot;</span>
+<li><p class="first">Unauthenticated Proxy:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">export</span> <span class="n">http_proxy</span><span class="o">=</span><span class="s2">&quot;http://your-proxy-domain:&lt;port&gt;&quot;</span>
 <span class="n">export</span> <span class="n">https_proxy</span><span class="o">=</span><span class="s2">&quot;http://your-proxy-domain:&lt;port&gt;&quot;</span>
 </pre></div>
 </div>
 </li>
-<li><p>Authenticated Proxy:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">export</span> <span class="n">http_proxy</span><span class="o">=</span><span class="s2">&quot;http://username:password@corp.com:&lt;port&gt;&quot;</span>
+<li><p class="first">Authenticated Proxy:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">export</span> <span class="n">http_proxy</span><span class="o">=</span><span class="s2">&quot;http://username:password@corp.com:&lt;port&gt;&quot;</span>
 <span class="n">export</span> <span class="n">https_proxy</span><span class="o">=</span><span class="s2">&quot;http://username:password@corp.com:&lt;port&gt;&quot;</span>
 </pre></div>
 </div>
 </li>
 </ol>
 </li>
-<li><p>Permanently change the environment variables in MacOS.  For permanent setting, you need to understand where to put the “export” command. This is determined by what shell you are using. You can check this by running the following command: <code class="code docutils literal notranslate"><span class="pre">echo</span> <span class="pre">$SHELL</span></code></p>
+<li><p class="first">Permanently change the environment variables in MacOS.  For permanent setting, you need to understand where to put the “export” command. This is determined by what shell you are using. You can check this by running the following command: <code class="code docutils literal"><span class="pre">echo</span> <span class="pre">$SHELL</span></code></p>
 <ol class="arabic">
-<li><p>/bin/bash:  Edit  ~/.bash_profile and add the following lines based on the type of proxy:</p>
+<li><p class="first">/bin/bash:  Edit  ~/.bash_profile and add the following lines based on the type of proxy:</p>
 <ol class="arabic">
-<li><p>Unauthenticated Proxy:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">export</span> <span class="n">http_proxy</span><span class="o">=</span><span class="s2">&quot;http://your-proxy-domain:&lt;port&gt;&quot;</span>
+<li><p class="first">Unauthenticated Proxy:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">export</span> <span class="n">http_proxy</span><span class="o">=</span><span class="s2">&quot;http://your-proxy-domain:&lt;port&gt;&quot;</span>
 <span class="n">export</span> <span class="n">https_proxy</span><span class="o">=</span><span class="s2">&quot;http://your-proxy-domain:&lt;port&gt;&quot;</span>
 </pre></div>
 </div>
 </li>
-<li><p>Authenticated Proxy:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">export</span> <span class="n">http_proxy</span><span class="o">=</span><span class="s2">&quot;http://username:password@corp.com:&lt;port&gt;&quot;</span>
+<li><p class="first">Authenticated Proxy:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">export</span> <span class="n">http_proxy</span><span class="o">=</span><span class="s2">&quot;http://username:password@corp.com:&lt;port&gt;&quot;</span>
 <span class="n">export</span> <span class="n">https_proxy</span><span class="o">=</span><span class="s2">&quot;http://username:password@corp.com:&lt;port&gt;&quot;</span>
 </pre></div>
 </div>
 </li>
 </ol>
 </li>
-<li><p>/bin/zsh:   Edit  ~/.zshrc and add the following lines based on the type of proxy:</p>
+<li><p class="first">/bin/zsh:   Edit  ~/.zshrc and add the following lines based on the type of proxy:</p>
 <ol class="arabic">
-<li><p>Unauthenticated Proxy:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">export</span> <span class="n">http_proxy</span><span class="o">=</span><span class="s2">&quot;http://your-proxy-domain:&lt;port&gt;&quot;</span>
+<li><p class="first">Unauthenticated Proxy:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">export</span> <span class="n">http_proxy</span><span class="o">=</span><span class="s2">&quot;http://your-proxy-domain:&lt;port&gt;&quot;</span>
 <span class="n">export</span> <span class="n">https_proxy</span><span class="o">=</span><span class="s2">&quot;http://your-proxy-domain:&lt;port&gt;&quot;</span>
 </pre></div>
 </div>
 </li>
-<li><p>Authenticated Proxy:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">export</span> <span class="n">http_proxy</span><span class="o">=</span><span class="s2">&quot;http://username:password@corp.com:&lt;port&gt;&quot;</span>
+<li><p class="first">Authenticated Proxy:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">export</span> <span class="n">http_proxy</span><span class="o">=</span><span class="s2">&quot;http://username:password@corp.com:&lt;port&gt;&quot;</span>
 <span class="n">export</span> <span class="n">https_proxy</span><span class="o">=</span><span class="s2">&quot;http://username:password@corp.com:&lt;port&gt;&quot;</span>
 </pre></div>
 </div>
@@ -290,7 +303,6 @@
 </div>
 </div>
 </div>
-
 
 
            </div>
@@ -304,7 +316,7 @@
   <div role="contentinfo">
     <p>
         
-        &copy; Copyright 2020, Gro Intelligence
+        &copy; Copyright 2019, Gro Intelligence
 
     </p>
   </div>
@@ -327,33 +339,48 @@
   </div>
   
 <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
-  <span class="rst-current-version" data-toggle="rst-current-version">
-    <span class="fa fa-book"> Other Versions</span>
-    v: CLEWS-23863-composite-rank
-    <span class="fa fa-caret-down"></span>
-  </span>
-  <div class="rst-other-versions">
-    <dl>
-      <dt>Releases</dt>
-      <dd><a href="../../v1.40.6/index.html">v1.40.6</a></dd>
-      <dd><a href="../../v1.56.0/index.html">v1.56.0</a></dd>
-      <dd><a href="../../v1.56.1/index.html">v1.56.1</a></dd>
-      <dd><a href="../../v1.56.2/index.html">v1.56.2</a></dd>
-      <dd><a href="../../v1.60.0/index.html">v1.60.0</a></dd>
-      <dd><a href="../../v1.60.1/index.html">v1.60.1</a></dd>
-      <dd><a href="../../v1.71.0/index.html">v1.71.0</a></dd>
-      <dd><a href="../../v1.76.0/prerequisites/gro-api-corporate-proxy.html">v1.76.0</a></dd>
-      <dd><a href="../../v1.77.0/prerequisites/gro-api-corporate-proxy.html">v1.77.0</a></dd>
-      <dd><a href="../../v1.77.1/prerequisites/gro-api-corporate-proxy.html">v1.77.1</a></dd>
-      <dd><a href="../../v1.82.0/prerequisites/gro-api-corporate-proxy.html">v1.82.0</a></dd>
-      <dd><a href="../../v1.83.0/prerequisites/gro-api-corporate-proxy.html">v1.83.0</a></dd>
-      <dd><a href="../../v1.98.0/prerequisites/gro-api-corporate-proxy.html">v1.98.0</a></dd>
-
-      
+    <span class="rst-current-version" data-toggle="rst-current-version">
+        <span class="fa fa-book"> Other Versions</span>
+        v: CLEWS-23863-composite-rank
+        <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+        <dl>
+            <dt>Tags</dt>
+            <dd><a href="../../v1.40.6/index.html">v1.40.6</a></dd>
+            <dd><a href="../../v1.56.0/index.html">v1.56.0</a></dd>
+            <dd><a href="../../v1.56.1/index.html">v1.56.1</a></dd>
+            <dd><a href="../../v1.56.2/index.html">v1.56.2</a></dd>
+            <dd><a href="../../v1.60.0/index.html">v1.60.0</a></dd>
+            <dd><a href="../../v1.60.1/index.html">v1.60.1</a></dd>
+            <dd><a href="../../v1.71.0/index.html">v1.71.0</a></dd>
+            <dd><a href="../../v1.76.0/prerequisites/gro-api-corporate-proxy.html">v1.76.0</a></dd>
+            <dd><a href="../../v1.77.0/prerequisites/gro-api-corporate-proxy.html">v1.77.0</a></dd>
+            <dd><a href="../../v1.77.1/prerequisites/gro-api-corporate-proxy.html">v1.77.1</a></dd>
+            <dd><a href="../../v1.82.0/prerequisites/gro-api-corporate-proxy.html">v1.82.0</a></dd>
+            <dd><a href="../../v1.83.0/prerequisites/gro-api-corporate-proxy.html">v1.83.0</a></dd>
+            <dd><a href="../../v1.98.0/prerequisites/gro-api-corporate-proxy.html">v1.98.0</a></dd>
+        </dl>
+        <dl>
+            <dt>Branches</dt>
+            <dd><a href="../../CLEWS-15676-add-names-to-index/prerequisites/gro-api-corporate-proxy.html">CLEWS-15676-add-names-to-index</a></dd>
+            <dd><a href="../../CLEWS-16955-units/index.html">CLEWS-16955-units</a></dd>
+            <dd><a href="../../CLEWS-19063/index.html">CLEWS-19063</a></dd>
+            <dd><a href="../../CLEWS-19840-3/index.html">CLEWS-19840-3</a></dd>
+            <dd><a href="../../CLEWS-22288/index.html">CLEWS-22288</a></dd>
+            <dd><a href="../../CLEWS-23863/index.html">CLEWS-23863</a></dd>
+            <dd><a href="gro-api-corporate-proxy.html">CLEWS-23863-composite-rank</a></dd>
+            <dd><a href="../../CLEWS-26758-similar_regions/prerequisites/gro-api-corporate-proxy.html">CLEWS-26758-similar_regions</a></dd>
+            <dd><a href="../../CLEWS-27625-fixtures/prerequisites/gro-api-corporate-proxy.html">CLEWS-27625-fixtures</a></dd>
             <dd><a href="../../development/prerequisites/gro-api-corporate-proxy.html">development</a></dd>
-    </dl>
-  </div>
+            <dd><a href="../../jli-requirecleandocs/prerequisites/gro-api-corporate-proxy.html">jli-requirecleandocs</a></dd>
+            <dd><a href="../../lib-test-refactor/prerequisites/gro-api-corporate-proxy.html">lib-test-refactor</a></dd>
+            <dd><a href="../../simplify-quickstart/index.html">simplify-quickstart</a></dd>
+            <dd><a href="../../simulate_reporting_date/prerequisites/gro-api-corporate-proxy.html">simulate_reporting_date</a></dd>
+        </dl>
+    </div>
 </div>
+
 
   <script type="text/javascript">
       jQuery(function () {

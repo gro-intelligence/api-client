@@ -1,9 +1,7 @@
 
 
-
-
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html4" lang="en" >
 <head>
   <meta charset="utf-8">
   
@@ -15,6 +13,7 @@
   
   <link rel="stylesheet" href="../_static/css/custom-theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/banner.css" type="text/css" />
 
   
   
@@ -27,11 +26,20 @@
   <![endif]-->
   
     
-      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script src="../_static/jquery.js"></script>
-        <script src="../_static/underscore.js"></script>
-        <script src="../_static/doctools.js"></script>
-        <script src="../_static/language_data.js"></script>
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../',
+              VERSION:'',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
@@ -198,89 +206,96 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-
-<p class="version-banner">
-  <strong>Note:</strong>
-  This document is for an older version of the Gro API Client.
-  Please see the <a href="../../development/prerequisites/index.html">latest documentation</a>.
-</p>
+  
 
 
-  <div class="section" id="prerequisites">
+    
+    
+
+
+
+    <p class="scv-banner scv-sphinx_rtd_theme"><a href="../../development/prerequisites/index.html"><b>Warning:</b> This document is for an old version of Gro API Client. The main version is development.</a></p>
+<div class="section" id="prerequisites">
 <h1>Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this headline">¶</a></h1>
 <div class="contents local topic" id="table-of-contents">
 <p class="topic-title">Table of Contents</p>
 <ul class="simple">
-<li><p><a class="reference internal" href="#user-skills" id="id1">User Skills</a></p></li>
-<li><p><a class="reference internal" href="#software-packages" id="id2">Software Packages</a></p></li>
-<li><p><a class="reference internal" href="#network-communication" id="id3">Network communication</a></p></li>
+<li><a class="reference internal" href="#user-skills" id="id1">User Skills</a></li>
+<li><a class="reference internal" href="#software-packages" id="id2">Software Packages</a></li>
+<li><a class="reference internal" href="#network-communication" id="id3">Network communication</a></li>
 </ul>
 </div>
 <div class="section" id="user-skills">
 <h2><a class="toc-backref" href="#id1">User Skills</a><a class="headerlink" href="#user-skills" title="Permalink to this headline">¶</a></h2>
 <p>The user(s) should be:</p>
 <ol class="arabic simple">
-<li><dl class="simple">
-<dt>Familiar with command line syntax</dt><dd><ol class="loweralpha simple">
-<li><p>MacOS: Terminal</p></li>
-<li><p>Windows: Command Prompt / Powershell</p></li>
-<li><p>Linux: Command Line</p></li>
+<li><dl class="first docutils">
+<dt>Familiar with command line syntax</dt>
+<dd><ol class="first last loweralpha">
+<li>MacOS: Terminal</li>
+<li>Windows: Command Prompt / Powershell</li>
+<li>Linux: Command Line</li>
 </ol>
 </dd>
 </dl>
 </li>
-<li><p>Experienced in Python</p></li>
-<li><p>Experienced with Jupyter notebooks (preferred)</p></li>
+<li>Experienced in Python</li>
+<li>Experienced with Jupyter notebooks (preferred)</li>
 </ol>
 </div>
 <div class="section" id="software-packages">
 <h2><a class="toc-backref" href="#id2">Software Packages</a><a class="headerlink" href="#software-packages" title="Permalink to this headline">¶</a></h2>
 <p>The following software packages must be installed in the environment(s) that will be used to access the Gro API prior to trying to install the Gro API client package. See environment-specific instructions for installing <a class="reference external" href="./software-packages-prereqs">prerequisite software packages</a>.</p>
 <ol class="arabic simple">
-<li><p>Git</p></li>
-<li><dl class="simple">
-<dt>Python</dt><dd><ul class="simple">
-<li><p>Python version 3.5 or above is recommended. Support for Python 2.7.13 or above is also maintained, but with its <a class="reference external" href="https://mail.python.org/pipermail/python-dev/2018-March/152348.html">End of Life</a> now passed, Python 3 is recommended for any new installations.</p></li>
+<li>Git</li>
+<li><dl class="first docutils">
+<dt>Python</dt>
+<dd><ul class="first last">
+<li>Python version 3.5 or above is recommended. Support for Python 2.7.13 or above is also maintained, but with its <a class="reference external" href="https://mail.python.org/pipermail/python-dev/2018-March/152348.html">End of Life</a> now passed, Python 3 is recommended for any new installations.</li>
 </ul>
 </dd>
 </dl>
 </li>
-<li><p>Pip (should be installed as part of the python installation)</p></li>
+<li>Pip (should be installed as part of the python installation)</li>
 </ol>
 </div>
 <div class="section" id="network-communication">
 <h2><a class="toc-backref" href="#id3">Network communication</a><a class="headerlink" href="#network-communication" title="Permalink to this headline">¶</a></h2>
 <p>The environment must have access to the following resources in order to download and install the Gro API client:</p>
 <ul class="simple">
-<li><dl class="simple">
-<dt>github</dt><dd><ul>
-<li><p>github.com (port 443 - https) or (port 80 - http)</p></li>
-<li><p>github.com (port 9418)</p></li>
-<li><p>github.com (port 22)</p></li>
+<li><dl class="first docutils">
+<dt>github</dt>
+<dd><ul class="first last">
+<li>github.com (port 443 - https) or (port 80 - http)</li>
+<li>github.com (port 9418)</li>
+<li>github.com (port 22)</li>
 </ul>
 </dd>
 </dl>
 </li>
-<li><dl class="simple">
-<dt>python.org</dt><dd><ul>
-<li><p>pypi.python.org (port 443 - https) or (port 80 - http)</p></li>
-<li><p>pypi.python.org (port 3128)</p></li>
+<li><dl class="first docutils">
+<dt>python.org</dt>
+<dd><ul class="first last">
+<li>pypi.python.org (port 443 - https) or (port 80 - http)</li>
+<li>pypi.python.org (port 3128)</li>
 </ul>
 </dd>
 </dl>
 </li>
-<li><dl class="simple">
-<dt>pythonhosted.org</dt><dd><ul>
-<li><p>files.pythonhosted.org (port 443 - https) or (port 80 - http)</p></li>
-<li><p>files.pythonhosted.org (port 3128)</p></li>
+<li><dl class="first docutils">
+<dt>pythonhosted.org</dt>
+<dd><ul class="first last">
+<li>files.pythonhosted.org (port 443 - https) or (port 80 - http)</li>
+<li>files.pythonhosted.org (port 3128)</li>
 </ul>
 </dd>
 </dl>
 </li>
-<li><dl class="simple">
-<dt>api.gro-intelligence.com</dt><dd><ul>
-<li><p>API hosts (port 443 - https)</p></li>
-<li><p>See <a class="reference external" href="./gro-api-corporate-proxy">additional information</a> if Gro API will be installed in an environment that uses a proxy to communicate with the internet</p></li>
+<li><dl class="first docutils">
+<dt>api.gro-intelligence.com</dt>
+<dd><ul class="first last">
+<li>API hosts (port 443 - https)</li>
+<li>See <a class="reference external" href="./gro-api-corporate-proxy">additional information</a> if Gro API will be installed in an environment that uses a proxy to communicate with the internet</li>
 </ul>
 </dd>
 </dl>
@@ -288,7 +303,6 @@
 </ul>
 </div>
 </div>
-
 
 
            </div>
@@ -311,7 +325,7 @@
   <div role="contentinfo">
     <p>
         
-        &copy; Copyright 2020, Gro Intelligence
+        &copy; Copyright 2019, Gro Intelligence
 
     </p>
   </div>
@@ -334,33 +348,48 @@
   </div>
   
 <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
-  <span class="rst-current-version" data-toggle="rst-current-version">
-    <span class="fa fa-book"> Other Versions</span>
-    v: v1.82.0
-    <span class="fa fa-caret-down"></span>
-  </span>
-  <div class="rst-other-versions">
-    <dl>
-      <dt>Releases</dt>
-      <dd><a href="../../v1.40.6/index.html">v1.40.6</a></dd>
-      <dd><a href="../../v1.56.0/index.html">v1.56.0</a></dd>
-      <dd><a href="../../v1.56.1/index.html">v1.56.1</a></dd>
-      <dd><a href="../../v1.56.2/index.html">v1.56.2</a></dd>
-      <dd><a href="../../v1.60.0/index.html">v1.60.0</a></dd>
-      <dd><a href="../../v1.60.1/index.html">v1.60.1</a></dd>
-      <dd><a href="../../v1.71.0/index.html">v1.71.0</a></dd>
-      <dd><a href="../../v1.76.0/prerequisites/index.html">v1.76.0</a></dd>
-      <dd><a href="../../v1.77.0/prerequisites/index.html">v1.77.0</a></dd>
-      <dd><a href="../../v1.77.1/prerequisites/index.html">v1.77.1</a></dd>
-      <dd><a href="index.html">v1.82.0</a></dd>
-      <dd><a href="../../v1.83.0/prerequisites/index.html">v1.83.0</a></dd>
-      <dd><a href="../../v1.98.0/prerequisites/index.html">v1.98.0</a></dd>
-
-      
+    <span class="rst-current-version" data-toggle="rst-current-version">
+        <span class="fa fa-book"> Other Versions</span>
+        v: v1.82.0
+        <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+        <dl>
+            <dt>Tags</dt>
+            <dd><a href="../../v1.40.6/index.html">v1.40.6</a></dd>
+            <dd><a href="../../v1.56.0/index.html">v1.56.0</a></dd>
+            <dd><a href="../../v1.56.1/index.html">v1.56.1</a></dd>
+            <dd><a href="../../v1.56.2/index.html">v1.56.2</a></dd>
+            <dd><a href="../../v1.60.0/index.html">v1.60.0</a></dd>
+            <dd><a href="../../v1.60.1/index.html">v1.60.1</a></dd>
+            <dd><a href="../../v1.71.0/index.html">v1.71.0</a></dd>
+            <dd><a href="../../v1.76.0/prerequisites/index.html">v1.76.0</a></dd>
+            <dd><a href="../../v1.77.0/prerequisites/index.html">v1.77.0</a></dd>
+            <dd><a href="../../v1.77.1/prerequisites/index.html">v1.77.1</a></dd>
+            <dd><a href="index.html">v1.82.0</a></dd>
+            <dd><a href="../../v1.83.0/prerequisites/index.html">v1.83.0</a></dd>
+            <dd><a href="../../v1.98.0/prerequisites/index.html">v1.98.0</a></dd>
+        </dl>
+        <dl>
+            <dt>Branches</dt>
+            <dd><a href="../../CLEWS-15676-add-names-to-index/prerequisites/index.html">CLEWS-15676-add-names-to-index</a></dd>
+            <dd><a href="../../CLEWS-16955-units/index.html">CLEWS-16955-units</a></dd>
+            <dd><a href="../../CLEWS-19063/index.html">CLEWS-19063</a></dd>
+            <dd><a href="../../CLEWS-19840-3/index.html">CLEWS-19840-3</a></dd>
+            <dd><a href="../../CLEWS-22288/index.html">CLEWS-22288</a></dd>
+            <dd><a href="../../CLEWS-23863/index.html">CLEWS-23863</a></dd>
+            <dd><a href="../../CLEWS-23863-composite-rank/prerequisites/index.html">CLEWS-23863-composite-rank</a></dd>
+            <dd><a href="../../CLEWS-26758-similar_regions/prerequisites/index.html">CLEWS-26758-similar_regions</a></dd>
+            <dd><a href="../../CLEWS-27625-fixtures/prerequisites/index.html">CLEWS-27625-fixtures</a></dd>
             <dd><a href="../../development/prerequisites/index.html">development</a></dd>
-    </dl>
-  </div>
+            <dd><a href="../../jli-requirecleandocs/prerequisites/index.html">jli-requirecleandocs</a></dd>
+            <dd><a href="../../lib-test-refactor/prerequisites/index.html">lib-test-refactor</a></dd>
+            <dd><a href="../../simplify-quickstart/index.html">simplify-quickstart</a></dd>
+            <dd><a href="../../simulate_reporting_date/prerequisites/index.html">simulate_reporting_date</a></dd>
+        </dl>
+    </div>
 </div>
+
 
   <script type="text/javascript">
       jQuery(function () {

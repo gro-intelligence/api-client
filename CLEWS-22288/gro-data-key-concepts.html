@@ -1,9 +1,7 @@
 
 
-
-
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html4" lang="en" >
 <head>
   <meta charset="utf-8">
   
@@ -15,6 +13,7 @@
   
   <link rel="stylesheet" href="_static/css/custom-theme.css" type="text/css" />
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/banner.css" type="text/css" />
 
   
   
@@ -27,11 +26,20 @@
   <![endif]-->
   
     
-      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-        <script src="_static/jquery.js"></script>
-        <script src="_static/underscore.js"></script>
-        <script src="_static/doctools.js"></script>
-        <script src="_static/language_data.js"></script>
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'./',
+              VERSION:'',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
@@ -39,25 +47,12 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="API Reference" href="api.html" />
-    <link rel="prev" title="Getting Started" href="getting-started.html" />
-    <!-- Google Tag Manager -->
-    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-    })(window,document,'script','dataLayer','GTM-5VHQ76P');</script>
-    <!-- End Google Tag Manager -->
-
+    <link rel="prev" title="Getting Started" href="getting-started.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
 
-  
-    <!-- Google Tag Manager (noscript) -->
-    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5VHQ76P"
-    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-    <!-- End Google Tag Manager (noscript) -->
-
+   
   <div class="wy-grid-for-nav">
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
@@ -66,7 +61,7 @@
           
 
           
-            <a href="index.html">
+            <a href="index.html" class="icon icon-home" alt="Documentation Home"> Gro API Client
           
 
           
@@ -102,15 +97,122 @@
             
               <p class="caption"><span class="caption-text">Getting Started</span></p>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="setting-up-your-environment.html">Setting Up Your Environment</a></li>
-<li class="toctree-l1"><a class="reference internal" href="getting-started.html">Getting Started</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Gro Data Key Concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="setting-up-your-environment.html">Setting Up Your Environment</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="setting-up-your-environment.html#system-prerequisites">System Prerequisites</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="setting-up-your-environment.html#macos-and-linux">MacOS and Linux</a></li>
+<li class="toctree-l3"><a class="reference internal" href="setting-up-your-environment.html#windows">Windows</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="setting-up-your-environment.html#anaconda">Anaconda</a></li>
+<li class="toctree-l4"><a class="reference internal" href="setting-up-your-environment.html#non-anaconda">Non-Anaconda</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="setting-up-your-environment.html#installing-gro-packages">Installing Gro Packages</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="setting-up-your-environment.html#authentication-token">Authentication Token</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="setting-up-your-environment.html#retrieving-a-token">Retrieving a token</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="setting-up-your-environment.html#option-1-using-the-web-app-recommended">Option 1: Using the Web App (Recommended)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="setting-up-your-environment.html#option-2-using-the-gro-client-command-line-interface">Option 2: Using the gro_client Command Line Interface</a></li>
+<li class="toctree-l4"><a class="reference internal" href="setting-up-your-environment.html#option-3-using-the-get-access-token-function">Option 3: Using the <code class="docutils literal"><span class="pre">get_access_token()</span></code> Function</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="setting-up-your-environment.html#expiring-regenerating-tokens">Expiring/Regenerating Tokens</a></li>
+<li class="toctree-l3"><a class="reference internal" href="setting-up-your-environment.html#saving-your-token-as-an-environment-variable">Saving your token as an environment variable</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="setting-up-your-environment.html#for-windows-10">For Windows 10:</a></li>
+<li class="toctree-l4"><a class="reference internal" href="setting-up-your-environment.html#for-mac">For Mac:</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="getting-started.html">Getting Started</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="getting-started.html#examples">Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting-started.html#discovering-data">Discovering Data</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="getting-started.html#code-snippets">Code snippets</a></li>
+<li class="toctree-l3"><a class="reference internal" href="getting-started.html#search">Search</a></li>
+<li class="toctree-l3"><a class="reference internal" href="getting-started.html#get-data-series">Get data series</a></li>
+<li class="toctree-l3"><a class="reference internal" href="getting-started.html#lookup-contains">Lookup contains</a></li>
+<li class="toctree-l3"><a class="reference internal" href="getting-started.html#get-descendants">Get descendants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="getting-started.html#lookup-belongs">Lookup belongs</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="getting-started.html#retrieving-data">Retrieving Data</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="getting-started.html#get-data-points">Get data points</a></li>
+<li class="toctree-l3"><a class="reference internal" href="getting-started.html#data-frame">Data frame</a></li>
+<li class="toctree-l3"><a class="reference internal" href="getting-started.html#show-revisions">Show revisions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="getting-started.html#understanding-data-responses">Understanding Data Responses</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="getting-started.html#look-up">Look up</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Gro Data Key Concepts</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#gro-ontology">Gro Ontology</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#entity-fields">Entity fields</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#entity-relationships-contains">Entity Relationships: Contains</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#special-properties-for-regions">Special Properties for Regions</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#level"><code class="docutils literal"><span class="pre">level</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#latitude-and-longitude"><code class="docutils literal"><span class="pre">latitude</span></code> and <code class="docutils literal"><span class="pre">longitude</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#data-series-definition">Data Series Definition</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#data-point-definition">Data Point Definition</a></li>
+</ul>
+</li>
 </ul>
 <p class="caption"><span class="caption-text">Reference</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="api.html">API Reference</a></li>
-<li class="toctree-l1"><a class="reference internal" href="faq.html">FAQ</a></li>
-<li class="toctree-l1"><a class="reference internal" href="other.html">Other</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api.html#basic-exploration">Basic Exploration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#data-retrieval">Data Retrieval</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#geographic">Geographic</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#advanced-exploration">Advanced Exploration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#pandas-utils">Pandas Utils</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="faq.html">FAQ</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="faq.html#exploring-what-s-available">Exploring What&#8216;s Available</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="faq.html#q-why-is-it-that-when-i-use-client-search-to-find-metrics-items-regions-i-m-interested-in-sometimes-client-get-data-series-doesn-t-have-any-data-for-those-metrics-items-regions">Q: Why is it that when I use client.search() to find metrics/items/regions I&#8216;m interested in, sometimes client.get_data_series() doesn&#8216;t have any data for those metrics/items/regions?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="faq.html#q-what-does-sourcelag-mean-when-i-use-client-lookup-to-inspect-a-source-s-details">Q: What does &#8216;sourceLag&#8216; mean when I use client.lookup() to inspect a source&#8216;s details?</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="faq.html#data-retrieval">Data Retrieval</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="faq.html#q-i-specified-an-end-date-when-calling-get-data-points-but-i-am-getting-points-with-other-end-dates">Q: I specified an end_date when calling get_data_points(), but I am getting points with other end_dates:</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="faq.html#account">Account</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="faq.html#q-i-tried-using-my-gro-username-and-login-but-am-getting-a-401-unauthorized-error">Q: I tried using my Gro username and login but am getting a 401 Unauthorized error</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="faq.html#gro-models">Gro Models</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="faq.html#q-do-your-predictive-models-only-run-during-the-crop-season">Q: Do your predictive models only run during the crop season?</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="other.html">Other</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="other.html#gro-crop-masks">Gro Crop Masks</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="other.html#introduction">Introduction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="other.html#methodology">Methodology</a></li>
+<li class="toctree-l3"><a class="reference internal" href="other.html#us-corn">US Corn</a></li>
+<li class="toctree-l3"><a class="reference internal" href="other.html#us-soy">US Soy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="other.html#argentina-soy">Argentina Soy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="other.html#india-wheat">India Wheat</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="other.html#gro-yield-model-backtest-data">Gro Yield Model Backtest Data</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="other.html#id1">Introduction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="other.html#file-formats">File Formats</a></li>
+<li class="toctree-l3"><a class="reference internal" href="other.html#download-the-data-by-model">Download the Data by Model</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="other.html#radio-frequency-interference-effects-on-smos">Radio Frequency Interference Effects On SMOS</a></li>
+</ul>
+</li>
 </ul>
 
             
@@ -185,37 +287,38 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-
-<p class="version-banner">
-  <strong>Note:</strong>
-  This document is for an older version of the Gro API Client.
-  Please see the <a href="../development/index.html">latest documentation</a>.
-</p>
+  
 
 
-  <div class="section" id="gro-data-key-concepts">
+    
+    
+
+
+
+    <p class="scv-banner scv-sphinx_rtd_theme"><b>Warning:</b> This document is for the development version of Gro API Client.</p>
+<div class="section" id="gro-data-key-concepts">
 <h1>Gro Data: Key Concepts<a class="headerlink" href="#gro-data-key-concepts" title="Permalink to this headline">¶</a></h1>
 <ol class="simple">
-<li><p><a class="reference external" href="#gro-ontology">Gro Ontology</a></p></li>
-<li><p><a class="reference external" href="#data-series-definition">Data Series Definition</a></p></li>
-<li><p><a class="reference external" href="#data-point-definition">Data Point Definition</a></p></li>
+<li><a class="reference external" href="#gro-ontology">Gro Ontology</a></li>
+<li><a class="reference external" href="#data-series-definition">Data Series Definition</a></li>
+<li><a class="reference external" href="#data-point-definition">Data Point Definition</a></li>
 </ol>
 <div class="section" id="gro-ontology">
 <h2>Gro Ontology<a class="headerlink" href="#gro-ontology" title="Permalink to this headline">¶</a></h2>
 <p>Gro has brought the world of agricultural data into a single ontology. This ontology classifies all data into a limited set of entities.</p>
 <p>The entity types around which the data is organized in Gro are:</p>
 <ul class="simple">
-<li><p>items – what the data is about (e.g., Rice, Sugar, Rainfall, etc.).</p></li>
-<li><p>metrics – how the data is measured (e.g., Production, Precipitation, etc.).</p></li>
-<li><p>regions – where the data is from/about (e.g., a country, a weather station, a city etc.). Some data such as trade flows might have a partner region.</p></li>
-<li><p>frequencies – e.g., daily, weekly etc.</p></li>
-<li><p>sources – the organization or sub-organization that generates the data (e.g., USDA PS&amp;D).</p></li>
-<li><p>units – the units in which the data is presented (e.g., tonnes, liters, etc.).</p></li>
+<li>items &#8211; what the data is about (e.g., Rice, Sugar, Rainfall, etc.).</li>
+<li>metrics &#8211; how the data is measured (e.g., Production, Precipitation, etc.).</li>
+<li>regions &#8211; where the data is from/about (e.g., a country, a weather station, a city etc.). Some data such as trade flows might have a partner region.</li>
+<li>frequencies &#8211; e.g., daily, weekly etc.</li>
+<li>sources &#8211; the organization or sub-organization that generates the data (e.g., USDA PS&amp;D).</li>
+<li>units &#8211; the units in which the data is presented (e.g., tonnes, liters, etc.).</li>
 </ul>
 <div class="section" id="entity-fields">
 <h3>Entity fields<a class="headerlink" href="#entity-fields" title="Permalink to this headline">¶</a></h3>
-<p>Each specific entity will have an <code class="docutils literal notranslate"><span class="pre">id</span></code>, <code class="docutils literal notranslate"><span class="pre">name</span></code>, and various other properties. For example, “Soybeans” is a specific item with <code class="docutils literal notranslate"><span class="pre">id</span> <span class="pre">=</span> <span class="pre">270</span></code> and the following information</p>
-<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;allowedAggregations&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+<p>Each specific entity will have an <code class="docutils literal"><span class="pre">id</span></code>, <code class="docutils literal"><span class="pre">name</span></code>, and various other properties. For example, &#8220;Soybeans&#8220; is a specific item with <code class="docutils literal"><span class="pre">id</span> <span class="pre">=</span> <span class="pre">270</span></code> and the following information</p>
+<div class="highlight-py"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;allowedAggregations&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
  <span class="s1">&#39;contains&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1737</span><span class="p">,</span>
   <span class="mi">7401</span><span class="p">,</span>
   <span class="mi">7578</span><span class="p">,</span>
@@ -250,64 +353,64 @@
  <span class="s1">&#39;rankingScore&#39;</span><span class="p">:</span> <span class="mf">2.204</span><span class="p">}</span>
 </pre></div>
 </div>
-<p>IDs are unique within a particular entity type, i.e., there’s only one item with id = 270.</p>
+<p>IDs are unique within a particular entity type, i.e., there&#8216;s only one item with id = 270.</p>
 <p>The above information can be retrieved using the client.search function:
-<code class="docutils literal notranslate"><span class="pre">client.lookup('items',</span> <span class="pre">270)</span></code></p>
+<code class="docutils literal"><span class="pre">client.lookup('items',</span> <span class="pre">270)</span></code></p>
 <p><a class="reference external" href="./getting-started.html#look-up">See this Getting Started section for help on finding entities by name or by id.</a></p>
 </div>
 <div class="section" id="entity-relationships-contains">
 <h3>Entity Relationships: Contains<a class="headerlink" href="#entity-relationships-contains" title="Permalink to this headline">¶</a></h3>
-<p>Items, metrics, and regions have a property called <code class="docutils literal notranslate"><span class="pre">contains</span></code>, which is an array of the other entities that it contains, or that belong to it. For example, the item “Cereals” contains the items “Wheat,” “Corn,” etc.</p>
-<p>Variations of the <code class="docutils literal notranslate"><span class="pre">client.lookup(type,</span> <span class="pre">id)</span></code> function can help you understand what a given entity contains or belongs to. For example:
-<code class="docutils literal notranslate"><span class="pre">client.lookup('items',</span> <span class="pre">10009)['contains']</span></code>
-Will return a list of items that are contained within the item “Cereals” (item_id: 10009).</p>
-<p><code class="docutils literal notranslate"><span class="pre">client.lookup_belongs('regions',</span> <span class="pre">13055)</span></code>
-Will return a list of regions to which “California” (region_id: 13055) belongs.</p>
+<p>Items, metrics, and regions have a property called <code class="docutils literal"><span class="pre">contains</span></code>, which is an array of the other entities that it contains, or that belong to it. For example, the item &#8220;Cereals&#8220; contains the items &#8220;Wheat,&#8220; &#8220;Corn,&#8220; etc.</p>
+<p>Variations of the <code class="docutils literal"><span class="pre">client.lookup(type,</span> <span class="pre">id)</span></code> function can help you understand what a given entity contains or belongs to. For example:
+<code class="docutils literal"><span class="pre">client.lookup('items',</span> <span class="pre">10009)['contains']</span></code>
+Will return a list of items that are contained within the item &#8220;Cereals&#8220; (item_id: 10009).</p>
+<p><code class="docutils literal"><span class="pre">client.lookup_belongs('regions',</span> <span class="pre">13055)</span></code>
+Will return a list of regions to which &#8220;California&#8220; (region_id: 13055) belongs.</p>
 <p><a class="reference external" href="./getting-started.html#lookup-contains">See this Getting Started section for navigation of relationships between entities.</a></p>
 </div>
 <div class="section" id="special-properties-for-regions">
 <h3>Special Properties for Regions<a class="headerlink" href="#special-properties-for-regions" title="Permalink to this headline">¶</a></h3>
 <p>The following properties exist for regions only:</p>
 <div class="section" id="level">
-<h4><code class="docutils literal notranslate"><span class="pre">level</span></code><a class="headerlink" href="#level" title="Permalink to this headline">¶</a></h4>
+<h4><code class="docutils literal"><span class="pre">level</span></code><a class="headerlink" href="#level" title="Permalink to this headline">¶</a></h4>
 <p>Region level corresponds to the administrative level of the region:</p>
 <ul class="simple">
-<li><p>level 1: world</p></li>
-<li><p>level 2: continent</p></li>
-<li><p>level 3: country</p></li>
-<li><p>level 4: provinces</p></li>
-<li><p>level 5: districts</p></li>
-<li><p>level 6: city</p></li>
-<li><p>level 7: market</p></li>
-<li><p>level 8: other arbitrary regions</p></li>
-<li><p>level 9: point-location</p></li>
+<li>level 1: world</li>
+<li>level 2: continent</li>
+<li>level 3: country</li>
+<li>level 4: provinces</li>
+<li>level 5: districts</li>
+<li>level 6: city</li>
+<li>level 7: market</li>
+<li>level 8: other arbitrary regions</li>
+<li>level 9: point-location</li>
 </ul>
 </div>
 <div class="section" id="latitude-and-longitude">
-<h4><code class="docutils literal notranslate"><span class="pre">latitude</span></code> and <code class="docutils literal notranslate"><span class="pre">longitude</span></code><a class="headerlink" href="#latitude-and-longitude" title="Permalink to this headline">¶</a></h4>
-<p>For point-locations (i.e., region level 9), these properties correspond to the location’s coordinates. More generally for other regions, these properties are optional, but if specified, they correspond to the coordinates of the geographic center of the region.</p>
+<h4><code class="docutils literal"><span class="pre">latitude</span></code> and <code class="docutils literal"><span class="pre">longitude</span></code><a class="headerlink" href="#latitude-and-longitude" title="Permalink to this headline">¶</a></h4>
+<p>For point-locations (i.e., region level 9), these properties correspond to the location&#8216;s coordinates. More generally for other regions, these properties are optional, but if specified, they correspond to the coordinates of the geographic center of the region.</p>
 </div>
 </div>
 </div>
 <div class="section" id="data-series-definition">
 <h2>Data Series Definition<a class="headerlink" href="#data-series-definition" title="Permalink to this headline">¶</a></h2>
-<p>Gro defines a “data series” as a series of data points over time.
+<p>Gro defines a &#8220;data series&#8220; as a series of data points over time.
 Each data series is defined by a unique selection of:</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">item</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">metric</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">region</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">partner_region</span></code> (optional)</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">frequency</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">source</span></code></p></li>
+<li><code class="docutils literal"><span class="pre">item</span></code></li>
+<li><code class="docutils literal"><span class="pre">metric</span></code></li>
+<li><code class="docutils literal"><span class="pre">region</span></code></li>
+<li><code class="docutils literal"><span class="pre">partner_region</span></code> (optional)</li>
+<li><code class="docutils literal"><span class="pre">frequency</span></code></li>
+<li><code class="docutils literal"><span class="pre">source</span></code></li>
 </ul>
-<p>For example, if you select <code class="docutils literal notranslate"><span class="pre">item=Wheat</span></code>, <code class="docutils literal notranslate"><span class="pre">metric=Production</span> <span class="pre">Quantity</span> <span class="pre">(mass)</span></code>, <code class="docutils literal notranslate"><span class="pre">region=India</span></code>, <code class="docutils literal notranslate"><span class="pre">frequency=Annual</span></code>, <code class="docutils literal notranslate"><span class="pre">source=FAO</span></code>, that would be one data series. Partner_region is optional and used only in series that represent a flow between two places, e.g. if the metric is exports, the region would be the exporter and the partner_region would be the importer.</p>
-<p>To get all the available data series for a given selection of entities, use the <code class="docutils literal notranslate"><span class="pre">get_data_series</span></code> function as described in the <a class="reference external" href="../docs/faqs.md###Q:-how-do-I-get-data-series?">FAQ</a>.</p>
+<p>For example, if you select <code class="docutils literal"><span class="pre">item=Wheat</span></code>, <code class="docutils literal"><span class="pre">metric=Production</span> <span class="pre">Quantity</span> <span class="pre">(mass)</span></code>, <code class="docutils literal"><span class="pre">region=India</span></code>, <code class="docutils literal"><span class="pre">frequency=Annual</span></code>, <code class="docutils literal"><span class="pre">source=FAO</span></code>, that would be one data series. Partner_region is optional and used only in series that represent a flow between two places, e.g. if the metric is exports, the region would be the exporter and the partner_region would be the importer.</p>
+<p>To get all the available data series for a given selection of entities, use the <code class="docutils literal"><span class="pre">get_data_series</span></code> function as described in the <a class="reference external" href="../docs/faqs.md###Q:-how-do-I-get-data-series?">FAQ</a>.</p>
 </div>
 <div class="section" id="data-point-definition">
 <h2>Data Point Definition<a class="headerlink" href="#data-point-definition" title="Permalink to this headline">¶</a></h2>
-<p>Gro defines a “data point” as a discrete result produced by our API. When using the <code class="docutils literal notranslate"><span class="pre">get_data_points()</span></code> function, you are returned an array of points, each of which is a Python dictionary object that looks something like:</p>
-<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<p>Gro defines a &#8220;data point&#8220; as a discrete result produced by our API. When using the <code class="docutils literal"><span class="pre">get_data_points()</span></code> function, you are returned an array of points, each of which is a Python dictionary object that looks something like:</p>
+<div class="highlight-py"><div class="highlight"><pre><span></span><span class="p">{</span>
   <span class="sa">u</span><span class="s1">&#39;input_unit_scale&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
   <span class="sa">u</span><span class="s1">&#39;region_id&#39;</span><span class="p">:</span> <span class="mi">1038</span><span class="p">,</span>
   <span class="sa">u</span><span class="s1">&#39;end_date&#39;</span><span class="p">:</span> <span class="sa">u</span><span class="s1">&#39;2000-12-31T00:00:00.000Z&#39;</span><span class="p">,</span>
@@ -325,19 +428,18 @@ Each data series is defined by a unique selection of:</p>
 <p>Another example is if you get weekly precipitation data for a given region in a given week, you will get a single point. On the other hand, if you get daily precipitation for a given region for a period of a week, you will get seven data points.</p>
 <p>Below are some explanations of what each of those fields represent:</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">start_date</span></code>: beginning of the period this point represents</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">end_date</span></code>: end of the period this point represents</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">reporting_date</span></code>: date the source reported this value (only included when source provides reporting date)</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">value</span></code>: the value, typically a number. In some cases, the value may be non-numeric. E.g., when the metric is Crop Calendar, a value of “planting,” represents the fact that the planting period is from <code class="docutils literal notranslate"><span class="pre">start_date</span></code> to <code class="docutils literal notranslate"><span class="pre">end_date</span></code>.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">unit_id</span></code>: this is a Gro unit id you can look up the name/abbreviation/etc. of using the <code class="docutils literal notranslate"><span class="pre">client.lookup('units',</span> <span class="pre">unit_id)</span></code> function. There’s also a helper function of which you can see an example in the <a class="reference external" href="https://github.com/gro-intelligence/api-client/blob/9c2c17642980b5415b8a8167a28276b77e34915c/api/client/samples/quick_start.py#L30">quickstart</a> for getting just the abbreviation from the unit id, <code class="docutils literal notranslate"><span class="pre">client.lookup_unit_abbreviation(point['unit_id'])</span></code>, which is the common case you probably want</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">metric_id</span></code>: unique id for the metric (i.e. “Export Value (currency)”) you selected - get more details (name, definition, …) using <code class="docutils literal notranslate"><span class="pre">client.lookup('metrics',</span> <span class="pre">metric_id)</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">item_id</span></code>: unique id for the item (i.e., “Corn”) you selected - get more details (name, definition, …) using <code class="docutils literal notranslate"><span class="pre">client.lookup('items',</span> <span class="pre">item_id)</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">region_id</span></code>: unique id for the region (i.e., “United States”) you selected - get more details (name, administrative level, …) using <code class="docutils literal notranslate"><span class="pre">client.lookup('regions',</span> <span class="pre">region_id)</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">frequency_id</span></code>: unique id for the frequency (i.e., “annual”) you selected - get more details (name, abbreviation, period length, …) using <code class="docutils literal notranslate"><span class="pre">client.lookup('frequencies',</span> <span class="pre">frequency_id)</span></code></p></li>
+<li><code class="docutils literal"><span class="pre">start_date</span></code>: beginning of the period this point represents</li>
+<li><code class="docutils literal"><span class="pre">end_date</span></code>: end of the period this point represents</li>
+<li><code class="docutils literal"><span class="pre">reporting_date</span></code>: date the source reported this value (only included when source provides reporting date)</li>
+<li><code class="docutils literal"><span class="pre">value</span></code>: the value, typically a number. In some cases, the value may be non-numeric. E.g., when the metric is Crop Calendar, a value of &#8220;planting,&#8220; represents the fact that the planting period is from <code class="docutils literal"><span class="pre">start_date</span></code> to <code class="docutils literal"><span class="pre">end_date</span></code>.</li>
+<li><code class="docutils literal"><span class="pre">unit_id</span></code>: this is a Gro unit id you can look up the name/abbreviation/etc. of using the <code class="docutils literal"><span class="pre">client.lookup('units',</span> <span class="pre">unit_id)</span></code> function. There&#8216;s also a helper function of which you can see an example in the <a class="reference external" href="https://github.com/gro-intelligence/api-client/blob/9c2c17642980b5415b8a8167a28276b77e34915c/api/client/samples/quick_start.py#L30">quickstart</a> for getting just the abbreviation from the unit id, <code class="docutils literal"><span class="pre">client.lookup_unit_abbreviation(point['unit_id'])</span></code>, which is the common case you probably want</li>
+<li><code class="docutils literal"><span class="pre">metric_id</span></code>: unique id for the metric (i.e. &#8220;Export Value (currency)&#8220;) you selected - get more details (name, definition, ...) using <code class="docutils literal"><span class="pre">client.lookup('metrics',</span> <span class="pre">metric_id)</span></code></li>
+<li><code class="docutils literal"><span class="pre">item_id</span></code>: unique id for the item (i.e., &#8220;Corn&#8220;) you selected - get more details (name, definition, ...) using <code class="docutils literal"><span class="pre">client.lookup('items',</span> <span class="pre">item_id)</span></code></li>
+<li><code class="docutils literal"><span class="pre">region_id</span></code>: unique id for the region (i.e., &#8220;United States&#8220;) you selected - get more details (name, administrative level, ...) using <code class="docutils literal"><span class="pre">client.lookup('regions',</span> <span class="pre">region_id)</span></code></li>
+<li><code class="docutils literal"><span class="pre">frequency_id</span></code>: unique id for the frequency (i.e., &#8220;annual&#8220;) you selected - get more details (name, abbreviation, period length, ...) using <code class="docutils literal"><span class="pre">client.lookup('frequencies',</span> <span class="pre">frequency_id)</span></code></li>
 </ul>
 </div>
 </div>
-
 
 
            </div>
@@ -360,7 +462,7 @@ Each data series is defined by a unique selection of:</p>
   <div role="contentinfo">
     <p>
         
-        &copy; Copyright 2020, Gro Intelligence
+        &copy; Copyright 2019, Gro Intelligence
 
     </p>
   </div>
@@ -383,33 +485,48 @@ Each data series is defined by a unique selection of:</p>
   </div>
   
 <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
-  <span class="rst-current-version" data-toggle="rst-current-version">
-    <span class="fa fa-book"> Other Versions</span>
-    v: CLEWS-22288
-    <span class="fa fa-caret-down"></span>
-  </span>
-  <div class="rst-other-versions">
-    <dl>
-      <dt>Releases</dt>
-      <dd><a href="../v1.40.6/index.html">v1.40.6</a></dd>
-      <dd><a href="../v1.56.0/index.html">v1.56.0</a></dd>
-      <dd><a href="../v1.56.1/index.html">v1.56.1</a></dd>
-      <dd><a href="../v1.56.2/index.html">v1.56.2</a></dd>
-      <dd><a href="../v1.60.0/index.html">v1.60.0</a></dd>
-      <dd><a href="../v1.60.1/index.html">v1.60.1</a></dd>
-      <dd><a href="../v1.71.0/index.html">v1.71.0</a></dd>
-      <dd><a href="../v1.76.0/index.html">v1.76.0</a></dd>
-      <dd><a href="../v1.77.0/index.html">v1.77.0</a></dd>
-      <dd><a href="../v1.77.1/index.html">v1.77.1</a></dd>
-      <dd><a href="../v1.82.0/index.html">v1.82.0</a></dd>
-      <dd><a href="../v1.83.0/index.html">v1.83.0</a></dd>
-      <dd><a href="../v1.98.0/index.html">v1.98.0</a></dd>
-
-      
+    <span class="rst-current-version" data-toggle="rst-current-version">
+        <span class="fa fa-book"> Other Versions</span>
+        v: CLEWS-22288
+        <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+        <dl>
+            <dt>Tags</dt>
+            <dd><a href="../v1.40.6/index.html">v1.40.6</a></dd>
+            <dd><a href="../v1.56.0/index.html">v1.56.0</a></dd>
+            <dd><a href="../v1.56.1/index.html">v1.56.1</a></dd>
+            <dd><a href="../v1.56.2/index.html">v1.56.2</a></dd>
+            <dd><a href="../v1.60.0/index.html">v1.60.0</a></dd>
+            <dd><a href="../v1.60.1/index.html">v1.60.1</a></dd>
+            <dd><a href="../v1.71.0/index.html">v1.71.0</a></dd>
+            <dd><a href="../v1.76.0/index.html">v1.76.0</a></dd>
+            <dd><a href="../v1.77.0/index.html">v1.77.0</a></dd>
+            <dd><a href="../v1.77.1/index.html">v1.77.1</a></dd>
+            <dd><a href="../v1.82.0/index.html">v1.82.0</a></dd>
+            <dd><a href="../v1.83.0/index.html">v1.83.0</a></dd>
+            <dd><a href="../v1.98.0/index.html">v1.98.0</a></dd>
+        </dl>
+        <dl>
+            <dt>Branches</dt>
+            <dd><a href="../CLEWS-15676-add-names-to-index/index.html">CLEWS-15676-add-names-to-index</a></dd>
+            <dd><a href="../CLEWS-16955-units/gro-data-key-concepts.html">CLEWS-16955-units</a></dd>
+            <dd><a href="../CLEWS-19063/index.html">CLEWS-19063</a></dd>
+            <dd><a href="../CLEWS-19840-3/index.html">CLEWS-19840-3</a></dd>
+            <dd><a href="gro-data-key-concepts.html">CLEWS-22288</a></dd>
+            <dd><a href="../CLEWS-23863/index.html">CLEWS-23863</a></dd>
+            <dd><a href="../CLEWS-23863-composite-rank/index.html">CLEWS-23863-composite-rank</a></dd>
+            <dd><a href="../CLEWS-26758-similar_regions/index.html">CLEWS-26758-similar_regions</a></dd>
+            <dd><a href="../CLEWS-27625-fixtures/index.html">CLEWS-27625-fixtures</a></dd>
             <dd><a href="../development/index.html">development</a></dd>
-    </dl>
-  </div>
+            <dd><a href="../jli-requirecleandocs/index.html">jli-requirecleandocs</a></dd>
+            <dd><a href="../lib-test-refactor/index.html">lib-test-refactor</a></dd>
+            <dd><a href="../simplify-quickstart/index.html">simplify-quickstart</a></dd>
+            <dd><a href="../simulate_reporting_date/index.html">simulate_reporting_date</a></dd>
+        </dl>
+    </div>
 </div>
+
 
   <script type="text/javascript">
       jQuery(function () {

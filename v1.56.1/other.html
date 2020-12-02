@@ -1,9 +1,7 @@
 
 
-
-
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html4" lang="en" >
 <head>
   <meta charset="utf-8">
   
@@ -15,6 +13,7 @@
   
   <link rel="stylesheet" href="_static/css/custom-theme.css" type="text/css" />
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/banner.css" type="text/css" />
 
   
   
@@ -27,36 +26,32 @@
   <![endif]-->
   
     
-      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-        <script src="_static/jquery.js"></script>
-        <script src="_static/underscore.js"></script>
-        <script src="_static/doctools.js"></script>
-        <script src="_static/language_data.js"></script>
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'./',
+              VERSION:'',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
     
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="prev" title="FAQ" href="faq.html" />
-    <!-- Google Tag Manager -->
-    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-    })(window,document,'script','dataLayer','GTM-5VHQ76P');</script>
-    <!-- End Google Tag Manager -->
-
+    <link rel="prev" title="FAQ" href="faq.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
 
-  
-    <!-- Google Tag Manager (noscript) -->
-    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5VHQ76P"
-    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-    <!-- End Google Tag Manager (noscript) -->
-
+   
   <div class="wy-grid-for-nav">
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
@@ -65,7 +60,7 @@
           
 
           
-            <a href="index.html">
+            <a href="index.html" class="icon icon-home" alt="Documentation Home"> Gro API Client
           
 
           
@@ -101,28 +96,154 @@
             
               <p class="caption"><span class="caption-text">Getting Started</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="prerequisites.html">Prerequisites</a></li>
-<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="authentication.html">Authentication</a></li>
-<li class="toctree-l1"><a class="reference internal" href="quickstart-examples.html">Quickstart Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="prerequisites.html">Prerequisites</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="prerequisites.html#macos-and-linux">MacOS and Linux</a></li>
+<li class="toctree-l2"><a class="reference internal" href="prerequisites.html#windows">Windows</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="prerequisites.html#anaconda">Anaconda</a></li>
+<li class="toctree-l3"><a class="reference internal" href="prerequisites.html#non-anaconda">Non-Anaconda</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#install-with-pip">Install with pip</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#inspect-the-package">Inspect the package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#stay-updated">Stay updated</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="authentication.html">Authentication</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="authentication.html#retrieving-a-token">Retrieving a token</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="authentication.html#option-1-using-the-web-app-recommended">Option 1: Using the Web App (Recommended)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="authentication.html#option-2-using-the-gro-client-command-line-interface">Option 2: Using the gro_client Command Line Interface</a></li>
+<li class="toctree-l3"><a class="reference internal" href="authentication.html#option-3-using-the-get-access-token-function">Option 3: Using the <code class="docutils literal"><span class="pre">get_access_token()</span></code> Function</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="authentication.html#expiring-regenerating-tokens">Expiring/Regenerating Tokens</a></li>
+<li class="toctree-l2"><a class="reference internal" href="authentication.html#saving-your-token-as-an-environment-variable">Saving your token as an environment variable</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="authentication.html#for-windows-10">For Windows 10</a></li>
+<li class="toctree-l3"><a class="reference internal" href="authentication.html#for-mac-and-linux">For Mac and Linux</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="quickstart-examples.html">Quickstart Examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="quickstart-examples.html#get-started-in-120-seconds">Get Started in 120 Seconds</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="quickstart-examples.html#step-1-get-your-api-token">Step 1: Get your API token</a></li>
+<li class="toctree-l3"><a class="reference internal" href="quickstart-examples.html#step-2-run-the-code-in-a-notebook">Step 2: Run the code in a notebook</a></li>
+<li class="toctree-l3"><a class="reference internal" href="quickstart-examples.html#step-3-bonus-round">Step 3: Bonus Round</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="quickstart-examples.html#quickstart-py">Quickstart.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quickstart-examples.html#brazil-soybeans">Brazil Soybeans</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quickstart-examples.html#gro-client-tool">gro_client tool</a></li>
+</ul>
+</li>
 </ul>
 <p class="caption"><span class="caption-text">Using the API Client</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="api.html">API Reference</a></li>
-<li class="toctree-l1"><a class="reference internal" href="searching-data.html">Searching Data</a></li>
-<li class="toctree-l1"><a class="reference internal" href="querying-data.html">Querying Data</a></li>
-<li class="toctree-l1"><a class="reference internal" href="understanding-data-responses.html">Understanding Data Responses</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api.html#basic-exploration">Basic Exploration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#data-retrieval">Data Retrieval</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#geographic">Geographic</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#advanced-exploration">Advanced Exploration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#pandas-utils">Pandas Utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#crop-modeling">Crop Modeling</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="searching-data.html">Searching Data</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="searching-data.html#code-snippets">Code snippets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="searching-data.html#search">Search</a></li>
+<li class="toctree-l2"><a class="reference internal" href="searching-data.html#get-data-series">Get data series</a></li>
+<li class="toctree-l2"><a class="reference internal" href="searching-data.html#lookup-contains">Lookup contains</a></li>
+<li class="toctree-l2"><a class="reference internal" href="searching-data.html#get-descendants">Get descendants</a></li>
+<li class="toctree-l2"><a class="reference internal" href="searching-data.html#lookup-belongs">Lookup belongs</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="querying-data.html">Querying Data</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="querying-data.html#get-data-points">Get data points</a></li>
+<li class="toctree-l2"><a class="reference internal" href="querying-data.html#get-data-frame">Get data frame</a></li>
+<li class="toctree-l2"><a class="reference internal" href="querying-data.html#show-revisions">Show revisions</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="understanding-data-responses.html">Understanding Data Responses</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="understanding-data-responses.html#look-up">Look up</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="understanding-data-responses.html#metrics">Metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="understanding-data-responses.html#frequencies">Frequencies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="understanding-data-responses.html#units">Units</a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 <p class="caption"><span class="caption-text">Gro Data: Key Concepts</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="gro-ontology.html">Gro Ontology</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gro-ontology.html">Gro Ontology</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="gro-ontology.html#entity-fields">Entity fields</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gro-ontology.html#entity-relationships-contains">Entity Relationships: Contains</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gro-ontology.html#special-properties-for-regions">Special Properties for Regions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="gro-ontology.html#level"><code class="docutils literal"><span class="pre">level</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="gro-ontology.html#latitude-and-longitude"><code class="docutils literal"><span class="pre">latitude</span></code> and <code class="docutils literal"><span class="pre">longitude</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="data-series-definition.html">Data Series Definition</a></li>
 <li class="toctree-l1"><a class="reference internal" href="data-point-definition.html">Data Point Definition</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Additional Resources</span></p>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="faq.html">FAQ</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Other</a></li>
+<li class="toctree-l1"><a class="reference internal" href="faq.html">FAQ</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="faq.html#exploring-what-s-available">Exploring What&#8216;s Available</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="faq.html#why-is-it-that-when-i-use-client-search-to-find-metrics-items-regions-i-m-interested-in-sometimes-client-get-data-series-doesn-t-have-any-data-for-those-metrics-items-regions">Why is it that when I use client.search() to find metrics/items/regions I&#8216;m interested in, sometimes client.get_data_series() doesn&#8216;t have any data for those metrics/items/regions?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="faq.html#what-does-sourcelag-mean-when-i-use-client-lookup-to-inspect-a-source-s-details">What does &#8216;sourceLag&#8216; mean when I use client.lookup() to inspect a source&#8216;s details?</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="faq.html#data-retrieval">Data Retrieval</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="faq.html#i-specified-an-end-date-when-calling-get-data-points-but-i-am-getting-points-with-other-end-dates">I specified an end_date when calling get_data_points(), but I am getting points with other end_dates</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="faq.html#data-coverage">Data Coverage</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="faq.html#why-is-there-no-satellite-rainfall-data-in-northern-latitudes-sometimes">Why is there no satellite rainfall data in northern latitudes sometimes?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="faq.html#why-are-there-some-gaps-in-the-soil-moisture-data">Why are there some gaps in the soil moisture data?</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="faq.html#account">Account</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="faq.html#how-do-i-verify-connectivity-with-gro-api">How do I verify connectivity with Gro API?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="faq.html#how-do-i-get-authenticated-access-to-gro-api">How do I get authenticated access to Gro API?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="faq.html#i-tried-using-my-gro-username-and-login-but-am-getting-a-401-unauthorized-error">I tried using my Gro username and login but am getting a 401 Unauthorized error</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="faq.html#gro-models">Gro Models</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="faq.html#do-your-predictive-models-only-run-during-the-crop-season">Do your predictive models only run during the crop season?</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Other</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#gro-crop-masks">Gro Crop Masks</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#methodology">Methodology</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#crop-masks-for-past-seasons">Crop masks for past seasons</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#in-season-crop-mask">In-season crop mask</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#us-corn">US Corn</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#us-soy">US Soy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#argentina-soy">Argentina Soy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#india-wheat">India Wheat</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#gro-yield-model-backtest-data">Gro Yield Model Backtest Data</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#file-formats">File Formats</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#download-the-data-by-model">Download the Data by Model</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#models">Models</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#radio-frequency-interference-effects-on-smos">Radio Frequency Interference Effects On SMOS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#trmm-and-gpm-spatial-extents">TRMM and GPM spatial extents</a></li>
+</ul>
+</li>
 </ul>
 
             
@@ -195,19 +316,20 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-
-<p class="version-banner">
-  <strong>Note:</strong>
-  This document is for an older version of the Gro API Client.
-  Please see the <a href="../development/index.html">latest documentation</a>.
-</p>
+  
 
 
-  <div class="section" id="other">
+    
+    
+
+
+
+    <p class="scv-banner scv-sphinx_rtd_theme"><b>Warning:</b> This document is for an old version of Gro API Client.</p>
+<div class="section" id="other">
 <h1>Other<a class="headerlink" href="#other" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="gro-crop-masks">
 <h2>Gro Crop Masks<a class="headerlink" href="#gro-crop-masks" title="Permalink to this headline">¶</a></h2>
-<p>Gro’s proprietary high resolution crop masks are currently used in the <a class="reference external" href="https://gro-intelligence.com/gro-models">Gro yield models</a>. These have proven very successful i.e. more accurate for yield modeling than the best available alternatives. Gro does not plan on developing a yield model for every crop or region in the world, so our models will always be limited to the regions and crops where we can help push the envelope. Our crop masks are not yet directly available to users in the Gro web app and the API, but will be very soon!</p>
+<p>Gro&#8216;s proprietary high resolution crop masks are currently used in the <a class="reference external" href="https://gro-intelligence.com/gro-models">Gro yield models</a>. These have proven very successful i.e. more accurate for yield modeling than the best available alternatives. Gro does not plan on developing a yield model for every crop or region in the world, so our models will always be limited to the regions and crops where we can help push the envelope. Our crop masks are not yet directly available to users in the Gro web app and the API, but will be very soon!</p>
 <div class="section" id="methodology">
 <h3>Methodology<a class="headerlink" href="#methodology" title="Permalink to this headline">¶</a></h3>
 <div class="section" id="crop-masks-for-past-seasons">
@@ -216,15 +338,15 @@
 </div>
 <div class="section" id="in-season-crop-mask">
 <h4>In-season crop mask<a class="headerlink" href="#in-season-crop-mask" title="Permalink to this headline">¶</a></h4>
-<p>For current season forecasting, since we’re starting well before the growing period, there is no universal approach that provides the best mask. Instead, we use the series of masks for prior seasons to create a few different masks for the current season. Together, these current season masks can be thought of as providing supersets and subsets of the true planted area. The combination of the various masks provides the information needed for yield forecasting purposes.</p>
+<p>For current season forecasting, since we&#8216;re starting well before the growing period, there is no universal approach that provides the best mask. Instead, we use the series of masks for prior seasons to create a few different masks for the current season. Together, these current season masks can be thought of as providing supersets and subsets of the true planted area. The combination of the various masks provides the information needed for yield forecasting purposes.</p>
 <p>For any mask, the following current season masks are created:</p>
 <ul class="simple">
-<li><p>a <strong>low-confidence</strong> version is created by an OR of the years, i.e., choosing pixels that have been the crop in question for at least one year in the history of the cropland data layers. In other words, the low-confidence mask answers the question “was the crop planted here in 2000 or in 2001 or in 2002 …”. This can be thought of as an upper bound of the true area. Or equivalently, for each pixel, a prediction with high recall and low precision.</p></li>
-<li><p>a <strong>high-confidence</strong> mask version is created by an AND of the years, i.e., selecting pixels that have always been the crop in question over the entire history of the prior season masks, so long as that region has been in the data layers. In other words, it answers the question “was the crop planted here in 2000 and in 2001 and in 2002 …” This it can be seen as a lower bound of the true area. Or equivalently, for each pixel, a prediction with low recall and high precision.</p></li>
+<li>a <strong>low-confidence</strong> version is created by an OR of the years, i.e., choosing pixels that have been the crop in question for at least one year in the history of the cropland data layers. In other words, the low-confidence mask answers the question &#8220;was the crop planted here in 2000 or in 2001 or in 2002 ...&#8220;. This can be thought of as an upper bound of the true area. Or equivalently, for each pixel, a prediction with high recall and low precision.</li>
+<li>a <strong>high-confidence</strong> mask version is created by an AND of the years, i.e., selecting pixels that have always been the crop in question over the entire history of the prior season masks, so long as that region has been in the data layers. In other words, it answers the question &#8220;was the crop planted here in 2000 and in 2001 and in 2002 …&#8220; This it can be seen as a lower bound of the true area. Or equivalently, for each pixel, a prediction with low recall and high precision.</li>
 </ul>
 <p>Additional refinements:</p>
 <ul class="simple">
-<li><p>a <strong>clumped</strong> version is obtained by removing clusters with a total number of fewer than 8 pixels.</p></li>
+<li>a <strong>clumped</strong> version is obtained by removing clusters with a total number of fewer than 8 pixels.</li>
 </ul>
 </div>
 </div>
@@ -234,10 +356,10 @@
 <p>In-season masks:</p>
 <p>A low-confidence mask and a high-confidence mask were made from those yearly crop masks. Each of them was further clumped to remove erroneous pixels, which gave us two more static corn masks.</p>
 <ul class="simple">
-<li><p><a class="reference external" href="https://s3.amazonaws.com/groprod/gro_crop_masks/us_corn/USCorn_LC_99_15.tif">low confidence</a></p></li>
-<li><p><a class="reference external" href="https://s3.amazonaws.com/groprod/gro_crop_masks/us_corn/USCorn_HC_99_15.tif">high confidence</a></p></li>
-<li><p><a class="reference external" href="https://s3.amazonaws.com/groprod/gro_crop_masks/us_corn/USCorn_LCClump_99_15.tif">low confidence clumped</a></p></li>
-<li><p><a class="reference external" href="https://s3.amazonaws.com/groprod/gro_crop_masks/us_corn/USCorn_HCClump_99_15.tif">high confidence clumped</a></p></li>
+<li><a class="reference external" href="https://s3.amazonaws.com/groprod/gro_crop_masks/us_corn/USCorn_LC_99_15.tif">low confidence</a></li>
+<li><a class="reference external" href="https://s3.amazonaws.com/groprod/gro_crop_masks/us_corn/USCorn_HC_99_15.tif">high confidence</a></li>
+<li><a class="reference external" href="https://s3.amazonaws.com/groprod/gro_crop_masks/us_corn/USCorn_LCClump_99_15.tif">low confidence clumped</a></li>
+<li><a class="reference external" href="https://s3.amazonaws.com/groprod/gro_crop_masks/us_corn/USCorn_HCClump_99_15.tif">high confidence clumped</a></li>
 </ul>
 </div>
 <div class="section" id="us-soy">
@@ -245,7 +367,7 @@
 <p>Yearly soy masks were extracted from the NASS CDL the same way as corn, except that the entire contiguous US was included. In this case we end up using only one mask:</p>
 <p>In-season masks:</p>
 <ul class="simple">
-<li><p><a class="reference external" href="https://s3.amazonaws.com/groprod/gro_crop_masks/us_soy/USSoy_LC_08_17.tif">low confidence</a> was made from yearly masks for 2008 to 2017.</p></li>
+<li><a class="reference external" href="https://s3.amazonaws.com/groprod/gro_crop_masks/us_soy/USSoy_LC_08_17.tif">low confidence</a> was made from yearly masks for 2008 to 2017.</li>
 </ul>
 <p>We start in 2008, because including years prior to 2008 reduces the accuracy for yield modeling purposes. A high-confidence mask is not used, as it was found to not help the yield modeling accuracy. Both of these observations seem to reflect the fact that, in the US, the areas where soybeans are planted have been changing relatively more than the corn areas, which makes older crop masks less informative in this case.</p>
 </div>
@@ -258,27 +380,27 @@
 <p>A low-confidence mask and a high-confidence mask were made from those yearly crop masks. Each of them were further clumped to remove erroneous pixels, which gave us two more static soy masks.</p>
 <p>In-season masks:</p>
 <ul class="simple">
-<li><p><a class="reference external" href="https://s3.amazonaws.com/groprod/gro_crop_masks/argentina_soy/ArgLC07_16.tif">low confidence</a></p></li>
-<li><p><a class="reference external" href="https://s3.amazonaws.com/groprod/gro_crop_masks/argentina_soy/ArgHC07_16.tif">high confidence</a></p></li>
-<li><p><a class="reference external" href="https://s3.amazonaws.com/groprod/gro_crop_masks/argentina_soy/ArgLC07_16Clumped.tif">low confidence clumped</a></p></li>
-<li><p><a class="reference external" href="https://s3.amazonaws.com/groprod/gro_crop_masks/argentina_soy/ArgHC07_16Clumped.tif">high confidence clumped</a></p></li>
+<li><a class="reference external" href="https://s3.amazonaws.com/groprod/gro_crop_masks/argentina_soy/ArgLC07_16.tif">low confidence</a></li>
+<li><a class="reference external" href="https://s3.amazonaws.com/groprod/gro_crop_masks/argentina_soy/ArgHC07_16.tif">high confidence</a></li>
+<li><a class="reference external" href="https://s3.amazonaws.com/groprod/gro_crop_masks/argentina_soy/ArgLC07_16Clumped.tif">low confidence clumped</a></li>
+<li><a class="reference external" href="https://s3.amazonaws.com/groprod/gro_crop_masks/argentina_soy/ArgHC07_16Clumped.tif">high confidence clumped</a></li>
 </ul>
 </div>
 <div class="section" id="india-wheat">
 <h3>India Wheat<a class="headerlink" href="#india-wheat" title="Permalink to this headline">¶</a></h3>
 <p>Since India does not have the equivalent of NASS CDL available to the public, we use a technique similar to the one used for Argentina. The masks were also classified annually and span years 2007-2017. The methodology was refined slightly in three ways:</p>
 <ul class="simple">
-<li><p>Instead of using a single crop calendar for the entire country, crop calendars specific to individual states were used to create the planting and growth phase images. Subsequently, the corresponding years were mosaicked together before the creation of the confidence masks.</p></li>
-<li><p>The simple ratio of SWIR/Red was not used for the identification of wheat. Instead, when comparing images to CDL masks in the US the combination that most closely identified with wheat was the high end of Hue*NDVI*NDWI during the growth phase.</p></li>
-<li><p>The final change that was made was the addition of eliminating pixels that were on a slope that was greater than 10°.</p></li>
+<li>Instead of using a single crop calendar for the entire country, crop calendars specific to individual states were used to create the planting and growth phase images. Subsequently, the corresponding years were mosaicked together before the creation of the confidence masks.</li>
+<li>The simple ratio of SWIR/Red was not used for the identification of wheat. Instead, when comparing images to CDL masks in the US the combination that most closely identified with wheat was the high end of Hue*NDVI*NDWI during the growth phase.</li>
+<li>The final change that was made was the addition of eliminating pixels that were on a slope that was greater than 10°.</li>
 </ul>
 <p>A low-confidence mask and a high-confidence mask were made from those yearly crop masks. Each of them were further clumped to remove erroneous pixels, which gave us two more static wheat masks.</p>
 <p>In-season masks:</p>
 <ul class="simple">
-<li><p><a class="reference external" href="https://s3.amazonaws.com/groprod/gro_crop_masks/india_wheat/IndiaWheat_07_17_LC_1b.tif">low confidence</a></p></li>
-<li><p><a class="reference external" href="https://s3.amazonaws.com/groprod/gro_crop_masks/india_wheat/IndiaWheat_07_17_HC_1b.tif">high confidence</a></p></li>
-<li><p><a class="reference external" href="https://s3.amazonaws.com/groprod/gro_crop_masks/india_wheat/IndiaWheat_07_17_LC_ClumpDual.tif">low confidence clumped</a></p></li>
-<li><p><a class="reference external" href="https://s3.amazonaws.com/groprod/gro_crop_masks/india_wheat/IndiaWheat_07_17_HC_ClumpDual.tif">high confidence clumped</a></p></li>
+<li><a class="reference external" href="https://s3.amazonaws.com/groprod/gro_crop_masks/india_wheat/IndiaWheat_07_17_LC_1b.tif">low confidence</a></li>
+<li><a class="reference external" href="https://s3.amazonaws.com/groprod/gro_crop_masks/india_wheat/IndiaWheat_07_17_HC_1b.tif">high confidence</a></li>
+<li><a class="reference external" href="https://s3.amazonaws.com/groprod/gro_crop_masks/india_wheat/IndiaWheat_07_17_LC_ClumpDual.tif">low confidence clumped</a></li>
+<li><a class="reference external" href="https://s3.amazonaws.com/groprod/gro_crop_masks/india_wheat/IndiaWheat_07_17_HC_ClumpDual.tif">high confidence clumped</a></li>
 </ul>
 </div>
 </div>
@@ -289,28 +411,24 @@
 <h3>File Formats<a class="headerlink" href="#file-formats" title="Permalink to this headline">¶</a></h3>
 <p>For each crop-region pair for which we have a yield model, we provide two csv files for each day in the crop season.</p>
 <ol class="simple">
-<li><p>national level backtest:</p>
-<ul class="simple">
-<li><p>file name is of the following format: {DATE}<em>backtesting_national</em>{CROP}_{REGION}.csv</p></li>
-<li><p>columns in the file are:</p>
-<ul>
-<li><p>year: market year of the backtested prediction</p></li>
-<li><p>pred: yield prediction at the country level of that year</p></li>
-<li><p>unit_id: unit_id that the prediction is in. You can look up the unit by using <code class="docutils literal notranslate"><span class="pre">client.lookup('units',</span> <span class="pre">input_unit_id)</span></code> function.</p></li>
+<li>national level backtest:<ul>
+<li>file name is of the following format: {DATE}<em>backtesting_national</em>{CROP}_{REGION}.csv</li>
+<li>columns in the file are:<ul>
+<li>year: market year of the backtested prediction</li>
+<li>pred: yield prediction at the country level of that year</li>
+<li>unit_id: unit_id that the prediction is in. You can look up the unit by using <code class="docutils literal"><span class="pre">client.lookup('units',</span> <span class="pre">input_unit_id)</span></code> function.</li>
 </ul>
 </li>
 </ul>
 </li>
-<li><p>regional level backtest</p>
-<ul class="simple">
-<li><p>granularity varies among models</p></li>
-<li><p>file name is of the following format: {DATE}<em>backtesting</em>{CROP}_{REGION}.csv</p></li>
-<li><p>columns in the file are:</p>
-<ul>
-<li><p>year: market year of the backtested prediction</p></li>
-<li><p>region_id: Gro region id that this prediction is for. You can look up the region by using <code class="docutils literal notranslate"><span class="pre">client.lookup('regions',</span> <span class="pre">region_id)</span></code> function.</p></li>
-<li><p>pred: yield prediction of that region in that year</p></li>
-<li><p>unit_id: Gro unit id that the prediction is in. You can look up the unit by using <code class="docutils literal notranslate"><span class="pre">client.lookup('units',</span> <span class="pre">input_unit_id)</span></code> function</p></li>
+<li>regional level backtest<ul>
+<li>granularity varies among models</li>
+<li>file name is of the following format: {DATE}<em>backtesting</em>{CROP}_{REGION}.csv</li>
+<li>columns in the file are:<ul>
+<li>year: market year of the backtested prediction</li>
+<li>region_id: Gro region id that this prediction is for. You can look up the region by using <code class="docutils literal"><span class="pre">client.lookup('regions',</span> <span class="pre">region_id)</span></code> function.</li>
+<li>pred: yield prediction of that region in that year</li>
+<li>unit_id: Gro unit id that the prediction is in. You can look up the unit by using <code class="docutils literal"><span class="pre">client.lookup('units',</span> <span class="pre">input_unit_id)</span></code> function</li>
 </ul>
 </li>
 </ul>
@@ -321,17 +439,17 @@
 <h3>Download the Data by Model<a class="headerlink" href="#download-the-data-by-model" title="Permalink to this headline">¶</a></h3>
 <div class="section" id="models">
 <h4>Models<a class="headerlink" href="#models" title="Permalink to this headline">¶</a></h4>
-<p>Listed below are Gro’s existing models. Each available link will lead you to backtest data (daily frequency) for a whole crop season.</p>
+<p>Listed below are Gro&#8216;s existing models. Each available link will lead you to backtest data (daily frequency) for a whole crop season.</p>
 <ul class="simple">
-<li><p><a class="reference external" href="https://s3.amazonaws.com/groprod/yield_model_backtest/US_corn_backtest_2001_to_2017.zip">US Corn</a></p></li>
-<li><p><a class="reference external" href="https://s3.amazonaws.com/groprod/yield_model_backtest/US_soybeans_backtest_2001_to_2017.zip">US Soybeans</a></p></li>
-<li><p><a class="reference external" href="https://s3.amazonaws.com/groprod/yield_model_backtest/Argentina_soybeans_backtest_2001_to_2017.zip">Argentina Soybeans</a></p></li>
-<li><p><a class="reference external" href="https://s3.amazonaws.com/groprod/yield_model_backtest/India_wheat_backtest_2001_to_2017.zip">India Wheat</a></p></li>
-<li><p>Ukraine Wheat (Beta)</p></li>
-<li><p>Russia Wheat (Beta)</p></li>
-<li><p><a class="reference external" href="https://s3.amazonaws.com/groprod/yield_model_backtest/US_hardRedWinterWheat_backtest_2001_to_2018.zip">US Hard Red Winter Wheat (Beta)</a></p></li>
+<li><a class="reference external" href="https://s3.amazonaws.com/groprod/yield_model_backtest/US_corn_backtest_2001_to_2017.zip">US Corn</a></li>
+<li><a class="reference external" href="https://s3.amazonaws.com/groprod/yield_model_backtest/US_soybeans_backtest_2001_to_2017.zip">US Soybeans</a></li>
+<li><a class="reference external" href="https://s3.amazonaws.com/groprod/yield_model_backtest/Argentina_soybeans_backtest_2001_to_2017.zip">Argentina Soybeans</a></li>
+<li><a class="reference external" href="https://s3.amazonaws.com/groprod/yield_model_backtest/India_wheat_backtest_2001_to_2017.zip">India Wheat</a></li>
+<li>Ukraine Wheat (Beta)</li>
+<li>Russia Wheat (Beta)</li>
+<li><a class="reference external" href="https://s3.amazonaws.com/groprod/yield_model_backtest/US_hardRedWinterWheat_backtest_2001_to_2018.zip">US Hard Red Winter Wheat (Beta)</a></li>
 </ul>
-<p>NOTE: Our “beta” models have run for less than one full season. At this stage, each model has been fully backtested at monthly frequency across a whole crop season. However, the beta models are still under active development, so the inputs and parameters to the models might change during the current season.</p>
+<p>NOTE: Our &#8220;beta&#8220; models have run for less than one full season. At this stage, each model has been fully backtested at monthly frequency across a whole crop season. However, the beta models are still under active development, so the inputs and parameters to the models might change during the current season.</p>
 </div>
 </div>
 </div>
@@ -345,11 +463,9 @@
 <p>For <a class="reference external" href="https://app.gro-intelligence.com/dictionary/sources/35">TRMM (3B42RT)</a>, the spatial extent of the data is 50° north to 50° south (red bounding box below) due to the satellite’s coverage and the mission’s focus on tropical regions. While for <a class="reference external" href="https://app.gro-intelligence.com/dictionary/sources/126">GPM (3IMERGDL)</a>, the spatial extent of the data is 90° north to 90° south, however the “complete” version of the data only extends from 60° north to 60° south (blue bounding box below). This is because the “complete” version masks out observed passive microwave estimates over snowy/icy surfaces, so outside the latitude in the blue bounding box, where IR estimates are not available, precipitation estimates over non-snowy/icy surfaces are recorded as missing (1). This means that while Gro uses the 90° north to 90° south dataset, periodically data outside the 60° north to 60° south bounding box will not be reported.</p>
 <p><img alt="spatial-extent-trmm-gpm" src="_images/spatial-extent-trmm-gpm.jpg" /></p>
 <blockquote>
-<div><p>(1) Huffman, G. J., Bolvin, D. T., &amp; Nelkin, E. J. (2015). Integrated Multi-satellite Retrievals for GPM (IMERG) technical documentation. NASA/GSFC Code, 612(47), 2019.</p>
-</div></blockquote>
+<div>(1) Huffman, G. J., Bolvin, D. T., &amp; Nelkin, E. J. (2015). Integrated Multi-satellite Retrievals for GPM (IMERG) technical documentation. NASA/GSFC Code, 612(47), 2019.</div></blockquote>
 </div>
 </div>
-
 
 
            </div>
@@ -370,7 +486,7 @@
   <div role="contentinfo">
     <p>
         
-        &copy; Copyright 2020, Gro Intelligence
+        &copy; Copyright 2019, Gro Intelligence
 
     </p>
   </div>
@@ -393,33 +509,48 @@
   </div>
   
 <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
-  <span class="rst-current-version" data-toggle="rst-current-version">
-    <span class="fa fa-book"> Other Versions</span>
-    v: v1.56.1
-    <span class="fa fa-caret-down"></span>
-  </span>
-  <div class="rst-other-versions">
-    <dl>
-      <dt>Releases</dt>
-      <dd><a href="../v1.40.6/other.html">v1.40.6</a></dd>
-      <dd><a href="../v1.56.0/other.html">v1.56.0</a></dd>
-      <dd><a href="other.html">v1.56.1</a></dd>
-      <dd><a href="../v1.56.2/other.html">v1.56.2</a></dd>
-      <dd><a href="../v1.60.0/other.html">v1.60.0</a></dd>
-      <dd><a href="../v1.60.1/other.html">v1.60.1</a></dd>
-      <dd><a href="../v1.71.0/other.html">v1.71.0</a></dd>
-      <dd><a href="../v1.76.0/index.html">v1.76.0</a></dd>
-      <dd><a href="../v1.77.0/index.html">v1.77.0</a></dd>
-      <dd><a href="../v1.77.1/index.html">v1.77.1</a></dd>
-      <dd><a href="../v1.82.0/index.html">v1.82.0</a></dd>
-      <dd><a href="../v1.83.0/index.html">v1.83.0</a></dd>
-      <dd><a href="../v1.98.0/index.html">v1.98.0</a></dd>
-
-      
+    <span class="rst-current-version" data-toggle="rst-current-version">
+        <span class="fa fa-book"> Other Versions</span>
+        v: v1.56.1
+        <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+        <dl>
+            <dt>Tags</dt>
+            <dd><a href="../v1.40.6/other.html">v1.40.6</a></dd>
+            <dd><a href="../v1.56.0/other.html">v1.56.0</a></dd>
+            <dd><a href="other.html">v1.56.1</a></dd>
+            <dd><a href="../v1.56.2/other.html">v1.56.2</a></dd>
+            <dd><a href="../v1.60.0/other.html">v1.60.0</a></dd>
+            <dd><a href="../v1.60.1/other.html">v1.60.1</a></dd>
+            <dd><a href="../v1.71.0/other.html">v1.71.0</a></dd>
+            <dd><a href="../v1.76.0/index.html">v1.76.0</a></dd>
+            <dd><a href="../v1.77.0/index.html">v1.77.0</a></dd>
+            <dd><a href="../v1.77.1/index.html">v1.77.1</a></dd>
+            <dd><a href="../v1.82.0/index.html">v1.82.0</a></dd>
+            <dd><a href="../v1.83.0/index.html">v1.83.0</a></dd>
+            <dd><a href="../v1.98.0/index.html">v1.98.0</a></dd>
+        </dl>
+        <dl>
+            <dt>Branches</dt>
+            <dd><a href="../CLEWS-15676-add-names-to-index/index.html">CLEWS-15676-add-names-to-index</a></dd>
+            <dd><a href="../CLEWS-16955-units/other.html">CLEWS-16955-units</a></dd>
+            <dd><a href="../CLEWS-19063/other.html">CLEWS-19063</a></dd>
+            <dd><a href="../CLEWS-19840-3/other.html">CLEWS-19840-3</a></dd>
+            <dd><a href="../CLEWS-22288/other.html">CLEWS-22288</a></dd>
+            <dd><a href="../CLEWS-23863/other.html">CLEWS-23863</a></dd>
+            <dd><a href="../CLEWS-23863-composite-rank/index.html">CLEWS-23863-composite-rank</a></dd>
+            <dd><a href="../CLEWS-26758-similar_regions/index.html">CLEWS-26758-similar_regions</a></dd>
+            <dd><a href="../CLEWS-27625-fixtures/index.html">CLEWS-27625-fixtures</a></dd>
             <dd><a href="../development/index.html">development</a></dd>
-    </dl>
-  </div>
+            <dd><a href="../jli-requirecleandocs/index.html">jli-requirecleandocs</a></dd>
+            <dd><a href="../lib-test-refactor/index.html">lib-test-refactor</a></dd>
+            <dd><a href="../simplify-quickstart/other.html">simplify-quickstart</a></dd>
+            <dd><a href="../simulate_reporting_date/index.html">simulate_reporting_date</a></dd>
+        </dl>
+    </div>
 </div>
+
 
   <script type="text/javascript">
       jQuery(function () {

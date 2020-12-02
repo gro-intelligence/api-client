@@ -1,0 +1,333 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html4" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Data Series Definition &mdash; Gro API Client  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/custom-theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/banner.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'./',
+              VERSION:'',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Data Point Definition" href="data-point-definition.html" />
+    <link rel="prev" title="Gro Ontology" href="gro-ontology.html" />
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-5VHQ76P');</script>
+    <!-- End Google Tag Manager -->
+
+</head>
+
+<body class="wy-body-for-nav">
+
+  
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5VHQ76P"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html">
+          
+
+          
+            
+            <img src="_static/logo.jpg" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="prerequisites/index.html">Prerequisites</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="authentication.html">Authentication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quick-start-projects/index.html">Quick Start Projects</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Using the API Client</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="searching-data.html">Searching Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="querying-data.html">Querying Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="understanding-data-responses.html">Understanding Data Responses</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Gro Data: Key Concepts</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="gro-ontology.html">Gro Ontology</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Data Series Definition</a></li>
+<li class="toctree-l1"><a class="reference internal" href="data-point-definition.html">Data Point Definition</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Additional Resources</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="faq.html">FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modeling-resources.html">Modeling Resources</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Gro API Client</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content style-external-links">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Data Series Definition</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/data-series-definition.md.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
+      
+        <a href="data-point-definition.html" class="btn btn-neutral float-right" title="Data Point Definition" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="gro-ontology.html" class="btn btn-neutral float-left" title="Gro Ontology" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+  </div>
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  
+
+
+    
+    
+
+
+
+    <p class="scv-banner scv-sphinx_rtd_theme"><a href="../development/data-series-definition.html"><b>Warning:</b> This document is for the development version of Gro API Client. The main version is development.</a></p>
+<div class="section" id="data-series-definition">
+<h1>Data Series Definition<a class="headerlink" href="#data-series-definition" title="Permalink to this headline">¶</a></h1>
+<p>Gro defines a &#8220;data series&#8220; as a series of data points over time.
+Each data series is defined by a unique selection of:</p>
+<ul class="simple">
+<li><code class="docutils literal"><span class="pre">metric</span></code></li>
+<li><code class="docutils literal"><span class="pre">item</span></code></li>
+<li><code class="docutils literal"><span class="pre">region</span></code></li>
+<li><code class="docutils literal"><span class="pre">partner_region</span></code> (optional)</li>
+<li><code class="docutils literal"><span class="pre">frequency</span></code></li>
+<li><code class="docutils literal"><span class="pre">source</span></code></li>
+</ul>
+<p>For example, if you select <code class="docutils literal"><span class="pre">item=Wheat</span></code>, <code class="docutils literal"><span class="pre">metric=Production</span> <span class="pre">Quantity</span> <span class="pre">(mass)</span></code>, <code class="docutils literal"><span class="pre">region=India</span></code>, <code class="docutils literal"><span class="pre">frequency=Annual</span></code>, <code class="docutils literal"><span class="pre">source=FAO</span></code>, that would be one data series. Partner_region is optional and used only in series that represent a flow between two places, e.g. if the metric is exports, the region would be the exporter and the partner_region would be the importer.</p>
+<p>To get all the available data series for a given selection of entities, use the <code class="docutils literal"><span class="pre">get_data_series</span></code> function as described in the <a class="reference external" href="./searching-data.html#get-data-series">Searching Data</a> section.</p>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="data-point-definition.html" class="btn btn-neutral float-right" title="Data Point Definition" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="gro-ontology.html" class="btn btn-neutral float-left" title="Gro Ontology" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Gro Intelligence
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+<div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+        <span class="fa fa-book"> Other Versions</span>
+        v: CLEWS-26758-similar_regions
+        <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+        <dl>
+            <dt>Tags</dt>
+            <dd><a href="../v1.40.6/data-series-definition.html">v1.40.6</a></dd>
+            <dd><a href="../v1.56.0/data-series-definition.html">v1.56.0</a></dd>
+            <dd><a href="../v1.56.1/data-series-definition.html">v1.56.1</a></dd>
+            <dd><a href="../v1.56.2/data-series-definition.html">v1.56.2</a></dd>
+            <dd><a href="../v1.60.0/data-series-definition.html">v1.60.0</a></dd>
+            <dd><a href="../v1.60.1/data-series-definition.html">v1.60.1</a></dd>
+            <dd><a href="../v1.71.0/data-series-definition.html">v1.71.0</a></dd>
+            <dd><a href="../v1.76.0/data-series-definition.html">v1.76.0</a></dd>
+            <dd><a href="../v1.77.0/data-series-definition.html">v1.77.0</a></dd>
+            <dd><a href="../v1.77.1/data-series-definition.html">v1.77.1</a></dd>
+            <dd><a href="../v1.82.0/data-series-definition.html">v1.82.0</a></dd>
+            <dd><a href="../v1.83.0/data-series-definition.html">v1.83.0</a></dd>
+            <dd><a href="../v1.98.0/data-series-definition.html">v1.98.0</a></dd>
+        </dl>
+        <dl>
+            <dt>Branches</dt>
+            <dd><a href="../CLEWS-15676-add-names-to-index/data-series-definition.html">CLEWS-15676-add-names-to-index</a></dd>
+            <dd><a href="../CLEWS-16955-units/index.html">CLEWS-16955-units</a></dd>
+            <dd><a href="../CLEWS-19063/data-series-definition.html">CLEWS-19063</a></dd>
+            <dd><a href="../CLEWS-19840-3/data-series-definition.html">CLEWS-19840-3</a></dd>
+            <dd><a href="../CLEWS-22288/index.html">CLEWS-22288</a></dd>
+            <dd><a href="../CLEWS-23863/data-series-definition.html">CLEWS-23863</a></dd>
+            <dd><a href="../CLEWS-23863-composite-rank/data-series-definition.html">CLEWS-23863-composite-rank</a></dd>
+            <dd><a href="data-series-definition.html">CLEWS-26758-similar_regions</a></dd>
+            <dd><a href="../CLEWS-27625-fixtures/data-series-definition.html">CLEWS-27625-fixtures</a></dd>
+            <dd><a href="../development/data-series-definition.html">development</a></dd>
+            <dd><a href="../jli-requirecleandocs/data-series-definition.html">jli-requirecleandocs</a></dd>
+            <dd><a href="../lib-test-refactor/data-series-definition.html">lib-test-refactor</a></dd>
+            <dd><a href="../simplify-quickstart/data-series-definition.html">simplify-quickstart</a></dd>
+            <dd><a href="../simulate_reporting_date/data-series-definition.html">simulate_reporting_date</a></dd>
+        </dl>
+    </div>
+</div>
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

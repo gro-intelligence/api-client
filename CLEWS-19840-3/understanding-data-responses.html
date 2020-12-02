@@ -1,9 +1,7 @@
 
 
-
-
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html4" lang="en" >
 <head>
   <meta charset="utf-8">
   
@@ -15,6 +13,7 @@
   
   <link rel="stylesheet" href="_static/css/custom-theme.css" type="text/css" />
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/banner.css" type="text/css" />
 
   
   
@@ -27,11 +26,20 @@
   <![endif]-->
   
     
-      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-        <script src="_static/jquery.js"></script>
-        <script src="_static/underscore.js"></script>
-        <script src="_static/doctools.js"></script>
-        <script src="_static/language_data.js"></script>
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'./',
+              VERSION:'',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
@@ -198,26 +206,27 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-
-<p class="version-banner">
-  <strong>Note:</strong>
-  This document is for an older version of the Gro API Client.
-  Please see the <a href="../development/understanding-data-responses.html">latest documentation</a>.
-</p>
+  
 
 
-  <div class="section" id="understanding-data-responses">
+    
+    
+
+
+
+    <p class="scv-banner scv-sphinx_rtd_theme"><a href="../development/understanding-data-responses.html"><b>Warning:</b> This document is for the development version of Gro API Client. The main version is development.</a></p>
+<div class="section" id="understanding-data-responses">
 <h1>Understanding Data Responses<a class="headerlink" href="#understanding-data-responses" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="look-up">
 <h2>Look up<a class="headerlink" href="#look-up" title="Permalink to this headline">¶</a></h2>
-<p>If it is ever unclear what an id number represents, you can use <code class="docutils literal notranslate"><span class="pre">lookup</span></code> to get all the information you’d need. <code class="docutils literal notranslate"><span class="pre">lookup</span></code> works for any of the <a class="reference internal" href="data-series-definition.html"><span class="doc">data series selection entities</span></a>: <code class="docutils literal notranslate"><span class="pre">items</span></code>, <code class="docutils literal notranslate"><span class="pre">metrics</span></code>, <code class="docutils literal notranslate"><span class="pre">regions</span></code>, <code class="docutils literal notranslate"><span class="pre">frequencies</span></code>, <code class="docutils literal notranslate"><span class="pre">sources</span></code> and also <code class="docutils literal notranslate"><span class="pre">units</span></code>. For example:</p>
+<p>If it is ever unclear what an id number represents, you can use <code class="docutils literal"><span class="pre">lookup</span></code> to get all the information you&#8216;d need. <code class="docutils literal"><span class="pre">lookup</span></code> works for any of the <a class="reference internal" href="data-series-definition.html"><span class="doc">data series selection entities</span></a>: <code class="docutils literal"><span class="pre">items</span></code>, <code class="docutils literal"><span class="pre">metrics</span></code>, <code class="docutils literal"><span class="pre">regions</span></code>, <code class="docutils literal"><span class="pre">frequencies</span></code>, <code class="docutils literal"><span class="pre">sources</span></code> and also <code class="docutils literal"><span class="pre">units</span></code>. For example:</p>
 <div class="section" id="metrics">
 <h3>Metrics<a class="headerlink" href="#metrics" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">client</span><span class="o">.</span><span class="n">lookup</span><span class="p">(</span><span class="s1">&#39;items&#39;</span><span class="p">,</span> <span class="mi">274</span><span class="p">)</span>
+<div class="highlight-py"><div class="highlight"><pre><span></span><span class="n">client</span><span class="o">.</span><span class="n">lookup</span><span class="p">(</span><span class="s1">&#39;items&#39;</span><span class="p">,</span> <span class="mi">274</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>returns:</p>
-<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s1">&#39;contains&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">779</span><span class="p">,</span> <span class="mi">780</span><span class="p">,</span> <span class="mi">9338</span><span class="p">,</span> <span class="mi">9339</span><span class="p">,</span> <span class="mi">8219</span><span class="p">,</span> <span class="mi">8220</span><span class="p">,</span> <span class="mi">10568</span><span class="p">,</span> <span class="mi">12431</span><span class="p">,</span> <span class="mi">1443</span><span class="p">,</span> <span class="mi">1687</span><span class="p">,</span> <span class="mi">2749</span><span class="p">,</span> <span class="mi">5433</span><span class="p">,</span> <span class="mi">5128</span><span class="p">,</span> <span class="mi">5127</span><span class="p">,</span> <span class="mi">5125</span><span class="p">,</span> <span class="mi">5001</span><span class="p">,</span> <span class="mi">866</span><span class="p">,</span> <span class="mi">867</span><span class="p">,</span> <span class="mi">148</span><span class="p">,</span> <span class="mi">692</span><span class="p">,</span> <span class="mi">5126</span><span class="p">,</span> <span class="mi">2175</span><span class="p">,</span> <span class="mi">2514</span><span class="p">,</span> <span class="mi">2515</span><span class="p">,</span> <span class="mi">2516</span><span class="p">,</span> <span class="mi">8092</span><span class="p">,</span> <span class="mi">2521</span><span class="p">,</span> <span class="mi">5114</span><span class="p">,</span> <span class="mi">5118</span><span class="p">,</span> <span class="mi">5115</span><span class="p">,</span> <span class="mi">5116</span><span class="p">,</span> <span class="mi">5117</span><span class="p">,</span> <span class="mi">5601</span><span class="p">,</span> <span class="mi">6338</span><span class="p">,</span> <span class="mi">6586</span><span class="p">,</span> <span class="mi">9252</span><span class="p">,</span> <span class="mi">9253</span><span class="p">,</span> <span class="mi">7626</span><span class="p">,</span> <span class="mi">5103</span><span class="p">,</span> <span class="mi">4370</span><span class="p">,</span> <span class="mi">4368</span><span class="p">,</span> <span class="mi">10106</span><span class="p">,</span> <span class="mi">2303</span><span class="p">,</span> <span class="mi">12697</span><span class="p">,</span> <span class="mi">12698</span><span class="p">,</span> <span class="mi">12699</span><span class="p">,</span> <span class="mi">12700</span><span class="p">,</span> <span class="mi">12701</span><span class="p">,</span> <span class="mi">12702</span><span class="p">,</span> <span class="mi">12703</span><span class="p">,</span> <span class="mi">12704</span><span class="p">,</span> <span class="mi">12705</span><span class="p">,</span> <span class="mi">12706</span><span class="p">,</span> <span class="mi">5434</span><span class="p">,</span> <span class="mi">13479</span><span class="p">,</span> <span class="mi">13652</span><span class="p">,</span> <span class="mi">14725</span><span class="p">,</span> <span class="mi">14726</span><span class="p">],</span>
+<div class="highlight-py"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s1">&#39;contains&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">779</span><span class="p">,</span> <span class="mi">780</span><span class="p">,</span> <span class="mi">9338</span><span class="p">,</span> <span class="mi">9339</span><span class="p">,</span> <span class="mi">8219</span><span class="p">,</span> <span class="mi">8220</span><span class="p">,</span> <span class="mi">10568</span><span class="p">,</span> <span class="mi">12431</span><span class="p">,</span> <span class="mi">1443</span><span class="p">,</span> <span class="mi">1687</span><span class="p">,</span> <span class="mi">2749</span><span class="p">,</span> <span class="mi">5433</span><span class="p">,</span> <span class="mi">5128</span><span class="p">,</span> <span class="mi">5127</span><span class="p">,</span> <span class="mi">5125</span><span class="p">,</span> <span class="mi">5001</span><span class="p">,</span> <span class="mi">866</span><span class="p">,</span> <span class="mi">867</span><span class="p">,</span> <span class="mi">148</span><span class="p">,</span> <span class="mi">692</span><span class="p">,</span> <span class="mi">5126</span><span class="p">,</span> <span class="mi">2175</span><span class="p">,</span> <span class="mi">2514</span><span class="p">,</span> <span class="mi">2515</span><span class="p">,</span> <span class="mi">2516</span><span class="p">,</span> <span class="mi">8092</span><span class="p">,</span> <span class="mi">2521</span><span class="p">,</span> <span class="mi">5114</span><span class="p">,</span> <span class="mi">5118</span><span class="p">,</span> <span class="mi">5115</span><span class="p">,</span> <span class="mi">5116</span><span class="p">,</span> <span class="mi">5117</span><span class="p">,</span> <span class="mi">5601</span><span class="p">,</span> <span class="mi">6338</span><span class="p">,</span> <span class="mi">6586</span><span class="p">,</span> <span class="mi">9252</span><span class="p">,</span> <span class="mi">9253</span><span class="p">,</span> <span class="mi">7626</span><span class="p">,</span> <span class="mi">5103</span><span class="p">,</span> <span class="mi">4370</span><span class="p">,</span> <span class="mi">4368</span><span class="p">,</span> <span class="mi">10106</span><span class="p">,</span> <span class="mi">2303</span><span class="p">,</span> <span class="mi">12697</span><span class="p">,</span> <span class="mi">12698</span><span class="p">,</span> <span class="mi">12699</span><span class="p">,</span> <span class="mi">12700</span><span class="p">,</span> <span class="mi">12701</span><span class="p">,</span> <span class="mi">12702</span><span class="p">,</span> <span class="mi">12703</span><span class="p">,</span> <span class="mi">12704</span><span class="p">,</span> <span class="mi">12705</span><span class="p">,</span> <span class="mi">12706</span><span class="p">,</span> <span class="mi">5434</span><span class="p">,</span> <span class="mi">13479</span><span class="p">,</span> <span class="mi">13652</span><span class="p">,</span> <span class="mi">14725</span><span class="p">,</span> <span class="mi">14726</span><span class="p">],</span>
   <span class="s1">&#39;definition&#39;</span><span class="p">:</span> <span class="s2">&quot;The seeds of the widely cultivated corn plant &lt;i&gt;Zea mays&lt;/i&gt;, which is one of the world&#39;s most popular grains.&quot;</span><span class="p">,</span>
   <span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="mi">274</span><span class="p">,</span>
   <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Corn&#39;</span> <span class="p">}</span>
@@ -226,11 +235,11 @@
 </div>
 <div class="section" id="frequencies">
 <h3>Frequencies<a class="headerlink" href="#frequencies" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">client</span><span class="o">.</span><span class="n">lookup</span><span class="p">(</span><span class="s1">&#39;frequencies&#39;</span><span class="p">,</span> <span class="mi">7</span><span class="p">)</span>
+<div class="highlight-py"><div class="highlight"><pre><span></span><span class="n">client</span><span class="o">.</span><span class="n">lookup</span><span class="p">(</span><span class="s1">&#39;frequencies&#39;</span><span class="p">,</span> <span class="mi">7</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>returns:</p>
-<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s1">&#39;abbrev&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+<div class="highlight-py"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s1">&#39;abbrev&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
   <span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="mi">7</span><span class="p">,</span>
   <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;quarterly&#39;</span><span class="p">,</span>
   <span class="s1">&#39;periodLength&#39;</span><span class="p">:</span> <span class="p">{</span> <span class="s1">&#39;months&#39;</span><span class="p">:</span> <span class="mi">3</span> <span class="p">}</span> <span class="p">}</span>
@@ -239,11 +248,11 @@
 </div>
 <div class="section" id="units">
 <h3>Units<a class="headerlink" href="#units" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">client</span><span class="o">.</span><span class="n">lookup</span><span class="p">(</span><span class="s1">&#39;units&#39;</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+<div class="highlight-py"><div class="highlight"><pre><span></span><span class="n">client</span><span class="o">.</span><span class="n">lookup</span><span class="p">(</span><span class="s1">&#39;units&#39;</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>returns:</p>
-<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s1">&#39;abbreviation&#39;</span><span class="p">:</span> <span class="s1">&#39;kg&#39;</span><span class="p">,</span>
+<div class="highlight-py"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s1">&#39;abbreviation&#39;</span><span class="p">:</span> <span class="s1">&#39;kg&#39;</span><span class="p">,</span>
   <span class="s1">&#39;baseConvFactor&#39;</span><span class="p">:</span> <span class="p">{</span> <span class="s1">&#39;factor&#39;</span><span class="p">:</span> <span class="mi">1</span> <span class="p">},</span>
   <span class="s1">&#39;convType&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
   <span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
@@ -255,7 +264,6 @@
 </div>
 </div>
 </div>
-
 
 
            </div>
@@ -278,7 +286,7 @@
   <div role="contentinfo">
     <p>
         
-        &copy; Copyright 2020, Gro Intelligence
+        &copy; Copyright 2019, Gro Intelligence
 
     </p>
   </div>
@@ -301,33 +309,48 @@
   </div>
   
 <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
-  <span class="rst-current-version" data-toggle="rst-current-version">
-    <span class="fa fa-book"> Other Versions</span>
-    v: CLEWS-19840-3
-    <span class="fa fa-caret-down"></span>
-  </span>
-  <div class="rst-other-versions">
-    <dl>
-      <dt>Releases</dt>
-      <dd><a href="../v1.40.6/understanding-data-responses.html">v1.40.6</a></dd>
-      <dd><a href="../v1.56.0/understanding-data-responses.html">v1.56.0</a></dd>
-      <dd><a href="../v1.56.1/understanding-data-responses.html">v1.56.1</a></dd>
-      <dd><a href="../v1.56.2/understanding-data-responses.html">v1.56.2</a></dd>
-      <dd><a href="../v1.60.0/understanding-data-responses.html">v1.60.0</a></dd>
-      <dd><a href="../v1.60.1/understanding-data-responses.html">v1.60.1</a></dd>
-      <dd><a href="../v1.71.0/understanding-data-responses.html">v1.71.0</a></dd>
-      <dd><a href="../v1.76.0/understanding-data-responses.html">v1.76.0</a></dd>
-      <dd><a href="../v1.77.0/understanding-data-responses.html">v1.77.0</a></dd>
-      <dd><a href="../v1.77.1/understanding-data-responses.html">v1.77.1</a></dd>
-      <dd><a href="../v1.82.0/understanding-data-responses.html">v1.82.0</a></dd>
-      <dd><a href="../v1.83.0/understanding-data-responses.html">v1.83.0</a></dd>
-      <dd><a href="../v1.98.0/understanding-data-responses.html">v1.98.0</a></dd>
-
-      
+    <span class="rst-current-version" data-toggle="rst-current-version">
+        <span class="fa fa-book"> Other Versions</span>
+        v: CLEWS-19840-3
+        <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+        <dl>
+            <dt>Tags</dt>
+            <dd><a href="../v1.40.6/understanding-data-responses.html">v1.40.6</a></dd>
+            <dd><a href="../v1.56.0/understanding-data-responses.html">v1.56.0</a></dd>
+            <dd><a href="../v1.56.1/understanding-data-responses.html">v1.56.1</a></dd>
+            <dd><a href="../v1.56.2/understanding-data-responses.html">v1.56.2</a></dd>
+            <dd><a href="../v1.60.0/understanding-data-responses.html">v1.60.0</a></dd>
+            <dd><a href="../v1.60.1/understanding-data-responses.html">v1.60.1</a></dd>
+            <dd><a href="../v1.71.0/understanding-data-responses.html">v1.71.0</a></dd>
+            <dd><a href="../v1.76.0/understanding-data-responses.html">v1.76.0</a></dd>
+            <dd><a href="../v1.77.0/understanding-data-responses.html">v1.77.0</a></dd>
+            <dd><a href="../v1.77.1/understanding-data-responses.html">v1.77.1</a></dd>
+            <dd><a href="../v1.82.0/understanding-data-responses.html">v1.82.0</a></dd>
+            <dd><a href="../v1.83.0/understanding-data-responses.html">v1.83.0</a></dd>
+            <dd><a href="../v1.98.0/understanding-data-responses.html">v1.98.0</a></dd>
+        </dl>
+        <dl>
+            <dt>Branches</dt>
+            <dd><a href="../CLEWS-15676-add-names-to-index/understanding-data-responses.html">CLEWS-15676-add-names-to-index</a></dd>
+            <dd><a href="../CLEWS-16955-units/index.html">CLEWS-16955-units</a></dd>
+            <dd><a href="../CLEWS-19063/understanding-data-responses.html">CLEWS-19063</a></dd>
+            <dd><a href="understanding-data-responses.html">CLEWS-19840-3</a></dd>
+            <dd><a href="../CLEWS-22288/index.html">CLEWS-22288</a></dd>
+            <dd><a href="../CLEWS-23863/understanding-data-responses.html">CLEWS-23863</a></dd>
+            <dd><a href="../CLEWS-23863-composite-rank/understanding-data-responses.html">CLEWS-23863-composite-rank</a></dd>
+            <dd><a href="../CLEWS-26758-similar_regions/understanding-data-responses.html">CLEWS-26758-similar_regions</a></dd>
+            <dd><a href="../CLEWS-27625-fixtures/understanding-data-responses.html">CLEWS-27625-fixtures</a></dd>
             <dd><a href="../development/understanding-data-responses.html">development</a></dd>
-    </dl>
-  </div>
+            <dd><a href="../jli-requirecleandocs/understanding-data-responses.html">jli-requirecleandocs</a></dd>
+            <dd><a href="../lib-test-refactor/understanding-data-responses.html">lib-test-refactor</a></dd>
+            <dd><a href="../simplify-quickstart/understanding-data-responses.html">simplify-quickstart</a></dd>
+            <dd><a href="../simulate_reporting_date/understanding-data-responses.html">simulate_reporting_date</a></dd>
+        </dl>
+    </div>
 </div>
+
 
   <script type="text/javascript">
       jQuery(function () {

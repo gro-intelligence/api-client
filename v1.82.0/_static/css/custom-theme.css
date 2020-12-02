@@ -231,3 +231,8 @@ a > code {
   font-weight: 500;
   color: #9b9b9e;
 }
+
+/* hide branches from version switcher */
+.rst-other-versions dl:last-child {
+  display: none;
+} 

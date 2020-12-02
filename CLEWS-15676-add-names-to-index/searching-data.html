@@ -1,9 +1,7 @@
 
 
-
-
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html4" lang="en" >
 <head>
   <meta charset="utf-8">
   
@@ -15,6 +13,7 @@
   
   <link rel="stylesheet" href="_static/css/custom-theme.css" type="text/css" />
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/banner.css" type="text/css" />
 
   
   
@@ -27,11 +26,20 @@
   <![endif]-->
   
     
-      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-        <script src="_static/jquery.js"></script>
-        <script src="_static/underscore.js"></script>
-        <script src="_static/doctools.js"></script>
-        <script src="_static/language_data.js"></script>
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'./',
+              VERSION:'',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
@@ -198,31 +206,32 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-
-<p class="version-banner">
-  <strong>Note:</strong>
-  This document is for an older version of the Gro API Client.
-  Please see the <a href="../development/searching-data.html">latest documentation</a>.
-</p>
+  
 
 
-  <div class="section" id="searching-data">
+    
+    
+
+
+
+    <p class="scv-banner scv-sphinx_rtd_theme"><a href="../development/searching-data.html"><b>Warning:</b> This document is for the development version of Gro API Client. The main version is development.</a></p>
+<div class="section" id="searching-data">
 <h1>Searching Data<a class="headerlink" href="#searching-data" title="Permalink to this headline">¶</a></h1>
 <div class="contents local topic" id="table-of-contents">
 <p class="topic-title">Table of Contents</p>
 <ul class="simple">
-<li><p><a class="reference internal" href="#code-snippets" id="id1">Code snippets</a></p></li>
-<li><p><a class="reference internal" href="#search" id="id2">Search</a></p></li>
-<li><p><a class="reference internal" href="#get-data-series" id="id3">Get data series</a></p></li>
-<li><p><a class="reference internal" href="#lookup-contains" id="id4">Lookup contains</a></p></li>
-<li><p><a class="reference internal" href="#get-descendants" id="id5">Get descendants</a></p></li>
-<li><p><a class="reference internal" href="#lookup-belongs" id="id6">Lookup belongs</a></p></li>
+<li><a class="reference internal" href="#code-snippets" id="id1">Code snippets</a></li>
+<li><a class="reference internal" href="#search" id="id2">Search</a></li>
+<li><a class="reference internal" href="#get-data-series" id="id3">Get data series</a></li>
+<li><a class="reference internal" href="#lookup-contains" id="id4">Lookup contains</a></li>
+<li><a class="reference internal" href="#get-descendants" id="id5">Get descendants</a></li>
+<li><a class="reference internal" href="#lookup-belongs" id="id6">Lookup belongs</a></li>
 </ul>
 </div>
-<p>To derive the insights you want from Gro’s data, you will first want to find the data you’re interested in. Below you will find some of the most useful tips on how to discover the data of greatest value to you.</p>
+<p>To derive the insights you want from Gro&#8217;s data, you will first want to find the data you&#8217;re interested in. Below you will find some of the most useful tips on how to discover the data of greatest value to you.</p>
 <div class="section" id="code-snippets">
 <h2><a class="toc-backref" href="#id1">Code snippets</a><a class="headerlink" href="#code-snippets" title="Permalink to this headline">¶</a></h2>
-<p>Users may find that the Gro API is at its most powerful when used in conjunction with the Gro web application. The web app provides the most convenient format for selecting the data series that is of most interest to you. In our Add Data Series window, you can select entities of interest, and then other entities for which no data is available based on your selection will be filtered out from the remaining options. For example, after selecting the item “Corn” only metrics and regions that have data for ‘Corn’ will remain selectable.</p>
+<p>Users may find that the Gro API is at its most powerful when used in conjunction with the Gro web application. The web app provides the most convenient format for selecting the data series that is of most interest to you. In our Add Data Series window, you can select entities of interest, and then other entities for which no data is available based on your selection will be filtered out from the remaining options. For example, after selecting the item &#8220;Corn&#8221; only metrics and regions that have data for &#8216;Corn&#8217; will remain selectable.</p>
 <img alt="Add data series example" class="align-center" src="_images/add-data-series-example.PNG" />
 <p>Once you have created a chart with data that you want, you can take advantage of our Code Snippets feature to pull that data into your API client code.</p>
 <p>Simply click on the Chart Dropdown Button, then select Export and API Client Code Snippets.</p>
@@ -234,37 +243,37 @@
 </div>
 <div class="section" id="search">
 <h2><a class="toc-backref" href="#id2">Search</a><a class="headerlink" href="#search" title="Permalink to this headline">¶</a></h2>
-<p>As described in the <a class="reference external" href="./data-series-definition">Data Series Definition</a> page, a data series in Gro is a unique combination of the entities: item, metric, region, partner_region (optional), frequency, and source. To find the specific entity you would like to retrieve data for, you can use a variety of search methods. For example, <a class="reference internal" href="api.html#api.client.gro_client.GroClient.search" title="api.client.gro_client.GroClient.search"><code class="xref py py-meth docutils literal notranslate"><span class="pre">api.client.gro_client.GroClient.search()</span></code></a> will return a list of IDs that match your search term. If you want to understand the differences between various search results, you may find the <a class="reference internal" href="api.html#api.client.gro_client.GroClient.search_and_lookup" title="api.client.gro_client.GroClient.search_and_lookup"><code class="xref py py-meth docutils literal notranslate"><span class="pre">api.client.gro_client.GroClient.search_and_lookup()</span></code></a> method more helpful.</p>
-<p><code class="code docutils literal notranslate"><span class="pre">client.search_and_lookup('items','Corn')</span></code> will yield a list of all items that contain “corn” in their name, along with supporting information like id, name, and ids of other items contained by a given item.</p>
+<p>As described in the <a class="reference external" href="./data-series-definition">Data Series Definition</a> page, a data series in Gro is a unique combination of the entities: item, metric, region, partner_region (optional), frequency, and source. To find the specific entity you would like to retrieve data for, you can use a variety of search methods. For example, <a class="reference internal" href="api.html#api.client.gro_client.GroClient.search" title="api.client.gro_client.GroClient.search"><code class="xref py py-meth docutils literal"><span class="pre">api.client.gro_client.GroClient.search()</span></code></a> will return a list of IDs that match your search term. If you want to understand the differences between various search results, you may find the <a class="reference internal" href="api.html#api.client.gro_client.GroClient.search_and_lookup" title="api.client.gro_client.GroClient.search_and_lookup"><code class="xref py py-meth docutils literal"><span class="pre">api.client.gro_client.GroClient.search_and_lookup()</span></code></a> method more helpful.</p>
+<p><code class="code docutils literal"><span class="pre">client.search_and_lookup('items','Corn')</span></code> will yield a list of all items that contain &#8220;corn&#8221; in their name, along with supporting information like id, name, and ids of other items contained by a given item.</p>
 <p>Note: the above query will return a <a class="reference external" href="https://wiki.python.org/moin/Generators">generator</a> object. Running a query like the one below will print every result:</p>
 </div>
 <div class="section" id="get-data-series">
 <h2><a class="toc-backref" href="#id3">Get data series</a><a class="headerlink" href="#get-data-series" title="Permalink to this headline">¶</a></h2>
-<p>Instead of searching for all the individual entity IDs required to create a data series, the <a class="reference internal" href="api.html#api.client.gro_client.GroClient.get_data_series" title="api.client.gro_client.GroClient.get_data_series"><code class="xref py py-meth docutils literal notranslate"><span class="pre">api.client.gro_client.GroClient.get_data_series()</span></code></a> method will return a list of all the data series available for the filters you have supplied. For example, if you are interested in Russian Oats you could use the following code to find out all the available data series that have “Oats” (item_id = 327) as the item and “Russia” (region_id = 1168) as the region:
+<p>Instead of searching for all the individual entity IDs required to create a data series, the <a class="reference internal" href="api.html#api.client.gro_client.GroClient.get_data_series" title="api.client.gro_client.GroClient.get_data_series"><code class="xref py py-meth docutils literal"><span class="pre">api.client.gro_client.GroClient.get_data_series()</span></code></a> method will return a list of all the data series available for the filters you have supplied. For example, if you are interested in Russian Oats you could use the following code to find out all the available data series that have &#8220;Oats&#8221; (item_id = 327) as the item and &#8220;Russia&#8221; (region_id = 1168) as the region:
 To look up all descendants of region 1029 (Brazil) that are of level 4 (provinces):</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">api.client.lib</span> <span class="kn">import</span> <span class="n">REGION_LEVELS</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">api.client.lib</span> <span class="kn">import</span> <span class="n">REGION_LEVELS</span>
 <span class="n">provinces_of_brazil</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get_descendant_regions</span><span class="p">(</span><span class="mi">1029</span><span class="p">,</span> <span class="n">REGION_LEVELS</span><span class="p">[</span><span class="s1">&#39;province&#39;</span><span class="p">])</span>
 </pre></div>
 </div>
 </div>
 <div class="section" id="lookup-contains">
 <h2><a class="toc-backref" href="#id4">Lookup contains</a><a class="headerlink" href="#lookup-contains" title="Permalink to this headline">¶</a></h2>
-<p>Our ontology is defined in terms of a graph, with metrics/items/regions containing others. In each case, you can see the <code class="code docutils literal notranslate"><span class="pre">'contains'</span></code> property in the output of <code class="code docutils literal notranslate"><span class="pre">client.lookup(type,</span> <span class="pre">id)</span></code>. For example:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">client</span><span class="o">.</span><span class="n">lookup</span><span class="p">(</span><span class="s1">&#39;items&#39;</span><span class="p">,</span> <span class="mi">10009</span><span class="p">)[</span><span class="s1">&#39;contains&#39;</span><span class="p">]</span>
+<p>Our ontology is defined in terms of a graph, with metrics/items/regions containing others. In each case, you can see the <code class="code docutils literal"><span class="pre">'contains'</span></code> property in the output of <code class="code docutils literal"><span class="pre">client.lookup(type,</span> <span class="pre">id)</span></code>. For example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">client</span><span class="o">.</span><span class="n">lookup</span><span class="p">(</span><span class="s1">&#39;items&#39;</span><span class="p">,</span> <span class="mi">10009</span><span class="p">)[</span><span class="s1">&#39;contains&#39;</span><span class="p">]</span>
 </pre></div>
 </div>
-<p>will return a list of items ids for items that are cereals (item_id = 10009): <code class="code docutils literal notranslate"><span class="pre">[...,</span> <span class="pre">274,</span> <span class="pre">422,</span> <span class="pre">...]</span></code>. Once you have those ids, you can use the <a class="reference internal" href="api.html#api.client.gro_client.GroClient.lookup" title="api.client.gro_client.GroClient.lookup"><code class="xref py py-meth docutils literal notranslate"><span class="pre">api.client.gro_client.GroClient.lookup()</span></code></a> function on each one to find more info, like their names, e.g.: <code class="code docutils literal notranslate"><span class="pre">client.lookup('items',</span> <span class="pre">274)['name']</span></code> will return <cite>Corn</cite>.</p>
+<p>will return a list of items ids for items that are cereals (item_id = 10009): <code class="code docutils literal"><span class="pre">[...,</span> <span class="pre">274,</span> <span class="pre">422,</span> <span class="pre">...]</span></code>. Once you have those ids, you can use the <a class="reference internal" href="api.html#api.client.gro_client.GroClient.lookup" title="api.client.gro_client.GroClient.lookup"><code class="xref py py-meth docutils literal"><span class="pre">api.client.gro_client.GroClient.lookup()</span></code></a> function on each one to find more info, like their names, e.g.: <code class="code docutils literal"><span class="pre">client.lookup('items',</span> <span class="pre">274)['name']</span></code> will return <cite>Corn</cite>.</p>
 </div>
 <div class="section" id="get-descendants">
 <h2><a class="toc-backref" href="#id5">Get descendants</a><a class="headerlink" href="#get-descendants" title="Permalink to this headline">¶</a></h2>
-<p>Using the <code class="code docutils literal notranslate"><span class="pre">lookup()</span></code> method, you can get an entity’s list of direct children (i.e. country→provinces). However, you may want all of the lower level regions that belong to a higher level region (i.e. country→provinces, districts, coordinates, etc.). To do this, there’s a helper function which also gives the option of filtering by region level: <a class="reference internal" href="api.html#api.client.gro_client.GroClient.get_descendant_regions" title="api.client.gro_client.GroClient.get_descendant_regions"><code class="xref py py-meth docutils literal notranslate"><span class="pre">api.client.gro_client.GroClient.get_descendant_regions()</span></code></a></p>
+<p>Using the <code class="code docutils literal"><span class="pre">lookup()</span></code> method, you can get an entity&#8217;s list of direct children (i.e. country→provinces). However, you may want all of the lower level regions that belong to a higher level region (i.e. country→provinces, districts, coordinates, etc.). To do this, there&#8217;s a helper function which also gives the option of filtering by region level: <a class="reference internal" href="api.html#api.client.gro_client.GroClient.get_descendant_regions" title="api.client.gro_client.GroClient.get_descendant_regions"><code class="xref py py-meth docutils literal"><span class="pre">api.client.gro_client.GroClient.get_descendant_regions()</span></code></a></p>
 <p>To look up all descendants of region 1029 (Brazil) that are of level 4 (provinces):</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">api.client.lib</span> <span class="kn">import</span> <span class="n">REGION_LEVELS</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">api.client.lib</span> <span class="kn">import</span> <span class="n">REGION_LEVELS</span>
 <span class="n">provinces_of_brazil</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get_descendant_regions</span><span class="p">(</span><span class="mi">1029</span><span class="p">,</span> <span class="n">REGION_LEVELS</span><span class="p">[</span><span class="s1">&#39;province&#39;</span><span class="p">])</span>
 </pre></div>
 </div>
 <p>To look up all descendants of region 1029 (Brazil) that are of level 5 (districts):</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">api.client.lib</span> <span class="kn">import</span> <span class="n">REGION_LEVELS</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">api.client.lib</span> <span class="kn">import</span> <span class="n">REGION_LEVELS</span>
 <span class="n">provinces_of_brazil</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get_descendant_regions</span><span class="p">(</span><span class="mi">1029</span><span class="p">,</span> <span class="n">REGION_LEVELS</span><span class="p">[</span><span class="s1">&#39;district&#39;</span><span class="p">])</span>
 </pre></div>
 </div>
@@ -272,15 +281,14 @@ To look up all descendants of region 1029 (Brazil) that are of level 4 (province
 </div>
 <div class="section" id="lookup-belongs">
 <h2><a class="toc-backref" href="#id6">Lookup belongs</a><a class="headerlink" href="#lookup-belongs" title="Permalink to this headline">¶</a></h2>
-<p>If you want to find “what entities contain the given entity?” there is a method, <a class="reference internal" href="api.html#api.client.gro_client.GroClient.lookup_belongs" title="api.client.gro_client.GroClient.lookup_belongs"><code class="xref py py-meth docutils literal notranslate"><span class="pre">api.client.gro_client.GroClient.lookup_belongs()</span></code></a> that just does that. For example:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">UNITED_STATES</span> <span class="o">=</span> <span class="mi">1215</span>
+<p>If you want to find &#8220;what entities contain the given entity?&#8221; there is a method, <a class="reference internal" href="api.html#api.client.gro_client.GroClient.lookup_belongs" title="api.client.gro_client.GroClient.lookup_belongs"><code class="xref py py-meth docutils literal"><span class="pre">api.client.gro_client.GroClient.lookup_belongs()</span></code></a> that just does that. For example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">UNITED_STATES</span> <span class="o">=</span> <span class="mi">1215</span>
 <span class="n">client</span><span class="o">.</span><span class="n">lookup_belongs</span><span class="p">(</span><span class="s1">&#39;regions&#39;</span><span class="p">,</span> <span class="n">UNITED_STATES</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>will yield <code class="code docutils literal notranslate"><span class="pre">[{id:</span> <span class="pre">15,</span> <span class="pre">name:</span> <span class="pre">'North</span> <span class="pre">America',</span> <span class="pre">contains:</span> <span class="pre">[1215,</span> <span class="pre">1037,</span> <span class="pre">...],</span> <span class="pre">level:</span> <span class="pre">2},</span> <span class="pre">...]</span></code></p>
+<p>will yield <code class="code docutils literal"><span class="pre">[{id:</span> <span class="pre">15,</span> <span class="pre">name:</span> <span class="pre">'North</span> <span class="pre">America',</span> <span class="pre">contains:</span> <span class="pre">[1215,</span> <span class="pre">1037,</span> <span class="pre">...],</span> <span class="pre">level:</span> <span class="pre">2},</span> <span class="pre">...]</span></code></p>
 </div>
 </div>
-
 
 
            </div>
@@ -303,7 +311,7 @@ To look up all descendants of region 1029 (Brazil) that are of level 4 (province
   <div role="contentinfo">
     <p>
         
-        &copy; Copyright 2020, Gro Intelligence
+        &copy; Copyright 2019, Gro Intelligence
 
     </p>
   </div>
@@ -326,33 +334,48 @@ To look up all descendants of region 1029 (Brazil) that are of level 4 (province
   </div>
   
 <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
-  <span class="rst-current-version" data-toggle="rst-current-version">
-    <span class="fa fa-book"> Other Versions</span>
-    v: CLEWS-15676-add-names-to-index
-    <span class="fa fa-caret-down"></span>
-  </span>
-  <div class="rst-other-versions">
-    <dl>
-      <dt>Releases</dt>
-      <dd><a href="../v1.40.6/searching-data.html">v1.40.6</a></dd>
-      <dd><a href="../v1.56.0/searching-data.html">v1.56.0</a></dd>
-      <dd><a href="../v1.56.1/searching-data.html">v1.56.1</a></dd>
-      <dd><a href="../v1.56.2/searching-data.html">v1.56.2</a></dd>
-      <dd><a href="../v1.60.0/searching-data.html">v1.60.0</a></dd>
-      <dd><a href="../v1.60.1/searching-data.html">v1.60.1</a></dd>
-      <dd><a href="../v1.71.0/searching-data.html">v1.71.0</a></dd>
-      <dd><a href="../v1.76.0/searching-data.html">v1.76.0</a></dd>
-      <dd><a href="../v1.77.0/searching-data.html">v1.77.0</a></dd>
-      <dd><a href="../v1.77.1/searching-data.html">v1.77.1</a></dd>
-      <dd><a href="../v1.82.0/searching-data.html">v1.82.0</a></dd>
-      <dd><a href="../v1.83.0/searching-data.html">v1.83.0</a></dd>
-      <dd><a href="../v1.98.0/searching-data.html">v1.98.0</a></dd>
-
-      
+    <span class="rst-current-version" data-toggle="rst-current-version">
+        <span class="fa fa-book"> Other Versions</span>
+        v: CLEWS-15676-add-names-to-index
+        <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+        <dl>
+            <dt>Tags</dt>
+            <dd><a href="../v1.40.6/searching-data.html">v1.40.6</a></dd>
+            <dd><a href="../v1.56.0/searching-data.html">v1.56.0</a></dd>
+            <dd><a href="../v1.56.1/searching-data.html">v1.56.1</a></dd>
+            <dd><a href="../v1.56.2/searching-data.html">v1.56.2</a></dd>
+            <dd><a href="../v1.60.0/searching-data.html">v1.60.0</a></dd>
+            <dd><a href="../v1.60.1/searching-data.html">v1.60.1</a></dd>
+            <dd><a href="../v1.71.0/searching-data.html">v1.71.0</a></dd>
+            <dd><a href="../v1.76.0/searching-data.html">v1.76.0</a></dd>
+            <dd><a href="../v1.77.0/searching-data.html">v1.77.0</a></dd>
+            <dd><a href="../v1.77.1/searching-data.html">v1.77.1</a></dd>
+            <dd><a href="../v1.82.0/searching-data.html">v1.82.0</a></dd>
+            <dd><a href="../v1.83.0/searching-data.html">v1.83.0</a></dd>
+            <dd><a href="../v1.98.0/searching-data.html">v1.98.0</a></dd>
+        </dl>
+        <dl>
+            <dt>Branches</dt>
+            <dd><a href="searching-data.html">CLEWS-15676-add-names-to-index</a></dd>
+            <dd><a href="../CLEWS-16955-units/index.html">CLEWS-16955-units</a></dd>
+            <dd><a href="../CLEWS-19063/searching-data.html">CLEWS-19063</a></dd>
+            <dd><a href="../CLEWS-19840-3/searching-data.html">CLEWS-19840-3</a></dd>
+            <dd><a href="../CLEWS-22288/index.html">CLEWS-22288</a></dd>
+            <dd><a href="../CLEWS-23863/searching-data.html">CLEWS-23863</a></dd>
+            <dd><a href="../CLEWS-23863-composite-rank/searching-data.html">CLEWS-23863-composite-rank</a></dd>
+            <dd><a href="../CLEWS-26758-similar_regions/searching-data.html">CLEWS-26758-similar_regions</a></dd>
+            <dd><a href="../CLEWS-27625-fixtures/searching-data.html">CLEWS-27625-fixtures</a></dd>
             <dd><a href="../development/searching-data.html">development</a></dd>
-    </dl>
-  </div>
+            <dd><a href="../jli-requirecleandocs/searching-data.html">jli-requirecleandocs</a></dd>
+            <dd><a href="../lib-test-refactor/searching-data.html">lib-test-refactor</a></dd>
+            <dd><a href="../simplify-quickstart/searching-data.html">simplify-quickstart</a></dd>
+            <dd><a href="../simulate_reporting_date/searching-data.html">simulate_reporting_date</a></dd>
+        </dl>
+    </div>
 </div>
+
 
   <script type="text/javascript">
       jQuery(function () {

@@ -1,9 +1,7 @@
 
 
-
-
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html4" lang="en" >
 <head>
   <meta charset="utf-8">
   
@@ -15,6 +13,7 @@
   
   <link rel="stylesheet" href="_static/css/custom-theme.css" type="text/css" />
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/banner.css" type="text/css" />
 
   
   
@@ -27,11 +26,20 @@
   <![endif]-->
   
     
-      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-        <script src="_static/jquery.js"></script>
-        <script src="_static/underscore.js"></script>
-        <script src="_static/doctools.js"></script>
-        <script src="_static/language_data.js"></script>
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'./',
+              VERSION:'',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
@@ -39,25 +47,12 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Getting Started" href="getting-started.html" />
-    <link rel="prev" title="Gro API Client" href="index.html" />
-    <!-- Google Tag Manager -->
-    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-    })(window,document,'script','dataLayer','GTM-5VHQ76P');</script>
-    <!-- End Google Tag Manager -->
-
+    <link rel="prev" title="Gro API Client" href="index.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
 
-  
-    <!-- Google Tag Manager (noscript) -->
-    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5VHQ76P"
-    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-    <!-- End Google Tag Manager (noscript) -->
-
+   
   <div class="wy-grid-for-nav">
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
@@ -66,7 +61,7 @@
           
 
           
-            <a href="index.html">
+            <a href="index.html" class="icon icon-home" alt="Documentation Home"> Gro API Client
           
 
           
@@ -102,15 +97,122 @@
             
               <p class="caption"><span class="caption-text">Getting Started</span></p>
 <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Setting Up Your Environment</a></li>
-<li class="toctree-l1"><a class="reference internal" href="getting-started.html">Getting Started</a></li>
-<li class="toctree-l1"><a class="reference internal" href="gro-data-key-concepts.html">Gro Data Key Concepts</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Setting Up Your Environment</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#system-prerequisites">System Prerequisites</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#macos-and-linux">MacOS and Linux</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#windows">Windows</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#anaconda">Anaconda</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#non-anaconda">Non-Anaconda</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#installing-gro-packages">Installing Gro Packages</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#authentication-token">Authentication Token</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#retrieving-a-token">Retrieving a token</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#option-1-using-the-web-app-recommended">Option 1: Using the Web App (Recommended)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#option-2-using-the-gro-client-command-line-interface">Option 2: Using the gro_client Command Line Interface</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#option-3-using-the-get-access-token-function">Option 3: Using the <code class="docutils literal"><span class="pre">get_access_token()</span></code> Function</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#expiring-regenerating-tokens">Expiring/Regenerating Tokens</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#saving-your-token-as-an-environment-variable">Saving your token as an environment variable</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#for-windows-10">For Windows 10:</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#for-mac">For Mac:</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="getting-started.html">Getting Started</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="getting-started.html#examples">Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting-started.html#discovering-data">Discovering Data</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="getting-started.html#code-snippets">Code snippets</a></li>
+<li class="toctree-l3"><a class="reference internal" href="getting-started.html#search">Search</a></li>
+<li class="toctree-l3"><a class="reference internal" href="getting-started.html#get-data-series">Get data series</a></li>
+<li class="toctree-l3"><a class="reference internal" href="getting-started.html#lookup-contains">Lookup contains</a></li>
+<li class="toctree-l3"><a class="reference internal" href="getting-started.html#get-descendants">Get descendants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="getting-started.html#lookup-belongs">Lookup belongs</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="getting-started.html#retrieving-data">Retrieving Data</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="getting-started.html#get-data-points">Get data points</a></li>
+<li class="toctree-l3"><a class="reference internal" href="getting-started.html#data-frame">Data frame</a></li>
+<li class="toctree-l3"><a class="reference internal" href="getting-started.html#show-revisions">Show revisions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="getting-started.html#understanding-data-responses">Understanding Data Responses</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="getting-started.html#look-up">Look up</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="gro-data-key-concepts.html">Gro Data Key Concepts</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="gro-data-key-concepts.html#gro-ontology">Gro Ontology</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="gro-data-key-concepts.html#entity-fields">Entity fields</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gro-data-key-concepts.html#entity-relationships-contains">Entity Relationships: Contains</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gro-data-key-concepts.html#special-properties-for-regions">Special Properties for Regions</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="gro-data-key-concepts.html#level"><code class="docutils literal"><span class="pre">level</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gro-data-key-concepts.html#latitude-and-longitude"><code class="docutils literal"><span class="pre">latitude</span></code> and <code class="docutils literal"><span class="pre">longitude</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="gro-data-key-concepts.html#data-series-definition">Data Series Definition</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gro-data-key-concepts.html#data-point-definition">Data Point Definition</a></li>
+</ul>
+</li>
 </ul>
 <p class="caption"><span class="caption-text">Reference</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="api.html">API Reference</a></li>
-<li class="toctree-l1"><a class="reference internal" href="faq.html">FAQ</a></li>
-<li class="toctree-l1"><a class="reference internal" href="other.html">Other</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api.html#module-api.client.lib">lib</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#client">Client</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#groclient">GroClient</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#crop-model">Crop Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#batch-client">Batch Client</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="faq.html">FAQ</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="faq.html#exploring-what-s-available">Exploring What&#8216;s Available</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="faq.html#q-why-is-it-that-when-i-use-client-search-to-find-metrics-items-regions-i-m-interested-in-sometimes-client-get-data-series-doesn-t-have-any-data-for-those-metrics-items-regions">Q: Why is it that when I use client.search() to find metrics/items/regions I&#8216;m interested in, sometimes client.get_data_series() doesn&#8216;t have any data for those metrics/items/regions?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="faq.html#q-what-does-sourcelag-mean-when-i-use-client-lookup-to-inspect-a-source-s-details">Q: What does &#8216;sourceLag&#8216; mean when I use client.lookup() to inspect a source&#8216;s details?</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="faq.html#data-retrieval">Data Retrieval</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="faq.html#q-i-specified-an-end-date-when-calling-get-data-points-but-i-am-getting-points-with-other-end-dates">Q: I specified an end_date when calling get_data_points(), but I am getting points with other end_dates:</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="faq.html#account">Account</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="faq.html#q-i-tried-using-my-gro-username-and-login-but-am-getting-a-401-unauthorized-error">Q: I tried using my Gro username and login but am getting a 401 Unauthorized error</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="faq.html#gro-models">Gro Models</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="faq.html#q-do-your-predictive-models-only-run-during-the-crop-season">Q: Do your predictive models only run during the crop season?</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="other.html">Other</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="other.html#gro-crop-masks">Gro Crop Masks</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="other.html#introduction">Introduction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="other.html#methodology">Methodology</a></li>
+<li class="toctree-l3"><a class="reference internal" href="other.html#us-corn">US Corn</a></li>
+<li class="toctree-l3"><a class="reference internal" href="other.html#us-soy">US Soy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="other.html#argentina-soy">Argentina Soy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="other.html#india-wheat">India Wheat</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="other.html#gro-yield-model-backtest-data">Gro Yield Model Backtest Data</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="other.html#id1">Introduction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="other.html#file-formats">File Formats</a></li>
+<li class="toctree-l3"><a class="reference internal" href="other.html#download-the-data-by-model">Download the Data by Model</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="other.html#radio-frequency-interference-effects-on-smos">Radio Frequency Interference Effects On SMOS</a></li>
+</ul>
+</li>
 </ul>
 
             
@@ -185,20 +287,21 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-
-<p class="version-banner">
-  <strong>Note:</strong>
-  This document is for an older version of the Gro API Client.
-  Please see the <a href="../development/index.html">latest documentation</a>.
-</p>
+  
 
 
-  <div class="section" id="setting-up-your-environment">
+    
+    
+
+
+
+    <p class="scv-banner scv-sphinx_rtd_theme"><b>Warning:</b> This document is for the development version of Gro API Client.</p>
+<div class="section" id="setting-up-your-environment">
 <h1>Setting Up Your Environment<a class="headerlink" href="#setting-up-your-environment" title="Permalink to this headline">¶</a></h1>
 <p>In order to start engaging with the Gro API Client, you will need to set up your local environment with some basic requirements.</p>
 <ol class="simple">
-<li><p><a class="reference external" href="#system-prerequisites">System Prerequisites</a></p></li>
-<li><p><a class="reference external" href="#authentication-token">Authentication Token/Saving Environment Variables</a></p></li>
+<li><a class="reference external" href="#system-prerequisites">System Prerequisites</a></li>
+<li><a class="reference external" href="#authentication-token">Authentication Token/Saving Environment Variables</a></li>
 </ol>
 <div class="section" id="system-prerequisites">
 <h2>System Prerequisites<a class="headerlink" href="#system-prerequisites" title="Permalink to this headline">¶</a></h2>
@@ -206,8 +309,8 @@
 <div class="section" id="macos-and-linux">
 <h3>MacOS and Linux<a class="headerlink" href="#macos-and-linux" title="Permalink to this headline">¶</a></h3>
 <ol class="simple">
-<li><p>git (<a class="reference external" href="https://git-scm.com/book/en/v2/Getting-Started-Installing-Git">Installation instructions</a>)</p></li>
-<li><p>python version 3.5 or above from <a class="reference external" href="https://www.python.org">https://www.python.org</a>. Support for Python 2.7.13 or above is also maintained, but with its <a class="reference external" href="https://mail.python.org/pipermail/python-dev/2018-March/152348.html">End of Life</a> soon approaching, Python 3 is recommended.</p></li>
+<li>git (<a class="reference external" href="https://git-scm.com/book/en/v2/Getting-Started-Installing-Git">Installation instructions</a>)</li>
+<li>python version 3.5 or above from <a class="reference external" href="https://www.python.org">https://www.python.org</a>. Support for Python 2.7.13 or above is also maintained, but with its <a class="reference external" href="https://mail.python.org/pipermail/python-dev/2018-March/152348.html">End of Life</a> soon approaching, Python 3 is recommended.</li>
 </ol>
 </div>
 <div class="section" id="windows">
@@ -216,17 +319,17 @@
 <div class="section" id="anaconda">
 <h4>Anaconda<a class="headerlink" href="#anaconda" title="Permalink to this headline">¶</a></h4>
 <ol class="simple">
-<li><p>Download Anaconda with Python 3.5 or above from <a class="reference external" href="https://www.anaconda.com/distribution/">anaconda.com</a>. Support for Python 2.7.13 or above is also maintained, but with <a class="reference external" href="https://mail.python.org/pipermail/python-dev/2018-March/152348.html">its End of Life</a> soon approaching, it is recommended you start with Python 3.</p></li>
-<li><p>Install Git from <a class="reference external" href="https://git-scm.com/download/win">git-scm.com</a>. Proceed with the default options.</p></li>
+<li>Download Anaconda with Python 3.5 or above from <a class="reference external" href="https://www.anaconda.com/distribution/">anaconda.com</a>. Support for Python 2.7.13 or above is also maintained, but with <a class="reference external" href="https://mail.python.org/pipermail/python-dev/2018-March/152348.html">its End of Life</a> soon approaching, it is recommended you start with Python 3.</li>
+<li>Install Git from <a class="reference external" href="https://git-scm.com/download/win">git-scm.com</a>. Proceed with the default options.</li>
 </ol>
 </div>
 <div class="section" id="non-anaconda">
 <h4>Non-Anaconda<a class="headerlink" href="#non-anaconda" title="Permalink to this headline">¶</a></h4>
 <ol class="simple">
-<li><p>Powershell (should come default with Windows)</p></li>
-<li><p>Download Python version 3.5 or above from <a class="reference external" href="https://www.python.org/downloads/windows/">python.org</a>. Support for Python 2.7.13 or above is also maintained, but with <a class="reference external" href="https://mail.python.org/pipermail/python-dev/2018-March/152348.html">its End of Life</a> soon approaching, it is recommended you start with Python 3.</p></li>
-<li><p>Install both Python and pip to PATH either in the installer (enable component during the installation) or manually. The easiest way to do this is to make sure the below is checked during installation: <img alt="readme_add_python_to_path_installer.png" src="https://raw.githubusercontent.com/gro-intelligence/api-client/development/readme_add_python_to_path_installer.png" /></p></li>
-<li><p>Install Git from <a class="reference external" href="https://git-scm.com/download/win">git-scm.com</a>. Proceed with the default options.</p></li>
+<li>Powershell (should come default with Windows)</li>
+<li>Download Python version 3.5 or above from <a class="reference external" href="https://www.python.org/downloads/windows/">python.org</a>. Support for Python 2.7.13 or above is also maintained, but with <a class="reference external" href="https://mail.python.org/pipermail/python-dev/2018-March/152348.html">its End of Life</a> soon approaching, it is recommended you start with Python 3.</li>
+<li>Install both Python and pip to PATH either in the installer (enable component during the installation) or manually. The easiest way to do this is to make sure the below is checked during installation: <img alt="readme_add_python_to_path_installer.png" src="https://raw.githubusercontent.com/gro-intelligence/api-client/development/readme_add_python_to_path_installer.png" /></li>
+<li>Install Git from <a class="reference external" href="https://git-scm.com/download/win">git-scm.com</a>. Proceed with the default options.</li>
 </ol>
 </div>
 </div>
@@ -234,12 +337,12 @@
 <h3>Installing Gro Packages<a class="headerlink" href="#installing-gro-packages" title="Permalink to this headline">¶</a></h3>
 <p>Now that you have downloaded the base system requirements, you will need to install the packages for the Gro API Client.</p>
 <p>Install with pip install</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">git</span><span class="o">+</span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">gro</span><span class="o">-</span><span class="n">intelligence</span><span class="o">/</span><span class="n">api</span><span class="o">-</span><span class="n">client</span><span class="o">.</span><span class="n">git</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">git</span><span class="o">+</span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">gro</span><span class="o">-</span><span class="n">intelligence</span><span class="o">/</span><span class="n">api</span><span class="o">-</span><span class="n">client</span><span class="o">.</span><span class="n">git</span>
 </pre></div>
 </div>
 <p>Note: even if you are using <a class="reference external" href="https://www.anaconda.com/">Anaconda</a>, the API Client install should still be performed using pip and not <a class="reference external" href="https://docs.conda.io/en/latest/">conda</a>.</p>
 <p>Note: to find the location where Gro packages have been installed you can use the query:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">show</span> <span class="n">gro</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">show</span> <span class="n">gro</span>
 </pre></div>
 </div>
 </div>
@@ -247,97 +350,96 @@
 <div class="section" id="authentication-token">
 <h2>Authentication Token<a class="headerlink" href="#authentication-token" title="Permalink to this headline">¶</a></h2>
 <ol class="simple">
-<li><p><a class="reference external" href="#retrieving-a-token">Retrieving a token</a></p></li>
-<li><p><a class="reference external" href="#expiring-regenerating-tokens">Expiring/Regenerating Tokens</a></p></li>
-<li><p><a class="reference external" href="#saving-your-token-as-an-environment-variable">Saving your token as an environment variable</a></p></li>
+<li><a class="reference external" href="#retrieving-a-token">Retrieving a token</a></li>
+<li><a class="reference external" href="#expiring-regenerating-tokens">Expiring/Regenerating Tokens</a></li>
+<li><a class="reference external" href="#saving-your-token-as-an-environment-variable">Saving your token as an environment variable</a></li>
 </ol>
-<p>To work with the Gro API, you need an authentication token. This token needs to be sent along with every request made to the API. This is typically done by using one of the included Client classes (<code class="docutils literal notranslate"><span class="pre">Client</span></code>, <code class="docutils literal notranslate"><span class="pre">GroClient</span></code>, <code class="docutils literal notranslate"><span class="pre">BatchClient</span></code>, or <code class="docutils literal notranslate"><span class="pre">CropModel</span></code>): you provide your access token when creating the object, and then every API request made thereafter automatically includes the token.</p>
+<p>To work with the Gro API, you need an authentication token. This token needs to be sent along with every request made to the API. This is typically done by using one of the included Client classes (<code class="docutils literal"><span class="pre">Client</span></code>, <code class="docutils literal"><span class="pre">GroClient</span></code>, <code class="docutils literal"><span class="pre">BatchClient</span></code>, or <code class="docutils literal"><span class="pre">CropModel</span></code>): you provide your access token when creating the object, and then every API request made thereafter automatically includes the token.</p>
 <div class="section" id="retrieving-a-token">
 <h3>Retrieving a token<a class="headerlink" href="#retrieving-a-token" title="Permalink to this headline">¶</a></h3>
 <p>Note that your account needs to be activated for API access before you will be able to retrieve a token. See <a class="reference external" href="https://gro-intelligence.com/products/gro-api">https://gro-intelligence.com/products/gro-api</a> for more info regarding unlocking API access for your account.
 Once you have API access enabled for your account, you may retrieve your token in any of the following ways:</p>
 <ol class="simple">
-<li><p><a class="reference external" href="#option-1-using-the-web-app-recommended">Using the Gro Web Application (preferred)</a></p></li>
-<li><p><a class="reference external" href="#option-2-using-the-gro-client-command-line-interface">Using the Gro Command Line Interface</a></p></li>
-<li><p><a class="reference external" href="#option-3-using-the-get-access-token-function">Using the get_access_token() Function</a></p></li>
+<li><a class="reference external" href="#option-1-using-the-web-app-recommended">Using the Gro Web Application (preferred)</a></li>
+<li><a class="reference external" href="#option-2-using-the-gro-client-command-line-interface">Using the Gro Command Line Interface</a></li>
+<li><a class="reference external" href="#option-3-using-the-get-access-token-function">Using the get_access_token() Function</a></li>
 </ol>
 <div class="section" id="option-1-using-the-web-app-recommended">
 <h4>Option 1: Using the Web App (Recommended)<a class="headerlink" href="#option-1-using-the-web-app-recommended" title="Permalink to this headline">¶</a></h4>
 <ol class="simple">
-<li><p>Log in to your Gro account at <a class="reference external" href="http://app.gro-intelligence.com">http://app.gro-intelligence.com</a> and open your Account menu using the button on the bottom left of the Gro dashboard (see image below).
-<img alt="user-profile-annotated.png" src="_images/user-profile-annotated.png" /></p></li>
-<li><p>In the Account menu, select the API tab (see below).
-<img alt="profile-tab-annotated.png" src="_images/profile-tab-annotated.png" /></p></li>
-<li><p>Select the text of the token and copy it to your clipboard, or use the “Copy to clipboard” button (see below).
-<img alt="api-tab-annotated.png" src="_images/api-tab-annotated.png" /></p></li>
+<li>Log in to your Gro account at <a class="reference external" href="http://app.gro-intelligence.com">http://app.gro-intelligence.com</a> and open your Account menu using the button on the bottom left of the Gro dashboard (see image below).
+<img alt="user-profile-annotated.png" src="_images/user-profile-annotated.png" /></li>
+<li>In the Account menu, select the API tab (see below).
+<img alt="profile-tab-annotated.png" src="_images/profile-tab-annotated.png" /></li>
+<li>Select the text of the token and copy it to your clipboard, or use the &#8220;Copy to clipboard&#8220; button (see below).
+<img alt="api-tab-annotated.png" src="_images/api-tab-annotated.png" /></li>
 </ol>
 </div>
 <div class="section" id="option-2-using-the-gro-client-command-line-interface">
 <h4>Option 2: Using the gro_client Command Line Interface<a class="headerlink" href="#option-2-using-the-gro-client-command-line-interface" title="Permalink to this headline">¶</a></h4>
 <p>Limitation: The Gro Command Line Interface cannot retrieve tokens for users using OAuth authentication. If this applies to you, please use the Gro web application instead.</p>
-<p>When you install the Gro API Client via pip, the <code class="docutils literal notranslate"><span class="pre">gro_client</span></code> command line interface is automatically added to your PATH. This is a convenience tool for doing basic operations on the command line without needing to write a full Python script. One of its uses is it can retrieve your authentication token and print that token out to the console. To do so, execute the command below on your command line, substituting email&#64;example.com for the email address associated with your Gro web application account:</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>gro_client --user_email<span class="o">=</span><span class="s2">&quot;email@example.com&quot;</span> --print_token
+<p>When you install the Gro API Client via pip, the <code class="docutils literal"><span class="pre">gro_client</span></code> command line interface is automatically added to your PATH. This is a convenience tool for doing basic operations on the command line without needing to write a full Python script. One of its uses is it can retrieve your authentication token and print that token out to the console. To do so, execute the command below on your command line, substituting email&#64;example.com for the email address associated with your Gro web application account:</p>
+<div class="highlight-sh"><div class="highlight"><pre><span></span>gro_client --user_email<span class="o">=</span><span class="s2">&quot;email@example.com&quot;</span> --print_token
 </pre></div>
 </div>
 <p>You should then be prompted for a password. Note that this password prompt does not display any user input on the command line, so it may appear as though you are not typing anything. This is intended. Simply type your password and press Enter.</p>
 <p>If the password is accepted, your access token is printed to the console.</p>
 </div>
 <div class="section" id="option-3-using-the-get-access-token-function">
-<h4>Option 3: Using the <code class="docutils literal notranslate"><span class="pre">get_access_token()</span></code> Function<a class="headerlink" href="#option-3-using-the-get-access-token-function" title="Permalink to this headline">¶</a></h4>
-<p>Limitation: The <code class="docutils literal notranslate"><span class="pre">get_access_token()</span></code> function cannot retrieve tokens for users using OAuth authentication. If this applies to you, please use the Gro web application instead.</p>
-<p>If you would like to programmatically retrieve your active token, you may use the <code class="docutils literal notranslate"><span class="pre">get_access_token()</span></code> function in the API Client library. See below:</p>
-<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">api.client.lib</span> <span class="kn">import</span> <span class="n">get_access_token</span>
+<h4>Option 3: Using the <code class="docutils literal"><span class="pre">get_access_token()</span></code> Function<a class="headerlink" href="#option-3-using-the-get-access-token-function" title="Permalink to this headline">¶</a></h4>
+<p>Limitation: The <code class="docutils literal"><span class="pre">get_access_token()</span></code> function cannot retrieve tokens for users using OAuth authentication. If this applies to you, please use the Gro web application instead.</p>
+<p>If you would like to programmatically retrieve your active token, you may use the <code class="docutils literal"><span class="pre">get_access_token()</span></code> function in the API Client library. See below:</p>
+<div class="highlight-py"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">api.client.lib</span> <span class="kn">import</span> <span class="n">get_access_token</span>
 <span class="n">API_HOST</span> <span class="o">=</span> <span class="s1">&#39;api.gro-intelligence.com&#39;</span>
 <span class="n">EMAIL</span> <span class="o">=</span> <span class="s1">&#39;example@example.com&#39;</span>
 <span class="n">PASSWORD</span> <span class="o">=</span> <span class="s1">&#39;password123&#39;</span>
 <span class="n">ACCESS_TOKEN</span> <span class="o">=</span> <span class="n">get_access_token</span><span class="p">(</span><span class="n">API_HOST</span><span class="p">,</span> <span class="n">EMAIL</span><span class="p">,</span> <span class="n">PASSWORD</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>It is generally bad practice to put login credentials directly in code as in this example, but the <code class="docutils literal notranslate"><span class="pre">get_access_token()</span></code> function may be useful for productionization purposes, making the application more robust to tokens expiring (see the next section).</p>
+<p>It is generally bad practice to put login credentials directly in code as in this example, but the <code class="docutils literal"><span class="pre">get_access_token()</span></code> function may be useful for productionization purposes, making the application more robust to tokens expiring (see the next section).</p>
 </div>
 </div>
 <div class="section" id="expiring-regenerating-tokens">
 <h3>Expiring/Regenerating Tokens<a class="headerlink" href="#expiring-regenerating-tokens" title="Permalink to this headline">¶</a></h3>
 <p>There are two ways you can invalidate your current authorization token and create a new one, both of which are performed through the Gro web application:</p>
 <ol class="simple">
-<li><p>Changing your password, or</p></li>
-<li><p>Using the “Regenerate Token” button in the API section of your Account menu (see instructions below)</p></li>
+<li>Changing your password, or</li>
+<li>Using the &#8220;Regenerate Token&#8220; button in the API section of your Account menu (see instructions below)</li>
 </ol>
 <p>If you have your authentication token saved, performing either of these two actions will cause any applications using the old token to cease being able to contact the Gro API. You will need to follow the instructions in Section 1 to retrieve your new token and update any such applications accordingly.</p>
-<p>To regenerate your authentication token, open the API tab in your Account menu as in <a class="reference external" href="#option-1-using-the-web-app-recommended">Retrieving a token, Option 1: Using the Web App</a>, but instead of copying the authentication token, press the “Regenerate Token” button (see below). A prompt will appear to warn that any applications using the old token will need to be updated and to confirm your intent.</p>
+<p>To regenerate your authentication token, open the API tab in your Account menu as in <a class="reference external" href="#option-1-using-the-web-app-recommended">Retrieving a token, Option 1: Using the Web App</a>, but instead of copying the authentication token, press the &#8220;Regenerate Token&#8220; button (see below). A prompt will appear to warn that any applications using the old token will need to be updated and to confirm your intent.</p>
 <p><img alt="regenerate-token.png" src="_images/regenerate-token.png" /></p>
 </div>
 <div class="section" id="saving-your-token-as-an-environment-variable">
 <h3>Saving your token as an environment variable<a class="headerlink" href="#saving-your-token-as-an-environment-variable" title="Permalink to this headline">¶</a></h3>
-<p>If you don’t want to enter a password or token each time, you can save the token as an environment variable. In some of the sample code, it is assumed that you have the token saved to your environment variables as <code class="docutils literal notranslate"><span class="pre">GROAPI_TOKEN</span></code>.</p>
+<p>If you don&#8216;t want to enter a password or token each time, you can save the token as an environment variable. In some of the sample code, it is assumed that you have the token saved to your environment variables as <code class="docutils literal"><span class="pre">GROAPI_TOKEN</span></code>.</p>
 <p>Please consult your OS or IDE documentation for the most accurate and up-to-date information on how to set environment variables, e.g. setting environment variables in <a class="reference external" href="https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_environment_variables?view=powershell-6">Windows Powershell</a> or <a class="reference external" href="https://apple.stackexchange.com/questions/106778/how-do-i-set-environment-variables-on-os-x">Mac OS X/Linux</a> or <a class="reference external" href="https://anaconda-project.readthedocs.io/en/latest/user-guide/tasks/work-with-variables.html">Anaconda</a>. As a quick guide, the following steps should work:</p>
 <div class="section" id="for-windows-10">
 <h4>For Windows 10:<a class="headerlink" href="#for-windows-10" title="Permalink to this headline">¶</a></h4>
 <ol class="simple">
-<li><p>Click on start menu and search for “environment variables.” Click on “Edit the system environment variables” option.</p></li>
-<li><p>In the “Advanced” tab, select the “Environment Variables…” button.</p></li>
-<li><p>Under the first section called “User variables for &lt;username&gt;,” and click on the “New” button.</p></li>
-<li><p>Enter the information as follows:</p></li>
+<li>Click on start menu and search for &#8220;environment variables.&#8220; Click on &#8220;Edit the system environment variables&#8220; option.</li>
+<li>In the &#8220;Advanced&#8220; tab, select the &#8220;Environment Variables...&#8220; button.</li>
+<li>Under the first section called &#8220;User variables for &lt;username&gt;,&#8220; and click on the &#8220;New&#8220; button.</li>
+<li>Enter the information as follows:</li>
 </ol>
-<p>Variable name: <code class="docutils literal notranslate"><span class="pre">GROAPI_TOKEN</span></code></p>
-<p>Variable value: <code class="docutils literal notranslate"><span class="pre">&lt;insert</span> <span class="pre">your</span> <span class="pre">Gro</span> <span class="pre">API</span> <span class="pre">Token</span> <span class="pre">here&gt;</span></code></p>
+<p>Variable name: <code class="docutils literal"><span class="pre">GROAPI_TOKEN</span></code></p>
+<p>Variable value: <code class="docutils literal"><span class="pre">&lt;insert</span> <span class="pre">your</span> <span class="pre">Gro</span> <span class="pre">API</span> <span class="pre">Token</span> <span class="pre">here&gt;</span></code></p>
 <ol class="simple">
-<li><p>Click OK</p></li>
+<li>Click OK</li>
 </ol>
-<p>Your environment variable should now be saved. You will likely need to close an re-open your IDE for the IDE to recognize the change. Whenever you run code that includes the code <code class="docutils literal notranslate"><span class="pre">os.environ['GROAPI_TOKEN']</span></code> it should automatically pull in your API Token.</p>
+<p>Your environment variable should now be saved. You will likely need to close an re-open your IDE for the IDE to recognize the change. Whenever you run code that includes the code <code class="docutils literal"><span class="pre">os.environ['GROAPI_TOKEN']</span></code> it should automatically pull in your API Token.</p>
 </div>
 <div class="section" id="for-mac">
 <h4>For Mac:<a class="headerlink" href="#for-mac" title="Permalink to this headline">¶</a></h4>
 <ol class="simple">
-<li><p>Open up your terminal and type <code class="docutils literal notranslate"><span class="pre">open</span> <span class="pre">~/.bash_profile</span></code></p></li>
-<li><p>Add the following line: <code class="docutils literal notranslate"><span class="pre">export</span> <span class="pre">GROAPI_TOKEN=&quot;YOUR</span> <span class="pre">TOKEN</span> <span class="pre">HERE&quot;</span></code></p></li>
-<li><p>Save the file and close any shells you have open. The environment variable should be available next time you open a shell.</p></li>
+<li>Open up your terminal and type <code class="docutils literal"><span class="pre">open</span> <span class="pre">~/.bash_profile</span></code></li>
+<li>Add the following line: <code class="docutils literal"><span class="pre">export</span> <span class="pre">GROAPI_TOKEN=&quot;YOUR</span> <span class="pre">TOKEN</span> <span class="pre">HERE&quot;</span></code></li>
+<li>Save the file and close any shells you have open. The environment variable should be available next time you open a shell.</li>
 </ol>
 </div>
 </div>
 </div>
 </div>
-
 
 
            </div>
@@ -360,7 +462,7 @@ Once you have API access enabled for your account, you may retrieve your token i
   <div role="contentinfo">
     <p>
         
-        &copy; Copyright 2020, Gro Intelligence
+        &copy; Copyright 2019, Gro Intelligence
 
     </p>
   </div>
@@ -383,33 +485,48 @@ Once you have API access enabled for your account, you may retrieve your token i
   </div>
   
 <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
-  <span class="rst-current-version" data-toggle="rst-current-version">
-    <span class="fa fa-book"> Other Versions</span>
-    v: CLEWS-16955-units
-    <span class="fa fa-caret-down"></span>
-  </span>
-  <div class="rst-other-versions">
-    <dl>
-      <dt>Releases</dt>
-      <dd><a href="../v1.40.6/index.html">v1.40.6</a></dd>
-      <dd><a href="../v1.56.0/index.html">v1.56.0</a></dd>
-      <dd><a href="../v1.56.1/index.html">v1.56.1</a></dd>
-      <dd><a href="../v1.56.2/index.html">v1.56.2</a></dd>
-      <dd><a href="../v1.60.0/index.html">v1.60.0</a></dd>
-      <dd><a href="../v1.60.1/index.html">v1.60.1</a></dd>
-      <dd><a href="../v1.71.0/index.html">v1.71.0</a></dd>
-      <dd><a href="../v1.76.0/index.html">v1.76.0</a></dd>
-      <dd><a href="../v1.77.0/index.html">v1.77.0</a></dd>
-      <dd><a href="../v1.77.1/index.html">v1.77.1</a></dd>
-      <dd><a href="../v1.82.0/index.html">v1.82.0</a></dd>
-      <dd><a href="../v1.83.0/index.html">v1.83.0</a></dd>
-      <dd><a href="../v1.98.0/index.html">v1.98.0</a></dd>
-
-      
+    <span class="rst-current-version" data-toggle="rst-current-version">
+        <span class="fa fa-book"> Other Versions</span>
+        v: CLEWS-16955-units
+        <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+        <dl>
+            <dt>Tags</dt>
+            <dd><a href="../v1.40.6/index.html">v1.40.6</a></dd>
+            <dd><a href="../v1.56.0/index.html">v1.56.0</a></dd>
+            <dd><a href="../v1.56.1/index.html">v1.56.1</a></dd>
+            <dd><a href="../v1.56.2/index.html">v1.56.2</a></dd>
+            <dd><a href="../v1.60.0/index.html">v1.60.0</a></dd>
+            <dd><a href="../v1.60.1/index.html">v1.60.1</a></dd>
+            <dd><a href="../v1.71.0/index.html">v1.71.0</a></dd>
+            <dd><a href="../v1.76.0/index.html">v1.76.0</a></dd>
+            <dd><a href="../v1.77.0/index.html">v1.77.0</a></dd>
+            <dd><a href="../v1.77.1/index.html">v1.77.1</a></dd>
+            <dd><a href="../v1.82.0/index.html">v1.82.0</a></dd>
+            <dd><a href="../v1.83.0/index.html">v1.83.0</a></dd>
+            <dd><a href="../v1.98.0/index.html">v1.98.0</a></dd>
+        </dl>
+        <dl>
+            <dt>Branches</dt>
+            <dd><a href="../CLEWS-15676-add-names-to-index/index.html">CLEWS-15676-add-names-to-index</a></dd>
+            <dd><a href="setting-up-your-environment.html">CLEWS-16955-units</a></dd>
+            <dd><a href="../CLEWS-19063/index.html">CLEWS-19063</a></dd>
+            <dd><a href="../CLEWS-19840-3/index.html">CLEWS-19840-3</a></dd>
+            <dd><a href="../CLEWS-22288/setting-up-your-environment.html">CLEWS-22288</a></dd>
+            <dd><a href="../CLEWS-23863/index.html">CLEWS-23863</a></dd>
+            <dd><a href="../CLEWS-23863-composite-rank/index.html">CLEWS-23863-composite-rank</a></dd>
+            <dd><a href="../CLEWS-26758-similar_regions/index.html">CLEWS-26758-similar_regions</a></dd>
+            <dd><a href="../CLEWS-27625-fixtures/index.html">CLEWS-27625-fixtures</a></dd>
             <dd><a href="../development/index.html">development</a></dd>
-    </dl>
-  </div>
+            <dd><a href="../jli-requirecleandocs/index.html">jli-requirecleandocs</a></dd>
+            <dd><a href="../lib-test-refactor/index.html">lib-test-refactor</a></dd>
+            <dd><a href="../simplify-quickstart/index.html">simplify-quickstart</a></dd>
+            <dd><a href="../simulate_reporting_date/index.html">simulate_reporting_date</a></dd>
+        </dl>
+    </div>
 </div>
+
 
   <script type="text/javascript">
       jQuery(function () {

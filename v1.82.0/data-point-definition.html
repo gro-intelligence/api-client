@@ -1,9 +1,7 @@
 
 
-
-
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html4" lang="en" >
 <head>
   <meta charset="utf-8">
   
@@ -15,6 +13,7 @@
   
   <link rel="stylesheet" href="_static/css/custom-theme.css" type="text/css" />
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/banner.css" type="text/css" />
 
   
   
@@ -27,11 +26,20 @@
   <![endif]-->
   
     
-      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-        <script src="_static/jquery.js"></script>
-        <script src="_static/underscore.js"></script>
-        <script src="_static/doctools.js"></script>
-        <script src="_static/language_data.js"></script>
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'./',
+              VERSION:'',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
@@ -198,18 +206,19 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-
-<p class="version-banner">
-  <strong>Note:</strong>
-  This document is for an older version of the Gro API Client.
-  Please see the <a href="../development/data-point-definition.html">latest documentation</a>.
-</p>
+  
 
 
-  <div class="section" id="data-point-definition">
+    
+    
+
+
+
+    <p class="scv-banner scv-sphinx_rtd_theme"><a href="../development/data-point-definition.html"><b>Warning:</b> This document is for an old version of Gro API Client. The main version is development.</a></p>
+<div class="section" id="data-point-definition">
 <h1>Data Point Definition<a class="headerlink" href="#data-point-definition" title="Permalink to this headline">¶</a></h1>
-<p>Gro defines a “data point” as a discrete result produced by our API. When using the <code class="docutils literal notranslate"><span class="pre">get_data_points()</span></code> function, you are returned an array of points, each of which is a Python dictionary object that looks something like:</p>
-<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s1">&#39;start_date&#39;</span><span class="p">:</span> <span class="s1">&#39;2013-02-04T00:00:00.000Z&#39;</span><span class="p">,</span>
+<p>Gro defines a &#8220;data point&#8220; as a discrete result produced by our API. When using the <code class="docutils literal"><span class="pre">get_data_points()</span></code> function, you are returned an array of points, each of which is a Python dictionary object that looks something like:</p>
+<div class="highlight-py"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s1">&#39;start_date&#39;</span><span class="p">:</span> <span class="s1">&#39;2013-02-04T00:00:00.000Z&#39;</span><span class="p">,</span>
   <span class="s1">&#39;end_date&#39;</span><span class="p">:</span> <span class="s1">&#39;2013-02-04T00:00:00.000Z&#39;</span><span class="p">,</span>
   <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="mf">0.131714797651</span><span class="p">,</span>
   <span class="s1">&#39;unit_id&#39;</span><span class="p">:</span> <span class="mi">851</span><span class="p">,</span>
@@ -224,18 +233,17 @@
 <p>Another example is if you get weekly precipitation data for a given region in a given week, you will get a single point. On the other hand, if you get daily precipitation for a given region for a period of a week, you will get seven data points.</p>
 <p>Below are some explanations of what each of those fields represent:</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">start_date</span></code>: beginning of the period this point represents</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">end_date</span></code>: end of the period this point represents</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">value</span></code>: the value, typically a number. In some cases, the value may be non-numeric. E.g., when the metric is Crop Calendar, a value of “planting,” represents the fact that the planting period is from <code class="docutils literal notranslate"><span class="pre">start_date</span></code> to <code class="docutils literal notranslate"><span class="pre">end_date</span></code>.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">unit_id</span></code>: this is a Gro unit id you can look up the name/abbreviation/etc. of using the <code class="docutils literal notranslate"><span class="pre">client.lookup('units',</span> <span class="pre">unit_id)</span></code> function. There’s also a helper function of which you can see an example in the <a class="reference external" href="https://github.com/gro-intelligence/api-client/blob/9c2c17642980b5415b8a8167a28276b77e34915c/api/client/samples/quick_start.py#L30">quickstart</a> for getting just the abbreviation from the unit id, <code class="docutils literal notranslate"><span class="pre">client.lookup_unit_abbreviation(point['unit_id'])</span></code>, which is the common case you probably want</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">reporting_date</span></code>: date the source reported this value (only included when source provides reporting date)</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">metric_id</span></code>: unique id for the metric (i.e. “Export Value (currency)”) you selected - get more details (name, definition, …) using <code class="docutils literal notranslate"><span class="pre">client.lookup('metrics',</span> <span class="pre">metric_id)</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">item_id</span></code>: unique id for the item (i.e., “Corn”) you selected - get more details (name, definition, …) using <code class="docutils literal notranslate"><span class="pre">client.lookup('items',</span> <span class="pre">item_id)</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">region_id</span></code>: unique id for the region (i.e., “United States”) you selected - get more details (name, administrative level, …) using <code class="docutils literal notranslate"><span class="pre">client.lookup('regions',</span> <span class="pre">region_id)</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">frequency_id</span></code>: unique id for the frequency (i.e., “annual”) you selected - get more details (name, abbreviation, period length, …) using <code class="docutils literal notranslate"><span class="pre">client.lookup('frequencies',</span> <span class="pre">frequency_id)</span></code></p></li>
+<li><code class="docutils literal"><span class="pre">start_date</span></code>: beginning of the period this point represents</li>
+<li><code class="docutils literal"><span class="pre">end_date</span></code>: end of the period this point represents</li>
+<li><code class="docutils literal"><span class="pre">value</span></code>: the value, typically a number. In some cases, the value may be non-numeric. E.g., when the metric is Crop Calendar, a value of &#8220;planting,&#8220; represents the fact that the planting period is from <code class="docutils literal"><span class="pre">start_date</span></code> to <code class="docutils literal"><span class="pre">end_date</span></code>.</li>
+<li><code class="docutils literal"><span class="pre">unit_id</span></code>: this is a Gro unit id you can look up the name/abbreviation/etc. of using the <code class="docutils literal"><span class="pre">client.lookup('units',</span> <span class="pre">unit_id)</span></code> function. There&#8216;s also a helper function of which you can see an example in the <a class="reference external" href="https://github.com/gro-intelligence/api-client/blob/9c2c17642980b5415b8a8167a28276b77e34915c/api/client/samples/quick_start.py#L30">quickstart</a> for getting just the abbreviation from the unit id, <code class="docutils literal"><span class="pre">client.lookup_unit_abbreviation(point['unit_id'])</span></code>, which is the common case you probably want</li>
+<li><code class="docutils literal"><span class="pre">reporting_date</span></code>: date the source reported this value (only included when source provides reporting date)</li>
+<li><code class="docutils literal"><span class="pre">metric_id</span></code>: unique id for the metric (i.e. &#8220;Export Value (currency)&#8220;) you selected - get more details (name, definition, ...) using <code class="docutils literal"><span class="pre">client.lookup('metrics',</span> <span class="pre">metric_id)</span></code></li>
+<li><code class="docutils literal"><span class="pre">item_id</span></code>: unique id for the item (i.e., &#8220;Corn&#8220;) you selected - get more details (name, definition, ...) using <code class="docutils literal"><span class="pre">client.lookup('items',</span> <span class="pre">item_id)</span></code></li>
+<li><code class="docutils literal"><span class="pre">region_id</span></code>: unique id for the region (i.e., &#8220;United States&#8220;) you selected - get more details (name, administrative level, ...) using <code class="docutils literal"><span class="pre">client.lookup('regions',</span> <span class="pre">region_id)</span></code></li>
+<li><code class="docutils literal"><span class="pre">frequency_id</span></code>: unique id for the frequency (i.e., &#8220;annual&#8220;) you selected - get more details (name, abbreviation, period length, ...) using <code class="docutils literal"><span class="pre">client.lookup('frequencies',</span> <span class="pre">frequency_id)</span></code></li>
 </ul>
 </div>
-
 
 
            </div>
@@ -258,7 +266,7 @@
   <div role="contentinfo">
     <p>
         
-        &copy; Copyright 2020, Gro Intelligence
+        &copy; Copyright 2019, Gro Intelligence
 
     </p>
   </div>
@@ -281,33 +289,48 @@
   </div>
   
 <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
-  <span class="rst-current-version" data-toggle="rst-current-version">
-    <span class="fa fa-book"> Other Versions</span>
-    v: v1.82.0
-    <span class="fa fa-caret-down"></span>
-  </span>
-  <div class="rst-other-versions">
-    <dl>
-      <dt>Releases</dt>
-      <dd><a href="../v1.40.6/data-point-definition.html">v1.40.6</a></dd>
-      <dd><a href="../v1.56.0/data-point-definition.html">v1.56.0</a></dd>
-      <dd><a href="../v1.56.1/data-point-definition.html">v1.56.1</a></dd>
-      <dd><a href="../v1.56.2/data-point-definition.html">v1.56.2</a></dd>
-      <dd><a href="../v1.60.0/data-point-definition.html">v1.60.0</a></dd>
-      <dd><a href="../v1.60.1/data-point-definition.html">v1.60.1</a></dd>
-      <dd><a href="../v1.71.0/data-point-definition.html">v1.71.0</a></dd>
-      <dd><a href="../v1.76.0/data-point-definition.html">v1.76.0</a></dd>
-      <dd><a href="../v1.77.0/data-point-definition.html">v1.77.0</a></dd>
-      <dd><a href="../v1.77.1/data-point-definition.html">v1.77.1</a></dd>
-      <dd><a href="data-point-definition.html">v1.82.0</a></dd>
-      <dd><a href="../v1.83.0/data-point-definition.html">v1.83.0</a></dd>
-      <dd><a href="../v1.98.0/data-point-definition.html">v1.98.0</a></dd>
-
-      
+    <span class="rst-current-version" data-toggle="rst-current-version">
+        <span class="fa fa-book"> Other Versions</span>
+        v: v1.82.0
+        <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+        <dl>
+            <dt>Tags</dt>
+            <dd><a href="../v1.40.6/data-point-definition.html">v1.40.6</a></dd>
+            <dd><a href="../v1.56.0/data-point-definition.html">v1.56.0</a></dd>
+            <dd><a href="../v1.56.1/data-point-definition.html">v1.56.1</a></dd>
+            <dd><a href="../v1.56.2/data-point-definition.html">v1.56.2</a></dd>
+            <dd><a href="../v1.60.0/data-point-definition.html">v1.60.0</a></dd>
+            <dd><a href="../v1.60.1/data-point-definition.html">v1.60.1</a></dd>
+            <dd><a href="../v1.71.0/data-point-definition.html">v1.71.0</a></dd>
+            <dd><a href="../v1.76.0/data-point-definition.html">v1.76.0</a></dd>
+            <dd><a href="../v1.77.0/data-point-definition.html">v1.77.0</a></dd>
+            <dd><a href="../v1.77.1/data-point-definition.html">v1.77.1</a></dd>
+            <dd><a href="data-point-definition.html">v1.82.0</a></dd>
+            <dd><a href="../v1.83.0/data-point-definition.html">v1.83.0</a></dd>
+            <dd><a href="../v1.98.0/data-point-definition.html">v1.98.0</a></dd>
+        </dl>
+        <dl>
+            <dt>Branches</dt>
+            <dd><a href="../CLEWS-15676-add-names-to-index/data-point-definition.html">CLEWS-15676-add-names-to-index</a></dd>
+            <dd><a href="../CLEWS-16955-units/index.html">CLEWS-16955-units</a></dd>
+            <dd><a href="../CLEWS-19063/data-point-definition.html">CLEWS-19063</a></dd>
+            <dd><a href="../CLEWS-19840-3/data-point-definition.html">CLEWS-19840-3</a></dd>
+            <dd><a href="../CLEWS-22288/index.html">CLEWS-22288</a></dd>
+            <dd><a href="../CLEWS-23863/data-point-definition.html">CLEWS-23863</a></dd>
+            <dd><a href="../CLEWS-23863-composite-rank/data-point-definition.html">CLEWS-23863-composite-rank</a></dd>
+            <dd><a href="../CLEWS-26758-similar_regions/data-point-definition.html">CLEWS-26758-similar_regions</a></dd>
+            <dd><a href="../CLEWS-27625-fixtures/data-point-definition.html">CLEWS-27625-fixtures</a></dd>
             <dd><a href="../development/data-point-definition.html">development</a></dd>
-    </dl>
-  </div>
+            <dd><a href="../jli-requirecleandocs/data-point-definition.html">jli-requirecleandocs</a></dd>
+            <dd><a href="../lib-test-refactor/data-point-definition.html">lib-test-refactor</a></dd>
+            <dd><a href="../simplify-quickstart/data-point-definition.html">simplify-quickstart</a></dd>
+            <dd><a href="../simulate_reporting_date/data-point-definition.html">simulate_reporting_date</a></dd>
+        </dl>
+    </div>
 </div>
+
 
   <script type="text/javascript">
       jQuery(function () {

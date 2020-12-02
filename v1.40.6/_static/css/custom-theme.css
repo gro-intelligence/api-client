@@ -1,46 +1,42 @@
 @import 'theme.css';
-@import 'sidebar.css';
-@import 'banner.css';
-
-
 h1 {
     font-family: Roboto,Arial,sans-serif;
-    font-weight: 300;
-    font-size: 36px;
+    font-weight:300;
+    font-size: 48px;
     color: #444447;
-    line-height: 42px;
+    line-height: 48px;
 }
 
 h2 {
     font-family: Roboto,Arial,sans-serif;
-    font-weight: 400;
-    font-size: 22px;
+    font-weight:300;
+    font-size: 32px;
     color: #444447;
     line-height: 36px;
 }
 
 h3 {
     font-family: Roboto,Arial,sans-serif;
-    font-weight: 500;
-    font-size: 18px;
-    color: #666669;
-    line-height: 28px;
+    font-weight:500;
+    font-size: 21px;
+    color: #555558;
+    line-height: 21px;
 }
 
 h4 {
     font-family: Roboto,Arial,sans-serif;
-    font-weight: 400;
-    font-size: 16px;
+    font-weight:500;
+    font-size: 18px;
     color: #555558;
     line-height: 21px;
 }
 
 p {
     font-family: Roboto,Arial,sans-serif;
-    font-weight: 400;
+    font-weight:400;
     font-size: 16px;
-    color: #666669;
-    line-height: 21px;
+    color: #444447;
+    line-height: 28px;
 }
 
 ol li{
@@ -53,29 +49,141 @@ ol li{
 
 a {
     font-family: Roboto,Arial,sans-serif;
-    font-weight: 400;
+    font-weight:400;
     font-size: 16px;
-    color: #00A1C2;
-    line-height: inherit;
+    color: #e31b37;
+    line-height: 28px;
     text-decoration: underline;
-}
-
-a:visited {
-  color: #00A1C2;
-}
-
-a.reference.external:after {
-  font-size: unset !important;
-  vertical-align: initial !important;
 }
 
 img {
     padding: 26px 0;
 }
 
+.wy-side-nav-search {
+    background-color: #ffffff;
+}
+
+.wy-menu-vertical a {
+    color: #404040;
+}
+
+.wy-nav-side {
+    background: #ffffff;
+}
+
 .wy-nav-content {
-  border-left: 2px #EEEEF1 solid;
-  max-width: 800px;
+    border-left: 2px #EEEEF1 solid;
+    max-width: 800px;
+}
+
+.caption {
+    border-top: 1px solid #eeeef1;
+}
+
+.caption-text {
+    font-family: Roboto,Arial,sans-serif;
+    font-weight:500;
+    font-size: 12px;
+    color: #9b9b9e;
+    line-height: 14px;
+    text-transform: capitalize;
+}
+
+.current {
+    font-family: Roboto,Arial,sans-serif;
+    font-weight:400;
+    font-size: 13px;
+    color: #555558;
+    line-height: 13px;
+    background: #fff;
+}
+
+.reference.internal {
+    font-family: Roboto,Arial,sans-serif;
+    font-weight:400;
+    font-size: 13px;
+    color: #555558;
+    line-height: 20px;
+    text-decoration: none;
+}
+
+a:hover.reference.internal {
+    color: #e31b37;
+}
+
+.wy-menu-vertical li span.toctree-expand {
+    line-height: 20px;
+}
+
+.wy-menu-vertical li.toctree-l2 span.toctree-expand {
+    line-height: 20px;
+}
+
+.wy-menu-vertical li.toctree-l2 a:hover span.toctree-expand{
+    line-height: 20px;
+}
+
+.wy-menu-vertical li.on a span.toctree-expand, .wy-menu-vertical li.current>a span.toctree-expand {
+    line-height: 20px;
+}
+
+.wy-menu-vertical a:hover {
+    background: #fff;
+    color: #e31b37;
+}
+
+.reference.internal.current {
+    color: #e31b37;
+}
+
+.wy-menu-vertical li.current {
+    background: #fff;
+}
+
+.wy-menu-vertical li.current a:hover {
+    background: #fff;
+    color: #e31b37;
+}
+
+.wy-menu-vertical li.toctree-l1.current>a {
+    border:none;
+    font-size: 16px;
+}
+
+.wy-menu-vertical li.toctree-l2.current>a {
+    background: #fff;
+}
+
+.wy-menu-vertical li.toctree-l2.current li.toctree-l3>a {
+    background: #fff; 
+}
+
+.wy-menu-vertical li.toctree-l3.current li.toctree-l4>a {
+    background: #fff;
+}
+
+.wy-side-nav-search>a.icon img.logo, .wy-side-nav-search .wy-dropdown>a.icon img.logo {
+    width: 74px;
+    padding-left: 0;
+}
+
+.wy-side-nav-search input[type=text] {
+    font-family: Roboto,Arial,sans-serif;
+    border-color: #eeeef1;
+    border-radius: 3px;
+    background-color: #eeeef1;
+}
+
+.wy-side-nav-search>a, .wy-side-nav-search .wy-dropdown>a {
+    display: table-cell;
+}
+
+.wy-side-nav-search>a.icon img.logo, .wy-side-nav-search .wy-dropdown>a.icon img.logo {
+    margin-left: 0;
+    margin-top: 0;
+    width: 180px;
+    margin-bottom: 24px;
 }
 
 .wy-breadcrumbs {
@@ -84,10 +192,6 @@ img {
 
 .rst-breadcrumbs-buttons {
     display: none;
-}
-
-.wy-breadcrumbs li.wy-breadcrumbs-aside {
-  display: none;
 }
 
 .rst-footer-buttons {
@@ -145,43 +249,6 @@ img {
     font-family: Roboto,Arial,sans-serif;
 }
 
-.rst-content ol li {
-  font-family: Roboto,Arial,sans-serif;
-  font-weight: 400;
-  font-size: 16px;
-  color: #666669;
-  line-height: 21px;
-}
-
-
-/* Page Table of Contents */
-.rst-content .section .contents {
-  border-bottom: solid #DDDDE0 1px;
-  margin-bottom: 40px;
-}
-
-.rst-content .section .contents .topic-title {
-  text-transform: uppercase;
-  font-weight: 500;
-  font-size: 18px;
-  margin-bottom: 8px;
-}
-
-.rst-content .section .contents ul li,
-.rst-content .section .contents ul li li {
-  line-height: 25px;
-  list-style: none;
-}
- 
-.rst-content .section .contents > ul > li {
-  margin-left: 3px;
-}
-
-.rst-content a.toc-backref {
-  text-decoration: inherit;
-  font: inherit;
-}
-
 footer {
     font-family: Roboto,Arial,sans-serif;
     font-size: 0;
@@ -201,33 +268,7 @@ footer a {
     display: none;
 }
 
-/* Make method links like :meth:`~.get_data_points` not tiny */
-code, .rst-content tt, .rst-content code {
-  font-size: 90% !important;
-  font-weight: 500 !important;
-}
-
-a > code {
-  text-decoration: underline;
-}
-
-.rst-content code.xref {
-  color: #e31b37;
-}
-
-.rst-content a {
-  font-size: inherit;
-}
-
-.caption-text {
-  font-size: 15px;
-  font-weight: 500;
-  color: #555558;
-  text-transform: capitalize;
-}
-
-.rst-content .caption-text {
-  font-family: Roboto,Arial,sans-serif;
-  font-weight: 500;
-  color: #9b9b9e;
+/* hide branches from version switcher */
+.rst-other-versions dl:last-child {
+    display: none;
 }

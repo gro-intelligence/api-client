@@ -1,9 +1,7 @@
 
 
-
-
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html4" lang="en" >
 <head>
   <meta charset="utf-8">
   
@@ -15,6 +13,7 @@
   
   <link rel="stylesheet" href="../_static/css/custom-theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/banner.css" type="text/css" />
 
   
   
@@ -27,11 +26,20 @@
   <![endif]-->
   
     
-      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script src="../_static/jquery.js"></script>
-        <script src="../_static/underscore.js"></script>
-        <script src="../_static/doctools.js"></script>
-        <script src="../_static/language_data.js"></script>
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../',
+              VERSION:'',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
@@ -200,25 +208,25 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-
-<p class="version-banner">
-  <strong>Note:</strong>
-  This document is for an older version of the Gro API Client.
-  Please see the <a href="../../development/quick-start-projects/quickstart.html">latest documentation</a>.
-</p>
+  
 
 
-  <div class="section" id="quickstart-py">
+    
+    
+
+
+
+    <p class="scv-banner scv-sphinx_rtd_theme"><a href="../../development/quick-start-projects/quickstart.html"><b>Warning:</b> This document is for the development version of Gro API Client. The main version is development.</a></p>
+<div class="section" id="quickstart-py">
 <h1>Quickstart.py<a class="headerlink" href="#quickstart-py" title="Permalink to this headline">¶</a></h1>
-<p><a class="reference external" href="https://github.com/gro-intelligence/api-client/blob/development/api/client/samples/quick_start.py">quick_start.py</a> is a simple script that creates an authenticated <code class="code docutils literal notranslate"><span class="pre">GroClient</span></code> object and uses the <a class="reference internal" href="../api.html#api.client.gro_client.GroClient.get_data_series" title="api.client.gro_client.GroClient.get_data_series"><code class="xref py py-meth docutils literal notranslate"><span class="pre">api.client.gro_client.GroClient.get_data_series()</span></code></a> and <a class="reference internal" href="../api.html#api.client.gro_client.GroClient.get_data_points" title="api.client.gro_client.GroClient.get_data_points"><code class="xref py py-meth docutils literal notranslate"><span class="pre">api.client.gro_client.GroClient.get_data_points()</span></code></a> methods to find Area Harvested series for Ukrainian Wheat from a variety of different sources, and outputs the time series points to a CSV file. You will likely want to revisit this script as a starting point for building your own scripts.</p>
-<p>Note that the script assumes you have your authentication token set to a <code class="code docutils literal notranslate"><span class="pre">GROAPI_TOKEN</span></code> environment variable <a class="reference external" href="./authentication#saving-your-token-as-an-environment-variable">see Saving your token as an environment variable</a>. If you don’t wish to use environment variables, you can modify the sample script to set <code class="code docutils literal notranslate"><span class="pre">ACCESS_TOKEN</span></code> in some other way.</p>
+<p><a class="reference external" href="https://github.com/gro-intelligence/api-client/blob/development/api/client/samples/quick_start.py">quick_start.py</a> is a simple script that creates an authenticated <code class="code docutils literal"><span class="pre">GroClient</span></code> object and uses the <a class="reference internal" href="../api.html#api.client.gro_client.GroClient.get_data_series" title="api.client.gro_client.GroClient.get_data_series"><code class="xref py py-meth docutils literal"><span class="pre">api.client.gro_client.GroClient.get_data_series()</span></code></a> and <a class="reference internal" href="../api.html#api.client.gro_client.GroClient.get_data_points" title="api.client.gro_client.GroClient.get_data_points"><code class="xref py py-meth docutils literal"><span class="pre">api.client.gro_client.GroClient.get_data_points()</span></code></a> methods to find Area Harvested series for Ukrainian Wheat from a variety of different sources, and outputs the time series points to a CSV file. You will likely want to revisit this script as a starting point for building your own scripts.</p>
+<p>Note that the script assumes you have your authentication token set to a <code class="code docutils literal"><span class="pre">GROAPI_TOKEN</span></code> environment variable <a class="reference external" href="./authentication#saving-your-token-as-an-environment-variable">see Saving your token as an environment variable</a>. If you don&#8217;t wish to use environment variables, you can modify the sample script to set <code class="code docutils literal"><span class="pre">ACCESS_TOKEN</span></code> in some other way.</p>
 <p>Just simply run the following from your terminal:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ python quick_start.py
+<div class="highlight-default"><div class="highlight"><pre><span></span>$ python quick_start.py
 </pre></div>
 </div>
-<p>If the API client is installed and your authentication token is set, a CSV file called <code class="code docutils literal notranslate"><span class="pre">gro_client_output.csv</span></code> should be created in the directory where the script was run.</p>
+<p>If the API client is installed and your authentication token is set, a CSV file called <code class="code docutils literal"><span class="pre">gro_client_output.csv</span></code> should be created in the directory where the script was run.</p>
 </div>
-
 
 
            </div>
@@ -241,7 +249,7 @@
   <div role="contentinfo">
     <p>
         
-        &copy; Copyright 2020, Gro Intelligence
+        &copy; Copyright 2019, Gro Intelligence
 
     </p>
   </div>
@@ -264,33 +272,48 @@
   </div>
   
 <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
-  <span class="rst-current-version" data-toggle="rst-current-version">
-    <span class="fa fa-book"> Other Versions</span>
-    v: lib-test-refactor
-    <span class="fa fa-caret-down"></span>
-  </span>
-  <div class="rst-other-versions">
-    <dl>
-      <dt>Releases</dt>
-      <dd><a href="../../v1.40.6/index.html">v1.40.6</a></dd>
-      <dd><a href="../../v1.56.0/index.html">v1.56.0</a></dd>
-      <dd><a href="../../v1.56.1/index.html">v1.56.1</a></dd>
-      <dd><a href="../../v1.56.2/index.html">v1.56.2</a></dd>
-      <dd><a href="../../v1.60.0/index.html">v1.60.0</a></dd>
-      <dd><a href="../../v1.60.1/index.html">v1.60.1</a></dd>
-      <dd><a href="../../v1.71.0/index.html">v1.71.0</a></dd>
-      <dd><a href="../../v1.76.0/quick-start-projects/quickstart.html">v1.76.0</a></dd>
-      <dd><a href="../../v1.77.0/quick-start-projects/quickstart.html">v1.77.0</a></dd>
-      <dd><a href="../../v1.77.1/quick-start-projects/quickstart.html">v1.77.1</a></dd>
-      <dd><a href="../../v1.82.0/quick-start-projects/quickstart.html">v1.82.0</a></dd>
-      <dd><a href="../../v1.83.0/quick-start-projects/quickstart.html">v1.83.0</a></dd>
-      <dd><a href="../../v1.98.0/quick-start-projects/quickstart.html">v1.98.0</a></dd>
-
-      
+    <span class="rst-current-version" data-toggle="rst-current-version">
+        <span class="fa fa-book"> Other Versions</span>
+        v: lib-test-refactor
+        <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+        <dl>
+            <dt>Tags</dt>
+            <dd><a href="../../v1.40.6/index.html">v1.40.6</a></dd>
+            <dd><a href="../../v1.56.0/index.html">v1.56.0</a></dd>
+            <dd><a href="../../v1.56.1/index.html">v1.56.1</a></dd>
+            <dd><a href="../../v1.56.2/index.html">v1.56.2</a></dd>
+            <dd><a href="../../v1.60.0/index.html">v1.60.0</a></dd>
+            <dd><a href="../../v1.60.1/index.html">v1.60.1</a></dd>
+            <dd><a href="../../v1.71.0/index.html">v1.71.0</a></dd>
+            <dd><a href="../../v1.76.0/quick-start-projects/quickstart.html">v1.76.0</a></dd>
+            <dd><a href="../../v1.77.0/quick-start-projects/quickstart.html">v1.77.0</a></dd>
+            <dd><a href="../../v1.77.1/quick-start-projects/quickstart.html">v1.77.1</a></dd>
+            <dd><a href="../../v1.82.0/quick-start-projects/quickstart.html">v1.82.0</a></dd>
+            <dd><a href="../../v1.83.0/quick-start-projects/quickstart.html">v1.83.0</a></dd>
+            <dd><a href="../../v1.98.0/quick-start-projects/quickstart.html">v1.98.0</a></dd>
+        </dl>
+        <dl>
+            <dt>Branches</dt>
+            <dd><a href="../../CLEWS-15676-add-names-to-index/quick-start-projects/quickstart.html">CLEWS-15676-add-names-to-index</a></dd>
+            <dd><a href="../../CLEWS-16955-units/index.html">CLEWS-16955-units</a></dd>
+            <dd><a href="../../CLEWS-19063/index.html">CLEWS-19063</a></dd>
+            <dd><a href="../../CLEWS-19840-3/index.html">CLEWS-19840-3</a></dd>
+            <dd><a href="../../CLEWS-22288/index.html">CLEWS-22288</a></dd>
+            <dd><a href="../../CLEWS-23863/index.html">CLEWS-23863</a></dd>
+            <dd><a href="../../CLEWS-23863-composite-rank/quick-start-projects/quickstart.html">CLEWS-23863-composite-rank</a></dd>
+            <dd><a href="../../CLEWS-26758-similar_regions/quick-start-projects/quickstart.html">CLEWS-26758-similar_regions</a></dd>
+            <dd><a href="../../CLEWS-27625-fixtures/quick-start-projects/quickstart.html">CLEWS-27625-fixtures</a></dd>
             <dd><a href="../../development/quick-start-projects/quickstart.html">development</a></dd>
-    </dl>
-  </div>
+            <dd><a href="../../jli-requirecleandocs/quick-start-projects/quickstart.html">jli-requirecleandocs</a></dd>
+            <dd><a href="quickstart.html">lib-test-refactor</a></dd>
+            <dd><a href="../../simplify-quickstart/index.html">simplify-quickstart</a></dd>
+            <dd><a href="../../simulate_reporting_date/quick-start-projects/quickstart.html">simulate_reporting_date</a></dd>
+        </dl>
+    </div>
 </div>
+
 
   <script type="text/javascript">
       jQuery(function () {

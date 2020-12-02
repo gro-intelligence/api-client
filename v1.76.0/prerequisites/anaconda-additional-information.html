@@ -1,9 +1,7 @@
 
 
-
-
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html4" lang="en" >
 <head>
   <meta charset="utf-8">
   
@@ -15,6 +13,7 @@
   
   <link rel="stylesheet" href="../_static/css/custom-theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/banner.css" type="text/css" />
 
   
   
@@ -27,11 +26,20 @@
   <![endif]-->
   
     
-      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script src="../_static/jquery.js"></script>
-        <script src="../_static/underscore.js"></script>
-        <script src="../_static/doctools.js"></script>
-        <script src="../_static/language_data.js"></script>
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../',
+              VERSION:'',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
@@ -187,49 +195,51 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-
-<p class="version-banner">
-  <strong>Note:</strong>
-  This document is for an older version of the Gro API Client.
-  Please see the <a href="../../development/prerequisites/anaconda-additional-information.html">latest documentation</a>.
-</p>
+  
 
 
-  <div class="section" id="anaconda-additional-information">
+    
+    
+
+
+
+    <p class="scv-banner scv-sphinx_rtd_theme"><a href="../../development/prerequisites/anaconda-additional-information.html"><b>Warning:</b> This document is for an old version of Gro API Client. The main version is development.</a></p>
+<div class="section" id="anaconda-additional-information">
 <h1>Anaconda Additional Information<a class="headerlink" href="#anaconda-additional-information" title="Permalink to this headline">¶</a></h1>
 <ol class="arabic simple">
-<li><dl class="simple">
-<dt>If your username includes spaces, as is common on Windows systems, you are not allowed to install Anaconda in the default path (C:Users&lt;your-username&gt;Anaconda3)</dt><dd><ol class="arabic simple">
-<li><p>See this <a class="reference external" href="https://docs.anaconda.com/anaconda/user-guide/faq/#distribution-faq-windows-folder">Anaconda link</a> for additional information.</p></li>
+<li><dl class="first docutils">
+<dt>If your username includes spaces, as is common on Windows systems, you are not allowed to install Anaconda in the default path (C:Users&lt;your-username&gt;Anaconda3)</dt>
+<dd><ol class="first last arabic">
+<li>See this <a class="reference external" href="https://docs.anaconda.com/anaconda/user-guide/faq/#distribution-faq-windows-folder">Anaconda link</a> for additional information.</li>
 </ol>
 </dd>
 </dl>
 </li>
-<li><dl class="simple">
-<dt>If you install Anaconda outside of the default path, then you will need to update the config for the jupyter notebook default directory as outlined below:</dt><dd><ol class="arabic simple">
-<li><p>Go to the default path (C:Users/&lt;your-username&gt;)</p></li>
-<li><p>Open the .jupyter folder (pay attention to the ‘dot’ before the name)</p></li>
-<li><p>Open the following file using a text editor: jupyter_notebook_config.py</p></li>
-<li><dl class="simple">
-<dt>Edit the following line</dt><dd><p><code class="code docutils literal notranslate"><span class="pre">#c.NotebookApp.notebook_dir</span> <span class="pre">=</span> <span class="pre">u&quot;</span></code>
+<li><dl class="first docutils">
+<dt>If you install Anaconda outside of the default path, then you will need to update the config for the jupyter notebook default directory as outlined below:</dt>
+<dd><ol class="first last arabic">
+<li>Go to the default path (C:Users/&lt;your-username&gt;)</li>
+<li>Open the .jupyter folder (pay attention to the ‘dot’ before the name)</li>
+<li>Open the following file using a text editor: jupyter_notebook_config.py</li>
+<li><dl class="first docutils">
+<dt>Edit the following line</dt>
+<dd><code class="code docutils literal"><span class="pre">#c.NotebookApp.notebook_dir</span> <span class="pre">=</span> <span class="pre">u&quot;</span></code>
 change it to:
-<code class="code docutils literal notranslate"><span class="pre">c.NotebookApp.notebook_dir</span> <span class="pre">=</span> <span class="pre">'C:\Your\Path'</span></code>
-Note: Be careful not to leave an empty space in the line when you delete the ‘#’ character, the first character on that line is ‘c’</p>
-</dd>
+<code class="code docutils literal"><span class="pre">c.NotebookApp.notebook_dir</span> <span class="pre">=</span> <span class="pre">'C:\Your\Path'</span></code>
+Note: Be careful not to leave an empty space in the line when you delete the ‘#’ character, the first character on that line is ‘c’</dd>
 </dl>
 </li>
-<li><p>Save the file</p></li>
-<li><p>Relaunch Anaconda Navigator</p></li>
-<li><p>Launch jupyter notebook</p></li>
+<li>Save the file</li>
+<li>Relaunch Anaconda Navigator</li>
+<li>Launch jupyter notebook</li>
 </ol>
 </dd>
 </dl>
 </li>
-<li><p>See the following link from Anaconda if you have a <a class="reference external" href="https://docs.anaconda.com/anaconda/user-guide/tasks/proxy/">proxy</a></p></li>
-<li><p>See the following link from Anaconda if you have a <a class="reference external" href="https://docs.anaconda.com/anaconda-enterprise-4/ae-and-nav/#configuring-firewall-settings">firewall</a></p></li>
+<li>See the following link from Anaconda if you have a <a class="reference external" href="https://docs.anaconda.com/anaconda/user-guide/tasks/proxy/">proxy</a></li>
+<li>See the following link from Anaconda if you have a <a class="reference external" href="https://docs.anaconda.com/anaconda-enterprise-4/ae-and-nav/#configuring-firewall-settings">firewall</a></li>
 </ol>
 </div>
-
 
 
            </div>
@@ -243,7 +253,7 @@ Note: Be careful not to leave an empty space in the line when you delete the ‘
   <div role="contentinfo">
     <p>
         
-        &copy; Copyright 2020, Gro Intelligence
+        &copy; Copyright 2019, Gro Intelligence
 
     </p>
   </div>
@@ -266,33 +276,48 @@ Note: Be careful not to leave an empty space in the line when you delete the ‘
   </div>
   
 <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
-  <span class="rst-current-version" data-toggle="rst-current-version">
-    <span class="fa fa-book"> Other Versions</span>
-    v: v1.76.0
-    <span class="fa fa-caret-down"></span>
-  </span>
-  <div class="rst-other-versions">
-    <dl>
-      <dt>Releases</dt>
-      <dd><a href="../../v1.40.6/index.html">v1.40.6</a></dd>
-      <dd><a href="../../v1.56.0/index.html">v1.56.0</a></dd>
-      <dd><a href="../../v1.56.1/index.html">v1.56.1</a></dd>
-      <dd><a href="../../v1.56.2/index.html">v1.56.2</a></dd>
-      <dd><a href="../../v1.60.0/index.html">v1.60.0</a></dd>
-      <dd><a href="../../v1.60.1/index.html">v1.60.1</a></dd>
-      <dd><a href="../../v1.71.0/index.html">v1.71.0</a></dd>
-      <dd><a href="anaconda-additional-information.html">v1.76.0</a></dd>
-      <dd><a href="../../v1.77.0/prerequisites/anaconda-additional-information.html">v1.77.0</a></dd>
-      <dd><a href="../../v1.77.1/prerequisites/anaconda-additional-information.html">v1.77.1</a></dd>
-      <dd><a href="../../v1.82.0/prerequisites/anaconda-additional-information.html">v1.82.0</a></dd>
-      <dd><a href="../../v1.83.0/prerequisites/anaconda-additional-information.html">v1.83.0</a></dd>
-      <dd><a href="../../v1.98.0/prerequisites/anaconda-additional-information.html">v1.98.0</a></dd>
-
-      
+    <span class="rst-current-version" data-toggle="rst-current-version">
+        <span class="fa fa-book"> Other Versions</span>
+        v: v1.76.0
+        <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+        <dl>
+            <dt>Tags</dt>
+            <dd><a href="../../v1.40.6/index.html">v1.40.6</a></dd>
+            <dd><a href="../../v1.56.0/index.html">v1.56.0</a></dd>
+            <dd><a href="../../v1.56.1/index.html">v1.56.1</a></dd>
+            <dd><a href="../../v1.56.2/index.html">v1.56.2</a></dd>
+            <dd><a href="../../v1.60.0/index.html">v1.60.0</a></dd>
+            <dd><a href="../../v1.60.1/index.html">v1.60.1</a></dd>
+            <dd><a href="../../v1.71.0/index.html">v1.71.0</a></dd>
+            <dd><a href="anaconda-additional-information.html">v1.76.0</a></dd>
+            <dd><a href="../../v1.77.0/prerequisites/anaconda-additional-information.html">v1.77.0</a></dd>
+            <dd><a href="../../v1.77.1/prerequisites/anaconda-additional-information.html">v1.77.1</a></dd>
+            <dd><a href="../../v1.82.0/prerequisites/anaconda-additional-information.html">v1.82.0</a></dd>
+            <dd><a href="../../v1.83.0/prerequisites/anaconda-additional-information.html">v1.83.0</a></dd>
+            <dd><a href="../../v1.98.0/prerequisites/anaconda-additional-information.html">v1.98.0</a></dd>
+        </dl>
+        <dl>
+            <dt>Branches</dt>
+            <dd><a href="../../CLEWS-15676-add-names-to-index/prerequisites/anaconda-additional-information.html">CLEWS-15676-add-names-to-index</a></dd>
+            <dd><a href="../../CLEWS-16955-units/index.html">CLEWS-16955-units</a></dd>
+            <dd><a href="../../CLEWS-19063/index.html">CLEWS-19063</a></dd>
+            <dd><a href="../../CLEWS-19840-3/index.html">CLEWS-19840-3</a></dd>
+            <dd><a href="../../CLEWS-22288/index.html">CLEWS-22288</a></dd>
+            <dd><a href="../../CLEWS-23863/index.html">CLEWS-23863</a></dd>
+            <dd><a href="../../CLEWS-23863-composite-rank/prerequisites/anaconda-additional-information.html">CLEWS-23863-composite-rank</a></dd>
+            <dd><a href="../../CLEWS-26758-similar_regions/prerequisites/anaconda-additional-information.html">CLEWS-26758-similar_regions</a></dd>
+            <dd><a href="../../CLEWS-27625-fixtures/prerequisites/anaconda-additional-information.html">CLEWS-27625-fixtures</a></dd>
             <dd><a href="../../development/prerequisites/anaconda-additional-information.html">development</a></dd>
-    </dl>
-  </div>
+            <dd><a href="../../jli-requirecleandocs/prerequisites/anaconda-additional-information.html">jli-requirecleandocs</a></dd>
+            <dd><a href="../../lib-test-refactor/prerequisites/anaconda-additional-information.html">lib-test-refactor</a></dd>
+            <dd><a href="../../simplify-quickstart/index.html">simplify-quickstart</a></dd>
+            <dd><a href="../../simulate_reporting_date/prerequisites/anaconda-additional-information.html">simulate_reporting_date</a></dd>
+        </dl>
+    </div>
 </div>
+
 
   <script type="text/javascript">
       jQuery(function () {
