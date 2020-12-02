@@ -164,7 +164,7 @@ NOTE: Our "beta" models have run for less than one full season. At this stage, e
 Radio Frequency Interference Effects On SMOS
 ============================================
 
-The attached document details the effect that Radio Frequency Interference (RFI) has on the soil moisture source `SMOS <https://app.gro-intelligence.com/#/dictionary/sources/43>`_: `radio-frequency-interference-smos.pdf <https://github.com/gro-intelligence/api-client/wiki/radio-frequency-interference-smos.pdf>`_
+The attached document details the effect that Radio Frequency Interference (RFI) has on the soil moisture source `SMOS <https://app.gro-intelligence.com/dictionary/sources/43>`_: `radio-frequency-interference-smos.pdf <https://github.com/gro-intelligence/api-client/wiki/radio-frequency-interference-smos.pdf>`_
 
 TRMM and GPM spatial extents
 ============================
