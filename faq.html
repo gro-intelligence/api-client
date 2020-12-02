@@ -1,7 +1,9 @@
 
 
+
+
 <!DOCTYPE html>
-<html class="writer-html4" lang="en" >
+<html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
   
@@ -13,7 +15,6 @@
   
   <link rel="stylesheet" href="_static/css/custom-theme.css" type="text/css" />
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="_static/banner.css" type="text/css" />
 
   
   
@@ -26,20 +27,11 @@
   <![endif]-->
   
     
-      <script type="text/javascript">
-          var DOCUMENTATION_OPTIONS = {
-              URL_ROOT:'./',
-              VERSION:'',
-              LANGUAGE:'None',
-              COLLAPSE_INDEX:false,
-              FILE_SUFFIX:'.html',
-              HAS_SOURCE:  true,
-              SOURCELINK_SUFFIX: '.txt'
-          };
-      </script>
-        <script type="text/javascript" src="_static/jquery.js"></script>
-        <script type="text/javascript" src="_static/underscore.js"></script>
-        <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
@@ -206,58 +198,59 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  
 
 
-
-
-
-<div class="section" id="faqs">
+  <div class="section" id="faqs">
 <h1>FAQs<a class="headerlink" href="#faqs" title="Permalink to this headline">¶</a></h1>
 <div class="contents local topic" id="table-of-contents">
 <p class="topic-title">Table of Contents</p>
 <ul class="simple">
-<li><a class="reference internal" href="#exploring-what-s-available" id="id2">Exploring What&#8217;s Available</a><ul>
-<li><a class="reference internal" href="#why-is-it-that-when-i-use-client-search-to-find-metrics-items-regions-i-m-interested-in-sometimes-client-get-data-series-doesn-t-have-any-data-for-those-metrics-items-regions" id="id3">Why is it that when I use client.search() to find metrics/items/regions I&#8217;m interested in, sometimes client.get_data_series() doesn&#8217;t have any data for those metrics/items/regions?</a></li>
-<li><a class="reference internal" href="#what-does-sourcelag-mean-when-i-use-client-lookup-to-inspect-a-source-s-details" id="id4">What does &#8216;sourceLag&#8217; mean when I use client.lookup() to inspect a source&#8217;s details?</a></li>
+<li><p><a class="reference internal" href="#exploring-what-s-available" id="id2">Exploring What’s Available</a></p>
+<ul>
+<li><p><a class="reference internal" href="#why-is-it-that-when-i-use-client-search-to-find-metrics-items-regions-i-m-interested-in-sometimes-client-get-data-series-doesn-t-have-any-data-for-those-metrics-items-regions" id="id3">Why is it that when I use client.search() to find metrics/items/regions I’m interested in, sometimes client.get_data_series() doesn’t have any data for those metrics/items/regions?</a></p></li>
+<li><p><a class="reference internal" href="#what-does-sourcelag-mean-when-i-use-client-lookup-to-inspect-a-source-s-details" id="id4">What does ‘sourceLag’ mean when I use client.lookup() to inspect a source’s details?</a></p></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#data-retrieval" id="id5">Data Retrieval</a><ul>
-<li><a class="reference internal" href="#i-specified-an-end-date-when-calling-get-data-points-why-am-i-getting-points-with-other-end-dates" id="id6">I specified an end_date when calling get_data_points(). Why am I getting points with other end_dates?</a></li>
+<li><p><a class="reference internal" href="#data-retrieval" id="id5">Data Retrieval</a></p>
+<ul>
+<li><p><a class="reference internal" href="#i-specified-an-end-date-when-calling-get-data-points-why-am-i-getting-points-with-other-end-dates" id="id6">I specified an end_date when calling get_data_points(). Why am I getting points with other end_dates?</a></p></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#data-coverage" id="id7">Data Coverage</a><ul>
-<li><a class="reference internal" href="#why-is-there-no-satellite-rainfall-data-in-northern-latitudes-sometimes" id="id8">Why is there no satellite rainfall data in northern latitudes sometimes?</a></li>
-<li><a class="reference internal" href="#why-are-there-some-gaps-in-the-soil-moisture-data" id="id9">Why are there some gaps in the soil moisture data?</a></li>
-<li><a class="reference internal" href="#what-do-warnings-about-historical-regions-mean" id="id10">What do warnings about &#8216;historical&#8217; regions mean?</a></li>
-<li><a class="reference internal" href="#why-is-daily-ndvi-changing-so-much-from-day-to-day-and-why-do-some-days-have-no-ndvi-coverage-especially-in-winter" id="id11">Why is daily NDVI changing so much from day to day? And why do some days have no NDVI coverage, especially in winter?</a></li>
-<li><a class="reference internal" href="#why-isnt-there-100-coverage-every-day-for-daily-ndvi" id="id12">Why isn’t there 100% coverage every day for daily NDVI?</a></li>
-<li><a class="reference internal" href="#why-a-threshold-and-how-is-it-computed-to-determine-district-mean" id="id13">Why a threshold and how is it computed to determine district mean?</a></li>
+<li><p><a class="reference internal" href="#data-coverage" id="id7">Data Coverage</a></p>
+<ul>
+<li><p><a class="reference internal" href="#why-is-there-no-satellite-rainfall-data-in-northern-latitudes-sometimes" id="id8">Why is there no satellite rainfall data in northern latitudes sometimes?</a></p></li>
+<li><p><a class="reference internal" href="#why-are-there-some-gaps-in-the-soil-moisture-data" id="id9">Why are there some gaps in the soil moisture data?</a></p></li>
+<li><p><a class="reference internal" href="#what-do-warnings-about-historical-regions-mean" id="id10">What do warnings about ‘historical’ regions mean?</a></p></li>
+<li><p><a class="reference internal" href="#why-is-daily-ndvi-changing-so-much-from-day-to-day-and-why-do-some-days-have-no-ndvi-coverage-especially-in-winter" id="id11">Why is daily NDVI changing so much from day to day? And why do some days have no NDVI coverage, especially in winter?</a></p></li>
+<li><p><a class="reference internal" href="#why-isnt-there-100-coverage-every-day-for-daily-ndvi" id="id12">Why isn’t there 100% coverage every day for daily NDVI?</a></p></li>
+<li><p><a class="reference internal" href="#why-a-threshold-and-how-is-it-computed-to-determine-district-mean" id="id13">Why a threshold and how is it computed to determine district mean?</a></p></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#account" id="id14">Account</a><ul>
-<li><a class="reference internal" href="#how-do-i-verify-connectivity-with-gro-api" id="id15">How do I verify connectivity with Gro API?</a></li>
-<li><a class="reference internal" href="#how-do-i-get-authenticated-access-to-gro-api" id="id16">How do I get authenticated access to Gro API?</a></li>
-<li><a class="reference internal" href="#why-am-i-getting-a-401-unauthorized-error-when-i-try-to-use-my-gro-username-and-login" id="id17">Why am I getting a 401 Unauthorized error when I try to use my Gro username and login?</a></li>
+<li><p><a class="reference internal" href="#account" id="id14">Account</a></p>
+<ul>
+<li><p><a class="reference internal" href="#how-do-i-verify-connectivity-with-gro-api" id="id15">How do I verify connectivity with Gro API?</a></p></li>
+<li><p><a class="reference internal" href="#how-do-i-get-authenticated-access-to-gro-api" id="id16">How do I get authenticated access to Gro API?</a></p></li>
+<li><p><a class="reference internal" href="#why-am-i-getting-a-401-unauthorized-error-when-i-try-to-use-my-gro-username-and-login" id="id17">Why am I getting a 401 Unauthorized error when I try to use my Gro username and login?</a></p></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#gro-models" id="id18">Gro Models</a><ul>
-<li><a class="reference internal" href="#do-your-predictive-models-only-run-during-the-crop-season" id="id19">Do your predictive models only run during the crop season?</a></li>
+<li><p><a class="reference internal" href="#gro-models" id="id18">Gro Models</a></p>
+<ul>
+<li><p><a class="reference internal" href="#do-your-predictive-models-only-run-during-the-crop-season" id="id19">Do your predictive models only run during the crop season?</a></p></li>
 </ul>
 </li>
 </ul>
 </div>
 <div class="section" id="exploring-what-s-available">
-<h2><a class="toc-backref" href="#id2">Exploring What&#8217;s Available</a><a class="headerlink" href="#exploring-what-s-available" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id2">Exploring What’s Available</a><a class="headerlink" href="#exploring-what-s-available" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="why-is-it-that-when-i-use-client-search-to-find-metrics-items-regions-i-m-interested-in-sometimes-client-get-data-series-doesn-t-have-any-data-for-those-metrics-items-regions">
-<h3><a class="toc-backref" href="#id3">Why is it that when I use client.search() to find metrics/items/regions I&#8217;m interested in, sometimes client.get_data_series() doesn&#8217;t have any data for those metrics/items/regions?</a><a class="headerlink" href="#why-is-it-that-when-i-use-client-search-to-find-metrics-items-regions-i-m-interested-in-sometimes-client-get-data-series-doesn-t-have-any-data-for-those-metrics-items-regions" title="Permalink to this headline">¶</a></h3>
-<p><code class="code docutils literal"><span class="pre">client.search()</span></code> provides a way to search across everything we have identified and defined in our ontology. Sometimes data doesn&#8217;t exist for a particular result for a number of reasons, most commonly because we may have defined new entries in preparation for an incoming source which is undergoing testing.
+<h3><a class="toc-backref" href="#id3">Why is it that when I use client.search() to find metrics/items/regions I’m interested in, sometimes client.get_data_series() doesn’t have any data for those metrics/items/regions?</a><a class="headerlink" href="#why-is-it-that-when-i-use-client-search-to-find-metrics-items-regions-i-m-interested-in-sometimes-client-get-data-series-doesn-t-have-any-data-for-those-metrics-items-regions" title="Permalink to this headline">¶</a></h3>
+<p><code class="code docutils literal notranslate"><span class="pre">client.search()</span></code> provides a way to search across everything we have identified and defined in our ontology. Sometimes data doesn’t exist for a particular result for a number of reasons, most commonly because we may have defined new entries in preparation for an incoming source which is undergoing testing.
 <a class="reference external" href="api.html#groclient.GroClient.find_data_series">find_data_series()</a>
 will tell you what data is actually available by performing searches for combinations of items, metrics and regions. You can intersect the results from those two functions to find things programmatically, or you can use the web application at <a class="reference external" href="https://app.gro-intelligence.com">https://app.gro-intelligence.com</a> to explore what data is available, intersected already.</p>
 </div>
 <div class="section" id="what-does-sourcelag-mean-when-i-use-client-lookup-to-inspect-a-source-s-details">
-<h3><a class="toc-backref" href="#id4">What does &#8216;sourceLag&#8217; mean when I use client.lookup() to inspect a source&#8217;s details?</a><a class="headerlink" href="#what-does-sourcelag-mean-when-i-use-client-lookup-to-inspect-a-source-s-details" title="Permalink to this headline">¶</a></h3>
-<p>Source lag is defined as the worst normal case scenario in regards to how long a source might report data after a point&#8217;s end date. In other words, a source lag of one month would mean that an annual source might report the 01/01/2017-12/31/2017 data point on 02/01/2018 at the latest. Extraordinary delays do occur from time to time, such as in a government shutdown or satellite data center malfunctions, but in general the data is expected to be updated by the endDate of the point + the sourceLag.</p>
+<h3><a class="toc-backref" href="#id4">What does ‘sourceLag’ mean when I use client.lookup() to inspect a source’s details?</a><a class="headerlink" href="#what-does-sourcelag-mean-when-i-use-client-lookup-to-inspect-a-source-s-details" title="Permalink to this headline">¶</a></h3>
+<p>Source lag is defined as the worst normal case scenario in regards to how long a source might report data after a point’s end date. In other words, a source lag of one month would mean that an annual source might report the 01/01/2017-12/31/2017 data point on 02/01/2018 at the latest. Extraordinary delays do occur from time to time, such as in a government shutdown or satellite data center malfunctions, but in general the data is expected to be updated by the endDate of the point + the sourceLag.</p>
 </div>
 </div>
 <div class="section" id="data-retrieval">
@@ -270,7 +263,7 @@ that are fully or partially in the desired interval. Thus if the start
 and end dates selected are March 15 to May 15, and the data happens to
 be monthly on calendar months, it will include points for [Mar 1, Mar
 31], [Apr 1, Apr 30], [May 1, May 31].</p>
-<p>Thus, when calling <a class="reference external" href="api.html#groclient.GroClient.get_data_points">get_data_points()</a> specifying a start_date for the series restricts the query to any point where &#8220;point_end_date &gt;= series_start_date,&#8221; and a series end_date restricts it to any point where &#8220;point_start_date &lt;= series_end_date&#8221;.</p>
+<p>Thus, when calling <a class="reference external" href="api.html#groclient.GroClient.get_data_points">get_data_points()</a> specifying a start_date for the series restricts the query to any point where “point_end_date &gt;= series_start_date,” and a series end_date restricts it to any point where “point_start_date &lt;= series_end_date”.</p>
 </div>
 </div>
 <div class="section" id="data-coverage">
@@ -284,10 +277,10 @@ be monthly on calendar months, it will include points for [Mar 1, Mar
 <p>Radio Frequency Interferences (RFI) can limit the quality of remotely sensed data in some regions. For more information see <a class="reference external" href="modeling-resources#radio-frequency-interference-effects-on-smos">Radio Frequency Interference Effects On SMOS</a>.</p>
 </div>
 <div class="section" id="what-do-warnings-about-historical-regions-mean">
-<h3><a class="toc-backref" href="#id10">What do warnings about &#8216;historical&#8217; regions mean?</a><a class="headerlink" href="#what-do-warnings-about-historical-regions-mean" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id10">What do warnings about ‘historical’ regions mean?</a><a class="headerlink" href="#what-do-warnings-about-historical-regions-mean" title="Permalink to this headline">¶</a></h3>
 <p><a class="reference external" href="gro-ontology#historical">Historical regions</a> behave just like other regions. Any data that exists can be accessed the same way as data for any region in Gro.  Generally historical regions will only have data corresponding to the time periods when they existed. But in some
 cases, new regions can have data that extends into the past and overlaps with historical regions.
-Rather than always excluding the old regions in such cases, we allow the user to choose via the  <code class="code docutils literal"><span class="pre">include_historical</span></code> option in <a class="reference external" href="api.html#groclient.GroClient.get_data_points">get_data_points()</a>. This can be useful if for example you are analyzing historical temperatures at the district level in a country where the districts that exist today were only created 5 years ago and but you want 20 years of data. In that case, you can filter out the historical regions to avoid double counting.</p>
+Rather than always excluding the old regions in such cases, we allow the user to choose via the  <code class="code docutils literal notranslate"><span class="pre">include_historical</span></code> option in <a class="reference external" href="api.html#groclient.GroClient.get_data_points">get_data_points()</a>. This can be useful if for example you are analyzing historical temperatures at the district level in a country where the districts that exist today were only created 5 years ago and but you want 20 years of data. In that case, you can filter out the historical regions to avoid double counting.</p>
 </div>
 <div class="section" id="why-is-daily-ndvi-changing-so-much-from-day-to-day-and-why-do-some-days-have-no-ndvi-coverage-especially-in-winter">
 <h3><a class="toc-backref" href="#id11">Why is daily NDVI changing so much from day to day? And why do some days have no NDVI coverage, especially in winter?</a><a class="headerlink" href="#why-is-daily-ndvi-changing-so-much-from-day-to-day-and-why-do-some-days-have-no-ndvi-coverage-especially-in-winter" title="Permalink to this headline">¶</a></h3>
@@ -308,8 +301,8 @@ Rather than always excluding the old regions in such cases, we allow the user to
 <h2><a class="toc-backref" href="#id14">Account</a><a class="headerlink" href="#account" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="how-do-i-verify-connectivity-with-gro-api">
 <h3><a class="toc-backref" href="#id15">How do I verify connectivity with Gro API?</a><a class="headerlink" href="#how-do-i-verify-connectivity-with-gro-api" title="Permalink to this headline">¶</a></h3>
-<p>To check your basic connectivity, e.g. whether your corporate firewall allows access to Gro API servers, you can using a Gro API client function that doesn&#8217;t require authentication, such as lookup(). For example:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">groclient.lib</span> <span class="kn">import</span> <span class="n">lib</span>
+<p>To check your basic connectivity, e.g. whether your corporate firewall allows access to Gro API servers, you can using a Gro API client function that doesn’t require authentication, such as lookup(). For example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">groclient.lib</span> <span class="kn">import</span> <span class="n">lib</span>
 <span class="n">lib</span><span class="o">.</span><span class="n">lookup</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;api.gro-intelligence.com&#39;</span><span class="p">,</span> <span class="s1">&#39;items&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -331,6 +324,7 @@ Rather than always excluding the old regions in such cases, we allow the user to
 </div>
 </div>
 </div>
+
 
 
            </div>
@@ -376,47 +370,33 @@ Rather than always excluding the old regions in such cases, we allow the user to
   </div>
   
 <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
-    <span class="rst-current-version" data-toggle="rst-current-version">
-        <span class="fa fa-book"> Other Versions</span>
-        v: development
-        <span class="fa fa-caret-down"></span>
-    </span>
-    <div class="rst-other-versions">
-        <dl>
-            <dt>Tags</dt>
-            <dd><a href="v1.40.6/faq.html">v1.40.6</a></dd>
-            <dd><a href="v1.56.0/faq.html">v1.56.0</a></dd>
-            <dd><a href="v1.56.1/faq.html">v1.56.1</a></dd>
-            <dd><a href="v1.56.2/faq.html">v1.56.2</a></dd>
-            <dd><a href="v1.60.0/faq.html">v1.60.0</a></dd>
-            <dd><a href="v1.60.1/faq.html">v1.60.1</a></dd>
-            <dd><a href="v1.71.0/faq.html">v1.71.0</a></dd>
-            <dd><a href="v1.76.0/faq.html">v1.76.0</a></dd>
-            <dd><a href="v1.77.0/faq.html">v1.77.0</a></dd>
-            <dd><a href="v1.77.1/faq.html">v1.77.1</a></dd>
-            <dd><a href="v1.82.0/faq.html">v1.82.0</a></dd>
-            <dd><a href="v1.83.0/faq.html">v1.83.0</a></dd>
-            <dd><a href="v1.98.0/faq.html">v1.98.0</a></dd>
-        </dl>
-        <dl>
-            <dt>Branches</dt>
-            <dd><a href="CLEWS-15676-add-names-to-index/faq.html">CLEWS-15676-add-names-to-index</a></dd>
-            <dd><a href="CLEWS-16955-units/faq.html">CLEWS-16955-units</a></dd>
-            <dd><a href="CLEWS-19063/faq.html">CLEWS-19063</a></dd>
-            <dd><a href="CLEWS-19840-3/faq.html">CLEWS-19840-3</a></dd>
-            <dd><a href="CLEWS-22288/faq.html">CLEWS-22288</a></dd>
-            <dd><a href="CLEWS-23863/faq.html">CLEWS-23863</a></dd>
-            <dd><a href="CLEWS-23863-composite-rank/faq.html">CLEWS-23863-composite-rank</a></dd>
-            <dd><a href="CLEWS-27625-fixtures/faq.html">CLEWS-27625-fixtures</a></dd>
-            <dd><a href="development/faq.html">development</a></dd>
-            <dd><a href="jli-requirecleandocs/faq.html">jli-requirecleandocs</a></dd>
-            <dd><a href="lib-test-refactor/faq.html">lib-test-refactor</a></dd>
-            <dd><a href="simplify-quickstart/faq.html">simplify-quickstart</a></dd>
-            <dd><a href="simulate_reporting_date/faq.html">simulate_reporting_date</a></dd>
-        </dl>
-    </div>
-</div>
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    <span class="fa fa-book"> Other Versions</span>
+    v: development
+    <span class="fa fa-caret-down"></span>
+  </span>
+  <div class="rst-other-versions">
+    <dl>
+      <dt>Releases</dt>
+      <dd><a href="../v1.40.6/faq.html">v1.40.6</a></dd>
+      <dd><a href="../v1.56.0/faq.html">v1.56.0</a></dd>
+      <dd><a href="../v1.56.1/faq.html">v1.56.1</a></dd>
+      <dd><a href="../v1.56.2/faq.html">v1.56.2</a></dd>
+      <dd><a href="../v1.60.0/faq.html">v1.60.0</a></dd>
+      <dd><a href="../v1.60.1/faq.html">v1.60.1</a></dd>
+      <dd><a href="../v1.71.0/faq.html">v1.71.0</a></dd>
+      <dd><a href="../v1.76.0/faq.html">v1.76.0</a></dd>
+      <dd><a href="../v1.77.0/faq.html">v1.77.0</a></dd>
+      <dd><a href="../v1.77.1/faq.html">v1.77.1</a></dd>
+      <dd><a href="../v1.82.0/faq.html">v1.82.0</a></dd>
+      <dd><a href="../v1.83.0/faq.html">v1.83.0</a></dd>
+      <dd><a href="../v1.98.0/faq.html">v1.98.0</a></dd>
 
+      
+            <dd><a href="faq.html">development</a></dd>
+    </dl>
+  </div>
+</div>
 
   <script type="text/javascript">
       jQuery(function () {
