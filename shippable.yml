@@ -3,10 +3,6 @@ language: python
 python:
   - 3.7
 
-branches:
-  except:
-    - gh-pages
-
 env:
   global:
     - GROAPI_TOKEN=dummytoken

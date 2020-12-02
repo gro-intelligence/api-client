@@ -85,7 +85,7 @@ html_static_path = ['_static', '_images']
 master_doc = 'index'
 
 # Do not delete these files:
-scv_grm_exclude = ('README.md', '.gitignore', '.nojekyll', 'CNAME')
+scv_grm_exclude = ('README.md', '.gitignore', '.nojekyll', 'CNAME', 'shippable.yml*')
 scv_show_banner = True
 scv_banner_main_ref = 'development'
 scv_root_ref = 'development'
