@@ -211,32 +211,40 @@
 <div class="contents local topic" id="table-of-contents">
 <p class="topic-title">Table of Contents</p>
 <ul class="simple">
-<li><p><a class="reference internal" href="#install-with-pip" id="id1">Install with pip</a></p></li>
-<li><p><a class="reference internal" href="#inspect-the-package" id="id2">Inspect the package</a></p></li>
-<li><p><a class="reference internal" href="#stay-updated" id="id3">Stay updated</a></p></li>
+<li><p><a class="reference internal" href="#conda-anaconda-users" id="id1">Conda/Anaconda users</a></p></li>
+<li><p><a class="reference internal" href="#install-with-pip" id="id2">Install with pip</a></p></li>
+<li><p><a class="reference internal" href="#inspect-the-package" id="id3">Inspect the package</a></p></li>
+<li><p><a class="reference internal" href="#stay-updated" id="id4">Stay updated</a></p></li>
 </ul>
 </div>
+<div class="section" id="conda-anaconda-users">
+<h2><a class="toc-backref" href="#id1">Conda/Anaconda users</a><a class="headerlink" href="#conda-anaconda-users" title="Permalink to this headline">¶</a></h2>
+<p>The Gro API client is available via the <a class="reference external" href="https://anaconda.org/conda-forge/groclient">conda-forge channel</a>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">conda</span> <span class="n">config</span> <span class="o">--</span><span class="n">add</span> <span class="n">channels</span> <span class="n">conda</span><span class="o">-</span><span class="n">forge</span>
+<span class="n">conda</span> <span class="n">install</span> <span class="n">groclient</span>
+</pre></div>
+</div>
+</div>
 <div class="section" id="install-with-pip">
-<h2><a class="toc-backref" href="#id1">Install with pip</a><a class="headerlink" href="#install-with-pip" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id2">Install with pip</a><a class="headerlink" href="#install-with-pip" title="Permalink to this headline">¶</a></h2>
 <p>Install the latest package from <a class="reference external" href="https://pypi.org/">PyPI</a>:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">groclient</span>
 </pre></div>
 </div>
 <p>Notes:</p>
 <ul class="simple">
-<li><p>Even if you are using <a class="reference external" href="https://www.anaconda.com/">Anaconda</a>, the API Client install should still be performed using pip and <em>not</em> <a class="reference external" href="https://docs.conda.io/en/latest/">conda</a>.</p></li>
 <li><p>If you’re unable to access PyPI, you can install the latest code from Github: <code class="code docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">git+https://github.com/gro-intelligence/api-client.git</span></code></p></li>
 </ul>
 </div>
 <div class="section" id="inspect-the-package">
-<h2><a class="toc-backref" href="#id2">Inspect the package</a><a class="headerlink" href="#inspect-the-package" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id3">Inspect the package</a><a class="headerlink" href="#inspect-the-package" title="Permalink to this headline">¶</a></h2>
 <p>To find the location on your filesystem where the Gro package has been installed and to see the version you have installed you can use the query:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">show</span> <span class="n">groclient</span>
 </pre></div>
 </div>
 </div>
 <div class="section" id="stay-updated">
-<h2><a class="toc-backref" href="#id3">Stay updated</a><a class="headerlink" href="#stay-updated" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id4">Stay updated</a><a class="headerlink" href="#stay-updated" title="Permalink to this headline">¶</a></h2>
 <p>To ensure that you have the latest client version with newest features, you can use the following command:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="o">--</span><span class="n">upgrade</span> <span class="n">groclient</span>
 </pre></div>
