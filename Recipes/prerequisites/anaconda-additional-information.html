@@ -32,6 +32,7 @@
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
         <script src="../_static/language_data.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
@@ -200,35 +201,61 @@
 </p>
 
 
-  <div class="section" id="anaconda-additional-information">
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast.container,
+.nboutput.nblast.container {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast.container + .nbinput.container {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<div class="section" id="anaconda-additional-information">
 <h1>Anaconda Additional Information<a class="headerlink" href="#anaconda-additional-information" title="Permalink to this headline">¶</a></h1>
-<ol class="arabic simple">
-<li><dl class="simple">
-<dt>If your username includes spaces, as is common on Windows systems, you are not allowed to install Anaconda in the default path (C:Users&lt;your-username&gt;Anaconda3)</dt><dd><ol class="arabic simple">
+<ol class="arabic">
+<li><p>If your username includes spaces, as is common on Windows systems, you are not allowed to install Anaconda in the default path (C:Users&lt;your-username&gt;Anaconda3)</p>
+<blockquote>
+<div><ol class="loweralpha simple">
 <li><p>See this <a class="reference external" href="https://docs.anaconda.com/anaconda/user-guide/faq/#distribution-faq-windows-folder">Anaconda link</a> for additional information.</p></li>
 </ol>
-</dd>
-</dl>
+</div></blockquote>
 </li>
-<li><dl class="simple">
-<dt>If you install Anaconda outside of the default path, then you will need to update the config for the jupyter notebook default directory as outlined below:</dt><dd><ol class="arabic simple">
+<li><p>If you install Anaconda outside of the default path, then you will need to update the config for the jupyter notebook default directory as outlined below:</p>
+<blockquote>
+<div><ol class="loweralpha">
 <li><p>Go to the default path (C:Users/&lt;your-username&gt;)</p></li>
-<li><p>Open the .jupyter folder (pay attention to the ‘dot’ before the name)</p></li>
+<li><p>Open the ‘.jupyter’ folder (note the period ‘.’ before the word ‘jupyter’)</p></li>
 <li><p>Open the following file using a text editor: jupyter_notebook_config.py</p></li>
-<li><dl class="simple">
-<dt>Edit the following line</dt><dd><p><code class="code docutils literal notranslate"><span class="pre">#c.NotebookApp.notebook_dir</span> <span class="pre">=</span> <span class="pre">u&quot;</span></code>
-change it to:
-<code class="code docutils literal notranslate"><span class="pre">c.NotebookApp.notebook_dir</span> <span class="pre">=</span> <span class="pre">'C:\Your\Path'</span></code>
-Note: Be careful not to leave an empty space in the line when you delete the ‘#’ character, the first character on that line is ‘c’</p>
-</dd>
-</dl>
+<li><p>Change the following line:</p>
+<blockquote>
+<div><div class="line-block">
+<div class="line"><code class="code docutils literal notranslate"><span class="pre">#c.NotebookApp.notebook_dir</span> <span class="pre">=</span> <span class="pre">u&quot;</span></code></div>
+<div class="line">to:</div>
+<div class="line"><code class="code docutils literal notranslate"><span class="pre">c.NotebookApp.notebook_dir</span> <span class="pre">=</span> <span class="pre">'C:\Your\Path'</span></code></div>
+<div class="line">Note: Be careful not to leave an empty space in the line when you delete the ‘#’ character, the first character on that line is ‘c’.</div>
+</div>
+</div></blockquote>
 </li>
 <li><p>Save the file</p></li>
 <li><p>Relaunch Anaconda Navigator</p></li>
 <li><p>Launch jupyter notebook</p></li>
 </ol>
-</dd>
-</dl>
+</div></blockquote>
 </li>
 <li><p>See the following link from Anaconda if you have a <a class="reference external" href="https://docs.anaconda.com/anaconda/user-guide/tasks/proxy/">proxy</a></p></li>
 <li><p>See the following link from Anaconda if you have a <a class="reference external" href="https://docs.anaconda.com/anaconda-enterprise-4/ae-and-nav/#configuring-firewall-settings">firewall</a></p></li>

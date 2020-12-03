@@ -32,6 +32,7 @@
         <script src="../../_static/underscore.js"></script>
         <script src="../../_static/doctools.js"></script>
         <script src="../../_static/language_data.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     
     <script type="text/javascript" src="../../_static/js/theme.js"></script>
 
@@ -359,7 +360,7 @@
                     <span class="k">else</span> <span class="n">e</span>
                 <span class="p">)</span>
                 <span class="n">log_request</span><span class="p">(</span><span class="n">start_time</span><span class="p">,</span> <span class="n">retry_count</span><span class="p">,</span> <span class="n">error_msg</span><span class="p">,</span> <span class="n">status_code</span><span class="p">)</span>
-                <span class="k">if</span> <span class="n">status_code</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">429</span><span class="p">,</span> <span class="mi">500</span><span class="p">,</span> <span class="mi">503</span><span class="p">,</span> <span class="mi">504</span><span class="p">]:</span>
+                <span class="k">if</span> <span class="n">status_code</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">429</span><span class="p">,</span> <span class="mi">500</span><span class="p">,</span> <span class="mi">502</span><span class="p">,</span> <span class="mi">503</span><span class="p">,</span> <span class="mi">504</span><span class="p">]:</span>
                     <span class="c1"># First retry is immediate.</span>
                     <span class="c1"># After that, exponential backoff before retrying.</span>
                     <span class="k">if</span> <span class="n">retry_count</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
@@ -906,11 +907,11 @@
         <span class="n">distance</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">include_details</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
     <span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Given an item, metric or region, returns all its descendants i.e. </span>
+        <span class="sd">&quot;&quot;&quot;Given an item, metric or region, returns all its descendants i.e.</span>
 <span class="sd">        entities that are &quot;contained&quot; in the given entity</span>
 
-<span class="sd">        Similar to :meth:~.get_descendant_regions, but also works on items and metrics. This method has </span>
-<span class="sd">        a distance parameter (which returns all nested child entities) instead of a descendant_level </span>
+<span class="sd">        Similar to :meth:~.get_descendant_regions, but also works on items and metrics. This method has</span>
+<span class="sd">        a distance parameter (which returns all nested child entities) instead of a descendant_level</span>
 <span class="sd">        parameter (which only returns child entities at a given depth/level).</span>
 
 <span class="sd">        Parameters</span>
@@ -1219,6 +1220,7 @@
 <span class="sd">                                      &#39;start_date&#39;: &#39;2017-01-01&#39;,</span>
 <span class="sd">                                      &#39;end_date&#39;: &#39;2017-12-31&#39;,</span>
 <span class="sd">                                      &#39;unit_id&#39;: 15})</span>
+
 <span class="sd">        Returns::</span>
 
 <span class="sd">            [{  &#39;start_date&#39;: &#39;2017-01-01T00:00:00.000Z&#39;,</span>

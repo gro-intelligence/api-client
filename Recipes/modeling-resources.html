@@ -32,6 +32,7 @@
         <script src="_static/underscore.js"></script>
         <script src="_static/doctools.js"></script>
         <script src="_static/language_data.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
@@ -208,7 +209,31 @@
 </p>
 
 
-  <div class="section" id="modeling-resources">
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast.container,
+.nboutput.nblast.container {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast.container + .nbinput.container {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<div class="section" id="modeling-resources">
 <h1>Modeling Resources<a class="headerlink" href="#modeling-resources" title="Permalink to this headline">¶</a></h1>
 <div class="contents local topic" id="table-of-contents">
 <p class="topic-title">Table of Contents</p>
@@ -244,7 +269,7 @@
 </div>
 <div class="section" id="gro-crop-cover">
 <h2><a class="toc-backref" href="#id2">Gro Crop Cover</a><a class="headerlink" href="#gro-crop-cover" title="Permalink to this headline">¶</a></h2>
-<p>Gro’s proprietary high-resolution crop covers are currently used in the <a class="reference external" href="https://gro-intelligence.com/gro-models">Gro yield models</a>. These have proven very successful i.e. more accurate for yield modeling than the best available alternatives. Gro does not plan on developing a yield model for every crop or region in the world, so our models will always be limited to the regions and crops where we can help push the envelope. Users can access our crop covers in the <a href="#id17"><span class="problematic" id="id18">`Gro web app _&lt;https://app.gro-intelligence.com/displays/jdOQrvERw&gt;`_</span></a> and the API, or from the download links below. In the web app and API, users can interact with detailed cropland covers that indicate the intensity of crop cover for a particular pixel. Below users can download .tif files of low and high-confidence crop covers which represent, as a binary value, whether a crop is growing in a specific pixel.</p>
+<p>Gro’s proprietary high-resolution crop covers are currently used in the <a class="reference external" href="https://gro-intelligence.com/gro-models">Gro yield models</a>. These have proven very successful i.e. more accurate for yield modeling than the best available alternatives. Gro does not plan on developing a yield model for every crop or region in the world, so our models will always be limited to the regions and crops where we can help push the envelope. Users can access our crop covers in the <a class="reference external" href="https://app.gro-intelligence.com/displays/jdOQrvERw">Gro web app</a> and the API, or from the download links below. In the web app and API, users can interact with detailed cropland covers that indicate the intensity of crop cover for a particular pixel. Below users can download .tif files of low and high-confidence crop covers which represent, as a binary value, whether a crop is growing in a specific pixel.</p>
 <div class="section" id="methodology">
 <h3><a class="toc-backref" href="#id3">Methodology</a><a class="headerlink" href="#methodology" title="Permalink to this headline">¶</a></h3>
 <div class="section" id="crop-covers-for-past-seasons">
