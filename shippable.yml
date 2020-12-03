@@ -34,10 +34,13 @@ build:
       poetry run pytest api/client/samples/analogous_years/
   on_success:
     # Build docs and push to gh-pages.
-    # Note: git remote set-url is for setting a git url instead of an https
-    # one, which is needed so Shippable can be authenticated to push changes.
+    # Notes:
+    # - pandoc is required by nbsphinx to handle Jupyter notebooks in our docs.
+    # - git remote set-url is for setting a git url instead of an https one,
+    #   which is needed so Shippable can be authenticated to push changes.
     - >
       shippable_retry poetry install -E docs &&
+      shippable_retry apt-get install pandoc &&
       git config --global user.email "api-documentation@gro-intelligence.com" &&
       git config --global user.name "Gro Intelligence" &&
       git remote set-url origin git@github.com:$REPO_FULL_NAME.git &&
