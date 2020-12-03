@@ -12,7 +12,6 @@
 #
 import os
 import sys
-import re
 sys.path.insert(0, os.path.abspath('..'))
 
 
@@ -20,7 +19,7 @@ sys.path.insert(0, os.path.abspath('..'))
 
 project = 'Gro API Client'
 html_logo = '_images/logo.jpg'
-copyright = '2019, Gro Intelligence'
+copyright = '2020, Gro Intelligence'
 author = 'Gro Intelligence'
 
 
@@ -37,12 +36,12 @@ extensions = [
     'sphinx.ext.napoleon',
     'sphinx.ext.viewcode',
     'recommonmark',
+    'sphinx_multiversion',
     'nbsphinx'
 ]
 
 source_suffix = {
     '.rst': 'restructuredtext',
-    '.txt': 'markdown',
     '.md': 'markdown',
 }
 
@@ -52,7 +51,7 @@ templates_path = ['_templates']
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path.
-exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
+exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store', 'README.md']
 
 # -- Options for HTML output -------------------------------------------------
 
@@ -86,16 +85,24 @@ html_static_path = ['_static', '_images']
 
 master_doc = 'index'
 
-# Do not delete these files:
-scv_grm_exclude = ('README.md', '.gitignore', '.nojekyll', 'CNAME')
-scv_show_banner = True
-scv_banner_main_ref = 'development'
-scv_root_ref = 'development'
 
-# still build other branches, but hide the version selectors in _static/css/custom-theme.css.
-# Uncomment this line to stop building them altogether:
-# scv_whitelist_branches = ('development',)
+# -- sphinx-multiversion options ---------------------------------------------
 
-# Omit versions before docs style was finalized
-# TODO: https://stackoverflow.com/questions/26141851/let-sphinx-use-version-from-setup-py
-scv_whitelist_tags = (re.compile(r'^(?!.*(v1.40.0|v1.40.1|v1.40.2|v1.40.3|v1.40.4|v1.40.5)).*$'),)
+# v1.40.6 (from 2019-12-19) is the first version with finalized docs style.
+# so, we ignore all other releases that preceded that.
+smv_tag_whitelist = r'^v(?!1\.40\.[012345]).+$'
+
+# By default, sphinx-multiversion doesn't build remote branches. We want to
+# build all branches, so we sent the pattern to something that matches
+# everything.
+smv_remote_whitelist = r'.'
+
+# Exclude the 'HEAD' ref from being built. Due to building remote refs with
+# smv_remote_whitelist, SMV will build the remotes/origin/HEAD ref. This is
+# equivalent to the 'development' branch, so no need to build it again.
+smv_branch_whitelist = r'^(?!HEAD).*$'
+
+# Note: see bin/sphinx_push_ghpages.sh for how we push new documentation to
+# GitHub Pages. Some options related to pushing docs changes that used to be
+# set here for sphinxcontrib-versioning are now configured in the script, since
+# sphinx-multiversion doesn't have built-in support for pushing changes.

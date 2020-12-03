@@ -25,10 +25,13 @@ requests = "*"
 pandas = "*"
 tornado = "*"
 unicodecsv = "*"
-sphinx = { version = "1.5.6", optional = true }
+# TODO: Sphinx 3.2.0 added support for local link checking w/ -b linkcheck. Our
+# docs currently fail at this though, due to the way we do local linking. See:
+# https://www.sphinx-doc.org/en/master/changes.html
+sphinx = { version = "~3.1.0", optional = true }
 recommonmark = { version = "*", optional = true }
 sphinx_rtd_theme = { version = "*", optional = true }
-sphinxcontrib-versioning = { version = "*", optional = true }
+sphinx-multiversion = { version = "*", optional = true }
 nbsphinx = { version = "*", optional = true }
 
 [tool.poetry.dev-dependencies]
@@ -37,7 +40,7 @@ pytest = "*"
 pytest-cov = "*"
 
 [tool.poetry.extras]
-docs = ["sphinx", "recommonmark", "sphinx_rtd_theme", "sphinxcontrib-versioning", "nbsphinx"]
+docs = ["sphinx", "recommonmark", "sphinx_rtd_theme", "sphinx-multiversion", "nbsphinx"]
 
 [build-system]
 requires = ["poetry-core>=1.0.0", "poetry-dynamic-versioning"]

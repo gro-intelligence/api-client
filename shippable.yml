@@ -3,10 +3,6 @@ language: python
 python:
   - 3.7
 
-branches:
-  except:
-    - gh-pages
-
 env:
   global:
     - GROAPI_TOKEN=dummytoken
@@ -37,34 +33,38 @@ build:
       shippable_retry pip install -r api/client/samples/analogous_years/requirements.txt &&
       poetry run pytest api/client/samples/analogous_years/
   on_success:
+    # Build docs and push to gh-pages.
+    # Note: git remote set-url is for setting a git url instead of an https
+    # one, which is needed so Shippable can be authenticated to push changes.
+    - >
+      shippable_retry poetry install -E docs &&
+      git config --global user.email "api-documentation@gro-intelligence.com" &&
+      git config --global user.name "Gro Intelligence" &&
+      git remote set-url origin git@github.com:$REPO_FULL_NAME.git &&
+      poetry run bin/sphinx_push_ghpages.sh
     # Build package.
     # Note: We need to install versioning library outside of the poetry venv.
     # See note in CONTRIBUTING.md
     - >
       pip install poetry-dynamic-versioning &&
       poetry build
-    # Build docs and push to gh-pages.
+    # Publish new development updates to TestPyPI whenever changes are merged
+    # to development.
+    #
+    # Note: for all changes to an in-progress PR, Shippable launches 2 jobs:
+    # one for the PR branch, and another for the PR branch merged into
+    # development branch. See: https://github.com/Shippable/support/issues/3938#issuecomment-342244497
+    # We only want to publish a new package when PRs are actually accepted and
+    # merged, which is why we check $IS_PULL_REQUEST.
     - >
-      shippable_retry poetry install -E docs &&
-      git config --global user.email "api-documentation@gro-intelligence.com" &&
-      git config --global user.name "Gro Intelligence" &&
-      git remote set-url origin git@github.com:$REPO_FULL_NAME.git &&
-      ssh-agent bash -c 'ssh-add /tmp/ssh/00_sub; poetry run sphinx-versioning push -r development docs gh-pages .'
-    # Publish new development updates to TestPyPI.
-    # TODO(jli): for some reason, shippable builds are failing due to the PyPI
-    # tokens being undefined. commenting this for now, will attempt to add it
-    # back later.
-    - >
-      if [ "$BRANCH" == "development" ]; then
+      if [ "$BRANCH" == "development" -a "$IS_PULL_REQUEST" == "false" ]; then
         poetry config repositories.testpypi https://test.pypi.org/legacy/ &&
-        echo "TODO: publish to TestPyPI"
-        # poetry publish -u __token__ -p $TESTPYPI_TOKEN -r testpypi
+        poetry publish -u __token__ -p $TESTPYPI_TOKEN -r testpypi
       fi
     # Publish new releases to PyPI.
     # Note: requires configuring Shippable for release webhooks:
     # http://docs.shippable.com/ci/trigger-job/#configuring-build-triggers
     - >
-      if [ $IS_RELEASE == "true" ]; then
-        echo "TODO: publish to PyPI"
-        # poetry publish -u __token__ -p $PYPI_TOKEN
+      if [ "$IS_RELEASE" == "true" ]; then
+        poetry publish -u __token__ -p $PYPI_TOKEN
       fi
