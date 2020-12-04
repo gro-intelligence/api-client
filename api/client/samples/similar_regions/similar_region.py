@@ -350,7 +350,7 @@ class SimilarRegion(object):
         # will return array of long-term averages for each time interval within a year, even for static
         result = np.zeros(self.t_int_per_year)
         try:
-            raw_data = pd.read_csv(full_path, parse_dates=[0,1], infer_datetime_format=True)
+            raw_data = pd.read_csv(full_path, parse_dates=[0,1], infer_datetime_format=True).dropna()
         except Exception as e:
             self._logger.error("Can not get data from file {}: {}".format(full_path, str(e)))
             return None, [] # empty list signals no data
