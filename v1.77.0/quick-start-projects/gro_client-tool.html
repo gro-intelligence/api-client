@@ -32,7 +32,6 @@
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
         <script src="../_static/language_data.js"></script>
-        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
@@ -209,31 +208,7 @@
 </p>
 
 
-  
-<style>
-/* CSS overrides for sphinx_rtd_theme */
-
-/* 24px margin */
-.nbinput.nblast.container,
-.nboutput.nblast.container {
-    margin-bottom: 19px;  /* padding has already 5px */
-}
-
-/* ... except between code cells! */
-.nblast.container + .nbinput.container {
-    margin-top: -19px;
-}
-
-.admonition > p:before {
-    margin-right: 4px;  /* make room for the exclamation icon */
-}
-
-/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
-.math {
-    text-align: unset;
-}
-</style>
-<div class="section" id="gro-client-tool">
+  <div class="section" id="gro-client-tool">
 <h1>gro_client tool<a class="headerlink" href="#gro-client-tool" title="Permalink to this headline">¶</a></h1>
 <p>You can also use the included gro_client tool as a quick way to request a single data series right on the command line. Try the following:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">gro_client</span> <span class="o">--</span><span class="n">metric</span><span class="o">=</span><span class="s2">&quot;Production Quantity mass&quot;</span> <span class="o">--</span><span class="n">item</span><span class="o">=</span><span class="s2">&quot;Corn&quot;</span> <span class="o">--</span><span class="n">region</span><span class="o">=</span><span class="s2">&quot;United States&quot;</span> <span class="o">--</span><span class="n">user_email</span><span class="o">=</span><span class="s2">&quot;email@example.com&quot;</span>
