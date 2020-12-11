@@ -255,11 +255,14 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_data_series_queue</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># added but not loaded in data frame</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_data_frame</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_async_http_client</span> <span class="o">=</span> <span class="n">AsyncHTTPClient</span><span class="p">()</span>
+            <span class="c1"># Each GroClient has its own IOLoop and AsyncHTTPClient.</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_ioloop</span> <span class="o">=</span> <span class="n">IOLoop</span><span class="p">()</span>
+            <span class="c1"># Note: force_instance is needed to disable Tornado&#39;s</span>
+            <span class="c1"># pseudo-singleton AsyncHTTPClient caching behavior.</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_async_http_client</span> <span class="o">=</span> <span class="n">AsyncHTTPClient</span><span class="p">(</span><span class="n">force_instance</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
-                <span class="s2">&quot;Unable to initialize an event loop. Async methods disabled.&quot;</span>
+                <span class="s2">&quot;Unable to initialize event loop, async methods disabled: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
             <span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_async_http_client</span> <span class="o">=</span> <span class="kc">None</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_ioloop</span> <span class="o">=</span> <span class="kc">None</span>
@@ -1688,6 +1691,7 @@
   <div class="rst-other-versions">
     <dl>
       <dt>Releases</dt>
+      <dd><a href="../../../v1.100.0/index.html">v1.100.0</a></dd>
       <dd><a href="../../../v1.40.6/index.html">v1.40.6</a></dd>
       <dd><a href="../../../v1.56.0/index.html">v1.56.0</a></dd>
       <dd><a href="../../../v1.56.1/index.html">v1.56.1</a></dd>
