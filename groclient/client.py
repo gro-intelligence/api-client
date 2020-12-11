@@ -65,11 +65,14 @@ class GroClient(object):
         self._data_series_queue = []  # added but not loaded in data frame
         self._data_frame = pandas.DataFrame()
         try:
-            self._async_http_client = AsyncHTTPClient()
+            # Each GroClient has its own IOLoop and AsyncHTTPClient.
             self._ioloop = IOLoop()
+            # Note: force_instance is needed to disable Tornado's
+            # pseudo-singleton AsyncHTTPClient caching behavior.
+            self._async_http_client = AsyncHTTPClient(force_instance=True)
         except Exception as e:
             self._logger.warning(
-                "Unable to initialize an event loop. Async methods disabled."
+                "Unable to initialize event loop, async methods disabled: {}".format(e)
             )
             self._async_http_client = None
             self._ioloop = None
