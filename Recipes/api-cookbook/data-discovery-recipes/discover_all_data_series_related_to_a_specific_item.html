@@ -1,0 +1,1024 @@
+
+
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Discover all data series related to a specific item &mdash; Gro API Client  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../_static/css/custom-theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Gro Ontology" href="../../gro-ontology.html" />
+    <link rel="prev" title="Data Discovery Recipes" href="index.html" />
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-5VHQ76P');</script>
+    <!-- End Google Tag Manager -->
+
+</head>
+
+<body class="wy-body-for-nav">
+
+  
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5VHQ76P"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html">
+          
+
+          
+            
+            <img src="../../_static/logo.jpg" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../prerequisites/index.html">Prerequisites</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../authentication.html">Authentication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../quick-start-projects/index.html">Quick Start Projects</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Using the API Client</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../api.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../searching-data.html">Searching Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../querying-data.html">Querying Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../understanding-data-responses.html">Understanding Data Responses</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API Cookbook</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Introduction</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Data Discovery Recipes</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Gro Data: Key Concepts</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../gro-ontology.html">Gro Ontology</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../data-series-definition.html">Data Series Definition</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../data-point-definition.html">Data Point Definition</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Additional Resources</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../faq.html">FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modeling-resources.html">Modeling Resources</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Gro API Client</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content style-external-links">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../index.html">API Cookbook</a> &raquo;</li>
+        
+          <li><a href="index.html">Data Discovery Recipes</a> &raquo;</li>
+        
+      <li>Discover all data series related to a specific item</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/api-cookbook/data-discovery-recipes/discover_all_data_series_related_to_a_specific_item.ipynb.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
+      
+        <a href="../../gro-ontology.html" class="btn btn-neutral float-right" title="Gro Ontology" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="index.html" class="btn btn-neutral float-left" title="Data Discovery Recipes" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+  </div>
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+
+<p class="version-banner">
+  <strong>Note:</strong>
+  This document is for an older version of the Gro API Client.
+  Please see the <a href="../../../development/index.html">latest documentation</a>.
+</p>
+
+
+  
+<style>
+/* CSS for nbsphinx extension */
+
+/* remove conflicting styling from Sphinx themes */
+div.nbinput.container div.prompt *,
+div.nboutput.container div.prompt *,
+div.nbinput.container div.input_area pre,
+div.nboutput.container div.output_area pre,
+div.nbinput.container div.input_area .highlight,
+div.nboutput.container div.output_area .highlight {
+    border: none;
+    padding: 0;
+    margin: 0;
+    box-shadow: none;
+}
+
+div.nbinput.container > div[class*=highlight],
+div.nboutput.container > div[class*=highlight] {
+    margin: 0;
+}
+
+div.nbinput.container div.prompt *,
+div.nboutput.container div.prompt * {
+    background: none;
+}
+
+div.nboutput.container div.output_area .highlight,
+div.nboutput.container div.output_area pre {
+    background: unset;
+}
+
+div.nboutput.container div.output_area div.highlight {
+    color: unset;  /* override Pygments text color */
+}
+
+/* avoid gaps between output lines */
+div.nboutput.container div[class*=highlight] pre {
+    line-height: normal;
+}
+
+/* input/output containers */
+div.nbinput.container,
+div.nboutput.container {
+    display: -webkit-flex;
+    display: flex;
+    align-items: flex-start;
+    margin: 0;
+    width: 100%;
+}
+@media (max-width: 540px) {
+    div.nbinput.container,
+    div.nboutput.container {
+        flex-direction: column;
+    }
+}
+
+/* input container */
+div.nbinput.container {
+    padding-top: 5px;
+}
+
+/* last container */
+div.nblast.container {
+    padding-bottom: 5px;
+}
+
+/* input prompt */
+div.nbinput.container div.prompt pre {
+    color: #307FC1;
+}
+
+/* output prompt */
+div.nboutput.container div.prompt pre {
+    color: #BF5B3D;
+}
+
+/* all prompts */
+div.nbinput.container div.prompt,
+div.nboutput.container div.prompt {
+    width: 4.5ex;
+    padding-top: 5px;
+    position: relative;
+    user-select: none;
+}
+
+div.nbinput.container div.prompt > div,
+div.nboutput.container div.prompt > div {
+    position: absolute;
+    right: 0;
+    margin-right: 0.3ex;
+}
+
+@media (max-width: 540px) {
+    div.nbinput.container div.prompt,
+    div.nboutput.container div.prompt {
+        width: unset;
+        text-align: left;
+        padding: 0.4em;
+    }
+    div.nboutput.container div.prompt.empty {
+        padding: 0;
+    }
+
+    div.nbinput.container div.prompt > div,
+    div.nboutput.container div.prompt > div {
+        position: unset;
+    }
+}
+
+/* disable scrollbars on prompts */
+div.nbinput.container div.prompt pre,
+div.nboutput.container div.prompt pre {
+    overflow: hidden;
+}
+
+/* input/output area */
+div.nbinput.container div.input_area,
+div.nboutput.container div.output_area {
+    -webkit-flex: 1;
+    flex: 1;
+    overflow: auto;
+}
+@media (max-width: 540px) {
+    div.nbinput.container div.input_area,
+    div.nboutput.container div.output_area {
+        width: 100%;
+    }
+}
+
+/* input area */
+div.nbinput.container div.input_area {
+    border: 1px solid #e0e0e0;
+    border-radius: 2px;
+    /*background: #f5f5f5;*/
+}
+
+/* override MathJax center alignment in output cells */
+div.nboutput.container div[class*=MathJax] {
+    text-align: left !important;
+}
+
+/* override sphinx.ext.imgmath center alignment in output cells */
+div.nboutput.container div.math p {
+    text-align: left;
+}
+
+/* standard error */
+div.nboutput.container div.output_area.stderr {
+    background: #fdd;
+}
+
+/* ANSI colors */
+.ansi-black-fg { color: #3E424D; }
+.ansi-black-bg { background-color: #3E424D; }
+.ansi-black-intense-fg { color: #282C36; }
+.ansi-black-intense-bg { background-color: #282C36; }
+.ansi-red-fg { color: #E75C58; }
+.ansi-red-bg { background-color: #E75C58; }
+.ansi-red-intense-fg { color: #B22B31; }
+.ansi-red-intense-bg { background-color: #B22B31; }
+.ansi-green-fg { color: #00A250; }
+.ansi-green-bg { background-color: #00A250; }
+.ansi-green-intense-fg { color: #007427; }
+.ansi-green-intense-bg { background-color: #007427; }
+.ansi-yellow-fg { color: #DDB62B; }
+.ansi-yellow-bg { background-color: #DDB62B; }
+.ansi-yellow-intense-fg { color: #B27D12; }
+.ansi-yellow-intense-bg { background-color: #B27D12; }
+.ansi-blue-fg { color: #208FFB; }
+.ansi-blue-bg { background-color: #208FFB; }
+.ansi-blue-intense-fg { color: #0065CA; }
+.ansi-blue-intense-bg { background-color: #0065CA; }
+.ansi-magenta-fg { color: #D160C4; }
+.ansi-magenta-bg { background-color: #D160C4; }
+.ansi-magenta-intense-fg { color: #A03196; }
+.ansi-magenta-intense-bg { background-color: #A03196; }
+.ansi-cyan-fg { color: #60C6C8; }
+.ansi-cyan-bg { background-color: #60C6C8; }
+.ansi-cyan-intense-fg { color: #258F8F; }
+.ansi-cyan-intense-bg { background-color: #258F8F; }
+.ansi-white-fg { color: #C5C1B4; }
+.ansi-white-bg { background-color: #C5C1B4; }
+.ansi-white-intense-fg { color: #A1A6B2; }
+.ansi-white-intense-bg { background-color: #A1A6B2; }
+
+.ansi-default-inverse-fg { color: #FFFFFF; }
+.ansi-default-inverse-bg { background-color: #000000; }
+
+.ansi-bold { font-weight: bold; }
+.ansi-underline { text-decoration: underline; }
+
+
+div.nbinput.container div.input_area div[class*=highlight] > pre,
+div.nboutput.container div.output_area div[class*=highlight] > pre,
+div.nboutput.container div.output_area div[class*=highlight].math,
+div.nboutput.container div.output_area.rendered_html,
+div.nboutput.container div.output_area > div.output_javascript,
+div.nboutput.container div.output_area:not(.rendered_html) > img{
+    padding: 5px;
+    margin: 0;
+}
+
+/* fix copybtn overflow problem in chromium (needed for 'sphinx_copybutton') */
+div.nbinput.container div.input_area > div[class^='highlight'],
+div.nboutput.container div.output_area > div[class^='highlight']{
+    overflow-y: hidden;
+}
+
+/* hide copybtn icon on prompts (needed for 'sphinx_copybutton') */
+.prompt a.copybtn {
+    display: none;
+}
+
+/* Some additional styling taken form the Jupyter notebook CSS */
+div.rendered_html table {
+  border: none;
+  border-collapse: collapse;
+  border-spacing: 0;
+  color: black;
+  font-size: 12px;
+  table-layout: fixed;
+}
+div.rendered_html thead {
+  border-bottom: 1px solid black;
+  vertical-align: bottom;
+}
+div.rendered_html tr,
+div.rendered_html th,
+div.rendered_html td {
+  text-align: right;
+  vertical-align: middle;
+  padding: 0.5em 0.5em;
+  line-height: normal;
+  white-space: normal;
+  max-width: none;
+  border: none;
+}
+div.rendered_html th {
+  font-weight: bold;
+}
+div.rendered_html tbody tr:nth-child(odd) {
+  background: #f5f5f5;
+}
+div.rendered_html tbody tr:hover {
+  background: rgba(66, 165, 245, 0.2);
+}
+
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast.container,
+.nboutput.nblast.container {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast.container + .nbinput.container {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<div class="section" id="Discover-all-data-series-related-to-a-specific-item">
+<h1>Discover all data series related to a specific item<a class="headerlink" href="#Discover-all-data-series-related-to-a-specific-item" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="The-Python-packages-used-in-this-notebook-are-listed-in-the-requirements.txt-file-located-in-the-current-directory.-The-packages-can-be-installed-by-simply-running-'pip-install---requirement-requirements.txt'-on-your-command-line.-Adjustments-may-be-needed-if-you-are-not-using-the-same-versions-included-in-the-requirements-file.">
+<h2><em>The Python packages used in this notebook are listed in the requirements.txt file located in the current directory. The packages can be installed by simply running ‘pip install –requirement requirements.txt’ on your command line. Adjustments may be needed if you are not using the same versions included in the requirements file.</em><a class="headerlink" href="#The-Python-packages-used-in-this-notebook-are-listed-in-the-requirements.txt-file-located-in-the-current-directory.-The-packages-can-be-installed-by-simply-running-'pip-install---requirement-requirements.txt'-on-your-command-line.-Adjustments-may-be-needed-if-you-are-not-using-the-same-versions-included-in-the-requirements-file." title="Permalink to this headline">¶</a></h2>
+<p>Gro has tens of millions of data series, with wildly varied levels of granularity. When beginning a crop-focused analysis, you might find it helpful to discover every data series Gro has related to that specific crop.</p>
+<p>The code below can help you find every data series related to a specific crop/item available in Gro. This code will return both low granularity data (e.g. Production Quantity of Millet in France) and highly granular data (e.g. Area Planted, Non-Irrigated of Foxtail millet, for seed in Perkins, Nebraska).</p>
+<div class="section" id="Preliminary">
+<h3>Preliminary<a class="headerlink" href="#Preliminary" title="Permalink to this headline">¶</a></h3>
+<p>First, we import all the Python packages needed to run this notebook. We then create a GroClient object and define Gro entity ids to save for future use. We will use these throughout the notebook to simplify the retrieval, storage, and manipulation of data. We also create a Python dictionary defining the preferred futures contract month for each crop.</p>
+<p>The below asssumes you have GROAPI_TOKEN set as an environment variable.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>from groclient import GroClient
+import os
+import pandas as pd
+client = GroClient(&#39;api.gro-intelligence.com&#39;, os.environ[&#39;GROAPI_TOKEN&#39;])
+</pre></div>
+</div>
+</div>
+<p>In this example, we’ll be returing all available series related to millet. If you’re interested in a different crop/item, simply replace millet with your search term.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span># Enter the name of the crop or item for which you would like to find data series.
+search_item = &#39;millet&#39;
+
+# By default, the number of potential results will be limited to 100. To increase this limit, change the number on the row below.
+search_item_results = list(client.search_and_lookup(&#39;items&#39;, search_item, 100))
+
+print(&#39;found {} items related to {}&#39;.format(len(search_item_results), search_item))
+
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+found 77 items related to millet
+</pre></div></div>
+</div>
+<p>If you would like to see the details of all the items that matched your search term, you can run the below code block.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>for v in search_item_results:
+    entities = {}
+    entities[&#39;item_id&#39;] = v[&#39;id&#39;]
+    print(v[&#39;name&#39;], v[&#39;definition&#39;], v[&#39;id&#39;])
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Millet Grains from millet cereals, a highly diverse group of small-seeded grasses, that are popular around much of the world as a staple in both human and livestock consumption. Data includes barnyard or Japanese millet, ragi, finger or African millet, teff, common, golden or proso millet, koda or ditch millet; pearl or cattail millet; and foxtail millet. 21
+Cereals Grains of grasses that are used primarily for human consumption, such as wheat, corn, rice, millet, oats. 10009
+Millet and products Grains from millet cereals, a highly diverse group of small-seeded grasses, that are popular around much of the world as a staple in both human and livestock consumption. Data includes products partially or wholly derived from millet and millet plants. 10475
+Millet protein Protein derived from the grains of millet cereals, a highly diverse group of small-seeded grasses, that are popular around much of the world as a staple in both human and livestock consumption. Proteins are polymer chains of amino acids, linked together by peptide bonds, nine types of which are considered essential to the human diet. 14905
+Millet, for forage Grains from millet cereals, a highly diverse group of small-seeded grasses, cultivated for livestock forage. 8130
+Millet, for sowing Seeds used for growing a variety of diverse small-seeded grasses known as millet, a staple in both human and livestock consumption around much of the world. 6403
+Millet seed Seeds used for growing a variety of diverse small-seeded grasses known as millet, a staple in both human and livestock consumption around much of the world. 1362
+Millet bran The hard outer layers of grain created as a byproduct of the milling or refining of millet, especially pearl millet &lt;i&gt;Pennisetum glaucum&lt;/i&gt; and proso millet &lt;i&gt;Panicum miliaceum&lt;/i&gt;. 253
+Millet, biofortified &lt;i&gt;Definition pending.&lt;/i&gt; 9074
+Millet beer An alcoholic beverage produced by the fermentation of sugars in starches, in this case millet, and used for human consumption. 20771
+Millet flour Grain from millet—plants belonging to various small-size grasses of the Poace family—that has been processed and milled into flour, meal, or pellets. 20772
+Proso millet Small grains produced by grasses of the species &lt;i&gt;Panicum miliaceum&lt;/i&gt; that, in the U.S., are commonly cultivated for use as bird feed. 2998
+Small millet This is a categorization of millets that excludes pearl millet, and includes finger millet, kodo millet, little millet, foxtail millet, proso millet and barnyard millet, and which are cultivated as a source of food. 7471
+Pearl millet Grains from pearl millet—cereals belonging to the popular species &lt;i&gt;Pennisetum glaucum&lt;/i&gt;—that is widely cultivated for both food and feed use. 416
+Finger millet Grain of finger millet—cereals belonging to the species &lt;i&gt;Eleusine coracana&lt;/i&gt;—that is cultivated primarily for human consumption and may also be known as red millet, caracan millet, koracan, and ragi. 430
+Millet, excl seed Grains from millet cereals that are popular around much of the world as a staple in both human and livestock consumption. Data includes barnyard or Japanese millet, ragi, finger or African millet, teff, common, golden or proso millet, koda or ditch millet, pearl or cattail millet, and foxtail millet, but excludes their seeds. 1096
+Millet, crop residue Materials left on the field after the harvest of millet has been completed. 5099
+Millet, green, for forage Grains and grasses from millet cereals, a highly diverse group of small-seeded grasses, cultivated fresh for livestock forage. 8929
+Millet, excl for sowing Grains from millet cereals that are popular around much of the world as a staple in both human and livestock consumption. Data includes barnyard or Japanese millet, ragi, finger or African millet, teff, common, golden or proso millet, koda or ditch millet, pearl or cattail millet, and foxtail millet, but excludes their seeds. 6505
+Millet, other, excl for sowing Millet seeds of unspecified variety, and excluding millet seeds intended for the production of new plants. 6253
+Common millet, for cover crop &lt;i&gt;Definition pending&lt;/i&gt; 10948
+Common millet, for forage &lt;i&gt;Definition pending&lt;/i&gt; 10949
+Common millet, for grain &lt;i&gt;Definition pending&lt;/i&gt; 10950
+Common millet, for grazing &lt;i&gt;Definition pending&lt;/i&gt; 10951
+Common millet, for green manure &lt;i&gt;Definition pending&lt;/i&gt; 10952
+Common millet, for seed &lt;i&gt;Definition pending&lt;/i&gt; 10954
+Common millet, to leave standing &lt;i&gt;Definition pending&lt;/i&gt; 10953
+Dove proso millet, for forage &lt;i&gt;Definition pending&lt;/i&gt; 11032
+Dove proso millet, for grain &lt;i&gt;Definition pending&lt;/i&gt; 11033
+Dove proso millet, for grazing &lt;i&gt;Definition pending&lt;/i&gt; 11034
+Dove proso millet, for seed &lt;i&gt;Definition pending&lt;/i&gt; 11037
+Foxtail millet, for cover crop &lt;i&gt;Definition pending&lt;/i&gt; 11068
+Japanese millet, for green manure &lt;i&gt;Definition pending&lt;/i&gt; 11229
+Pearl millet, for cover crop &lt;i&gt;Definition pending&lt;/i&gt; 11348
+Pearl millet, for forage &lt;i&gt;Definition pending&lt;/i&gt; 11349
+Pearl millet, for grain &lt;i&gt;Definition pending&lt;/i&gt; 11350
+Pearl millet, for grazing &lt;i&gt;Definition pending&lt;/i&gt; 11351
+Pearl millet, for green manure &lt;i&gt;Definition pending&lt;/i&gt; 11352
+Pearl millet, for seed &lt;i&gt;Definition pending&lt;/i&gt; 11354
+Pearl millet, to leave standing &lt;i&gt;Definition pending&lt;/i&gt; 11353
+Foxtail millet, for forage &lt;i&gt;Definition pending&lt;/i&gt; 10734
+Foxtail millet, for grain &lt;i&gt;Definition pending&lt;/i&gt; 10735
+Foxtail millet, for grazing &lt;i&gt;Definition pending&lt;/i&gt; 10736
+Foxtail millet, for seed &lt;i&gt;Definition pending&lt;/i&gt; 10738
+Foxtail millet, to leave standing &lt;i&gt;Definition pending&lt;/i&gt; 10737
+Japanese millet, for forage &lt;i&gt;Definition pending&lt;/i&gt; 10779
+Japanese millet, for grain &lt;i&gt;Definition pending&lt;/i&gt; 10780
+Japanese millet, for grazing &lt;i&gt;Definition pending&lt;/i&gt; 10781
+Japanese millet, for seed &lt;i&gt;Definition pending&lt;/i&gt; 10783
+Japanese millet, to leave standing &lt;i&gt;Definition pending&lt;/i&gt; 10782
+Pearl millet, for sowing Grains from pearl millet—cereals belonging to the popular species &lt;i&gt;Pennisetum glaucum&lt;/i&gt;—that is widely cultivated for both food and feed use. Data refers to the seeds of pearl millet that are intended for the production of new plants. 6276
+Pearl millet, excl for sowing Grains from pearl millet—cereals belonging to the popular species &lt;i&gt;Pennisetum glaucum&lt;/i&gt;—that is widely cultivated for both food and feed use. Data &lt;b&gt;excludes&lt;/b&gt; seeds of pearl millet that are intended for the production of new plants. 6508
+Dove proso millet, for cover crop &lt;i&gt;Definition pending&lt;/i&gt; 11031
+Dove proso millet, for green manure &lt;i&gt;Definition pending&lt;/i&gt; 11035
+Dove proso millet, to leave standing &lt;i&gt;Definition pending&lt;/i&gt; 11036
+Fonio The grain produced by fonio—cereals belonging to the species &lt;i&gt;Digitaria exilis&lt;/i&gt; or &lt;i&gt;Digitaria iburua&lt;/i&gt;—which is grown primarily in West Africa and is favored for its rapid maturation rate. 442
+Red teff Fine red grains from the annual grass in the species &lt;i&gt;Eragrostis tef&lt;/i&gt; that are widely cultivated in Ethiopia and Eritrea. The grains have a high nutritional profile with a rich balance of amino acids. 424
+Teff Grains, belonging to the species &lt;i&gt;Eragrostis tef&lt;/i&gt;, that are cultivated primarily in Ethiopia for both direct human consumption and as an ingredient in food products. 2122
+Teff, mixed Fine red and white grains from the annual grass in the species &lt;i&gt;Eragrostis tef&lt;/i&gt; that are widely cultivated in Ethiopia and Eritrea. The grains have a high nutritional profile with a rich balance of amino acids. 423
+White teff Cereal crops, belonging to the species &lt;i&gt;Eragrostis tef&lt;/i&gt;, that are both cultivated for direct human consumption and used as an ingredient in food products. Data only includes teff of a lighter, or white, color. 425
+Coarse grains &lt;i&gt;Definition pending.&lt;/i&gt; 2004
+Total grains (WASDE) A set of grains covered by the USDA&#39;s WASDE report, including wheat, rice, milled, corn, sorghum, barlet, oats, millet, and other mixed grains. 12696
+Grains The small, dry seeds harvested primarily from cereal and legume crops for human or animal consumption. Grains are known for their durability, as the seeds are easily shipped and stored for long periods. 2007
+Grains, oil crops, and vegetable oils “A grouping of agricultural products that includes: seeds harvested primarily from cereal and legume crops, crops that are cultivated primarily for oil, and oils extracted from seed and vegetable crops. 18630
+Fonio bran The hard outer layers of grain created as a byproduct of the milling or refining of fonio &lt;i&gt;Digitaria exilis; D. iburua&lt;/i&gt;. 514
+Fonio flour Grain from fonio— two species of plants belonging to the genus &lt;i&gt;Digitaria&lt;/i&gt;—that has been processed and milled into flour, meal, or pellets. 572
+Beer An alcoholic beverage, both bottled and unbottled, primarily produced by the fermentation of sugars in starches such as barley, but also commonly wheat, rye, oats, and rice. The resulting beers are commonly known as either porters, stouts, lagers, pilsners, or ales. 115
+Flour A powdered substance derived from the grinding and milling of uncooked cereal grains, as well as some seeds and roots, that is primarily used to produce other food products. 880
+Protein supply The amount of protein from either plants or animals available for consumption. 7564
+Food Various items relating to any agricultural produce in a form ready for human consumption. 10035
+Stimulant crops Crops like, coffee, tea, and cocoa beans that are used to make products that stimulate the consumers to enhance their mental alertness, increased or prolonged physical activity, uninhibited conviviality, or fierce fighting. 20680
+Agricultural products Diverse baskets and aggregations of various agricultural goods and commodities. 643
+Byproducts An unintended or secondary product that results from the creation or production of another item. 10017
+Cereals, processed Products, such as macaroni and breakfast cereal, that have been developed by processing cereals. 10024
+Seeds The part of a plant which is used specifically for the sowing or reproduction of that plant. 10077
+Beverages, including alcohol Drinks for human consumption, including alcohol with a strength by volume of less than 80%, such as spirits, liqueurs and other beverages. 10002
+Feed and fodder Products and crops that are grown and produced for the primary purpose of feeding livestock. 10004
+</pre></div></div>
+</div>
+<p>The below will find all of the available data series that include the results of your search term. Note that there is a limit of 300,000 responses. If you wish to get more responses than this, you will need to split up the list of items being searched into many queries.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>data_series_list = []
+for v in search_item_results:
+    entities = {}
+    entities[&#39;item_id&#39;] = v[&#39;id&#39;]
+    data_series_list += client.get_data_series(**entities)
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+Data series have some historical regions, see https://developers.gro-intelligence.com/faq.html
+Data series have some historical regions, see https://developers.gro-intelligence.com/faq.html
+Data series have some historical regions, see https://developers.gro-intelligence.com/faq.html
+Data series have some historical regions, see https://developers.gro-intelligence.com/faq.html
+Data series have some historical regions, see https://developers.gro-intelligence.com/faq.html
+Data series have some historical regions, see https://developers.gro-intelligence.com/faq.html
+Data series have some historical regions, see https://developers.gro-intelligence.com/faq.html
+Data series have some historical regions, see https://developers.gro-intelligence.com/faq.html
+Data series have some historical regions, see https://developers.gro-intelligence.com/faq.html
+Data series have some historical regions, see https://developers.gro-intelligence.com/faq.html
+Data series have some historical regions, see https://developers.gro-intelligence.com/faq.html
+Data series have some historical regions, see https://developers.gro-intelligence.com/faq.html
+</pre></div></div>
+</div>
+<p>This last step will simply return all of your data series into a readable dataframe.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>data_series_list = pd.DataFrame(data_series_list)
+
+data_series_list
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>metric_id</th>
+      <th>metric_name</th>
+      <th>item_id</th>
+      <th>item_name</th>
+      <th>region_id</th>
+      <th>region_name</th>
+      <th>partner_region_id</th>
+      <th>partner_region_name</th>
+      <th>frequency_id</th>
+      <th>frequency_name</th>
+      <th>source_id</th>
+      <th>source_name</th>
+      <th>start_date</th>
+      <th>end_date</th>
+      <th>data_count_estimate</th>
+      <th>metadata</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>2120042</td>
+      <td>Land Cover (percent)</td>
+      <td>21</td>
+      <td>Millet</td>
+      <td>138561</td>
+      <td>Hidalgo</td>
+      <td>0</td>
+      <td>World</td>
+      <td>9</td>
+      <td>annual</td>
+      <td>146</td>
+      <td>NASS Cropland Data Layer</td>
+      <td>2006-01-01T00:00:00.000Z</td>
+      <td>2019-12-31T00:00:00.000Z</td>
+      <td>15.0</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>20032</td>
+      <td>Export Volume (mass)</td>
+      <td>21</td>
+      <td>Millet</td>
+      <td>1215</td>
+      <td>United States</td>
+      <td>1157</td>
+      <td>Panama</td>
+      <td>9</td>
+      <td>annual</td>
+      <td>15</td>
+      <td>USDA GATS</td>
+      <td>1995-01-01T00:00:00.000Z</td>
+      <td>2011-12-31T00:00:00.000Z</td>
+      <td>18.0</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>20032</td>
+      <td>Export Volume (mass)</td>
+      <td>21</td>
+      <td>Millet</td>
+      <td>1112</td>
+      <td>Latvia</td>
+      <td>1157</td>
+      <td>Panama</td>
+      <td>9</td>
+      <td>annual</td>
+      <td>59</td>
+      <td>COMTRADE</td>
+      <td>2002-01-01T00:00:00.000Z</td>
+      <td>2002-12-31T00:00:00.000Z</td>
+      <td>1.0</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>20032</td>
+      <td>Export Volume (mass)</td>
+      <td>21</td>
+      <td>Millet</td>
+      <td>1210</td>
+      <td>Ukraine</td>
+      <td>1157</td>
+      <td>Panama</td>
+      <td>9</td>
+      <td>annual</td>
+      <td>59</td>
+      <td>COMTRADE</td>
+      <td>2011-01-01T00:00:00.000Z</td>
+      <td>2014-12-31T00:00:00.000Z</td>
+      <td>5.0</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>30032</td>
+      <td>Import Volume (mass)</td>
+      <td>21</td>
+      <td>Millet</td>
+      <td>1187</td>
+      <td>South Africa</td>
+      <td>1157</td>
+      <td>Panama</td>
+      <td>9</td>
+      <td>annual</td>
+      <td>59</td>
+      <td>COMTRADE</td>
+      <td>2015-01-01T00:00:00.000Z</td>
+      <td>2016-12-31T00:00:00.000Z</td>
+      <td>3.0</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>2241907</th>
+      <td>11078</td>
+      <td>Export Value (currency)</td>
+      <td>1866</td>
+      <td>Animal feed, prepared, NES</td>
+      <td>1029</td>
+      <td>Brazil</td>
+      <td>1176</td>
+      <td>San Marino</td>
+      <td>6</td>
+      <td>monthly</td>
+      <td>59</td>
+      <td>COMTRADE</td>
+      <td>2019-03-01T00:00:00.000Z</td>
+      <td>2019-03-31T00:00:00.000Z</td>
+      <td>2.0</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>2241908</th>
+      <td>20032</td>
+      <td>Export Volume (mass)</td>
+      <td>1866</td>
+      <td>Animal feed, prepared, NES</td>
+      <td>1029</td>
+      <td>Brazil</td>
+      <td>1048</td>
+      <td>Croatia</td>
+      <td>6</td>
+      <td>monthly</td>
+      <td>59</td>
+      <td>COMTRADE</td>
+      <td>2018-08-01T00:00:00.000Z</td>
+      <td>2018-08-31T00:00:00.000Z</td>
+      <td>2.0</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>2241909</th>
+      <td>41078</td>
+      <td>Import Value (currency)</td>
+      <td>1866</td>
+      <td>Animal feed, prepared, NES</td>
+      <td>1009</td>
+      <td>Antigua and Barbuda</td>
+      <td>1076</td>
+      <td>Germany</td>
+      <td>9</td>
+      <td>annual</td>
+      <td>59</td>
+      <td>COMTRADE</td>
+      <td>2018-01-01T00:00:00.000Z</td>
+      <td>2018-12-31T00:00:00.000Z</td>
+      <td>1.0</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>2241910</th>
+      <td>11078</td>
+      <td>Export Value (currency)</td>
+      <td>1866</td>
+      <td>Animal feed, prepared, NES</td>
+      <td>1029</td>
+      <td>Brazil</td>
+      <td>1055</td>
+      <td>Denmark</td>
+      <td>6</td>
+      <td>monthly</td>
+      <td>59</td>
+      <td>COMTRADE</td>
+      <td>2019-03-01T00:00:00.000Z</td>
+      <td>2019-12-31T00:00:00.000Z</td>
+      <td>11.0</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>2241911</th>
+      <td>11078</td>
+      <td>Export Value (currency)</td>
+      <td>1866</td>
+      <td>Animal feed, prepared, NES</td>
+      <td>1250</td>
+      <td>Palestine</td>
+      <td>0</td>
+      <td>World</td>
+      <td>9</td>
+      <td>annual</td>
+      <td>59</td>
+      <td>COMTRADE</td>
+      <td>2007-01-01T00:00:00.000Z</td>
+      <td>2018-12-31T00:00:00.000Z</td>
+      <td>13.0</td>
+      <td>NaN</td>
+    </tr>
+  </tbody>
+</table>
+<p>2241912 rows × 16 columns</p>
+</div></div>
+</div>
+</div>
+</div>
+</div>
+
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../../gro-ontology.html" class="btn btn-neutral float-right" title="Gro Ontology" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="index.html" class="btn btn-neutral float-left" title="Data Discovery Recipes" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Gro Intelligence
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+<div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    <span class="fa fa-book"> Other Versions</span>
+    v: Recipes
+    <span class="fa fa-caret-down"></span>
+  </span>
+  <div class="rst-other-versions">
+    <dl>
+      <dt>Releases</dt>
+      <dd><a href="../../../v1.100.0/index.html">v1.100.0</a></dd>
+      <dd><a href="../../../v1.40.6/index.html">v1.40.6</a></dd>
+      <dd><a href="../../../v1.56.0/index.html">v1.56.0</a></dd>
+      <dd><a href="../../../v1.56.1/index.html">v1.56.1</a></dd>
+      <dd><a href="../../../v1.56.2/index.html">v1.56.2</a></dd>
+      <dd><a href="../../../v1.60.0/index.html">v1.60.0</a></dd>
+      <dd><a href="../../../v1.60.1/index.html">v1.60.1</a></dd>
+      <dd><a href="../../../v1.71.0/index.html">v1.71.0</a></dd>
+      <dd><a href="../../../v1.76.0/index.html">v1.76.0</a></dd>
+      <dd><a href="../../../v1.77.0/index.html">v1.77.0</a></dd>
+      <dd><a href="../../../v1.77.1/index.html">v1.77.1</a></dd>
+      <dd><a href="../../../v1.82.0/index.html">v1.82.0</a></dd>
+      <dd><a href="../../../v1.83.0/index.html">v1.83.0</a></dd>
+      <dd><a href="../../../v1.98.0/index.html">v1.98.0</a></dd>
+
+      
+            <dd><a href="../../../development/index.html">development</a></dd>
+    </dl>
+  </div>
+</div>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

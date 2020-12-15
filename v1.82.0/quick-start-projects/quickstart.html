@@ -32,6 +32,7 @@
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
         <script src="../_static/language_data.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
@@ -208,7 +209,31 @@
 </p>
 
 
-  <div class="section" id="quickstart-py">
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast.container,
+.nboutput.nblast.container {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast.container + .nbinput.container {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<div class="section" id="quickstart-py">
 <h1>Quickstart.py<a class="headerlink" href="#quickstart-py" title="Permalink to this headline">¶</a></h1>
 <p><a class="reference external" href="https://github.com/gro-intelligence/api-client/blob/development/api/client/samples/quick_start.py">quick_start.py</a> is a simple script that creates an authenticated <code class="code docutils literal notranslate"><span class="pre">GroClient</span></code> object and uses the <a class="reference internal" href="../api.html#api.client.gro_client.GroClient.get_data_series" title="api.client.gro_client.GroClient.get_data_series"><code class="xref py py-meth docutils literal notranslate"><span class="pre">api.client.gro_client.GroClient.get_data_series()</span></code></a> and <a class="reference internal" href="../api.html#api.client.gro_client.GroClient.get_data_points" title="api.client.gro_client.GroClient.get_data_points"><code class="xref py py-meth docutils literal notranslate"><span class="pre">api.client.gro_client.GroClient.get_data_points()</span></code></a> methods to find Area Harvested series for Ukrainian Wheat from a variety of different sources, and outputs the time series points to a CSV file. You will likely want to revisit this script as a starting point for building your own scripts.</p>
 <p>Note that the script assumes you have your authentication token set to a <code class="code docutils literal notranslate"><span class="pre">GROAPI_TOKEN</span></code> environment variable <a class="reference external" href="./authentication#saving-your-token-as-an-environment-variable">see Saving your token as an environment variable</a>. If you don’t wish to use environment variables, you can modify the sample script to set <code class="code docutils literal notranslate"><span class="pre">ACCESS_TOKEN</span></code> in some other way.</p>
