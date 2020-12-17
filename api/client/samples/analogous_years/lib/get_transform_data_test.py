@@ -1,4 +1,4 @@
-from api.client.gro_client import GroClient
+from groclient import GroClient
 import mock
 import numpy as np
 import pandas as pd

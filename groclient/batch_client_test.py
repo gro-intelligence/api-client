@@ -14,7 +14,7 @@ from tornado.httpclient import HTTPResponse, HTTPError
 from tornado.concurrent import Future
 from tornado.ioloop import IOLoop
 
-from groclient import GroClient as BatchClient
+from groclient import GroClient
 from groclient.client import BatchError
 from groclient.utils import str_camel_to_snake
 from groclient.mock_data import (
@@ -52,17 +52,17 @@ def mock_tornado_fetch(request):
 
 
 @patch(
-    "api.client.lib.rank_series_by_source",
+    "groclient.lib.rank_series_by_source",
     MagicMock(side_effect=mock_rank_series_by_source),
 )
 @patch(
     "tornado.httpclient.AsyncHTTPClient.fetch",
     MagicMock(side_effect=mock_tornado_fetch),
 )
-class BatchClientTests(TestCase):
+class BatchTests(TestCase):
     def setUp(self):
-        self.client = BatchClient(MOCK_HOST, MOCK_TOKEN)
-        self.assertTrue(isinstance(self.client, BatchClient))
+        self.client = GroClient(MOCK_HOST, MOCK_TOKEN)
+        self.assertTrue(isinstance(self.client, GroClient))
 
     def tearDown(self):
         IOLoop.clear_current()
@@ -121,6 +121,18 @@ class BatchClientTests(TestCase):
         )
 
         self.assertEqual(summation, 97680)
+
+    # Test that multiple GroClients each have their own AsyncHTTPClient. Note:
+    # this tests the fix for the `fetch called on closed AsyncHTTPClient`
+    # error. We can't test for that directly since the `fetch` call is mocked,
+    # so instead we just ensure that all GroClients have their own
+    # AsyncHTTPClient.
+    def test_batch_async_get_data_points_multiple_clients(self):
+        client = GroClient(MOCK_HOST, MOCK_TOKEN)
+        ahc_id1 = id(client._async_http_client)
+        client = GroClient(MOCK_HOST, MOCK_TOKEN)
+        ahc_id2 = id(client._async_http_client)
+        self.assertNotEqual(ahc_id1, ahc_id2)
 
     def test_batch_async_get_data_points_bad_request_error(self):
         responses = self.client.batch_async_get_data_points([mock_error_selection])
