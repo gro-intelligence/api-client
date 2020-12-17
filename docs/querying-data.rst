@@ -12,7 +12,7 @@ be initialized as follows:
 
 .. code-block:: python
 
-  from api.client.gro_client import GroClient
+  from groclient import GroClient
 
   client = GroClient('api.gro-intelligence.com', '<YOUR_TOKEN>')
 
@@ -20,7 +20,7 @@ be initialized as follows:
 Get data points
 ===============
 
-:code:`get_data_points(**selection)` is the most basic method for retrieving data. The `code snippets <searching-data#code-snippets>`_ feature covered earlier provides you with a fully completed `get_data_points()` query, such as:
+:code:`get_data_points(**selection)` is the most basic method for retrieving data. The `code snippets <./searching-data#code-snippets>`_ feature covered earlier provides you with a fully completed `get_data_points()` query, such as:
 
 .. code-block:: python
 
@@ -33,7 +33,7 @@ Get data points
       'frequency_id': 9
   })
 
-The above query has completed fields for :code:`metric_id`, :code:`item_id`, :code:`region_id`, :code:`source_id`, and :code:`frequency_id`. However, :meth:`api.client.gro_client.GroClient.get_data_points` can also accept fields to further narrow your data series of interest: :code:`partner_region_id` (used only in series that represent a flow between two places), :code:`start_date`, :code:`end_date`, :code:`show_revions`, :code:`insert_null`, and :code:`at_time`.
+The above query has completed fields for :code:`metric_id`, :code:`item_id`, :code:`region_id`, :code:`source_id`, and :code:`frequency_id`. However, :meth:`groclient.GroClient.get_data_points` can also accept fields to further narrow your data series of interest: :code:`partner_region_id` (used only in series that represent a flow between two places), :code:`start_date`, :code:`end_date`, :code:`show_revions`, :code:`insert_null`, and :code:`at_time`.
 
 Making your query more specific will speed up your query by limiting the amount of data requested.
 
@@ -63,9 +63,9 @@ The easiest way to do that is to use :code:`add_data_series()`, e.g.:
   df = client.get_df()
 
 
-Note that :code:`add_data_series()` combines searching for combinations of entities by name, finding the best possible data series for that combination, and adding it to the client. In the above example, each :code:`add_data_series()` call finds several possible series (5 series for area harvested and 6 for production quantity respectively), and adds the highest ranked one for each.  For more information on how series are ranked see :meth:`api.client.gro_client.GroClient.rank_series_by_source`.
+Note that :code:`add_data_series()` combines searching for combinations of entities by name, finding the best possible data series for that combination, and adding it to the client. In the above example, each :code:`add_data_series()` call finds several possible series (5 series for area harvested and 6 for production quantity respectively), and adds the highest ranked one for each.  For more information on how series are ranked see :meth:`groclient.GroClient.rank_series_by_source`.
 
-If you want to directly control the series selection, you can also take a specific selection - discovered, perhaps, via `code snippets <./searching-data.html#code-snippets>`_, or using :meth:`api.client.gro_client.GroClient.find_data_series` and then add that series directly with the
+If you want to directly control the series selection, you can also take a specific selection - discovered, perhaps, via `code snippets <./searching-data#code-snippets>`_, or using :meth:`groclient.GroClient.find_data_series` and then add that series directly with the
 :code:`add_single_data_series()` method, e.g.:
 
 .. code-block:: python

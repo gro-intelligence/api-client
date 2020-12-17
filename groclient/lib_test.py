@@ -1,18 +1,29 @@
+import platform
+from pkg_resources import get_distribution
+
 import mock
 import numpy as np
 
 from groclient import lib
-import platform
-from pkg_resources import get_distribution
+from groclient.utils import dict_assign
+from groclient.constants import DATA_SERIES_UNIQUE_TYPES_ID
 
 MOCK_HOST = 'pytest.groclient.url'
 MOCK_TOKEN = 'pytest.groclient.token'
-PYTHON_VERSION = platform.python_version()
-API_CLIENT_VERSION = get_distribution('groclient').version
 
 LOOKUP_MAP = {
-    'metrics': {},
-    'items': {},
+    'metrics': {
+        '1': {'id': 1, 'name': 'metric 1', 'contains': [], 'belongsTo': [3], 'definition': 'def1'},
+        '2': {'id': 2, 'name': 'metric 2', 'contains': [], 'belongsTo': [3], 'definition': 'def2'},
+        '3': {'id': 3, 'name': 'parent', 'contains': [1, 2], 'belongsTo': [4], 'definition': 'def3'},
+        '4': {'id': 4, 'name': 'ancestor', 'contains': [3], 'belongsTo': [], 'definition': 'def4'}
+    },
+    'items': {
+        '1': {'id': 1, 'name': 'item 1', 'contains': [], 'belongsTo': [3], 'definition': 'def1'},
+        '2': {'id': 2, 'name': 'item 2', 'contains': [], 'belongsTo': [3], 'definition': 'def2'},
+        '3': {'id': 3, 'name': 'parent', 'contains': [1, 2], 'belongsTo': [4], 'definition': 'def3'},
+        '4': {'id': 4, 'name': 'ancestor', 'contains': [3], 'belongsTo': [], 'definition': 'def4'}
+    },
     'regions': {
         '1': {'id': 1, 'name': 'region 1', 'contains': [], 'belongsTo': [3], 'historical': True},
         '2': {'id': 2, 'name': 'region 2', 'contains': [], 'belongsTo': [3], 'historical': False},
@@ -209,7 +220,7 @@ def test_list_of_series_to_single_series():
          'end_date': '2003-12-31',
          'value': 123,
          'unit_id': 15,
-         'metadata': {'confInterval': 2},
+         'metadata': {'conf_interval': 2},
          'input_unit_id': 15,
          'input_unit_scale': 1,
          'reporting_date': None,
@@ -255,8 +266,8 @@ def test_search(mock_requests_get):
     assert lib.search(MOCK_TOKEN, MOCK_HOST, 'items', 'test123') == mock_data
 
 
-@mock.patch('api.client.lib.lookup')
-@mock.patch('api.client.lib.search')
+@mock.patch('groclient.lib.lookup')
+@mock.patch('groclient.lib.search')
 def test_search_and_lookup(search_mocked, lookup_mocked):
     # Set up
     # mock return values
@@ -271,7 +282,7 @@ def test_search_and_lookup(search_mocked, lookup_mocked):
     ]
 
 
-@mock.patch('api.client.lib.lookup')
+@mock.patch('groclient.lib.lookup')
 @mock.patch('requests.get')
 def test_lookup_belongs(mock_requests_get, lookup_mocked):
     mock_requests_get.return_value.json.return_value = {'data': {'1': [3]}}
@@ -298,25 +309,40 @@ def test_get_source_ranking(mock_requests_get):
 @mock.patch('requests.get')
 def test_rank_series_by_source(mock_requests_get):
     # for each series selection, mock ranking of 3 source ids
-    mock_return = [11, 22, 33]
+    mock_return = [11, 123, 33]
     mock_requests_get.return_value.json.return_value = mock_return
     mock_requests_get.return_value.status_code = 200
 
-    a = {'region_id': 13474, 'abc': 123, 'def': 123, 'ghe': 123, 'fij': 123,
-         'item_id': 3457, 'metric_id': 2540047,
-         'source_id': 123, 'source_name': 'dontcare'}
-    a.pop('abc')
-    a.pop('def')
-    a.pop('ghe')
-    a.pop('fij')
+    full_data_series = {
+        'metric_id': 2540047,
+        'item_id': 3457,
+        'region_id': 13474,
+        'partner_region_id': 56789,
+        'source_id': 123,
+        'source_name': 'dontcare',
+        'frequency_id': 9,
+        'start_date': '2020-01-01',
+        'end_date': '2020-05-01',
+        'metadata': {'historical': True}
+    }
+    # input selection should allow a list of ids
+    partial_selection = {
+        'metric_id': 2540047,
+        'item_id': 1457,
+        'region_id': [13474,13475]
+    }
 
-    b = {'item_id': 1457, 'region_id': 13474, 'metric_id': 2540047}
-    c = list(lib.rank_series_by_source(MOCK_TOKEN, MOCK_HOST, [a, b]))
-
-    assert(len(c) == 6)
-    for x in c:
-        assert 'source_name' not in x
-    assert mock_return + mock_return == [x['source_id'] for x in c]
+    expected = [
+        full_data_series,
+        dict_assign(partial_selection, 'source_id', mock_return[0]),
+        dict_assign(partial_selection, 'source_id', mock_return[1]),
+        dict_assign(partial_selection, 'source_id', mock_return[2])
+    ]
+    for idx, series in enumerate(lib.rank_series_by_source(MOCK_TOKEN,
+                                                           MOCK_HOST,
+                                                           [full_data_series,
+                                                            partial_selection])):
+        assert series == expected[idx]
 
 
 def lookup_mock(MOCK_TOKEN, MOCK_HOST, entity_type, entity_ids):
@@ -327,7 +353,37 @@ def lookup_mock(MOCK_TOKEN, MOCK_HOST, entity_type, entity_ids):
                 for entity_id in entity_ids}
 
 
-@mock.patch('api.client.lib.lookup')
+@mock.patch('groclient.lib.lookup')
+@mock.patch('requests.get')
+def test_get_descendant(mock_requests_get, lookup_mocked):
+    mock_requests_get.return_value.json.return_value = {'data': {'4': [1, 2, 3]}}
+    mock_requests_get.return_value.status_code = 200
+    lookup_mocked.side_effect = lookup_mock
+
+    assert lib.get_descendant(MOCK_TOKEN, MOCK_HOST, 'items', 4) == [
+        {'id': 1, 'name': 'item 1', 'contains': [], 'belongsTo': [3], 'definition': 'def1'},
+        {'id': 2, 'name': 'item 2', 'contains': [], 'belongsTo': [3], 'definition': 'def2'},
+        {'id': 3, 'name': 'parent', 'contains': [1, 2], 'belongsTo': [4], 'definition': 'def3'}
+    ]
+    
+    assert lib.get_descendant(MOCK_TOKEN, MOCK_HOST, 'metrics', 4, include_details=True) == [
+        {'id': 1, 'name': 'metric 1', 'contains': [], 'belongsTo': [3], 'definition': 'def1'},
+        {'id': 2, 'name': 'metric 2', 'contains': [], 'belongsTo': [3], 'definition': 'def2'},
+        {'id': 3, 'name': 'parent', 'contains': [1, 2], 'belongsTo': [4], 'definition': 'def3'}
+    ]
+
+    assert lib.get_descendant(MOCK_TOKEN, MOCK_HOST, 'items', 4, include_details=False) == [
+        {'id': 1}, {'id': 2}, {'id': 3}
+    ]
+
+    mock_requests_get.return_value.json.return_value = {'data': {'4': [3]}}
+    assert lib.get_descendant(MOCK_TOKEN, MOCK_HOST, 'items', 4, distance=1) == [
+        {'id': 3, 'name': 'parent', 'contains': [1, 2], 'belongsTo': [4], 'definition': 'def3'}
+    ]
+
+    
+
+@mock.patch('groclient.lib.lookup')
 @mock.patch('requests.get')
 def test_descendant_regions(mock_requests_get, lookup_mocked):
     mock_requests_get.return_value.json.return_value = {'data': {'3': [1, 2]}}
@@ -453,7 +509,7 @@ def test_get_geo_jsons(mock_requests_get):
     assert lib.get_geojsons(MOCK_TOKEN, MOCK_HOST, 1215, None, 7) == expected_return
 
 
-@mock.patch('api.client.lib.get_geojsons')
+@mock.patch('groclient.lib.get_geojsons')
 def test_get_geo_json(geojsons_mocked):
     geojsons_mocked.return_value = [{
         "region_id": 1215,

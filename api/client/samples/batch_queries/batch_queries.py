@@ -1,5 +1,5 @@
 import os
-from api.client.batch_client import BatchClient
+from groclient import GroClient
 
 def main():
     # set up the Batch Client, same as normal Client
@@ -7,7 +7,7 @@ def main():
     API_HOST = 'api.gro-intelligence.com'
     ACCESS_TOKEN = os.environ['GROAPI_TOKEN']
 
-    api_client = BatchClient(API_HOST, ACCESS_TOKEN)
+    api_client = GroClient(API_HOST, ACCESS_TOKEN)
 
     # specify everything except region_id
     selection = {
