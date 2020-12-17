@@ -1,5 +1,5 @@
 from __future__ import print_function
-import functools import partial
+from functools import partial
 import itertools
 import time
 import json
