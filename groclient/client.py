@@ -878,23 +878,21 @@ class GroClient(object):
                 None, data_series, self.get_data_points(**data_series)
             )
 
-        df = self._data_frame.copy()
-
-        if include_names and not df.empty:
+        if include_names and not self._data_frame.empty:
             def get_name(entity_type_id, entity_id):
                 return self.lookup(ENTITY_KEY_TO_TYPE[entity_type_id], entity_id)['name']
 
             for entity_type_id in DATA_SERIES_UNIQUE_TYPES_ID + ['unit_id']:
                 name_col = entity_type_id.replace('_id', '_name')
-                df[name_col] = df[entity_type_id].apply(partial(get_name, entity_type_id))
+                self._data_frame[name_col] = self._data_frame[entity_type_id].apply(partial(get_name, entity_type_id))
 
-        if index_by_series and not df.empty:
-            idx_columns = intersect(DATA_SERIES_UNIQUE_TYPES_ID, df.columns)
+        if index_by_series and not self._data_frame.empty:
+            idx_columns = intersect(DATA_SERIES_UNIQUE_TYPES_ID, self._data_frame.columns)
 
-            df.set_index(idx_columns, inplace=True)
-            df.sort_index(inplace=True)
+            self._data_frame.set_index(idx_columns, inplace=True)
+            self._data_frame.sort_index(inplace=True)
 
-        return df
+        return self._data_frame
 
     def async_get_df(self):
         self.batch_async_get_data_points(
