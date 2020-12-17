@@ -804,22 +804,27 @@ value the series are ranked by. You may then use the results to call
 <h2><a class="toc-backref" href="#id5">Pandas Utils</a><a class="headerlink" href="#pandas-utils" title="Permalink to this headline">¶</a></h2>
 <dl class="py method">
 <dt id="groclient.GroClient.get_df">
-<code class="sig-prename descclassname">GroClient.</code><code class="sig-name descname">get_df</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">show_revisions</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">include_names</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">index_by_series</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/groclient/client.html#GroClient.get_df"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#groclient.GroClient.get_df" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">GroClient.</code><code class="sig-name descname">get_df</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">show_revisions</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">index_by_series</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">include_names</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/groclient/client.html#GroClient.get_df"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#groclient.GroClient.get_df" title="Permalink to this definition">¶</a></dt>
 <dd><p>Call <a class="reference internal" href="#groclient.GroClient.get_data_points" title="groclient.GroClient.get_data_points"><code class="xref py py-meth docutils literal notranslate"><span class="pre">get_data_points()</span></code></a> for each saved data series and return as a combined
 dataframe.</p>
 <p>Note you must have first called either <a class="reference internal" href="#groclient.GroClient.add_data_series" title="groclient.GroClient.add_data_series"><code class="xref py py-meth docutils literal notranslate"><span class="pre">add_data_series()</span></code></a> or
 <a class="reference internal" href="#groclient.GroClient.add_single_data_series" title="groclient.GroClient.add_single_data_series"><code class="xref py py-meth docutils literal notranslate"><span class="pre">add_single_data_series()</span></code></a> to save data series into the GroClient’s data_series_list.
 You can inspect the client’s saved list using <a class="reference internal" href="#groclient.GroClient.get_data_series_list" title="groclient.GroClient.get_data_series_list"><code class="xref py py-meth docutils literal notranslate"><span class="pre">get_data_series_list()</span></code></a>.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>The results to <a class="reference internal" href="#groclient.GroClient.get_data_points" title="groclient.GroClient.get_data_points"><code class="xref py py-meth docutils literal notranslate"><span class="pre">get_data_points()</span></code></a> for all the saved series, appended together
-into a single dataframe.
-See <a class="reference external" href="https://developers.gro-intelligence.com/data-point-definition.html">https://developers.gro-intelligence.com/data-point-definition.html</a>
-If index_by_series is set, the dataframe is indexed by series.
-See <a class="reference external" href="https://developers.gro-intelligence.com/data-series-definition.html">https://developers.gro-intelligence.com/data-series-definition.html</a></p>
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>index_by_series</strong> (<em>boolean</em><em>, </em><em>optional</em>) – If set, the dataframe is indexed by series. See <a class="reference external" href="https://developers.gro-intelligence.com/data-series-definition.html">https://developers.gro-intelligence.com/data-series-definition.html</a></p></li>
+<li><p><strong>include_names</strong> (<em>boolean</em><em>, </em><em>optional</em>) – If set, the dataframe will have additional columns with names of entities.
+Note that this will increase the size of the dataframe by about 5x.</p></li>
+</ul>
 </dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>pandas.DataFrame</p>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The results to <a class="reference internal" href="#groclient.GroClient.get_data_points" title="groclient.GroClient.get_data_points"><code class="xref py py-meth docutils literal notranslate"><span class="pre">get_data_points()</span></code></a> for all the saved series, appended together
+into a single dataframe.
+See <a class="reference external" href="https://developers.gro-intelligence.com/data-point-definition.html">https://developers.gro-intelligence.com/data-point-definition.html</a></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>pandas.DataFrame</p>
 </dd>
 </dl>
 </dd></dl>
