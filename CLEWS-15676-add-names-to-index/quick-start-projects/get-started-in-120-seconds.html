@@ -32,7 +32,6 @@
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
         <script src="../_static/language_data.js"></script>
-        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
@@ -209,31 +208,7 @@
 </p>
 
 
-  
-<style>
-/* CSS overrides for sphinx_rtd_theme */
-
-/* 24px margin */
-.nbinput.nblast.container,
-.nboutput.nblast.container {
-    margin-bottom: 19px;  /* padding has already 5px */
-}
-
-/* ... except between code cells! */
-.nblast.container + .nbinput.container {
-    margin-top: -19px;
-}
-
-.admonition > p:before {
-    margin-right: 4px;  /* make room for the exclamation icon */
-}
-
-/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
-.math {
-    text-align: unset;
-}
-</style>
-<div class="section" id="get-started-in-120-seconds">
+  <div class="section" id="get-started-in-120-seconds">
 <h1>Get Started in 120 Seconds<a class="headerlink" href="#get-started-in-120-seconds" title="Permalink to this headline">¶</a></h1>
 <p>If you have a Google account, or if you already have <a class="reference external" href="https://jupyter.readthedocs.io/en/latest/install.html">Jupyter Notebook</a> and python installed, and a Gro API token, you can start pulling Gro data via our API client within 120 seconds.</p>
 <div class="section" id="step-1-get-your-api-token">
@@ -262,7 +237,7 @@
 <li><p>Copy the below code and paste it into the first cell.</p></li>
 </ol>
 <blockquote>
-<div><div class="highlight-default notranslate"><div class="highlight"><pre><span></span>!pip install git+https://github.com/gro-intelligence/api-client.git
+<div><div class="highlight-default notranslate"><div class="highlight"><pre><span></span>!pip install groclient
 </pre></div>
 </div>
 <p>Then click the “Run Cell” button to the left of the cell.
@@ -275,7 +250,7 @@ In Colab, it will look like this:</p>
 <li><p>Add another cell with the “+ Code” button, then copy the below code and paste it into the second cell.</p></li>
 </ol>
 <blockquote>
-<div><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">api.client.gro_client</span> <span class="kn">import</span> <span class="n">GroClient</span>
+<div><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">groclient</span> <span class="kn">import</span> <span class="n">GroClient</span>
 <span class="n">client</span> <span class="o">=</span> <span class="n">GroClient</span><span class="p">(</span><span class="s1">&#39;api.gro-intelligence.com&#39;</span><span class="p">,</span> <span class="s1">&#39;&lt;YOUR_TOKEN&gt;&#39;</span><span class="p">)</span>
 </pre></div>
 </div>

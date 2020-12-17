@@ -32,7 +32,6 @@
         <script src="../../_static/underscore.js"></script>
         <script src="../../_static/doctools.js"></script>
         <script src="../../_static/language_data.js"></script>
-        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     
     <script type="text/javascript" src="../../_static/js/theme.js"></script>
 
@@ -206,7 +205,7 @@
 
 <span class="k">class</span> <span class="nc">CropModel</span><span class="p">(</span><span class="n">GroClient</span><span class="p">):</span>
 
-<div class="viewcode-block" id="CropModel.compute_weights"><a class="viewcode-back" href="../../api.html#api.client.crop_model.CropModel.compute_weights">[docs]</a>    <span class="k">def</span> <span class="nf">compute_weights</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">crop_name</span><span class="p">,</span> <span class="n">metric_name</span><span class="p">,</span> <span class="n">regions</span><span class="p">):</span>
+<div class="viewcode-block" id="CropModel.compute_weights"><a class="viewcode-back" href="../../api.html#groclient.CropModel.compute_weights">[docs]</a>    <span class="k">def</span> <span class="nf">compute_weights</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">crop_name</span><span class="p">,</span> <span class="n">metric_name</span><span class="p">,</span> <span class="n">regions</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Compute a vector of &#39;weights&#39; that can be used for crop-weighted</span>
 <span class="sd">        average across regions, as in :meth:`~.compute_crop_weighted_series`.</span>
 
@@ -271,7 +270,7 @@
         <span class="k">return</span> <span class="n">means</span></div>
 
 
-<div class="viewcode-block" id="CropModel.compute_crop_weighted_series"><a class="viewcode-back" href="../../api.html#api.client.crop_model.CropModel.compute_crop_weighted_series">[docs]</a>    <span class="k">def</span> <span class="nf">compute_crop_weighted_series</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">weighting_crop_name</span><span class="p">,</span> <span class="n">weighting_metric_name</span><span class="p">,</span>
+<div class="viewcode-block" id="CropModel.compute_crop_weighted_series"><a class="viewcode-back" href="../../api.html#groclient.CropModel.compute_crop_weighted_series">[docs]</a>    <span class="k">def</span> <span class="nf">compute_crop_weighted_series</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">weighting_crop_name</span><span class="p">,</span> <span class="n">weighting_metric_name</span><span class="p">,</span>
                                      <span class="n">item_name</span><span class="p">,</span> <span class="n">metric_name</span><span class="p">,</span> <span class="n">regions</span><span class="p">,</span>
                                      <span class="n">weighting_func</span><span class="o">=</span><span class="k">lambda</span> <span class="n">w</span><span class="p">,</span> <span class="n">v</span><span class="p">:</span> <span class="n">w</span><span class="o">*</span><span class="n">v</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Compute the &#39;crop-weighted average&#39; of the series for the given</span>
@@ -335,7 +334,7 @@
             <span class="n">series_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">series</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">pandas</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">series_list</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="CropModel.compute_gdd"><a class="viewcode-back" href="../../api.html#api.client.crop_model.CropModel.compute_gdd">[docs]</a>    <span class="k">def</span> <span class="nf">compute_gdd</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tmin_series</span><span class="p">,</span> <span class="n">tmax_series</span><span class="p">,</span> <span class="n">base_temperature</span><span class="p">,</span>
+<div class="viewcode-block" id="CropModel.compute_gdd"><a class="viewcode-back" href="../../api.html#groclient.CropModel.compute_gdd">[docs]</a>    <span class="k">def</span> <span class="nf">compute_gdd</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tmin_series</span><span class="p">,</span> <span class="n">tmax_series</span><span class="p">,</span> <span class="n">base_temperature</span><span class="p">,</span>
                     <span class="n">start_date</span><span class="p">,</span> <span class="n">end_date</span><span class="p">,</span> <span class="n">min_temporal_coverage</span><span class="p">,</span>
                     <span class="n">upper_temperature_cap</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Compute Growing Degree Days value from specific data series.</span>
@@ -396,7 +395,7 @@
         <span class="c1"># TODO: add unit conversions in case future sources are in different units</span>
         <span class="k">return</span> <span class="n">gdd_values</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="CropModel.growing_degree_days"><a class="viewcode-back" href="../../api.html#api.client.crop_model.CropModel.growing_degree_days">[docs]</a>    <span class="k">def</span> <span class="nf">growing_degree_days</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">region_name</span><span class="p">,</span> <span class="n">base_temperature</span><span class="p">,</span>
+<div class="viewcode-block" id="CropModel.growing_degree_days"><a class="viewcode-back" href="../../api.html#groclient.CropModel.growing_degree_days">[docs]</a>    <span class="k">def</span> <span class="nf">growing_degree_days</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">region_name</span><span class="p">,</span> <span class="n">base_temperature</span><span class="p">,</span>
                             <span class="n">start_date</span><span class="p">,</span> <span class="n">end_date</span><span class="p">,</span> <span class="n">min_temporal_coverage</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
                             <span class="n">upper_temperature_cap</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="s2">&quot;Infinity&quot;</span><span class="p">)):</span>
         <span class="sd">&quot;&quot;&quot;Get Growing Degree Days (GDD) for a region.</span>

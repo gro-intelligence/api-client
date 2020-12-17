@@ -32,7 +32,6 @@
         <script src="_static/underscore.js"></script>
         <script src="_static/doctools.js"></script>
         <script src="_static/language_data.js"></script>
-        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
@@ -207,31 +206,7 @@
 </p>
 
 
-  
-<style>
-/* CSS overrides for sphinx_rtd_theme */
-
-/* 24px margin */
-.nbinput.nblast.container,
-.nboutput.nblast.container {
-    margin-bottom: 19px;  /* padding has already 5px */
-}
-
-/* ... except between code cells! */
-.nblast.container + .nbinput.container {
-    margin-top: -19px;
-}
-
-.admonition > p:before {
-    margin-right: 4px;  /* make room for the exclamation icon */
-}
-
-/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
-.math {
-    text-align: unset;
-}
-</style>
-<div class="section" id="authentication">
+  <div class="section" id="authentication">
 <h1>Authentication<a class="headerlink" href="#authentication" title="Permalink to this headline">¶</a></h1>
 <div class="contents local topic" id="table-of-contents">
 <p class="topic-title">Table of Contents</p>
@@ -252,7 +227,7 @@
 </li>
 </ul>
 </div>
-<p>To work with the Gro API, you need an authentication token. This token needs to be sent along with every request made to the API. This is typically done by using one of the included Client classes (<code class="code docutils literal notranslate"><span class="pre">Client</span></code>, <code class="code docutils literal notranslate"><span class="pre">GroClient</span></code>, <code class="code docutils literal notranslate"><span class="pre">BatchClient</span></code>, or <code class="code docutils literal notranslate"><span class="pre">CropModel</span></code>): you provide your access token when creating the object, and then every API request made thereafter automatically includes the token.</p>
+<p>To work with the Gro API, you need an authentication token. This token needs to be sent along with every request made to the API. This is typically done by using one of the included Client classes (<code class="code docutils literal notranslate"><span class="pre">GroClient</span></code> or <code class="code docutils literal notranslate"><span class="pre">CropModel</span></code>): you provide your access token when creating the object, and then every API request made thereafter automatically includes the token.</p>
 <div class="section" id="retrieving-a-token">
 <h2><a class="toc-backref" href="#id1">Retrieving a token</a><a class="headerlink" href="#retrieving-a-token" title="Permalink to this headline">¶</a></h2>
 <p>Note that your account needs to be activated for API access before you will be able to retrieve a token. See <a class="reference external" href="https://gro-intelligence.com/products/gro-api">https://gro-intelligence.com/products/gro-api</a> for more info regarding unlocking API access for your account.
@@ -288,7 +263,7 @@ Once you have API access enabled for your account, you may retrieve your token i
 <h3><a class="toc-backref" href="#id4">Option 3: Using the <code class="code docutils literal notranslate"><span class="pre">get_access_token()</span></code> Function</a><a class="headerlink" href="#option-3-using-the-get-access-token-function" title="Permalink to this headline">¶</a></h3>
 <p>Limitation: The <code class="code docutils literal notranslate"><span class="pre">get_access_token()</span></code> function cannot retrieve tokens for users using OAuth authentication. If this applies to you, please use the Gro web application instead.</p>
 <p>If you would like to programmatically retrieve your active token, you may use the <code class="code docutils literal notranslate"><span class="pre">get_access_token()</span></code> function in the API Client library. See below:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">api.client.lib</span> <span class="kn">import</span> <span class="n">get_access_token</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">groclient.lib</span> <span class="kn">import</span> <span class="n">get_access_token</span>
 <span class="n">API_HOST</span> <span class="o">=</span> <span class="s1">&#39;api.gro-intelligence.com&#39;</span>
 <span class="n">EMAIL</span> <span class="o">=</span> <span class="s1">&#39;example@example.com&#39;</span>
 <span class="n">PASSWORD</span> <span class="o">=</span> <span class="s1">&#39;password123&#39;</span>

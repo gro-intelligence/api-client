@@ -32,7 +32,6 @@
         <script src="_static/underscore.js"></script>
         <script src="_static/doctools.js"></script>
         <script src="_static/language_data.js"></script>
-        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
@@ -212,31 +211,7 @@
 </p>
 
 
-  
-<style>
-/* CSS overrides for sphinx_rtd_theme */
-
-/* 24px margin */
-.nbinput.nblast.container,
-.nboutput.nblast.container {
-    margin-bottom: 19px;  /* padding has already 5px */
-}
-
-/* ... except between code cells! */
-.nblast.container + .nbinput.container {
-    margin-top: -19px;
-}
-
-.admonition > p:before {
-    margin-right: 4px;  /* make room for the exclamation icon */
-}
-
-/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
-.math {
-    text-align: unset;
-}
-</style>
-<div class="section" id="data-point-definition">
+  <div class="section" id="data-point-definition">
 <h1>Data Point Definition<a class="headerlink" href="#data-point-definition" title="Permalink to this headline">¶</a></h1>
 <p>Gro defines a “data point” as a discrete result produced by our API. When using the <code class="docutils literal notranslate"><span class="pre">get_data_points()</span></code> function, you are returned an array of points, each of which is a Python dictionary object that looks something like:</p>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s1">&#39;start_date&#39;</span><span class="p">:</span> <span class="s1">&#39;2013-02-04T00:00:00.000Z&#39;</span><span class="p">,</span>

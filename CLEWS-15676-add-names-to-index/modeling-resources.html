@@ -32,7 +32,6 @@
         <script src="_static/underscore.js"></script>
         <script src="_static/doctools.js"></script>
         <script src="_static/language_data.js"></script>
-        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
@@ -204,41 +203,17 @@
 </p>
 
 
-  
-<style>
-/* CSS overrides for sphinx_rtd_theme */
-
-/* 24px margin */
-.nbinput.nblast.container,
-.nboutput.nblast.container {
-    margin-bottom: 19px;  /* padding has already 5px */
-}
-
-/* ... except between code cells! */
-.nblast.container + .nbinput.container {
-    margin-top: -19px;
-}
-
-.admonition > p:before {
-    margin-right: 4px;  /* make room for the exclamation icon */
-}
-
-/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
-.math {
-    text-align: unset;
-}
-</style>
-<div class="section" id="modeling-resources">
+  <div class="section" id="modeling-resources">
 <h1>Modeling Resources<a class="headerlink" href="#modeling-resources" title="Permalink to this headline">¶</a></h1>
 <div class="contents local topic" id="table-of-contents">
 <p class="topic-title">Table of Contents</p>
 <ul class="simple">
-<li><p><a class="reference internal" href="#gro-crop-masks" id="id2">Gro Crop Masks</a></p>
+<li><p><a class="reference internal" href="#gro-crop-cover" id="id2">Gro Crop Cover</a></p>
 <ul>
 <li><p><a class="reference internal" href="#methodology" id="id3">Methodology</a></p>
 <ul>
-<li><p><a class="reference internal" href="#crop-masks-for-past-seasons" id="id4">Crop masks for past seasons</a></p></li>
-<li><p><a class="reference internal" href="#in-season-crop-mask" id="id5">In-season crop mask</a></p></li>
+<li><p><a class="reference internal" href="#crop-covers-for-past-seasons" id="id4">Crop covers for past seasons</a></p></li>
+<li><p><a class="reference internal" href="#in-season-crop-cover" id="id5">In-season crop cover</a></p></li>
 </ul>
 </li>
 <li><p><a class="reference internal" href="#us-corn" id="id6">US Corn</a></p></li>
@@ -262,22 +237,22 @@
 <li><p><a class="reference internal" href="#computing-mean-values-amid-lst-data-gaps" id="id16">Computing Mean Values Amid LST Data Gaps</a></p></li>
 </ul>
 </div>
-<div class="section" id="gro-crop-masks">
-<h2><a class="toc-backref" href="#id2">Gro Crop Masks</a><a class="headerlink" href="#gro-crop-masks" title="Permalink to this headline">¶</a></h2>
-<p>Gro’s proprietary high resolution crop masks are currently used in the <a class="reference external" href="https://gro-intelligence.com/gro-models">Gro yield models</a>. These have proven very successful i.e. more accurate for yield modeling than the best available alternatives. Gro does not plan on developing a yield model for every crop or region in the world, so our models will always be limited to the regions and crops where we can help push the envelope. Our crop masks are not yet directly available to users in the Gro web app and the API, but will be very soon!</p>
+<div class="section" id="gro-crop-cover">
+<h2><a class="toc-backref" href="#id2">Gro Crop Cover</a><a class="headerlink" href="#gro-crop-cover" title="Permalink to this headline">¶</a></h2>
+<p>Gro’s proprietary high-resolution crop covers are currently used in the <a class="reference external" href="https://gro-intelligence.com/gro-models">Gro yield models</a>. These have proven very successful i.e. more accurate for yield modeling than the best available alternatives. Gro does not plan on developing a yield model for every crop or region in the world, so our models will always be limited to the regions and crops where we can help push the envelope. Users can access our crop covers in the <a class="reference external" href="https://app.gro-intelligence.com/displays/jdOQrvERw">Gro web app</a> and the API, or from the download links below. In the web app and API, users can interact with detailed cropland covers that indicate the intensity of crop cover for a particular pixel. Below users can download .tif files of low and high-confidence crop covers which represent, as a binary value, whether a crop is growing in a specific pixel.</p>
 <div class="section" id="methodology">
 <h3><a class="toc-backref" href="#id3">Methodology</a><a class="headerlink" href="#methodology" title="Permalink to this headline">¶</a></h3>
-<div class="section" id="crop-masks-for-past-seasons">
-<h4><a class="toc-backref" href="#id4">Crop masks for past seasons</a><a class="headerlink" href="#crop-masks-for-past-seasons" title="Permalink to this headline">¶</a></h4>
-<p>In order to remove irrelevant data pixels (i.e., pixels that are not representative of the crop in study), we create/derive crop specific masks for each past crop season, as <a class="reference external" href="https://www.gro-intelligence.com/blog/want-to-build-a-yield-model-heres-your-first-step">described here</a> (see also <a class="reference external" href="https://www.tandfonline.com/doi/abs/10.1080/2150704X.2016.1252471">Creating a basic customizable framework for crop detection using Landsat imagery</a>. This is necessary for each year, due to crop rotations and other changes in the area where crops are planted. Moreover, even with per-season masks, there is an additional challenge for in-season crop yield forecasting, because the current season crop mask is usually not available until the beginning of the following year.</p>
+<div class="section" id="crop-covers-for-past-seasons">
+<h4><a class="toc-backref" href="#id4">Crop covers for past seasons</a><a class="headerlink" href="#crop-covers-for-past-seasons" title="Permalink to this headline">¶</a></h4>
+<p>In order to remove irrelevant data pixels (i.e., pixels that are not representative of the crop in study), we create/derive crop specific covers for each past crop season, as <a class="reference external" href="https://www.gro-intelligence.com/blog/want-to-build-a-yield-model-heres-your-first-step">described here</a> (see also <a class="reference external" href="https://www.tandfonline.com/doi/abs/10.1080/2150704X.2016.1252471">Creating a basic customizable framework for crop detection using Landsat imagery</a>. This is necessary for each year, due to crop rotations and other changes in the area where crops are planted. Moreover, even with per-season covers, there is an additional challenge for in-season crop yield forecasting, because the current season crop cover is usually not available until the beginning of the following year.</p>
 </div>
-<div class="section" id="in-season-crop-mask">
-<h4><a class="toc-backref" href="#id5">In-season crop mask</a><a class="headerlink" href="#in-season-crop-mask" title="Permalink to this headline">¶</a></h4>
-<p>For current season forecasting, since we’re starting well before the growing period, there is no universal approach that provides the best mask. Instead, we use the series of masks for prior seasons to create a few different masks for the current season. Together, these current season masks can be thought of as providing supersets and subsets of the true planted area. The combination of the various masks provides the information needed for yield forecasting purposes.</p>
-<p>For any mask, the following current season masks are created:</p>
+<div class="section" id="in-season-crop-cover">
+<h4><a class="toc-backref" href="#id5">In-season crop cover</a><a class="headerlink" href="#in-season-crop-cover" title="Permalink to this headline">¶</a></h4>
+<p>For current season forecasting, since we’re starting well before the growing period, there is no universal approach that provides the best cover. Instead, we use the series of covers for prior seasons to create a few different covers for the current season. Together, these current season covers can be thought of as providing supersets and subsets of the true planted area. The combination of the various covers provides the information needed for yield forecasting purposes.</p>
+<p>For any cover, the following current season covers are created:</p>
 <ul class="simple">
-<li><p>a <strong>low-confidence</strong> version is created by an OR of the years, i.e., choosing pixels that have been the crop in question for at least one year in the history of the cropland data layers. In other words, the low-confidence mask answers the question “was the crop planted here in 2000 or in 2001 or in 2002 …”. This can be thought of as an upper bound of the true area. Or equivalently, for each pixel, a prediction with high recall and low precision.</p></li>
-<li><p>a <strong>high-confidence</strong> mask version is created by an AND of the years, i.e., selecting pixels that have always been the crop in question over the entire history of the prior season masks, so long as that region has been in the data layers. In other words, it answers the question “was the crop planted here in 2000 and in 2001 and in 2002 …” This it can be seen as a lower bound of the true area. Or equivalently, for each pixel, a prediction with low recall and high precision.</p></li>
+<li><p>a <strong>low-confidence</strong> version is created by an OR of the years, i.e., choosing pixels that have been the crop in question for at least one year in the history of the cropland data layers. In other words, the low-confidence cover answers the question “was the crop planted here in 2000 or in 2001 or in 2002 …”. This can be thought of as an upper bound of the true area. Or equivalently, for each pixel, a prediction with high recall and low precision.</p></li>
+<li><p>a <strong>high-confidence</strong> cover version is created by an AND of the years, i.e., selecting pixels that have always been the crop in question over the entire history of the prior season covers, so long as that region has been in the data layers. In other words, it answers the question “was the crop planted here in 2000 and in 2001 and in 2002 …” This it can be seen as a lower bound of the true area. Or equivalently, for each pixel, a prediction with low recall and high precision.</p></li>
 </ul>
 <p>Additional refinements:</p>
 <ul class="simple">
@@ -287,9 +262,9 @@
 </div>
 <div class="section" id="us-corn">
 <h3><a class="toc-backref" href="#id6">US Corn</a><a class="headerlink" href="#us-corn" title="Permalink to this headline">¶</a></h3>
-<p>Yearly corn masks (binary) were extracted from USDA NASS Cropland Data Layers (CDL) for the US Corn Belt, which includes 10 states: Illinois, Indiana, Iowa, Kansas, Minnesota, Missouri, Nebraska, Ohio, South Dakota, and Wisconsin, from 1999 to 2015. Note that not all states were covered in the yearly masks prior to 2008 due to growing coverage of NASS CDL from 1999 to 2008.</p>
-<p>A low-confidence mask and a high-confidence mask were made from those yearly crop masks. Each of them was further clumped to remove erroneous pixels, which gave us two more static corn masks.</p>
-<p>Click the links below to download TIF files of in-season masks:</p>
+<p>Yearly corn covers (binary) were extracted from USDA NASS Cropland Data Layers (CDL) for the US Corn Belt, which includes 10 states: Illinois, Indiana, Iowa, Kansas, Minnesota, Missouri, Nebraska, Ohio, South Dakota, and Wisconsin, from 1999 to 2015. Note that not all states were covered in the yearly covers prior to 2008 due to growing coverage of NASS CDL from 1999 to 2008.</p>
+<p>A low-confidence cover and a high-confidence cover were made from those yearly crop covers. Each of them was further clumped to remove erroneous pixels, which gave us two more static corn covers.</p>
+<p>Click the links below to download TIF files of in-season covers:</p>
 <ul class="simple">
 <li><a href="https://s3.amazonaws.com/groprod/gro_crop_masks/us_corn/USCorn_LC_99_15.tif" target="_blank"><code class="download"><span class="pre"></span>low confidence</code></a></li>
 <li><a href="<https://s3.amazonaws.com/groprod/gro_crop_masks/us_corn/USCorn_HC_99_15.tif" target="_blank"><code class="download"><span class="pre"></span>high confidence</code></a></li>
@@ -298,20 +273,20 @@
 </ul></div>
 <div class="section" id="us-soy">
 <h3><a class="toc-backref" href="#id7">US Soy</a><a class="headerlink" href="#us-soy" title="Permalink to this headline">¶</a></h3>
-<p>Yearly soy masks were extracted from the NASS CDL the same way as corn, except that the entire contiguous US was included. In this case we end up using only one mask:</p>
-<p>We start in 2008, because including years prior to 2008 reduces the accuracy for yield modeling purposes. A high-confidence mask is not used, as it was found to not help the yield modeling accuracy. Both of these observations seem to reflect the fact that, in the US, the areas where soybeans are planted have been changing relatively more than the corn areas, which makes older crop masks less informative in this case.</p>
-<p>Click the link below to download TIF files of in-season masks:</p>
+<p>Yearly soy covers were extracted from the NASS CDL the same way as corn, except that the entire contiguous US was included. In this case we end up using only one cover:</p>
+<p>We start in 2008, because including years prior to 2008 reduces the accuracy for yield modeling purposes. A high-confidence cover is not used, as it was found to not help the yield modeling accuracy. Both of these observations seem to reflect the fact that, in the US, the areas where soybeans are planted have been changing relatively more than the corn areas, which makes older crop covers less informative in this case.</p>
+<p>Click the link below to download TIF files of in-season covers:</p>
 <ul class="simple">
 <li><a href="https://s3.amazonaws.com/groprod/gro_crop_masks/us_soy/USSoy_LC_08_17.tif" target="_blank"><code class="download"><span class="pre"></span>low confidence</code></a></li>
 </ul></div>
 <div class="section" id="argentina-soy">
 <h3><a class="toc-backref" href="#id8">Argentina Soy</a><a class="headerlink" href="#argentina-soy" title="Permalink to this headline">¶</a></h3>
-<p>Argentina does not have an equivalent of the US CDL data, so annual soybean masks had to be created by Gro. These masks were created annually and ranged from 2007-2016 using the following methodology.</p>
+<p>Argentina does not have an equivalent of the US CDL data, so annual soybean covers had to be created by Gro. These covers were created annually and ranged from 2007-2016 using the following methodology.</p>
 <p>The signals for classification of soy in Argentina were from optical sensors from Landsat 5, 7, and 8 along with Sentinel-2. First, a set of false color images were created from the shortwave infrared (SWIR ~1.62µm) band, near infrared (NIR ~0.85µm) band, and visible red (Red ~0.66µm) band. which were temporally classified using the crop calendars in Gro for the primary season of soybean production over the country. These were divided into two images, one taking the median pixel value over the time period that planting occurred and the other taking the median pixel value over the time period when growth occurred. The false color image was created. This was done because studies have shown that SWIR-NIR-Red false color composites accurately discriminate between vegetation, soil, and water due to the spectral properties of the channels.</p>
 <p>After this was completed, the false color images were transformed from a normal RGB (Red-Green-Blue) color space into a Hue-Saturation-Value (HSV) color space where the Hue band is subsequently isolated. By isolating the Hue pixel values, we solve the problems resulting from variations in brightness level (owed to the Value) and chromatic modulation (from the Saturation) from pixel to pixel. By doing this the Hue pixel values identified as soil generally range on the low end of pixel values while vegetation accounts for the middle range with water taking up the high end range. By subtracting the vegetation hue layer from the soil hue layer and isolating the top portion of the pixel values (pixels greater than or equal to 0.14), what’s left is an image that highlights areas which were soil during the planting phase and vegetation during the growth phase. Those areas are inclined to only be crops during those specific times during the crop cycle (i.e., forests, grasslands, and pastures tend to not change in sync with the cropland) although it is not yet know what specific crops they are, only that their growth cycle matches that of the crop cycle given in the crop calendars.</p>
 <p>Once those unidentifiable crops have been found, a simple ratio was used to identify soy from other crops. For the case of soy, we use a simple ratio of: SWIR/Red values from the growing season, where SWIR represents the shortwave infrared band (~1.62µm) and Red represents the red band in the visible spectrum (~0.66µm). High values of this simple ratio were shown to be very distinctive at identifying soy when validated against the NASS Cropland Data Layers in the US.</p>
-<p>A low-confidence mask and a high-confidence mask were made from those yearly crop masks. Each of them were further clumped to remove erroneous pixels, which gave us two more static soy masks.</p>
-<p>Click the links below to download TIF files of in-season masks:</p>
+<p>A low-confidence cover and a high-confidence cover were made from those yearly crop covers. Each of them were further clumped to remove erroneous pixels, which gave us two more static soy covers.</p>
+<p>Click the links below to download TIF files of in-season covers:</p>
 <ul class="simple">
 <li><a href="https://s3.amazonaws.com/groprod/gro_crop_masks/argentina_soy/ArgLC07_16.tif" target="_blank"><code class="download"><span class="pre"></span>low confidence</code></a></li>
 <li><a href="<https://s3.amazonaws.com/groprod/gro_crop_masks/argentina_soy/ArgHC07_16.tif" target="_blank"><code class="download"><span class="pre"></span>high confidence</code></a></li>
@@ -320,14 +295,14 @@
 </ul></div>
 <div class="section" id="india-wheat">
 <h3><a class="toc-backref" href="#id9">India Wheat</a><a class="headerlink" href="#india-wheat" title="Permalink to this headline">¶</a></h3>
-<p>Since India does not have the equivalent of NASS CDL available to the public, we use a technique similar to the one used for Argentina. The masks were also classified annually and span years 2007-2017. The methodology was refined slightly in three ways:</p>
+<p>Since India does not have the equivalent of NASS CDL available to the public, we use a technique similar to the one used for Argentina. The covers were also classified annually and span years 2007-2017. The methodology was refined slightly in three ways:</p>
 <ul class="simple">
-<li><p>Instead of using a single crop calendar for the entire country, crop calendars specific to individual states were used to create the planting and growth phase images. Subsequently, the corresponding years were mosaicked together before the creation of the confidence masks.</p></li>
-<li><p>The simple ratio of SWIR/Red was not used for the identification of wheat. Instead, when comparing images to CDL masks in the US the combination that most closely identified with wheat was the high end of Hue&amp;ast;NDVI&amp;ast;NDWI during the growth phase.</p></li>
+<li><p>Instead of using a single crop calendar for the entire country, crop calendars specific to individual states were used to create the planting and growth phase images. Subsequently, the corresponding years were mosaicked together before the creation of the confidence covers.</p></li>
+<li><p>The simple ratio of SWIR/Red was not used for the identification of wheat. Instead, when comparing images to CDL covers in the US the combination that most closely identified with wheat was the high end of Hue&amp;ast;NDVI&amp;ast;NDWI during the growth phase.</p></li>
 <li><p>The final change that was made was the addition of eliminating pixels that were on a slope that was greater than 10°.</p></li>
 </ul>
-<p>A low-confidence mask and a high-confidence mask were made from those yearly crop masks. Each of them were further clumped to remove erroneous pixels, which gave us two more static wheat masks.</p>
-<p>Click the links below to download TIF files of in-season masks:</p>
+<p>A low-confidence cover and a high-confidence cover were made from those yearly crop covers. Each of them were further clumped to remove erroneous pixels, which gave us two more static wheat covers.</p>
+<p>Click the links below to download TIF files of in-season covers:</p>
 <ul class="simple">
 <li><a href="https://s3.amazonaws.com/groprod/gro_crop_masks/india_wheat/IndiaWheat_07_17_LC_1b.tif" target="_blank"><code class="download"><span class="pre"></span>low confidence</code></a></li>
 <li><a href="<https://s3.amazonaws.com/groprod/gro_crop_masks/india_wheat/IndiaWheat_07_17_HC_1b.tif" target="_blank"><code class="download"><span class="pre"></span>high confidence</code></a></li>
@@ -385,20 +360,21 @@
 <p>Listed below are Gro’s existing models. Each available link will download backtest data (daily frequency) for a whole crop season.</p>
 <ul class="simple">
 <li><a href="https://s3.amazonaws.com/groprod/yield_model_backtest/US_corn_backtest_2001_to_2017.zip" target="_blank"><code class="download"><span class="pre"></span>US Corn</code></a></li>
-<li><a href="<https://s3.amazonaws.com/groprod/yield_model_backtest/US_soybeans_backtest_2001_to_2017.zip" target="_blank"><code class="download"><span class="pre"></span>US Soybeans</code></a></li>
+<li><a href="https://s3.amazonaws.com/groprod/yield_model_backtest/US_soybeans_backtest_2001_to_2017.zip" target="_blank"><code class="download"><span class="pre"></span>US Soybeans</code></a></li>
 <li><a href="https://s3.amazonaws.com/groprod/yield_model_backtest/Argentina_soybeans_backtest_2001_to_2017.zip" target="_blank"><code class="download"><span class="pre"></span>Argentina Soybeans</code></a></li>
 <li><a href="https://s3.amazonaws.com/groprod/yield_model_backtest/Brazil_soybeans_backtest_2001_to_2018.zip" target="_blank"><code class="download"><span class="pre"></span>Brazil Soybeans</code></a></li>
 <li><a href="https://s3.amazonaws.com/groprod/yield_model_backtest/India_wheat_backtest_2001_to_2017.zip" target="_blank"><code class="download"><span class="pre"></span>India Wheat</code></a></li>
 <li><a href="https://groprod.s3.amazonaws.com/yield_model_backtest/Wheat_Ukraine_backtest_2001_to_2017.zip" target="_blank"><code class="download"><span class="pre"></span>Ukraine Wheat</code></a></li>
 <li><a href="https://groprod.s3.amazonaws.com/yield_model_backtest/Winter+wheat_Russia_backtest_2001_to_2018.zip" target="_blank"><code class="download"><span class="pre"></span>Russia Wheat (Beta)</code></a></li>
 <li><a href="https://s3.amazonaws.com/groprod/yield_model_backtest/Winter+wheat_United_States_backtest_2002_to_2018.zip" target="_blank"><code class="download"><span class="pre"></span>US Hard Red Winter Wheat</code></a></li>
+<li><a href="https://groprod.s3.amazonaws.com/yield_model_backtest/Canada_Spring_wheat_backtest_2001_to_2019.zip" target="_blank"><code class="download"><span class="pre"></span>Canada Spring Wheat</code></a></li>
 </ul><p>NOTE: Our “beta” models have run for less than one full season. At this stage, each model has been fully backtested at monthly frequency across a whole crop season. However, the beta models are still under active development, so the inputs and parameters to the models might change during the current season.</p>
 </div>
 </div>
 </div>
 <div class="section" id="radio-frequency-interference-effects-on-smos">
 <h2><a class="toc-backref" href="#id14">Radio Frequency Interference Effects On SMOS</a><a class="headerlink" href="#radio-frequency-interference-effects-on-smos" title="Permalink to this headline">¶</a></h2>
-<p>The attached document details the effect that Radio Frequency Interference (RFI) has on the soil moisture source <a class="reference external" href="https://app.gro-intelligence.com/#/dictionary/sources/43">SMOS</a>: <a class="reference external" href="https://github.com/gro-intelligence/api-client/wiki/radio-frequency-interference-smos.pdf">radio-frequency-interference-smos.pdf</a></p>
+<p>The attached document details the effect that Radio Frequency Interference (RFI) has on the soil moisture source <a class="reference external" href="https://app.gro-intelligence.com/dictionary/sources/43">SMOS</a>: <a class="reference external" href="https://github.com/gro-intelligence/api-client/wiki/radio-frequency-interference-smos.pdf">radio-frequency-interference-smos.pdf</a></p>
 </div>
 <div class="section" id="trmm-and-gpm-spatial-extents">
 <h2><a class="toc-backref" href="#id15">TRMM and GPM spatial extents</a><a class="headerlink" href="#trmm-and-gpm-spatial-extents" title="Permalink to this headline">¶</a></h2>

@@ -32,7 +32,6 @@
         <script src="../../_static/underscore.js"></script>
         <script src="../../_static/doctools.js"></script>
         <script src="../../_static/language_data.js"></script>
-        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     
     <script type="text/javascript" src="../../_static/js/theme.js"></script>
 
@@ -196,14 +195,8 @@
 
   <h1>Source code for groclient.client</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span>
-<span class="kn">from</span> <span class="nn">builtins</span> <span class="kn">import</span> <span class="nb">str</span>
-<span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">random</span>
-<span class="kn">import</span> <span class="nn">argparse</span>
 <span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
-<span class="kn">import</span> <span class="nn">getpass</span>
 <span class="kn">import</span> <span class="nn">itertools</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">time</span>
 <span class="kn">import</span> <span class="nn">json</span>
 
@@ -221,16 +214,11 @@
 <span class="kn">from</span> <span class="nn">groclient.lib</span> <span class="kn">import</span> <span class="n">APIError</span>
 
 <span class="kn">import</span> <span class="nn">pandas</span>
-<span class="kn">import</span> <span class="nn">unicodecsv</span>
 <span class="kn">from</span> <span class="nn">tornado</span> <span class="kn">import</span> <span class="n">gen</span>
 <span class="kn">from</span> <span class="nn">tornado.escape</span> <span class="kn">import</span> <span class="n">json_decode</span>
 <span class="kn">from</span> <span class="nn">tornado.httpclient</span> <span class="kn">import</span> <span class="n">AsyncHTTPClient</span><span class="p">,</span> <span class="n">HTTPRequest</span><span class="p">,</span> <span class="n">HTTPError</span>
 <span class="kn">from</span> <span class="nn">tornado.ioloop</span> <span class="kn">import</span> <span class="n">IOLoop</span>
 <span class="kn">from</span> <span class="nn">tornado.queues</span> <span class="kn">import</span> <span class="n">Queue</span>
-
-
-<span class="n">API_HOST</span> <span class="o">=</span> <span class="s2">&quot;api.gro-intelligence.com&quot;</span>
-<span class="n">OUTPUT_FILENAME</span> <span class="o">=</span> <span class="s2">&quot;gro_client_output.csv&quot;</span>
 
 
 <span class="k">class</span> <span class="nc">BatchError</span><span class="p">(</span><span class="n">APIError</span><span class="p">):</span>
@@ -273,14 +261,22 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_data_series_queue</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># added but not loaded in data frame</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_data_frame</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_async_http_client</span> <span class="o">=</span> <span class="n">AsyncHTTPClient</span><span class="p">()</span>
+            <span class="c1"># Each GroClient has its own IOLoop and AsyncHTTPClient.</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_ioloop</span> <span class="o">=</span> <span class="n">IOLoop</span><span class="p">()</span>
+            <span class="c1"># Note: force_instance is needed to disable Tornado&#39;s</span>
+            <span class="c1"># pseudo-singleton AsyncHTTPClient caching behavior.</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_async_http_client</span> <span class="o">=</span> <span class="n">AsyncHTTPClient</span><span class="p">(</span><span class="n">force_instance</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
-                <span class="s2">&quot;Unable to initialize an event loop. Async methods disabled.&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                <span class="s2">&quot;Unable to initialize event loop, async methods disabled: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
             <span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_async_http_client</span> <span class="o">=</span> <span class="kc">None</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_ioloop</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="fm">__del__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_async_http_client</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ioloop</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ioloop</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
     <span class="k">def</span> <span class="nf">get_logger</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span>
@@ -361,7 +357,7 @@
                     <span class="k">else</span> <span class="n">e</span>
                 <span class="p">)</span>
                 <span class="n">log_request</span><span class="p">(</span><span class="n">start_time</span><span class="p">,</span> <span class="n">retry_count</span><span class="p">,</span> <span class="n">error_msg</span><span class="p">,</span> <span class="n">status_code</span><span class="p">)</span>
-                <span class="k">if</span> <span class="n">status_code</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">429</span><span class="p">,</span> <span class="mi">500</span><span class="p">,</span> <span class="mi">503</span><span class="p">,</span> <span class="mi">504</span><span class="p">]:</span>
+                <span class="k">if</span> <span class="n">status_code</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">429</span><span class="p">,</span> <span class="mi">500</span><span class="p">,</span> <span class="mi">502</span><span class="p">,</span> <span class="mi">503</span><span class="p">,</span> <span class="mi">504</span><span class="p">]:</span>
                     <span class="c1"># First retry is immediate.</span>
                     <span class="c1"># After that, exponential backoff before retrying.</span>
                     <span class="k">if</span> <span class="n">retry_count</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
@@ -632,7 +628,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">lib</span><span class="o">.</span><span class="n">list_available</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_host</span><span class="p">,</span> <span class="n">selected_entities</span><span class="p">)</span>
 
-<div class="viewcode-block" id="GroClient.lookup"><a class="viewcode-back" href="../../api.html#api.client.gro_client.GroClient.lookup">[docs]</a>    <span class="k">def</span> <span class="nf">lookup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">,</span> <span class="n">entity_ids</span><span class="p">):</span>
+<div class="viewcode-block" id="GroClient.lookup"><a class="viewcode-back" href="../../api.html#groclient.GroClient.lookup">[docs]</a>    <span class="k">def</span> <span class="nf">lookup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">,</span> <span class="n">entity_ids</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Retrieve details about a given id or list of ids of type entity_type.</span>
 
 <span class="sd">        https://developers.gro-intelligence.com/gro-ontology.html</span>
@@ -704,7 +700,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_host</span><span class="p">,</span> <span class="n">metric_id</span><span class="p">,</span> <span class="n">item_id</span>
         <span class="p">)</span>
 
-<div class="viewcode-block" id="GroClient.get_data_series"><a class="viewcode-back" href="../../api.html#api.client.gro_client.GroClient.get_data_series">[docs]</a>    <span class="k">def</span> <span class="nf">get_data_series</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">selection</span><span class="p">):</span>
+<div class="viewcode-block" id="GroClient.get_data_series"><a class="viewcode-back" href="../../api.html#groclient.GroClient.get_data_series">[docs]</a>    <span class="k">def</span> <span class="nf">get_data_series</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">selection</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Get available data series for the given selections.</span>
 
 <span class="sd">        https://developers.gro-intelligence.com/data-series-definition.html</span>
@@ -736,7 +732,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">lib</span><span class="o">.</span><span class="n">get_data_series</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_host</span><span class="p">,</span> <span class="o">**</span><span class="n">selection</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="GroClient.search"><a class="viewcode-back" href="../../api.html#api.client.gro_client.GroClient.search">[docs]</a>    <span class="k">def</span> <span class="nf">search</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">,</span> <span class="n">search_terms</span><span class="p">):</span>
+<div class="viewcode-block" id="GroClient.search"><a class="viewcode-back" href="../../api.html#groclient.GroClient.search">[docs]</a>    <span class="k">def</span> <span class="nf">search</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">,</span> <span class="n">search_terms</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Search for the given search term. Better matches appear first.</span>
 
 <span class="sd">        Parameters</span>
@@ -755,7 +751,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">lib</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_host</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">,</span> <span class="n">search_terms</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="GroClient.search_and_lookup"><a class="viewcode-back" href="../../api.html#api.client.gro_client.GroClient.search_and_lookup">[docs]</a>    <span class="k">def</span> <span class="nf">search_and_lookup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">,</span> <span class="n">search_terms</span><span class="p">,</span> <span class="n">num_results</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
+<div class="viewcode-block" id="GroClient.search_and_lookup"><a class="viewcode-back" href="../../api.html#groclient.GroClient.search_and_lookup">[docs]</a>    <span class="k">def</span> <span class="nf">search_and_lookup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">,</span> <span class="n">search_terms</span><span class="p">,</span> <span class="n">num_results</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Search for the given search terms and look up their details.</span>
 
 <span class="sd">        For each result, yield a dict of the entity and it&#39;s properties.</span>
@@ -787,7 +783,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_host</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">,</span> <span class="n">search_terms</span><span class="p">,</span> <span class="n">num_results</span>
         <span class="p">)</span></div>
 
-<div class="viewcode-block" id="GroClient.lookup_belongs"><a class="viewcode-back" href="../../api.html#api.client.gro_client.GroClient.lookup_belongs">[docs]</a>    <span class="k">def</span> <span class="nf">lookup_belongs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">,</span> <span class="n">entity_id</span><span class="p">):</span>
+<div class="viewcode-block" id="GroClient.lookup_belongs"><a class="viewcode-back" href="../../api.html#groclient.GroClient.lookup_belongs">[docs]</a>    <span class="k">def</span> <span class="nf">lookup_belongs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">,</span> <span class="n">entity_id</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Look up details of entities containing the given entity.</span>
 
 <span class="sd">        Parameters</span>
@@ -813,7 +809,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_host</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">,</span> <span class="n">entity_id</span>
         <span class="p">)</span></div>
 
-<div class="viewcode-block" id="GroClient.rank_series_by_source"><a class="viewcode-back" href="../../api.html#api.client.gro_client.GroClient.rank_series_by_source">[docs]</a>    <span class="k">def</span> <span class="nf">rank_series_by_source</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">selections_list</span><span class="p">):</span>
+<div class="viewcode-block" id="GroClient.rank_series_by_source"><a class="viewcode-back" href="../../api.html#groclient.GroClient.rank_series_by_source">[docs]</a>    <span class="k">def</span> <span class="nf">rank_series_by_source</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">selections_list</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Given a list of series selections, for each unique combination excluding source, expand</span>
 <span class="sd">        to all available sources and return them in ranked order. The order corresponds to how well</span>
 <span class="sd">        that source covers the selection (metrics, items, regions, and time range and frequency).</span>
@@ -878,7 +874,7 @@
         <span class="k">return</span> <span class="n">lib</span><span class="o">.</span><span class="n">get_geojsons</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_host</span><span class="p">,</span> <span class="n">region_id</span><span class="p">,</span> <span class="n">descendant_level</span><span class="p">,</span> <span class="n">zoom_level</span><span class="p">)</span>
 
-<div class="viewcode-block" id="GroClient.get_geojson"><a class="viewcode-back" href="../../api.html#api.client.gro_client.GroClient.get_geojson">[docs]</a>    <span class="k">def</span> <span class="nf">get_geojson</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">region_id</span><span class="p">,</span> <span class="n">zoom_level</span><span class="o">=</span><span class="mi">7</span><span class="p">):</span>
+<div class="viewcode-block" id="GroClient.get_geojson"><a class="viewcode-back" href="../../api.html#groclient.GroClient.get_geojson">[docs]</a>    <span class="k">def</span> <span class="nf">get_geojson</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">region_id</span><span class="p">,</span> <span class="n">zoom_level</span><span class="o">=</span><span class="mi">7</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Given a region ID, return shape information in geojson.</span>
 
 <span class="sd">        Parameters</span>
@@ -901,7 +897,62 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">lib</span><span class="o">.</span><span class="n">get_geojson</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_host</span><span class="p">,</span> <span class="n">region_id</span><span class="p">,</span> <span class="n">zoom_level</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="GroClient.get_descendant_regions"><a class="viewcode-back" href="../../api.html#api.client.gro_client.GroClient.get_descendant_regions">[docs]</a>    <span class="k">def</span> <span class="nf">get_descendant_regions</span><span class="p">(</span>
+    <span class="k">def</span> <span class="nf">get_descendant</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">entity_type</span><span class="p">,</span>
+        <span class="n">entity_id</span><span class="p">,</span>
+        <span class="n">distance</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">include_details</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Given an item, metric or region, returns all its descendants i.e.</span>
+<span class="sd">        entities that are &quot;contained&quot; in the given entity</span>
+
+<span class="sd">        Similar to :meth:~.get_descendant_regions, but also works on items and metrics. This method has</span>
+<span class="sd">        a distance parameter (which returns all nested child entities) instead of a descendant_level</span>
+<span class="sd">        parameter (which only returns child entities at a given depth/level).</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        entity_type : { &#39;metrics&#39;, &#39;items&#39;, &#39;regions&#39; }</span>
+<span class="sd">        entity_id : integer</span>
+<span class="sd">        distance: integer, optional</span>
+<span class="sd">            Return all entity contained to entity_id at maximum distance.</span>
+<span class="sd">            If not provided, get all descendants.</span>
+<span class="sd">        include_details : boolean, optional</span>
+<span class="sd">            True by default. Will perform a lookup() on each descendant  to find name,</span>
+<span class="sd">            definition, etc. If this option is set to False, only ids of descendant</span>
+<span class="sd">            entities will be returned, which makes execution significantly faster.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        list of dicts</span>
+
+<span class="sd">            Example::</span>
+
+<span class="sd">                [{</span>
+<span class="sd">                    &#39;id&#39;: 134,</span>
+<span class="sd">                    &#39;name&#39;: &#39;Cattle hides, wet-salted&#39;,</span>
+<span class="sd">                    &#39;definition&#39;: &#39;Hides and skins of domesticated cattle-animals ...&#39;,</span>
+<span class="sd">                } , {</span>
+<span class="sd">                    &#39;id&#39;: 382,</span>
+<span class="sd">                    &#39;name&#39;: &#39;Calf skins, wet-salted&#39;,</span>
+<span class="sd">                    &#39;definition&#39;: &#39;Wet-salted hides and skins of calves-animals of ...&#39;</span>
+<span class="sd">                }, ...]</span>
+
+<span class="sd">            See output of :meth:`~.lookup`</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">lib</span><span class="o">.</span><span class="n">get_descendant</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">api_host</span><span class="p">,</span>
+            <span class="n">entity_type</span><span class="p">,</span>
+            <span class="n">entity_id</span><span class="p">,</span>
+            <span class="n">distance</span><span class="p">,</span>
+            <span class="n">include_details</span><span class="p">,</span>
+        <span class="p">)</span>
+
+
+<div class="viewcode-block" id="GroClient.get_descendant_regions"><a class="viewcode-back" href="../../api.html#groclient.GroClient.get_descendant_regions">[docs]</a>    <span class="k">def</span> <span class="nf">get_descendant_regions</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">region_id</span><span class="p">,</span>
         <span class="n">descendant_level</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -956,7 +1007,7 @@
             <span class="n">include_details</span><span class="p">,</span>
         <span class="p">)</span></div>
 
-<div class="viewcode-block" id="GroClient.get_available_timefrequency"><a class="viewcode-back" href="../../api.html#api.client.gro_client.GroClient.get_available_timefrequency">[docs]</a>    <span class="k">def</span> <span class="nf">get_available_timefrequency</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">selection</span><span class="p">):</span>
+<div class="viewcode-block" id="GroClient.get_available_timefrequency"><a class="viewcode-back" href="../../api.html#groclient.GroClient.get_available_timefrequency">[docs]</a>    <span class="k">def</span> <span class="nf">get_available_timefrequency</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">selection</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Given a selection, return a list of frequencies and time ranges.</span>
 <span class="sd">        The results are ordered by coverage-optimized ranking.</span>
 
@@ -988,7 +1039,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_host</span><span class="p">,</span> <span class="o">**</span><span class="n">selection</span>
         <span class="p">)</span></div>
 
-<div class="viewcode-block" id="GroClient.get_top"><a class="viewcode-back" href="../../api.html#api.client.gro_client.GroClient.get_top">[docs]</a>    <span class="k">def</span> <span class="nf">get_top</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">,</span> <span class="n">num_results</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="o">**</span><span class="n">selection</span><span class="p">):</span>
+<div class="viewcode-block" id="GroClient.get_top"><a class="viewcode-back" href="../../api.html#groclient.GroClient.get_top">[docs]</a>    <span class="k">def</span> <span class="nf">get_top</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">,</span> <span class="n">num_results</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="o">**</span><span class="n">selection</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Find the data series with the highest cumulative value for the given time range.</span>
 
 <span class="sd">        Examples::</span>
@@ -1047,7 +1098,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_host</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">,</span> <span class="n">num_results</span><span class="p">,</span> <span class="o">**</span><span class="n">selection</span>
         <span class="p">)</span></div>
 
-<div class="viewcode-block" id="GroClient.get_df"><a class="viewcode-back" href="../../api.html#api.client.gro_client.GroClient.get_df">[docs]</a>    <span class="k">def</span> <span class="nf">get_df</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+<div class="viewcode-block" id="GroClient.get_df"><a class="viewcode-back" href="../../api.html#groclient.GroClient.get_df">[docs]</a>    <span class="k">def</span> <span class="nf">get_df</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                <span class="n">show_revisions</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                <span class="n">include_names</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                <span class="n">index_by_series</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
@@ -1075,23 +1126,21 @@
                 <span class="kc">None</span><span class="p">,</span> <span class="n">data_series</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_data_points</span><span class="p">(</span><span class="o">**</span><span class="n">data_series</span><span class="p">)</span>
             <span class="p">)</span>
 
-        <span class="n">df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_frame</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-
-        <span class="k">if</span> <span class="n">include_names</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">df</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">include_names</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_frame</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
             <span class="k">def</span> <span class="nf">get_name</span><span class="p">(</span><span class="n">entity_type_id</span><span class="p">,</span> <span class="n">entity_id</span><span class="p">):</span>
                 <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">lookup</span><span class="p">(</span><span class="n">ENTITY_KEY_TO_TYPE</span><span class="p">[</span><span class="n">entity_type_id</span><span class="p">],</span> <span class="n">entity_id</span><span class="p">)[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span>
 
             <span class="k">for</span> <span class="n">entity_type_id</span> <span class="ow">in</span> <span class="n">DATA_SERIES_UNIQUE_TYPES_ID</span> <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;unit_id&#39;</span><span class="p">]:</span>
                 <span class="n">name_col</span> <span class="o">=</span> <span class="n">entity_type_id</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;_id&#39;</span><span class="p">,</span> <span class="s1">&#39;_name&#39;</span><span class="p">)</span>
-                <span class="n">df</span><span class="p">[</span><span class="n">name_col</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">entity_type_id</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">partial</span><span class="p">(</span><span class="n">get_name</span><span class="p">,</span> <span class="n">entity_type_id</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_data_frame</span><span class="p">[</span><span class="n">name_col</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_frame</span><span class="p">[</span><span class="n">entity_type_id</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">partial</span><span class="p">(</span><span class="n">get_name</span><span class="p">,</span> <span class="n">entity_type_id</span><span class="p">))</span>
 
-        <span class="k">if</span> <span class="n">index_by_series</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">df</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
-            <span class="n">idx_columns</span> <span class="o">=</span> <span class="n">intersect</span><span class="p">(</span><span class="n">DATA_SERIES_UNIQUE_TYPES_ID</span><span class="p">,</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">index_by_series</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_frame</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+            <span class="n">idx_columns</span> <span class="o">=</span> <span class="n">intersect</span><span class="p">(</span><span class="n">DATA_SERIES_UNIQUE_TYPES_ID</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_frame</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
 
-            <span class="n">df</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="n">idx_columns</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-            <span class="n">df</span><span class="o">.</span><span class="n">sort_index</span><span class="p">(</span><span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_data_frame</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="n">idx_columns</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_data_frame</span><span class="o">.</span><span class="n">sort_index</span><span class="p">(</span><span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="n">df</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_frame</span></div>
 
     <span class="k">def</span> <span class="nf">async_get_df</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">batch_async_get_data_points</span><span class="p">(</span>
@@ -1129,7 +1178,7 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_data_frame</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">_data_frame</span><span class="p">,</span> <span class="n">tmp</span><span class="p">])</span>
 
-<div class="viewcode-block" id="GroClient.get_data_points"><a class="viewcode-back" href="../../api.html#api.client.gro_client.GroClient.get_data_points">[docs]</a>    <span class="k">def</span> <span class="nf">get_data_points</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">selections</span><span class="p">):</span>
+<div class="viewcode-block" id="GroClient.get_data_points"><a class="viewcode-back" href="../../api.html#groclient.GroClient.get_data_points">[docs]</a>    <span class="k">def</span> <span class="nf">get_data_points</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">selections</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Get all the data points for a given selection.</span>
 
 <span class="sd">        https://developers.gro-intelligence.com/data-point-definition.html</span>
@@ -1180,6 +1229,7 @@
 <span class="sd">                                      &#39;start_date&#39;: &#39;2017-01-01&#39;,</span>
 <span class="sd">                                      &#39;end_date&#39;: &#39;2017-12-31&#39;,</span>
 <span class="sd">                                      &#39;unit_id&#39;: 15})</span>
+
 <span class="sd">        Returns::</span>
 
 <span class="sd">            [{  &#39;start_date&#39;: &#39;2017-01-01T00:00:00.000Z&#39;,</span>
@@ -1301,10 +1351,10 @@
                          <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">df</span>
         <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;GDH returned no data&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;GDH returned no data&quot;</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
 
-<div class="viewcode-block" id="GroClient.get_data_series_list"><a class="viewcode-back" href="../../api.html#api.client.gro_client.GroClient.get_data_series_list">[docs]</a>    <span class="k">def</span> <span class="nf">get_data_series_list</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="GroClient.get_data_series_list"><a class="viewcode-back" href="../../api.html#groclient.GroClient.get_data_series_list">[docs]</a>    <span class="k">def</span> <span class="nf">get_data_series_list</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Inspect the current list of saved data series contained in the GroClient.</span>
 
 <span class="sd">        For use with :meth:`~.get_df`. Add new data series to the list using</span>
@@ -1318,7 +1368,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="p">[</span><span class="nb">dict</span><span class="p">(</span><span class="n">data_series_hash</span><span class="p">)</span> <span class="k">for</span> <span class="n">data_series_hash</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_series_list</span><span class="p">]</span></div>
 
-<div class="viewcode-block" id="GroClient.add_single_data_series"><a class="viewcode-back" href="../../api.html#api.client.gro_client.GroClient.add_single_data_series">[docs]</a>    <span class="k">def</span> <span class="nf">add_single_data_series</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_series</span><span class="p">):</span>
+<div class="viewcode-block" id="GroClient.add_single_data_series"><a class="viewcode-back" href="../../api.html#groclient.GroClient.add_single_data_series">[docs]</a>    <span class="k">def</span> <span class="nf">add_single_data_series</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_series</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Save a data series object to the GroClient&#39;s data_series_list.</span>
 
 <span class="sd">        For use with :meth:`~.get_df`.</span>
@@ -1335,7 +1385,7 @@
 <span class="sd">        None</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">series_hash</span> <span class="o">=</span> <span class="nb">frozenset</span><span class="p">(</span><span class="n">data_series</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
+        <span class="n">series_hash</span> <span class="o">=</span> <span class="nb">frozenset</span><span class="p">(</span><span class="n">dict_unnest</span><span class="p">(</span><span class="n">data_series</span><span class="p">)</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
         <span class="k">if</span> <span class="n">series_hash</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_series_list</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_data_series_list</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">series_hash</span><span class="p">)</span>
             <span class="c1"># Add a copy of the data series, in case the original is modified</span>
@@ -1345,7 +1395,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Already added: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">data_series</span><span class="p">))</span>
         <span class="k">return</span></div>
 
-<div class="viewcode-block" id="GroClient.find_data_series"><a class="viewcode-back" href="../../api.html#api.client.gro_client.GroClient.find_data_series">[docs]</a>    <span class="k">def</span> <span class="nf">find_data_series</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">result_filter</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="GroClient.find_data_series"><a class="viewcode-back" href="../../api.html#groclient.GroClient.find_data_series">[docs]</a>    <span class="k">def</span> <span class="nf">find_data_series</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">result_filter</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Find data series matching a combination of entities specified by</span>
 <span class="sd">        name and yield them ranked by coverage.</span>
 
@@ -1407,6 +1457,8 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># [[(&#39;item_id&#39;,1),(&#39;item_id&#39;,2),...],[(&#39;metric_id&quot; 1),...],...]</span>
         <span class="k">for</span> <span class="n">kw</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">kw</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">continue</span>
             <span class="n">id_key</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">_id&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">kw</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">id_key</span> <span class="ow">in</span> <span class="n">ENTITY_KEY_TO_TYPE</span><span class="p">:</span>
                 <span class="n">type_results</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># [(&#39;item_id&#39;,1),(&#39;item_id&#39;,2),...]</span>
@@ -1447,9 +1499,9 @@
                         <span class="n">ds</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">data_series</span><span class="p">)</span>
                         <span class="n">ds</span><span class="p">[</span><span class="s2">&quot;frequency_id&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">tf</span><span class="p">[</span><span class="s2">&quot;frequency_id&quot;</span><span class="p">]</span>
                         <span class="k">for</span> <span class="n">data_series</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">rank_series_by_source</span><span class="p">([</span><span class="n">ds</span><span class="p">]):</span>
-                            <span class="k">yield</span> <span class="n">data_series</span></div>
+                            <span class="k">yield</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_data_series</span><span class="p">(</span><span class="o">**</span><span class="n">data_series</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span></div>
 
-<div class="viewcode-block" id="GroClient.add_data_series"><a class="viewcode-back" href="../../api.html#api.client.gro_client.GroClient.add_data_series">[docs]</a>    <span class="k">def</span> <span class="nf">add_data_series</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="GroClient.add_data_series"><a class="viewcode-back" href="../../api.html#groclient.GroClient.add_data_series">[docs]</a>    <span class="k">def</span> <span class="nf">add_data_series</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Adds the top result of :meth:`~.find_data_series` to the saved data series list.</span>
 
 <span class="sd">        For use with :meth:`~.get_df`.</span>
@@ -1487,7 +1539,7 @@
     <span class="c1">###</span>
     <span class="c1"># Discovery shortcuts</span>
     <span class="c1">###</span>
-<div class="viewcode-block" id="GroClient.search_for_entity"><a class="viewcode-back" href="../../api.html#api.client.gro_client.GroClient.search_for_entity">[docs]</a>    <span class="k">def</span> <span class="nf">search_for_entity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">,</span> <span class="n">keywords</span><span class="p">):</span>
+<div class="viewcode-block" id="GroClient.search_for_entity"><a class="viewcode-back" href="../../api.html#groclient.GroClient.search_for_entity">[docs]</a>    <span class="k">def</span> <span class="nf">search_for_entity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">,</span> <span class="n">keywords</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Returns the first result of entity_type that matches the given keywords.</span>
 
 <span class="sd">        Parameters</span>
@@ -1510,7 +1562,7 @@
             <span class="p">)</span>
             <span class="k">return</span> <span class="n">result</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]</span></div>
 
-<div class="viewcode-block" id="GroClient.get_provinces"><a class="viewcode-back" href="../../api.html#api.client.gro_client.GroClient.get_provinces">[docs]</a>    <span class="k">def</span> <span class="nf">get_provinces</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">country_name</span><span class="p">):</span>
+<div class="viewcode-block" id="GroClient.get_provinces"><a class="viewcode-back" href="../../api.html#groclient.GroClient.get_provinces">[docs]</a>    <span class="k">def</span> <span class="nf">get_provinces</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">country_name</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Given the name of a country, find its provinces.</span>
 
 <span class="sd">        Parameters</span>
@@ -1576,51 +1628,6 @@
             <span class="k">for</span> <span class="n">entity_key</span><span class="p">,</span> <span class="n">entity_id</span> <span class="ow">in</span> <span class="n">selection</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
         <span class="p">]</span>
 
-    <span class="c1">###</span>
-    <span class="c1"># Convenience methods that automatically fill in partial selections with random entities</span>
-    <span class="c1">###</span>
-    <span class="k">def</span> <span class="nf">pick_random_entities</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>  <span class="c1"># pragma: no cover</span>
-        <span class="sd">&quot;&quot;&quot;Pick a random item that has some data associated with it, and a random metric and region</span>
-<span class="sd">        pair for that item with data available.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">item_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_available</span><span class="p">(</span><span class="s2">&quot;items&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
-        <span class="n">num</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="k">while</span> <span class="ow">not</span> <span class="n">num</span><span class="p">:</span>
-            <span class="n">item</span> <span class="o">=</span> <span class="n">item_list</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">item_list</span><span class="p">)</span> <span class="o">*</span> <span class="n">random</span><span class="p">())]</span>
-            <span class="n">selected_entities</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;itemId&quot;</span><span class="p">:</span> <span class="n">item</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]}</span>
-            <span class="n">entity_list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">list_available</span><span class="p">(</span><span class="n">selected_entities</span><span class="p">)</span>
-            <span class="n">num</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">entity_list</span><span class="p">)</span>
-        <span class="n">entities</span> <span class="o">=</span> <span class="n">entity_list</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">num</span> <span class="o">*</span> <span class="n">random</span><span class="p">())]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Using randomly selected entities: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">entities</span><span class="p">)))</span>
-        <span class="n">selected_entities</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">entities</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">selected_entities</span>
-
-    <span class="k">def</span> <span class="nf">pick_random_data_series</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">selected_entities</span><span class="p">):</span>  <span class="c1"># pragma: no cover</span>
-        <span class="sd">&quot;&quot;&quot;Given a selection of tentities, pick a random available data series the given selection</span>
-<span class="sd">        of entities.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">data_series_list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_data_series</span><span class="p">(</span><span class="o">**</span><span class="n">selected_entities</span><span class="p">)</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">data_series_list</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;No data series available for </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">selected_entities</span><span class="p">))</span>
-        <span class="n">selected_data_series</span> <span class="o">=</span> <span class="n">data_series_list</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">data_series_list</span><span class="p">)</span> <span class="o">*</span> <span class="n">random</span><span class="p">())]</span>
-        <span class="k">return</span> <span class="n">selected_data_series</span>
-
-    <span class="c1"># TODO: rename function to &quot;write_...&quot; rather than &quot;print_...&quot;</span>
-    <span class="k">def</span> <span class="nf">print_one_data_series</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_series</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>  <span class="c1"># pragma: no cover</span>
-        <span class="sd">&quot;&quot;&quot;Output a data series to a CSV file.&quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Using data series: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">data_series</span><span class="p">)))</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Outputing to file: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">filename</span><span class="p">))</span>
-        <span class="n">writer</span> <span class="o">=</span> <span class="n">unicodecsv</span><span class="o">.</span><span class="n">writer</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">))</span>
-        <span class="k">for</span> <span class="n">point</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_data_points</span><span class="p">(</span><span class="o">**</span><span class="n">data_series</span><span class="p">):</span>
-            <span class="n">writer</span><span class="o">.</span><span class="n">writerow</span><span class="p">(</span>
-                <span class="p">[</span>
-                    <span class="n">point</span><span class="p">[</span><span class="s2">&quot;start_date&quot;</span><span class="p">],</span>
-                    <span class="n">point</span><span class="p">[</span><span class="s2">&quot;end_date&quot;</span><span class="p">],</span>
-                    <span class="n">point</span><span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">],</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">lookup_unit_abbreviation</span><span class="p">(</span><span class="n">point</span><span class="p">[</span><span class="s2">&quot;unit_id&quot;</span><span class="p">]),</span>
-                <span class="p">]</span>
-            <span class="p">)</span>
-
     <span class="k">def</span> <span class="nf">convert_unit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">point</span><span class="p">,</span> <span class="n">target_unit_id</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Convert the data point from one unit to another unit.</span>
 
@@ -1654,113 +1661,13 @@
         <span class="n">to_convert_factor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lookup</span><span class="p">(</span><span class="s2">&quot;units&quot;</span><span class="p">,</span> <span class="n">target_unit_id</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;baseConvFactor&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">to_convert_factor</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;factor&quot;</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;unit_id </span><span class="si">{}</span><span class="s2"> is not convertible&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">target_unit_id</span><span class="p">))</span>
+
         <span class="k">if</span> <span class="n">point</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;value&quot;</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">value_in_base_unit</span> <span class="o">=</span> <span class="p">(</span>
-                <span class="n">point</span><span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="n">from_convert_factor</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;factor&quot;</span><span class="p">)</span>
-            <span class="p">)</span> <span class="o">+</span> <span class="n">from_convert_factor</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;offset&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
-            <span class="n">point</span><span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span>
-                <span class="n">value_in_base_unit</span> <span class="o">-</span> <span class="n">to_convert_factor</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;offset&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
-            <span class="p">)</span> <span class="o">/</span> <span class="n">to_convert_factor</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;factor&quot;</span><span class="p">)</span>
+            <span class="n">point</span><span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">lib</span><span class="o">.</span><span class="n">convert_value</span><span class="p">(</span><span class="n">point</span><span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">],</span> <span class="n">from_convert_factor</span><span class="p">,</span> <span class="n">to_convert_factor</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">point</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;metadata&quot;</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">point</span><span class="p">[</span><span class="s2">&quot;metadata&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;conf_interval&quot;</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">point</span><span class="p">[</span><span class="s2">&quot;metadata&quot;</span><span class="p">][</span><span class="s2">&quot;conf_interval&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">lib</span><span class="o">.</span><span class="n">convert_value</span><span class="p">(</span><span class="n">point</span><span class="p">[</span><span class="s2">&quot;metadata&quot;</span><span class="p">][</span><span class="s2">&quot;conf_interval&quot;</span><span class="p">],</span> <span class="n">from_convert_factor</span><span class="p">,</span> <span class="n">to_convert_factor</span><span class="p">)</span>
         <span class="n">point</span><span class="p">[</span><span class="s2">&quot;unit_id&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">target_unit_id</span>
         <span class="k">return</span> <span class="n">point</span>
-
-
-<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>  <span class="c1"># pragma: no cover</span>
-    <span class="sd">&quot;&quot;&quot;Basic Gro API command line interface.</span>
-
-<span class="sd">    Note that results are chosen randomly from matching selections, and so results are not</span>
-<span class="sd">    deterministic. This tool is useful for simple queries, but anything more complex should be done</span>
-<span class="sd">    using the provided Python packages.</span>
-
-<span class="sd">    Usage examples:</span>
-<span class="sd">        gro_client --item=soybeans  --region=brazil --partner_region china --metric export</span>
-<span class="sd">        gro_client --item=sesame --region=ethiopia</span>
-<span class="sd">        gro_client --user_email=john.doe@example.com  --print_token</span>
-<span class="sd">    For more information use --help</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;Gro API command line interface&quot;</span><span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--user_email&quot;</span><span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--user_password&quot;</span><span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--item&quot;</span><span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--metric&quot;</span><span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--region&quot;</span><span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--partner_region&quot;</span><span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-        <span class="s2">&quot;--print_token&quot;</span><span class="p">,</span>
-        <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span>
-        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Ouput API access token for the given user email and password. &quot;</span>
-        <span class="s2">&quot;Save it in GROAPI_TOKEN environment variable.&quot;</span><span class="p">,</span>
-    <span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-        <span class="s2">&quot;--token&quot;</span><span class="p">,</span>
-        <span class="n">default</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;GROAPI_TOKEN&quot;</span><span class="p">),</span>
-        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Defaults to GROAPI_TOKEN environment variable.&quot;</span><span class="p">,</span>
-    <span class="p">)</span>
-    <span class="n">args</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>
-
-    <span class="k">assert</span> <span class="p">(</span>
-        <span class="n">args</span><span class="o">.</span><span class="n">user_email</span> <span class="ow">or</span> <span class="n">args</span><span class="o">.</span><span class="n">token</span>
-    <span class="p">),</span> <span class="s2">&quot;Need --token, or --user_email, or $GROAPI_TOKEN&quot;</span>
-    <span class="n">access_token</span> <span class="o">=</span> <span class="kc">None</span>
-
-    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">token</span><span class="p">:</span>
-        <span class="n">access_token</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">token</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">args</span><span class="o">.</span><span class="n">user_password</span><span class="p">:</span>
-            <span class="n">args</span><span class="o">.</span><span class="n">user_password</span> <span class="o">=</span> <span class="n">getpass</span><span class="o">.</span><span class="n">getpass</span><span class="p">()</span>
-        <span class="n">access_token</span> <span class="o">=</span> <span class="n">lib</span><span class="o">.</span><span class="n">get_access_token</span><span class="p">(</span>
-            <span class="n">API_HOST</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">user_email</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">user_password</span>
-        <span class="p">)</span>
-    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">print_token</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">access_token</span><span class="p">)</span>
-        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-    <span class="n">client</span> <span class="o">=</span> <span class="n">GroClient</span><span class="p">(</span><span class="n">API_HOST</span><span class="p">,</span> <span class="n">access_token</span><span class="p">)</span>
-
-    <span class="k">if</span> <span class="p">(</span>
-        <span class="ow">not</span> <span class="n">args</span><span class="o">.</span><span class="n">metric</span>
-        <span class="ow">and</span> <span class="ow">not</span> <span class="n">args</span><span class="o">.</span><span class="n">item</span>
-        <span class="ow">and</span> <span class="ow">not</span> <span class="n">args</span><span class="o">.</span><span class="n">region</span>
-        <span class="ow">and</span> <span class="ow">not</span> <span class="n">args</span><span class="o">.</span><span class="n">partner_region</span>
-    <span class="p">):</span>
-        <span class="n">ds</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">pick_random_data_series</span><span class="p">(</span><span class="n">client</span><span class="o">.</span><span class="n">pick_random_entities</span><span class="p">())</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">ds</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span>
-            <span class="n">client</span><span class="o">.</span><span class="n">find_data_series</span><span class="p">(</span>
-                <span class="n">item</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">item</span><span class="p">,</span>
-                <span class="n">metric</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">metric</span><span class="p">,</span>
-                <span class="n">region</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">region</span><span class="p">,</span>
-                <span class="n">partner_region</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">partner_region</span><span class="p">,</span>
-            <span class="p">)</span>
-        <span class="p">)</span>
-    <span class="n">client</span><span class="o">.</span><span class="n">print_one_data_series</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">OUTPUT_FILENAME</span><span class="p">)</span>
-
-
-<span class="k">def</span> <span class="nf">get_df</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="o">**</span><span class="n">selected_entities</span><span class="p">):</span>  <span class="c1"># pragma: no cover</span>
-    <span class="sd">&quot;&quot;&quot;Deprecated: use the corresponding method in GroClient instead.&quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">client</span><span class="o">.</span><span class="n">get_data_points</span><span class="p">(</span><span class="o">**</span><span class="n">selected_entities</span><span class="p">))</span>
-
-
-<span class="k">def</span> <span class="nf">search_for_entity</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">,</span> <span class="n">keywords</span><span class="p">):</span>  <span class="c1"># pragma: no cover</span>
-    <span class="sd">&quot;&quot;&quot;Deprecated: use the corresponding method in GroClient instead.&quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">client</span><span class="o">.</span><span class="n">search_for_entity</span><span class="p">(</span><span class="n">entity_type</span><span class="p">,</span> <span class="n">keywords</span><span class="p">)</span>
-
-
-<span class="k">def</span> <span class="nf">pick_random_entities</span><span class="p">(</span><span class="n">client</span><span class="p">):</span>  <span class="c1"># pragma: no cover</span>
-    <span class="sd">&quot;&quot;&quot;Deprecated: use the corresponding method in GroClient instead.&quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">client</span><span class="o">.</span><span class="n">pick_random_entities</span><span class="p">()</span>
-
-
-<span class="k">def</span> <span class="nf">print_random_data_series</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="n">selected_entities</span><span class="p">):</span>  <span class="c1"># pragma: no cover</span>
-    <span class="sd">&quot;&quot;&quot;Example which prints out a CSV of a random data series that</span>
-<span class="sd">    satisfies the (optional) given selection.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">client</span><span class="o">.</span><span class="n">print_one_data_series</span><span class="p">(</span>
-        <span class="n">client</span><span class="o">.</span><span class="n">pick_random_data_series</span><span class="p">(</span><span class="n">selected_entities</span><span class="p">),</span> <span class="n">OUTPUT_FILENAME</span>
-    <span class="p">)</span>
-
-
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
-    <span class="n">main</span><span class="p">()</span>
 </pre></div>
 
 
