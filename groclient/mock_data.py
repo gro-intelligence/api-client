@@ -15,7 +15,14 @@ mock_entities = {
             "belongsTo": [119],
         }
     },
-    "items": {},
+    "items": {
+        274: {
+            "id": 274,
+            "name": "Corn",
+            "contains": [],
+            "belongsTo": []
+        }
+    },
     "regions": {
         0: {"id": 0, "level": 1, "name": "World", "contains": [1215], "belongsTo": []},
         1215: {
@@ -33,8 +40,18 @@ mock_entities = {
             "belongsTo": [1215],
         },
     },
-    "frequencies": {},
-    "sources": {},
+    "frequencies": {
+        9: {
+            "id": 9,
+            "name": "Annual",
+        },
+    },
+    "sources": {
+        2: {
+            "id": 2,
+            "name": "FAO",
+        }
+    },
     "units": {
         10: {
             "id": 10,

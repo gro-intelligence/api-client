@@ -1,5 +1,5 @@
 from __future__ import print_function
-import functools
+from functools import partial
 import itertools
 import time
 import json
@@ -902,7 +902,7 @@ class GroClient(object):
             self.access_token, self.api_host, entity_type, num_results, **selection
         )
 
-    def get_df(self, show_revisions=False, index_by_series=False):
+    def get_df(self, show_revisions=False, index_by_series=False, include_names=False):
         """Call :meth:`~.get_data_points` for each saved data series and return as a combined
         dataframe.
 
@@ -910,14 +910,20 @@ class GroClient(object):
         :meth:`~.add_single_data_series` to save data series into the GroClient's data_series_list.
         You can inspect the client's saved list using :meth:`~.get_data_series_list`.
 
+        Parameters
+        ----------
+            index_by_series : boolean, optional
+               If set, the dataframe is indexed by series. See https://developers.gro-intelligence.com/data-series-definition.html
+            include_names : boolean, optional
+               If set, the dataframe will have additional columns with names of entities.
+               Note that this will increase the size of the dataframe by about 5x.
+
         Returns
         -------
         pandas.DataFrame
             The results to :meth:`~.get_data_points` for all the saved series, appended together
             into a single dataframe.
             See https://developers.gro-intelligence.com/data-point-definition.html
-            If index_by_series is set, the dataframe is indexed by series.
-            See https://developers.gro-intelligence.com/data-series-definition.html
         """
         while self._data_series_queue:
             data_series = self._data_series_queue.pop()
@@ -926,12 +932,21 @@ class GroClient(object):
             self.add_points_to_df(
                 None, data_series, self.get_data_points(**data_series)
             )
+
+        if include_names and not self._data_frame.empty:
+            def get_name(entity_type_id, entity_id):
+                return self.lookup(ENTITY_KEY_TO_TYPE[entity_type_id], entity_id)['name']
+
+            for entity_type_id in DATA_SERIES_UNIQUE_TYPES_ID + ['unit_id']:
+                name_col = entity_type_id.replace('_id', '_name')
+                self._data_frame[name_col] = self._data_frame[entity_type_id].apply(partial(get_name, entity_type_id))
+
         if index_by_series and not self._data_frame.empty:
-            columns = intersect(DATA_SERIES_UNIQUE_TYPES_ID, self._data_frame.columns)
-            if len(columns) > 0:
-                indexed_df = self._data_frame.set_index(columns)
-                indexed_df.index.set_names(DATA_SERIES_UNIQUE_TYPES_ID, inplace=True)
-                return indexed_df.sort_index()
+            idx_columns = intersect(DATA_SERIES_UNIQUE_TYPES_ID, self._data_frame.columns)
+
+            self._data_frame.set_index(idx_columns, inplace=True)
+            self._data_frame.sort_index(inplace=True)
+
         return self._data_frame
 
     def async_get_df(self):
@@ -1096,9 +1111,7 @@ class GroClient(object):
         if "unit_id" in selections:
             return list(
                 map(
-                    functools.partial(
-                        self.convert_unit, target_unit_id=selections["unit_id"]
-                    ),
+                    partial(self.convert_unit, target_unit_id=selections["unit_id"]),
                     data_points,
                 )
             )
@@ -1128,7 +1141,8 @@ class GroClient(object):
         ------
         pandas.DataFrame
 
-            the subset of the main DataFrame :meth:`~.get_df`. with the requested series.
+            The subset of the main DataFrame :meth:`~.get_df`. with the requested series,
+            indexed by the names of the selections.
 
         """
 
@@ -1137,7 +1151,12 @@ class GroClient(object):
 
         self.add_single_data_series(selection)
         try:
-            return self.get_df(index_by_series=True).loc[[tuple(entity_ids)], :]
+            df = self.get_df(index_by_series=True, include_names=True).loc[[tuple(entity_ids)], :]
+            df.set_index([entity_type_id.replace('_id', '_name')
+                          for entity_type_id in intersect(DATA_SERIES_UNIQUE_TYPES_ID,
+                                                          df.index.names)],
+                         inplace=True)
+            return df
         except KeyError:
             self._logger.warning("GDH returned no data")
             return pandas.DataFrame()
