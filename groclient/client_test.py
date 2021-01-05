@@ -8,6 +8,7 @@ from unittest import TestCase
 from datetime import date
 
 from groclient import GroClient
+from groclient.utils import zip_selections
 from groclient.mock_data import mock_entities, mock_data_series, mock_data_points
 
 MOCK_HOST = "pytest.groclient.url"
@@ -23,14 +24,15 @@ def mock_list_available(access_token, api_host, selected_entities):
 
 
 def mock_lookup(access_token, api_host, entity_type, entity_ids):
-    if isinstance(entity_ids, int):
-        # Raises a KeyError if the requested entity hasn't been mocked:
-        return mock_entities[entity_type][entity_ids]
-    else:
+    try:
+        entity_ids = list(entity_ids)
         return {
             str(entity_id): mock_entities[entity_type][entity_id]
             for entity_id in entity_ids
         }
+    except TypeError:
+        # Raises a KeyError if the requested entity hasn't been mocked:
+        return mock_entities[entity_type][entity_ids]
 
 
 def mock_get_allowed_units(access_token, api_host, metric_id, item_id):
@@ -336,7 +338,7 @@ class GroClientTests(TestCase):
         self.assertEqual(df.iloc[0]["start_date"].date(), date(2017, 1, 1))
         indexed_df = self.client.get_df(index_by_series=True)
         self.assertEqual(indexed_df.iloc[0]["start_date"].date(), date(2017, 1, 1))
-        series = dict(zip(indexed_df.index.names, indexed_df.iloc[0].name))
+        series = zip_selections(indexed_df.iloc[0].name)
         self.assertEqual(series, mock_data_series[0])
 
     def test_get_df_show_revisions(self):
