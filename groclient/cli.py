@@ -72,7 +72,7 @@ def main():  # pragma: no cover
     parser.add_argument(
         "--print_token",
         action="store_true",
-        help="Ouput API access token for the given user email and password. "
+        help="Output API access token for the given user email and password. "
         "Save it in GROAPI_TOKEN environment variable.",
     )
     parser.add_argument(

@@ -1,8 +1,9 @@
 from __future__ import print_function
 from functools import partial
 import itertools
-import time
 import json
+import os
+import time
 
 # Python3 support
 try:
@@ -57,7 +58,36 @@ class BatchError(APIError):
 class GroClient(object):
     """API client with stateful authentication for lib functions and extra convenience methods."""
 
-    def __init__(self, api_host, access_token):
+    def __init__(self, api_host=cfg.API_HOST, access_token=None):
+        """Construct a GroClient instance.
+
+        Parameters
+        ----------
+        api_host : string, optional
+            The API server hostname.
+        access_token : string, optional
+            Your Gro API authentication token. If not specified, the
+            :code:`$GROAPI_TOKEN` environment variable is used. See
+            :doc:`authentication`.
+
+        Raises
+        ------
+            RuntimeError
+                Raised when neither the :code:`access_token` parameter nor
+                :code:`$GROAPI_TOKEN` environment variable are set.
+
+        Examples
+        --------
+            >>> client = GroClient()  # token stored in $GROAPI_TOKEN
+
+            >>> client = GroClient(access_token="your_token_here")
+        """
+        if access_token is None:
+            env_token = os.environ.get("GROAPI_TOKEN")
+            if env_token is None:
+                raise RuntimeError("$GROAPI_TOKEN environment variable must be set"
+                                   " when GroClient is constructed without access_token")
+            access_token = env_token
         self.api_host = api_host
         self.access_token = access_token
         self._logger = lib.get_default_logger()
