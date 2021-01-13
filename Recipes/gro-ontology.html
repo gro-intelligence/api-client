@@ -32,6 +32,7 @@
         <script src="_static/underscore.js"></script>
         <script src="_static/doctools.js"></script>
         <script src="_static/language_data.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
@@ -39,7 +40,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Data Series Definition" href="data-series-definition.html" />
-    <link rel="prev" title="Data Discovery Recipes" href="api-cookbook/data-discovery-recipes/index.html" />
+    <link rel="prev" title="Discover all data series related to a specific item" href="api-cookbook/data-discovery-recipes/discover_all_data_series_related_to_a_specific_item.html" />
     <!-- Google Tag Manager -->
     <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
     new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
@@ -194,7 +195,7 @@
         <a href="data-series-definition.html" class="btn btn-neutral float-right" title="Data Series Definition" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="api-cookbook/data-discovery-recipes/index.html" class="btn btn-neutral float-left" title="Data Discovery Recipes" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="api-cookbook/data-discovery-recipes/discover_all_data_series_related_to_a_specific_item.html" class="btn btn-neutral float-left" title="Discover all data series related to a specific item" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
   </div>
   
@@ -211,7 +212,31 @@
 </p>
 
 
-  <div class="section" id="gro-ontology">
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast.container,
+.nboutput.nblast.container {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast.container + .nbinput.container {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<div class="section" id="gro-ontology">
 <h1>Gro Ontology<a class="headerlink" href="#gro-ontology" title="Permalink to this headline">¶</a></h1>
 <div class="contents local topic" id="table-of-contents">
 <p class="topic-title">Table of Contents</p>
@@ -332,7 +357,7 @@ adminstratively in the real world. However, data can be accessed for those regio
         <a href="data-series-definition.html" class="btn btn-neutral float-right" title="Data Series Definition" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="api-cookbook/data-discovery-recipes/index.html" class="btn btn-neutral float-left" title="Data Discovery Recipes" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="api-cookbook/data-discovery-recipes/discover_all_data_series_related_to_a_specific_item.html" class="btn btn-neutral float-left" title="Discover all data series related to a specific item" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
