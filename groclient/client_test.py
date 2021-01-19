@@ -346,6 +346,11 @@ class GroClientTests(TestCase):
         df = self.client.get_df(show_revisions=True)
         self.assertEqual(df.iloc[0]["start_date"].date(), date(2017, 1, 1))
 
+    def test_get_df_show_available_date(self):
+        self.client.add_single_data_series(mock_data_series[0])
+        df = self.client.get_df(show_available_date=True)
+        self.assertEqual(df.iloc[0]["available_date"].date(), date(2017, 12, 31))
+
     def test_add_points_to_df(self):
         self.client.add_points_to_df(None, mock_data_series[0], [])
         self.assertTrue(self.client.get_df().empty)

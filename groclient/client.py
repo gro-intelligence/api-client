@@ -902,7 +902,7 @@ class GroClient(object):
             self.access_token, self.api_host, entity_type, num_results, **selection
         )
 
-    def get_df(self, show_revisions=False, index_by_series=False, include_names=False):
+    def get_df(self, show_revisions=False, show_available_date=False, index_by_series=False, include_names=False):
         """Call :meth:`~.get_data_points` for each saved data series and return as a combined
         dataframe.
 
@@ -929,6 +929,8 @@ class GroClient(object):
             data_series = self._data_series_queue.pop()
             if show_revisions:
                 data_series["show_revisions"] = True
+            if show_available_date:
+                data_series["show_available_date"] = True
             self.add_points_to_df(
                 None, data_series, self.get_data_points(**data_series)
             )
@@ -975,10 +977,11 @@ class GroClient(object):
         # source_id. We add it as a column, in case we have
         # several selections series which differ only by source id.
         tmp["source_id"] = data_series["source_id"]
-        # tmp should always have end_date/start_date/reporting_date as columns if not empty
+        # tmp should always have end_date/start_date/reporting_date/available_date as columns if not empty
         tmp.end_date = pandas.to_datetime(tmp.end_date)
         tmp.start_date = pandas.to_datetime(tmp.start_date)
         tmp.reporting_date = pandas.to_datetime(tmp.reporting_date)
+        tmp.available_date = pandas.to_datetime(tmp.available_date)
 
         if self._data_frame.empty:
             self._data_frame = tmp
@@ -1006,7 +1009,7 @@ class GroClient(object):
             [{  'start_date': '2017-01-01T00:00:00.000Z',
                 'end_date': '2017-12-31T00:00:00.000Z',
                 'value': 408913833.8019222, 'unit_id': 15,
-                'reporting_date': None,
+                'reporting_date': None, 'available_date': None,
                 'metric_id': 860032, 'item_id': 274, 'region_id': 1215,
                 'partner_region_id': 0, 'frequency_id': 9, 'source_id': 2,
                 'belongs_to': {
@@ -1042,7 +1045,7 @@ class GroClient(object):
             [{  'start_date': '2017-01-01T00:00:00.000Z',
                 'end_date': '2017-12-31T00:00:00.000Z',
                 'value': 408913833.8019222, 'unit_id': 15,
-                'reporting_date': None,
+                'reporting_date': None, 'available_date': None,
                 'metric_id': 860032, 'item_id': 274, 'region_id': 1215,
                 'partner_region_id': 0, 'frequency_id': 9, 'source_id': 2,
                 'belongs_to': {
@@ -1055,7 +1058,7 @@ class GroClient(object):
             }, { 'start_date': '2017-01-01T00:00:00.000Z',
                  'end_date': '2017-12-31T00:00:00.000Z',
                  'value': 340614.19507563586, 'unit_id': 15,
-                 'reporting_date': None,
+                 'reporting_date': None, 'available_date': None,
                  'metric_id': 860032, 'item_id': 274, 'region_id': 1216,
                  'partner_region_id': 0, 'frequency_id': 9, 'source_id': 2,
                  'belongs_to': {
@@ -1090,6 +1093,8 @@ class GroClient(object):
         show_revisions : boolean, optional
             False by default, meaning only the latest value for each period. If true, will return
             all values for a given period, differentiated by the `reporting_date` field.
+        show_available_date : boolean, optional
+            False by default. If true, will return the available date of each data point.
         insert_null : boolean, optional
             False by default. If True, will include a data point with a None value for each period
             that does not have data.
