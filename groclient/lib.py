@@ -489,7 +489,7 @@ def list_of_series_to_single_series(series_list, add_belongs_to=False, include_h
                 'end_date': point[1],
                 'value': point[2],
                 'unit_id': point[4] if len(point) > 4 else series['series'].get('unitId', None),
-                'metadata': point[5] if len(point) > 5 and point[5]!=None else {},
+                'metadata': point[5] if len(point) > 5 and point[5] is not None else {},
                 # input_unit_id and input_unit_scale are deprecated but provided for backwards
                 # compatibility. unit_id should be used instead.
                 'input_unit_id': point[4] if len(point) > 4 else series['series'].get('unitId', None),
