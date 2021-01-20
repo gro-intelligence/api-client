@@ -912,6 +912,11 @@ class GroClient(object):
 
         Parameters
         ----------
+            show_revisions : boolean, optional
+                False by default, meaning only the latest value for each period. If true, will return 
+                all values for a given period, differentiated by the `reporting_date` field.
+            show_available_date : boolean, optional
+                False by default. If true, will return the available date of each data point.
             index_by_series : boolean, optional
                If set, the dataframe is indexed by series. See https://developers.gro-intelligence.com/data-series-definition.html
             include_names : boolean, optional
