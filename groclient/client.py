@@ -282,8 +282,9 @@ class GroClient(object):
         try:
             list_of_series_points = yield self.async_get_data(url, headers, params)
             include_historical = selection.get("include_historical", True)
+            include_available_date = selection.get('show_available_date', False)
             points = lib.list_of_series_to_single_series(
-                list_of_series_points, False, include_historical
+                list_of_series_points, False, include_historical. include_available_date
             )
             raise gen.Return(points)
         except BatchError as b:
