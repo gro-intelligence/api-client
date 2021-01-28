@@ -982,7 +982,8 @@ class GroClient(object):
         tmp.end_date = pandas.to_datetime(tmp.end_date)
         tmp.start_date = pandas.to_datetime(tmp.start_date)
         tmp.reporting_date = pandas.to_datetime(tmp.reporting_date)
-        tmp.available_date = pandas.to_datetime(tmp.available_date)
+        if "available_date" in tmp.columns:
+            tmp.available_date = pandas.to_datetime(tmp.available_date)
 
         if self._data_frame.empty:
             self._data_frame = tmp
