@@ -153,7 +153,6 @@ def test_get_data_points(mock_requests_get):
         'input_unit_id': None,
         'input_unit_scale': 1,
         'reporting_date': None,
-        'available_date': None,
         'metric_id': None,
         'item_id': None,
         'metadata': {},
@@ -198,7 +197,6 @@ def test_list_of_series_to_single_series():
          'input_unit_id': 4,
          'input_unit_scale': 1,
          'reporting_date': None,
-         'available_date': None,
          'metric_id': 1,
          'item_id': 2,
          'region_id': 3,
@@ -213,7 +211,6 @@ def test_list_of_series_to_single_series():
          'input_unit_id': 4,
          'input_unit_scale': 1,
          'reporting_date': '2012-01-01',
-         'available_date': None,
          'metric_id': 1,
          'item_id': 2,
          'region_id': 3,
@@ -228,7 +225,6 @@ def test_list_of_series_to_single_series():
          'input_unit_id': 15,
          'input_unit_scale': 1,
          'reporting_date': None,
-         'available_date': None,
          'metric_id': 1,
          'item_id': 2,
          'region_id': 3,
@@ -243,7 +239,6 @@ def test_list_of_series_to_single_series():
          'input_unit_id': 15,
          'input_unit_scale': 1,
          'reporting_date': None,
-         'available_date': '2013-01-01',
          'metric_id': 1,
          'item_id': 2,
          'region_id': 3,
@@ -273,6 +268,82 @@ def test_list_of_series_to_single_series():
         'series': {'unitId': 4, 'belongsTo': {'itemId': 22}, 'metadata': {'includesHistoricalRegion': True}},
         'data': [['2001-01-01', '2001-12-31', 123]]
     }], include_historical=True)) == 1
+
+    # test the include_available_date kwarg:
+    assert lib.list_of_series_to_single_series([{
+        'series': {
+            'metricId': 1,
+            'itemId': 2,
+            'regionId': 3,
+            'unitId': 4,
+            'inputUnitId': 5,
+            'belongsTo': {'itemId': 22},
+            'metadata': {'includesHistoricalRegion': True}
+        },
+        'data': [['2004-01-01', '2004-12-31', 123, None, 15]]
+    }], include_available_date=False) == [
+        {'start_date': '2004-01-01',
+         'end_date': '2004-12-31',
+         'value': 123,
+         'unit_id': 15,
+         'metadata': {},
+         'input_unit_id': 15,
+         'input_unit_scale': 1,
+         'reporting_date': None,
+         'metric_id': 1,
+         'item_id': 2,
+         'region_id': 3,
+         'partner_region_id': 0,
+         'frequency_id': None
+        }
+    ]
+
+    assert lib.list_of_series_to_single_series([{
+        'series': {
+            'metricId': 1,
+            'itemId': 2,
+            'regionId': 3,
+            'unitId': 4,
+            'inputUnitId': 5,
+            'belongsTo': {'itemId': 22},
+            'metadata': {'includesHistoricalRegion': True}
+        },
+        'data': [
+            ['2003-01-01', '2003-12-31', 123, None, 15],
+            ['2004-01-01', '2004-12-31', 123, None, 15, None, '2013-01-01']
+        ]
+    }], include_available_date=True) == [
+        {'start_date': '2003-01-01',
+         'end_date': '2003-12-31',
+         'value': 123,
+         'unit_id': 15,
+         'metadata': {},
+         'input_unit_id': 15,
+         'input_unit_scale': 1,
+         'reporting_date': None,
+         'available_date': None,
+         'metric_id': 1,
+         'item_id': 2,
+         'region_id': 3,
+         'partner_region_id': 0,
+         'frequency_id': None
+        },
+        {'start_date': '2004-01-01',
+         'end_date': '2004-12-31',
+         'value': 123,
+         'unit_id': 15,
+         'metadata': {},
+         'input_unit_id': 15,
+         'input_unit_scale': 1,
+         'reporting_date': None,
+         'available_date': '2013-01-01',
+         'metric_id': 1,
+         'item_id': 2,
+         'region_id': 3,
+         'partner_region_id': 0,
+         'frequency_id': None
+        }
+    ]
 
     # test invalid input propagation
     assert lib.list_of_series_to_single_series('test input') == 'test input'

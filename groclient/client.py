@@ -282,8 +282,9 @@ class GroClient(object):
         try:
             list_of_series_points = yield self.async_get_data(url, headers, params)
             include_historical = selection.get("include_historical", True)
+            include_available_date = selection.get('show_available_date', False)
             points = lib.list_of_series_to_single_series(
-                list_of_series_points, False, include_historical
+                list_of_series_points, False, include_historical, include_available_date
             )
             raise gen.Return(points)
         except BatchError as b:
@@ -981,7 +982,8 @@ class GroClient(object):
         tmp.end_date = pandas.to_datetime(tmp.end_date)
         tmp.start_date = pandas.to_datetime(tmp.start_date)
         tmp.reporting_date = pandas.to_datetime(tmp.reporting_date)
-        tmp.available_date = pandas.to_datetime(tmp.available_date)
+        if "available_date" in tmp.columns:
+            tmp.available_date = pandas.to_datetime(tmp.available_date)
 
         if self._data_frame.empty:
             self._data_frame = tmp
