@@ -2,7 +2,7 @@
 Get Started in 120 Seconds
 ##########################
 
-If you have a Google account, or if you already have `Jupyter Notebook <https://jupyter.readthedocs.io/en/latest/install.html>`_ and python installed, and a Gro API token, you can start pulling Gro data via our API client within 120 seconds.
+If you have a Google account, or if you already have Python and `Jupyter Notebook <https://jupyter.readthedocs.io/en/latest/install.html>`_ installed, and a Gro API token, you can start pulling Gro data via our API client within 120 seconds.
 
 Step 1: Get your API token
 --------------------------
@@ -33,7 +33,7 @@ Step 2: Run the code in a notebook
     !pip install groclient
 
   Then click the "Run Cell" button to the left of the cell.
-  In Colab, it will look like this:
+  In Colab, it looks like this:
 
   .. image:: ../_images/colab-run-button.PNG
     :align: center
