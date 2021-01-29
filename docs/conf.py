@@ -19,7 +19,7 @@ sys.path.insert(0, os.path.abspath('..'))
 
 project = 'Gro API Client'
 html_logo = '_images/logo.jpg'
-copyright = '2020, Gro Intelligence'
+copyright = '2017-2021, Gro Intelligence'
 author = 'Gro Intelligence'
 
 
