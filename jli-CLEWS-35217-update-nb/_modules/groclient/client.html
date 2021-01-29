@@ -1,0 +1,1762 @@
+
+
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>groclient.client &mdash; Gro API Client  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../_static/css/custom-theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-5VHQ76P');</script>
+    <!-- End Google Tag Manager -->
+
+</head>
+
+<body class="wy-body-for-nav">
+
+  
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5VHQ76P"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html">
+          
+
+          
+            
+            <img src="../../_static/logo.jpg" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../prerequisites/index.html">Prerequisites</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../authentication.html">Authentication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../quick-start-projects/index.html">Quick Start Projects</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Using the API Client</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../api.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../searching-data.html">Searching Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../querying-data.html">Querying Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../understanding-data-responses.html">Understanding Data Responses</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Gro Data: Key Concepts</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../gro-ontology.html">Gro Ontology</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../data-series-definition.html">Data Series Definition</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../data-point-definition.html">Data Point Definition</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Additional Resources</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../faq.html">FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modeling-resources.html">Modeling Resources</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Gro API Client</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content style-external-links">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>groclient.client</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+
+<p class="version-banner">
+  <strong>Note:</strong>
+  This document is for an older version of the Gro API Client.
+  Please see the <a href="../../../development/index.html">latest documentation</a>.
+</p>
+
+
+  <h1>Source code for groclient.client</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span>
+<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
+<span class="kn">import</span> <span class="nn">itertools</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">json</span>
+
+<span class="c1"># Python3 support</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="c1"># Python3</span>
+    <span class="kn">from</span> <span class="nn">urllib.parse</span> <span class="kn">import</span> <span class="n">urlencode</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="c1"># Python2</span>
+    <span class="kn">from</span> <span class="nn">urllib</span> <span class="kn">import</span> <span class="n">urlencode</span>
+
+<span class="kn">from</span> <span class="nn">groclient</span> <span class="kn">import</span> <span class="n">cfg</span><span class="p">,</span> <span class="n">lib</span>
+<span class="kn">from</span> <span class="nn">groclient.constants</span> <span class="kn">import</span> <span class="n">DATA_SERIES_UNIQUE_TYPES_ID</span><span class="p">,</span> <span class="n">ENTITY_KEY_TO_TYPE</span>
+<span class="kn">from</span> <span class="nn">groclient.utils</span> <span class="kn">import</span> <span class="n">intersect</span><span class="p">,</span> <span class="n">zip_selections</span><span class="p">,</span> <span class="n">dict_unnest</span>
+<span class="kn">from</span> <span class="nn">groclient.lib</span> <span class="kn">import</span> <span class="n">APIError</span>
+
+<span class="kn">import</span> <span class="nn">pandas</span>
+<span class="kn">from</span> <span class="nn">tornado</span> <span class="kn">import</span> <span class="n">gen</span>
+<span class="kn">from</span> <span class="nn">tornado.escape</span> <span class="kn">import</span> <span class="n">json_decode</span>
+<span class="kn">from</span> <span class="nn">tornado.httpclient</span> <span class="kn">import</span> <span class="n">AsyncHTTPClient</span><span class="p">,</span> <span class="n">HTTPRequest</span><span class="p">,</span> <span class="n">HTTPError</span>
+<span class="kn">from</span> <span class="nn">tornado.ioloop</span> <span class="kn">import</span> <span class="n">IOLoop</span>
+<span class="kn">from</span> <span class="nn">tornado.queues</span> <span class="kn">import</span> <span class="n">Queue</span>
+
+
+<span class="k">class</span> <span class="nc">BatchError</span><span class="p">(</span><span class="n">APIError</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Replicate the APIError interface given a Tornado HTTPError.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">response</span><span class="p">,</span> <span class="n">retry_count</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">params</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">response</span> <span class="o">=</span> <span class="n">response</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">retry_count</span> <span class="o">=</span> <span class="n">retry_count</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">url</span> <span class="o">=</span> <span class="n">url</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">params</span> <span class="o">=</span> <span class="n">params</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">status_code</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">code</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="p">,</span> <span class="s2">&quot;code&quot;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">json_content</span> <span class="o">=</span> <span class="n">json_decode</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">body</span><span class="p">)</span>
+            <span class="c1"># &#39;error&#39; should be something like &#39;Not Found&#39; or &#39;Bad Request&#39;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">message</span> <span class="o">=</span> <span class="n">json_content</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;error&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+            <span class="c1"># Some error responses give additional info.</span>
+            <span class="c1"># For example, a 400 Bad Request might say &quot;metricId is required&quot;</span>
+            <span class="k">if</span> <span class="s2">&quot;message&quot;</span> <span class="ow">in</span> <span class="n">json_content</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">message</span> <span class="o">+=</span> <span class="s2">&quot;: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">json_content</span><span class="p">[</span><span class="s2">&quot;message&quot;</span><span class="p">])</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="c1"># If the error message can&#39;t be parsed, fall back to a generic &quot;giving up&quot; message.</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;Giving up on </span><span class="si">{}</span><span class="s2"> after </span><span class="si">{}</span><span class="s2"> </span><span class="si">{}</span><span class="s2">: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">retry_count</span><span class="p">,</span>
+                <span class="s2">&quot;retry&quot;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">retry_count</span> <span class="o">==</span> <span class="mi">1</span> <span class="k">else</span> <span class="s2">&quot;retries&quot;</span><span class="p">,</span>
+                <span class="n">response</span><span class="p">,</span>
+            <span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">GroClient</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;API client with stateful authentication for lib functions and extra convenience methods.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">api_host</span><span class="p">,</span> <span class="n">access_token</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">api_host</span> <span class="o">=</span> <span class="n">api_host</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">access_token</span> <span class="o">=</span> <span class="n">access_token</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span> <span class="o">=</span> <span class="n">lib</span><span class="o">.</span><span class="n">get_default_logger</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_data_series_list</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>  <span class="c1"># all that have been added</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_data_series_queue</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># added but not loaded in data frame</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_data_frame</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># Each GroClient has its own IOLoop and AsyncHTTPClient.</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_ioloop</span> <span class="o">=</span> <span class="n">IOLoop</span><span class="p">()</span>
+            <span class="c1"># Note: force_instance is needed to disable Tornado&#39;s</span>
+            <span class="c1"># pseudo-singleton AsyncHTTPClient caching behavior.</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_async_http_client</span> <span class="o">=</span> <span class="n">AsyncHTTPClient</span><span class="p">(</span><span class="n">force_instance</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                <span class="s2">&quot;Unable to initialize event loop, async methods disabled: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_async_http_client</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_ioloop</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="fm">__del__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_async_http_client</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ioloop</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ioloop</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">get_logger</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span>
+
+    <span class="nd">@gen</span><span class="o">.</span><span class="n">coroutine</span>
+    <span class="k">def</span> <span class="nf">async_get_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">base_log_record</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">route</span><span class="o">=</span><span class="n">url</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">)</span>
+
+        <span class="k">def</span> <span class="nf">log_request</span><span class="p">(</span><span class="n">start_time</span><span class="p">,</span> <span class="n">retry_count</span><span class="p">,</span> <span class="n">msg</span><span class="p">,</span> <span class="n">status_code</span><span class="p">):</span>
+            <span class="n">elapsed_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
+            <span class="n">log_record</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">base_log_record</span><span class="p">)</span>
+            <span class="n">log_record</span><span class="p">[</span><span class="s2">&quot;elapsed_time_in_ms&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1000</span> <span class="o">*</span> <span class="n">elapsed_time</span>
+            <span class="n">log_record</span><span class="p">[</span><span class="s2">&quot;retry_count&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">retry_count</span>
+            <span class="n">log_record</span><span class="p">[</span><span class="s2">&quot;status_code&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">status_code</span>
+            <span class="k">if</span> <span class="n">status_code</span> <span class="o">==</span> <span class="mi">200</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="n">extra</span><span class="o">=</span><span class="n">log_record</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="n">extra</span><span class="o">=</span><span class="n">log_record</span><span class="p">)</span>
+
+        <span class="sd">&quot;&quot;&quot;General &#39;make api request&#39; function.</span>
+
+<span class="sd">        Assigns headers and builds in retries and logging.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+
+        <span class="c1"># append version info</span>
+        <span class="n">headers</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">lib</span><span class="o">.</span><span class="n">get_version_info</span><span class="p">())</span>
+
+        <span class="c1"># Initialize to -1 so first attempt will be retry 0</span>
+        <span class="n">retry_count</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+        <span class="k">while</span> <span class="n">retry_count</span> <span class="o">&lt;=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">MAX_RETRIES</span><span class="p">:</span>
+            <span class="n">retry_count</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+            <span class="n">http_request</span> <span class="o">=</span> <span class="n">HTTPRequest</span><span class="p">(</span>
+                <span class="s2">&quot;</span><span class="si">{url}</span><span class="s2">?</span><span class="si">{params}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="n">url</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">urlencode</span><span class="p">(</span><span class="n">params</span><span class="p">)),</span>
+                <span class="n">method</span><span class="o">=</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span>
+                <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">,</span>
+                <span class="n">request_timeout</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">TIMEOUT</span><span class="p">,</span>
+                <span class="n">connect_timeout</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">TIMEOUT</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">response</span> <span class="o">=</span> <span class="k">yield</span> <span class="bp">self</span><span class="o">.</span><span class="n">_async_http_client</span><span class="o">.</span><span class="n">fetch</span><span class="p">(</span><span class="n">http_request</span><span class="p">)</span>
+                    <span class="n">status_code</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">code</span>
+                <span class="k">except</span> <span class="n">HTTPError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                    <span class="c1"># Catch non-200 codes that aren&#39;t errors</span>
+                    <span class="n">status_code</span> <span class="o">=</span> <span class="n">e</span><span class="o">.</span><span class="n">code</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="s2">&quot;code&quot;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+                    <span class="k">if</span> <span class="n">status_code</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">204</span><span class="p">,</span> <span class="mi">206</span><span class="p">]:</span>
+                        <span class="n">log_msg</span> <span class="o">=</span> <span class="p">{</span><span class="mi">204</span><span class="p">:</span> <span class="s2">&quot;No Content&quot;</span><span class="p">,</span> <span class="mi">206</span><span class="p">:</span> <span class="s2">&quot;Partial Content&quot;</span><span class="p">}[</span>
+                            <span class="n">status_code</span>
+                        <span class="p">]</span>
+                        <span class="n">response</span> <span class="o">=</span> <span class="n">e</span><span class="o">.</span><span class="n">response</span>
+                        <span class="n">log_request</span><span class="p">(</span><span class="n">start_time</span><span class="p">,</span> <span class="n">retry_count</span><span class="p">,</span> <span class="n">log_msg</span><span class="p">,</span> <span class="n">status_code</span><span class="p">)</span>
+                        <span class="c1"># Do not retry.</span>
+                    <span class="k">elif</span> <span class="n">status_code</span> <span class="o">==</span> <span class="mi">301</span><span class="p">:</span>
+                        <span class="n">redirected_ids</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">))[</span>
+                            <span class="s2">&quot;data&quot;</span>
+                        <span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+                        <span class="n">new_params</span> <span class="o">=</span> <span class="n">lib</span><span class="o">.</span><span class="n">redirect</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">redirected_ids</span><span class="p">)</span>
+                        <span class="n">log_request</span><span class="p">(</span>
+                            <span class="n">start_time</span><span class="p">,</span>
+                            <span class="n">retry_count</span><span class="p">,</span>
+                            <span class="s2">&quot;Redirecting </span><span class="si">{}</span><span class="s2"> to </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">new_params</span><span class="p">),</span>
+                            <span class="n">status_code</span><span class="p">,</span>
+                        <span class="p">)</span>
+                        <span class="n">params</span> <span class="o">=</span> <span class="n">new_params</span>
+                        <span class="k">continue</span>  <span class="c1"># retry</span>
+                    <span class="k">else</span><span class="p">:</span>  <span class="c1"># Otherwise, propagate to error handling</span>
+                        <span class="k">raise</span> <span class="n">e</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="c1"># HTTPError raised when there&#39;s a non-200 status code</span>
+                <span class="c1"># socket.gaio error raised when there&#39;s a connection error</span>
+                <span class="n">response</span> <span class="o">=</span> <span class="n">e</span><span class="o">.</span><span class="n">response</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="s2">&quot;response&quot;</span><span class="p">)</span> <span class="k">else</span> <span class="n">e</span>
+                <span class="n">status_code</span> <span class="o">=</span> <span class="n">e</span><span class="o">.</span><span class="n">code</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="s2">&quot;code&quot;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+                <span class="n">error_msg</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="n">e</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">error</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="nb">hasattr</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="s2">&quot;response&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">response</span><span class="p">,</span> <span class="s2">&quot;error&quot;</span><span class="p">))</span>
+                    <span class="k">else</span> <span class="n">e</span>
+                <span class="p">)</span>
+                <span class="n">log_request</span><span class="p">(</span><span class="n">start_time</span><span class="p">,</span> <span class="n">retry_count</span><span class="p">,</span> <span class="n">error_msg</span><span class="p">,</span> <span class="n">status_code</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">status_code</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">429</span><span class="p">,</span> <span class="mi">500</span><span class="p">,</span> <span class="mi">502</span><span class="p">,</span> <span class="mi">503</span><span class="p">,</span> <span class="mi">504</span><span class="p">]:</span>
+                    <span class="c1"># First retry is immediate.</span>
+                    <span class="c1"># After that, exponential backoff before retrying.</span>
+                    <span class="k">if</span> <span class="n">retry_count</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">2</span> <span class="o">**</span> <span class="n">retry_count</span><span class="p">)</span>
+                    <span class="k">continue</span>
+                <span class="k">elif</span> <span class="n">status_code</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">400</span><span class="p">,</span> <span class="mi">401</span><span class="p">,</span> <span class="mi">402</span><span class="p">,</span> <span class="mi">404</span><span class="p">]:</span>
+                    <span class="k">break</span>  <span class="c1"># Do not retry. Go right to raising an Exception.</span>
+
+            <span class="c1"># Request was successful</span>
+            <span class="n">log_request</span><span class="p">(</span><span class="n">start_time</span><span class="p">,</span> <span class="n">retry_count</span><span class="p">,</span> <span class="s2">&quot;OK&quot;</span><span class="p">,</span> <span class="n">status_code</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">gen</span><span class="o">.</span><span class="n">Return</span><span class="p">(</span>
+                <span class="n">json_decode</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">body</span><span class="p">)</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="s2">&quot;body&quot;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+            <span class="p">)</span>
+
+        <span class="c1"># Retries failed. Raise exception</span>
+        <span class="k">raise</span> <span class="n">BatchError</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">retry_count</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">batch_async_queue</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">,</span> <span class="n">batched_args</span><span class="p">,</span> <span class="n">output_list</span><span class="p">,</span> <span class="n">map_result</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Asynchronously call func.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        func : function</span>
+<span class="sd">            The function to be batched. Typically a Client method.</span>
+<span class="sd">        batched_args : list of dicts</span>
+<span class="sd">            Inputs</span>
+<span class="sd">        output_list : any, optional</span>
+<span class="sd">            A custom accumulator to use in map_result. For example: may pass in a non-empty list</span>
+<span class="sd">            to append results to it, or may pass in a pandas dataframe, etc. By default, is a list</span>
+<span class="sd">            of n 0s, where n is the length of batched_args.</span>
+<span class="sd">        map_result : function, optional</span>
+<span class="sd">            Function to apply changes to individual requests&#39; responses before returning. Must</span>
+<span class="sd">            return an accumulator, like a map() function.</span>
+<span class="sd">            Takes 4 params:</span>
+<span class="sd">            1. the index in batched_args</span>
+<span class="sd">            2. the element from batched_args</span>
+<span class="sd">            3. the result from that input</span>
+<span class="sd">            4. `output_list`. The accumulator of all results</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="p">(</span>
+            <span class="nb">type</span><span class="p">(</span><span class="n">batched_args</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">list</span>
+        <span class="p">),</span> <span class="s2">&quot;Only argument to a batch async decorated function should be a </span><span class="se">\</span>
+<span class="s2">            list of a list of the individual non-keyword arguments being </span><span class="se">\</span>
+<span class="s2">            passed to the original function.&quot;</span>
+
+        <span class="c1"># Wrap output_list in an object so it can be modified within inner functions&#39; scope</span>
+        <span class="c1"># In Python 3, can accomplish the same thing with `nonlocal` keyword.</span>
+        <span class="n">output_data</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">if</span> <span class="n">output_list</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">output_data</span><span class="p">[</span><span class="s2">&quot;result&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">batched_args</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">output_data</span><span class="p">[</span><span class="s2">&quot;result&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">output_list</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">map_result</span><span class="p">:</span>
+            <span class="c1"># Default map_result function separates output by index of the query. For example:</span>
+            <span class="c1"># batched_args: [exports of corn, exports of soybeans]</span>
+            <span class="c1"># accumulator: [[corn datapoint, corn datapoint],</span>
+            <span class="c1">#               [soybean data point, soybean data point]]</span>
+            <span class="k">def</span> <span class="nf">map_result</span><span class="p">(</span><span class="n">idx</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="n">response</span><span class="p">,</span> <span class="n">accumulator</span><span class="p">):</span>
+                <span class="n">accumulator</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">response</span>
+                <span class="k">return</span> <span class="n">accumulator</span>
+
+        <span class="n">q</span> <span class="o">=</span> <span class="n">Queue</span><span class="p">()</span>
+
+        <span class="nd">@gen</span><span class="o">.</span><span class="n">coroutine</span>
+        <span class="k">def</span> <span class="nf">consumer</span><span class="p">():</span>
+            <span class="sd">&quot;&quot;&quot;Execute func on all items in queue asynchronously.&quot;&quot;&quot;</span>
+            <span class="k">while</span> <span class="n">q</span><span class="o">.</span><span class="n">qsize</span><span class="p">():</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">idx</span><span class="p">,</span> <span class="n">item</span> <span class="o">=</span> <span class="n">q</span><span class="o">.</span><span class="n">get</span><span class="p">()</span><span class="o">.</span><span class="n">result</span><span class="p">()</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Doing work on </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">idx</span><span class="p">))</span>
+                    <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">item</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">dict</span><span class="p">:</span>
+                        <span class="c1"># Assume that dict types should be unpacked as kwargs</span>
+                        <span class="n">result</span> <span class="o">=</span> <span class="k">yield</span> <span class="n">func</span><span class="p">(</span><span class="o">**</span><span class="n">item</span><span class="p">)</span>
+                    <span class="k">elif</span> <span class="nb">type</span><span class="p">(</span><span class="n">item</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">list</span><span class="p">:</span>
+                        <span class="c1"># Assume that list types should be unpacked as positional args</span>
+                        <span class="n">result</span> <span class="o">=</span> <span class="k">yield</span> <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">item</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">result</span> <span class="o">=</span> <span class="k">yield</span> <span class="n">func</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+                    <span class="n">output_data</span><span class="p">[</span><span class="s2">&quot;result&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">map_result</span><span class="p">(</span>
+                        <span class="n">idx</span><span class="p">,</span> <span class="n">item</span><span class="p">,</span> <span class="n">result</span><span class="p">,</span> <span class="n">output_data</span><span class="p">[</span><span class="s2">&quot;result&quot;</span><span class="p">]</span>
+                    <span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Done with </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">idx</span><span class="p">))</span>
+                    <span class="n">q</span><span class="o">.</span><span class="n">task_done</span><span class="p">()</span>
+                <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+                    <span class="c1"># Cease processing</span>
+                    <span class="c1"># IOLoop raises &quot;Operation timed out after None seconds&quot;</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_ioloop</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_ioloop</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+        <span class="k">def</span> <span class="nf">producer</span><span class="p">():</span>
+            <span class="sd">&quot;&quot;&quot;Immediately enqueue the whole batch of requests.&quot;&quot;&quot;</span>
+            <span class="n">lasttime</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">item</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">batched_args</span><span class="p">):</span>
+                <span class="n">q</span><span class="o">.</span><span class="n">put</span><span class="p">((</span><span class="n">idx</span><span class="p">,</span> <span class="n">item</span><span class="p">))</span>
+            <span class="n">elapsed</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">lasttime</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Queued </span><span class="si">{}</span><span class="s2"> requests in </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">q</span><span class="o">.</span><span class="n">qsize</span><span class="p">(),</span> <span class="n">elapsed</span><span class="p">))</span>
+
+        <span class="nd">@gen</span><span class="o">.</span><span class="n">coroutine</span>
+        <span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+            <span class="c1"># Start consumer without waiting (since it never finishes).</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">MAX_QUERIES_PER_SECOND</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_ioloop</span><span class="o">.</span><span class="n">spawn_callback</span><span class="p">(</span><span class="n">consumer</span><span class="p">)</span>
+            <span class="n">producer</span><span class="p">()</span>  <span class="c1"># Wait for producer to put all tasks.</span>
+            <span class="k">yield</span> <span class="n">q</span><span class="o">.</span><span class="n">join</span><span class="p">()</span>  <span class="c1"># Wait for consumer to finish all tasks.</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ioloop</span><span class="o">.</span><span class="n">run_sync</span><span class="p">(</span><span class="n">main</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">output_data</span><span class="p">[</span><span class="s2">&quot;result&quot;</span><span class="p">]</span>
+
+    <span class="c1"># TODO: deprecate  the following  two methods, standardize  on one</span>
+    <span class="c1"># approach with get_data_points and get_df</span>
+    <span class="nd">@gen</span><span class="o">.</span><span class="n">coroutine</span>
+    <span class="k">def</span> <span class="nf">get_data_points_generator</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">selection</span><span class="p">):</span>
+        <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;authorization&quot;</span><span class="p">:</span> <span class="s2">&quot;Bearer &quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="p">}</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;/&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s2">&quot;https:&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_host</span><span class="p">,</span> <span class="s2">&quot;v2/data&quot;</span><span class="p">])</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="n">lib</span><span class="o">.</span><span class="n">get_data_call_params</span><span class="p">(</span><span class="o">**</span><span class="n">selection</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">list_of_series_points</span> <span class="o">=</span> <span class="k">yield</span> <span class="bp">self</span><span class="o">.</span><span class="n">async_get_data</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+            <span class="n">include_historical</span> <span class="o">=</span> <span class="n">selection</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;include_historical&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+            <span class="n">include_available_date</span> <span class="o">=</span> <span class="n">selection</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;show_available_date&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+            <span class="n">points</span> <span class="o">=</span> <span class="n">lib</span><span class="o">.</span><span class="n">list_of_series_to_single_series</span><span class="p">(</span>
+                <span class="n">list_of_series_points</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="n">include_historical</span><span class="p">,</span> <span class="n">include_available_date</span>
+            <span class="p">)</span>
+            <span class="k">raise</span> <span class="n">gen</span><span class="o">.</span><span class="n">Return</span><span class="p">(</span><span class="n">points</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">BatchError</span> <span class="k">as</span> <span class="n">b</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">gen</span><span class="o">.</span><span class="n">Return</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">batch_async_get_data_points</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">batched_args</span><span class="p">,</span> <span class="n">output_list</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">map_result</span><span class="o">=</span><span class="kc">None</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Make many :meth:`~get_data_points` requests asynchronously.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        batched_args : list of dicts</span>
+<span class="sd">            Each dict should be a `selections` object like would be passed to</span>
+<span class="sd">            :meth:`~get_data_points`.</span>
+
+<span class="sd">            Example::</span>
+
+<span class="sd">                input_list = [</span>
+<span class="sd">                    {&#39;metric_id&#39;: 860032, &#39;item_id&#39;: 274, &#39;region_id&#39;: 1215, &#39;frequency_id&#39;: 9, &#39;source_id&#39;: 2},</span>
+<span class="sd">                    {&#39;metric_id&#39;: 860032, &#39;item_id&#39;: 270, &#39;region_id&#39;: 1215, &#39;frequency_id&#39;: 9, &#39;source_id&#39;: 2}</span>
+<span class="sd">                ]</span>
+
+<span class="sd">        output_list : any, optional</span>
+<span class="sd">            A custom accumulator to use in map_result. For example: may pass in a non-empty list</span>
+<span class="sd">            to append results to it, or may pass in a pandas dataframe, etc. By default, is a list</span>
+<span class="sd">            of n 0s, where n is the length of batched_args.</span>
+<span class="sd">        map_result : function, optional</span>
+<span class="sd">            Function to apply changes to individual requests&#39; responses before returning.</span>
+<span class="sd">            Takes 4 params:</span>
+<span class="sd">            1. the index in batched_args</span>
+<span class="sd">            2. the element from batched_args</span>
+<span class="sd">            3. the result from that input</span>
+<span class="sd">            4. `output_list`. The accumulator of all results</span>
+
+<span class="sd">            Example::</span>
+
+<span class="sd">                output_list = []</span>
+
+<span class="sd">                # Merge all responses into a single list</span>
+<span class="sd">                def map_response(inputIndex, inputObject, response, output_list):</span>
+<span class="sd">                    output_list += response</span>
+<span class="sd">                    return output_list</span>
+
+<span class="sd">                batch_output = client.batch_async_get_data_points(input_list,</span>
+<span class="sd">                                                                  output_list=output_list,</span>
+<span class="sd">                                                                  map_result=map_response)</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        any</span>
+<span class="sd">            By default, returns a list of lists of data points. Likely either objects or lists of</span>
+<span class="sd">            dictionaries. If using a custom map_result function, can return any type.</span>
+
+<span class="sd">            Example of the default output format::</span>
+
+<span class="sd">                [</span>
+<span class="sd">                    [</span>
+<span class="sd">                        {&#39;metric_id&#39;: 1, &#39;item_id&#39;: 2, &#39;start_date&#39;: 2000-01-01, &#39;value&#39;: 41, ...},</span>
+<span class="sd">                        {&#39;metric_id&#39;: 1, &#39;item_id&#39;: 2, &#39;start_date&#39;: 2001-01-01, &#39;value&#39;: 39, ...},</span>
+<span class="sd">                        {&#39;metric_id&#39;: 1, &#39;item_id&#39;: 2, &#39;start_date&#39;: 2002-01-01, &#39;value&#39;: 50, ...},</span>
+<span class="sd">                    ],</span>
+<span class="sd">                    [</span>
+<span class="sd">                        {&#39;metric_id&#39;: 1, &#39;item_id&#39;: 6, &#39;start_date&#39;: 2000-01-01, &#39;value&#39;: 12, ...},</span>
+<span class="sd">                        {&#39;metric_id&#39;: 1, &#39;item_id&#39;: 6, &#39;start_date&#39;: 2001-01-01, &#39;value&#39;: 13, ...},</span>
+<span class="sd">                        {&#39;metric_id&#39;: 1, &#39;item_id&#39;: 6, &#39;start_date&#39;: 2002-01-01, &#39;value&#39;: 4, ...},</span>
+<span class="sd">                    ],</span>
+<span class="sd">                ]</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">batch_async_queue</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">get_data_points_generator</span><span class="p">,</span> <span class="n">batched_args</span><span class="p">,</span> <span class="n">output_list</span><span class="p">,</span> <span class="n">map_result</span>
+        <span class="p">)</span>
+
+    <span class="nd">@gen</span><span class="o">.</span><span class="n">coroutine</span>
+    <span class="k">def</span> <span class="nf">async_rank_series_by_source</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">selections_list</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get all sources, in ranked order, for a given selection.&quot;&quot;&quot;</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rank_series_by_source</span><span class="p">(</span><span class="n">selections_list</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="n">gen</span><span class="o">.</span><span class="n">Return</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">response</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">batch_async_rank_series_by_source</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">batched_args</span><span class="p">,</span> <span class="n">output_list</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">map_result</span><span class="o">=</span><span class="kc">None</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Perform multiple rank_series_by_source requests asynchronously.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        batched_args : list of lists of dicts</span>
+<span class="sd">            See :meth:`~.rank_series_by_source` `selections_list`. A list of those lists.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">batch_async_queue</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">async_rank_series_by_source</span><span class="p">,</span> <span class="n">batched_args</span><span class="p">,</span> <span class="n">output_list</span><span class="p">,</span> <span class="n">map_result</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">get_available</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;List the first 5000 available entities of the given type.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        entity_type : {&#39;metrics&#39;, &#39;items&#39;, &#39;regions&#39;}</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        data : list of dicts</span>
+
+<span class="sd">            Example::</span>
+
+<span class="sd">                [ { &#39;id&#39;: 0, &#39;contains&#39;: [1, 2, 3], &#39;name&#39;: &#39;World&#39;, &#39;level&#39;: 1},</span>
+<span class="sd">                  { &#39;id&#39;: 1, &#39;contains&#39;: [4, 5, 6], &#39;name&#39;: &#39;Asia&#39;, &#39;level&#39;: 2},</span>
+<span class="sd">                ... ]</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">lib</span><span class="o">.</span><span class="n">get_available</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_host</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">list_available</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">selected_entities</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;List available entities given some selected entities.</span>
+
+<span class="sd">        Given one or more selections, return entities combinations that have</span>
+<span class="sd">        data for the given selections.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        selected_entities : dict</span>
+
+<span class="sd">            Example::</span>
+
+<span class="sd">                { &#39;metric_id&#39;: 123, &#39;item_id&#39;: 456, &#39;source_id&#39;: 7 }</span>
+
+<span class="sd">            Keys may include: metric_id, item_id, region_id, partner_region_id,</span>
+<span class="sd">            source_id, frequency_id</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        list of dicts</span>
+
+<span class="sd">            Example::</span>
+
+<span class="sd">                [ { &#39;metric_id&#39;: 11078, &#39;metric_name&#39;: &#39;Export Value (currency)&#39;,</span>
+<span class="sd">                    &#39;item_id&#39;: 274, &#39;item_name&#39;: &#39;Corn&#39;,</span>
+<span class="sd">                    &#39;region_id&#39;: 1215, &#39;region_name&#39;: &#39;United States&#39;,</span>
+<span class="sd">                    &#39;source_id&#39;: 15, &#39;source_name&#39;: &#39;USDA GATS&#39; },</span>
+<span class="sd">                  { ... },</span>
+<span class="sd">                ... ]</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">lib</span><span class="o">.</span><span class="n">list_available</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_host</span><span class="p">,</span> <span class="n">selected_entities</span><span class="p">)</span>
+
+<div class="viewcode-block" id="GroClient.lookup"><a class="viewcode-back" href="../../api.html#groclient.GroClient.lookup">[docs]</a>    <span class="k">def</span> <span class="nf">lookup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">,</span> <span class="n">entity_ids</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Retrieve details about a given id or list of ids of type entity_type.</span>
+
+<span class="sd">        https://developers.gro-intelligence.com/gro-ontology.html</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        entity_type : { &#39;metrics&#39;, &#39;items&#39;, &#39;regions&#39;, &#39;frequencies&#39;, &#39;sources&#39;, &#39;units&#39; }</span>
+<span class="sd">        entity_ids : int or list of ints</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        dict or dict of dicts</span>
+<span class="sd">            A dict with entity details is returned if an integer is given for entity_ids.</span>
+<span class="sd">            A dict of dicts with entity details, keyed by id, is returned if a list of integers is</span>
+<span class="sd">            given for entity_ids.</span>
+
+<span class="sd">            Example::</span>
+
+<span class="sd">                { &#39;id&#39;: 274,</span>
+<span class="sd">                  &#39;contains&#39;: [779, 780, ...]</span>
+<span class="sd">                  &#39;name&#39;: &#39;Corn&#39;,</span>
+<span class="sd">                  &#39;definition&#39;: &#39;The seeds of the widely cultivated corn plant &lt;i&gt;Zea mays&lt;/i&gt;,&#39;</span>
+<span class="sd">                                &#39; which is one of the world\&#39;s most popular grains.&#39; }</span>
+
+<span class="sd">            Example::</span>
+
+<span class="sd">                {   &#39;274&#39;: {</span>
+<span class="sd">                        &#39;id&#39;: 274,</span>
+<span class="sd">                        &#39;contains&#39;: [779, 780, ...],</span>
+<span class="sd">                        &#39;belongsTo&#39;: [4138, 8830, ...],</span>
+<span class="sd">                        &#39;name&#39;: &#39;Corn&#39;,</span>
+<span class="sd">                        &#39;definition&#39;: &#39;The seeds of the widely cultivated corn plant&#39;</span>
+<span class="sd">                                      &#39; &lt;i&gt;Zea mays&lt;/i&gt;, which is one of the world\&#39;s most popular&#39;</span>
+<span class="sd">                                      &#39; grains.&#39;</span>
+<span class="sd">                    },</span>
+<span class="sd">                    &#39;270&#39;: {</span>
+<span class="sd">                        &#39;id&#39;: 270,</span>
+<span class="sd">                        &#39;contains&#39;: [1737, 7401, ...],</span>
+<span class="sd">                        &#39;belongsTo&#39;: [8830, 9053, ...],</span>
+<span class="sd">                        &#39;name&#39;: &#39;Soybeans&#39;,</span>
+<span class="sd">                        &#39;definition&#39;: &#39;The seeds and harvested crops of plants belonging to the&#39;</span>
+<span class="sd">                                      &#39; species &lt;i&gt;Glycine max&lt;/i&gt; that are used in the production&#39;</span>
+<span class="sd">                                      &#39; of oil and both human and livestock consumption.&#39;</span>
+<span class="sd">                    }</span>
+<span class="sd">                }</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">lib</span><span class="o">.</span><span class="n">lookup</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_host</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">,</span> <span class="n">entity_ids</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">lookup_unit_abbreviation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">unit_id</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">lookup</span><span class="p">(</span><span class="s2">&quot;units&quot;</span><span class="p">,</span> <span class="n">unit_id</span><span class="p">)[</span><span class="s2">&quot;abbreviation&quot;</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">get_allowed_units</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">metric_id</span><span class="p">,</span> <span class="n">item_id</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get a list of unit that can be used with the given metric (and</span>
+<span class="sd">        optionally, item).</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        metric_id: int</span>
+<span class="sd">        item_id: int, optional.</span>
+
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        list of unit ids</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">lib</span><span class="o">.</span><span class="n">get_allowed_units</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_host</span><span class="p">,</span> <span class="n">metric_id</span><span class="p">,</span> <span class="n">item_id</span>
+        <span class="p">)</span>
+
+<div class="viewcode-block" id="GroClient.get_data_series"><a class="viewcode-back" href="../../api.html#groclient.GroClient.get_data_series">[docs]</a>    <span class="k">def</span> <span class="nf">get_data_series</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">selection</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get available data series for the given selections.</span>
+
+<span class="sd">        https://developers.gro-intelligence.com/data-series-definition.html</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        metric_id : integer, optional</span>
+<span class="sd">        item_id : integer, optional</span>
+<span class="sd">        region_id : integer, optional</span>
+<span class="sd">        partner_region_id : integer, optional</span>
+<span class="sd">        source_id : integer, optional</span>
+<span class="sd">        frequency_id : integer, optional</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        list of dicts</span>
+
+<span class="sd">            Example::</span>
+
+<span class="sd">                [{ &#39;metric_id&#39;: 2020032, &#39;metric_name&#39;: &#39;Seed Use&#39;,</span>
+<span class="sd">                   &#39;item_id&#39;: 274, &#39;item_name&#39;: &#39;Corn&#39;,</span>
+<span class="sd">                   &#39;region_id&#39;: 1215, &#39;region_name&#39;: &#39;United States&#39;,</span>
+<span class="sd">                   &#39;source_id&#39;: 24, &#39;source_name&#39;: &#39;USDA FEEDGRAINS&#39;,</span>
+<span class="sd">                   &#39;frequency_id&#39;: 7,</span>
+<span class="sd">                   &#39;start_date&#39;: &#39;1975-03-01T00:00:00.000Z&#39;,</span>
+<span class="sd">                   &#39;end_date&#39;: &#39;2018-05-31T00:00:00.000Z&#39;</span>
+<span class="sd">                 }, { ... }, ... ]</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">lib</span><span class="o">.</span><span class="n">get_data_series</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_host</span><span class="p">,</span> <span class="o">**</span><span class="n">selection</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="GroClient.search"><a class="viewcode-back" href="../../api.html#groclient.GroClient.search">[docs]</a>    <span class="k">def</span> <span class="nf">search</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">,</span> <span class="n">search_terms</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Search for the given search term. Better matches appear first.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        entity_type : { &#39;metrics&#39;, &#39;items&#39;, &#39;regions&#39;, &#39;sources&#39; }</span>
+<span class="sd">        search_terms : string</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        list of dicts</span>
+
+<span class="sd">            Example::</span>
+
+<span class="sd">                [{&#39;id&#39;: 5604}, {&#39;id&#39;: 10204}, {&#39;id&#39;: 10210}, ....]</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">lib</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_host</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">,</span> <span class="n">search_terms</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="GroClient.search_and_lookup"><a class="viewcode-back" href="../../api.html#groclient.GroClient.search_and_lookup">[docs]</a>    <span class="k">def</span> <span class="nf">search_and_lookup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">,</span> <span class="n">search_terms</span><span class="p">,</span> <span class="n">num_results</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Search for the given search terms and look up their details.</span>
+
+<span class="sd">        For each result, yield a dict of the entity and it&#39;s properties.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        entity_type : { &#39;metrics&#39;, &#39;items&#39;, &#39;regions&#39;, &#39;sources&#39; }</span>
+<span class="sd">        search_terms : string</span>
+<span class="sd">        num_results: int</span>
+<span class="sd">            Maximum number of results to return. Defaults to 10.</span>
+
+<span class="sd">        Yields</span>
+<span class="sd">        ------</span>
+<span class="sd">        dict</span>
+<span class="sd">            Result from :meth:`~.search` passed to :meth:`~.lookup` to get additional details.</span>
+
+<span class="sd">            Example::</span>
+
+<span class="sd">                { &#39;id&#39;: 274,</span>
+<span class="sd">                  &#39;contains&#39;: [779, 780, ...],</span>
+<span class="sd">                  &#39;name&#39;: &#39;Corn&#39;,</span>
+<span class="sd">                  &#39;definition&#39;: &#39;The seeds of the widely cultivated...&#39; }</span>
+
+<span class="sd">            See output of :meth:`~.lookup`. Note that as with :meth:`~.search`, the first result is</span>
+<span class="sd">            the best match for the given search term(s).</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">lib</span><span class="o">.</span><span class="n">search_and_lookup</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_host</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">,</span> <span class="n">search_terms</span><span class="p">,</span> <span class="n">num_results</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="GroClient.lookup_belongs"><a class="viewcode-back" href="../../api.html#groclient.GroClient.lookup_belongs">[docs]</a>    <span class="k">def</span> <span class="nf">lookup_belongs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">,</span> <span class="n">entity_id</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Look up details of entities containing the given entity.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        entity_type : { &#39;metrics&#39;, &#39;items&#39;, &#39;regions&#39; }</span>
+<span class="sd">        entity_id : int</span>
+
+<span class="sd">        Yields</span>
+<span class="sd">        ------</span>
+<span class="sd">        dict</span>
+<span class="sd">            Result of :meth:`~.lookup` on each entity the given entity belongs to.</span>
+
+<span class="sd">            For example: For the region &#39;United States&#39;, one yielded result will be for</span>
+<span class="sd">            &#39;North America.&#39; The format of which matches the output of :meth:`~.lookup`::</span>
+
+<span class="sd">                { &#39;id&#39;: 15,</span>
+<span class="sd">                  &#39;contains&#39;: [ 1008, 1009, 1012, 1215, ... ],</span>
+<span class="sd">                  &#39;name&#39;: &#39;North America&#39;,</span>
+<span class="sd">                  &#39;level&#39;: 2 }</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">lib</span><span class="o">.</span><span class="n">lookup_belongs</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_host</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">,</span> <span class="n">entity_id</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="GroClient.rank_series_by_source"><a class="viewcode-back" href="../../api.html#groclient.GroClient.rank_series_by_source">[docs]</a>    <span class="k">def</span> <span class="nf">rank_series_by_source</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">selections_list</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Given a list of series selections, for each unique combination excluding source, expand</span>
+<span class="sd">        to all available sources and return them in ranked order. The order corresponds to how well</span>
+<span class="sd">        that source covers the selection (metrics, items, regions, and time range and frequency).</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        selections_list : list of dicts</span>
+<span class="sd">            See the output of :meth:`~.get_data_series`.</span>
+
+<span class="sd">        Yields</span>
+<span class="sd">        ------</span>
+<span class="sd">        dict</span>
+<span class="sd">            The input selections_list, expanded out to each possible source, ordered by coverage.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">lib</span><span class="o">.</span><span class="n">rank_series_by_source</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_host</span><span class="p">,</span> <span class="n">selections_list</span>
+        <span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">get_geo_centre</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">region_id</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Given a region ID, return the geographic centre in degrees lat/lon.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        region_id : integer</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        list of dicts</span>
+
+<span class="sd">            Example::</span>
+
+<span class="sd">                [{&#39;centre&#39;: [ 39.8333, -98.5855 ], &#39;regionId&#39;: 1215, &#39;regionName&#39;: &#39;United States&#39;}]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">lib</span><span class="o">.</span><span class="n">get_geo_centre</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_host</span><span class="p">,</span> <span class="n">region_id</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">get_geojsons</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">region_id</span><span class="p">,</span> <span class="n">descendant_level</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">zoom_level</span><span class="o">=</span><span class="mi">7</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Given a region ID, return shape information in geojson, for the</span>
+<span class="sd">        region and all its descendants at the given level (if specified).</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        region_id : integer</span>
+<span class="sd">        descendant_level : integer, admin region level (2, 3, 4 or 5)</span>
+<span class="sd">        zoom_level : integer, optional(allow 1-8)</span>
+<span class="sd">            Valid if include_geojson equals True. If zoom level is specified and it is less than 6,</span>
+<span class="sd">            simplified shapefile will be returned. Otherwise, detailed shapefile will be used by default.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        list of dicts</span>
+
+<span class="sd">            Example::</span>
+
+<span class="sd">                [{  &#39;centre&#39;: [ 39.8333, -98.5855 ],</span>
+<span class="sd">                    &#39;regionId&#39;: 1215,</span>
+<span class="sd">                    &#39;regionName&#39;: &#39;United States&#39;,</span>
+<span class="sd">                    u&#39;geojson&#39;: u&#39;{&quot;type&quot;:&quot;GeometryCollection&quot;,&quot;geometries&quot;:[{&quot;type&quot;:&quot;MultiPolygon&quot;,&quot;coordinates&quot;:[[[[-155.651382446,20.1647224430001], ...]]]}]}&#39;</span>
+<span class="sd">                }]</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">lib</span><span class="o">.</span><span class="n">get_geojsons</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_host</span><span class="p">,</span> <span class="n">region_id</span><span class="p">,</span> <span class="n">descendant_level</span><span class="p">,</span> <span class="n">zoom_level</span><span class="p">)</span>
+
+<div class="viewcode-block" id="GroClient.get_geojson"><a class="viewcode-back" href="../../api.html#groclient.GroClient.get_geojson">[docs]</a>    <span class="k">def</span> <span class="nf">get_geojson</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">region_id</span><span class="p">,</span> <span class="n">zoom_level</span><span class="o">=</span><span class="mi">7</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Given a region ID, return shape information in geojson.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        region_id : integer</span>
+<span class="sd">        zoom_level : integer, optional(allow 1-8)</span>
+<span class="sd">            Valid if include_geojson equals True. If zoom level is specified and it is less than 6,</span>
+<span class="sd">            simplified shapefile will be returned. Otherwise, detailed shapefile will be used by default.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        a geojson object or None</span>
+
+<span class="sd">            Example::</span>
+
+<span class="sd">                { &#39;type&#39;: &#39;GeometryCollection&#39;,</span>
+<span class="sd">                &#39;geometries&#39;: [{&#39;type&#39;: &#39;MultiPolygon&#39;,</span>
+<span class="sd">                                &#39;coordinates&#39;: [[[[-38.394, -4.225], ...]]]}, ...]}</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">lib</span><span class="o">.</span><span class="n">get_geojson</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_host</span><span class="p">,</span> <span class="n">region_id</span><span class="p">,</span> <span class="n">zoom_level</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">get_descendant</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">entity_type</span><span class="p">,</span>
+        <span class="n">entity_id</span><span class="p">,</span>
+        <span class="n">distance</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">include_details</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Given an item, metric or region, returns all its descendants i.e.</span>
+<span class="sd">        entities that are &quot;contained&quot; in the given entity</span>
+
+<span class="sd">        Similar to :meth:~.get_descendant_regions, but also works on items and metrics. This method has</span>
+<span class="sd">        a distance parameter (which returns all nested child entities) instead of a descendant_level</span>
+<span class="sd">        parameter (which only returns child entities at a given depth/level).</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        entity_type : { &#39;metrics&#39;, &#39;items&#39;, &#39;regions&#39; }</span>
+<span class="sd">        entity_id : integer</span>
+<span class="sd">        distance: integer, optional</span>
+<span class="sd">            Return all entity contained to entity_id at maximum distance.</span>
+<span class="sd">            If not provided, get all descendants.</span>
+<span class="sd">        include_details : boolean, optional</span>
+<span class="sd">            True by default. Will perform a lookup() on each descendant  to find name,</span>
+<span class="sd">            definition, etc. If this option is set to False, only ids of descendant</span>
+<span class="sd">            entities will be returned, which makes execution significantly faster.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        list of dicts</span>
+
+<span class="sd">            Example::</span>
+
+<span class="sd">                [{</span>
+<span class="sd">                    &#39;id&#39;: 134,</span>
+<span class="sd">                    &#39;name&#39;: &#39;Cattle hides, wet-salted&#39;,</span>
+<span class="sd">                    &#39;definition&#39;: &#39;Hides and skins of domesticated cattle-animals ...&#39;,</span>
+<span class="sd">                } , {</span>
+<span class="sd">                    &#39;id&#39;: 382,</span>
+<span class="sd">                    &#39;name&#39;: &#39;Calf skins, wet-salted&#39;,</span>
+<span class="sd">                    &#39;definition&#39;: &#39;Wet-salted hides and skins of calves-animals of ...&#39;</span>
+<span class="sd">                }, ...]</span>
+
+<span class="sd">            See output of :meth:`~.lookup`</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">lib</span><span class="o">.</span><span class="n">get_descendant</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">api_host</span><span class="p">,</span>
+            <span class="n">entity_type</span><span class="p">,</span>
+            <span class="n">entity_id</span><span class="p">,</span>
+            <span class="n">distance</span><span class="p">,</span>
+            <span class="n">include_details</span><span class="p">,</span>
+        <span class="p">)</span>
+
+
+<div class="viewcode-block" id="GroClient.get_descendant_regions"><a class="viewcode-back" href="../../api.html#groclient.GroClient.get_descendant_regions">[docs]</a>    <span class="k">def</span> <span class="nf">get_descendant_regions</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">region_id</span><span class="p">,</span>
+        <span class="n">descendant_level</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">include_historical</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">include_details</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Look up details of all regions of the given level contained by a region.</span>
+
+<span class="sd">        Given any region by id, get all the descendant regions that are of the specified level.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        region_id : integer</span>
+<span class="sd">        descendant_level : integer, optional</span>
+<span class="sd">            The region level of interest. See REGION_LEVELS constant. If not provided, get all</span>
+<span class="sd">            descendants.</span>
+<span class="sd">        include_historical : boolean, optional</span>
+<span class="sd">            True by default. If False is specified, regions that only exist in historical data</span>
+<span class="sd">            (e.g. the Soviet Union) will be excluded.</span>
+<span class="sd">        include_details : boolean, optional</span>
+<span class="sd">            True by default. Will perform a lookup() on each descendant region to find name,</span>
+<span class="sd">            latitude, longitude, etc. If this option is set to False, only ids of descendant</span>
+<span class="sd">            regions will be returned, which makes execution significantly faster.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        list of dicts</span>
+
+<span class="sd">            Example::</span>
+
+<span class="sd">                [{</span>
+<span class="sd">                    &#39;id&#39;: 13100,</span>
+<span class="sd">                    &#39;contains&#39;: [139839, 139857, ...],</span>
+<span class="sd">                    &#39;name&#39;: &#39;Wisconsin&#39;,</span>
+<span class="sd">                    &#39;level&#39;: 4</span>
+<span class="sd">                } , {</span>
+<span class="sd">                    &#39;id&#39;: 13101,</span>
+<span class="sd">                    &#39;contains&#39;: [139891, 139890, ...],</span>
+<span class="sd">                    &#39;name&#39;: &#39;Wyoming&#39;,</span>
+<span class="sd">                    &#39;level&#39;: 4</span>
+<span class="sd">                }, ...]</span>
+
+<span class="sd">            See output of :meth:`~.lookup`</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">lib</span><span class="o">.</span><span class="n">get_descendant_regions</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">api_host</span><span class="p">,</span>
+            <span class="n">region_id</span><span class="p">,</span>
+            <span class="n">descendant_level</span><span class="p">,</span>
+            <span class="n">include_historical</span><span class="p">,</span>
+            <span class="n">include_details</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="GroClient.get_available_timefrequency"><a class="viewcode-back" href="../../api.html#groclient.GroClient.get_available_timefrequency">[docs]</a>    <span class="k">def</span> <span class="nf">get_available_timefrequency</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">selection</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Given a selection, return a list of frequencies and time ranges.</span>
+<span class="sd">        The results are ordered by coverage-optimized ranking.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        metric_id : integer, optional</span>
+<span class="sd">        item_id : integer, optional</span>
+<span class="sd">        region_id : integer, optional</span>
+<span class="sd">        partner_region_id : integer, optional</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        list of dicts</span>
+
+<span class="sd">            Example::</span>
+
+<span class="sd">                 [{</span>
+<span class="sd">                    &#39;start_date&#39;: &#39;2000-02-18T00:00:00.000Z&#39;,</span>
+<span class="sd">                    &#39;frequency_id&#39;: 3,</span>
+<span class="sd">                    &#39;end_date&#39;: &#39;2020-03-12T00:00:00.000Z&#39;,</span>
+<span class="sd">                    &#39;name&#39;: &#39;8-day&#39;</span>
+<span class="sd">                  }, {</span>
+<span class="sd">                    &#39;start_date&#39;: &#39;2019-09-02T00:00:00.000Z&#39;,</span>
+<span class="sd">                    &#39;frequency_id&#39;: 1,</span>
+<span class="sd">                    &#39;end_date&#39;: &#39;2020-03-09T00:00:00.000Z&#39;,</span>
+<span class="sd">                    &#39;name&#39;: u&#39;daily&#39;}, ... ]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">lib</span><span class="o">.</span><span class="n">get_available_timefrequency</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_host</span><span class="p">,</span> <span class="o">**</span><span class="n">selection</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="GroClient.get_top"><a class="viewcode-back" href="../../api.html#groclient.GroClient.get_top">[docs]</a>    <span class="k">def</span> <span class="nf">get_top</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">,</span> <span class="n">num_results</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="o">**</span><span class="n">selection</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Find the data series with the highest cumulative value for the given time range.</span>
+
+<span class="sd">        Examples::</span>
+
+<span class="sd">            # To get FAO&#39;s top 5 corn-producing countries of all time:</span>
+<span class="sd">            client.get_top(&#39;regions&#39;, metric_id=860032, item_id=274, frequency_id=9, source_id=2)</span>
+
+<span class="sd">            # To get FAO&#39;s top 5 corn-producing countries of 2014:</span>
+<span class="sd">            client.get_top(&#39;regions&#39;, metric_id=860032, item_id=274, frequency_id=9, source_id=2,</span>
+<span class="sd">                           start_date=&#39;2014-01-01&#39;, end_date=&#39;2014-12-31&#39;)</span>
+
+<span class="sd">            # To get the United States&#39; top 15 exports in the decade of 2010-2019:</span>
+<span class="sd">            client.get_top(&#39;items&#39;, num_results=15, metric_id=20032, region_id=1215, frequency_id=9,</span>
+<span class="sd">                           source_id=2, start_date=&#39;2010-01-01&#39;, end_date=&#39;2019-12-31&#39;)</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        entity_type : { &#39;items&#39;, &#39;regions&#39; }</span>
+<span class="sd">            The entity type to rank, all other selections being the same. Only items and regions</span>
+<span class="sd">            are rankable at this time.</span>
+<span class="sd">        num_results : integer, optional</span>
+<span class="sd">            How many data series to rank. Top 5 by default.</span>
+<span class="sd">        metric_id : integer</span>
+<span class="sd">        item_id : integer</span>
+<span class="sd">            Required if requesting top regions. Disallowed if requesting top items.</span>
+<span class="sd">        region_id : integer</span>
+<span class="sd">            Required if requesting top items. Disallowed if requesting top regions.</span>
+<span class="sd">        partner_region_id : integer, optional</span>
+<span class="sd">        frequency_id : integer</span>
+<span class="sd">        source_id : integer</span>
+<span class="sd">        start_date : string, optional</span>
+<span class="sd">            If not provided, the cumulative value used for ranking will include data points as far</span>
+<span class="sd">            back as the source provides.</span>
+<span class="sd">        end_date : string, optional</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        list of dicts</span>
+
+<span class="sd">            Example::</span>
+
+<span class="sd">                [</span>
+<span class="sd">                    {&#39;metricId&#39;: 860032, &#39;itemId&#39;: 274, &#39;regionId&#39;: 1215, &#39;frequencyId&#39;: 9,</span>
+<span class="sd">                     &#39;sourceId&#39;: 2, &#39;value&#39;: 400, &#39;unitId&#39;: 14},</span>
+<span class="sd">                    {&#39;metricId&#39;: 860032, &#39;itemId&#39;: 274, &#39;regionId&#39;: 1215, &#39;frequencyId&#39;: 9,</span>
+<span class="sd">                     &#39;sourceId&#39;: 2, &#39;value&#39;: 395, &#39;unitId&#39;: 14},</span>
+<span class="sd">                    {&#39;metricId&#39;: 860032, &#39;itemId&#39;: 274, &#39;regionId&#39;: 1215, &#39;frequencyId&#39;: 9,</span>
+<span class="sd">                     &#39;sourceId&#39;: 2, &#39;value&#39;: 12, &#39;unitId&#39;: 14},</span>
+<span class="sd">                ]</span>
+
+<span class="sd">            Along with the series attributes, value and unit are also given for the total cumulative</span>
+<span class="sd">            value the series are ranked by. You may then use the results to call</span>
+<span class="sd">            :meth:`~.get_data_points` to get the individual time series points.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">lib</span><span class="o">.</span><span class="n">get_top</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_host</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">,</span> <span class="n">num_results</span><span class="p">,</span> <span class="o">**</span><span class="n">selection</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="GroClient.get_df"><a class="viewcode-back" href="../../api.html#groclient.GroClient.get_df">[docs]</a>    <span class="k">def</span> <span class="nf">get_df</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">show_revisions</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">show_available_date</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">index_by_series</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">include_names</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Call :meth:`~.get_data_points` for each saved data series and return as a combined</span>
+<span class="sd">        dataframe.</span>
+
+<span class="sd">        Note you must have first called either :meth:`~.add_data_series` or</span>
+<span class="sd">        :meth:`~.add_single_data_series` to save data series into the GroClient&#39;s data_series_list.</span>
+<span class="sd">        You can inspect the client&#39;s saved list using :meth:`~.get_data_series_list`.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">            index_by_series : boolean, optional</span>
+<span class="sd">               If set, the dataframe is indexed by series. See https://developers.gro-intelligence.com/data-series-definition.html</span>
+<span class="sd">            include_names : boolean, optional</span>
+<span class="sd">               If set, the dataframe will have additional columns with names of entities.</span>
+<span class="sd">               Note that this will increase the size of the dataframe by about 5x.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        pandas.DataFrame</span>
+<span class="sd">            The results to :meth:`~.get_data_points` for all the saved series, appended together</span>
+<span class="sd">            into a single dataframe.</span>
+<span class="sd">            See https://developers.gro-intelligence.com/data-point-definition.html</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_series_queue</span><span class="p">:</span>
+            <span class="n">data_series</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_series_queue</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">show_revisions</span><span class="p">:</span>
+                <span class="n">data_series</span><span class="p">[</span><span class="s2">&quot;show_revisions&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">if</span> <span class="n">show_available_date</span><span class="p">:</span>
+                <span class="n">data_series</span><span class="p">[</span><span class="s2">&quot;show_available_date&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_points_to_df</span><span class="p">(</span>
+                <span class="kc">None</span><span class="p">,</span> <span class="n">data_series</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_data_points</span><span class="p">(</span><span class="o">**</span><span class="n">data_series</span><span class="p">)</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">include_names</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_frame</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+            <span class="k">def</span> <span class="nf">get_name</span><span class="p">(</span><span class="n">entity_type_id</span><span class="p">,</span> <span class="n">entity_id</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">lookup</span><span class="p">(</span><span class="n">ENTITY_KEY_TO_TYPE</span><span class="p">[</span><span class="n">entity_type_id</span><span class="p">],</span> <span class="n">entity_id</span><span class="p">)[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span>
+
+            <span class="k">for</span> <span class="n">entity_type_id</span> <span class="ow">in</span> <span class="n">DATA_SERIES_UNIQUE_TYPES_ID</span> <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;unit_id&#39;</span><span class="p">]:</span>
+                <span class="n">name_col</span> <span class="o">=</span> <span class="n">entity_type_id</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;_id&#39;</span><span class="p">,</span> <span class="s1">&#39;_name&#39;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_data_frame</span><span class="p">[</span><span class="n">name_col</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_frame</span><span class="p">[</span><span class="n">entity_type_id</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">partial</span><span class="p">(</span><span class="n">get_name</span><span class="p">,</span> <span class="n">entity_type_id</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="n">index_by_series</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_frame</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+            <span class="n">idx_columns</span> <span class="o">=</span> <span class="n">intersect</span><span class="p">(</span><span class="n">DATA_SERIES_UNIQUE_TYPES_ID</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_frame</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_data_frame</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="n">idx_columns</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_data_frame</span><span class="o">.</span><span class="n">sort_index</span><span class="p">(</span><span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_frame</span></div>
+
+    <span class="k">def</span> <span class="nf">async_get_df</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">batch_async_get_data_points</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_data_series_queue</span><span class="p">,</span>
+            <span class="n">output_list</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_data_frame</span><span class="p">,</span>
+            <span class="n">map_result</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">add_points_to_df</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_frame</span>
+
+    <span class="k">def</span> <span class="nf">add_points_to_df</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="n">data_series</span><span class="p">,</span> <span class="n">data_points</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Add the given datapoints to a pandas dataframe.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">        -----------</span>
+<span class="sd">        index : unused</span>
+<span class="sd">        data_series : dict</span>
+<span class="sd">        data_points : list of dicts</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">tmp</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="p">[</span><span class="n">dict_unnest</span><span class="p">(</span><span class="n">point</span><span class="p">)</span> <span class="k">for</span> <span class="n">point</span> <span class="ow">in</span> <span class="n">data_points</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">tmp</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="c1"># get_data_points response doesn&#39;t include the</span>
+        <span class="c1"># source_id. We add it as a column, in case we have</span>
+        <span class="c1"># several selections series which differ only by source id.</span>
+        <span class="n">tmp</span><span class="p">[</span><span class="s2">&quot;source_id&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data_series</span><span class="p">[</span><span class="s2">&quot;source_id&quot;</span><span class="p">]</span>
+        <span class="c1"># tmp should always have end_date/start_date/reporting_date/available_date as columns if not empty</span>
+        <span class="n">tmp</span><span class="o">.</span><span class="n">end_date</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">tmp</span><span class="o">.</span><span class="n">end_date</span><span class="p">)</span>
+        <span class="n">tmp</span><span class="o">.</span><span class="n">start_date</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">tmp</span><span class="o">.</span><span class="n">start_date</span><span class="p">)</span>
+        <span class="n">tmp</span><span class="o">.</span><span class="n">reporting_date</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">tmp</span><span class="o">.</span><span class="n">reporting_date</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s2">&quot;available_date&quot;</span> <span class="ow">in</span> <span class="n">tmp</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+            <span class="n">tmp</span><span class="o">.</span><span class="n">available_date</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">tmp</span><span class="o">.</span><span class="n">available_date</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_frame</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_data_frame</span> <span class="o">=</span> <span class="n">tmp</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_data_frame</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">_data_frame</span><span class="p">,</span> <span class="n">tmp</span><span class="p">])</span>
+
+<div class="viewcode-block" id="GroClient.get_data_points"><a class="viewcode-back" href="../../api.html#groclient.GroClient.get_data_points">[docs]</a>    <span class="k">def</span> <span class="nf">get_data_points</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">selections</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get all the data points for a given selection.</span>
+
+<span class="sd">        https://developers.gro-intelligence.com/data-point-definition.html</span>
+
+<span class="sd">        Example::</span>
+
+<span class="sd">            client.get_data_points(**{&#39;metric_id&#39;: 860032,</span>
+<span class="sd">                                      &#39;item_id&#39;: 274,</span>
+<span class="sd">                                      &#39;region_id&#39;: 1215,</span>
+<span class="sd">                                      &#39;frequency_id&#39;: 9,</span>
+<span class="sd">                                      &#39;source_id&#39;: 2,</span>
+<span class="sd">                                      &#39;start_date&#39;: &#39;2017-01-01&#39;,</span>
+<span class="sd">                                      &#39;end_date&#39;: &#39;2017-12-31&#39;,</span>
+<span class="sd">                                      &#39;unit_id&#39;: 15})</span>
+
+<span class="sd">        Returns::</span>
+
+<span class="sd">            [{  &#39;start_date&#39;: &#39;2017-01-01T00:00:00.000Z&#39;,</span>
+<span class="sd">                &#39;end_date&#39;: &#39;2017-12-31T00:00:00.000Z&#39;,</span>
+<span class="sd">                &#39;value&#39;: 408913833.8019222, &#39;unit_id&#39;: 15,</span>
+<span class="sd">                &#39;reporting_date&#39;: None, &#39;available_date&#39;: None,</span>
+<span class="sd">                &#39;metric_id&#39;: 860032, &#39;item_id&#39;: 274, &#39;region_id&#39;: 1215,</span>
+<span class="sd">                &#39;partner_region_id&#39;: 0, &#39;frequency_id&#39;: 9, &#39;source_id&#39;: 2,</span>
+<span class="sd">                &#39;belongs_to&#39;: {</span>
+<span class="sd">                    &#39;metric_id&#39;: 860032,</span>
+<span class="sd">                    &#39;item_id&#39;: 274,</span>
+<span class="sd">                    &#39;region_id&#39;: 1215,</span>
+<span class="sd">                    &#39;frequency_id&#39;: 9,</span>
+<span class="sd">                    &#39;source_id&#39;: 2</span>
+<span class="sd">                }</span>
+<span class="sd">            }]</span>
+
+<span class="sd">        Note: you can pass the output of :meth:`~.get_data_series` into :meth:`~.get_data_points`</span>
+<span class="sd">        to check what series exist for some selections and then retrieve the data points for those</span>
+<span class="sd">        series. See :sample:`quick_start.py` for an example of this.</span>
+
+<span class="sd">        :meth:`~.get_data_points` also allows passing a list of ids for metric_id, item_id, and/or</span>
+<span class="sd">        region_id to get multiple series in a single request. This can be faster if requesting many</span>
+<span class="sd">        series.</span>
+
+<span class="sd">        For example::</span>
+
+<span class="sd">            client.get_data_points(**{&#39;metric_id&#39;: 860032,</span>
+<span class="sd">                                      &#39;item_id&#39;: 274,</span>
+<span class="sd">                                      &#39;region_id&#39;: [1215,1216],</span>
+<span class="sd">                                      &#39;frequency_id&#39;: 9,</span>
+<span class="sd">                                      &#39;source_id&#39;: 2,</span>
+<span class="sd">                                      &#39;start_date&#39;: &#39;2017-01-01&#39;,</span>
+<span class="sd">                                      &#39;end_date&#39;: &#39;2017-12-31&#39;,</span>
+<span class="sd">                                      &#39;unit_id&#39;: 15})</span>
+
+<span class="sd">        Returns::</span>
+
+<span class="sd">            [{  &#39;start_date&#39;: &#39;2017-01-01T00:00:00.000Z&#39;,</span>
+<span class="sd">                &#39;end_date&#39;: &#39;2017-12-31T00:00:00.000Z&#39;,</span>
+<span class="sd">                &#39;value&#39;: 408913833.8019222, &#39;unit_id&#39;: 15,</span>
+<span class="sd">                &#39;reporting_date&#39;: None, &#39;available_date&#39;: None,</span>
+<span class="sd">                &#39;metric_id&#39;: 860032, &#39;item_id&#39;: 274, &#39;region_id&#39;: 1215,</span>
+<span class="sd">                &#39;partner_region_id&#39;: 0, &#39;frequency_id&#39;: 9, &#39;source_id&#39;: 2,</span>
+<span class="sd">                &#39;belongs_to&#39;: {</span>
+<span class="sd">                    &#39;metric_id&#39;: 860032,</span>
+<span class="sd">                    &#39;item_id&#39;: 274,</span>
+<span class="sd">                    &#39;region_id&#39;: 1215,</span>
+<span class="sd">                    &#39;frequency_id&#39;: 9,</span>
+<span class="sd">                    &#39;source_id&#39;: 2</span>
+<span class="sd">                }</span>
+<span class="sd">            }, { &#39;start_date&#39;: &#39;2017-01-01T00:00:00.000Z&#39;,</span>
+<span class="sd">                 &#39;end_date&#39;: &#39;2017-12-31T00:00:00.000Z&#39;,</span>
+<span class="sd">                 &#39;value&#39;: 340614.19507563586, &#39;unit_id&#39;: 15,</span>
+<span class="sd">                 &#39;reporting_date&#39;: None, &#39;available_date&#39;: None,</span>
+<span class="sd">                 &#39;metric_id&#39;: 860032, &#39;item_id&#39;: 274, &#39;region_id&#39;: 1216,</span>
+<span class="sd">                 &#39;partner_region_id&#39;: 0, &#39;frequency_id&#39;: 9, &#39;source_id&#39;: 2,</span>
+<span class="sd">                 &#39;belongs_to&#39;: {</span>
+<span class="sd">                    &#39;metric_id&#39;: 860032,</span>
+<span class="sd">                    &#39;item_id&#39;: 274,</span>
+<span class="sd">                    &#39;region_id&#39;: 1216,</span>
+<span class="sd">                    &#39;frequency_id&#39;: 9,</span>
+<span class="sd">                    &#39;source_id&#39;: 2</span>
+<span class="sd">                 }</span>
+<span class="sd">            }]</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        metric_id : integer or list of integers</span>
+<span class="sd">            How something is measured. e.g. &quot;Export Value&quot; or &quot;Area Harvested&quot;</span>
+<span class="sd">        item_id : integer or list of integers</span>
+<span class="sd">            What is being measured. e.g. &quot;Corn&quot; or &quot;Rainfall&quot;</span>
+<span class="sd">        region_id : integer or list of integers</span>
+<span class="sd">            Where something is being measured e.g. &quot;United States Corn Belt&quot; or &quot;China&quot;</span>
+<span class="sd">        partner_region_id : integer or list of integers, optional</span>
+<span class="sd">            partner_region refers to an interaction between two regions, like trade or</span>
+<span class="sd">            transportation. For example, for an Export metric, the &quot;region&quot; would be the exporter</span>
+<span class="sd">            and the &quot;partner_region&quot; would be the importer. For most series, this can be excluded</span>
+<span class="sd">            or set to 0 (&quot;World&quot;) by default.</span>
+<span class="sd">        source_id : integer</span>
+<span class="sd">        frequency_id : integer</span>
+<span class="sd">        unit_id : integer, optional</span>
+<span class="sd">        start_date : string, optional</span>
+<span class="sd">            All points with end dates equal to or after this date</span>
+<span class="sd">        end_date : string, optional</span>
+<span class="sd">            All points with start dates equal to or before this date</span>
+<span class="sd">        show_revisions : boolean, optional</span>
+<span class="sd">            False by default, meaning only the latest value for each period. If true, will return</span>
+<span class="sd">            all values for a given period, differentiated by the `reporting_date` field.</span>
+<span class="sd">        show_available_date : boolean, optional</span>
+<span class="sd">            False by default. If true, will return the available date of each data point.</span>
+<span class="sd">        insert_null : boolean, optional</span>
+<span class="sd">            False by default. If True, will include a data point with a None value for each period</span>
+<span class="sd">            that does not have data.</span>
+<span class="sd">        at_time : string, optional</span>
+<span class="sd">            Estimate what data would have been available via Gro at a given time in the past. See</span>
+<span class="sd">            :sample:`at-time-query-examples.ipynb` for more details.</span>
+<span class="sd">        include_historical : boolean, optional</span>
+<span class="sd">            True by default, will include historical regions that are part of your selections</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        list of dicts</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">data_points</span> <span class="o">=</span> <span class="n">lib</span><span class="o">.</span><span class="n">get_data_points</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_host</span><span class="p">,</span> <span class="o">**</span><span class="n">selections</span>
+        <span class="p">)</span>
+        <span class="c1"># Apply unit conversion if a unit is specified</span>
+        <span class="k">if</span> <span class="s2">&quot;unit_id&quot;</span> <span class="ow">in</span> <span class="n">selections</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">list</span><span class="p">(</span>
+                <span class="nb">map</span><span class="p">(</span>
+                    <span class="n">partial</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">convert_unit</span><span class="p">,</span> <span class="n">target_unit_id</span><span class="o">=</span><span class="n">selections</span><span class="p">[</span><span class="s2">&quot;unit_id&quot;</span><span class="p">]),</span>
+                    <span class="n">data_points</span><span class="p">,</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+        <span class="c1"># Return data points in input units if not unit is specified</span>
+        <span class="k">return</span> <span class="n">data_points</span></div>
+
+    <span class="k">def</span> <span class="nf">GDH</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gdh_selection</span><span class="p">,</span> <span class="o">**</span><span class="n">optional_selections</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Wrapper for :meth:`~.get_data_points`. with alternative input and output style.</span>
+
+<span class="sd">        The data series selection to retrieve is encoded in a</span>
+<span class="sd">        &#39;gdh_selection&#39; string of the form</span>
+<span class="sd">        &lt;metric_id&gt;-&lt;item_id&gt;-&lt;region_id&gt;-&lt;partner_region_id&gt;-&lt;frequency_id&gt;-&lt;source_id&gt;</span>
+
+<span class="sd">        For example, client.GDH(&quot;860032-274-1231-0-9-14&quot;) will get the</span>
+<span class="sd">        data points for Production of Corn in China from PS&amp;D at an</span>
+<span class="sd">        annual frequency, e.g.</span>
+<span class="sd">        for csv_row in client.GDH(&quot;860032-274-1231-0-9-14&quot;):</span>
+<span class="sd">            print csv_row</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">        ----------</span>
+<span class="sd">        gdh_selection: string</span>
+<span class="sd">        optional_selections: dict, optional</span>
+<span class="sd">            accepts optional params from :meth:`~.get_data_points`.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">        ------</span>
+<span class="sd">        pandas.DataFrame</span>
+
+<span class="sd">            The subset of the main DataFrame :meth:`~.get_df`. with the requested series,</span>
+<span class="sd">            indexed by the names of the selections.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">entity_ids</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">gdh_selection</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">)]</span>
+        <span class="n">selection</span> <span class="o">=</span> <span class="n">zip_selections</span><span class="p">(</span><span class="n">entity_ids</span><span class="p">,</span> <span class="o">**</span><span class="n">optional_selections</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_single_data_series</span><span class="p">(</span><span class="n">selection</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_df</span><span class="p">(</span><span class="n">index_by_series</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">include_names</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">loc</span><span class="p">[[</span><span class="nb">tuple</span><span class="p">(</span><span class="n">entity_ids</span><span class="p">)],</span> <span class="p">:]</span>
+            <span class="n">df</span><span class="o">.</span><span class="n">set_index</span><span class="p">([</span><span class="n">entity_type_id</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;_id&#39;</span><span class="p">,</span> <span class="s1">&#39;_name&#39;</span><span class="p">)</span>
+                          <span class="k">for</span> <span class="n">entity_type_id</span> <span class="ow">in</span> <span class="n">intersect</span><span class="p">(</span><span class="n">DATA_SERIES_UNIQUE_TYPES_ID</span><span class="p">,</span>
+                                                          <span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">names</span><span class="p">)],</span>
+                         <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">df</span>
+        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;GDH returned no data&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
+
+<div class="viewcode-block" id="GroClient.get_data_series_list"><a class="viewcode-back" href="../../api.html#groclient.GroClient.get_data_series_list">[docs]</a>    <span class="k">def</span> <span class="nf">get_data_series_list</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Inspect the current list of saved data series contained in the GroClient.</span>
+
+<span class="sd">        For use with :meth:`~.get_df`. Add new data series to the list using</span>
+<span class="sd">        :meth:`~.add_data_series` and :meth:`~.add_single_data_series`.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        list of dicts</span>
+<span class="sd">            A list of data_series objects, as returned by :meth:`~.get_data_series`.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">[</span><span class="nb">dict</span><span class="p">(</span><span class="n">data_series_hash</span><span class="p">)</span> <span class="k">for</span> <span class="n">data_series_hash</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_series_list</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="GroClient.add_single_data_series"><a class="viewcode-back" href="../../api.html#groclient.GroClient.add_single_data_series">[docs]</a>    <span class="k">def</span> <span class="nf">add_single_data_series</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_series</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Save a data series object to the GroClient&#39;s data_series_list.</span>
+
+<span class="sd">        For use with :meth:`~.get_df`.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        data_series : dict</span>
+<span class="sd">            A single data_series object, as returned by :meth:`~.get_data_series` or</span>
+<span class="sd">            :meth:`~.find_data_series`.</span>
+<span class="sd">            See https://developers.gro-intelligence.com/data-series-definition.html</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        None</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">series_hash</span> <span class="o">=</span> <span class="nb">frozenset</span><span class="p">(</span><span class="n">dict_unnest</span><span class="p">(</span><span class="n">data_series</span><span class="p">)</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
+        <span class="k">if</span> <span class="n">series_hash</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_series_list</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_data_series_list</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">series_hash</span><span class="p">)</span>
+            <span class="c1"># Add a copy of the data series, in case the original is modified</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_data_series_queue</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="n">data_series</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Added </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">data_series</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Already added: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">data_series</span><span class="p">))</span>
+        <span class="k">return</span></div>
+
+<div class="viewcode-block" id="GroClient.find_data_series"><a class="viewcode-back" href="../../api.html#groclient.GroClient.find_data_series">[docs]</a>    <span class="k">def</span> <span class="nf">find_data_series</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">result_filter</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Find data series matching a combination of entities specified by</span>
+<span class="sd">        name and yield them ranked by coverage.</span>
+
+<span class="sd">        Example::</span>
+
+<span class="sd">            client.find_data_series(item=&quot;Corn&quot;,</span>
+<span class="sd">                                    metric=&quot;Futures Open Interest&quot;,</span>
+<span class="sd">                                    region=&quot;United States of America&quot;)</span>
+
+<span class="sd">        will yield a sequence of dictionaries of the form::</span>
+
+<span class="sd">            { &#39;metric_id&#39;: 15610005, &#39;metric_name&#39;: &#39;Futures Open Interest&#39;,</span>
+<span class="sd">              &#39;item_id&#39;: 274, &#39;item_name&#39;: &#39;Corn&#39;,</span>
+<span class="sd">              &#39;region_id&#39;: 1215, &#39;region_name&#39;: &#39;United States&#39;,</span>
+<span class="sd">              &#39;frequency_id&#39;: 15, &#39;source_id&#39;: 81,</span>
+<span class="sd">              &#39;start_date&#39;: &#39;1972-03-01T00:00:00.000Z&#39;, ...},</span>
+<span class="sd">            { ... },  ...</span>
+
+
+<span class="sd">        See https://developers.gro-intelligence.com/data-series-definition.html</span>
+
+<span class="sd">        :code:`result_filter` can be used to filter entity searches. For example::</span>
+
+<span class="sd">            client.find_data_series(item=&quot;vegetation&quot;,</span>
+<span class="sd">                                    metric=&quot;vegetation indices&quot;,</span>
+<span class="sd">                                    region=&quot;Central&quot;,</span>
+<span class="sd">                                    result_filter=lambda r: (&#39;region_id&#39; not in r or</span>
+<span class="sd">                                                             r[&#39;region_id&#39;] == 10393))</span>
+
+<span class="sd">        will only consider that particular region, and not the many other regions</span>
+<span class="sd">        with the same name.</span>
+
+<span class="sd">        This method uses :meth:`~.search`, :meth:`~.get_data_series`,</span>
+<span class="sd">        :meth:`~.get_available_timefrequency` and  :meth:`~.rank_series_by_source`.</span>
+
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        metric : string, optional</span>
+<span class="sd">        item : string, optional</span>
+<span class="sd">        region : string, optional</span>
+<span class="sd">        partner_region : string, optional</span>
+<span class="sd">        start_date : string, optional</span>
+<span class="sd">            YYYY-MM-DD</span>
+<span class="sd">        end_date : string, optional</span>
+<span class="sd">            YYYY-MM-DD</span>
+<span class="sd">        result_filter: function, optional</span>
+<span class="sd">            function taking data series selection dict returning boolean</span>
+
+<span class="sd">        Yields</span>
+<span class="sd">        ------</span>
+<span class="sd">        dict</span>
+<span class="sd">           A sequence of data series matching the input selections</span>
+
+<span class="sd">        See also</span>
+<span class="sd">        --------</span>
+<span class="sd">        :meth:`~.get_data_series`</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># [[(&#39;item_id&#39;,1),(&#39;item_id&#39;,2),...],[(&#39;metric_id&quot; 1),...],...]</span>
+        <span class="k">for</span> <span class="n">kw</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">kw</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">id_key</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">_id&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">kw</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">id_key</span> <span class="ow">in</span> <span class="n">ENTITY_KEY_TO_TYPE</span><span class="p">:</span>
+                <span class="n">type_results</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># [(&#39;item_id&#39;,1),(&#39;item_id&#39;,2),...]</span>
+                <span class="k">for</span> <span class="n">search_result</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">search</span><span class="p">(</span>
+                    <span class="n">ENTITY_KEY_TO_TYPE</span><span class="p">[</span><span class="n">id_key</span><span class="p">],</span> <span class="n">kwargs</span><span class="p">[</span><span class="n">kw</span><span class="p">]</span>
+                <span class="p">)[:</span> <span class="n">cfg</span><span class="o">.</span><span class="n">MAX_RESULT_COMBINATION_DEPTH</span><span class="p">]:</span>
+                    <span class="k">if</span> <span class="n">result_filter</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">result_filter</span><span class="p">(</span>
+                        <span class="p">{</span><span class="n">id_key</span><span class="p">:</span> <span class="n">search_result</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]}</span>
+                    <span class="p">):</span>
+                        <span class="n">type_results</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">id_key</span><span class="p">,</span> <span class="n">search_result</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]))</span>
+                <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">type_results</span><span class="p">)</span>
+        <span class="c1"># Rank by frequency and source, while preserving search ranking in</span>
+        <span class="c1"># permutations of search results.</span>
+        <span class="n">ranking_groups</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">comb</span> <span class="ow">in</span> <span class="n">itertools</span><span class="o">.</span><span class="n">product</span><span class="p">(</span><span class="o">*</span><span class="n">results</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">data_series</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_data_series</span><span class="p">(</span><span class="o">**</span><span class="nb">dict</span><span class="p">(</span><span class="n">comb</span><span class="p">))[</span>
+                <span class="p">:</span> <span class="n">cfg</span><span class="o">.</span><span class="n">MAX_SERIES_PER_COMB</span>
+            <span class="p">]:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Data series: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">data_series</span><span class="p">))</span>
+                <span class="c1"># remove time and frequency to rank them</span>
+                <span class="n">data_series</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;start_date&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+                <span class="n">data_series</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;end_date&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+                <span class="n">data_series</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;frequency_id&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+                <span class="n">data_series</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;frequency_name&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+                <span class="c1"># remove source to rank them</span>
+                <span class="n">data_series</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;source_id&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+                <span class="n">data_series</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;source_name&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+                <span class="c1"># metadata is not hashable</span>
+                <span class="n">data_series</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;metadata&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+                <span class="n">series_hash</span> <span class="o">=</span> <span class="nb">frozenset</span><span class="p">(</span><span class="n">data_series</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
+                <span class="k">if</span> <span class="n">series_hash</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">ranking_groups</span><span class="p">:</span>
+                    <span class="n">ranking_groups</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">series_hash</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;start_date&quot;</span><span class="p">):</span>
+                        <span class="n">data_series</span><span class="p">[</span><span class="s2">&quot;start_date&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;start_date&quot;</span><span class="p">]</span>
+                    <span class="k">if</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;end_date&quot;</span><span class="p">):</span>
+                        <span class="n">data_series</span><span class="p">[</span><span class="s2">&quot;end_date&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;end_date&quot;</span><span class="p">]</span>
+                    <span class="k">for</span> <span class="n">tf</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_available_timefrequency</span><span class="p">(</span><span class="o">**</span><span class="n">data_series</span><span class="p">):</span>
+                        <span class="n">ds</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">data_series</span><span class="p">)</span>
+                        <span class="n">ds</span><span class="p">[</span><span class="s2">&quot;frequency_id&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">tf</span><span class="p">[</span><span class="s2">&quot;frequency_id&quot;</span><span class="p">]</span>
+                        <span class="k">for</span> <span class="n">data_series</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">rank_series_by_source</span><span class="p">([</span><span class="n">ds</span><span class="p">]):</span>
+                            <span class="k">yield</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_data_series</span><span class="p">(</span><span class="o">**</span><span class="n">data_series</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="GroClient.add_data_series"><a class="viewcode-back" href="../../api.html#groclient.GroClient.add_data_series">[docs]</a>    <span class="k">def</span> <span class="nf">add_data_series</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Adds the top result of :meth:`~.find_data_series` to the saved data series list.</span>
+
+<span class="sd">        For use with :meth:`~.get_df`.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        metric : string, optional</span>
+<span class="sd">        item : string, optional</span>
+<span class="sd">        region : string, optional</span>
+<span class="sd">        partner_region : string, optional</span>
+<span class="sd">        start_date : string, optional</span>
+<span class="sd">            YYYY-MM-DD</span>
+<span class="sd">        end_date : string, optional</span>
+<span class="sd">            YYYY-MM-DD</span>
+<span class="sd">        result_filter: function, optional</span>
+<span class="sd">            function taking data series selection dict returning boolean</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        data_series object, as returned by :meth:`~.get_data_series`.</span>
+<span class="sd">            The data_series that was added or None if none were found.</span>
+
+<span class="sd">        See also</span>
+<span class="sd">        --------</span>
+<span class="sd">        :meth:`~.get_df`</span>
+<span class="sd">        :meth:`~.add_single_data_series`</span>
+<span class="sd">        :meth:`~.find_data_series`</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">the_data_series</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">find_data_series</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_single_data_series</span><span class="p">(</span><span class="n">the_data_series</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">the_data_series</span>
+        <span class="k">return</span></div>
+
+    <span class="c1">###</span>
+    <span class="c1"># Discovery shortcuts</span>
+    <span class="c1">###</span>
+<div class="viewcode-block" id="GroClient.search_for_entity"><a class="viewcode-back" href="../../api.html#groclient.GroClient.search_for_entity">[docs]</a>    <span class="k">def</span> <span class="nf">search_for_entity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">,</span> <span class="n">keywords</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns the first result of entity_type that matches the given keywords.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        entity_type : { &#39;metrics&#39;, &#39;items&#39;, &#39;regions&#39;, &#39;sources&#39; }</span>
+<span class="sd">        keywords : string</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        ----------</span>
+<span class="sd">        integer</span>
+<span class="sd">            The id of the first search result</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">results</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">entity_type</span><span class="p">,</span> <span class="n">keywords</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">results</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+                <span class="s2">&quot;First result, out of </span><span class="si">{}</span><span class="s2"> </span><span class="si">{}</span><span class="s2">: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="nb">len</span><span class="p">(</span><span class="n">results</span><span class="p">),</span> <span class="n">entity_type</span><span class="p">,</span> <span class="n">result</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+            <span class="k">return</span> <span class="n">result</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="GroClient.get_provinces"><a class="viewcode-back" href="../../api.html#groclient.GroClient.get_provinces">[docs]</a>    <span class="k">def</span> <span class="nf">get_provinces</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">country_name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Given the name of a country, find its provinces.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        country_name : string</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        ----------</span>
+<span class="sd">        list of dicts</span>
+
+<span class="sd">            Example::</span>
+
+<span class="sd">                [{</span>
+<span class="sd">                    &#39;id&#39;: 13100,</span>
+<span class="sd">                    &#39;contains&#39;: [139839, 139857, ...],</span>
+<span class="sd">                    &#39;name&#39;: &#39;Wisconsin&#39;,</span>
+<span class="sd">                    &#39;level&#39;: 4</span>
+<span class="sd">                } , {</span>
+<span class="sd">                    &#39;id&#39;: 13101,</span>
+<span class="sd">                    &#39;contains&#39;: [139891, 139890, ...],</span>
+<span class="sd">                    &#39;name&#39;: &#39;Wyoming&#39;,</span>
+<span class="sd">                    &#39;level&#39;: 4</span>
+<span class="sd">                }, ...]</span>
+
+<span class="sd">            See output of :meth:`~.lookup`</span>
+
+<span class="sd">        See Also</span>
+<span class="sd">        --------</span>
+<span class="sd">        :meth:`~.get_descendant_regions`</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">region</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">search_and_lookup</span><span class="p">(</span><span class="s2">&quot;regions&quot;</span><span class="p">,</span> <span class="n">country_name</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">region</span><span class="p">[</span><span class="s2">&quot;level&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">lib</span><span class="o">.</span><span class="n">REGION_LEVELS</span><span class="p">[</span><span class="s2">&quot;country&quot;</span><span class="p">]:</span>
+                <span class="n">provinces</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_descendant_regions</span><span class="p">(</span>
+                    <span class="n">region</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">],</span> <span class="n">lib</span><span class="o">.</span><span class="n">REGION_LEVELS</span><span class="p">[</span><span class="s2">&quot;province&quot;</span><span class="p">]</span>
+                <span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+                    <span class="s2">&quot;Provinces of </span><span class="si">{}</span><span class="s2">: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">country_name</span><span class="p">,</span> <span class="n">provinces</span><span class="p">)</span>
+                <span class="p">)</span>
+                <span class="k">return</span> <span class="n">provinces</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+    <span class="k">def</span> <span class="nf">get_names_for_selection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">selection</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Convert a selection into entity names.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">        -----------</span>
+<span class="sd">        data_series : dict</span>
+<span class="sd">            A single data_series object, as returned by get_data_series() or find_data_series().</span>
+<span class="sd">            See https://github.com/gro-intelligence/api-client/wiki/Data-Series-Definition</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">        --------</span>
+<span class="sd">        list of pairs of strings</span>
+<span class="sd">            [(&#39;item&#39;, &#39;Corn&#39;), (&#39;region&#39;, &#39;China&#39;) ...]</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">[</span>
+            <span class="p">(</span>
+                <span class="n">entity_key</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">lookup</span><span class="p">(</span><span class="n">ENTITY_KEY_TO_TYPE</span><span class="p">[</span><span class="n">entity_key</span><span class="p">],</span> <span class="n">entity_id</span><span class="p">)[</span><span class="s2">&quot;name&quot;</span><span class="p">],</span>
+            <span class="p">)</span>
+            <span class="k">for</span> <span class="n">entity_key</span><span class="p">,</span> <span class="n">entity_id</span> <span class="ow">in</span> <span class="n">selection</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+        <span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">convert_unit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">point</span><span class="p">,</span> <span class="n">target_unit_id</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Convert the data point from one unit to another unit.</span>
+
+<span class="sd">        If original or target unit is non-convertible, throw an error.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        point : dict</span>
+<span class="sd">            { value: float, unit_id: integer, ... }</span>
+<span class="sd">        target_unit_id : integer</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        dict</span>
+
+<span class="sd">            Example ::</span>
+
+<span class="sd">                { value: 14.2, unit_id: 4 }</span>
+
+<span class="sd">            unit_id is changed to the target, and value is converted to use the</span>
+<span class="sd">            new unit_id. Other properties are unchanged.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">point</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;unit_id&quot;</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">point</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;unit_id&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="n">target_unit_id</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">point</span>
+        <span class="n">from_convert_factor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lookup</span><span class="p">(</span><span class="s2">&quot;units&quot;</span><span class="p">,</span> <span class="n">point</span><span class="p">[</span><span class="s2">&quot;unit_id&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+            <span class="s2">&quot;baseConvFactor&quot;</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">from_convert_factor</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;factor&quot;</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;unit_id </span><span class="si">{}</span><span class="s2"> is not convertible&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">point</span><span class="p">[</span><span class="s2">&quot;unit_id&quot;</span><span class="p">]))</span>
+        <span class="n">to_convert_factor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lookup</span><span class="p">(</span><span class="s2">&quot;units&quot;</span><span class="p">,</span> <span class="n">target_unit_id</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;baseConvFactor&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">to_convert_factor</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;factor&quot;</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;unit_id </span><span class="si">{}</span><span class="s2"> is not convertible&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">target_unit_id</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="n">point</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;value&quot;</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">point</span><span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">lib</span><span class="o">.</span><span class="n">convert_value</span><span class="p">(</span><span class="n">point</span><span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">],</span> <span class="n">from_convert_factor</span><span class="p">,</span> <span class="n">to_convert_factor</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">point</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;metadata&quot;</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">point</span><span class="p">[</span><span class="s2">&quot;metadata&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;conf_interval&quot;</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">point</span><span class="p">[</span><span class="s2">&quot;metadata&quot;</span><span class="p">][</span><span class="s2">&quot;conf_interval&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">lib</span><span class="o">.</span><span class="n">convert_value</span><span class="p">(</span><span class="n">point</span><span class="p">[</span><span class="s2">&quot;metadata&quot;</span><span class="p">][</span><span class="s2">&quot;conf_interval&quot;</span><span class="p">],</span> <span class="n">from_convert_factor</span><span class="p">,</span> <span class="n">to_convert_factor</span><span class="p">)</span>
+        <span class="n">point</span><span class="p">[</span><span class="s2">&quot;unit_id&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">target_unit_id</span>
+        <span class="k">return</span> <span class="n">point</span>
+</pre></div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2017-2021, Gro Intelligence
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+<div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    <span class="fa fa-book"> Other Versions</span>
+    v: jli-CLEWS-35217-update-nb
+    <span class="fa fa-caret-down"></span>
+  </span>
+  <div class="rst-other-versions">
+    <dl>
+      <dt>Releases</dt>
+      <dd><a href="../../../v1.100.0/index.html">v1.100.0</a></dd>
+      <dd><a href="../../../v1.101.0/index.html">v1.101.0</a></dd>
+      <dd><a href="../../../v1.107.2/index.html">v1.107.2</a></dd>
+      <dd><a href="../../../v1.107.3/index.html">v1.107.3</a></dd>
+      <dd><a href="../../../v1.40.6/index.html">v1.40.6</a></dd>
+      <dd><a href="../../../v1.56.0/index.html">v1.56.0</a></dd>
+      <dd><a href="../../../v1.56.1/index.html">v1.56.1</a></dd>
+      <dd><a href="../../../v1.56.2/index.html">v1.56.2</a></dd>
+      <dd><a href="../../../v1.60.0/index.html">v1.60.0</a></dd>
+      <dd><a href="../../../v1.60.1/index.html">v1.60.1</a></dd>
+      <dd><a href="../../../v1.71.0/index.html">v1.71.0</a></dd>
+      <dd><a href="../../../v1.76.0/index.html">v1.76.0</a></dd>
+      <dd><a href="../../../v1.77.0/index.html">v1.77.0</a></dd>
+      <dd><a href="../../../v1.77.1/index.html">v1.77.1</a></dd>
+      <dd><a href="../../../v1.82.0/index.html">v1.82.0</a></dd>
+      <dd><a href="../../../v1.83.0/index.html">v1.83.0</a></dd>
+      <dd><a href="../../../v1.98.0/index.html">v1.98.0</a></dd>
+
+      
+            <dd><a href="../../../development/index.html">development</a></dd>
+    </dl>
+  </div>
+</div>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
