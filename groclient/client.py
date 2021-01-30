@@ -1011,7 +1011,7 @@ class GroClient(object):
             [{  'start_date': '2017-01-01T00:00:00.000Z',
                 'end_date': '2017-12-31T00:00:00.000Z',
                 'value': 408913833.8019222, 'unit_id': 15,
-                'reporting_date': None, 'available_date': None,
+                'reporting_date': None,
                 'metric_id': 860032, 'item_id': 274, 'region_id': 1215,
                 'partner_region_id': 0, 'frequency_id': 9, 'source_id': 2,
                 'belongs_to': {
@@ -1047,7 +1047,7 @@ class GroClient(object):
             [{  'start_date': '2017-01-01T00:00:00.000Z',
                 'end_date': '2017-12-31T00:00:00.000Z',
                 'value': 408913833.8019222, 'unit_id': 15,
-                'reporting_date': None, 'available_date': None,
+                'reporting_date': None,
                 'metric_id': 860032, 'item_id': 274, 'region_id': 1215,
                 'partner_region_id': 0, 'frequency_id': 9, 'source_id': 2,
                 'belongs_to': {
@@ -1060,7 +1060,7 @@ class GroClient(object):
             }, { 'start_date': '2017-01-01T00:00:00.000Z',
                  'end_date': '2017-12-31T00:00:00.000Z',
                  'value': 340614.19507563586, 'unit_id': 15,
-                 'reporting_date': None, 'available_date': None,
+                 'reporting_date': None,
                  'metric_id': 860032, 'item_id': 274, 'region_id': 1216,
                  'partner_region_id': 0, 'frequency_id': 9, 'source_id': 2,
                  'belongs_to': {
@@ -1095,8 +1095,6 @@ class GroClient(object):
         show_revisions : boolean, optional
             False by default, meaning only the latest value for each period. If true, will return
             all values for a given period, differentiated by the `reporting_date` field.
-        show_available_date : boolean, optional
-            False by default. If true, will return the available date of each data point.
         insert_null : boolean, optional
             False by default. If True, will include a data point with a None value for each period
             that does not have data.
