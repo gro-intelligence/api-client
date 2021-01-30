@@ -348,6 +348,7 @@ def get_data_call_params(**selection):
     start_date : string, optional
     end_date : string, optional
     show_revisions : boolean, optional
+    show_available_date : boolean, optional
     insert_null : boolean, optional
     show_metadata : boolean, optional
     at_time : string, optional
