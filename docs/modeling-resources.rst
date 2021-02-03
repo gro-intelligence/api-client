@@ -122,7 +122,7 @@ The crop discrimination methods used were different for different areas studied.
 
 We also eliminated pixels that were on a slope greater than 5°. Crude forest covers based on thresholding annual NDVI as well as SWIR bands (~1.61 µm) and NIR bands (~0.865 µm) were also applied to the regions. 
 
-We also made two types of covers for different data sources: NBS (low-confidence cover only) and Cofeed (high- and low-confidence covers). The results of these covers can be viewed in Gro under the Land Cover (percent) metric, where the value of a pixel will represent that pixel's likelihood of growing this crop in a given year.
+We also made two types of covers for different data sources: NBS (low-confidence cover only) and Cofeed (high-confidence and low-confidence covers). The results of these covers can be viewed in Gro under the Land Cover (percent) metric, where the value of a pixel will represent that pixel's likelihood of growing this crop in a given year.
  
 Brazil Corn
 -----------
