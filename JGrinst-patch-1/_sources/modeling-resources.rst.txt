@@ -100,9 +100,9 @@ Brazil Soy
 ----------
 Brazil soybeans uses a similar methodology to that of Argentina soybeans, with the exception that Landsat 5 was omitted from the constellation of satellites.
 
-Another minor change: Instead of subtracting the vegetation hue layer from the soil hue layer and isolating the top portion of the pixel values as was done for Argentina, , for Brazil we threshold and extract the soil values in each of the soil images and combine them with the other satellite soil imagery. The same is done with the vegetation values over all the vegetation images. This small technique change proved to be much more useful in finding crop areas, as it allowed for areas with poor coverage to be picked up more easily and not be drowned out.
+Another minor change: Instead of subtracting the vegetation hue layer from the soil hue layer and isolating the top portion of the pixel values as was done for Argentina, for Brazil we threshold and extract the soil values in each of the soil images and combine them with the other satellite soil imagery. The same is done with the vegetation values over all the vegetation images. This small technique change proved to be much more useful in finding crop areas, as it allowed for areas with poor coverage to be picked up more easily and not be drowned out.
 
-A low-confidence cover and a high-confidence cover were made from those yearly crop covers starting in 2009.  Each of them was further clumped to remove erroneous pixels. The results of these covers can be viewed in Gro under the Land Cover (percent) metric, where the value of a pixel will represent that pixel's likelihood of growing this crop in a given year.
+A low-confidence cover and a high-confidence cover were made from those yearly crop covers starting in 2009. Each of them was further clumped to remove erroneous pixels. The results of these covers can be viewed in Gro under the Land Cover (percent) metric, where the value of a pixel will represent that pixel's likelihood of growing this crop in a given year.
  
 Argentina Corn
 ----------------
@@ -122,7 +122,7 @@ The crop discrimination methods used were different for different areas studied.
 
 We also eliminated pixels that were on a slope greater than 5°. Crude forest covers based on thresholding annual NDVI as well as SWIR bands (~1.61 µm) and NIR bands (~0.865 µm) were also applied to the regions. 
 
-We also made two types of covers for different data sources: NBS (low-confidence cover only) and Cofeed (high- and low-confidence covers). The results of these covers can be viewed in Gro under the Land Cover (percent) metric, where the value of a pixel will represent that pixel's likelihood of growing this crop in a given year.
+We also made two types of covers for different data sources: NBS (low-confidence cover only) and Cofeed (high-confidence and low-confidence covers). The results of these covers can be viewed in Gro under the Land Cover (percent) metric, where the value of a pixel will represent that pixel's likelihood of growing this crop in a given year.
  
 Brazil Corn
 -----------
