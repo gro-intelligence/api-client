@@ -40,31 +40,12 @@ Yearly corn covers (binary) were extracted from USDA NASS Cropland Data Layers (
 
 A low-confidence cover and a high-confidence cover were made from those yearly crop covers. Each of them was further clumped to remove erroneous pixels, which gave us two more static corn covers.
 
-Click the links below to download TIF files of in-season covers:
-
-.. raw:: html
-
-  <ul class="simple">
-  <li><a href="https://s3.amazonaws.com/groprod/gro_crop_masks/us_corn/USCorn_LC_99_15.tif" target="_blank"><code class="download"><span class="pre"></span>low confidence</code></a></li>
-  <li><a href="<https://s3.amazonaws.com/groprod/gro_crop_masks/us_corn/USCorn_HC_99_15.tif" target="_blank"><code class="download"><span class="pre"></span>high confidence</code></a></li>
-  <li><a href="https://s3.amazonaws.com/groprod/gro_crop_masks/us_corn/USCorn_LCClump_99_15.tif" target="_blank"><code class="download"><span class="pre"></span>low confidence clumped</code></a></li>
-  <li><a href="https://s3.amazonaws.com/groprod/gro_crop_masks/us_corn/USCorn_HCClump_99_15.tif" target="_blank"><code class="download"><span class="pre"></span>low confidence clumped</code></a></li>
-  </ul>
-
 US Soy
 ------
 
 Yearly soy covers were extracted from the NASS CDL the same way as corn, except that the entire contiguous US was included. In this case we end up using only one cover:
 
 We start in 2008, because including years prior to 2008 reduces the accuracy for yield modeling purposes. A high-confidence cover is not used, as it was found to not help the yield modeling accuracy. Both of these observations seem to reflect the fact that, in the US, the areas where soybeans are planted have been changing relatively more than the corn areas, which makes older crop covers less informative in this case.
-
-Click the link below to download TIF files of in-season covers:
-
-.. raw:: html
-
-  <ul class="simple">
-  <li><a href="https://s3.amazonaws.com/groprod/gro_crop_masks/us_soy/USSoy_LC_08_17.tif" target="_blank"><code class="download"><span class="pre"></span>low confidence</code></a></li>
-  </ul>
 
 Argentina Soy
 -------------
@@ -79,17 +60,6 @@ Once those unidentifiable crops have been found, a simple ratio was used to iden
 
 A low-confidence cover and a high-confidence cover were made from those yearly crop covers. Each of them were further clumped to remove erroneous pixels, which gave us two more static soy covers.
 
-Click the links below to download TIF files of in-season covers:
-
-.. raw:: html
-
-  <ul class="simple">
-  <li><a href="https://s3.amazonaws.com/groprod/gro_crop_masks/argentina_soy/ArgLC07_16.tif" target="_blank"><code class="download"><span class="pre"></span>low confidence</code></a></li>
-  <li><a href="<https://s3.amazonaws.com/groprod/gro_crop_masks/argentina_soy/ArgHC07_16.tif" target="_blank"><code class="download"><span class="pre"></span>high confidence</code></a></li>
-  <li><a href="https://s3.amazonaws.com/groprod/gro_crop_masks/argentina_soy/ArgLC07_16Clumped.tif" target="_blank"><code class="download"><span class="pre"></span>low confidence clumped</code></a></li>
-  <li><a href="https://s3.amazonaws.com/groprod/gro_crop_masks/argentina_soy/ArgHC07_16Clumped.tif" target="_blank"><code class="download"><span class="pre"></span>low confidence clumped</code></a></li>
-  </ul>
-
 India Wheat
 -----------
 
@@ -101,16 +71,79 @@ Since India does not have the equivalent of NASS CDL available to the public, we
 
 A low-confidence cover and a high-confidence cover were made from those yearly crop covers. Each of them were further clumped to remove erroneous pixels, which gave us two more static wheat covers.
 
-Click the links below to download TIF files of in-season covers:
+US Winter Wheat
+----------------
 
-.. raw:: html
+Yearly wheat crop covers were extracted from the NASS CDL using the same methodology as for corn, except that the entire contiguous US was included.
 
-  <ul class="simple">
-  <li><a href="https://s3.amazonaws.com/groprod/gro_crop_masks/india_wheat/IndiaWheat_07_17_LC_1b.tif" target="_blank"><code class="download"><span class="pre"></span>low confidence</code></a></li>
-  <li><a href="<https://s3.amazonaws.com/groprod/gro_crop_masks/india_wheat/IndiaWheat_07_17_HC_1b.tif" target="_blank"><code class="download"><span class="pre"></span>high confidence</code></a></li>
-  <li><a href="https://s3.amazonaws.com/groprod/gro_crop_masks/india_wheat/IndiaWheat_07_17_LC_ClumpDual.tif" target="_blank"><code class="download"><span class="pre"></span>low confidence clumped</code></a></li>
-  <li><a href="https://s3.amazonaws.com/groprod/gro_crop_masks/india_wheat/IndiaWheat_07_17_HC_ClumpDual.tif" target="_blank"><code class="download"><span class="pre"></span>low confidence clumped</code></a></li>
-  </ul>
+A low-confidence cover and a high-confidence cover were made from the yearly crop covers starting in 2009. The results of these covers can be viewed in Gro under the Land Cover (percent) metric, where the value of a pixel will represent that pixel's likelihood of growing this crop in a given year.
+ 
+Russia Winter Wheat
+--------------------
+
+Since Russia does not have the equivalent of NASS CDL available to the public, we use a technique similar to the one used for our other non-US country/crop pairings. The covers were classified annually back to 2008. We did not make the covers for the entire country, but only for the select provinces and districts that are the highest producing regions.
+
+The method of crop discrimination used a thresholding of Sentinel-2 and Landsat 5/7/8 bands in a combination of Shortwave Infrared (SWIR) (~1.61 µm), Green (~0.56 µm), Near Infrared (NIR) (~0.865 µm), and Red (~0.66 µm) in the following combination: SWIR - Green/NIR + Red.
+
+A low-confidence cover was made from the yearly crop covers starting in 2008. The results of these covers can be viewed in Gro under the Land Cover (percent) metric, where the value of a pixel will represent that pixel's likelihood of growing this crop in a given year.
+ 
+Ukraine Winter Wheat
+---------------------
+
+Since Ukraine does not have the equivalent of NASS CDL available to the public, we use a technique similar to the one used for our other non-US country/crop pairings. The covers were classified annually but these annual covers only went back to 2014. This shortened time period was due to the fact that the Synthetic Aperture Radar (SAR) bands exclusive to Sentinel-1 were used for the crop discrimination step and its archival depth is not deep. 
+
+The method of crop discrimination used a thresholding of Sentinel-1 with a simple ratio between its VV band (Single co-polarization, vertical transmit/vertical receive) and the VH band (Dual-band cross-polarization, vertical transmit/horizontal receive) as follows: VV/VH.
+
+A low-confidence cover was made from the yearly crop covers starting in 2014. The results of these covers can be viewed in Gro under the Land Cover (percent) metric, where the value of a pixel will represent that pixel's likelihood of growing this crop in a given year.
+ 
+Brazil Soy
+----------
+Brazil soybeans uses a similar methodology to that of Argentina soybeans, with the exception that Landsat 5 was omitted from the constellation of satellites.
+
+Another minor change: Instead of subtracting the vegetation hue layer from the soil hue layer and isolating the top portion of the pixel values as was done for Argentina, for Brazil we threshold and extract the soil values in each of the soil images and combine them with the other satellite soil imagery. The same is done with the vegetation values over all the vegetation images. This small technique change proved to be much more useful in finding crop areas, as it allowed for areas with poor coverage to be picked up more easily and not be drowned out.
+
+A low-confidence cover and a high-confidence cover were made from those yearly crop covers starting in 2009. Each of them was further clumped to remove erroneous pixels. The results of these covers can be viewed in Gro under the Land Cover (percent) metric, where the value of a pixel will represent that pixel's likelihood of growing this crop in a given year.
+ 
+Argentina Corn
+----------------
+
+Since Argentina does not have the equivalent of NASS CDL available to the public, we use a technique similar to the one used for our other non-US country/crop pairings. The covers were classified annually but these annual covers only went back to 2016. This shortened time period was due to the fact that bands exclusive to Sentinel-2 were used for the crop discrimination step and its archival depth is limited. 
+
+The method of crop discrimination used a thresholding of Sentinel-2 bands 8 (~0.842 µm), band 7 (~0.783 µm), band 6 (~0.74 µm), and band 5 (~0.705 µm), expressed as: B7 - B6/B8 + B5.
+
+A low-confidence cover and a high-confidence cover were made from the yearly crop covers starting in 2016. The results of these covers can be viewed in Gro under the Land Cover (percent) metric, where the value of a pixel will represent that pixel's likelihood of growing this crop in a given year.
+ 
+China Corn
+----------
+
+Since China does not have the equivalent of NASS CDL available to the public, we use a technique similar to the one used for our other non-US country/crop pairings. The covers were classified annually but these annual covers only went back to 2016. This shortened time period was due to the fact that bands exclusive to Sentinel-2 were used for the crop discrimination step and its archival depth is not deep. We did not make the covers for the entire country, but only for select provinces and districts to focus on the highest producing regions of the country. 
+
+The crop discrimination methods used were different for different areas studied. One method used Sentinel-2 bands in a normalized difference of band 7 (~0.783 µm) and band 5 (~0.705 µm): B7 - B5/B7 + B5. The other method was based on band 8 (~0.842 µm), band 7 (~0.783 µm), band 6 (~0.74 µm), and band 5 (~0.705 µm), expressed as: B7 - B6/B8 + B5.
+
+We also eliminated pixels that were on a slope greater than 5°. Crude forest covers based on thresholding annual NDVI as well as SWIR bands (~1.61 µm) and NIR bands (~0.865 µm) were also applied to the regions. 
+
+We also made two types of covers for different data sources: NBS (low-confidence cover only) and Cofeed (high-confidence and low-confidence covers). The results of these covers can be viewed in Gro under the Land Cover (percent) metric, where the value of a pixel will represent that pixel's likelihood of growing this crop in a given year.
+ 
+Brazil Corn
+-----------
+
+Since Brazil does not have the equivalent of NASS CDL available to the public, we use a technique similar to the one used for our other non-US country/crop pairings. The covers were classified annually but these annual covers only went back to 2016. This shortened time period was due to the fact that bands exclusive to Sentinel-2 were used for the crop discrimination step and its archival depth is not deep. 
+
+The method of crop discrimination used a thresholding of Sentinel-2 band 8 (~0.842 µm), band 7 (~0.783 µm), band 6 (~0.74 µm), and band 5 (~0.705 µm), expressed as: B7 - B6/B8 + B5.
+
+A low-confidence cover and a high-confidence cover were made from the yearly crop covers starting in 2016. The results of these covers can be viewed in Gro under the Land Cover (percent) metric, where the value of a pixel will represent that pixel's likelihood of growing this crop in a given year.
+ 
+China Wheat
+-----------
+
+Since China does not have the equivalent of NASS CDL available to the public, we use a technique similar to the one used for our other non-US country/crop pairings. The covers were classified annually but these annual covers only went back to 2016. This shortened time period was due to the fact that bands exclusive to Sentinel-2 were used for the crop discrimination step and its archival depth is not deep. We did not make the covers for the entire country, but only for selected provinces to focus on the highest producing regions. 
+
+The method of crop discrimination used a thresholding of Sentinel-2 band 11 (~1.61 µm), band 7 (~0.783 µm), band 6 (~0.74 µm), and band 5 (~0.705 µm), expressed as: B11 - B7/B6 + B5.
+
+We also eliminated pixels that were on a slope greater than 5°.
+
+A low-confidence cover and a high-confidence cover were made from the yearly crop covers starting in 2016. The results of these covers can be viewed in Gro under the Land Cover (percent) metric, where the value of a pixel will represent that pixel's likelihood of growing this crop in a given year.
+
 
 Gro Yield Model Backtest Data
 =============================
