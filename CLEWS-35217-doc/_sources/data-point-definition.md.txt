@@ -9,7 +9,7 @@ Gro defines a "data point" as a discrete result produced by our API. When using 
   'unit_id': 851,
   'reporting_date': None,
   'metadata': {},
-  'available_date': None,
+  'available_date': '2013-03-01T00:00:00.000Z',
   'metric_id': 15531082,
   'item_id': 7382,
   'region_id': 138295,
