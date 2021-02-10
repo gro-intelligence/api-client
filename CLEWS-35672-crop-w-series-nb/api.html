@@ -538,6 +538,7 @@ or set to 0 (“World”) by default.</p></li>
 <li><p><strong>end_date</strong> (<em>string</em><em>, </em><em>optional</em>) – All points with start dates equal to or before this date</p></li>
 <li><p><strong>show_revisions</strong> (<em>boolean</em><em>, </em><em>optional</em>) – False by default, meaning only the latest value for each period. If true, will return
 all values for a given period, differentiated by the <cite>reporting_date</cite> field.</p></li>
+<li><p><strong>show_available_date</strong> (<em>boolean</em><em>, </em><em>optional</em>) – False by default. If true, will return the available date of each data point.</p></li>
 <li><p><strong>insert_null</strong> (<em>boolean</em><em>, </em><em>optional</em>) – False by default. If True, will include a data point with a None value for each period
 that does not have data.</p></li>
 <li><p><strong>at_time</strong> (<em>string</em><em>, </em><em>optional</em>) – Estimate what data would have been available via Gro at a given time in the past. See
@@ -813,6 +814,9 @@ You can inspect the client’s saved list using <a class="reference internal" hr
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
+<li><p><strong>show_revisions</strong> (<em>boolean</em><em>, </em><em>optional</em>) – False by default, meaning only the latest value for each period. If true, will return
+all values for a given period, differentiated by the <cite>reporting_date</cite> field.</p></li>
+<li><p><strong>show_available_date</strong> (<em>boolean</em><em>, </em><em>optional</em>) – False by default. If true, will return the available date of each data point.</p></li>
 <li><p><strong>index_by_series</strong> (<em>boolean</em><em>, </em><em>optional</em>) – If set, the dataframe is indexed by series. See <a class="reference external" href="https://developers.gro-intelligence.com/data-series-definition.html">https://developers.gro-intelligence.com/data-series-definition.html</a></p></li>
 <li><p><strong>include_names</strong> (<em>boolean</em><em>, </em><em>optional</em>) – If set, the dataframe will have additional columns with names of entities.
 Note that this will increase the size of the dataframe by about 5x.</p></li>

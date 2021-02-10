@@ -1109,6 +1109,11 @@
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
+<span class="sd">            show_revisions : boolean, optional</span>
+<span class="sd">                False by default, meaning only the latest value for each period. If true, will return </span>
+<span class="sd">                all values for a given period, differentiated by the `reporting_date` field.</span>
+<span class="sd">            show_available_date : boolean, optional</span>
+<span class="sd">                False by default. If true, will return the available date of each data point.</span>
 <span class="sd">            index_by_series : boolean, optional</span>
 <span class="sd">               If set, the dataframe is indexed by series. See https://developers.gro-intelligence.com/data-series-definition.html</span>
 <span class="sd">            include_names : boolean, optional</span>
@@ -1291,6 +1296,8 @@
 <span class="sd">        show_revisions : boolean, optional</span>
 <span class="sd">            False by default, meaning only the latest value for each period. If true, will return</span>
 <span class="sd">            all values for a given period, differentiated by the `reporting_date` field.</span>
+<span class="sd">        show_available_date : boolean, optional</span>
+<span class="sd">            False by default. If true, will return the available date of each data point.</span>
 <span class="sd">        insert_null : boolean, optional</span>
 <span class="sd">            False by default. If True, will include a data point with a None value for each period</span>
 <span class="sd">            that does not have data.</span>
