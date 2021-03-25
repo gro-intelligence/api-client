@@ -914,7 +914,7 @@ class GroClient(object):
         Parameters
         ----------
             show_revisions : boolean, optional
-                False by default, meaning only the latest value for each period. If true, will return 
+                False by default, meaning only the latest value for each period. If true, will return
                 all values for a given period, differentiated by the `reporting_date` field.
             show_available_date : boolean, optional
                 False by default. If true, will return the available date of each data point.
@@ -1307,6 +1307,8 @@ class GroClient(object):
                 data_series.pop("source_name", None)
                 # metadata is not hashable
                 data_series.pop("metadata", None)
+                # estimated data count is not hashable
+                data_series.pop("data_count_estimate", None)
                 series_hash = frozenset(data_series.items())
                 if series_hash not in ranking_groups:
                     ranking_groups.add(series_hash)
