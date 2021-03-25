@@ -1104,7 +1104,7 @@
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">            show_revisions : boolean, optional</span>
-<span class="sd">                False by default, meaning only the latest value for each period. If true, will return </span>
+<span class="sd">                False by default, meaning only the latest value for each period. If true, will return</span>
 <span class="sd">                all values for a given period, differentiated by the `reporting_date` field.</span>
 <span class="sd">            show_available_date : boolean, optional</span>
 <span class="sd">                False by default. If true, will return the available date of each data point.</span>
@@ -1497,6 +1497,8 @@
                 <span class="n">data_series</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;source_name&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
                 <span class="c1"># metadata is not hashable</span>
                 <span class="n">data_series</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;metadata&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+                <span class="c1"># estimated data count is not hashable</span>
+                <span class="n">data_series</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;data_count_estimate&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
                 <span class="n">series_hash</span> <span class="o">=</span> <span class="nb">frozenset</span><span class="p">(</span><span class="n">data_series</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
                 <span class="k">if</span> <span class="n">series_hash</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">ranking_groups</span><span class="p">:</span>
                     <span class="n">ranking_groups</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">series_hash</span><span class="p">)</span>
