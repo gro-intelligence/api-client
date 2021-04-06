@@ -278,12 +278,16 @@
 
 <span class="sd">            &gt;&gt;&gt; client = GroClient(access_token=&quot;your_token_here&quot;)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Initialize early since they&#39;re referenced in the destructor and</span>
+        <span class="c1"># access_token checking may cause constructor to exit early.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_async_http_client</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ioloop</span> <span class="o">=</span> <span class="kc">None</span>
+
         <span class="k">if</span> <span class="n">access_token</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">env_token</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;GROAPI_TOKEN&quot;</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">env_token</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;$GROAPI_TOKEN environment variable must be set&quot;</span>
-                                   <span class="s2">&quot; when GroClient is constructed without access_token&quot;</span><span class="p">)</span>
-            <span class="n">access_token</span> <span class="o">=</span> <span class="n">env_token</span>
+            <span class="n">access_token</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;GROAPI_TOKEN&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">access_token</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;$GROAPI_TOKEN environment variable must be set when &quot;</span>
+                                   <span class="s2">&quot;GroClient is constructed without the access_token argument&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">api_host</span> <span class="o">=</span> <span class="n">api_host</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">access_token</span> <span class="o">=</span> <span class="n">access_token</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span> <span class="o">=</span> <span class="n">lib</span><span class="o">.</span><span class="n">get_default_logger</span><span class="p">()</span>
@@ -299,14 +303,14 @@
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
                 <span class="s2">&quot;Unable to initialize event loop, async methods disabled: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
-            <span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_async_http_client</span> <span class="o">=</span> <span class="kc">None</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_ioloop</span> <span class="o">=</span> <span class="kc">None</span></div>
+            <span class="p">)</span></div>
 
     <span class="k">def</span> <span class="fm">__del__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_async_http_client</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_ioloop</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_ioloop</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_async_http_client</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_async_http_client</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ioloop</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_ioloop</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_ioloop</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
     <span class="k">def</span> <span class="nf">get_logger</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span>
@@ -508,8 +512,9 @@
         <span class="k">try</span><span class="p">:</span>
             <span class="n">list_of_series_points</span> <span class="o">=</span> <span class="k">yield</span> <span class="bp">self</span><span class="o">.</span><span class="n">async_get_data</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
             <span class="n">include_historical</span> <span class="o">=</span> <span class="n">selection</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;include_historical&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+            <span class="n">include_available_date</span> <span class="o">=</span> <span class="n">selection</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;show_available_date&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
             <span class="n">points</span> <span class="o">=</span> <span class="n">lib</span><span class="o">.</span><span class="n">list_of_series_to_single_series</span><span class="p">(</span>
-                <span class="n">list_of_series_points</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="n">include_historical</span>
+                <span class="n">list_of_series_points</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="n">include_historical</span><span class="p">,</span> <span class="n">include_available_date</span>
             <span class="p">)</span>
             <span class="k">raise</span> <span class="n">gen</span><span class="o">.</span><span class="n">Return</span><span class="p">(</span><span class="n">points</span><span class="p">)</span>
         <span class="k">except</span> <span class="n">BatchError</span> <span class="k">as</span> <span class="n">b</span><span class="p">:</span>
@@ -1128,7 +1133,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_host</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">,</span> <span class="n">num_results</span><span class="p">,</span> <span class="o">**</span><span class="n">selection</span>
         <span class="p">)</span></div>
 
-<div class="viewcode-block" id="GroClient.get_df"><a class="viewcode-back" href="../../api.html#groclient.GroClient.get_df">[docs]</a>    <span class="k">def</span> <span class="nf">get_df</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">show_revisions</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">index_by_series</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">include_names</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="GroClient.get_df"><a class="viewcode-back" href="../../api.html#groclient.GroClient.get_df">[docs]</a>    <span class="k">def</span> <span class="nf">get_df</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">show_revisions</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">show_available_date</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">index_by_series</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">include_names</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Call :meth:`~.get_data_points` for each saved data series and return as a combined</span>
 <span class="sd">        dataframe.</span>
 
@@ -1138,6 +1143,11 @@
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
+<span class="sd">            show_revisions : boolean, optional</span>
+<span class="sd">                False by default, meaning only the latest value for each period. If true, will return</span>
+<span class="sd">                all values for a given period, differentiated by the `reporting_date` field.</span>
+<span class="sd">            show_available_date : boolean, optional</span>
+<span class="sd">                False by default. If true, will return the available date of each data point.</span>
 <span class="sd">            index_by_series : boolean, optional</span>
 <span class="sd">               If set, the dataframe is indexed by series. See https://developers.gro-intelligence.com/data-series-definition.html</span>
 <span class="sd">            include_names : boolean, optional</span>
@@ -1155,6 +1165,8 @@
             <span class="n">data_series</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_series_queue</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
             <span class="k">if</span> <span class="n">show_revisions</span><span class="p">:</span>
                 <span class="n">data_series</span><span class="p">[</span><span class="s2">&quot;show_revisions&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">if</span> <span class="n">show_available_date</span><span class="p">:</span>
+                <span class="n">data_series</span><span class="p">[</span><span class="s2">&quot;show_available_date&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_points_to_df</span><span class="p">(</span>
                 <span class="kc">None</span><span class="p">,</span> <span class="n">data_series</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_data_points</span><span class="p">(</span><span class="o">**</span><span class="n">data_series</span><span class="p">)</span>
             <span class="p">)</span>
@@ -1201,10 +1213,12 @@
         <span class="c1"># source_id. We add it as a column, in case we have</span>
         <span class="c1"># several selections series which differ only by source id.</span>
         <span class="n">tmp</span><span class="p">[</span><span class="s2">&quot;source_id&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data_series</span><span class="p">[</span><span class="s2">&quot;source_id&quot;</span><span class="p">]</span>
-        <span class="c1"># tmp should always have end_date/start_date/reporting_date as columns if not empty</span>
+        <span class="c1"># tmp should always have end_date/start_date/reporting_date/available_date as columns if not empty</span>
         <span class="n">tmp</span><span class="o">.</span><span class="n">end_date</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">tmp</span><span class="o">.</span><span class="n">end_date</span><span class="p">)</span>
         <span class="n">tmp</span><span class="o">.</span><span class="n">start_date</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">tmp</span><span class="o">.</span><span class="n">start_date</span><span class="p">)</span>
         <span class="n">tmp</span><span class="o">.</span><span class="n">reporting_date</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">tmp</span><span class="o">.</span><span class="n">reporting_date</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s2">&quot;available_date&quot;</span> <span class="ow">in</span> <span class="n">tmp</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+            <span class="n">tmp</span><span class="o">.</span><span class="n">available_date</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">tmp</span><span class="o">.</span><span class="n">available_date</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_frame</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_data_frame</span> <span class="o">=</span> <span class="n">tmp</span>
@@ -1316,6 +1330,8 @@
 <span class="sd">        show_revisions : boolean, optional</span>
 <span class="sd">            False by default, meaning only the latest value for each period. If true, will return</span>
 <span class="sd">            all values for a given period, differentiated by the `reporting_date` field.</span>
+<span class="sd">        show_available_date : boolean, optional</span>
+<span class="sd">            False by default. If true, will return the available date of each data point.</span>
 <span class="sd">        insert_null : boolean, optional</span>
 <span class="sd">            False by default. If True, will include a data point with a None value for each period</span>
 <span class="sd">            that does not have data.</span>
@@ -1521,6 +1537,8 @@
                 <span class="n">data_series</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;source_name&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
                 <span class="c1"># metadata is not hashable</span>
                 <span class="n">data_series</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;metadata&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+                <span class="c1"># estimated data count is not hashable</span>
+                <span class="n">data_series</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;data_count_estimate&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
                 <span class="n">series_hash</span> <span class="o">=</span> <span class="nb">frozenset</span><span class="p">(</span><span class="n">data_series</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
                 <span class="k">if</span> <span class="n">series_hash</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">ranking_groups</span><span class="p">:</span>
                     <span class="n">ranking_groups</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">series_hash</span><span class="p">)</span>
