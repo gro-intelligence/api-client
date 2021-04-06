@@ -205,16 +205,47 @@
 <div class="contents local topic" id="table-of-contents">
 <p class="topic-title">Table of Contents</p>
 <ul class="simple">
-<li><p><a class="reference internal" href="#basic-exploration" id="id1">Basic Exploration</a></p></li>
-<li><p><a class="reference internal" href="#data-retrieval" id="id2">Data Retrieval</a></p></li>
-<li><p><a class="reference internal" href="#geographic" id="id3">Geographic</a></p></li>
-<li><p><a class="reference internal" href="#advanced-exploration" id="id4">Advanced Exploration</a></p></li>
-<li><p><a class="reference internal" href="#pandas-utils" id="id5">Pandas Utils</a></p></li>
-<li><p><a class="reference internal" href="#crop-modeling" id="id6">Crop Modeling</a></p></li>
+<li><p><a class="reference internal" href="#creating-a-client" id="id1">Creating a client</a></p></li>
+<li><p><a class="reference internal" href="#basic-exploration" id="id2">Basic Exploration</a></p></li>
+<li><p><a class="reference internal" href="#data-retrieval" id="id3">Data Retrieval</a></p></li>
+<li><p><a class="reference internal" href="#geographic" id="id4">Geographic</a></p></li>
+<li><p><a class="reference internal" href="#advanced-exploration" id="id5">Advanced Exploration</a></p></li>
+<li><p><a class="reference internal" href="#pandas-utils" id="id6">Pandas Utils</a></p></li>
+<li><p><a class="reference internal" href="#crop-modeling" id="id7">Crop Modeling</a></p></li>
 </ul>
 </div>
+<div class="section" id="creating-a-client">
+<h2><a class="toc-backref" href="#id1">Creating a client</a><a class="headerlink" href="#creating-a-client" title="Permalink to this headline">¶</a></h2>
+<dl class="py method">
+<dt id="groclient.GroClient.__init__">
+<code class="sig-prename descclassname">GroClient.</code><code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">api_host</span><span class="o">=</span><span class="default_value">'api.gro-intelligence.com'</span></em>, <em class="sig-param"><span class="n">access_token</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/groclient/client.html#GroClient.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#groclient.GroClient.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Construct a GroClient instance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>api_host</strong> (<em>string</em><em>, </em><em>optional</em>) – The API server hostname.</p></li>
+<li><p><strong>access_token</strong> (<em>string</em><em>, </em><em>optional</em>) – Your Gro API authentication token. If not specified, the
+<code class="code docutils literal notranslate"><span class="pre">$GROAPI_TOKEN</span></code> environment variable is used. See
+<a class="reference internal" href="authentication.html"><span class="doc">Authentication</span></a>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>RuntimeError</strong> – Raised when neither the <code class="code docutils literal notranslate"><span class="pre">access_token</span></code> parameter nor
+    <code class="code docutils literal notranslate"><span class="pre">$GROAPI_TOKEN</span></code> environment variable are set.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">client</span> <span class="o">=</span> <span class="n">GroClient</span><span class="p">()</span>  <span class="c1"># token stored in $GROAPI_TOKEN</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">client</span> <span class="o">=</span> <span class="n">GroClient</span><span class="p">(</span><span class="n">access_token</span><span class="o">=</span><span class="s2">&quot;your_token_here&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
 <div class="section" id="basic-exploration">
-<h2><a class="toc-backref" href="#id1">Basic Exploration</a><a class="headerlink" href="#basic-exploration" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id2">Basic Exploration</a><a class="headerlink" href="#basic-exploration" title="Permalink to this headline">¶</a></h2>
 <dl class="py method">
 <dt id="groclient.GroClient.lookup">
 <code class="sig-prename descclassname">GroClient.</code><code class="sig-name descname">lookup</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">entity_type</span></em>, <em class="sig-param"><span class="n">entity_ids</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/groclient/client.html#GroClient.lookup"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#groclient.GroClient.lookup" title="Permalink to this definition">¶</a></dt>
@@ -434,7 +465,7 @@ with the same name.</p>
 
 </div>
 <div class="section" id="data-retrieval">
-<h2><a class="toc-backref" href="#id2">Data Retrieval</a><a class="headerlink" href="#data-retrieval" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id3">Data Retrieval</a><a class="headerlink" href="#data-retrieval" title="Permalink to this headline">¶</a></h2>
 <dl class="py method">
 <dt id="groclient.GroClient.get_data_points">
 <code class="sig-prename descclassname">GroClient.</code><code class="sig-name descname">get_data_points</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">**</span><span class="n">selections</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/groclient/client.html#GroClient.get_data_points"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#groclient.GroClient.get_data_points" title="Permalink to this definition">¶</a></dt>
@@ -551,7 +582,7 @@ that does not have data.</p></li>
 
 </div>
 <div class="section" id="geographic">
-<h2><a class="toc-backref" href="#id3">Geographic</a><a class="headerlink" href="#geographic" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id4">Geographic</a><a class="headerlink" href="#geographic" title="Permalink to this headline">¶</a></h2>
 <dl class="py method">
 <dt id="groclient.GroClient.get_geojson">
 <code class="sig-prename descclassname">GroClient.</code><code class="sig-name descname">get_geojson</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">region_id</span></em>, <em class="sig-param"><span class="n">zoom_level</span><span class="o">=</span><span class="default_value">7</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/groclient/client.html#GroClient.get_geojson"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#groclient.GroClient.get_geojson" title="Permalink to this definition">¶</a></dt>
@@ -659,7 +690,7 @@ regions will be returned, which makes execution significantly faster.</p></li>
 
 </div>
 <div class="section" id="advanced-exploration">
-<h2><a class="toc-backref" href="#id4">Advanced Exploration</a><a class="headerlink" href="#advanced-exploration" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id5">Advanced Exploration</a><a class="headerlink" href="#advanced-exploration" title="Permalink to this headline">¶</a></h2>
 <dl class="py method">
 <dt id="groclient.GroClient.lookup_belongs">
 <code class="sig-prename descclassname">GroClient.</code><code class="sig-name descname">lookup_belongs</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">entity_type</span></em>, <em class="sig-param"><span class="n">entity_id</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/groclient/client.html#GroClient.lookup_belongs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#groclient.GroClient.lookup_belongs" title="Permalink to this definition">¶</a></dt>
@@ -796,7 +827,7 @@ value the series are ranked by. You may then use the results to call
 
 </div>
 <div class="section" id="pandas-utils">
-<h2><a class="toc-backref" href="#id5">Pandas Utils</a><a class="headerlink" href="#pandas-utils" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id6">Pandas Utils</a><a class="headerlink" href="#pandas-utils" title="Permalink to this headline">¶</a></h2>
 <dl class="py method">
 <dt id="groclient.GroClient.get_df">
 <code class="sig-prename descclassname">GroClient.</code><code class="sig-name descname">get_df</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">show_revisions</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">show_available_date</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">index_by_series</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">include_names</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/groclient/client.html#GroClient.get_df"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#groclient.GroClient.get_df" title="Permalink to this definition">¶</a></dt>
@@ -895,7 +926,7 @@ See <a class="reference external" href="https://developers.gro-intelligence.com/
 
 </div>
 <div class="section" id="crop-modeling">
-<h2><a class="toc-backref" href="#id6">Crop Modeling</a><a class="headerlink" href="#crop-modeling" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id7">Crop Modeling</a><a class="headerlink" href="#crop-modeling" title="Permalink to this headline">¶</a></h2>
 <dl class="py method">
 <dt id="groclient.CropModel.compute_weights">
 <code class="sig-prename descclassname">CropModel.</code><code class="sig-name descname">compute_weights</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">crop_name</span></em>, <em class="sig-param"><span class="n">metric_name</span></em>, <em class="sig-param"><span class="n">regions</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/groclient/crop_model.html#CropModel.compute_weights"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#groclient.CropModel.compute_weights" title="Permalink to this definition">¶</a></dt>
@@ -1112,6 +1143,7 @@ search for available series, use <a class="reference internal" href="#groclient.
       <dd><a href="../v1.101.0/api.html">v1.101.0</a></dd>
       <dd><a href="../v1.107.2/api.html">v1.107.2</a></dd>
       <dd><a href="../v1.107.3/api.html">v1.107.3</a></dd>
+      <dd><a href="../v1.122.0/api.html">v1.122.0</a></dd>
       <dd><a href="../v1.40.6/api.html">v1.40.6</a></dd>
       <dd><a href="../v1.56.0/api.html">v1.56.0</a></dd>
       <dd><a href="../v1.56.1/api.html">v1.56.1</a></dd>

@@ -191,8 +191,9 @@
 <span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span>
 <span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
 <span class="kn">import</span> <span class="nn">itertools</span>
-<span class="kn">import</span> <span class="nn">time</span>
 <span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">time</span>
 
 <span class="c1"># Python3 support</span>
 <span class="k">try</span><span class="p">:</span>
@@ -247,7 +248,40 @@
 <span class="k">class</span> <span class="nc">GroClient</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;API client with stateful authentication for lib functions and extra convenience methods.&quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">api_host</span><span class="p">,</span> <span class="n">access_token</span><span class="p">):</span>
+<div class="viewcode-block" id="GroClient.__init__"><a class="viewcode-back" href="../../api.html#groclient.GroClient.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">api_host</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">API_HOST</span><span class="p">,</span> <span class="n">access_token</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Construct a GroClient instance.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        api_host : string, optional</span>
+<span class="sd">            The API server hostname.</span>
+<span class="sd">        access_token : string, optional</span>
+<span class="sd">            Your Gro API authentication token. If not specified, the</span>
+<span class="sd">            :code:`$GROAPI_TOKEN` environment variable is used. See</span>
+<span class="sd">            :doc:`authentication`.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">            RuntimeError</span>
+<span class="sd">                Raised when neither the :code:`access_token` parameter nor</span>
+<span class="sd">                :code:`$GROAPI_TOKEN` environment variable are set.</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">            &gt;&gt;&gt; client = GroClient()  # token stored in $GROAPI_TOKEN</span>
+
+<span class="sd">            &gt;&gt;&gt; client = GroClient(access_token=&quot;your_token_here&quot;)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Initialize early since they&#39;re referenced in the destructor and</span>
+        <span class="c1"># access_token checking may cause constructor to exit early.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_async_http_client</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ioloop</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">if</span> <span class="n">access_token</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">access_token</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;GROAPI_TOKEN&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">access_token</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;$GROAPI_TOKEN environment variable must be set when &quot;</span>
+                                   <span class="s2">&quot;GroClient is constructed without the access_token argument&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">api_host</span> <span class="o">=</span> <span class="n">api_host</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">access_token</span> <span class="o">=</span> <span class="n">access_token</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span> <span class="o">=</span> <span class="n">lib</span><span class="o">.</span><span class="n">get_default_logger</span><span class="p">()</span>
@@ -263,14 +297,14 @@
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
                 <span class="s2">&quot;Unable to initialize event loop, async methods disabled: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
-            <span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_async_http_client</span> <span class="o">=</span> <span class="kc">None</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_ioloop</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="p">)</span></div>
 
     <span class="k">def</span> <span class="fm">__del__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_async_http_client</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_ioloop</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_ioloop</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_async_http_client</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_async_http_client</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ioloop</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_ioloop</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_ioloop</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
     <span class="k">def</span> <span class="nf">get_logger</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span>
@@ -1728,6 +1762,7 @@
       <dd><a href="../../../v1.101.0/index.html">v1.101.0</a></dd>
       <dd><a href="../../../v1.107.2/index.html">v1.107.2</a></dd>
       <dd><a href="../../../v1.107.3/index.html">v1.107.3</a></dd>
+      <dd><a href="../../../v1.122.0/index.html">v1.122.0</a></dd>
       <dd><a href="../../../v1.40.6/index.html">v1.40.6</a></dd>
       <dd><a href="../../../v1.56.0/index.html">v1.56.0</a></dd>
       <dd><a href="../../../v1.56.1/index.html">v1.56.1</a></dd>
