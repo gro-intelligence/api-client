@@ -82,6 +82,11 @@ class GroClient(object):
 
             >>> client = GroClient(access_token="your_token_here")
         """
+        # Initialize early since they're referenced in the destructor and
+        # access_token checking may cause constructor to exit early.
+        self._async_http_client = None
+        self._ioloop = None
+
         if access_token is None:
             access_token = os.environ.get("GROAPI_TOKEN")
             if access_token is None:
@@ -103,13 +108,13 @@ class GroClient(object):
             self._logger.warning(
                 "Unable to initialize event loop, async methods disabled: {}".format(e)
             )
-            self._async_http_client = None
-            self._ioloop = None
 
     def __del__(self):
-        self._async_http_client.close()
-        self._ioloop.stop()
-        self._ioloop.close()
+        if self._async_http_client is not None:
+            self._async_http_client.close()
+        if self._ioloop is not None:
+            self._ioloop.stop()
+            self._ioloop.close()
 
     def get_logger(self):
         return self._logger
