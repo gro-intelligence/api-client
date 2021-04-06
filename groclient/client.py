@@ -83,11 +83,10 @@ class GroClient(object):
             >>> client = GroClient(access_token="your_token_here")
         """
         if access_token is None:
-            env_token = os.environ.get("GROAPI_TOKEN")
-            if env_token is None:
-                raise RuntimeError("$GROAPI_TOKEN environment variable must be set"
-                                   " when GroClient is constructed without access_token")
-            access_token = env_token
+            access_token = os.environ.get("GROAPI_TOKEN")
+            if access_token is None:
+                raise RuntimeError("$GROAPI_TOKEN environment variable must be set when "
+                                   "GroClient is constructed without the access_token argument")
         self.api_host = api_host
         self.access_token = access_token
         self._logger = lib.get_default_logger()
