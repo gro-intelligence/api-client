@@ -1,8 +1,9 @@
 from __future__ import print_function
 from functools import partial
 import itertools
-import time
 import json
+import os
+import time
 
 # Python3 support
 try:
@@ -57,7 +58,40 @@ class BatchError(APIError):
 class GroClient(object):
     """API client with stateful authentication for lib functions and extra convenience methods."""
 
-    def __init__(self, api_host, access_token):
+    def __init__(self, api_host=cfg.API_HOST, access_token=None):
+        """Construct a GroClient instance.
+
+        Parameters
+        ----------
+        api_host : string, optional
+            The API server hostname.
+        access_token : string, optional
+            Your Gro API authentication token. If not specified, the
+            :code:`$GROAPI_TOKEN` environment variable is used. See
+            :doc:`authentication`.
+
+        Raises
+        ------
+            RuntimeError
+                Raised when neither the :code:`access_token` parameter nor
+                :code:`$GROAPI_TOKEN` environment variable are set.
+
+        Examples
+        --------
+            >>> client = GroClient()  # token stored in $GROAPI_TOKEN
+
+            >>> client = GroClient(access_token="your_token_here")
+        """
+        # Initialize early since they're referenced in the destructor and
+        # access_token checking may cause constructor to exit early.
+        self._async_http_client = None
+        self._ioloop = None
+
+        if access_token is None:
+            access_token = os.environ.get("GROAPI_TOKEN")
+            if access_token is None:
+                raise RuntimeError("$GROAPI_TOKEN environment variable must be set when "
+                                   "GroClient is constructed without the access_token argument")
         self.api_host = api_host
         self.access_token = access_token
         self._logger = lib.get_default_logger()
@@ -74,13 +108,13 @@ class GroClient(object):
             self._logger.warning(
                 "Unable to initialize event loop, async methods disabled: {}".format(e)
             )
-            self._async_http_client = None
-            self._ioloop = None
 
     def __del__(self):
-        self._async_http_client.close()
-        self._ioloop.stop()
-        self._ioloop.close()
+        if self._async_http_client is not None:
+            self._async_http_client.close()
+        if self._ioloop is not None:
+            self._ioloop.stop()
+            self._ioloop.close()
 
     def get_logger(self):
         return self._logger

@@ -4,8 +4,9 @@ try:
 except ImportError:
     # Python 2.7
     from mock import patch, MagicMock
-from unittest import TestCase
 from datetime import date
+import os
+from unittest import TestCase
 
 from groclient import GroClient
 from groclient.utils import zip_selections
@@ -507,3 +508,36 @@ class GroClientTests(TestCase):
 
         with self.assertRaises(Exception):
             self.client.convert_unit({"value": None, "unit_id": 10}, 43)
+
+class GroClientConstructorTests(TestCase):
+    PROD_API_HOST = "api.gro-intelligence.com"
+
+    # The most convenient method.
+    @patch.dict(os.environ, {'GROAPI_TOKEN': MOCK_TOKEN})
+    def test_no_host_and_env_token(self):
+        client = GroClient()
+        with patch("groclient.lib.get_available") as get_available:
+            _ = client.get_available("items")
+            get_available.assert_called_once_with(MOCK_TOKEN, self.PROD_API_HOST, "items")
+
+    # A common use case: user passes an API token but no API host.
+    def test_no_host_and_kwarg_token(self):
+        client = GroClient(access_token=MOCK_TOKEN)
+        with patch("groclient.lib.get_available") as get_available:
+            _ = client.get_available("items")
+            get_available.assert_called_once_with(MOCK_TOKEN, self.PROD_API_HOST, "items")
+
+    def test_explicit_host_and_token(_self):
+        client = GroClient(MOCK_HOST, MOCK_TOKEN)
+        with patch("groclient.lib.get_available") as get_available:
+            _ = client.get_available("items")
+            get_available.assert_called_once_with(MOCK_TOKEN, MOCK_HOST, "items")
+
+    def test_missing_token(self):
+        # Explicitly unset GROAPI_TOKEN if it's set (eg, its set in our Shippable config).
+        env_without_token = {k: v for k, v in os.environ.items() if k != "GROAPI_TOKEN"}
+        with patch.dict(os.environ, env_without_token, clear=True):
+            with self.assertRaisesRegex(RuntimeError, "environment variable must be set"):
+                _ = GroClient(MOCK_HOST)
+            with self.assertRaisesRegex(RuntimeError, "environment variable must be set"):
+                _ = GroClient()
