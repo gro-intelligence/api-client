@@ -21,9 +21,7 @@ gro_client = 'groclient.__main__:main'
 [tool.poetry.dependencies]
 python = "^3.6.1"
 numpy = "*"
-scipy = "*"
 sklearn = "*"
-matplotlib = "*"
 requests = "*"
 pandas = "*"
 tornado = "*"
