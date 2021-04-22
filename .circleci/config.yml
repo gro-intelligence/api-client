@@ -8,9 +8,6 @@ jobs:
     docker:
       # Use the base circle CI image
       - image: "cimg/base:stable"
-        auth:
-          username: DOCKERHUB_LOGIN
-          password: DOCKERHUB_PASSWORD
     steps:
       # TODO set up source and pip caching
       # checkout the git repo
