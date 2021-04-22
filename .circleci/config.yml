@@ -26,7 +26,7 @@ jobs:
 
       - run:
           name: "Run tests and code coverage"
-          command: |
+          command: >-
             mkdir -p circleci/testresults circleci/codecoverage &&
             poetry run pytest
             --junitxml=circleci/testresults/junit.xml
@@ -41,7 +41,7 @@ jobs:
       
       - run:
           name: "Test sample notebook"
-          command: |
+          command: >-
             pip install -r api/client/samples/analogous_years/requirements.txt &&
             poetry run pytest api/client/samples/analogous_years/
 
@@ -50,7 +50,7 @@ jobs:
       # https://circleci.com/docs/2.0/configuration-reference/#run
       - run:
           name: "Ensure latest docs build without warnings or errors"
-          command: |
+          command: >-
             poetry install -E docs &&
             poetry run sphinx-build -W --keep-going docs docs/_build/html
 
@@ -63,7 +63,7 @@ jobs:
       # See note in CONTRIBUTING.md
       - run:
           name: "Build package"
-          command: |
+          command: >-
             pip install poetry-dynamic-versioning &&
             poetry build
 
@@ -73,7 +73,7 @@ jobs:
       # merged, which is why we check $IS_PULL_REQUEST.
       - run:
           name: "Check for broken links in the docs"
-          command: |
+          command: >-
             if [ "$CIRCLE_BRANCH" == "development" ] && [ ! -z $CIRCLE_PULL_REQUEST ]; then
               poetry config repositories.testpypi https://test.pypi.org/legacy/ &&
               poetry publish -u __token__ -p $TESTPYPI_TOKEN -r testpypi
