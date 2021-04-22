@@ -42,7 +42,7 @@ jobs:
       - run:
           name: "Test sample notebook"
           command: >-
-            pip install -r api/client/samples/analogous_years/requirements.txt &&
+            poetry run pip install -r api/client/samples/analogous_years/requirements.txt &&
             poetry run pytest api/client/samples/analogous_years/
 
       # We'll skip conditionally checking for success at this point since by default
