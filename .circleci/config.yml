@@ -7,7 +7,7 @@ jobs:
     # ref: https://circleci.com/docs/2.0/executor-types/?section=executors-and-images#using-docker
     docker:
       # Use the base circle CI image
-      - image: "cimg/base:stable"
+      - image: "cimg/python:3.7"
     steps:
       # TODO set up source and pip caching
       # checkout the git repo
