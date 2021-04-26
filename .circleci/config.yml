@@ -1,13 +1,78 @@
-# Use the latest 2.1 version of CircleCI pipeline process engine. See: https://circleci.com/docs/2.0/configuration-reference
+---
+
 version: 2.1
-# Use a package of configuration called an orb.
-orbs:
-  # Declare a dependency on the welcome-orb
-  welcome: circleci/welcome-orb@0.4.1
-# Orchestrate or schedule a set of jobs
+
+jobs:
+  ci:
+    # ref: https://circleci.com/docs/2.0/executor-types/?section=executors-and-images#using-docker
+    docker:
+      # Use the base circle CI image
+      - image: "cimg/python:3.7"
+    steps:
+      # TODO set up source and pip caching
+      # checkout the git repo
+      - checkout
+
+      - run:
+          name: "Environment setup"
+          command: |
+            pip install -U pip wheel
+            pip install poetry
+            poetry install
+
+      - run:
+          name: "Run doctests"
+          command: poetry run python groclient/lib.py -v
+
+      - run:
+          name: "Run tests and code coverage"
+          command: >-
+            mkdir -p circleci/testresults circleci/codecoverage &&
+            poetry run pytest
+            --junitxml=circleci/testresults/junit.xml
+            --cov=groclient
+            --cov-report=html:circleci/codecoverage/coverage_html
+
+      - store_test_results:
+          path: circleci/testresults
+
+      - store_artifacts:
+          path: circleci/codecoverage/coverage_html
+      
+      - run:
+          name: "Test sample notebook"
+          command: >-
+            poetry run pip install -r api/client/samples/analogous_years/requirements.txt &&
+            poetry run pytest api/client/samples/analogous_years/
+
+      # We'll skip conditionally checking for success at this point since by default
+      # CircleCI will run the following steps on_success
+      # https://circleci.com/docs/2.0/configuration-reference/#run
+      - run:
+          name: "Ensure latest docs build without warnings or errors"
+          command: >-
+            poetry install -E docs &&
+            poetry run sphinx-build -W --keep-going docs docs/_build/html
+
+      - run:
+          name: "Check for broken links in the docs"
+          command: |
+            poetry run sphinx-build -b linkcheck docs docs/_build/linkcheck
+      
+      # Note: We need to install versioning library outside of the poetry venv.
+      # See note in CONTRIBUTING.md
+      # TODO: Build docs and push to gh-pages.
+      - run:
+          name: "Build package"
+          command: >-
+            pip install poetry-dynamic-versioning &&
+            poetry build
+
+    environment:
+      GROAPI_TOKEN: dummytoken
+
 workflows:
-  # Name the workflow "welcome"
-  welcome:
-    # Run the welcome/run job in its own container
+  ci-workflows:
     jobs:
-      - welcome/run
+      - ci
+
