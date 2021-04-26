@@ -68,18 +68,6 @@ jobs:
             pip install poetry-dynamic-versioning &&
             poetry build
 
-      # Publish new development updates to TestPyPI whenever changes are merged
-      # to development.
-      # We only want to publish a new package when PRs are actually accepted and
-      # merged, which is why we check $CIRCLE_PULL_REQUEST.
-      - run:
-          name: "Push to testpypi"
-          command: >-
-            if [ "$CIRCLE_BRANCH" == "development" ] && [ ! -z $CIRCLE_PULL_REQUEST ]; then
-              poetry config repositories.testpypi https://test.pypi.org/legacy/ &&
-              poetry publish -u __token__ -p $TESTPYPI_TOKEN -r testpypi
-            fi
-
     environment:
       GROAPI_TOKEN: dummytoken
 
