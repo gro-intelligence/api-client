@@ -61,10 +61,11 @@ jobs:
       
       # Note: We need to install versioning library outside of the poetry venv.
       # See note in CONTRIBUTING.md
+      # TODO: Build docs and push to gh-pages.
       - run:
           name: "Build package"
           command: >-
-            poetry run pip install poetry-dynamic-versioning &&
+            pip install poetry-dynamic-versioning &&
             poetry build
 
       # Publish new development updates to TestPyPI whenever changes are merged
