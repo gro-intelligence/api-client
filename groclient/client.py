@@ -979,7 +979,9 @@ class GroClient(object):
                 None, data_series, self.get_data_points(**data_series)
             )
 
-        if compress_format: include_names = True
+        if compress_format: 
+            include_names = True
+        
         if include_names and not self._data_frame.empty:
             def get_name(entity_type_id, entity_id):
                 return self.lookup(ENTITY_KEY_TO_TYPE[entity_type_id], entity_id)['name']
