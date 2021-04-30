@@ -106,8 +106,8 @@ jobs:
 workflows:
   ci-workflows:
     jobs:
-      - ci
-        filters:
-          tags:
-            only: /^v.*/
+      - ci:
+          filters:
+            tags:
+              only: /^v.*/
 
