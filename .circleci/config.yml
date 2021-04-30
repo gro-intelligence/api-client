@@ -19,7 +19,7 @@ jobs:
             pip install -U pip wheel
             pip install poetry
             poetry install
-            echo $CIRCLE_PULL_REQUEST
+            echo $CIRCLE_TAG
 
       - run:
           name: "Run doctests"
@@ -86,7 +86,7 @@ jobs:
       - run:
           name: "Push to testpypi"
           command: >-
-            if [ "$CIRCLE_BRANCH" == "development" ] && [ -z $CIRCLE_PULL_REQUEST ]; then
+            if [ "$CIRCLE_BRANCH" == "development" ] && [ -z "$CIRCLE_PULL_REQUEST" ]; then
               poetry config repositories.testpypi https://test.pypi.org/legacy/ &&
               poetry publish -u __token__ -p $TESTPYPI_TOKEN -r testpypi
             fi
@@ -97,7 +97,7 @@ jobs:
       - run:
           name: "Push to pypi"
           command: >-
-            if [ -n $CIRCLE_TAG ]; then
+            if [ -n "$CIRCLE_TAG" ]; then
               poetry publish -u __token__ -p $PYPI_TOKEN
             fi
 
