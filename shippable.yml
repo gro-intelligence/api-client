@@ -42,11 +42,11 @@ build:
     # Build docs and push to gh-pages.
     # Note: git remote set-url is for setting a git url instead of an https
     # one, which is needed so Shippable can be authenticated to push changes.
-    - >
-      git config --global user.email "api-documentation@gro-intelligence.com" &&
-      git config --global user.name "Gro Intelligence" &&
-      git remote set-url origin git@github.com:$REPO_FULL_NAME.git &&
-      poetry run bin/sphinx_push_ghpages.sh
+    # - >
+    #   git config --global user.email "api-documentation@gro-intelligence.com" &&
+    #   git config --global user.name "Gro Intelligence" &&
+    #   git remote set-url origin git@github.com:$REPO_FULL_NAME.git &&
+    #   poetry run bin/sphinx_push_ghpages.sh
     # Build package.
     # Note: We need to install versioning library outside of the poetry venv.
     # See note in CONTRIBUTING.md
@@ -61,15 +61,15 @@ build:
     # development branch. See: https://github.com/Shippable/support/issues/3938#issuecomment-342244497
     # We only want to publish a new package when PRs are actually accepted and
     # merged, which is why we check $IS_PULL_REQUEST.
-    - >
-      if [ "$BRANCH" == "development" -a "$IS_PULL_REQUEST" == "false" ]; then
-        poetry config repositories.testpypi https://test.pypi.org/legacy/ &&
-        poetry publish -u __token__ -p $TESTPYPI_TOKEN -r testpypi
-      fi
+    # - >
+    #   if [ "$BRANCH" == "development" -a "$IS_PULL_REQUEST" == "false" ]; then
+    #     poetry config repositories.testpypi https://test.pypi.org/legacy/ &&
+    #     poetry publish -u __token__ -p $TESTPYPI_TOKEN -r testpypi
+    #   fi
     # Publish new releases to PyPI.
     # Note: requires configuring Shippable for release webhooks:
     # http://docs.shippable.com/ci/trigger-job/#configuring-build-triggers
-    - >
-      if [ "$IS_RELEASE" == "true" ]; then
-        poetry publish -u __token__ -p $PYPI_TOKEN
-      fi
+    # - >
+    #   if [ "$IS_RELEASE" == "true" ]; then
+    #     poetry publish -u __token__ -p $PYPI_TOKEN
+    #   fi
