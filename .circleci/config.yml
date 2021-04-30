@@ -10,7 +10,12 @@ jobs:
       - image: "cimg/python:3.7"
     steps:
       # TODO set up source and pip caching
-      # checkout the git repo
+      # Add deploy key
+      - add_ssh_keys:
+          fingerprints:
+            - "d3:c1:80:e6:6f:b2:f8:46:a6:8c:cf:74:71:a3:39:19"
+
+      # checkout the git repo  
       - checkout
 
       - run:
