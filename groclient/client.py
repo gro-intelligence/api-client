@@ -957,9 +957,18 @@ class GroClient(object):
 
         return self._data_frame
 
-    def async_get_df(self):
+    def async_get_df(self, show_revisions=False, show_available_date=False):
+        data_series_list = []
+        while self._data_series_queue:
+            data_series = self._data_series_queue.pop()
+            if show_revisions:
+                data_series["show_revisions"] = True
+            if show_available_date:
+                data_series["show_available_date"] = True
+            data_series_list.append(data_series)
+
         self.batch_async_get_data_points(
-            self._data_series_queue,
+            data_series_list,
             output_list=self._data_frame,
             map_result=self.add_points_to_df,
         )
