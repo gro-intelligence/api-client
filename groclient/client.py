@@ -937,20 +937,68 @@ class GroClient(object):
             self.access_token, self.api_host, entity_type, num_results, **selection
         )
 
-    def decorate_df(self, index_by_series, include_names, compress_format):
-        """ Format dataframe for :meth:`~.get_df` and :meth:`~.async_get_df`
+    def get_df(
+        self,
+        show_revisions=False,
+        show_available_date=False,
+        index_by_series=False,
+        include_names=False,
+        compress_format=False,
+        async_mode = False):
+        """Call :meth:`~.get_data_points` for each saved data series and return as a combined
+        dataframe.
+
+        Note you must have first called either :meth:`~.add_data_series` or
+        :meth:`~.add_single_data_series` to save data series into the GroClient's data_series_list.
+        You can inspect the client's saved list using :meth:`~.get_data_series_list`.
 
         Parameters
         ----------
-            index_by_series: see :meth:`~.get_df`
-            include_names: see :meth:`~.get_df`
-            compress_format: see :meth:`~.get_df`
-
+            show_revisions : boolean, optional
+                False by default, meaning only the latest value for each period. If true, will return
+                all values for a given period, differentiated by the `reporting_date` field.
+            show_available_date : boolean, optional
+                False by default. If true, will return the available date of each data point.
+            index_by_series : boolean, optional
+               If set, the dataframe is indexed by series. See https://developers.gro-intelligence.com/data-series-definition.html
+            include_names : boolean, optional
+               If set, the dataframe will have additional columns with names of entities.
+               Note that this will increase the size of the dataframe by about 5x.
+            compress_format: boolean, optional
+               If set, each series will be compressed to a single column in the dataframe, with the end_date column
+               set as the dataframe inde. All the entity names for each series will be
+               placed in column headers.
+            async_mode: boolean, optional
+                If set, it will make :meth:`~get_data_points` requests asynchronously.
+                Note that if you're using Jupyter Notebook, you will need to find a Tornado workaround
         Returns
         -------
         pandas.DataFrame
-
+            The results to :meth:`~.get_data_points` for all the saved series, appended together
+            into a single dataframe.
+            See https://developers.gro-intelligence.com/data-point-definition.html
         """
+        data_series_list = []
+        while self._data_series_queue:
+            data_series = self._data_series_queue.pop()
+            if show_revisions:
+                data_series["show_revisions"] = True
+            if show_available_date:
+                data_series["show_available_date"] = True
+            if async_mode:
+                data_series_list.append(data_series)
+            else:
+                self.add_points_to_df(
+                    None, data_series, self.get_data_points(**data_series)
+                )
+
+        if async_mode:
+            self.batch_async_get_data_points(
+                data_series_list,
+                output_list=self._data_frame,
+                map_result=self.add_points_to_df,
+            )
+
         if compress_format:
             include_names = True
 
@@ -978,68 +1026,15 @@ class GroClient(object):
 
         return self._data_frame
 
-    # TODO: merge get_df and async_get_df
-    def get_df(self, show_revisions=False, show_available_date=False, index_by_series=False, include_names=False, compress_format=False):
-        """Call :meth:`~.get_data_points` for each saved data series and return as a combined
-        dataframe.
-
-        Note you must have first called either :meth:`~.add_data_series` or
-        :meth:`~.add_single_data_series` to save data series into the GroClient's data_series_list.
-        You can inspect the client's saved list using :meth:`~.get_data_series_list`.
-
-        Parameters
-        ----------
-            show_revisions : boolean, optional
-                False by default, meaning only the latest value for each period. If true, will return
-                all values for a given period, differentiated by the `reporting_date` field.
-            show_available_date : boolean, optional
-                False by default. If true, will return the available date of each data point.
-            index_by_series : boolean, optional
-               If set, the dataframe is indexed by series. See https://developers.gro-intelligence.com/data-series-definition.html
-            include_names : boolean, optional
-               If set, the dataframe will have additional columns with names of entities.
-               Note that this will increase the size of the dataframe by about 5x.
-            compress_format: boolean, optional
-               If set, each series will be compressed to a single column in the dataframe, with the end_date column
-               set as the dataframe inde. All the entity names for each series will be
-               placed in column headers.
-
-        Returns
-        -------
-        pandas.DataFrame
-            The results to :meth:`~.get_data_points` for all the saved series, appended together
-            into a single dataframe.
-            See https://developers.gro-intelligence.com/data-point-definition.html
-        """
-        while self._data_series_queue:
-            data_series = self._data_series_queue.pop()
-            if show_revisions:
-                data_series["show_revisions"] = True
-            if show_available_date:
-                data_series["show_available_date"] = True
-            self.add_points_to_df(
-                None, data_series, self.get_data_points(**data_series)
-            )
-
-        return self.decorate_df(index_by_series, include_names, compress_format)
-
     def async_get_df(self, show_revisions=False, show_available_date=False, index_by_series=False, include_names=False, compress_format=False):
-        data_series_list = []
-        while self._data_series_queue:
-            data_series = self._data_series_queue.pop()
-            if show_revisions:
-                data_series["show_revisions"] = True
-            if show_available_date:
-                data_series["show_available_date"] = True
-            data_series_list.append(data_series)
-
-        self.batch_async_get_data_points(
-            data_series_list,
-            output_list=self._data_frame,
-            map_result=self.add_points_to_df,
+        return self.get_df(
+            show_revisions,
+            show_available_date,
+            index_by_series,
+            include_names,
+            compress_format,
+            async_mode=True
         )
-
-        return self.decorate_df(index_by_series, include_names, compress_format)
 
     def add_points_to_df(self, index, data_series, data_points, *args):
         """Add the given datapoints to a pandas dataframe.
