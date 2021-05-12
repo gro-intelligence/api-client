@@ -1133,20 +1133,68 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_host</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">,</span> <span class="n">num_results</span><span class="p">,</span> <span class="o">**</span><span class="n">selection</span>
         <span class="p">)</span></div>
 
-    <span class="k">def</span> <span class="nf">decorate_df</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index_by_series</span><span class="p">,</span> <span class="n">include_names</span><span class="p">,</span> <span class="n">compress_format</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Format dataframe for :meth:`~.get_df` and :meth:`~.async_get_df`</span>
+<div class="viewcode-block" id="GroClient.get_df"><a class="viewcode-back" href="../../api.html#groclient.GroClient.get_df">[docs]</a>    <span class="k">def</span> <span class="nf">get_df</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">show_revisions</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">show_available_date</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">index_by_series</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">include_names</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">compress_format</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">async_mode</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Call :meth:`~.get_data_points` for each saved data series and return as a combined</span>
+<span class="sd">        dataframe.</span>
+
+<span class="sd">        Note you must have first called either :meth:`~.add_data_series` or</span>
+<span class="sd">        :meth:`~.add_single_data_series` to save data series into the GroClient&#39;s data_series_list.</span>
+<span class="sd">        You can inspect the client&#39;s saved list using :meth:`~.get_data_series_list`.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">            index_by_series: see :meth:`~.get_df`</span>
-<span class="sd">            include_names: see :meth:`~.get_df`</span>
-<span class="sd">            compress_format: see :meth:`~.get_df`</span>
-
+<span class="sd">            show_revisions : boolean, optional</span>
+<span class="sd">                False by default, meaning only the latest value for each period. If true, will return</span>
+<span class="sd">                all values for a given period, differentiated by the `reporting_date` field.</span>
+<span class="sd">            show_available_date : boolean, optional</span>
+<span class="sd">                False by default. If true, will return the available date of each data point.</span>
+<span class="sd">            index_by_series : boolean, optional</span>
+<span class="sd">               If set, the dataframe is indexed by series. See https://developers.gro-intelligence.com/data-series-definition.html</span>
+<span class="sd">            include_names : boolean, optional</span>
+<span class="sd">               If set, the dataframe will have additional columns with names of entities.</span>
+<span class="sd">               Note that this will increase the size of the dataframe by about 5x.</span>
+<span class="sd">            compress_format: boolean, optional</span>
+<span class="sd">               If set, each series will be compressed to a single column in the dataframe, with the end_date column</span>
+<span class="sd">               set as the dataframe inde. All the entity names for each series will be</span>
+<span class="sd">               placed in column headers.</span>
+<span class="sd">            async_mode: boolean, optional</span>
+<span class="sd">                If set, it will make :meth:`~get_data_points` requests asynchronously.</span>
+<span class="sd">                Note that if you&#39;re using Jupyter Notebook, you will need to find a Tornado workaround</span>
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        pandas.DataFrame</span>
-
+<span class="sd">            The results to :meth:`~.get_data_points` for all the saved series, appended together</span>
+<span class="sd">            into a single dataframe.</span>
+<span class="sd">            See https://developers.gro-intelligence.com/data-point-definition.html</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">data_series_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_series_queue</span><span class="p">:</span>
+            <span class="n">data_series</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_series_queue</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">show_revisions</span><span class="p">:</span>
+                <span class="n">data_series</span><span class="p">[</span><span class="s2">&quot;show_revisions&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">if</span> <span class="n">show_available_date</span><span class="p">:</span>
+                <span class="n">data_series</span><span class="p">[</span><span class="s2">&quot;show_available_date&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">if</span> <span class="n">async_mode</span><span class="p">:</span>
+                <span class="n">data_series_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">data_series</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">add_points_to_df</span><span class="p">(</span>
+                    <span class="kc">None</span><span class="p">,</span> <span class="n">data_series</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_data_points</span><span class="p">(</span><span class="o">**</span><span class="n">data_series</span><span class="p">)</span>
+                <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">async_mode</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">batch_async_get_data_points</span><span class="p">(</span>
+                <span class="n">data_series_list</span><span class="p">,</span>
+                <span class="n">output_list</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_data_frame</span><span class="p">,</span>
+                <span class="n">map_result</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">add_points_to_df</span><span class="p">,</span>
+            <span class="p">)</span>
+
         <span class="k">if</span> <span class="n">compress_format</span><span class="p">:</span>
             <span class="n">include_names</span> <span class="o">=</span> <span class="kc">True</span>
 
@@ -1172,70 +1220,17 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_data_frame</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="n">idx_columns</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_data_frame</span><span class="o">.</span><span class="n">sort_index</span><span class="p">(</span><span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_frame</span>
-
-    <span class="c1"># TODO: merge get_df and async_get_df</span>
-<div class="viewcode-block" id="GroClient.get_df"><a class="viewcode-back" href="../../api.html#groclient.GroClient.get_df">[docs]</a>    <span class="k">def</span> <span class="nf">get_df</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">show_revisions</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">show_available_date</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">index_by_series</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">include_names</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">compress_format</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Call :meth:`~.get_data_points` for each saved data series and return as a combined</span>
-<span class="sd">        dataframe.</span>
-
-<span class="sd">        Note you must have first called either :meth:`~.add_data_series` or</span>
-<span class="sd">        :meth:`~.add_single_data_series` to save data series into the GroClient&#39;s data_series_list.</span>
-<span class="sd">        You can inspect the client&#39;s saved list using :meth:`~.get_data_series_list`.</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">            show_revisions : boolean, optional</span>
-<span class="sd">                False by default, meaning only the latest value for each period. If true, will return</span>
-<span class="sd">                all values for a given period, differentiated by the `reporting_date` field.</span>
-<span class="sd">            show_available_date : boolean, optional</span>
-<span class="sd">                False by default. If true, will return the available date of each data point.</span>
-<span class="sd">            index_by_series : boolean, optional</span>
-<span class="sd">               If set, the dataframe is indexed by series. See https://developers.gro-intelligence.com/data-series-definition.html</span>
-<span class="sd">            include_names : boolean, optional</span>
-<span class="sd">               If set, the dataframe will have additional columns with names of entities.</span>
-<span class="sd">               Note that this will increase the size of the dataframe by about 5x.</span>
-<span class="sd">            compress_format: boolean, optional</span>
-<span class="sd">               If set, each series will be compressed to a single column in the dataframe, with the end_date column</span>
-<span class="sd">               set as the dataframe inde. All the entity names for each series will be</span>
-<span class="sd">               placed in column headers.</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        pandas.DataFrame</span>
-<span class="sd">            The results to :meth:`~.get_data_points` for all the saved series, appended together</span>
-<span class="sd">            into a single dataframe.</span>
-<span class="sd">            See https://developers.gro-intelligence.com/data-point-definition.html</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_series_queue</span><span class="p">:</span>
-            <span class="n">data_series</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_series_queue</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
-            <span class="k">if</span> <span class="n">show_revisions</span><span class="p">:</span>
-                <span class="n">data_series</span><span class="p">[</span><span class="s2">&quot;show_revisions&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
-            <span class="k">if</span> <span class="n">show_available_date</span><span class="p">:</span>
-                <span class="n">data_series</span><span class="p">[</span><span class="s2">&quot;show_available_date&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">add_points_to_df</span><span class="p">(</span>
-                <span class="kc">None</span><span class="p">,</span> <span class="n">data_series</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_data_points</span><span class="p">(</span><span class="o">**</span><span class="n">data_series</span><span class="p">)</span>
-            <span class="p">)</span>
-
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">decorate_df</span><span class="p">(</span><span class="n">index_by_series</span><span class="p">,</span> <span class="n">include_names</span><span class="p">,</span> <span class="n">compress_format</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_frame</span></div>
 
     <span class="k">def</span> <span class="nf">async_get_df</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">show_revisions</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">show_available_date</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">index_by_series</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">include_names</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">compress_format</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-        <span class="n">data_series_list</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_series_queue</span><span class="p">:</span>
-            <span class="n">data_series</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_series_queue</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
-            <span class="k">if</span> <span class="n">show_revisions</span><span class="p">:</span>
-                <span class="n">data_series</span><span class="p">[</span><span class="s2">&quot;show_revisions&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
-            <span class="k">if</span> <span class="n">show_available_date</span><span class="p">:</span>
-                <span class="n">data_series</span><span class="p">[</span><span class="s2">&quot;show_available_date&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
-            <span class="n">data_series_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">data_series</span><span class="p">)</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">batch_async_get_data_points</span><span class="p">(</span>
-            <span class="n">data_series_list</span><span class="p">,</span>
-            <span class="n">output_list</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_data_frame</span><span class="p">,</span>
-            <span class="n">map_result</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">add_points_to_df</span><span class="p">,</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_df</span><span class="p">(</span>
+            <span class="n">show_revisions</span><span class="p">,</span>
+            <span class="n">show_available_date</span><span class="p">,</span>
+            <span class="n">index_by_series</span><span class="p">,</span>
+            <span class="n">include_names</span><span class="p">,</span>
+            <span class="n">compress_format</span><span class="p">,</span>
+            <span class="n">async_mode</span><span class="o">=</span><span class="kc">True</span>
         <span class="p">)</span>
-
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">decorate_df</span><span class="p">(</span><span class="n">index_by_series</span><span class="p">,</span> <span class="n">include_names</span><span class="p">,</span> <span class="n">compress_format</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">add_points_to_df</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="n">data_series</span><span class="p">,</span> <span class="n">data_points</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Add the given datapoints to a pandas dataframe.</span>
