@@ -978,6 +978,7 @@ class GroClient(object):
 
         return self._data_frame
 
+    # TODO: merge get_df and async_get_df
     def get_df(self, show_revisions=False, show_available_date=False, index_by_series=False, include_names=False, compress_format=False):
         """Call :meth:`~.get_data_points` for each saved data series and return as a combined
         dataframe.
