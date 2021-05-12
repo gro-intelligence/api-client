@@ -957,7 +957,7 @@ class GroClient(object):
 
         return self._data_frame
 
-    def async_get_df(self, show_revisions=False, show_available_date=False):
+    def async_get_df(self, show_revisions=False, show_available_date=False, index_by_series=False, include_names=False):
         data_series_list = []
         while self._data_series_queue:
             data_series = self._data_series_queue.pop()
@@ -972,6 +972,20 @@ class GroClient(object):
             output_list=self._data_frame,
             map_result=self.add_points_to_df,
         )
+
+        if include_names and not self._data_frame.empty:
+            for entity_type_id in DATA_SERIES_UNIQUE_TYPES_ID + ['unit_id']:
+                name_col = entity_type_id.replace('_id', '_name')
+                entity_dict = self.lookup(ENTITY_KEY_TO_TYPE[entity_type_id], self._data_frame[entity_type_id].unique())
+                self._data_frame[name_col] = self._data_frame[entity_type_id].apply(lambda entity_id: entity_dict.get(str(entity_id))['name'])
+
+        # todo: consolidate with get_df()
+        if index_by_series and not self._data_frame.empty:
+            idx_columns = intersect(DATA_SERIES_UNIQUE_TYPES_ID, self._data_frame.columns)
+
+            self._data_frame.set_index(idx_columns, inplace=True)
+            self._data_frame.sort_index(inplace=True)
+
         return self._data_frame
 
     def add_points_to_df(self, index, data_series, data_points, *args):
