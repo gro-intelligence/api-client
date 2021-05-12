@@ -1174,6 +1174,7 @@
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_frame</span>
 
+    <span class="c1"># TODO: merge get_df and async_get_df</span>
 <div class="viewcode-block" id="GroClient.get_df"><a class="viewcode-back" href="../../api.html#groclient.GroClient.get_df">[docs]</a>    <span class="k">def</span> <span class="nf">get_df</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">show_revisions</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">show_available_date</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">index_by_series</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">include_names</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">compress_format</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Call :meth:`~.get_data_points` for each saved data series and return as a combined</span>
 <span class="sd">        dataframe.</span>
