@@ -1134,6 +1134,19 @@
         <span class="p">)</span></div>
 
     <span class="k">def</span> <span class="nf">decorate_df</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index_by_series</span><span class="p">,</span> <span class="n">include_names</span><span class="p">,</span> <span class="n">compress_format</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Format dataframe for :meth:`~.get_df` and :meth:`~.async_get_df`</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">            index_by_series: see :meth:`~.get_df`</span>
+<span class="sd">            include_names: see :meth:`~.get_df`</span>
+<span class="sd">            compress_format: see :meth:`~.get_df`</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        pandas.DataFrame</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">compress_format</span><span class="p">:</span>
             <span class="n">include_names</span> <span class="o">=</span> <span class="kc">True</span>
 
@@ -1149,7 +1162,7 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">_data_frame</span><span class="p">[</span><span class="n">name_col</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_frame</span><span class="p">[</span><span class="n">entity_type_id</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">entity_id</span><span class="p">:</span> <span class="n">entity_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">entity_id</span><span class="p">))[</span><span class="s1">&#39;name&#39;</span><span class="p">])</span>
 
             <span class="k">if</span> <span class="n">compress_format</span><span class="p">:</span>
-                <span class="c1"># BUG: index by end_date doesn&#39;t work with revisions</span>
+                <span class="c1"># BUG: index by end_date will compute average for all revisions</span>
                 <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_frame</span><span class="o">.</span><span class="n">pivot_table</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="s1">&#39;end_date&#39;</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="s1">&#39;value&#39;</span><span class="p">,</span>
                                                     <span class="n">columns</span><span class="o">=</span><span class="n">name_cols</span><span class="p">)</span>
 
