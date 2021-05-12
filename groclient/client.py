@@ -938,6 +938,19 @@ class GroClient(object):
         )
 
     def decorate_df(self, index_by_series, include_names, compress_format):
+        """ Format dataframe for :meth:`~.get_df` and :meth:`~.async_get_df`
+
+        Parameters
+        ----------
+            index_by_series: see :meth:`~.get_df`
+            include_names: see :meth:`~.get_df`
+            compress_format: see :meth:`~.get_df`
+
+        Returns
+        -------
+        pandas.DataFrame
+
+        """
         if compress_format:
             include_names = True
 
@@ -953,7 +966,7 @@ class GroClient(object):
                 self._data_frame[name_col] = self._data_frame[entity_type_id].apply(lambda entity_id: entity_dict.get(str(entity_id))['name'])
 
             if compress_format:
-                # BUG: index by end_date doesn't work with revisions
+                # BUG: index by end_date will compute average for all revisions
                 return self._data_frame.pivot_table(index='end_date', values='value',
                                                     columns=name_cols)
 
