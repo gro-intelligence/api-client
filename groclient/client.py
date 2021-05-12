@@ -1,8 +1,9 @@
 from __future__ import print_function
 from functools import partial
 import itertools
-import time
 import json
+import os
+import time
 
 # Python3 support
 try:
@@ -57,7 +58,40 @@ class BatchError(APIError):
 class GroClient(object):
     """API client with stateful authentication for lib functions and extra convenience methods."""
 
-    def __init__(self, api_host, access_token):
+    def __init__(self, api_host=cfg.API_HOST, access_token=None):
+        """Construct a GroClient instance.
+
+        Parameters
+        ----------
+        api_host : string, optional
+            The API server hostname.
+        access_token : string, optional
+            Your Gro API authentication token. If not specified, the
+            :code:`$GROAPI_TOKEN` environment variable is used. See
+            :doc:`authentication`.
+
+        Raises
+        ------
+            RuntimeError
+                Raised when neither the :code:`access_token` parameter nor
+                :code:`$GROAPI_TOKEN` environment variable are set.
+
+        Examples
+        --------
+            >>> client = GroClient()  # token stored in $GROAPI_TOKEN
+
+            >>> client = GroClient(access_token="your_token_here")
+        """
+        # Initialize early since they're referenced in the destructor and
+        # access_token checking may cause constructor to exit early.
+        self._async_http_client = None
+        self._ioloop = None
+
+        if access_token is None:
+            access_token = os.environ.get("GROAPI_TOKEN")
+            if access_token is None:
+                raise RuntimeError("$GROAPI_TOKEN environment variable must be set when "
+                                   "GroClient is constructed without the access_token argument")
         self.api_host = api_host
         self.access_token = access_token
         self._logger = lib.get_default_logger()
@@ -74,13 +108,13 @@ class GroClient(object):
             self._logger.warning(
                 "Unable to initialize event loop, async methods disabled: {}".format(e)
             )
-            self._async_http_client = None
-            self._ioloop = None
 
     def __del__(self):
-        self._async_http_client.close()
-        self._ioloop.stop()
-        self._ioloop.close()
+        if self._async_http_client is not None:
+            self._async_http_client.close()
+        if self._ioloop is not None:
+            self._ioloop.stop()
+            self._ioloop.close()
 
     def get_logger(self):
         return self._logger
@@ -903,7 +937,7 @@ class GroClient(object):
             self.access_token, self.api_host, entity_type, num_results, **selection
         )
 
-    def get_df(self, show_revisions=False, show_available_date=False, index_by_series=False, include_names=False):
+    def get_df(self, show_revisions=False, show_available_date=False, index_by_series=False, include_names=False, compress_format=False):
         """Call :meth:`~.get_data_points` for each saved data series and return as a combined
         dataframe.
 
@@ -923,6 +957,10 @@ class GroClient(object):
             include_names : boolean, optional
                If set, the dataframe will have additional columns with names of entities.
                Note that this will increase the size of the dataframe by about 5x.
+            compress_format: boolean, optional
+               If set, each series will be compressed to a single column in the dataframe, with the end_date column 
+               set as the dataframe inde. All the entity names for each series will be 
+               placed in column headers.
 
         Returns
         -------
@@ -941,13 +979,23 @@ class GroClient(object):
                 None, data_series, self.get_data_points(**data_series)
             )
 
+        if compress_format: 
+            include_names = True
+        
         if include_names and not self._data_frame.empty:
             def get_name(entity_type_id, entity_id):
                 return self.lookup(ENTITY_KEY_TO_TYPE[entity_type_id], entity_id)['name']
 
+            name_cols = []
             for entity_type_id in DATA_SERIES_UNIQUE_TYPES_ID + ['unit_id']:
                 name_col = entity_type_id.replace('_id', '_name')
+                name_cols.append(name_col)
                 self._data_frame[name_col] = self._data_frame[entity_type_id].apply(partial(get_name, entity_type_id))
+
+            if compress_format:
+                table_df = self._data_frame.pivot_table(index='end_date', values='value',
+                                                    columns=name_cols)
+                return table_df
 
         if index_by_series and not self._data_frame.empty:
             idx_columns = intersect(DATA_SERIES_UNIQUE_TYPES_ID, self._data_frame.columns)
