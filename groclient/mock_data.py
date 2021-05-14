@@ -15,7 +15,14 @@ mock_entities = {
             "belongsTo": [119],
         }
     },
-    "items": {},
+    "items": {
+        274: {
+            "id": 274,
+            "name": "Corn",
+            "contains": [],
+            "belongsTo": []
+        }
+    },
     "regions": {
         0: {"id": 0, "level": 1, "name": "World", "contains": [1215], "belongsTo": []},
         1215: {
@@ -33,8 +40,18 @@ mock_entities = {
             "belongsTo": [1215],
         },
     },
-    "frequencies": {},
-    "sources": {},
+    "frequencies": {
+        9: {
+            "id": 9,
+            "name": "Annual",
+        },
+    },
+    "sources": {
+        2: {
+            "id": 2,
+            "name": "FAO",
+        }
+    },
     "units": {
         10: {
             "id": 10,
@@ -135,6 +152,7 @@ mock_data_points = [
         "value": 40891,
         "unit_id": 14,
         "reporting_date": None,
+        "available_date": "2017-12-31T00:00:00.000Z",
         "metric_id": 860032,
         "item_id": 274,
         "region_id": 1215,
@@ -155,6 +173,7 @@ mock_data_points = [
         "value": 56789,
         "unit_id": 10,
         "reporting_date": None,
+        "available_date": "2017-12-31T00:00:00.000Z",
         "metric_id": 860032,
         "item_id": 274,
         "region_id": 1216,

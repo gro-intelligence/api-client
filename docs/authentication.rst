@@ -96,7 +96,7 @@ Please consult your OS or IDE documentation for the most accurate and up-to-date
 
 For Windows 10
 --------------
-For Anaconda, please refer to `Anaconda's Documentation <https://anaconda-project.readthedocs.io/en/latest/user-guide/tasks/work-with-variables.html>`_.
+For Anaconda, please refer to `Anaconda's Documentation <https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html#setting-environment-variables>`_.
 
 If you are using Windows Powershell, you can refer to `Windows' Documentation <https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_environment_variables?view=powershell-6>`_.
 

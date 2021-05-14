@@ -1,8 +1,9 @@
 from __future__ import print_function
-import functools
+from functools import partial
 import itertools
-import time
 import json
+import os
+import time
 
 # Python3 support
 try:
@@ -57,7 +58,40 @@ class BatchError(APIError):
 class GroClient(object):
     """API client with stateful authentication for lib functions and extra convenience methods."""
 
-    def __init__(self, api_host, access_token):
+    def __init__(self, api_host=cfg.API_HOST, access_token=None):
+        """Construct a GroClient instance.
+
+        Parameters
+        ----------
+        api_host : string, optional
+            The API server hostname.
+        access_token : string, optional
+            Your Gro API authentication token. If not specified, the
+            :code:`$GROAPI_TOKEN` environment variable is used. See
+            :doc:`authentication`.
+
+        Raises
+        ------
+            RuntimeError
+                Raised when neither the :code:`access_token` parameter nor
+                :code:`$GROAPI_TOKEN` environment variable are set.
+
+        Examples
+        --------
+            >>> client = GroClient()  # token stored in $GROAPI_TOKEN
+
+            >>> client = GroClient(access_token="your_token_here")
+        """
+        # Initialize early since they're referenced in the destructor and
+        # access_token checking may cause constructor to exit early.
+        self._async_http_client = None
+        self._ioloop = None
+
+        if access_token is None:
+            access_token = os.environ.get("GROAPI_TOKEN")
+            if access_token is None:
+                raise RuntimeError("$GROAPI_TOKEN environment variable must be set when "
+                                   "GroClient is constructed without the access_token argument")
         self.api_host = api_host
         self.access_token = access_token
         self._logger = lib.get_default_logger()
@@ -65,19 +99,22 @@ class GroClient(object):
         self._data_series_queue = []  # added but not loaded in data frame
         self._data_frame = pandas.DataFrame()
         try:
-            self._async_http_client = AsyncHTTPClient()
+            # Each GroClient has its own IOLoop and AsyncHTTPClient.
             self._ioloop = IOLoop()
+            # Note: force_instance is needed to disable Tornado's
+            # pseudo-singleton AsyncHTTPClient caching behavior.
+            self._async_http_client = AsyncHTTPClient(force_instance=True)
         except Exception as e:
             self._logger.warning(
-                "Unable to initialize an event loop. Async methods disabled."
+                "Unable to initialize event loop, async methods disabled: {}".format(e)
             )
-            self._async_http_client = None
-            self._ioloop = None
 
     def __del__(self):
-        self._async_http_client.close()
-        self._ioloop.stop()
-        self._ioloop.close()
+        if self._async_http_client is not None:
+            self._async_http_client.close()
+        if self._ioloop is not None:
+            self._ioloop.stop()
+            self._ioloop.close()
 
     def get_logger(self):
         return self._logger
@@ -279,8 +316,9 @@ class GroClient(object):
         try:
             list_of_series_points = yield self.async_get_data(url, headers, params)
             include_historical = selection.get("include_historical", True)
+            include_available_date = selection.get('show_available_date', False)
             points = lib.list_of_series_to_single_series(
-                list_of_series_points, False, include_historical
+                list_of_series_points, False, include_historical, include_available_date
             )
             raise gen.Return(points)
         except BatchError as b:
@@ -899,7 +937,7 @@ class GroClient(object):
             self.access_token, self.api_host, entity_type, num_results, **selection
         )
 
-    def get_df(self, show_revisions=False, index_by_series=False):
+    def get_df(self, show_revisions=False, show_available_date=False, index_by_series=False, include_names=False, compress_format=False):
         """Call :meth:`~.get_data_points` for each saved data series and return as a combined
         dataframe.
 
@@ -907,28 +945,64 @@ class GroClient(object):
         :meth:`~.add_single_data_series` to save data series into the GroClient's data_series_list.
         You can inspect the client's saved list using :meth:`~.get_data_series_list`.
 
+        Parameters
+        ----------
+            show_revisions : boolean, optional
+                False by default, meaning only the latest value for each period. If true, will return
+                all values for a given period, differentiated by the `reporting_date` field.
+            show_available_date : boolean, optional
+                False by default. If true, will return the available date of each data point.
+            index_by_series : boolean, optional
+               If set, the dataframe is indexed by series. See https://developers.gro-intelligence.com/data-series-definition.html
+            include_names : boolean, optional
+               If set, the dataframe will have additional columns with names of entities.
+               Note that this will increase the size of the dataframe by about 5x.
+            compress_format: boolean, optional
+               If set, each series will be compressed to a single column in the dataframe, with the end_date column 
+               set as the dataframe inde. All the entity names for each series will be 
+               placed in column headers.
+
         Returns
         -------
         pandas.DataFrame
             The results to :meth:`~.get_data_points` for all the saved series, appended together
             into a single dataframe.
             See https://developers.gro-intelligence.com/data-point-definition.html
-            If index_by_series is set, the dataframe is indexed by series.
-            See https://developers.gro-intelligence.com/data-series-definition.html
         """
         while self._data_series_queue:
             data_series = self._data_series_queue.pop()
             if show_revisions:
                 data_series["show_revisions"] = True
+            if show_available_date:
+                data_series["show_available_date"] = True
             self.add_points_to_df(
                 None, data_series, self.get_data_points(**data_series)
             )
+
+        if compress_format: 
+            include_names = True
+        
+        if include_names and not self._data_frame.empty:
+            def get_name(entity_type_id, entity_id):
+                return self.lookup(ENTITY_KEY_TO_TYPE[entity_type_id], entity_id)['name']
+
+            name_cols = []
+            for entity_type_id in DATA_SERIES_UNIQUE_TYPES_ID + ['unit_id']:
+                name_col = entity_type_id.replace('_id', '_name')
+                name_cols.append(name_col)
+                self._data_frame[name_col] = self._data_frame[entity_type_id].apply(partial(get_name, entity_type_id))
+
+            if compress_format:
+                table_df = self._data_frame.pivot_table(index='end_date', values='value',
+                                                    columns=name_cols)
+                return table_df
+
         if index_by_series and not self._data_frame.empty:
-            columns = intersect(DATA_SERIES_UNIQUE_TYPES_ID, self._data_frame.columns)
-            if len(columns) > 0:
-                indexed_df = self._data_frame.set_index(columns)
-                indexed_df.index.set_names(DATA_SERIES_UNIQUE_TYPES_ID, inplace=True)
-                return indexed_df.sort_index()
+            idx_columns = intersect(DATA_SERIES_UNIQUE_TYPES_ID, self._data_frame.columns)
+
+            self._data_frame.set_index(idx_columns, inplace=True)
+            self._data_frame.sort_index(inplace=True)
+
         return self._data_frame
 
     def async_get_df(self):
@@ -957,10 +1031,12 @@ class GroClient(object):
         # source_id. We add it as a column, in case we have
         # several selections series which differ only by source id.
         tmp["source_id"] = data_series["source_id"]
-        # tmp should always have end_date/start_date/reporting_date as columns if not empty
+        # tmp should always have end_date/start_date/reporting_date/available_date as columns if not empty
         tmp.end_date = pandas.to_datetime(tmp.end_date)
         tmp.start_date = pandas.to_datetime(tmp.start_date)
         tmp.reporting_date = pandas.to_datetime(tmp.reporting_date)
+        if "available_date" in tmp.columns:
+            tmp.available_date = pandas.to_datetime(tmp.available_date)
 
         if self._data_frame.empty:
             self._data_frame = tmp
@@ -1072,6 +1148,8 @@ class GroClient(object):
         show_revisions : boolean, optional
             False by default, meaning only the latest value for each period. If true, will return
             all values for a given period, differentiated by the `reporting_date` field.
+        show_available_date : boolean, optional
+            False by default. If true, will return the available date of each data point.
         insert_null : boolean, optional
             False by default. If True, will include a data point with a None value for each period
             that does not have data.
@@ -1093,9 +1171,7 @@ class GroClient(object):
         if "unit_id" in selections:
             return list(
                 map(
-                    functools.partial(
-                        self.convert_unit, target_unit_id=selections["unit_id"]
-                    ),
+                    partial(self.convert_unit, target_unit_id=selections["unit_id"]),
                     data_points,
                 )
             )
@@ -1125,7 +1201,8 @@ class GroClient(object):
         ------
         pandas.DataFrame
 
-            the subset of the main DataFrame :meth:`~.get_df`. with the requested series.
+            The subset of the main DataFrame :meth:`~.get_df`. with the requested series,
+            indexed by the names of the selections.
 
         """
 
@@ -1134,7 +1211,12 @@ class GroClient(object):
 
         self.add_single_data_series(selection)
         try:
-            return self.get_df(index_by_series=True).loc[[tuple(entity_ids)], :]
+            df = self.get_df(index_by_series=True, include_names=True).loc[[tuple(entity_ids)], :]
+            df.set_index([entity_type_id.replace('_id', '_name')
+                          for entity_type_id in intersect(DATA_SERIES_UNIQUE_TYPES_ID,
+                                                          df.index.names)],
+                         inplace=True)
+            return df
         except KeyError:
             self._logger.warning("GDH returned no data")
             return pandas.DataFrame()
@@ -1273,6 +1355,8 @@ class GroClient(object):
                 data_series.pop("source_name", None)
                 # metadata is not hashable
                 data_series.pop("metadata", None)
+                # estimated data count is not hashable
+                data_series.pop("data_count_estimate", None)
                 series_hash = frozenset(data_series.items())
                 if series_hash not in ranking_groups:
                     ranking_groups.add(series_hash)

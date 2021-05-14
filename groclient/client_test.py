@@ -4,10 +4,12 @@ try:
 except ImportError:
     # Python 2.7
     from mock import patch, MagicMock
-from unittest import TestCase
 from datetime import date
+import os
+from unittest import TestCase
 
 from groclient import GroClient
+from groclient.utils import zip_selections
 from groclient.mock_data import mock_entities, mock_data_series, mock_data_points
 
 MOCK_HOST = "pytest.groclient.url"
@@ -23,14 +25,15 @@ def mock_list_available(access_token, api_host, selected_entities):
 
 
 def mock_lookup(access_token, api_host, entity_type, entity_ids):
-    if isinstance(entity_ids, int):
-        # Raises a KeyError if the requested entity hasn't been mocked:
-        return mock_entities[entity_type][entity_ids]
-    else:
+    try:
+        entity_ids = list(entity_ids)
         return {
             str(entity_id): mock_entities[entity_type][entity_id]
             for entity_id in entity_ids
         }
+    except TypeError:
+        # Raises a KeyError if the requested entity hasn't been mocked:
+        return mock_entities[entity_type][entity_ids]
 
 
 def mock_get_allowed_units(access_token, api_host, metric_id, item_id):
@@ -336,13 +339,18 @@ class GroClientTests(TestCase):
         self.assertEqual(df.iloc[0]["start_date"].date(), date(2017, 1, 1))
         indexed_df = self.client.get_df(index_by_series=True)
         self.assertEqual(indexed_df.iloc[0]["start_date"].date(), date(2017, 1, 1))
-        series = dict(zip(indexed_df.index.names, indexed_df.iloc[0].name))
+        series = zip_selections(indexed_df.iloc[0].name)
         self.assertEqual(series, mock_data_series[0])
 
     def test_get_df_show_revisions(self):
         self.client.add_single_data_series(mock_data_series[0])
         df = self.client.get_df(show_revisions=True)
         self.assertEqual(df.iloc[0]["start_date"].date(), date(2017, 1, 1))
+
+    def test_get_df_show_available_date(self):
+        self.client.add_single_data_series(mock_data_series[0])
+        df = self.client.get_df(show_available_date=True)
+        self.assertEqual(df.iloc[0]["available_date"].date(), date(2017, 12, 31))
 
     def test_add_points_to_df(self):
         self.client.add_points_to_df(None, mock_data_series[0], [])
@@ -500,3 +508,36 @@ class GroClientTests(TestCase):
 
         with self.assertRaises(Exception):
             self.client.convert_unit({"value": None, "unit_id": 10}, 43)
+
+class GroClientConstructorTests(TestCase):
+    PROD_API_HOST = "api.gro-intelligence.com"
+
+    # The most convenient method.
+    @patch.dict(os.environ, {'GROAPI_TOKEN': MOCK_TOKEN})
+    def test_no_host_and_env_token(self):
+        client = GroClient()
+        with patch("groclient.lib.get_available") as get_available:
+            _ = client.get_available("items")
+            get_available.assert_called_once_with(MOCK_TOKEN, self.PROD_API_HOST, "items")
+
+    # A common use case: user passes an API token but no API host.
+    def test_no_host_and_kwarg_token(self):
+        client = GroClient(access_token=MOCK_TOKEN)
+        with patch("groclient.lib.get_available") as get_available:
+            _ = client.get_available("items")
+            get_available.assert_called_once_with(MOCK_TOKEN, self.PROD_API_HOST, "items")
+
+    def test_explicit_host_and_token(_self):
+        client = GroClient(MOCK_HOST, MOCK_TOKEN)
+        with patch("groclient.lib.get_available") as get_available:
+            _ = client.get_available("items")
+            get_available.assert_called_once_with(MOCK_TOKEN, MOCK_HOST, "items")
+
+    def test_missing_token(self):
+        # Explicitly unset GROAPI_TOKEN if it's set (eg, its set in our Shippable config).
+        env_without_token = {k: v for k, v in os.environ.items() if k != "GROAPI_TOKEN"}
+        with patch.dict(os.environ, env_without_token, clear=True):
+            with self.assertRaisesRegex(RuntimeError, "environment variable must be set"):
+                _ = GroClient(MOCK_HOST)
+            with self.assertRaisesRegex(RuntimeError, "environment variable must be set"):
+                _ = GroClient()

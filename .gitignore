@@ -28,3 +28,6 @@ r-client/.vagrant/
 
 # poetry build output
 dist/
+
+# Jupyter notebooks/Jupyterlab
+.ipynb_checkpoints

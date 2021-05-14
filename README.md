@@ -1,32 +1,23 @@
 <p align="center"><img width=8% src="https://gro-intelligence.com/images/logo.jpg"></p>
 <h1 align="center">Gro API Client</h1>
 
-<https://www.gro-intelligence.com/products/gro-api>
 
-Client library for accessing Gro Intelligence's agricultural data platform.
+The Gro Intelligence Python API client library provides access to Gro's
+[agricultural data platform](https://www.gro-intelligence.com/products/gro-api).
 
-## Prerequisites
+Please see our developer documentation at
+<https://developers.gro-intelligence.com/> for install instructions, API
+reference documentation, and guides.
 
-1. [MacOS and Linux](unix-setup.md)
-2. [Windows](windows-setup.md)
-
-## Install Gro API client packages
-
-```sh
-pip install groclient
-```
-
-Note that even if you are using [Anaconda](https://www.anaconda.com/), the API Client install should still be performed using pip and not [conda](https://docs.conda.io/en/latest/).
-
-If you're unable to access PyPI, you can install the latest code from Github: `pip install git+https://github.com/gro-intelligence/api-client.git`
-
-## Gro API authentication token
-
-Use the Gro web application to retrieve an authentication token (detailed instructions are on the developers site [here](https://developers.gro-intelligence.com/authentication.html)).
+The short version:
+- [Install](https://developers.gro-intelligence.com/installation.html) the
+  library: `pip install groclient` or `conda install -c conda-forge groclient`
+- Get an [API authentication token](https://developers.gro-intelligence.com/authentication.html).
+- Check out the examples below.
 
 ## Examples
 
-Navigate to [api/client/samples/](api/client/samples/) folder and try executing the provided examples.
+Navigate to [api/client/samples/](api/client/samples/) and try executing the provided examples.
 
 1. Start with [quick_start.py](api/client/samples/quick_start.py). This script creates an authenticated `GroClient` object and uses the `get_data_series()` and `get_data_points()` methods to find Area Harvested series for Ukrainian Wheat from a variety of different sources and output the time series points to a CSV file. You will likely want to revisit this script as a starting point for building your own scripts.
 
@@ -53,5 +44,3 @@ Navigate to [api/client/samples/](api/client/samples/) folder and try executing 
     ```
 
     The `gro_client` command line interface does a keyword search for the inputs and finds a random matching data series. It displays the data series it picked and the data points to the console. This tool is useful for simple queries, but anything more complex should be done using the provided Python packages.
-
-Further documentation can be found on the Gro Developers site at <developers.gro-intelligence.com>.

@@ -5,6 +5,12 @@ API Reference
   :local:
 
 =================
+Creating a client
+=================
+
+.. automethod:: groclient.GroClient.__init__
+
+=================
 Basic Exploration
 =================
 

@@ -348,6 +348,7 @@ def get_data_call_params(**selection):
     start_date : string, optional
     end_date : string, optional
     show_revisions : boolean, optional
+    show_available_date : boolean, optional
     insert_null : boolean, optional
     show_metadata : boolean, optional
     at_time : string, optional
@@ -362,7 +363,7 @@ def get_data_call_params(**selection):
     for key, value in list(selection.items()):
         if key == 'show_metadata':
             params[groclient.utils.str_snake_to_camel('show_meta_data')] = value
-        if key in ('start_date', 'end_date', 'show_revisions', 'insert_null', 'at_time'):
+        if key in ('start_date', 'end_date', 'show_revisions', 'show_available_date', 'insert_null', 'at_time'):
             params[groclient.utils.str_snake_to_camel(key)] = value
     params['responseType'] = 'list_of_series'
     return params
@@ -463,7 +464,7 @@ def get_available_timefrequency(access_token, api_host, **series):
             for tf in response.json()]
 
 
-def list_of_series_to_single_series(series_list, add_belongs_to=False, include_historical=True):
+def list_of_series_to_single_series(series_list, add_belongs_to=False, include_historical=True, include_available_date=False):
     """Convert list_of_series format from API back into the familiar single_series output format."""
     if not isinstance(series_list, list):
         # If the output is an error or None or something else that's not a list, just propagate
@@ -488,7 +489,7 @@ def list_of_series_to_single_series(series_list, add_belongs_to=False, include_h
                 'end_date': point[1],
                 'value': point[2],
                 'unit_id': point[4] if len(point) > 4 else series['series'].get('unitId', None),
-                'metadata': point[5] if len(point) > 5 else {},
+                'metadata': point[5] if len(point) > 5 and point[5] is not None else {},
                 # input_unit_id and input_unit_scale are deprecated but provided for backwards
                 # compatibility. unit_id should be used instead.
                 'input_unit_id': point[4] if len(point) > 4 else series['series'].get('unitId', None),
@@ -503,6 +504,10 @@ def list_of_series_to_single_series(series_list, add_belongs_to=False, include_h
                 'frequency_id': series['series'].get('frequencyId', None)
                 # 'source_id': series['series'].get('sourceId', None), TODO: add source to output
             }
+            if include_available_date:
+                # If a point does not have available_date, use None
+                formatted_point['available_date'] = point[6] if len(point) > 6 else None
+
             if formatted_point['metadata'].get('confInterval') is not None:
                 formatted_point['metadata']['conf_interval'] = formatted_point['metadata'].pop('confInterval')
 
@@ -521,7 +526,8 @@ def get_data_points(access_token, api_host, **selection):
     params = get_data_call_params(**selection)
     resp = get_data(url, headers, params)
     include_historical = selection.get('include_historical', True)
-    return list_of_series_to_single_series(resp.json(), False, include_historical)
+    include_available_date = selection.get('show_available_date', False)
+    return list_of_series_to_single_series(resp.json(), False, include_historical, include_available_date)
 
 
 @memoize(maxsize=None)

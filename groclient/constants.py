@@ -23,12 +23,15 @@ DATA_SERIES_UNIQUE_TYPES_ID = [
     'source_id'
 ]
 
-ENTITY_KEY_TO_TYPE = {'item_id': 'items',
-                      'metric_id': 'metrics',
-                      'region_id': 'regions',
-                      'partner_region_id': 'regions',
-                      'source_id': 'sources',
-                      'frequency_id': 'frequencies'}
+ENTITY_KEY_TO_TYPE = {
+    'metric_id': 'metrics',
+    'item_id': 'items',
+    'region_id': 'regions',
+    'partner_region_id': 'regions',
+    'source_id': 'sources',
+    'frequency_id': 'frequencies',
+    'unit_id': 'units'
+}
 
 DATA_POINTS_UNIQUE_COLS = DATA_SERIES_UNIQUE_TYPES_ID + [
     'reporting_date',

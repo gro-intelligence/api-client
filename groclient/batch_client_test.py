@@ -122,6 +122,18 @@ class BatchTests(TestCase):
 
         self.assertEqual(summation, 97680)
 
+    # Test that multiple GroClients each have their own AsyncHTTPClient. Note:
+    # this tests the fix for the `fetch called on closed AsyncHTTPClient`
+    # error. We can't test for that directly since the `fetch` call is mocked,
+    # so instead we just ensure that all GroClients have their own
+    # AsyncHTTPClient.
+    def test_batch_async_get_data_points_multiple_clients(self):
+        client = GroClient(MOCK_HOST, MOCK_TOKEN)
+        ahc_id1 = id(client._async_http_client)
+        client = GroClient(MOCK_HOST, MOCK_TOKEN)
+        ahc_id2 = id(client._async_http_client)
+        self.assertNotEqual(ahc_id1, ahc_id2)
+
     def test_batch_async_get_data_points_bad_request_error(self):
         responses = self.client.batch_async_get_data_points([mock_error_selection])
         self.assertTrue(isinstance(responses[0], BatchError))
