@@ -968,9 +968,10 @@ class GroClient(object):
                If set, each series will be compressed to a single column in the dataframe, with the end_date column
                set as the dataframe inde. All the entity names for each series will be
                placed in column headers.
+               compress_format cannot be used simultaneously with show_revisions or show_available_date
             async_mode: boolean, optional
                 If set, it will make :meth:`~get_data_points` requests asynchronously.
-                Note that if you're using Jupyter Notebook, you will need to find a Tornado workaround
+                Note that when running in a Jupyter Ipython notebook with async_mode, you will need to use nest_asyncio module
         Returns
         -------
         pandas.DataFrame
@@ -978,6 +979,11 @@ class GroClient(object):
             into a single dataframe.
             See https://developers.gro-intelligence.com/data-point-definition.html
         """
+
+        assert not (
+            compress_format and (show_revisions or show_available_date)
+        ), "compress_format cannot be used simultaneously with show_revisions or show_available_date"
+
         data_series_list = []
         while self._data_series_queue:
             data_series = self._data_series_queue.pop()
