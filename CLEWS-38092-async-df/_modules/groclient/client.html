@@ -1164,9 +1164,10 @@
 <span class="sd">               If set, each series will be compressed to a single column in the dataframe, with the end_date column</span>
 <span class="sd">               set as the dataframe inde. All the entity names for each series will be</span>
 <span class="sd">               placed in column headers.</span>
+<span class="sd">               compress_format cannot be used simultaneously with show_revisions or show_available_date</span>
 <span class="sd">            async_mode: boolean, optional</span>
 <span class="sd">                If set, it will make :meth:`~get_data_points` requests asynchronously.</span>
-<span class="sd">                Note that if you&#39;re using Jupyter Notebook, you will need to find a Tornado workaround</span>
+<span class="sd">                Note that when running in a Jupyter Ipython notebook with async_mode, you will need to use nest_asyncio module</span>
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        pandas.DataFrame</span>
@@ -1174,6 +1175,11 @@
 <span class="sd">            into a single dataframe.</span>
 <span class="sd">            See https://developers.gro-intelligence.com/data-point-definition.html</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">assert</span> <span class="ow">not</span> <span class="p">(</span>
+            <span class="n">compress_format</span> <span class="ow">and</span> <span class="p">(</span><span class="n">show_revisions</span> <span class="ow">or</span> <span class="n">show_available_date</span><span class="p">)</span>
+        <span class="p">),</span> <span class="s2">&quot;compress_format cannot be used simultaneously with show_revisions or show_available_date&quot;</span>
+
         <span class="n">data_series_list</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_series_queue</span><span class="p">:</span>
             <span class="n">data_series</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_series_queue</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
@@ -1210,7 +1216,6 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">_data_frame</span><span class="p">[</span><span class="n">name_col</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_frame</span><span class="p">[</span><span class="n">entity_type_id</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">entity_id</span><span class="p">:</span> <span class="n">entity_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">entity_id</span><span class="p">))[</span><span class="s1">&#39;name&#39;</span><span class="p">])</span>
 
             <span class="k">if</span> <span class="n">compress_format</span><span class="p">:</span>
-                <span class="c1"># BUG: index by end_date will compute average for all revisions</span>
                 <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_frame</span><span class="o">.</span><span class="n">pivot_table</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="s1">&#39;end_date&#39;</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="s1">&#39;value&#39;</span><span class="p">,</span>
                                                     <span class="n">columns</span><span class="o">=</span><span class="n">name_cols</span><span class="p">)</span>
 

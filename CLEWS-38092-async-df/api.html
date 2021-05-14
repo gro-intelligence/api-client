@@ -853,9 +853,10 @@ all values for a given period, differentiated by the <cite>reporting_date</cite>
 Note that this will increase the size of the dataframe by about 5x.</p></li>
 <li><p><strong>compress_format</strong> (<em>boolean</em><em>, </em><em>optional</em>) – If set, each series will be compressed to a single column in the dataframe, with the end_date column
 set as the dataframe inde. All the entity names for each series will be
-placed in column headers.</p></li>
+placed in column headers.
+compress_format cannot be used simultaneously with show_revisions or show_available_date</p></li>
 <li><p><strong>async_mode</strong> (<em>boolean</em><em>, </em><em>optional</em>) – If set, it will make <a class="reference internal" href="#groclient.GroClient.get_data_points" title="groclient.GroClient.get_data_points"><code class="xref py py-meth docutils literal notranslate"><span class="pre">get_data_points()</span></code></a> requests asynchronously.
-Note that if you’re using Jupyter Notebook, you will need to find a Tornado workaround</p></li>
+Note that when running in a Jupyter Ipython notebook with async_mode, you will need to use nest_asyncio module</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
