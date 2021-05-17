@@ -320,6 +320,15 @@ class GroClient(object):
             points = lib.list_of_series_to_single_series(
                 list_of_series_points, False, include_historical, include_available_date
             )
+            # Apply unit conversion if a unit is specified
+            if "unit_id" in selection:
+                raise gen.Return(list(
+                    map(
+                        partial(self.convert_unit, target_unit_id=selection["unit_id"]),
+                        points,
+                    )
+                ))
+
             raise gen.Return(points)
         except BatchError as b:
             raise gen.Return(b)
