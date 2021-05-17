@@ -1127,7 +1127,14 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_host</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">,</span> <span class="n">num_results</span><span class="p">,</span> <span class="o">**</span><span class="n">selection</span>
         <span class="p">)</span></div>
 
-<div class="viewcode-block" id="GroClient.get_df"><a class="viewcode-back" href="../../api.html#groclient.GroClient.get_df">[docs]</a>    <span class="k">def</span> <span class="nf">get_df</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">show_revisions</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">show_available_date</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">index_by_series</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">include_names</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">compress_format</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="GroClient.get_df"><a class="viewcode-back" href="../../api.html#groclient.GroClient.get_df">[docs]</a>    <span class="k">def</span> <span class="nf">get_df</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">show_revisions</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">show_available_date</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">index_by_series</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">include_names</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">compress_format</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">async_mode</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Call :meth:`~.get_data_points` for each saved data series and return as a combined</span>
 <span class="sd">        dataframe.</span>
 
@@ -1148,10 +1155,13 @@
 <span class="sd">               If set, the dataframe will have additional columns with names of entities.</span>
 <span class="sd">               Note that this will increase the size of the dataframe by about 5x.</span>
 <span class="sd">            compress_format: boolean, optional</span>
-<span class="sd">               If set, each series will be compressed to a single column in the dataframe, with the end_date column </span>
-<span class="sd">               set as the dataframe inde. All the entity names for each series will be </span>
+<span class="sd">               If set, each series will be compressed to a single column in the dataframe, with the end_date column</span>
+<span class="sd">               set as the dataframe inde. All the entity names for each series will be</span>
 <span class="sd">               placed in column headers.</span>
-
+<span class="sd">               compress_format cannot be used simultaneously with show_revisions or show_available_date</span>
+<span class="sd">            async_mode: boolean, optional</span>
+<span class="sd">                If set, it will make :meth:`~get_data_points` requests asynchronously.</span>
+<span class="sd">                Note that when running in a Jupyter Ipython notebook with async_mode, you will need to use nest_asyncio module</span>
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        pandas.DataFrame</span>
@@ -1159,35 +1169,51 @@
 <span class="sd">            into a single dataframe.</span>
 <span class="sd">            See https://developers.gro-intelligence.com/data-point-definition.html</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">assert</span> <span class="ow">not</span> <span class="p">(</span>
+            <span class="n">compress_format</span> <span class="ow">and</span> <span class="p">(</span><span class="n">show_revisions</span> <span class="ow">or</span> <span class="n">show_available_date</span><span class="p">)</span>
+        <span class="p">),</span> <span class="s2">&quot;compress_format cannot be used simultaneously with show_revisions or show_available_date&quot;</span>
+
+        <span class="n">data_series_list</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_series_queue</span><span class="p">:</span>
             <span class="n">data_series</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_series_queue</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
             <span class="k">if</span> <span class="n">show_revisions</span><span class="p">:</span>
                 <span class="n">data_series</span><span class="p">[</span><span class="s2">&quot;show_revisions&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
             <span class="k">if</span> <span class="n">show_available_date</span><span class="p">:</span>
                 <span class="n">data_series</span><span class="p">[</span><span class="s2">&quot;show_available_date&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">add_points_to_df</span><span class="p">(</span>
-                <span class="kc">None</span><span class="p">,</span> <span class="n">data_series</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_data_points</span><span class="p">(</span><span class="o">**</span><span class="n">data_series</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">async_mode</span><span class="p">:</span>
+                <span class="n">data_series_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">data_series</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">add_points_to_df</span><span class="p">(</span>
+                    <span class="kc">None</span><span class="p">,</span> <span class="n">data_series</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_data_points</span><span class="p">(</span><span class="o">**</span><span class="n">data_series</span><span class="p">)</span>
+                <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">async_mode</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">batch_async_get_data_points</span><span class="p">(</span>
+                <span class="n">data_series_list</span><span class="p">,</span>
+                <span class="n">output_list</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_data_frame</span><span class="p">,</span>
+                <span class="n">map_result</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">add_points_to_df</span><span class="p">,</span>
             <span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">compress_format</span><span class="p">:</span> 
+        <span class="k">if</span> <span class="n">compress_format</span><span class="p">:</span>
             <span class="n">include_names</span> <span class="o">=</span> <span class="kc">True</span>
-        
-        <span class="k">if</span> <span class="n">include_names</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_frame</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
-            <span class="k">def</span> <span class="nf">get_name</span><span class="p">(</span><span class="n">entity_type_id</span><span class="p">,</span> <span class="n">entity_id</span><span class="p">):</span>
-                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">lookup</span><span class="p">(</span><span class="n">ENTITY_KEY_TO_TYPE</span><span class="p">[</span><span class="n">entity_type_id</span><span class="p">],</span> <span class="n">entity_id</span><span class="p">)[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span>
 
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_frame</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_frame</span>
+
+        <span class="k">if</span> <span class="n">include_names</span><span class="p">:</span>
             <span class="n">name_cols</span> <span class="o">=</span> <span class="p">[]</span>
             <span class="k">for</span> <span class="n">entity_type_id</span> <span class="ow">in</span> <span class="n">DATA_SERIES_UNIQUE_TYPES_ID</span> <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;unit_id&#39;</span><span class="p">]:</span>
                 <span class="n">name_col</span> <span class="o">=</span> <span class="n">entity_type_id</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;_id&#39;</span><span class="p">,</span> <span class="s1">&#39;_name&#39;</span><span class="p">)</span>
                 <span class="n">name_cols</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">name_col</span><span class="p">)</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_data_frame</span><span class="p">[</span><span class="n">name_col</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_frame</span><span class="p">[</span><span class="n">entity_type_id</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">partial</span><span class="p">(</span><span class="n">get_name</span><span class="p">,</span> <span class="n">entity_type_id</span><span class="p">))</span>
+                <span class="n">entity_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lookup</span><span class="p">(</span><span class="n">ENTITY_KEY_TO_TYPE</span><span class="p">[</span><span class="n">entity_type_id</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_frame</span><span class="p">[</span><span class="n">entity_type_id</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">())</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_data_frame</span><span class="p">[</span><span class="n">name_col</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_frame</span><span class="p">[</span><span class="n">entity_type_id</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">entity_id</span><span class="p">:</span> <span class="n">entity_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">entity_id</span><span class="p">))[</span><span class="s1">&#39;name&#39;</span><span class="p">])</span>
 
             <span class="k">if</span> <span class="n">compress_format</span><span class="p">:</span>
-                <span class="n">table_df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_frame</span><span class="o">.</span><span class="n">pivot_table</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="s1">&#39;end_date&#39;</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="s1">&#39;value&#39;</span><span class="p">,</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_frame</span><span class="o">.</span><span class="n">pivot_table</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="s1">&#39;end_date&#39;</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="s1">&#39;value&#39;</span><span class="p">,</span>
                                                     <span class="n">columns</span><span class="o">=</span><span class="n">name_cols</span><span class="p">)</span>
-                <span class="k">return</span> <span class="n">table_df</span>
 
-        <span class="k">if</span> <span class="n">index_by_series</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_frame</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">index_by_series</span><span class="p">:</span>
             <span class="n">idx_columns</span> <span class="o">=</span> <span class="n">intersect</span><span class="p">(</span><span class="n">DATA_SERIES_UNIQUE_TYPES_ID</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_frame</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
 
             <span class="bp">self</span><span class="o">.</span><span class="n">_data_frame</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="n">idx_columns</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -1195,13 +1221,15 @@
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_frame</span></div>
 
-    <span class="k">def</span> <span class="nf">async_get_df</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">batch_async_get_data_points</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_data_series_queue</span><span class="p">,</span>
-            <span class="n">output_list</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_data_frame</span><span class="p">,</span>
-            <span class="n">map_result</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">add_points_to_df</span><span class="p">,</span>
+    <span class="k">def</span> <span class="nf">async_get_df</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">show_revisions</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">show_available_date</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">index_by_series</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">include_names</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">compress_format</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_df</span><span class="p">(</span>
+            <span class="n">show_revisions</span><span class="p">,</span>
+            <span class="n">show_available_date</span><span class="p">,</span>
+            <span class="n">index_by_series</span><span class="p">,</span>
+            <span class="n">include_names</span><span class="p">,</span>
+            <span class="n">compress_format</span><span class="p">,</span>
+            <span class="n">async_mode</span><span class="o">=</span><span class="kc">True</span>
         <span class="p">)</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_frame</span>
 
     <span class="k">def</span> <span class="nf">add_points_to_df</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="n">data_series</span><span class="p">,</span> <span class="n">data_points</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Add the given datapoints to a pandas dataframe.</span>
