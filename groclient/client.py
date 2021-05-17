@@ -937,7 +937,14 @@ class GroClient(object):
             self.access_token, self.api_host, entity_type, num_results, **selection
         )
 
-    def get_df(self, show_revisions=False, show_available_date=False, index_by_series=False, include_names=False, compress_format=False):
+    def get_df(
+        self,
+        show_revisions=False,
+        show_available_date=False,
+        index_by_series=False,
+        include_names=False,
+        compress_format=False,
+        async_mode = False):
         """Call :meth:`~.get_data_points` for each saved data series and return as a combined
         dataframe.
 
@@ -958,10 +965,13 @@ class GroClient(object):
                If set, the dataframe will have additional columns with names of entities.
                Note that this will increase the size of the dataframe by about 5x.
             compress_format: boolean, optional
-               If set, each series will be compressed to a single column in the dataframe, with the end_date column 
-               set as the dataframe inde. All the entity names for each series will be 
+               If set, each series will be compressed to a single column in the dataframe, with the end_date column
+               set as the dataframe inde. All the entity names for each series will be
                placed in column headers.
-
+               compress_format cannot be used simultaneously with show_revisions or show_available_date
+            async_mode: boolean, optional
+                If set, it will make :meth:`~get_data_points` requests asynchronously.
+                Note that when running in a Jupyter Ipython notebook with async_mode, you will need to use nest_asyncio module
         Returns
         -------
         pandas.DataFrame
@@ -969,35 +979,51 @@ class GroClient(object):
             into a single dataframe.
             See https://developers.gro-intelligence.com/data-point-definition.html
         """
+
+        assert not (
+            compress_format and (show_revisions or show_available_date)
+        ), "compress_format cannot be used simultaneously with show_revisions or show_available_date"
+
+        data_series_list = []
         while self._data_series_queue:
             data_series = self._data_series_queue.pop()
             if show_revisions:
                 data_series["show_revisions"] = True
             if show_available_date:
                 data_series["show_available_date"] = True
-            self.add_points_to_df(
-                None, data_series, self.get_data_points(**data_series)
+            if async_mode:
+                data_series_list.append(data_series)
+            else:
+                self.add_points_to_df(
+                    None, data_series, self.get_data_points(**data_series)
+                )
+
+        if async_mode:
+            self.batch_async_get_data_points(
+                data_series_list,
+                output_list=self._data_frame,
+                map_result=self.add_points_to_df,
             )
 
-        if compress_format: 
+        if compress_format:
             include_names = True
-        
-        if include_names and not self._data_frame.empty:
-            def get_name(entity_type_id, entity_id):
-                return self.lookup(ENTITY_KEY_TO_TYPE[entity_type_id], entity_id)['name']
 
+        if self._data_frame.empty:
+            return self._data_frame
+
+        if include_names:
             name_cols = []
             for entity_type_id in DATA_SERIES_UNIQUE_TYPES_ID + ['unit_id']:
                 name_col = entity_type_id.replace('_id', '_name')
                 name_cols.append(name_col)
-                self._data_frame[name_col] = self._data_frame[entity_type_id].apply(partial(get_name, entity_type_id))
+                entity_dict = self.lookup(ENTITY_KEY_TO_TYPE[entity_type_id], self._data_frame[entity_type_id].unique())
+                self._data_frame[name_col] = self._data_frame[entity_type_id].apply(lambda entity_id: entity_dict.get(str(entity_id))['name'])
 
             if compress_format:
-                table_df = self._data_frame.pivot_table(index='end_date', values='value',
+                return self._data_frame.pivot_table(index='end_date', values='value',
                                                     columns=name_cols)
-                return table_df
 
-        if index_by_series and not self._data_frame.empty:
+        if index_by_series:
             idx_columns = intersect(DATA_SERIES_UNIQUE_TYPES_ID, self._data_frame.columns)
 
             self._data_frame.set_index(idx_columns, inplace=True)
@@ -1005,13 +1031,15 @@ class GroClient(object):
 
         return self._data_frame
 
-    def async_get_df(self):
-        self.batch_async_get_data_points(
-            self._data_series_queue,
-            output_list=self._data_frame,
-            map_result=self.add_points_to_df,
+    def async_get_df(self, show_revisions=False, show_available_date=False, index_by_series=False, include_names=False, compress_format=False):
+        return self.get_df(
+            show_revisions,
+            show_available_date,
+            index_by_series,
+            include_names,
+            compress_format,
+            async_mode=True
         )
-        return self._data_frame
 
     def add_points_to_df(self, index, data_series, data_points, *args):
         """Add the given datapoints to a pandas dataframe.
