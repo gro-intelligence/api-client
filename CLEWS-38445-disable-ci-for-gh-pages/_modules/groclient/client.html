@@ -516,6 +516,15 @@
             <span class="n">points</span> <span class="o">=</span> <span class="n">lib</span><span class="o">.</span><span class="n">list_of_series_to_single_series</span><span class="p">(</span>
                 <span class="n">list_of_series_points</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="n">include_historical</span><span class="p">,</span> <span class="n">include_available_date</span>
             <span class="p">)</span>
+            <span class="c1"># Apply unit conversion if a unit is specified</span>
+            <span class="k">if</span> <span class="s2">&quot;unit_id&quot;</span> <span class="ow">in</span> <span class="n">selection</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">gen</span><span class="o">.</span><span class="n">Return</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span>
+                    <span class="nb">map</span><span class="p">(</span>
+                        <span class="n">partial</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">convert_unit</span><span class="p">,</span> <span class="n">target_unit_id</span><span class="o">=</span><span class="n">selection</span><span class="p">[</span><span class="s2">&quot;unit_id&quot;</span><span class="p">]),</span>
+                        <span class="n">points</span><span class="p">,</span>
+                    <span class="p">)</span>
+                <span class="p">))</span>
+
             <span class="k">raise</span> <span class="n">gen</span><span class="o">.</span><span class="n">Return</span><span class="p">(</span><span class="n">points</span><span class="p">)</span>
         <span class="k">except</span> <span class="n">BatchError</span> <span class="k">as</span> <span class="n">b</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">gen</span><span class="o">.</span><span class="n">Return</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
