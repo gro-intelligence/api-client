@@ -113,9 +113,6 @@ workflows:
     jobs:
       - ci:
           filters:
-            branches:
-              ignore:
-                - gh-pages
             tags:
               only: /^v.*/
 
