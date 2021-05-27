@@ -56,7 +56,7 @@ jobs:
       - run:
           name: "Ensure latest docs build without warnings or errors"
           command: >-
-            poetry install -E docs &&
+            poetry install -E docs && apt-get install pandoc &&
             poetry run sphinx-build -W --keep-going docs docs/_build/html
 
       - run:
@@ -70,7 +70,6 @@ jobs:
       - run:
           name: "Build docs and push to gh-pages"
           command: >-
-            apt-get install pandoc &&
             git config --global user.email "api-documentation@gro-intelligence.com" &&
             git config --global user.name "Gro Intelligence" &&
             git remote set-url origin git@github.com:$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git &&
