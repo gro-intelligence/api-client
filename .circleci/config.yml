@@ -23,6 +23,7 @@ jobs:
           command: |
             pip install -U pip wheel
             pip install poetry
+            pip install ipython
             poetry install
 
       - run:
