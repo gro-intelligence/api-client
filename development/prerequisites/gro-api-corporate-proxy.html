@@ -32,6 +32,7 @@
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
         <script src="../_static/language_data.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
@@ -189,7 +190,31 @@
             
 
 
-  <div class="section" id="using-gro-api-behind-a-corporate-proxy">
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast.container,
+.nboutput.nblast.container {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast.container + .nbinput.container {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<div class="section" id="using-gro-api-behind-a-corporate-proxy">
 <h1>Using Gro API behind a Corporate Proxy<a class="headerlink" href="#using-gro-api-behind-a-corporate-proxy" title="Permalink to this headline">¶</a></h1>
 <p>The Gro API uses the requests package to communicate with the Gro Servers. If you are behind a corporate proxy, you may see the error message below:</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>requests.exceptions.ProxyError: HTTPSConnectionPool … <span class="o">(</span>Caused by ProxyError<span class="o">(</span><span class="s1">&#39;Cannot connect to proxy.&#39;</span>, OSError<span class="o">(</span><span class="s1">&#39;Tunnel connection failed: 407 Proxy Authentication Required&#39;</span><span class="o">)))</span>
