@@ -32,7 +32,6 @@
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
         <script src="../_static/language_data.js"></script>
-        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
@@ -203,31 +202,7 @@
             
 
 
-  
-<style>
-/* CSS overrides for sphinx_rtd_theme */
-
-/* 24px margin */
-.nbinput.nblast.container,
-.nboutput.nblast.container {
-    margin-bottom: 19px;  /* padding has already 5px */
-}
-
-/* ... except between code cells! */
-.nblast.container + .nbinput.container {
-    margin-top: -19px;
-}
-
-.admonition > p:before {
-    margin-right: 4px;  /* make room for the exclamation icon */
-}
-
-/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
-.math {
-    text-align: unset;
-}
-</style>
-<div class="section" id="brazil-soybeans">
+  <div class="section" id="brazil-soybeans">
 <h1>Brazil Soybeans<a class="headerlink" href="#brazil-soybeans" title="Permalink to this headline">¶</a></h1>
 <p>See the <a class="reference external" href="https://github.com/gro-intelligence/api-client/blob/development/api/client/samples/crop_models">Brazil Soybeans</a> example in the crop models folder for a longer, more detailed demonstration of many of the API’s capabilities in the form of a Jupyter notebook.</p>
 <p>This notebook demonstrates the <cite>CropModel</cite> class and its <code class="code docutils literal notranslate"><span class="pre">compute_crop_weighted_series()</span></code> method in action. In this example, NDVI (<a class="reference external" href="https://app.gro-intelligence.com/dictionary/items/321">normalized difference vegetation index</a>) for provinces in Brazil is weighted against each province’s historical soybean production to put the latest NDVI values into context.</p>
