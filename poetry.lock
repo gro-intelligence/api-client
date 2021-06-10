@@ -944,11 +944,12 @@ testing = ["pytest (>=3.5,!=3.7.3)", "pytest-checkdocs (>=1.2.3)", "pytest-flake
 
 [extras]
 docs = ["sphinx", "recommonmark", "sphinx_rtd_theme", "sphinx-multiversion", "nbsphinx"]
+recipes = ["ipython"]
 
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.6.1"
-content-hash = "62f9c57235ffc74ca970dd2aec3b2fdb552c621603e5dc01e73cc4c71ac0acb4"
+content-hash = "7001799e4b3fff52162c688b9fab88e02220af33cec06d0b0d5263f558ec05b4"
 
 [metadata.files]
 alabaster = [
