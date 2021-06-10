@@ -32,6 +32,7 @@
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
         <script src="../_static/language_data.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
@@ -211,7 +212,31 @@
 </p>
 
 
-  <div class="section" id="quick-start-projects">
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast.container,
+.nboutput.nblast.container {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast.container + .nbinput.container {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<div class="section" id="quick-start-projects">
 <h1>Quick Start Projects<a class="headerlink" href="#quick-start-projects" title="Permalink to this headline">¶</a></h1>
 <p>Now that you have installed the basic requirements, you can start pulling data. Try out the examples below, or navigate to the <a class="reference external" href="https://github.com/gro-intelligence/api-client/blob/development/api/client/samples">api/client/samples</a> folder for more options.</p>
 <div class="toctree-wrapper compound">
