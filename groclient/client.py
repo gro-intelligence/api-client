@@ -755,7 +755,7 @@ class GroClient(object):
         """Given an item, metric or region, returns all its descendants i.e.
         entities that are "contained" in the given entity
 
-        Similar to :meth:~.get_descendant_regions, but also works on items and metrics. This method has
+        Similar to :meth:`~.get_descendant_regions`, but also works on items and metrics. This method has
         a distance parameter (which returns all nested child entities) instead of a descendant_level
         parameter (which only returns child entities at a given depth/level).
 
