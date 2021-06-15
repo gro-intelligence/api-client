@@ -373,6 +373,48 @@ the best match for the given search term(s).</p>
 </dd></dl>
 
 <dl class="py method">
+<dt id="groclient.GroClient.get_descendant">
+<code class="sig-prename descclassname">GroClient.</code><code class="sig-name descname">get_descendant</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">entity_type</span></em>, <em class="sig-param"><span class="n">entity_id</span></em>, <em class="sig-param"><span class="n">distance</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">include_details</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/groclient/client.html#GroClient.get_descendant"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#groclient.GroClient.get_descendant" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given an item, metric or region, returns all its descendants i.e.
+entities that are “contained” in the given entity</p>
+<p>Similar to <a class="reference internal" href="#groclient.GroClient.get_descendant_regions" title="groclient.GroClient.get_descendant_regions"><code class="xref py py-meth docutils literal notranslate"><span class="pre">get_descendant_regions()</span></code></a>, but also works on items and metrics. This method has
+a distance parameter (which returns all nested child entities) instead of a descendant_level
+parameter (which only returns child entities at a given depth/level).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>entity_type</strong> (<em>{ 'metrics'</em><em>, </em><em>'items'</em><em>, </em><em>'regions' }</em>) – </p></li>
+<li><p><strong>entity_id</strong> (<em>integer</em>) – </p></li>
+<li><p><strong>distance</strong> (<em>integer</em><em>, </em><em>optional</em>) – Return all entity contained to entity_id at maximum distance.
+If not provided, get all descendants.</p></li>
+<li><p><strong>include_details</strong> (<em>boolean</em><em>, </em><em>optional</em>) – True by default. Will perform a lookup() on each descendant  to find name,
+definition, etc. If this option is set to False, only ids of descendant
+entities will be returned, which makes execution significantly faster.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[{</span>
+    <span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="mi">134</span><span class="p">,</span>
+    <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Cattle hides, wet-salted&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;definition&#39;</span><span class="p">:</span> <span class="s1">&#39;Hides and skins of domesticated cattle-animals ...&#39;</span><span class="p">,</span>
+<span class="p">}</span> <span class="p">,</span> <span class="p">{</span>
+    <span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="mi">382</span><span class="p">,</span>
+    <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Calf skins, wet-salted&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;definition&#39;</span><span class="p">:</span> <span class="s1">&#39;Wet-salted hides and skins of calves-animals of ...&#39;</span>
+<span class="p">},</span> <span class="o">...</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>See output of <a class="reference internal" href="#groclient.GroClient.lookup" title="groclient.GroClient.lookup"><code class="xref py py-meth docutils literal notranslate"><span class="pre">lookup()</span></code></a></p>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of dicts</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt id="groclient.GroClient.get_data_series">
 <code class="sig-prename descclassname">GroClient.</code><code class="sig-name descname">get_data_series</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">**</span><span class="n">selection</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/groclient/client.html#GroClient.get_data_series"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#groclient.GroClient.get_data_series" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get available data series for the given selections.</p>
