@@ -2,7 +2,7 @@
 <h1 align="center">Gro API Client</h1>
 
 
-![gro-intelligence](https://circleci.com/gh/gro-intelligence/api-client.svg?style=shield)(https://app.circleci.com/pipelines/github/gro-intelligence/api-client?branch=development)
+[![gro-intelligence](https://circleci.com/gh/gro-intelligence/api-client.svg?style=shield)](https://app.circleci.com/pipelines/github/gro-intelligence/api-client?branch=development)
 
 
 The Gro Intelligence Python API client library provides access to Gro's
