@@ -1,6 +1,9 @@
 <p align="center"><img width=8% src="https://gro-intelligence.com/images/logo.jpg"></p>
 <h1 align="center">Gro API Client</h1>
+
+
 ![gro-intelligence](https://circleci.com/gh/gro-intelligence/api-client.svg?style=shield)
+
 
 The Gro Intelligence Python API client library provides access to Gro's
 [agricultural data platform](https://www.gro-intelligence.com/products/gro-api).
