@@ -6,9 +6,6 @@ than here.
 """
 
 from builtins import str
-from numpy.lib.function_base import select
-
-from requests.api import head
 from groclient import cfg
 from collections import OrderedDict
 from groclient.constants import REGION_LEVELS, DATA_SERIES_UNIQUE_TYPES_ID
@@ -376,7 +373,7 @@ def get_data_series(access_token, api_host, stream=False, chunkSize=None, **sele
     params = get_params_from_selection(**selection)
     if type(chunkSize) == int and chunkSize>1:
         params['chunkSize'] = chunkSize
-    resp = get_data(url, headers, params, None, stream)
+    resp = get_data(url, headers, params, logger, stream)
     try:
         if not stream:
             response = resp.json()['data']
@@ -394,16 +391,6 @@ def get_data_series(access_token, api_host, stream=False, chunkSize=None, **sele
                     yield json.loads(line)
     except KeyError:
         raise Exception(resp.text)
-
-
-    # def get_stream(url):
-    #     start = time.time()
-    #     with requests.get(url, stream=True) as response:
-    #         for line in response.iter_lines(decode_unicode=True):
-    #             if line:
-    #                 end = time.time()
-    #                 print(f'current line: {end-start}')
-    #                 yield line
 
 
 def get_top(access_token, api_host, entity_type, num_results=5, **selection):
