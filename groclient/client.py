@@ -548,7 +548,7 @@ class GroClient(object):
             self.access_token, self.api_host, metric_id, item_id
         )
 
-    def get_data_series(self, **selection):
+    def get_data_series(self, stream=False, chunkSize=None, **selection):
         """Get available data series for the given selections.
 
         https://developers.gro-intelligence.com/data-series-definition.html
@@ -578,7 +578,7 @@ class GroClient(object):
                  }, { ... }, ... ]
 
         """
-        return lib.get_data_series(self.access_token, self.api_host, **selection)
+        return lib.get_data_series(self.access_token, self.api_host, stream, chunkSize, **selection)
 
     def search(self, entity_type, search_terms):
         """Search for the given search term. Better matches appear first.
