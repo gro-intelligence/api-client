@@ -22,6 +22,8 @@ Basic Exploration
 
 .. automethod:: groclient.GroClient.search_for_entity
 
+.. automethod:: groclient.GroClient.get_ancestors
+
 .. automethod:: groclient.GroClient.get_descendant
 
 .. automethod:: groclient.GroClient.get_data_series
