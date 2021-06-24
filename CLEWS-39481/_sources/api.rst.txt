@@ -22,7 +22,7 @@ Basic Exploration
 
 .. automethod:: groclient.GroClient.search_for_entity
 
-.. automethod:: groclient.GroClient.get_ancestors
+.. automethod:: groclient.GroClient.get_ancestor
 
 .. automethod:: groclient.GroClient.get_descendant
 

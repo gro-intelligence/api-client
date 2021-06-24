@@ -941,7 +941,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">lib</span><span class="o">.</span><span class="n">get_geojson</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_host</span><span class="p">,</span> <span class="n">region_id</span><span class="p">,</span> <span class="n">zoom_level</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="GroClient.get_ancestors"><a class="viewcode-back" href="../../api.html#groclient.GroClient.get_ancestors">[docs]</a>    <span class="k">def</span> <span class="nf">get_ancestors</span><span class="p">(</span>
+<div class="viewcode-block" id="GroClient.get_ancestor"><a class="viewcode-back" href="../../api.html#groclient.GroClient.get_ancestor">[docs]</a>    <span class="k">def</span> <span class="nf">get_ancestor</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">entity_type</span><span class="p">,</span>
         <span class="n">entity_id</span><span class="p">,</span>
@@ -982,7 +982,7 @@
 <span class="sd">            See output of :meth:`~.lookup`</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">lib</span><span class="o">.</span><span class="n">get_ancestors</span><span class="p">(</span>
+        <span class="k">return</span> <span class="n">lib</span><span class="o">.</span><span class="n">get_ancestor</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="p">,</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">api_host</span><span class="p">,</span>
             <span class="n">entity_type</span><span class="p">,</span>
