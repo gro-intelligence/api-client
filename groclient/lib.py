@@ -604,7 +604,7 @@ def get_geojson(access_token, api_host, region_id, zoom_level):
         return json.loads(region['geojson'])
 
 
-def get_ancestors(access_token, api_host, entity_type, entity_id, distance=None,
+def get_ancestor(access_token, api_host, entity_type, entity_id, distance=None,
                    include_details=True):
     url = '/'.join(['https:', '', api_host, 'v2/{}/belongs-to'.format(entity_type)])
     headers = {'authorization': 'Bearer ' + access_token}

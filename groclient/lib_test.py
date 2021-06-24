@@ -446,7 +446,7 @@ def lookup_mock(MOCK_TOKEN, MOCK_HOST, entity_type, entity_ids):
 
 @mock.patch('groclient.lib.lookup')
 @mock.patch('requests.get')
-def test_get_ancestors(mock_requests_get, lookup_mocked):
+def test_get_ancestor(mock_requests_get, lookup_mocked):
     mock_requests_get.return_value.json.return_value = {'data': {'1': [3, 4]}}
     mock_requests_get.return_value.status_code = 200
     lookup_mocked.side_effect = lookup_mock

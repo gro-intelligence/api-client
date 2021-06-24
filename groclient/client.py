@@ -745,7 +745,7 @@ class GroClient(object):
         """
         return lib.get_geojson(self.access_token, self.api_host, region_id, zoom_level)
 
-    def get_ancestors(
+    def get_ancestor(
         self,
         entity_type,
         entity_id,
@@ -786,7 +786,7 @@ class GroClient(object):
             See output of :meth:`~.lookup`
 
         """
-        return lib.get_ancestors(
+        return lib.get_ancestor(
             self.access_token,
             self.api_host,
             entity_type,
