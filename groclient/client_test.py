@@ -335,27 +335,23 @@ class GroClientTests(TestCase):
         df = self.client.get_df()
         self.assertEqual(df.iloc[0]["start_date"].date(), date(2017, 1, 1))
         self.client.add_single_data_series(mock_data_series[0])
-        df = self.client.get_df(show_revisions=True)
+        df = self.client.get_df(show_history=True)
         self.assertEqual(df.iloc[0]["start_date"].date(), date(2017, 1, 1))
         indexed_df = self.client.get_df(index_by_series=True)
         self.assertEqual(indexed_df.iloc[0]["start_date"].date(), date(2017, 1, 1))
         series = zip_selections(indexed_df.iloc[0].name)
         self.assertEqual(series, mock_data_series[0])
 
-    def test_get_df_show_revisions(self):
+    def test_get_df_show_history(self):
         self.client.add_single_data_series(mock_data_series[0])
-        df = self.client.get_df(show_revisions=True)
-        self.assertEqual(df.iloc[0]["start_date"].date(), date(2017, 1, 1))
-
-    def test_get_df_show_available_date(self):
-        self.client.add_single_data_series(mock_data_series[0])
-        df = self.client.get_df(show_available_date=True)
-        self.assertEqual(df.iloc[0]["available_date"].date(), date(2017, 12, 31))
+        df = self.client.get_df(show_history=True)
+        self.assertEqual(df.iloc[0]["reporting_date"].date(), date(2018, 1, 1))
+        self.assertEqual(df.iloc[0]["available_date"].date(), date(2018, 1, 31))
 
     def test_add_points_to_df(self):
         self.client.add_points_to_df(None, mock_data_series[0], [])
         self.assertTrue(self.client.get_df().empty)
-        self.assertTrue(self.client.get_df(show_revisions=True).empty)
+        self.assertTrue(self.client.get_df(show_history=True).empty)
         self.assertTrue(self.client.get_df(index_by_series=True).empty)
 
         data_points = self.client.get_data_points(**mock_data_series[0])

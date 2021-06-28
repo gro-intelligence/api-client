@@ -109,7 +109,7 @@ Sometimes looking at the most recent data point doesn't tell you the whole story
   })
 
 
-But the USDA begins forecasting the yield well before harvest time, and will continue to update its estimate for many months after the harvest is over. In order to see how the forecasts and estimates for each year have changed, you can include the `show_revisions` field as follows:
+But the USDA begins forecasting the yield well before harvest time, and will continue to update its estimate for many months after the harvest is over. In order to see how the forecasts and estimates for each year have changed, you can include the `show_history` field as follows:
 
 .. code-block:: python
 
@@ -121,5 +121,5 @@ But the USDA begins forecasting the yield well before harvest time, and will con
       'source_id': 14,
       'frequency_id': 9,
       'start_date': '2017-01-01',
-      'show_revisions': True
+      'show_history': True
   })

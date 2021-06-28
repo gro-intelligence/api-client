@@ -316,9 +316,8 @@ class GroClient(object):
         try:
             list_of_series_points = yield self.async_get_data(url, headers, params)
             include_historical = selection.get("include_historical", True)
-            include_available_date = selection.get('show_available_date', False)
             points = lib.list_of_series_to_single_series(
-                list_of_series_points, False, include_historical, include_available_date
+                list_of_series_points, False, include_historical
             )
             # Apply unit conversion if a unit is specified
             if "unit_id" in selection:
@@ -948,8 +947,7 @@ class GroClient(object):
 
     def get_df(
         self,
-        show_revisions=False,
-        show_available_date=False,
+        show_history=False,
         index_by_series=False,
         include_names=False,
         compress_format=False,
@@ -963,11 +961,9 @@ class GroClient(object):
 
         Parameters
         ----------
-            show_revisions : boolean, optional
+            show_history : boolean, optional
                 False by default, meaning only the latest value for each period. If true, will return
-                all values for a given period, differentiated by the `reporting_date` field.
-            show_available_date : boolean, optional
-                False by default. If true, will return the available date of each data point.
+                the full history for a given period, differentiated by the `reporting_date` and `available_date`.
             index_by_series : boolean, optional
                If set, the dataframe is indexed by series. See https://developers.gro-intelligence.com/data-series-definition.html
             include_names : boolean, optional
@@ -977,7 +973,7 @@ class GroClient(object):
                If set, each series will be compressed to a single column in the dataframe, with the end_date column
                set as the dataframe inde. All the entity names for each series will be
                placed in column headers.
-               compress_format cannot be used simultaneously with show_revisions or show_available_date
+               compress_format cannot be used simultaneously with show_history
             async_mode: boolean, optional
                 If set, it will make :meth:`~get_data_points` requests asynchronously.
                 Note that when running in a Jupyter Ipython notebook with async_mode, you will need to use nest_asyncio module
@@ -990,16 +986,14 @@ class GroClient(object):
         """
 
         assert not (
-            compress_format and (show_revisions or show_available_date)
-        ), "compress_format cannot be used simultaneously with show_revisions or show_available_date"
+            compress_format and show_history
+        ), "compress_format cannot be used simultaneously with show_history"
 
         data_series_list = []
         while self._data_series_queue:
             data_series = self._data_series_queue.pop()
-            if show_revisions:
-                data_series["show_revisions"] = True
-            if show_available_date:
-                data_series["show_available_date"] = True
+            if show_history:
+                data_series["show_history"] = True
             if async_mode:
                 data_series_list.append(data_series)
             else:
@@ -1040,10 +1034,9 @@ class GroClient(object):
 
         return self._data_frame
 
-    def async_get_df(self, show_revisions=False, show_available_date=False, index_by_series=False, include_names=False, compress_format=False):
+    def async_get_df(self, show_history=False, index_by_series=False, include_names=False, compress_format=False):
         return self.get_df(
-            show_revisions,
-            show_available_date,
+            show_history,
             index_by_series,
             include_names,
             compress_format,
@@ -1182,11 +1175,9 @@ class GroClient(object):
             All points with end dates equal to or after this date
         end_date : string, optional
             All points with start dates equal to or before this date
-        show_revisions : boolean, optional
+        show_history : boolean, optional
             False by default, meaning only the latest value for each period. If true, will return
-            all values for a given period, differentiated by the `reporting_date` field.
-        show_available_date : boolean, optional
-            False by default. If true, will return the available date of each data point.
+            the full history for a given period, differentiated by `reporting_date` and `available_date`.
         insert_null : boolean, optional
             False by default. If True, will include a data point with a None value for each period
             that does not have data.
