@@ -604,6 +604,26 @@ def get_geojson(access_token, api_host, region_id, zoom_level):
         return json.loads(region['geojson'])
 
 
+def get_ancestor(access_token, api_host, entity_type, entity_id, distance=None,
+                   include_details=True):
+    url = '/'.join(['https:', '', api_host, 'v2/{}/belongs-to'.format(entity_type)])
+    headers = {'authorization': 'Bearer ' + access_token}
+    params = {'ids': [entity_id]}
+    if distance:
+        params['distance'] = distance
+    else:
+        params['distance'] = -1
+
+    resp = get_data(url, headers, params)
+    ancestor_entity_ids = resp.json()['data'][str(entity_id)]
+
+    if include_details:
+        entity_details = lookup(access_token, api_host, entity_type, ancestor_entity_ids)
+        return [entity_details[str(child_entity_id)] for child_entity_id in ancestor_entity_ids]
+
+    return [{'id': ancestor_entity_id} for ancestor_entity_id in ancestor_entity_ids]
+
+
 def get_descendant(access_token, api_host, entity_type, entity_id, distance=None,
                    include_details=True):
     url = '/'.join(['https:', '', api_host, 'v2/{}/contains'.format(entity_type)])
