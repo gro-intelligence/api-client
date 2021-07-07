@@ -1,4 +1,4 @@
-<p align="center"><img width=8% src="https://gro-intelligence.com/images/logo.jpg"></p>
+<p align="center"><img width=8% src="https://gro-images.s3.amazonaws.com/gro-logo-large.png"></p>
 <h1 align="center">Gro API Client</h1>
 
 
