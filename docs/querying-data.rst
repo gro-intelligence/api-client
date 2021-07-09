@@ -33,7 +33,7 @@ Get data points
       'frequency_id': 9
   })
 
-The above query has completed fields for :code:`metric_id`, :code:`item_id`, :code:`region_id`, :code:`source_id`, and :code:`frequency_id`. However, :meth:`groclient.GroClient.get_data_points` can also accept fields to further narrow your data series of interest: :code:`partner_region_id` (used only in series that represent a flow between two places), :code:`start_date`, :code:`end_date`, :code:`show_revions`, :code:`insert_null`, :code:`at_time`.
+The above query has completed fields for :code:`metric_id`, :code:`item_id`, :code:`region_id`, :code:`source_id`, and :code:`frequency_id`. However, :meth:`groclient.GroClient.get_data_points` can also accept fields to further narrow your data series of interest: :code:`partner_region_id` (used only in series that represent a flow between two places), :code:`start_date`, :code:`end_date`, :code:`show_revions`, :code:`insert_null` and :code:`at_time`.
 
 Making your query more specific will speed up your query by limiting the amount of data requested.
 
