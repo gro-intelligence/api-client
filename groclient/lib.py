@@ -351,7 +351,8 @@ def get_data_call_params(**selection):
     show_available_date : boolean, optional
     insert_null : boolean, optional
     show_metadata : boolean, optional
-    at_time : string, optional
+    at_time : string, optional,
+    available_since : string, optional
 
     Returns
     -------
@@ -363,7 +364,7 @@ def get_data_call_params(**selection):
     for key, value in list(selection.items()):
         if key == 'show_metadata':
             params[groclient.utils.str_snake_to_camel('show_meta_data')] = value
-        if key in ('start_date', 'end_date', 'show_revisions', 'show_available_date', 'insert_null', 'at_time'):
+        if key in ('start_date', 'end_date', 'show_revisions', 'show_available_date', 'insert_null', 'at_time', 'available_since'):
             params[groclient.utils.str_snake_to_camel(key)] = value
     params['responseType'] = 'list_of_series'
     return params
