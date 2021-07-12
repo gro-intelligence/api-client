@@ -1,5 +1,5 @@
-<p align="center"><img width="20%"  src="https://gro-images.s3.amazonaws.com/Gro-Logo-Emble-Blue-LARGE.svg"> <h1 align="center">Gro API Client</h1></p>
-
+<p align="center"><img width="20%" src="https://gro-images.s3.amazonaws.com/Gro-Logo-Emble-Blue-LARGE.svg"></p>
+<h1 align="center">Gro API Client</h1>
 
 The Gro Intelligence Python API client library provides access to Gro's
 [agricultural data platform](https://www.gro-intelligence.com/products/gro-api).
