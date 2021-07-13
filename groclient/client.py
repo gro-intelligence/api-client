@@ -1244,6 +1244,8 @@ class GroClient(object):
             :sample:`at-time-query-examples.ipynb` for more details.
         include_historical : boolean, optional
             True by default, will include historical regions that are part of your selections
+        available_since : string, optional
+            Fetch points since last data retrieval where available date is equal to or after this date
 
         Returns
         -------
