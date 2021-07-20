@@ -865,6 +865,7 @@ class GroClient(object):
         descendant_level=None,
         include_historical=True,
         include_details=True,
+        distance=None,
     ):
         """Look up details of all regions of the given level contained by a region.
 
@@ -910,6 +911,7 @@ class GroClient(object):
             self.api_host,
             'regions',
             region_id,
+            distance,
             descendant_level,
             include_historical,
             include_details,
