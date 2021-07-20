@@ -132,17 +132,34 @@ def mock_get_ancestor(
     api_host,
     entity_type,
     entity_id,
-    distance,
-    include_details,
+    distance=None,
+    ancestor_level=None,
+    include_historical=True,
+    include_details=True,
 ):
-
     childs = [
             child
             for child in mock_entities[entity_type].values()
             if 12345 in child["contains"]
         ]
-    if include_details:
-        return childs
+
+    if entity_type == 'regions':
+        if ancestor_level:
+            childs = [
+                child
+                for child in mock_entities[entity_type].values()
+                if child["level"] == ancestor_level
+            ]
+        else:
+            childs = list(mock_entities["regions"].values())
+
+    if not include_historical or include_details:
+
+        if not include_historical:
+            childs = [child for child in childs if not child["historical"]]
+
+        if include_details:
+            return childs
     else:
         return [{"id": child["id"]} for child in childs]
 
