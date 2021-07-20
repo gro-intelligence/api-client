@@ -96,14 +96,14 @@ def mock_get_descendant(
     entity_type,
     entity_id,
     distance,
-    descendant_level,
-    include_historical,
-    include_details,
+    descendant_level=None,
+    include_historical=True,
+    include_details=True,
 ):
     childs = [
             child
             for child in mock_entities[entity_type].values()
-            if 119 in child["belongsTo"]
+            if 119 or 1215 in child["belongsTo"]
         ]
 
     if descendant_level:
@@ -123,18 +123,6 @@ def mock_get_descendant(
     else:
         return [{"id": child["id"]} for child in childs]
 
-"""
-def mock_get_descendant_regions(
-    access_token,
-    api_host,
-    region_id,
-    descendant_level,
-    include_historical,
-    include_details,
-):
-    return mock_get_descendant(access_token, api_host, 'regions', region_id, descendant_level,
-                               include_historical, include_details)
-"""
 
 def mock_get_ancestor(
     access_token,
