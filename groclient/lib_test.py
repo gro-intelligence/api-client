@@ -499,46 +499,38 @@ def test_get_descendant(mock_requests_get, lookup_mocked):
         {'id': 3, 'name': 'parent', 'contains': [1, 2], 'belongsTo': [4], 'definition': 'def3'}
     ]
 
-    
-
-@mock.patch('groclient.lib.lookup')
-@mock.patch('requests.get')
-def test_descendant_regions(mock_requests_get, lookup_mocked):
     mock_requests_get.return_value.json.return_value = {'data': {'3': [1, 2]}}
-    mock_requests_get.return_value.status_code = 200
-    lookup_mocked.side_effect = lookup_mock
-
-    assert lib.get_descendant_regions(MOCK_TOKEN, MOCK_HOST, 3) == [
+    assert lib.get_descendant(MOCK_TOKEN, MOCK_HOST, 'regions', 3) == [
         {'id': 1, 'name': 'region 1', 'contains': [], 'belongsTo': [3], 'historical': True},
         {'id': 2, 'name': 'region 2', 'contains': [], 'belongsTo': [3], 'historical': False}
     ]
 
-    assert lib.get_descendant_regions(MOCK_TOKEN, MOCK_HOST, 3, include_details=True) == [
+    assert lib.get_descendant(MOCK_TOKEN, MOCK_HOST, 'regions', 3, include_details=True) == [
         {'id': 1, 'name': 'region 1', 'contains': [], 'belongsTo': [3], 'historical': True},
         {'id': 2, 'name': 'region 2', 'contains': [], 'belongsTo': [3], 'historical': False}
     ]
 
-    assert lib.get_descendant_regions(MOCK_TOKEN, MOCK_HOST, 3, include_details=False) == [
+    assert lib.get_descendant(MOCK_TOKEN, MOCK_HOST, 'regions', 3, include_details=False) == [
         {'id': 1}, {'id': 2}
     ]
 
-    assert lib.get_descendant_regions(MOCK_TOKEN, MOCK_HOST, 3, include_historical=True) == [
+    assert lib.get_descendant(MOCK_TOKEN, MOCK_HOST, 'regions', 3, include_historical=True) == [
         {'id': 1, 'name': 'region 1', 'contains': [], 'belongsTo': [3], 'historical': True},
         {'id': 2, 'name': 'region 2', 'contains': [], 'belongsTo': [3], 'historical': False}
     ]
 
-    assert lib.get_descendant_regions(MOCK_TOKEN, MOCK_HOST, 3, include_historical=False) == [
+    assert lib.get_descendant(MOCK_TOKEN, MOCK_HOST, 'regions', 3, include_historical=False) == [
         {'id': 2, 'name': 'region 2', 'contains': [], 'belongsTo': [3], 'historical': False}
     ]
 
-    assert lib.get_descendant_regions(MOCK_TOKEN, MOCK_HOST, 3,
-                                      include_historical=True, include_details=True) == [
+    assert lib.get_descendant(MOCK_TOKEN, MOCK_HOST, 'regions', 3,
+                              include_historical=True, include_details=True) == [
         {'id': 1, 'name': 'region 1', 'contains': [], 'belongsTo': [3], 'historical': True},
         {'id': 2, 'name': 'region 2', 'contains': [], 'belongsTo': [3], 'historical': False}
     ]
 
-    assert lib.get_descendant_regions(MOCK_TOKEN, MOCK_HOST, 3, include_historical=False,
-                                      include_details=False) == [{'id': 2}]
+    assert lib.get_descendant(MOCK_TOKEN, MOCK_HOST, 'regions', 3, include_historical=False,
+                              include_details=False) == [{'id': 2}]
 
 
 @mock.patch('requests.get')

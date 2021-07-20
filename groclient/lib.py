@@ -626,50 +626,33 @@ def get_ancestor(access_token, api_host, entity_type, entity_id, distance=None,
 
 
 def get_descendant(access_token, api_host, entity_type, entity_id, distance=None,
-                   include_details=True):
+                   descendant_level=None, include_historical=True, include_details=True):
     url = '/'.join(['https:', '', api_host, 'v2/{}/contains'.format(entity_type)])
     headers = {'authorization': 'Bearer ' + access_token}
     params = {'ids': [entity_id]}
     if distance:
         params['distance'] = distance
+    elif descendant_level:
+        params['level'] = descendant_level
     else:
         params['distance'] = -1
 
     resp = get_data(url, headers, params)
     descendant_entity_ids = resp.json()['data'][str(entity_id)]
 
-    if include_details:
-        entity_details = lookup(access_token, api_host, entity_type, descendant_entity_ids)
-        return [entity_details[str(child_entity_id)] for child_entity_id in descendant_entity_ids]
-
-    return [{'id': descendant_entity_id} for descendant_entity_id in descendant_entity_ids]
-
-
-def get_descendant_regions(access_token, api_host, region_id,
-                           descendant_level=None, include_historical=True, include_details=True):
-    url = '/'.join(['https:', '', api_host, 'v2/regions/contains'])
-    headers = {'authorization': 'Bearer ' + access_token}
-    params = {'ids': [region_id]}
-    if descendant_level:
-        params['level'] = descendant_level
-    else:
-        params['distance'] = -1
-
-    resp = get_data(url, headers, params)
-    descendant_region_ids = resp.json()['data'][str(region_id)]
-
     # Filter out regions with the 'historical' flag set to true
     if not include_historical or include_details:
-        region_details = lookup(access_token, api_host, 'regions', descendant_region_ids)
+        entity_details = lookup(access_token, api_host, entity_type, descendant_entity_ids)
 
         if not include_historical:
-            descendant_region_ids = [region['id'] for region in region_details.values()
-                                     if not region['historical']]
+            descendant_entity_ids = [entity['id'] for entity in entity_details.values()
+                                     if not entity['historical']]
 
         if include_details:
-            return [region_details[str(region_id)] for region_id in descendant_region_ids]
+            return [entity_details[str(child_entity_id)] for child_entity_id in
+                    descendant_entity_ids]
 
-    return [{'id': descendant_region_id} for descendant_region_id in descendant_region_ids]
+    return [{'id': descendant_entity_id} for descendant_entity_id in descendant_entity_ids]
 
 
 if __name__ == '__main__':

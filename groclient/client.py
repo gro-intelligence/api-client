@@ -800,6 +800,8 @@ class GroClient(object):
         entity_type,
         entity_id,
         distance=None,
+        descendant_level=None,
+        include_historical=True,
         include_details=True,
     ):
         """Given an item, metric or region, returns all its descendants i.e.
@@ -816,6 +818,12 @@ class GroClient(object):
         distance: integer, optional
             Return all entity contained to entity_id at maximum distance.
             If not provided, get all descendants.
+        descendant_level : integer, optional
+            The region level of interest. See REGION_LEVELS constant. If not provided, get all
+            descendants.
+        include_historical : boolean, optional
+            True by default. If False is specified, regions that only exist in historical data
+            (e.g. the Soviet Union) will be excluded.
         include_details : boolean, optional
             True by default. Will perform a lookup() on each descendant  to find name,
             definition, etc. If this option is set to False, only ids of descendant
@@ -846,6 +854,8 @@ class GroClient(object):
             entity_type,
             entity_id,
             distance,
+            descendant_level,
+            include_historical,
             include_details,
         )
 
@@ -895,9 +905,10 @@ class GroClient(object):
             See output of :meth:`~.lookup`
 
         """
-        return lib.get_descendant_regions(
+        return lib.get_descendant(
             self.access_token,
             self.api_host,
+            'regions',
             region_id,
             descendant_level,
             include_historical,
