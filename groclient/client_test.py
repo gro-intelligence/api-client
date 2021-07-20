@@ -95,7 +95,7 @@ def mock_get_descendant(
     api_host,
     entity_type,
     entity_id,
-    distance,
+    distance=None,
     descendant_level=None,
     include_historical=True,
     include_details=True,
@@ -103,15 +103,18 @@ def mock_get_descendant(
     childs = [
             child
             for child in mock_entities[entity_type].values()
-            if 119 or 1215 in child["belongsTo"]
+            if 119 in child["belongsTo"]
         ]
 
-    if descendant_level:
-        childs = [
-            child
-            for child in mock_entities[entity_type].values()
-            if child["level"] == descendant_level
-        ]
+    if entity_type == 'regions':
+        if descendant_level:
+            childs = [
+                child
+                for child in mock_entities[entity_type].values()
+                if child["level"] == descendant_level
+            ]
+        else:
+            childs = list(mock_entities["regions"].values())
 
     if not include_historical or include_details:
 
@@ -228,7 +231,6 @@ def mock_get_data_points(access_token, api_host, **selections):
 @patch("groclient.lib.get_geojson", MagicMock(side_effect=mock_get_geojson))
 @patch("groclient.lib.get_ancestor", MagicMock(side_effect=mock_get_ancestor))
 @patch("groclient.lib.get_descendant", MagicMock(side_effect=mock_get_descendant))
-# @patch("groclient.client.get_descendant_regions", MagicMock(side_effect=mock_get_descendant))
 @patch(
     "groclient.lib.get_available_timefrequency",
     MagicMock(side_effect=mock_get_available_timefrequency),
