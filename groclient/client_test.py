@@ -96,19 +96,45 @@ def mock_get_descendant(
     entity_type,
     entity_id,
     distance,
+    descendant_level,
+    include_historical,
     include_details,
 ):
-
     childs = [
             child
             for child in mock_entities[entity_type].values()
             if 119 in child["belongsTo"]
         ]
-    if include_details:
-        return childs
+
+    if descendant_level:
+        childs = [
+            child
+            for child in mock_entities[entity_type].values()
+            if child["level"] == descendant_level
+        ]
+
+    if not include_historical or include_details:
+
+        if not include_historical:
+            childs = [child for child in childs if not child["historical"]]
+
+        if include_details:
+            return childs
     else:
         return [{"id": child["id"]} for child in childs]
 
+"""
+def mock_get_descendant_regions(
+    access_token,
+    api_host,
+    region_id,
+    descendant_level,
+    include_historical,
+    include_details,
+):
+    return mock_get_descendant(access_token, api_host, 'regions', region_id, descendant_level,
+                               include_historical, include_details)
+"""
 
 def mock_get_ancestor(
     access_token,
@@ -128,30 +154,6 @@ def mock_get_ancestor(
         return childs
     else:
         return [{"id": child["id"]} for child in childs]
-
-
-def mock_get_descendant_regions(
-    access_token,
-    api_host,
-    region_id,
-    descendant_level,
-    include_historical,
-    include_details,
-):
-    if descendant_level:
-        regions = [
-            region
-            for region in mock_entities["regions"].values()
-            if region["level"] == descendant_level
-        ]
-    else:
-        regions = list(mock_entities["regions"].values())
-    if not include_historical:
-        regions = [region for region in regions if not region["historical"]]
-    if include_details:
-        return regions
-    else:
-        return [{"id": region["id"]} for region in regions]
 
 
 def mock_get_available_timefrequency(access_token, api_host, **selection):
@@ -238,10 +240,7 @@ def mock_get_data_points(access_token, api_host, **selections):
 @patch("groclient.lib.get_geojson", MagicMock(side_effect=mock_get_geojson))
 @patch("groclient.lib.get_ancestor", MagicMock(side_effect=mock_get_ancestor))
 @patch("groclient.lib.get_descendant", MagicMock(side_effect=mock_get_descendant))
-@patch(
-    "groclient.lib.get_descendant_regions",
-    MagicMock(side_effect=mock_get_descendant_regions),
-)
+# @patch("groclient.client.get_descendant_regions", MagicMock(side_effect=mock_get_descendant))
 @patch(
     "groclient.lib.get_available_timefrequency",
     MagicMock(side_effect=mock_get_available_timefrequency),
@@ -337,8 +336,6 @@ class GroClientTests(TestCase):
             "name"
             not in self.client.get_descendant('metrics', 119, include_details=False)[0]
         )
-
-    def test_get_descendant_regions(self):
         self.assertTrue("name" in self.client.get_descendant_regions(1215)[0])
         self.assertTrue(
             "name"
