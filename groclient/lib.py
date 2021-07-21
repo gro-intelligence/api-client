@@ -636,7 +636,7 @@ def get_ancestor(access_token, api_host, entity_type, entity_id, distance=None,
 
 
 def get_descendant(access_token, api_host, entity_type, entity_id, distance=None,
-                   descendant_level=None, include_historical=True, include_details=True):
+                   include_details=True, descendant_level=None, include_historical=True):
     url = '/'.join(['https:', '', api_host, 'v2/{}/contains'.format(entity_type)])
     headers = {'authorization': 'Bearer ' + access_token}
     params = {'ids': [entity_id]}

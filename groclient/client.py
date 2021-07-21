@@ -810,16 +810,15 @@ class GroClient(object):
         entity_type,
         entity_id,
         distance=None,
+        include_details=True,
         descendant_level=None,
         include_historical=True,
-        include_details=True,
     ):
         """Given an item, metric or region, returns all its descendants i.e.
         entities that are "contained" in the given entity
 
-        Similar to :meth:`~.get_descendant_regions`, but also works on items and metrics. This method has
-        a distance parameter (which returns all nested child entities) instead of a descendant_level
-        parameter (which only returns child entities at a given depth/level).
+        This method has a distance parameter (which returns all nested child entities) as well as a
+        descendant_level parameter (which only returns child entities at a given depth/level).
 
         Parameters
         ----------
@@ -828,16 +827,16 @@ class GroClient(object):
         distance: integer, optional
             Return all entity contained to entity_id at maximum distance.
             If not provided, get all descendants.
+        include_details : boolean, optional
+            True by default. Will perform a lookup() on each descendant  to find name,
+            definition, etc. If this option is set to False, only ids of descendant
+            entities will be returned, which makes execution significantly faster.
         descendant_level : integer, optional
             The region level of interest. See REGION_LEVELS constant. If not provided, get all
             descendants.
         include_historical : boolean, optional
             True by default. If False is specified, regions that only exist in historical data
             (e.g. the Soviet Union) will be excluded.
-        include_details : boolean, optional
-            True by default. Will perform a lookup() on each descendant  to find name,
-            definition, etc. If this option is set to False, only ids of descendant
-            entities will be returned, which makes execution significantly faster.
 
         Returns
         -------
@@ -878,6 +877,9 @@ class GroClient(object):
         distance=None,
     ):
         """Look up details of all regions of the given level contained by a region.
+
+        This method is deprecated, and should be replaced by :meth:`~.get_descendant` which has
+        been updated to include the `descendant_level` and `include_historical` parameters.
 
         Given any region by id, get all the descendant regions that are of the specified level.
 
