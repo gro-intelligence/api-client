@@ -347,7 +347,8 @@ def get_data_call_params(**selection):
     frequency_id : integer
     start_date : string, optional
     end_date : string, optional
-    show_history : boolean, optional
+    reporting_history : boolean, optional
+    complete_history : boolean, optional
     insert_null : boolean, optional
     show_metadata : boolean, optional
     at_time : string, optional
@@ -362,7 +363,11 @@ def get_data_call_params(**selection):
     for key, value in list(selection.items()):
         if key == 'show_metadata':
             params[groclient.utils.str_snake_to_camel('show_meta_data')] = value
-        if key in ('start_date', 'end_date', 'show_history', 'insert_null', 'at_time'):
+        elif key == 'complete_history':
+            params['showHistory'] = value
+        elif key in ('show_revisions', 'reporting_history'):
+            params['showReportingDate'] = value
+        elif key in ('start_date', 'end_date', 'insert_null', 'at_time', 'show_available_date'):
             params[groclient.utils.str_snake_to_camel(key)] = value
     params['responseType'] = 'list_of_series'
     return params

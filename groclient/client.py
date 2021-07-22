@@ -947,11 +947,13 @@ class GroClient(object):
 
     def get_df(
         self,
-        show_history=False,
+        reporting_history=False,
+        complete_history=False,
         index_by_series=False,
         include_names=False,
         compress_format=False,
-        async_mode = False):
+        async_mode = False,
+        show_revisions=False):
         """Call :meth:`~.get_data_points` for each saved data series and return as a combined
         dataframe.
 
@@ -961,9 +963,12 @@ class GroClient(object):
 
         Parameters
         ----------
-            show_history : boolean, optional
-                False by default, meaning only the latest value for each period. If true, will return
-                the full history for a given period, differentiated by the `reporting_date` and `available_date`.
+            reporting_history : boolean, optional
+                False by default, meaning only the latest value for each period. If true, will return all values for a given period 
+                which have a valid reporting_date.
+            complete_history : boolean, optional
+                False by default, meaning only the latest value for each period. If true, will return all values for a given period, 
+                even if there is no valid reporting_date. Will return values which are differentiated only be available_date.
             index_by_series : boolean, optional
                If set, the dataframe is indexed by series. See https://developers.gro-intelligence.com/data-series-definition.html
             include_names : boolean, optional
@@ -973,7 +978,7 @@ class GroClient(object):
                If set, each series will be compressed to a single column in the dataframe, with the end_date column
                set as the dataframe inde. All the entity names for each series will be
                placed in column headers.
-               compress_format cannot be used simultaneously with show_history
+               compress_format cannot be used simultaneously with reporting_history or complete_history
             async_mode: boolean, optional
                 If set, it will make :meth:`~get_data_points` requests asynchronously.
                 Note that when running in a Jupyter Ipython notebook with async_mode, you will need to use nest_asyncio module
@@ -986,14 +991,16 @@ class GroClient(object):
         """
 
         assert not (
-            compress_format and show_history
-        ), "compress_format cannot be used simultaneously with show_history"
+            compress_format and (reporting_history or show_revisions or complete_history)
+        ), "compress_format cannot be used simultaneously with reporting_history or complete_history"
 
         data_series_list = []
         while self._data_series_queue:
             data_series = self._data_series_queue.pop()
-            if show_history:
-                data_series["show_history"] = True
+            if reporting_history or show_revisions:
+                 data_series["reporting_history"] = True
+            if complete_history:
+                data_series["complete_history"] = True
             if async_mode:
                 data_series_list.append(data_series)
             else:
@@ -1034,9 +1041,10 @@ class GroClient(object):
 
         return self._data_frame
 
-    def async_get_df(self, show_history=False, index_by_series=False, include_names=False, compress_format=False):
+    def async_get_df(self, reporting_history=False, complete_history=False, index_by_series=False, include_names=False, compress_format=False):
         return self.get_df(
-            show_history,
+            reporting_history,
+            complete_history,
             index_by_series,
             include_names,
             compress_format,
@@ -1175,9 +1183,12 @@ class GroClient(object):
             All points with end dates equal to or after this date
         end_date : string, optional
             All points with start dates equal to or before this date
-        show_history : boolean, optional
-            False by default, meaning only the latest value for each period. If true, will return
-            the full history for a given period, differentiated by `reporting_date` and `available_date`.
+        reporting_history : boolean, optional
+            False by default, meaning only the latest value for each period. If true, will return all values for a given period 
+            which have a valid reporting_date.
+        complete_history : boolean, optional
+            False by default, meaning only the latest value for each period. If true, will return all values for a given period, 
+            even if there is no valid reporting_date. Will return values which are differentiated only be available_date.
         insert_null : boolean, optional
             False by default. If True, will include a data point with a None value for each period
             that does not have data.
