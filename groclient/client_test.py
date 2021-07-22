@@ -96,9 +96,9 @@ def mock_get_descendant(
     entity_type,
     entity_id,
     distance=None,
+    include_details=True,
     descendant_level=None,
     include_historical=True,
-    include_details=True,
 ):
     childs = [
             child
@@ -133,9 +133,9 @@ def mock_get_ancestor(
     entity_type,
     entity_id,
     distance=None,
+    include_details=True,
     ancestor_level=None,
     include_historical=True,
-    include_details=True,
 ):
     childs = [
             child
