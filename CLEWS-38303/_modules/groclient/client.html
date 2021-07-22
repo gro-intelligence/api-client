@@ -69,7 +69,7 @@
 
           
             
-            <img src="../../_static/Gro-logo-full.svg" class="logo" alt="Logo"/>
+            <img src="../../_static/logo.jpg" class="logo" alt="Logo"/>
           
           </a>
 
@@ -1143,11 +1143,13 @@
 
 <div class="viewcode-block" id="GroClient.get_df"><a class="viewcode-back" href="../../api.html#groclient.GroClient.get_df">[docs]</a>    <span class="k">def</span> <span class="nf">get_df</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">show_history</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">reporting_history</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">complete_history</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
         <span class="n">index_by_series</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
         <span class="n">include_names</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
         <span class="n">compress_format</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-        <span class="n">async_mode</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+        <span class="n">async_mode</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">show_revisions</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Call :meth:`~.get_data_points` for each saved data series and return as a combined</span>
 <span class="sd">        dataframe.</span>
 
@@ -1157,9 +1159,12 @@
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">            show_history : boolean, optional</span>
-<span class="sd">                False by default, meaning only the latest value for each period. If true, will return</span>
-<span class="sd">                the full history for a given period, differentiated by the `reporting_date` and `available_date`.</span>
+<span class="sd">            reporting_history : boolean, optional</span>
+<span class="sd">                False by default, meaning only the latest value for each period. If true, will return all values for a given period </span>
+<span class="sd">                which have a valid reporting_date.</span>
+<span class="sd">            complete_history : boolean, optional</span>
+<span class="sd">                False by default, meaning only the latest value for each period. If true, will return all values for a given period, </span>
+<span class="sd">                even if there is no valid reporting_date. Will return values which are differentiated only be available_date.</span>
 <span class="sd">            index_by_series : boolean, optional</span>
 <span class="sd">               If set, the dataframe is indexed by series. See https://developers.gro-intelligence.com/data-series-definition.html</span>
 <span class="sd">            include_names : boolean, optional</span>
@@ -1169,7 +1174,7 @@
 <span class="sd">               If set, each series will be compressed to a single column in the dataframe, with the end_date column</span>
 <span class="sd">               set as the dataframe inde. All the entity names for each series will be</span>
 <span class="sd">               placed in column headers.</span>
-<span class="sd">               compress_format cannot be used simultaneously with show_history</span>
+<span class="sd">               compress_format cannot be used simultaneously with reporting_history or complete_history</span>
 <span class="sd">            async_mode: boolean, optional</span>
 <span class="sd">                If set, it will make :meth:`~get_data_points` requests asynchronously.</span>
 <span class="sd">                Note that when running in a Jupyter Ipython notebook with async_mode, you will need to use nest_asyncio module</span>
@@ -1182,14 +1187,16 @@
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">assert</span> <span class="ow">not</span> <span class="p">(</span>
-            <span class="n">compress_format</span> <span class="ow">and</span> <span class="n">show_history</span>
-        <span class="p">),</span> <span class="s2">&quot;compress_format cannot be used simultaneously with show_history&quot;</span>
+            <span class="n">compress_format</span> <span class="ow">and</span> <span class="p">(</span><span class="n">reporting_history</span> <span class="ow">or</span> <span class="n">show_revisions</span> <span class="ow">or</span> <span class="n">complete_history</span><span class="p">)</span>
+        <span class="p">),</span> <span class="s2">&quot;compress_format cannot be used simultaneously with reporting_history or complete_history&quot;</span>
 
         <span class="n">data_series_list</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_series_queue</span><span class="p">:</span>
             <span class="n">data_series</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_series_queue</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
-            <span class="k">if</span> <span class="n">show_history</span><span class="p">:</span>
-                <span class="n">data_series</span><span class="p">[</span><span class="s2">&quot;show_history&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">if</span> <span class="n">reporting_history</span> <span class="ow">or</span> <span class="n">show_revisions</span><span class="p">:</span>
+                 <span class="n">data_series</span><span class="p">[</span><span class="s2">&quot;reporting_history&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">if</span> <span class="n">complete_history</span><span class="p">:</span>
+                <span class="n">data_series</span><span class="p">[</span><span class="s2">&quot;complete_history&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
             <span class="k">if</span> <span class="n">async_mode</span><span class="p">:</span>
                 <span class="n">data_series_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">data_series</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
@@ -1230,9 +1237,10 @@
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_frame</span></div>
 
-    <span class="k">def</span> <span class="nf">async_get_df</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">show_history</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">index_by_series</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">include_names</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">compress_format</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">async_get_df</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reporting_history</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">complete_history</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">index_by_series</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">include_names</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">compress_format</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_df</span><span class="p">(</span>
-            <span class="n">show_history</span><span class="p">,</span>
+            <span class="n">reporting_history</span><span class="p">,</span>
+            <span class="n">complete_history</span><span class="p">,</span>
             <span class="n">index_by_series</span><span class="p">,</span>
             <span class="n">include_names</span><span class="p">,</span>
             <span class="n">compress_format</span><span class="p">,</span>
@@ -1371,9 +1379,12 @@
 <span class="sd">            All points with end dates equal to or after this date</span>
 <span class="sd">        end_date : string, optional</span>
 <span class="sd">            All points with start dates equal to or before this date</span>
-<span class="sd">        show_history : boolean, optional</span>
-<span class="sd">            False by default, meaning only the latest value for each period. If true, will return</span>
-<span class="sd">            the full history for a given period, differentiated by `reporting_date` and `available_date`.</span>
+<span class="sd">        reporting_history : boolean, optional</span>
+<span class="sd">            False by default, meaning only the latest value for each period. If true, will return all values for a given period </span>
+<span class="sd">            which have a valid reporting_date.</span>
+<span class="sd">        complete_history : boolean, optional</span>
+<span class="sd">            False by default, meaning only the latest value for each period. If true, will return all values for a given period, </span>
+<span class="sd">            even if there is no valid reporting_date. Will return values which are differentiated only be available_date.</span>
 <span class="sd">        insert_null : boolean, optional</span>
 <span class="sd">            False by default. If True, will include a data point with a None value for each period</span>
 <span class="sd">            that does not have data.</span>
