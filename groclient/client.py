@@ -1041,14 +1041,15 @@ class GroClient(object):
 
         return self._data_frame
 
-    def async_get_df(self, reporting_history=False, complete_history=False, index_by_series=False, include_names=False, compress_format=False):
+    def async_get_df(self, reporting_history=False, complete_history=False, index_by_series=False, include_names=False, compress_format=False, show_revisions=False):
         return self.get_df(
             reporting_history,
             complete_history,
             index_by_series,
             include_names,
             compress_format,
-            async_mode=True
+            True,
+            show_revisions
         )
 
     def add_points_to_df(self, index, data_series, data_points, *args):
