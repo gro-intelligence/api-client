@@ -348,7 +348,8 @@ def get_data_call_params(**selection):
     show_available_date : boolean, optional
     insert_null : boolean, optional
     show_metadata : boolean, optional
-    at_time : string, optional
+    at_time : string, optional,
+    available_since : string, optional
 
     Returns
     -------
@@ -360,7 +361,7 @@ def get_data_call_params(**selection):
     for key, value in list(selection.items()):
         if key == 'show_metadata':
             params[groclient.utils.str_snake_to_camel('show_meta_data')] = value
-        if key in ('start_date', 'end_date', 'show_revisions', 'show_available_date', 'insert_null', 'at_time'):
+        if key in ('start_date', 'end_date', 'show_revisions', 'show_available_date', 'insert_null', 'at_time', 'available_since'):
             params[groclient.utils.str_snake_to_camel(key)] = value
     params['responseType'] = 'list_of_series'
     return params
@@ -609,6 +610,26 @@ def get_geojsons(access_token, api_host, region_id, descendant_level, zoom_level
 def get_geojson(access_token, api_host, region_id, zoom_level):
     for region in get_geojsons(access_token, api_host, region_id, None, zoom_level):
         return json.loads(region['geojson'])
+
+
+def get_ancestor(access_token, api_host, entity_type, entity_id, distance=None,
+                   include_details=True):
+    url = '/'.join(['https:', '', api_host, 'v2/{}/belongs-to'.format(entity_type)])
+    headers = {'authorization': 'Bearer ' + access_token}
+    params = {'ids': [entity_id]}
+    if distance:
+        params['distance'] = distance
+    else:
+        params['distance'] = -1
+
+    resp = get_data(url, headers, params)
+    ancestor_entity_ids = resp.json()['data'][str(entity_id)]
+
+    if include_details:
+        entity_details = lookup(access_token, api_host, entity_type, ancestor_entity_ids)
+        return [entity_details[str(child_entity_id)] for child_entity_id in ancestor_entity_ids]
+
+    return [{'id': ancestor_entity_id} for ancestor_entity_id in ancestor_entity_ids]
 
 
 def get_descendant(access_token, api_host, entity_type, entity_id, distance=None,
