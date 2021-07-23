@@ -1237,14 +1237,15 @@
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_frame</span></div>
 
-    <span class="k">def</span> <span class="nf">async_get_df</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reporting_history</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">complete_history</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">index_by_series</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">include_names</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">compress_format</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">async_get_df</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reporting_history</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">complete_history</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">index_by_series</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">include_names</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">compress_format</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">show_revisions</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_df</span><span class="p">(</span>
             <span class="n">reporting_history</span><span class="p">,</span>
             <span class="n">complete_history</span><span class="p">,</span>
             <span class="n">index_by_series</span><span class="p">,</span>
             <span class="n">include_names</span><span class="p">,</span>
             <span class="n">compress_format</span><span class="p">,</span>
-            <span class="n">async_mode</span><span class="o">=</span><span class="kc">True</span>
+            <span class="kc">True</span><span class="p">,</span>
+            <span class="n">show_revisions</span>
         <span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">add_points_to_df</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="n">data_series</span><span class="p">,</span> <span class="n">data_points</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
