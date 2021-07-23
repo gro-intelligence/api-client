@@ -69,7 +69,7 @@
 
           
             
-            <img src="../../_static/logo.jpg" class="logo" alt="Logo"/>
+            <img src="../../_static/Gro-logo-full.svg" class="logo" alt="Logo"/>
           
           </a>
 
@@ -940,6 +940,56 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">lib</span><span class="o">.</span><span class="n">get_geojson</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_host</span><span class="p">,</span> <span class="n">region_id</span><span class="p">,</span> <span class="n">zoom_level</span><span class="p">)</span></div>
 
+<div class="viewcode-block" id="GroClient.get_ancestor"><a class="viewcode-back" href="../../api.html#groclient.GroClient.get_ancestor">[docs]</a>    <span class="k">def</span> <span class="nf">get_ancestor</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">entity_type</span><span class="p">,</span>
+        <span class="n">entity_id</span><span class="p">,</span>
+        <span class="n">distance</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">include_details</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Given an item, metric or region, returns all its ancestors i.e.</span>
+<span class="sd">        entities that &quot;contain&quot; in the given entity</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        entity_type : { &#39;metrics&#39;, &#39;items&#39;, &#39;regions&#39; }</span>
+<span class="sd">        entity_id : integer</span>
+<span class="sd">        distance: integer, optional</span>
+<span class="sd">            Return all entities that contain the entity_id at maximum distance.</span>
+<span class="sd">            If not provided, get all ancestors.</span>
+<span class="sd">        include_details : boolean, optional</span>
+<span class="sd">            True by default. Will perform a lookup() on each ancestor to find name,</span>
+<span class="sd">            definition, etc. If this option is set to False, only ids of ancestor</span>
+<span class="sd">            entities will be returned, which makes execution significantly faster.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        list of dicts</span>
+
+<span class="sd">            Example::</span>
+
+<span class="sd">                [{</span>
+<span class="sd">                    &#39;id&#39;: 134,</span>
+<span class="sd">                    &#39;name&#39;: &#39;Cattle hides, wet-salted&#39;,</span>
+<span class="sd">                    &#39;definition&#39;: &#39;Hides and skins of domesticated cattle-animals ...&#39;,</span>
+<span class="sd">                } , {</span>
+<span class="sd">                    &#39;id&#39;: 382,</span>
+<span class="sd">                    &#39;name&#39;: &#39;Calf skins, wet-salted&#39;,</span>
+<span class="sd">                    &#39;definition&#39;: &#39;Wet-salted hides and skins of calves-animals of ...&#39;</span>
+<span class="sd">                }, ...]</span>
+
+<span class="sd">            See output of :meth:`~.lookup`</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">lib</span><span class="o">.</span><span class="n">get_ancestor</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">api_host</span><span class="p">,</span>
+            <span class="n">entity_type</span><span class="p">,</span>
+            <span class="n">entity_id</span><span class="p">,</span>
+            <span class="n">distance</span><span class="p">,</span>
+            <span class="n">include_details</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
 <div class="viewcode-block" id="GroClient.get_descendant"><a class="viewcode-back" href="../../api.html#groclient.GroClient.get_descendant">[docs]</a>    <span class="k">def</span> <span class="nf">get_descendant</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">entity_type</span><span class="p">,</span>
@@ -993,7 +1043,6 @@
             <span class="n">distance</span><span class="p">,</span>
             <span class="n">include_details</span><span class="p">,</span>
         <span class="p">)</span></div>
-
 
 <div class="viewcode-block" id="GroClient.get_descendant_regions"><a class="viewcode-back" href="../../api.html#groclient.GroClient.get_descendant_regions">[docs]</a>    <span class="k">def</span> <span class="nf">get_descendant_regions</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
@@ -1394,6 +1443,8 @@
 <span class="sd">            :sample:`at-time-query-examples.ipynb` for more details.</span>
 <span class="sd">        include_historical : boolean, optional</span>
 <span class="sd">            True by default, will include historical regions that are part of your selections</span>
+<span class="sd">        available_since : string, optional</span>
+<span class="sd">            Fetch points since last data retrieval where available date is equal to or after this date</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
