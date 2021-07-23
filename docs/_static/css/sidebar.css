@@ -25,9 +25,9 @@
 }
 
 .wy-side-nav-search>a.icon img.logo,
+.wy-side-nav-search>a img.logo,
 .wy-side-nav-search .wy-dropdown>a.icon img.logo,
-.wy-side-nav-search .wy-dropdown>a img.logo,
-.wy-side-nav-search>a img.logo {
+.wy-side-nav-search .wy-dropdown>a img.logo {
   margin-left: 0;
   margin-top: 0;
   width: 100%;
