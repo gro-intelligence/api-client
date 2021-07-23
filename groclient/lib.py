@@ -367,7 +367,7 @@ def get_data_call_params(**selection):
             params['showHistory'] = value
         elif key in ('show_revisions', 'reporting_history'):
             params['showReportingDate'] = value
-        elif key in ('start_date', 'end_date', 'insert_null', 'at_time', 'show_available_date'):
+        elif key in ('start_date', 'end_date', 'insert_null', 'at_time'):
             params[groclient.utils.str_snake_to_camel(key)] = value
     params['responseType'] = 'list_of_series'
     return params
