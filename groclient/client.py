@@ -744,6 +744,56 @@ class GroClient(object):
         """
         return lib.get_geojson(self.access_token, self.api_host, region_id, zoom_level)
 
+    def get_ancestor(
+        self,
+        entity_type,
+        entity_id,
+        distance=None,
+        include_details=True,
+    ):
+        """Given an item, metric or region, returns all its ancestors i.e.
+        entities that "contain" in the given entity
+
+        Parameters
+        ----------
+        entity_type : { 'metrics', 'items', 'regions' }
+        entity_id : integer
+        distance: integer, optional
+            Return all entities that contain the entity_id at maximum distance.
+            If not provided, get all ancestors.
+        include_details : boolean, optional
+            True by default. Will perform a lookup() on each ancestor to find name,
+            definition, etc. If this option is set to False, only ids of ancestor
+            entities will be returned, which makes execution significantly faster.
+
+        Returns
+        -------
+        list of dicts
+
+            Example::
+
+                [{
+                    'id': 134,
+                    'name': 'Cattle hides, wet-salted',
+                    'definition': 'Hides and skins of domesticated cattle-animals ...',
+                } , {
+                    'id': 382,
+                    'name': 'Calf skins, wet-salted',
+                    'definition': 'Wet-salted hides and skins of calves-animals of ...'
+                }, ...]
+
+            See output of :meth:`~.lookup`
+
+        """
+        return lib.get_ancestor(
+            self.access_token,
+            self.api_host,
+            entity_type,
+            entity_id,
+            distance,
+            include_details,
+        )
+
     def get_descendant(
         self,
         entity_type,
@@ -797,7 +847,6 @@ class GroClient(object):
             distance,
             include_details,
         )
-
 
     def get_descendant_regions(
         self,
@@ -1198,6 +1247,8 @@ class GroClient(object):
             :sample:`at-time-query-examples.ipynb` for more details.
         include_historical : boolean, optional
             True by default, will include historical regions that are part of your selections
+        available_since : string, optional
+            Fetch points since last data retrieval where available date is equal to or after this date
 
         Returns
         -------
