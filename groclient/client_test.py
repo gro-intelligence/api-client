@@ -110,6 +110,26 @@ def mock_get_descendant(
         return [{"id": child["id"]} for child in childs]
 
 
+def mock_get_ancestor(
+    access_token,
+    api_host,
+    entity_type,
+    entity_id,
+    distance,
+    include_details,
+):
+
+    childs = [
+            child
+            for child in mock_entities[entity_type].values()
+            if 12345 in child["contains"]
+        ]
+    if include_details:
+        return childs
+    else:
+        return [{"id": child["id"]} for child in childs]
+
+
 def mock_get_descendant_regions(
     access_token,
     api_host,
@@ -216,6 +236,7 @@ def mock_get_data_points(access_token, api_host, **selections):
 @patch("groclient.lib.get_geo_centre", MagicMock(side_effect=mock_get_geo_centre))
 @patch("groclient.lib.get_geojsons", MagicMock(side_effect=mock_get_geojsons))
 @patch("groclient.lib.get_geojson", MagicMock(side_effect=mock_get_geojson))
+@patch("groclient.lib.get_ancestor", MagicMock(side_effect=mock_get_ancestor))
 @patch("groclient.lib.get_descendant", MagicMock(side_effect=mock_get_descendant))
 @patch(
     "groclient.lib.get_descendant_regions",
@@ -302,6 +323,13 @@ class GroClientTests(TestCase):
         self.assertTrue("type" in geojson["geometries"][0])
         self.assertTrue("coordinates" in geojson["geometries"][0])
         self.assertTrue(geojson["geometries"][0]['coordinates'][0][0][0] == [-38, -4])
+
+    def test_get_ancestor(self):
+        self.assertTrue("name" in self.client.get_descendant('metrics', 119)[0])
+        self.assertTrue(
+            "name"
+            not in self.client.get_ancestor('regions', 12345, include_details=False)[0]
+        )
 
     def test_get_descendant(self):
         self.assertTrue("name" in self.client.get_descendant('metrics', 119)[0])

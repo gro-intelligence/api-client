@@ -375,6 +375,33 @@ def lookup_mock(MOCK_TOKEN, MOCK_HOST, entity_type, entity_ids):
 
 @mock.patch('groclient.lib.lookup')
 @mock.patch('requests.get')
+def test_get_ancestor(mock_requests_get, lookup_mocked):
+    mock_requests_get.return_value.json.return_value = {'data': {'1': [3, 4]}}
+    mock_requests_get.return_value.status_code = 200
+    lookup_mocked.side_effect = lookup_mock
+
+    assert lib.get_descendant(MOCK_TOKEN, MOCK_HOST, 'items', 1) == [
+        {'id': 3, 'name': 'parent', 'contains': [1, 2], 'belongsTo': [4], 'definition': 'def3'},
+        {'id': 4, 'name': 'ancestor', 'contains': [3], 'belongsTo': [], 'definition': 'def4'}
+    ]
+    
+    assert lib.get_descendant(MOCK_TOKEN, MOCK_HOST, 'metrics', 1, include_details=True) == [
+        {'id': 3, 'name': 'parent', 'contains': [1, 2], 'belongsTo': [4], 'definition': 'def3'},
+        {'id': 4, 'name': 'ancestor', 'contains': [3], 'belongsTo': [], 'definition': 'def4'}
+    ]
+
+    assert lib.get_descendant(MOCK_TOKEN, MOCK_HOST, 'items', 1, include_details=False) == [
+        {'id': 3}, {'id': 4}
+    ]
+
+    mock_requests_get.return_value.json.return_value = {'data': {'2': [3]}}
+    assert lib.get_descendant(MOCK_TOKEN, MOCK_HOST, 'items', 2, distance=1) == [
+        {'id': 3, 'name': 'parent', 'contains': [1, 2], 'belongsTo': [4], 'definition': 'def3'}
+    ]
+
+
+@mock.patch('groclient.lib.lookup')
+@mock.patch('requests.get')
 def test_get_descendant(mock_requests_get, lookup_mocked):
     mock_requests_get.return_value.json.return_value = {'data': {'4': [1, 2, 3]}}
     mock_requests_get.return_value.status_code = 200
