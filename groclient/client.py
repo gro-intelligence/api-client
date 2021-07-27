@@ -1013,11 +1013,10 @@ class GroClient(object):
         Parameters
         ----------
             reporting_history : boolean, optional
-                False by default, meaning only the latest value for each period. If true, will return all values for a given period 
-                which have a valid reporting_date.
+                False by default. If true, will return all reporting history from the source.
             complete_history : boolean, optional
-                False by default, meaning only the latest value for each period. If true, will return all values for a given period, 
-                even if there is no valid reporting_date. Will return values which are differentiated only be available_date.
+                False by default. If true, will return complete history of data points for the selection. This will include 
+                the reporting history from the source and revisions Gro has captured that may not have been released with an official reporting_date.
             index_by_series : boolean, optional
                If set, the dataframe is indexed by series. See https://developers.gro-intelligence.com/data-series-definition.html
             include_names : boolean, optional
@@ -1030,7 +1029,9 @@ class GroClient(object):
                compress_format cannot be used simultaneously with reporting_history or complete_history
             async_mode: boolean, optional
                 If set, it will make :meth:`~get_data_points` requests asynchronously.
-                Note that when running in a Jupyter Ipython notebook with async_mode, you will need to use nest_asyncio module
+                Note that when running in a Jupyter Ipython notebook with async_mode, you will need to use nest_asyncio module.
+            show_revisions(deprecating) : boolean, optional
+                This parameter has been renamed as reporting_history.
         Returns
         -------
         pandas.DataFrame
@@ -1234,11 +1235,10 @@ class GroClient(object):
         end_date : string, optional
             All points with start dates equal to or before this date
         reporting_history : boolean, optional
-            False by default, meaning only the latest value for each period. If true, will return all values for a given period 
-            which have a valid reporting_date.
+            False by default. If true, will return all reporting history from the source.
         complete_history : boolean, optional
-            False by default, meaning only the latest value for each period. If true, will return all values for a given period, 
-            even if there is no valid reporting_date. Will return values which are differentiated only be available_date.
+            False by default. If true, will return complete history of data points for the selection. This will include 
+            the reporting history from the source and revisions Gro has captured that may not have been released with an official reporting_date.
         insert_null : boolean, optional
             False by default. If True, will include a data point with a None value for each period
             that does not have data.
