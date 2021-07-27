@@ -21,16 +21,15 @@
 
 /* logo */
 .wy-side-nav-search>a {
-  max-width: 300px;
+  max-width: 190px;
 }
 
-.wy-side-nav-search>a.icon img.logo,
-.wy-side-nav-search .wy-dropdown>a.icon img.logo,
-.wy-side-nav-search .wy-dropdown>a img.logo,
-.wy-side-nav-search>a img.logo {
+.wy-side-nav-search>a.icon img.logo, 
+.wy-side-nav-search .wy-dropdown>a.icon img.logo {
   margin-left: 0;
   margin-top: 0;
-  width: 100%;
+  width: 180px;
+  margin-bottom: 24px;
 }
 
 /* search bar */
@@ -50,8 +49,8 @@
 /* inner tree */
 
 /* submenu items */
-.wy-menu-vertical li.on a,
-.wy-menu-vertical li>a,
+.wy-menu-vertical li.on a, 
+.wy-menu-vertical li>a,  
 .wy-menu-vertical a,
 .wy-menu-vertical li.current>a {
   padding: .6em 1.8em;
