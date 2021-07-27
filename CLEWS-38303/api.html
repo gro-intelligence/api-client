@@ -648,10 +648,9 @@ or set to 0 (“World”) by default.</p></li>
 <li><p><strong>unit_id</strong> (<em>integer</em><em>, </em><em>optional</em>) – </p></li>
 <li><p><strong>start_date</strong> (<em>string</em><em>, </em><em>optional</em>) – All points with end dates equal to or after this date</p></li>
 <li><p><strong>end_date</strong> (<em>string</em><em>, </em><em>optional</em>) – All points with start dates equal to or before this date</p></li>
-<li><p><strong>reporting_history</strong> (<em>boolean</em><em>, </em><em>optional</em>) – False by default, meaning only the latest value for each period. If true, will return all values for a given period
-which have a valid reporting_date.</p></li>
-<li><p><strong>complete_history</strong> (<em>boolean</em><em>, </em><em>optional</em>) – False by default, meaning only the latest value for each period. If true, will return all values for a given period,
-even if there is no valid reporting_date. Will return values which are differentiated only be available_date.</p></li>
+<li><p><strong>reporting_history</strong> (<em>boolean</em><em>, </em><em>optional</em>) – False by default. If true, will return all reporting history from the source.</p></li>
+<li><p><strong>complete_history</strong> (<em>boolean</em><em>, </em><em>optional</em>) – False by default. If true, will return complete history of data points for the selection. This will include
+the reporting history from the source and revisions Gro has captured that may not have been released with an official reporting_date.</p></li>
 <li><p><strong>insert_null</strong> (<em>boolean</em><em>, </em><em>optional</em>) – False by default. If True, will include a data point with a None value for each period
 that does not have data.</p></li>
 <li><p><strong>at_time</strong> (<em>string</em><em>, </em><em>optional</em>) – Estimate what data would have been available via Gro at a given time in the past. See
@@ -928,10 +927,9 @@ You can inspect the client’s saved list using <a class="reference internal" hr
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>reporting_history</strong> (<em>boolean</em><em>, </em><em>optional</em>) – False by default, meaning only the latest value for each period. If true, will return all values for a given period
-which have a valid reporting_date.</p></li>
-<li><p><strong>complete_history</strong> (<em>boolean</em><em>, </em><em>optional</em>) – False by default, meaning only the latest value for each period. If true, will return all values for a given period,
-even if there is no valid reporting_date. Will return values which are differentiated only be available_date.</p></li>
+<li><p><strong>reporting_history</strong> (<em>boolean</em><em>, </em><em>optional</em>) – False by default. If true, will return all reporting history from the source.</p></li>
+<li><p><strong>complete_history</strong> (<em>boolean</em><em>, </em><em>optional</em>) – False by default. If true, will return complete history of data points for the selection. This will include
+the reporting history from the source and revisions Gro has captured that may not have been released with an official reporting_date.</p></li>
 <li><p><strong>index_by_series</strong> (<em>boolean</em><em>, </em><em>optional</em>) – If set, the dataframe is indexed by series. See <a class="reference external" href="https://developers.gro-intelligence.com/data-series-definition.html">https://developers.gro-intelligence.com/data-series-definition.html</a></p></li>
 <li><p><strong>include_names</strong> (<em>boolean</em><em>, </em><em>optional</em>) – If set, the dataframe will have additional columns with names of entities.
 Note that this will increase the size of the dataframe by about 5x.</p></li>
@@ -940,7 +938,8 @@ set as the dataframe inde. All the entity names for each series will be
 placed in column headers.
 compress_format cannot be used simultaneously with reporting_history or complete_history</p></li>
 <li><p><strong>async_mode</strong> (<em>boolean</em><em>, </em><em>optional</em>) – If set, it will make <a class="reference internal" href="#groclient.GroClient.get_data_points" title="groclient.GroClient.get_data_points"><code class="xref py py-meth docutils literal notranslate"><span class="pre">get_data_points()</span></code></a> requests asynchronously.
-Note that when running in a Jupyter Ipython notebook with async_mode, you will need to use nest_asyncio module</p></li>
+Note that when running in a Jupyter Ipython notebook with async_mode, you will need to use nest_asyncio module.</p></li>
+<li><p><strong>show_revisions</strong><strong>(</strong><strong>deprecating</strong><strong>)</strong> (<em>boolean</em><em>, </em><em>optional</em>) – This parameter has been renamed as reporting_history.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
