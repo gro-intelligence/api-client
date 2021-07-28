@@ -298,7 +298,7 @@ be initialized as follows:</p>
 <span class="p">})</span>
 </pre></div>
 </div>
-<p>But the USDA begins forecasting the yield well before harvest time, and will continue to update its estimate for many months after the harvest is over. In order to see how the forecasts and estimates for each year have changed, you can include the <cite>show_revisions</cite> field as follows:</p>
+<p>But the USDA begins forecasting the yield well before harvest time, and will continue to update its estimate for many months after the harvest is over. In order to see how the forecasts and estimates for each year have changed, you can include the <cite>reporting_history</cite> field as follows:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Soybeans - Yield (mass/area) - Argentina (USDA PS&amp;D)</span>
 <span class="n">client</span><span class="o">.</span><span class="n">get_data_points</span><span class="p">(</span><span class="o">**</span><span class="p">{</span>
     <span class="s1">&#39;metric_id&#39;</span><span class="p">:</span> <span class="mi">170037</span><span class="p">,</span>
@@ -307,7 +307,7 @@ be initialized as follows:</p>
     <span class="s1">&#39;source_id&#39;</span><span class="p">:</span> <span class="mi">14</span><span class="p">,</span>
     <span class="s1">&#39;frequency_id&#39;</span><span class="p">:</span> <span class="mi">9</span><span class="p">,</span>
     <span class="s1">&#39;start_date&#39;</span><span class="p">:</span> <span class="s1">&#39;2017-01-01&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;show_revisions&#39;</span><span class="p">:</span> <span class="kc">True</span>
+    <span class="s1">&#39;reporting_history&#39;</span><span class="p">:</span> <span class="kc">True</span>
 <span class="p">})</span>
 </pre></div>
 </div>
@@ -376,6 +376,7 @@ be initialized as follows:</p>
       <dd><a href="../v1.135/querying-data.html">v1.135</a></dd>
       <dd><a href="../v1.135.1/querying-data.html">v1.135.1</a></dd>
       <dd><a href="../v1.138/querying-data.html">v1.138</a></dd>
+      <dd><a href="../v1.138.1/querying-data.html">v1.138.1</a></dd>
       <dd><a href="../v1.40.6/querying-data.html">v1.40.6</a></dd>
       <dd><a href="../v1.56.0/querying-data.html">v1.56.0</a></dd>
       <dd><a href="../v1.56.1/querying-data.html">v1.56.1</a></dd>
