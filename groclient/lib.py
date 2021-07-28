@@ -347,8 +347,8 @@ def get_data_call_params(**selection):
     frequency_id : integer
     start_date : string, optional
     end_date : string, optional
-    show_revisions : boolean, optional
-    show_available_date : boolean, optional
+    reporting_history : boolean, optional
+    complete_history : boolean, optional
     insert_null : boolean, optional
     show_metadata : boolean, optional
     at_time : string, optional,
@@ -364,7 +364,11 @@ def get_data_call_params(**selection):
     for key, value in list(selection.items()):
         if key == 'show_metadata':
             params[groclient.utils.str_snake_to_camel('show_meta_data')] = value
-        if key in ('start_date', 'end_date', 'show_revisions', 'show_available_date', 'insert_null', 'at_time', 'available_since'):
+        elif key == 'complete_history':
+            params['showHistory'] = value
+        elif key in ('show_revisions', 'reporting_history'):
+            params['showReportingDate'] = value
+        elif key in ('start_date', 'end_date', 'insert_null', 'at_time', 'available_since'):
             params[groclient.utils.str_snake_to_camel(key)] = value
     params['responseType'] = 'list_of_series'
     return params
@@ -465,7 +469,7 @@ def get_available_timefrequency(access_token, api_host, **series):
             for tf in response.json()]
 
 
-def list_of_series_to_single_series(series_list, add_belongs_to=False, include_historical=True, include_available_date=False):
+def list_of_series_to_single_series(series_list, add_belongs_to=False, include_historical=True):
     """Convert list_of_series format from API back into the familiar single_series output format."""
     if not isinstance(series_list, list):
         # If the output is an error or None or something else that's not a list, just propagate
@@ -497,6 +501,8 @@ def list_of_series_to_single_series(series_list, add_belongs_to=False, include_h
                 'input_unit_scale': 1,
                 # If a point does not have reporting_date, use None
                 'reporting_date': point[3] if len(point) > 3 else None,
+                # If a point does not have available_date, use None
+                'available_date': point[6] if len(point) > 6 else None,
                 # Series attributes:
                 'metric_id': series['series'].get('metricId', None),
                 'item_id': series['series'].get('itemId', None),
@@ -505,9 +511,6 @@ def list_of_series_to_single_series(series_list, add_belongs_to=False, include_h
                 'frequency_id': series['series'].get('frequencyId', None)
                 # 'source_id': series['series'].get('sourceId', None), TODO: add source to output
             }
-            if include_available_date:
-                # If a point does not have available_date, use None
-                formatted_point['available_date'] = point[6] if len(point) > 6 else None
 
             if formatted_point['metadata'].get('confInterval') is not None:
                 formatted_point['metadata']['conf_interval'] = formatted_point['metadata'].pop('confInterval')
@@ -527,8 +530,7 @@ def get_data_points(access_token, api_host, **selection):
     params = get_data_call_params(**selection)
     resp = get_data(url, headers, params)
     include_historical = selection.get('include_historical', True)
-    include_available_date = selection.get('show_available_date', False)
-    return list_of_series_to_single_series(resp.json(), False, include_historical, include_available_date)
+    return list_of_series_to_single_series(resp.json(), False, include_historical)
 
 
 @memoize(maxsize=None)
