@@ -754,23 +754,31 @@ class GroClient(object):
         ancestor_level=None,
         include_historical=True,
     ):
-        """Given an item, metric or region, returns all its ancestors i.e.
-        entities that "contain" in the given entity
+        """Given an item, metric, or region, returns all its ancestors i.e.
+        entities that "contain" in the given entity.
+
+        The `distance` parameter controls how many levels of ancestor entities you want to be
+        returned. Additionally, if you are getting the descendants of a given region, you can
+        specify the `ancestor_level`, which will return only the ancestors of the given
+        `ancestor_level`. However, if both parameters are specified, `distance` takes precedence
+        over `ancestor_level`.
 
         Parameters
         ----------
         entity_type : { 'metrics', 'items', 'regions' }
         entity_id : integer
         distance: integer, optional
-            Return all entities that contain the entity_id at maximum distance.
+            Return all entities that contain the entity_id at maximum distance. If provided along
+            with `ancestor_level`, this will take precedence over `ancestor_level`.
             If not provided, get all ancestors.
         include_details : boolean, optional
             True by default. Will perform a lookup() on each ancestor to find name,
             definition, etc. If this option is set to False, only ids of ancestor
             entities will be returned, which makes execution significantly faster.
         ancestor_level : integer, optional
-            The region level of interest. See REGION_LEVELS constant. If not provided, get all
-            ancestors.
+            The region level of interest. See REGION_LEVELS constant. This should only be specified
+            if the `entity_type` is 'regions'. If provided along with `distance`, `distance` will
+            take precedence. If not provided, and `distance` not provided, get all ancestors.
         include_historical : boolean, optional
             True by default. If False is specified, regions that only exist in historical data
             (e.g. the Soviet Union) will be excluded.
@@ -817,23 +825,28 @@ class GroClient(object):
         """Given an item, metric or region, returns all its descendants i.e.
         entities that are "contained" in the given entity
 
-        This method has a distance parameter (which returns all nested child entities) as well as a
-        descendant_level parameter (which only returns child entities at a given depth/level).
+        The `distance` parameter controls how many levels of child entities you want to be returned.
+        Additionally, if you are getting the descendants of a given region, you can specify the
+        `descendant_level`, which will return only the descendants of the given `descendant_level`.
+        However, if both parameters are specified, `distance` takes precedence over
+        `descendant_level`.
 
         Parameters
         ----------
         entity_type : { 'metrics', 'items', 'regions' }
         entity_id : integer
         distance: integer, optional
-            Return all entity contained to entity_id at maximum distance.
-            If not provided, get all descendants.
+            Return all entities that contain the entity_id at maximum distance. If provided along
+            with `descendant_level`, this will take precedence over `descendant_level`.
+            If not provided, get all ancestors.
         include_details : boolean, optional
             True by default. Will perform a lookup() on each descendant  to find name,
             definition, etc. If this option is set to False, only ids of descendant
             entities will be returned, which makes execution significantly faster.
         descendant_level : integer, optional
-            The region level of interest. See REGION_LEVELS constant. If not provided, get all
-            descendants.
+            The region level of interest. See REGION_LEVELS constant. This should only be specified
+            if the `entity_type` is 'regions'. If provided along with `distance`, `distance` will
+            take precedence. If not provided, and `distance` not provided, get all ancestors.
         include_historical : boolean, optional
             True by default. If False is specified, regions that only exist in historical data
             (e.g. the Soviet Union) will be excluded.
@@ -898,6 +911,7 @@ class GroClient(object):
             regions will be returned, which makes execution significantly faster.
         distance: integer, optional
             Return all entity contained to entity_id at maximum distance.
+            If provided, it will take precedence over `descendant_level`.
             If not provided, get all descendants.
 
         Returns
