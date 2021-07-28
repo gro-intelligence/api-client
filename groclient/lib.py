@@ -612,10 +612,11 @@ def get_ancestor(access_token, api_host, entity_type, entity_id, distance=None,
     params = {'ids': [entity_id]}
     if distance:
         params['distance'] = distance
-    elif ancestor_level:
-        params['level'] = ancestor_level
     else:
-        params['distance'] = -1
+        if entity_type == 'regions' and ancestor_level:
+            params['level'] = ancestor_level
+        else:
+            params['distance'] = -1
 
     resp = get_data(url, headers, params)
     ancestor_entity_ids = resp.json()['data'][str(entity_id)]
@@ -642,10 +643,11 @@ def get_descendant(access_token, api_host, entity_type, entity_id, distance=None
     params = {'ids': [entity_id]}
     if distance:
         params['distance'] = distance
-    elif descendant_level:
-        params['level'] = descendant_level
     else:
-        params['distance'] = -1
+        if entity_type == 'regions' and descendant_level:
+            params['level'] = descendant_level
+        else:
+            params['distance'] = -1
 
     resp = get_data(url, headers, params)
     descendant_entity_ids = resp.json()['data'][str(entity_id)]
