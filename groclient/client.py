@@ -758,7 +758,7 @@ class GroClient(object):
         entities that "contain" in the given entity.
 
         The `distance` parameter controls how many levels of ancestor entities you want to be
-        returned. Additionally, if you are getting the descendants of a given region, you can
+        returned. Additionally, if you are getting the ancestors of a given region, you can
         specify the `ancestor_level`, which will return only the ancestors of the given
         `ancestor_level`. However, if both parameters are specified, `distance` takes precedence
         over `ancestor_level`.
@@ -1595,8 +1595,8 @@ class GroClient(object):
         """
         for region in self.search_and_lookup("regions", country_name):
             if region["level"] == lib.REGION_LEVELS["country"]:
-                provinces = self.get_descendant_regions(
-                    region["id"], lib.REGION_LEVELS["province"]
+                provinces = self.get_descendant(
+                    'regions', region["id"], descendant_level=lib.REGION_LEVELS["province"]
                 )
                 self._logger.debug(
                     "Provinces of {}: {}".format(country_name, provinces)
