@@ -70,7 +70,7 @@ else
 fi
 
 echo -e "\n-> committing change..."
-git commit -m "sphinx_push_ghpages.sh: autocommit $(date '+%Y-%m-%d %H:%M:%S')"
+git commit -m "[skip ci] sphinx_push_ghpages.sh: autocommit $(date '+%Y-%m-%d %H:%M:%S')"
 
 echo -e "\n-> pushing update..."
 git push origin "$PAGES_BRANCH"
