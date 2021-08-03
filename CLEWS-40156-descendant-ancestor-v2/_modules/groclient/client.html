@@ -953,7 +953,7 @@
 <span class="sd">        entities that &quot;contain&quot; in the given entity.</span>
 
 <span class="sd">        The `distance` parameter controls how many levels of ancestor entities you want to be</span>
-<span class="sd">        returned. Additionally, if you are getting the descendants of a given region, you can</span>
+<span class="sd">        returned. Additionally, if you are getting the ancestors of a given region, you can</span>
 <span class="sd">        specify the `ancestor_level`, which will return only the ancestors of the given</span>
 <span class="sd">        `ancestor_level`. However, if both parameters are specified, `distance` takes precedence</span>
 <span class="sd">        over `ancestor_level`.</span>
@@ -1794,8 +1794,8 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">region</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">search_and_lookup</span><span class="p">(</span><span class="s2">&quot;regions&quot;</span><span class="p">,</span> <span class="n">country_name</span><span class="p">):</span>
             <span class="k">if</span> <span class="n">region</span><span class="p">[</span><span class="s2">&quot;level&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">lib</span><span class="o">.</span><span class="n">REGION_LEVELS</span><span class="p">[</span><span class="s2">&quot;country&quot;</span><span class="p">]:</span>
-                <span class="n">provinces</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_descendant_regions</span><span class="p">(</span>
-                    <span class="n">region</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">],</span> <span class="n">lib</span><span class="o">.</span><span class="n">REGION_LEVELS</span><span class="p">[</span><span class="s2">&quot;province&quot;</span><span class="p">]</span>
+                <span class="n">provinces</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_descendant</span><span class="p">(</span>
+                    <span class="s1">&#39;regions&#39;</span><span class="p">,</span> <span class="n">region</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">],</span> <span class="n">descendant_level</span><span class="o">=</span><span class="n">lib</span><span class="o">.</span><span class="n">REGION_LEVELS</span><span class="p">[</span><span class="s2">&quot;province&quot;</span><span class="p">]</span>
                 <span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
                     <span class="s2">&quot;Provinces of </span><span class="si">{}</span><span class="s2">: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">country_name</span><span class="p">,</span> <span class="n">provinces</span><span class="p">)</span>
