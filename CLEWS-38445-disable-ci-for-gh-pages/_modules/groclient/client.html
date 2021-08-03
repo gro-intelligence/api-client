@@ -512,9 +512,8 @@
         <span class="k">try</span><span class="p">:</span>
             <span class="n">list_of_series_points</span> <span class="o">=</span> <span class="k">yield</span> <span class="bp">self</span><span class="o">.</span><span class="n">async_get_data</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
             <span class="n">include_historical</span> <span class="o">=</span> <span class="n">selection</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;include_historical&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
-            <span class="n">include_available_date</span> <span class="o">=</span> <span class="n">selection</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;show_available_date&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
             <span class="n">points</span> <span class="o">=</span> <span class="n">lib</span><span class="o">.</span><span class="n">list_of_series_to_single_series</span><span class="p">(</span>
-                <span class="n">list_of_series_points</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="n">include_historical</span><span class="p">,</span> <span class="n">include_available_date</span>
+                <span class="n">list_of_series_points</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="n">include_historical</span>
             <span class="p">)</span>
             <span class="c1"># Apply unit conversion if a unit is specified</span>
             <span class="k">if</span> <span class="s2">&quot;unit_id&quot;</span> <span class="ow">in</span> <span class="n">selection</span><span class="p">:</span>
@@ -941,31 +940,111 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">lib</span><span class="o">.</span><span class="n">get_geojson</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_host</span><span class="p">,</span> <span class="n">region_id</span><span class="p">,</span> <span class="n">zoom_level</span><span class="p">)</span></div>
 
-    <span class="k">def</span> <span class="nf">get_descendant</span><span class="p">(</span>
+<div class="viewcode-block" id="GroClient.get_ancestor"><a class="viewcode-back" href="../../api.html#groclient.GroClient.get_ancestor">[docs]</a>    <span class="k">def</span> <span class="nf">get_ancestor</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">entity_type</span><span class="p">,</span>
         <span class="n">entity_id</span><span class="p">,</span>
         <span class="n">distance</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">include_details</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">ancestor_level</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">include_historical</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
     <span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Given an item, metric or region, returns all its descendants i.e.</span>
-<span class="sd">        entities that are &quot;contained&quot; in the given entity</span>
+        <span class="sd">&quot;&quot;&quot;Given an item, metric, or region, returns all its ancestors i.e.</span>
+<span class="sd">        entities that &quot;contain&quot; in the given entity.</span>
 
-<span class="sd">        Similar to :meth:~.get_descendant_regions, but also works on items and metrics. This method has</span>
-<span class="sd">        a distance parameter (which returns all nested child entities) instead of a descendant_level</span>
-<span class="sd">        parameter (which only returns child entities at a given depth/level).</span>
+<span class="sd">        The `distance` parameter controls how many levels of ancestor entities you want to be</span>
+<span class="sd">        returned. Additionally, if you are getting the ancestors of a given region, you can</span>
+<span class="sd">        specify the `ancestor_level`, which will return only the ancestors of the given</span>
+<span class="sd">        `ancestor_level`. However, if both parameters are specified, `distance` takes precedence</span>
+<span class="sd">        over `ancestor_level`.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        entity_type : { &#39;metrics&#39;, &#39;items&#39;, &#39;regions&#39; }</span>
 <span class="sd">        entity_id : integer</span>
 <span class="sd">        distance: integer, optional</span>
-<span class="sd">            Return all entity contained to entity_id at maximum distance.</span>
-<span class="sd">            If not provided, get all descendants.</span>
+<span class="sd">            Return all entities that contain the entity_id at maximum distance. If provided along</span>
+<span class="sd">            with `ancestor_level`, this will take precedence over `ancestor_level`.</span>
+<span class="sd">            If not provided, get all ancestors.</span>
+<span class="sd">        include_details : boolean, optional</span>
+<span class="sd">            True by default. Will perform a lookup() on each ancestor to find name,</span>
+<span class="sd">            definition, etc. If this option is set to False, only ids of ancestor</span>
+<span class="sd">            entities will be returned, which makes execution significantly faster.</span>
+<span class="sd">        ancestor_level : integer, optional</span>
+<span class="sd">            The region level of interest. See REGION_LEVELS constant. This should only be specified</span>
+<span class="sd">            if the `entity_type` is &#39;regions&#39;. If provided along with `distance`, `distance` will</span>
+<span class="sd">            take precedence. If not provided, and `distance` not provided, get all ancestors.</span>
+<span class="sd">        include_historical : boolean, optional</span>
+<span class="sd">            True by default. If False is specified, regions that only exist in historical data</span>
+<span class="sd">            (e.g. the Soviet Union) will be excluded.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        list of dicts</span>
+
+<span class="sd">            Example::</span>
+
+<span class="sd">                [{</span>
+<span class="sd">                    &#39;id&#39;: 134,</span>
+<span class="sd">                    &#39;name&#39;: &#39;Cattle hides, wet-salted&#39;,</span>
+<span class="sd">                    &#39;definition&#39;: &#39;Hides and skins of domesticated cattle-animals ...&#39;,</span>
+<span class="sd">                } , {</span>
+<span class="sd">                    &#39;id&#39;: 382,</span>
+<span class="sd">                    &#39;name&#39;: &#39;Calf skins, wet-salted&#39;,</span>
+<span class="sd">                    &#39;definition&#39;: &#39;Wet-salted hides and skins of calves-animals of ...&#39;</span>
+<span class="sd">                }, ...]</span>
+
+<span class="sd">            See output of :meth:`~.lookup`</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">lib</span><span class="o">.</span><span class="n">get_ancestor</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">api_host</span><span class="p">,</span>
+            <span class="n">entity_type</span><span class="p">,</span>
+            <span class="n">entity_id</span><span class="p">,</span>
+            <span class="n">distance</span><span class="p">,</span>
+            <span class="n">include_details</span><span class="p">,</span>
+            <span class="n">ancestor_level</span><span class="p">,</span>
+            <span class="n">include_historical</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="GroClient.get_descendant"><a class="viewcode-back" href="../../api.html#groclient.GroClient.get_descendant">[docs]</a>    <span class="k">def</span> <span class="nf">get_descendant</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">entity_type</span><span class="p">,</span>
+        <span class="n">entity_id</span><span class="p">,</span>
+        <span class="n">distance</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">include_details</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">descendant_level</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">include_historical</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Given an item, metric or region, returns all its descendants i.e.</span>
+<span class="sd">        entities that are &quot;contained&quot; in the given entity</span>
+
+<span class="sd">        The `distance` parameter controls how many levels of child entities you want to be returned.</span>
+<span class="sd">        Additionally, if you are getting the descendants of a given region, you can specify the</span>
+<span class="sd">        `descendant_level`, which will return only the descendants of the given `descendant_level`.</span>
+<span class="sd">        However, if both parameters are specified, `distance` takes precedence over</span>
+<span class="sd">        `descendant_level`.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        entity_type : { &#39;metrics&#39;, &#39;items&#39;, &#39;regions&#39; }</span>
+<span class="sd">        entity_id : integer</span>
+<span class="sd">        distance: integer, optional</span>
+<span class="sd">            Return all entities that contain the entity_id at maximum distance. If provided along</span>
+<span class="sd">            with `descendant_level`, this will take precedence over `descendant_level`.</span>
+<span class="sd">            If not provided, get all ancestors.</span>
 <span class="sd">        include_details : boolean, optional</span>
 <span class="sd">            True by default. Will perform a lookup() on each descendant  to find name,</span>
 <span class="sd">            definition, etc. If this option is set to False, only ids of descendant</span>
 <span class="sd">            entities will be returned, which makes execution significantly faster.</span>
+<span class="sd">        descendant_level : integer, optional</span>
+<span class="sd">            The region level of interest. See REGION_LEVELS constant. This should only be specified</span>
+<span class="sd">            if the `entity_type` is &#39;regions&#39;. If provided along with `distance`, `distance` will</span>
+<span class="sd">            take precedence. If not provided, and `distance` not provided, get all ancestors.</span>
+<span class="sd">        include_historical : boolean, optional</span>
+<span class="sd">            True by default. If False is specified, regions that only exist in historical data</span>
+<span class="sd">            (e.g. the Soviet Union) will be excluded.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -993,8 +1072,9 @@
             <span class="n">entity_id</span><span class="p">,</span>
             <span class="n">distance</span><span class="p">,</span>
             <span class="n">include_details</span><span class="p">,</span>
-        <span class="p">)</span>
-
+            <span class="n">descendant_level</span><span class="p">,</span>
+            <span class="n">include_historical</span><span class="p">,</span>
+        <span class="p">)</span></div>
 
 <div class="viewcode-block" id="GroClient.get_descendant_regions"><a class="viewcode-back" href="../../api.html#groclient.GroClient.get_descendant_regions">[docs]</a>    <span class="k">def</span> <span class="nf">get_descendant_regions</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
@@ -1002,8 +1082,12 @@
         <span class="n">descendant_level</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">include_historical</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="n">include_details</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">distance</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Look up details of all regions of the given level contained by a region.</span>
+
+<span class="sd">        This method is deprecated, and should be replaced by :meth:`~.get_descendant` which has</span>
+<span class="sd">        been updated to include the `descendant_level` and `include_historical` parameters.</span>
 
 <span class="sd">        Given any region by id, get all the descendant regions that are of the specified level.</span>
 
@@ -1020,6 +1104,10 @@
 <span class="sd">            True by default. Will perform a lookup() on each descendant region to find name,</span>
 <span class="sd">            latitude, longitude, etc. If this option is set to False, only ids of descendant</span>
 <span class="sd">            regions will be returned, which makes execution significantly faster.</span>
+<span class="sd">        distance: integer, optional</span>
+<span class="sd">            Return all entity contained to entity_id at maximum distance.</span>
+<span class="sd">            If provided, it will take precedence over `descendant_level`.</span>
+<span class="sd">            If not provided, get all descendants.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -1042,13 +1130,15 @@
 <span class="sd">            See output of :meth:`~.lookup`</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">lib</span><span class="o">.</span><span class="n">get_descendant_regions</span><span class="p">(</span>
+        <span class="k">return</span> <span class="n">lib</span><span class="o">.</span><span class="n">get_descendant</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="p">,</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">api_host</span><span class="p">,</span>
+            <span class="s1">&#39;regions&#39;</span><span class="p">,</span>
             <span class="n">region_id</span><span class="p">,</span>
+            <span class="n">distance</span><span class="p">,</span>
+            <span class="n">include_details</span><span class="p">,</span>
             <span class="n">descendant_level</span><span class="p">,</span>
             <span class="n">include_historical</span><span class="p">,</span>
-            <span class="n">include_details</span><span class="p">,</span>
         <span class="p">)</span></div>
 
 <div class="viewcode-block" id="GroClient.get_available_timefrequency"><a class="viewcode-back" href="../../api.html#groclient.GroClient.get_available_timefrequency">[docs]</a>    <span class="k">def</span> <span class="nf">get_available_timefrequency</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">selection</span><span class="p">):</span>
@@ -1144,12 +1234,13 @@
 
 <div class="viewcode-block" id="GroClient.get_df"><a class="viewcode-back" href="../../api.html#groclient.GroClient.get_df">[docs]</a>    <span class="k">def</span> <span class="nf">get_df</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">show_revisions</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-        <span class="n">show_available_date</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">reporting_history</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">complete_history</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
         <span class="n">index_by_series</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
         <span class="n">include_names</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
         <span class="n">compress_format</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-        <span class="n">async_mode</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+        <span class="n">async_mode</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">show_revisions</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Call :meth:`~.get_data_points` for each saved data series and return as a combined</span>
 <span class="sd">        dataframe.</span>
 
@@ -1159,11 +1250,11 @@
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">            show_revisions : boolean, optional</span>
-<span class="sd">                False by default, meaning only the latest value for each period. If true, will return</span>
-<span class="sd">                all values for a given period, differentiated by the `reporting_date` field.</span>
-<span class="sd">            show_available_date : boolean, optional</span>
-<span class="sd">                False by default. If true, will return the available date of each data point.</span>
+<span class="sd">            reporting_history : boolean, optional</span>
+<span class="sd">                False by default. If true, will return all reporting history from the source.</span>
+<span class="sd">            complete_history : boolean, optional</span>
+<span class="sd">                False by default. If true, will return complete history of data points for the selection. This will include </span>
+<span class="sd">                the reporting history from the source and revisions Gro has captured that may not have been released with an official reporting_date.</span>
 <span class="sd">            index_by_series : boolean, optional</span>
 <span class="sd">               If set, the dataframe is indexed by series. See https://developers.gro-intelligence.com/data-series-definition.html</span>
 <span class="sd">            include_names : boolean, optional</span>
@@ -1173,10 +1264,12 @@
 <span class="sd">               If set, each series will be compressed to a single column in the dataframe, with the end_date column</span>
 <span class="sd">               set as the dataframe inde. All the entity names for each series will be</span>
 <span class="sd">               placed in column headers.</span>
-<span class="sd">               compress_format cannot be used simultaneously with show_revisions or show_available_date</span>
+<span class="sd">               compress_format cannot be used simultaneously with reporting_history or complete_history</span>
 <span class="sd">            async_mode: boolean, optional</span>
 <span class="sd">                If set, it will make :meth:`~get_data_points` requests asynchronously.</span>
-<span class="sd">                Note that when running in a Jupyter Ipython notebook with async_mode, you will need to use nest_asyncio module</span>
+<span class="sd">                Note that when running in a Jupyter Ipython notebook with async_mode, you will need to use nest_asyncio module.</span>
+<span class="sd">            show_revisions(deprecating) : boolean, optional</span>
+<span class="sd">                This parameter has been renamed as reporting_history.</span>
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        pandas.DataFrame</span>
@@ -1186,16 +1279,16 @@
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">assert</span> <span class="ow">not</span> <span class="p">(</span>
-            <span class="n">compress_format</span> <span class="ow">and</span> <span class="p">(</span><span class="n">show_revisions</span> <span class="ow">or</span> <span class="n">show_available_date</span><span class="p">)</span>
-        <span class="p">),</span> <span class="s2">&quot;compress_format cannot be used simultaneously with show_revisions or show_available_date&quot;</span>
+            <span class="n">compress_format</span> <span class="ow">and</span> <span class="p">(</span><span class="n">reporting_history</span> <span class="ow">or</span> <span class="n">show_revisions</span> <span class="ow">or</span> <span class="n">complete_history</span><span class="p">)</span>
+        <span class="p">),</span> <span class="s2">&quot;compress_format cannot be used simultaneously with reporting_history or complete_history&quot;</span>
 
         <span class="n">data_series_list</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_series_queue</span><span class="p">:</span>
             <span class="n">data_series</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_series_queue</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
-            <span class="k">if</span> <span class="n">show_revisions</span><span class="p">:</span>
-                <span class="n">data_series</span><span class="p">[</span><span class="s2">&quot;show_revisions&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
-            <span class="k">if</span> <span class="n">show_available_date</span><span class="p">:</span>
-                <span class="n">data_series</span><span class="p">[</span><span class="s2">&quot;show_available_date&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">if</span> <span class="n">reporting_history</span> <span class="ow">or</span> <span class="n">show_revisions</span><span class="p">:</span>
+                 <span class="n">data_series</span><span class="p">[</span><span class="s2">&quot;reporting_history&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">if</span> <span class="n">complete_history</span><span class="p">:</span>
+                <span class="n">data_series</span><span class="p">[</span><span class="s2">&quot;complete_history&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
             <span class="k">if</span> <span class="n">async_mode</span><span class="p">:</span>
                 <span class="n">data_series_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">data_series</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
@@ -1236,14 +1329,15 @@
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_frame</span></div>
 
-    <span class="k">def</span> <span class="nf">async_get_df</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">show_revisions</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">show_available_date</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">index_by_series</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">include_names</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">compress_format</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">async_get_df</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reporting_history</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">complete_history</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">index_by_series</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">include_names</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">compress_format</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">show_revisions</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_df</span><span class="p">(</span>
-            <span class="n">show_revisions</span><span class="p">,</span>
-            <span class="n">show_available_date</span><span class="p">,</span>
+            <span class="n">reporting_history</span><span class="p">,</span>
+            <span class="n">complete_history</span><span class="p">,</span>
             <span class="n">index_by_series</span><span class="p">,</span>
             <span class="n">include_names</span><span class="p">,</span>
             <span class="n">compress_format</span><span class="p">,</span>
-            <span class="n">async_mode</span><span class="o">=</span><span class="kc">True</span>
+            <span class="kc">True</span><span class="p">,</span>
+            <span class="n">show_revisions</span>
         <span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">add_points_to_df</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="n">data_series</span><span class="p">,</span> <span class="n">data_points</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
@@ -1378,11 +1472,11 @@
 <span class="sd">            All points with end dates equal to or after this date</span>
 <span class="sd">        end_date : string, optional</span>
 <span class="sd">            All points with start dates equal to or before this date</span>
-<span class="sd">        show_revisions : boolean, optional</span>
-<span class="sd">            False by default, meaning only the latest value for each period. If true, will return</span>
-<span class="sd">            all values for a given period, differentiated by the `reporting_date` field.</span>
-<span class="sd">        show_available_date : boolean, optional</span>
-<span class="sd">            False by default. If true, will return the available date of each data point.</span>
+<span class="sd">        reporting_history : boolean, optional</span>
+<span class="sd">            False by default. If true, will return all reporting history from the source.</span>
+<span class="sd">        complete_history : boolean, optional</span>
+<span class="sd">            False by default. If true, will return complete history of data points for the selection. This will include </span>
+<span class="sd">            the reporting history from the source and revisions Gro has captured that may not have been released with an official reporting_date.</span>
 <span class="sd">        insert_null : boolean, optional</span>
 <span class="sd">            False by default. If True, will include a data point with a None value for each period</span>
 <span class="sd">            that does not have data.</span>
@@ -1391,6 +1485,8 @@
 <span class="sd">            :sample:`at-time-query-examples.ipynb` for more details.</span>
 <span class="sd">        include_historical : boolean, optional</span>
 <span class="sd">            True by default, will include historical regions that are part of your selections</span>
+<span class="sd">        available_since : string, optional</span>
+<span class="sd">            Fetch points since last data retrieval where available date is equal to or after this date</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -1698,8 +1794,8 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">region</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">search_and_lookup</span><span class="p">(</span><span class="s2">&quot;regions&quot;</span><span class="p">,</span> <span class="n">country_name</span><span class="p">):</span>
             <span class="k">if</span> <span class="n">region</span><span class="p">[</span><span class="s2">&quot;level&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">lib</span><span class="o">.</span><span class="n">REGION_LEVELS</span><span class="p">[</span><span class="s2">&quot;country&quot;</span><span class="p">]:</span>
-                <span class="n">provinces</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_descendant_regions</span><span class="p">(</span>
-                    <span class="n">region</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">],</span> <span class="n">lib</span><span class="o">.</span><span class="n">REGION_LEVELS</span><span class="p">[</span><span class="s2">&quot;province&quot;</span><span class="p">]</span>
+                <span class="n">provinces</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_descendant</span><span class="p">(</span>
+                    <span class="s1">&#39;regions&#39;</span><span class="p">,</span> <span class="n">region</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">],</span> <span class="n">descendant_level</span><span class="o">=</span><span class="n">lib</span><span class="o">.</span><span class="n">REGION_LEVELS</span><span class="p">[</span><span class="s2">&quot;province&quot;</span><span class="p">]</span>
                 <span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
                     <span class="s2">&quot;Provinces of </span><span class="si">{}</span><span class="s2">: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">country_name</span><span class="p">,</span> <span class="n">provinces</span><span class="p">)</span>
