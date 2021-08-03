@@ -946,21 +946,37 @@
         <span class="n">entity_id</span><span class="p">,</span>
         <span class="n">distance</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">include_details</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">ancestor_level</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">include_historical</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
     <span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Given an item, metric or region, returns all its ancestors i.e.</span>
-<span class="sd">        entities that &quot;contain&quot; in the given entity</span>
+        <span class="sd">&quot;&quot;&quot;Given an item, metric, or region, returns all its ancestors i.e.</span>
+<span class="sd">        entities that &quot;contain&quot; in the given entity.</span>
+
+<span class="sd">        The `distance` parameter controls how many levels of ancestor entities you want to be</span>
+<span class="sd">        returned. Additionally, if you are getting the ancestors of a given region, you can</span>
+<span class="sd">        specify the `ancestor_level`, which will return only the ancestors of the given</span>
+<span class="sd">        `ancestor_level`. However, if both parameters are specified, `distance` takes precedence</span>
+<span class="sd">        over `ancestor_level`.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        entity_type : { &#39;metrics&#39;, &#39;items&#39;, &#39;regions&#39; }</span>
 <span class="sd">        entity_id : integer</span>
 <span class="sd">        distance: integer, optional</span>
-<span class="sd">            Return all entities that contain the entity_id at maximum distance.</span>
+<span class="sd">            Return all entities that contain the entity_id at maximum distance. If provided along</span>
+<span class="sd">            with `ancestor_level`, this will take precedence over `ancestor_level`.</span>
 <span class="sd">            If not provided, get all ancestors.</span>
 <span class="sd">        include_details : boolean, optional</span>
 <span class="sd">            True by default. Will perform a lookup() on each ancestor to find name,</span>
 <span class="sd">            definition, etc. If this option is set to False, only ids of ancestor</span>
 <span class="sd">            entities will be returned, which makes execution significantly faster.</span>
+<span class="sd">        ancestor_level : integer, optional</span>
+<span class="sd">            The region level of interest. See REGION_LEVELS constant. This should only be specified</span>
+<span class="sd">            if the `entity_type` is &#39;regions&#39;. If provided along with `distance`, `distance` will</span>
+<span class="sd">            take precedence. If not provided, and `distance` not provided, get all ancestors.</span>
+<span class="sd">        include_historical : boolean, optional</span>
+<span class="sd">            True by default. If False is specified, regions that only exist in historical data</span>
+<span class="sd">            (e.g. the Soviet Union) will be excluded.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -988,6 +1004,8 @@
             <span class="n">entity_id</span><span class="p">,</span>
             <span class="n">distance</span><span class="p">,</span>
             <span class="n">include_details</span><span class="p">,</span>
+            <span class="n">ancestor_level</span><span class="p">,</span>
+            <span class="n">include_historical</span><span class="p">,</span>
         <span class="p">)</span></div>
 
 <div class="viewcode-block" id="GroClient.get_descendant"><a class="viewcode-back" href="../../api.html#groclient.GroClient.get_descendant">[docs]</a>    <span class="k">def</span> <span class="nf">get_descendant</span><span class="p">(</span>
@@ -996,25 +1014,37 @@
         <span class="n">entity_id</span><span class="p">,</span>
         <span class="n">distance</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">include_details</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">descendant_level</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">include_historical</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Given an item, metric or region, returns all its descendants i.e.</span>
 <span class="sd">        entities that are &quot;contained&quot; in the given entity</span>
 
-<span class="sd">        Similar to :meth:`~.get_descendant_regions`, but also works on items and metrics. This method has</span>
-<span class="sd">        a distance parameter (which returns all nested child entities) instead of a descendant_level</span>
-<span class="sd">        parameter (which only returns child entities at a given depth/level).</span>
+<span class="sd">        The `distance` parameter controls how many levels of child entities you want to be returned.</span>
+<span class="sd">        Additionally, if you are getting the descendants of a given region, you can specify the</span>
+<span class="sd">        `descendant_level`, which will return only the descendants of the given `descendant_level`.</span>
+<span class="sd">        However, if both parameters are specified, `distance` takes precedence over</span>
+<span class="sd">        `descendant_level`.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        entity_type : { &#39;metrics&#39;, &#39;items&#39;, &#39;regions&#39; }</span>
 <span class="sd">        entity_id : integer</span>
 <span class="sd">        distance: integer, optional</span>
-<span class="sd">            Return all entity contained to entity_id at maximum distance.</span>
-<span class="sd">            If not provided, get all descendants.</span>
+<span class="sd">            Return all entities that contain the entity_id at maximum distance. If provided along</span>
+<span class="sd">            with `descendant_level`, this will take precedence over `descendant_level`.</span>
+<span class="sd">            If not provided, get all ancestors.</span>
 <span class="sd">        include_details : boolean, optional</span>
 <span class="sd">            True by default. Will perform a lookup() on each descendant  to find name,</span>
 <span class="sd">            definition, etc. If this option is set to False, only ids of descendant</span>
 <span class="sd">            entities will be returned, which makes execution significantly faster.</span>
+<span class="sd">        descendant_level : integer, optional</span>
+<span class="sd">            The region level of interest. See REGION_LEVELS constant. This should only be specified</span>
+<span class="sd">            if the `entity_type` is &#39;regions&#39;. If provided along with `distance`, `distance` will</span>
+<span class="sd">            take precedence. If not provided, and `distance` not provided, get all ancestors.</span>
+<span class="sd">        include_historical : boolean, optional</span>
+<span class="sd">            True by default. If False is specified, regions that only exist in historical data</span>
+<span class="sd">            (e.g. the Soviet Union) will be excluded.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -1042,6 +1072,8 @@
             <span class="n">entity_id</span><span class="p">,</span>
             <span class="n">distance</span><span class="p">,</span>
             <span class="n">include_details</span><span class="p">,</span>
+            <span class="n">descendant_level</span><span class="p">,</span>
+            <span class="n">include_historical</span><span class="p">,</span>
         <span class="p">)</span></div>
 
 <div class="viewcode-block" id="GroClient.get_descendant_regions"><a class="viewcode-back" href="../../api.html#groclient.GroClient.get_descendant_regions">[docs]</a>    <span class="k">def</span> <span class="nf">get_descendant_regions</span><span class="p">(</span>
@@ -1050,8 +1082,12 @@
         <span class="n">descendant_level</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">include_historical</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="n">include_details</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">distance</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Look up details of all regions of the given level contained by a region.</span>
+
+<span class="sd">        This method is deprecated, and should be replaced by :meth:`~.get_descendant` which has</span>
+<span class="sd">        been updated to include the `descendant_level` and `include_historical` parameters.</span>
 
 <span class="sd">        Given any region by id, get all the descendant regions that are of the specified level.</span>
 
@@ -1068,6 +1104,10 @@
 <span class="sd">            True by default. Will perform a lookup() on each descendant region to find name,</span>
 <span class="sd">            latitude, longitude, etc. If this option is set to False, only ids of descendant</span>
 <span class="sd">            regions will be returned, which makes execution significantly faster.</span>
+<span class="sd">        distance: integer, optional</span>
+<span class="sd">            Return all entity contained to entity_id at maximum distance.</span>
+<span class="sd">            If provided, it will take precedence over `descendant_level`.</span>
+<span class="sd">            If not provided, get all descendants.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -1090,13 +1130,15 @@
 <span class="sd">            See output of :meth:`~.lookup`</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">lib</span><span class="o">.</span><span class="n">get_descendant_regions</span><span class="p">(</span>
+        <span class="k">return</span> <span class="n">lib</span><span class="o">.</span><span class="n">get_descendant</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="p">,</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">api_host</span><span class="p">,</span>
+            <span class="s1">&#39;regions&#39;</span><span class="p">,</span>
             <span class="n">region_id</span><span class="p">,</span>
+            <span class="n">distance</span><span class="p">,</span>
+            <span class="n">include_details</span><span class="p">,</span>
             <span class="n">descendant_level</span><span class="p">,</span>
             <span class="n">include_historical</span><span class="p">,</span>
-            <span class="n">include_details</span><span class="p">,</span>
         <span class="p">)</span></div>
 
 <div class="viewcode-block" id="GroClient.get_available_timefrequency"><a class="viewcode-back" href="../../api.html#groclient.GroClient.get_available_timefrequency">[docs]</a>    <span class="k">def</span> <span class="nf">get_available_timefrequency</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">selection</span><span class="p">):</span>
@@ -1752,8 +1794,8 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">region</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">search_and_lookup</span><span class="p">(</span><span class="s2">&quot;regions&quot;</span><span class="p">,</span> <span class="n">country_name</span><span class="p">):</span>
             <span class="k">if</span> <span class="n">region</span><span class="p">[</span><span class="s2">&quot;level&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">lib</span><span class="o">.</span><span class="n">REGION_LEVELS</span><span class="p">[</span><span class="s2">&quot;country&quot;</span><span class="p">]:</span>
-                <span class="n">provinces</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_descendant_regions</span><span class="p">(</span>
-                    <span class="n">region</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">],</span> <span class="n">lib</span><span class="o">.</span><span class="n">REGION_LEVELS</span><span class="p">[</span><span class="s2">&quot;province&quot;</span><span class="p">]</span>
+                <span class="n">provinces</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_descendant</span><span class="p">(</span>
+                    <span class="s1">&#39;regions&#39;</span><span class="p">,</span> <span class="n">region</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">],</span> <span class="n">descendant_level</span><span class="o">=</span><span class="n">lib</span><span class="o">.</span><span class="n">REGION_LEVELS</span><span class="p">[</span><span class="s2">&quot;province&quot;</span><span class="p">]</span>
                 <span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
                     <span class="s2">&quot;Provinces of </span><span class="si">{}</span><span class="s2">: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">country_name</span><span class="p">,</span> <span class="n">provinces</span><span class="p">)</span>
