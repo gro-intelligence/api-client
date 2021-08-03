@@ -316,9 +316,8 @@ class GroClient(object):
         try:
             list_of_series_points = yield self.async_get_data(url, headers, params)
             include_historical = selection.get("include_historical", True)
-            include_available_date = selection.get('show_available_date', False)
             points = lib.list_of_series_to_single_series(
-                list_of_series_points, False, include_historical, include_available_date
+                list_of_series_points, False, include_historical
             )
             # Apply unit conversion if a unit is specified
             if "unit_id" in selection:
@@ -745,31 +744,111 @@ class GroClient(object):
         """
         return lib.get_geojson(self.access_token, self.api_host, region_id, zoom_level)
 
-    def get_descendant(
+    def get_ancestor(
         self,
         entity_type,
         entity_id,
         distance=None,
         include_details=True,
+        ancestor_level=None,
+        include_historical=True,
     ):
-        """Given an item, metric or region, returns all its descendants i.e.
-        entities that are "contained" in the given entity
+        """Given an item, metric, or region, returns all its ancestors i.e.
+        entities that "contain" in the given entity.
 
-        Similar to :meth:~.get_descendant_regions, but also works on items and metrics. This method has
-        a distance parameter (which returns all nested child entities) instead of a descendant_level
-        parameter (which only returns child entities at a given depth/level).
+        The `distance` parameter controls how many levels of ancestor entities you want to be
+        returned. Additionally, if you are getting the ancestors of a given region, you can
+        specify the `ancestor_level`, which will return only the ancestors of the given
+        `ancestor_level`. However, if both parameters are specified, `distance` takes precedence
+        over `ancestor_level`.
 
         Parameters
         ----------
         entity_type : { 'metrics', 'items', 'regions' }
         entity_id : integer
         distance: integer, optional
-            Return all entity contained to entity_id at maximum distance.
-            If not provided, get all descendants.
+            Return all entities that contain the entity_id at maximum distance. If provided along
+            with `ancestor_level`, this will take precedence over `ancestor_level`.
+            If not provided, get all ancestors.
+        include_details : boolean, optional
+            True by default. Will perform a lookup() on each ancestor to find name,
+            definition, etc. If this option is set to False, only ids of ancestor
+            entities will be returned, which makes execution significantly faster.
+        ancestor_level : integer, optional
+            The region level of interest. See REGION_LEVELS constant. This should only be specified
+            if the `entity_type` is 'regions'. If provided along with `distance`, `distance` will
+            take precedence. If not provided, and `distance` not provided, get all ancestors.
+        include_historical : boolean, optional
+            True by default. If False is specified, regions that only exist in historical data
+            (e.g. the Soviet Union) will be excluded.
+
+        Returns
+        -------
+        list of dicts
+
+            Example::
+
+                [{
+                    'id': 134,
+                    'name': 'Cattle hides, wet-salted',
+                    'definition': 'Hides and skins of domesticated cattle-animals ...',
+                } , {
+                    'id': 382,
+                    'name': 'Calf skins, wet-salted',
+                    'definition': 'Wet-salted hides and skins of calves-animals of ...'
+                }, ...]
+
+            See output of :meth:`~.lookup`
+
+        """
+        return lib.get_ancestor(
+            self.access_token,
+            self.api_host,
+            entity_type,
+            entity_id,
+            distance,
+            include_details,
+            ancestor_level,
+            include_historical,
+        )
+
+    def get_descendant(
+        self,
+        entity_type,
+        entity_id,
+        distance=None,
+        include_details=True,
+        descendant_level=None,
+        include_historical=True,
+    ):
+        """Given an item, metric or region, returns all its descendants i.e.
+        entities that are "contained" in the given entity
+
+        The `distance` parameter controls how many levels of child entities you want to be returned.
+        Additionally, if you are getting the descendants of a given region, you can specify the
+        `descendant_level`, which will return only the descendants of the given `descendant_level`.
+        However, if both parameters are specified, `distance` takes precedence over
+        `descendant_level`.
+
+        Parameters
+        ----------
+        entity_type : { 'metrics', 'items', 'regions' }
+        entity_id : integer
+        distance: integer, optional
+            Return all entities that contain the entity_id at maximum distance. If provided along
+            with `descendant_level`, this will take precedence over `descendant_level`.
+            If not provided, get all ancestors.
         include_details : boolean, optional
             True by default. Will perform a lookup() on each descendant  to find name,
             definition, etc. If this option is set to False, only ids of descendant
             entities will be returned, which makes execution significantly faster.
+        descendant_level : integer, optional
+            The region level of interest. See REGION_LEVELS constant. This should only be specified
+            if the `entity_type` is 'regions'. If provided along with `distance`, `distance` will
+            take precedence. If not provided, and `distance` not provided, get all ancestors.
+        include_historical : boolean, optional
+            True by default. If False is specified, regions that only exist in historical data
+            (e.g. the Soviet Union) will be excluded.
 
         Returns
         -------
@@ -797,8 +876,9 @@ class GroClient(object):
             entity_id,
             distance,
             include_details,
+            descendant_level,
+            include_historical,
         )
-
 
     def get_descendant_regions(
         self,
@@ -806,8 +886,12 @@ class GroClient(object):
         descendant_level=None,
         include_historical=True,
         include_details=True,
+        distance=None,
     ):
         """Look up details of all regions of the given level contained by a region.
+
+        This method is deprecated, and should be replaced by :meth:`~.get_descendant` which has
+        been updated to include the `descendant_level` and `include_historical` parameters.
 
         Given any region by id, get all the descendant regions that are of the specified level.
 
@@ -824,6 +908,10 @@ class GroClient(object):
             True by default. Will perform a lookup() on each descendant region to find name,
             latitude, longitude, etc. If this option is set to False, only ids of descendant
             regions will be returned, which makes execution significantly faster.
+        distance: integer, optional
+            Return all entity contained to entity_id at maximum distance.
+            If provided, it will take precedence over `descendant_level`.
+            If not provided, get all descendants.
 
         Returns
         -------
@@ -846,13 +934,15 @@ class GroClient(object):
             See output of :meth:`~.lookup`
 
         """
-        return lib.get_descendant_regions(
+        return lib.get_descendant(
             self.access_token,
             self.api_host,
+            'regions',
             region_id,
+            distance,
+            include_details,
             descendant_level,
             include_historical,
-            include_details,
         )
 
     def get_available_timefrequency(self, **selection):
@@ -948,12 +1038,13 @@ class GroClient(object):
 
     def get_df(
         self,
-        show_revisions=False,
-        show_available_date=False,
+        reporting_history=False,
+        complete_history=False,
         index_by_series=False,
         include_names=False,
         compress_format=False,
-        async_mode = False):
+        async_mode = False,
+        show_revisions=False):
         """Call :meth:`~.get_data_points` for each saved data series and return as a combined
         dataframe.
 
@@ -963,11 +1054,11 @@ class GroClient(object):
 
         Parameters
         ----------
-            show_revisions : boolean, optional
-                False by default, meaning only the latest value for each period. If true, will return
-                all values for a given period, differentiated by the `reporting_date` field.
-            show_available_date : boolean, optional
-                False by default. If true, will return the available date of each data point.
+            reporting_history : boolean, optional
+                False by default. If true, will return all reporting history from the source.
+            complete_history : boolean, optional
+                False by default. If true, will return complete history of data points for the selection. This will include 
+                the reporting history from the source and revisions Gro has captured that may not have been released with an official reporting_date.
             index_by_series : boolean, optional
                If set, the dataframe is indexed by series. See https://developers.gro-intelligence.com/data-series-definition.html
             include_names : boolean, optional
@@ -977,10 +1068,12 @@ class GroClient(object):
                If set, each series will be compressed to a single column in the dataframe, with the end_date column
                set as the dataframe inde. All the entity names for each series will be
                placed in column headers.
-               compress_format cannot be used simultaneously with show_revisions or show_available_date
+               compress_format cannot be used simultaneously with reporting_history or complete_history
             async_mode: boolean, optional
                 If set, it will make :meth:`~get_data_points` requests asynchronously.
-                Note that when running in a Jupyter Ipython notebook with async_mode, you will need to use nest_asyncio module
+                Note that when running in a Jupyter Ipython notebook with async_mode, you will need to use nest_asyncio module.
+            show_revisions(deprecating) : boolean, optional
+                This parameter has been renamed as reporting_history.
         Returns
         -------
         pandas.DataFrame
@@ -990,16 +1083,16 @@ class GroClient(object):
         """
 
         assert not (
-            compress_format and (show_revisions or show_available_date)
-        ), "compress_format cannot be used simultaneously with show_revisions or show_available_date"
+            compress_format and (reporting_history or show_revisions or complete_history)
+        ), "compress_format cannot be used simultaneously with reporting_history or complete_history"
 
         data_series_list = []
         while self._data_series_queue:
             data_series = self._data_series_queue.pop()
-            if show_revisions:
-                data_series["show_revisions"] = True
-            if show_available_date:
-                data_series["show_available_date"] = True
+            if reporting_history or show_revisions:
+                 data_series["reporting_history"] = True
+            if complete_history:
+                data_series["complete_history"] = True
             if async_mode:
                 data_series_list.append(data_series)
             else:
@@ -1040,14 +1133,15 @@ class GroClient(object):
 
         return self._data_frame
 
-    def async_get_df(self, show_revisions=False, show_available_date=False, index_by_series=False, include_names=False, compress_format=False):
+    def async_get_df(self, reporting_history=False, complete_history=False, index_by_series=False, include_names=False, compress_format=False, show_revisions=False):
         return self.get_df(
-            show_revisions,
-            show_available_date,
+            reporting_history,
+            complete_history,
             index_by_series,
             include_names,
             compress_format,
-            async_mode=True
+            True,
+            show_revisions
         )
 
     def add_points_to_df(self, index, data_series, data_points, *args):
@@ -1182,11 +1276,11 @@ class GroClient(object):
             All points with end dates equal to or after this date
         end_date : string, optional
             All points with start dates equal to or before this date
-        show_revisions : boolean, optional
-            False by default, meaning only the latest value for each period. If true, will return
-            all values for a given period, differentiated by the `reporting_date` field.
-        show_available_date : boolean, optional
-            False by default. If true, will return the available date of each data point.
+        reporting_history : boolean, optional
+            False by default. If true, will return all reporting history from the source.
+        complete_history : boolean, optional
+            False by default. If true, will return complete history of data points for the selection. This will include 
+            the reporting history from the source and revisions Gro has captured that may not have been released with an official reporting_date.
         insert_null : boolean, optional
             False by default. If True, will include a data point with a None value for each period
             that does not have data.
@@ -1195,6 +1289,8 @@ class GroClient(object):
             :sample:`at-time-query-examples.ipynb` for more details.
         include_historical : boolean, optional
             True by default, will include historical regions that are part of your selections
+        available_since : string, optional
+            Fetch points since last data retrieval where available date is equal to or after this date
 
         Returns
         -------
@@ -1502,8 +1598,8 @@ class GroClient(object):
         """
         for region in self.search_and_lookup("regions", country_name):
             if region["level"] == lib.REGION_LEVELS["country"]:
-                provinces = self.get_descendant_regions(
-                    region["id"], lib.REGION_LEVELS["province"]
+                provinces = self.get_descendant(
+                    'regions', region["id"], descendant_level=lib.REGION_LEVELS["province"]
                 )
                 self._logger.debug(
                     "Provinces of {}: {}".format(country_name, provinces)
