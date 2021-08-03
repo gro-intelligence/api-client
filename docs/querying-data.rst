@@ -33,7 +33,7 @@ Get data points
       'frequency_id': 9
   })
 
-The above query has completed fields for :code:`metric_id`, :code:`item_id`, :code:`region_id`, :code:`source_id`, and :code:`frequency_id`. However, :meth:`groclient.GroClient.get_data_points` can also accept fields to further narrow your data series of interest: :code:`partner_region_id` (used only in series that represent a flow between two places), :code:`start_date`, :code:`end_date`, :code:`show_revions`, :code:`insert_null`, and :code:`at_time`.
+The above query has completed fields for :code:`metric_id`, :code:`item_id`, :code:`region_id`, :code:`source_id`, and :code:`frequency_id`. However, :meth:`groclient.GroClient.get_data_points` can also accept fields to further narrow your data series of interest: :code:`partner_region_id` (used only in series that represent a flow between two places), :code:`start_date`, :code:`end_date`, :code:`show_revions`, :code:`insert_null` and :code:`at_time`.
 
 Making your query more specific will speed up your query by limiting the amount of data requested.
 
@@ -109,7 +109,7 @@ Sometimes looking at the most recent data point doesn't tell you the whole story
   })
 
 
-But the USDA begins forecasting the yield well before harvest time, and will continue to update its estimate for many months after the harvest is over. In order to see how the forecasts and estimates for each year have changed, you can include the `show_revisions` field as follows:
+But the USDA begins forecasting the yield well before harvest time, and will continue to update its estimate for many months after the harvest is over. In order to see how the forecasts and estimates for each year have changed, you can include the `reporting_history` field as follows:
 
 .. code-block:: python
 
@@ -121,5 +121,5 @@ But the USDA begins forecasting the yield well before harvest time, and will con
       'source_id': 14,
       'frequency_id': 9,
       'start_date': '2017-01-01',
-      'show_revisions': True
+      'reporting_history': True
   })

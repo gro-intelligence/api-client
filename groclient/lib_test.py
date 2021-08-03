@@ -143,16 +143,17 @@ def test_get_data_series(mock_requests_get):
 def test_get_data_points(mock_requests_get):
     list_of_series_format_data = [{
         'series': {},
-        'data': [['2000-01-01', '2000-12-31', 1]]
+        'data': [['2000-01-01', '2000-12-31', 1, None, 15, None, '2001-12-31']]
     }]
     single_series_format_data = [{
         'start_date': '2000-01-01',
         'end_date': '2000-12-31',
         'value': 1,
-        'unit_id': None,
-        'input_unit_id': None,
+        'unit_id': 15,
+        'input_unit_id': 15,
         'input_unit_scale': 1,
         'reporting_date': None,
+        'available_date':'2001-12-31',
         'metric_id': None,
         'item_id': None,
         'metadata': {},
@@ -184,9 +185,9 @@ def test_list_of_series_to_single_series():
         },
         'data': [
             ['2001-01-01', '2001-12-31', 123],
-            ['2002-01-01', '2002-12-31', 123, '2012-01-01'],
-            ['2003-01-01', '2003-12-31', 123, None, 15, {'confInterval': 2}],
-            ['2004-01-01', '2004-12-31', 123, None, 15, None, '2013-01-01']
+            ['2002-01-01', '2002-12-31', 123, '2012-01-01', 15, None, '2003-01-01'],
+            ['2002-01-01', '2002-12-31', 123, None, 15, None, '2003-01-01'],
+            ['2003-01-01', '2003-12-31', 123, None, 15, {'confInterval': 2}, '2004-01-01']
         ]
     }], add_belongs_to=True) == [
         {'start_date': '2001-01-01',
@@ -197,6 +198,7 @@ def test_list_of_series_to_single_series():
          'input_unit_id': 4,
          'input_unit_scale': 1,
          'reporting_date': None,
+         'available_date': None,
          'metric_id': 1,
          'item_id': 2,
          'region_id': 3,
@@ -206,11 +208,27 @@ def test_list_of_series_to_single_series():
         {'start_date': '2002-01-01',
          'end_date': '2002-12-31',
          'value': 123,
-         'unit_id': 4,
+         'unit_id': 15,
          'metadata': {},
-         'input_unit_id': 4,
+         'input_unit_id': 15,
          'input_unit_scale': 1,
          'reporting_date': '2012-01-01',
+         'available_date': '2003-01-01',
+         'metric_id': 1,
+         'item_id': 2,
+         'region_id': 3,
+         'partner_region_id': 0,
+         'frequency_id': None,
+         'belongs_to': {'item_id': 22}},
+        {'start_date': '2002-01-01',
+         'end_date': '2002-12-31',
+         'value': 123,
+         'unit_id': 15,
+         'metadata': {},
+         'input_unit_id': 15,
+         'input_unit_scale': 1,
+         'reporting_date': None,
+         'available_date': '2003-01-01',
          'metric_id': 1,
          'item_id': 2,
          'region_id': 3,
@@ -225,20 +243,7 @@ def test_list_of_series_to_single_series():
          'input_unit_id': 15,
          'input_unit_scale': 1,
          'reporting_date': None,
-         'metric_id': 1,
-         'item_id': 2,
-         'region_id': 3,
-         'partner_region_id': 0,
-         'frequency_id': None,
-         'belongs_to': {'item_id': 22}},
-        {'start_date': '2004-01-01',
-         'end_date': '2004-12-31',
-         'value': 123,
-         'unit_id': 15,
-         'metadata': {},
-         'input_unit_id': 15,
-         'input_unit_scale': 1,
-         'reporting_date': None,
+         'available_date': '2004-01-01',
          'metric_id': 1,
          'item_id': 2,
          'region_id': 3,
@@ -268,82 +273,6 @@ def test_list_of_series_to_single_series():
         'series': {'unitId': 4, 'belongsTo': {'itemId': 22}, 'metadata': {'includesHistoricalRegion': True}},
         'data': [['2001-01-01', '2001-12-31', 123]]
     }], include_historical=True)) == 1
-
-    # test the include_available_date kwarg:
-    assert lib.list_of_series_to_single_series([{
-        'series': {
-            'metricId': 1,
-            'itemId': 2,
-            'regionId': 3,
-            'unitId': 4,
-            'inputUnitId': 5,
-            'belongsTo': {'itemId': 22},
-            'metadata': {'includesHistoricalRegion': True}
-        },
-        'data': [['2004-01-01', '2004-12-31', 123, None, 15]]
-    }], include_available_date=False) == [
-        {'start_date': '2004-01-01',
-         'end_date': '2004-12-31',
-         'value': 123,
-         'unit_id': 15,
-         'metadata': {},
-         'input_unit_id': 15,
-         'input_unit_scale': 1,
-         'reporting_date': None,
-         'metric_id': 1,
-         'item_id': 2,
-         'region_id': 3,
-         'partner_region_id': 0,
-         'frequency_id': None
-        }
-    ]
-
-    assert lib.list_of_series_to_single_series([{
-        'series': {
-            'metricId': 1,
-            'itemId': 2,
-            'regionId': 3,
-            'unitId': 4,
-            'inputUnitId': 5,
-            'belongsTo': {'itemId': 22},
-            'metadata': {'includesHistoricalRegion': True}
-        },
-        'data': [
-            ['2003-01-01', '2003-12-31', 123, None, 15],
-            ['2004-01-01', '2004-12-31', 123, None, 15, None, '2013-01-01']
-        ]
-    }], include_available_date=True) == [
-        {'start_date': '2003-01-01',
-         'end_date': '2003-12-31',
-         'value': 123,
-         'unit_id': 15,
-         'metadata': {},
-         'input_unit_id': 15,
-         'input_unit_scale': 1,
-         'reporting_date': None,
-         'available_date': None,
-         'metric_id': 1,
-         'item_id': 2,
-         'region_id': 3,
-         'partner_region_id': 0,
-         'frequency_id': None
-        },
-        {'start_date': '2004-01-01',
-         'end_date': '2004-12-31',
-         'value': 123,
-         'unit_id': 15,
-         'metadata': {},
-         'input_unit_id': 15,
-         'input_unit_scale': 1,
-         'reporting_date': None,
-         'available_date': '2013-01-01',
-         'metric_id': 1,
-         'item_id': 2,
-         'region_id': 3,
-         'partner_region_id': 0,
-         'frequency_id': None
-        }
-    ]
 
     # test invalid input propagation
     assert lib.list_of_series_to_single_series('test input') == 'test input'
@@ -446,6 +375,39 @@ def lookup_mock(MOCK_TOKEN, MOCK_HOST, entity_type, entity_ids):
 
 @mock.patch('groclient.lib.lookup')
 @mock.patch('requests.get')
+def test_get_ancestor(mock_requests_get, lookup_mocked):
+    mock_requests_get.return_value.json.return_value = {'data': {'1': [3, 4]}}
+    mock_requests_get.return_value.status_code = 200
+    lookup_mocked.side_effect = lookup_mock
+
+    assert lib.get_ancestor(MOCK_TOKEN, MOCK_HOST, 'items', 1) == [
+        {'id': 3, 'name': 'parent', 'contains': [1, 2], 'belongsTo': [4], 'definition': 'def3'},
+        {'id': 4, 'name': 'ancestor', 'contains': [3], 'belongsTo': [], 'definition': 'def4'}
+    ]
+    
+    assert lib.get_ancestor(MOCK_TOKEN, MOCK_HOST, 'metrics', 1, include_details=True) == [
+        {'id': 3, 'name': 'parent', 'contains': [1, 2], 'belongsTo': [4], 'definition': 'def3'},
+        {'id': 4, 'name': 'ancestor', 'contains': [3], 'belongsTo': [], 'definition': 'def4'}
+    ]
+
+    assert lib.get_ancestor(MOCK_TOKEN, MOCK_HOST, 'items', 1, include_details=False) == [
+        {'id': 3},
+        {'id': 4}
+    ]
+
+    assert lib.get_ancestor(MOCK_TOKEN, MOCK_HOST, 'metrics', 1, include_details=True) == [
+        {'id': 3, 'name': 'parent', 'contains': [1, 2], 'belongsTo': [4], 'definition': 'def3'},
+        {'id': 4, 'name': 'ancestor', 'contains': [3], 'belongsTo': [], 'definition': 'def4'}
+    ]
+
+    mock_requests_get.return_value.json.return_value = {'data': {'2': [3]}}
+    assert lib.get_ancestor(MOCK_TOKEN, MOCK_HOST, 'items', 2, distance=1) == [
+        {'id': 3, 'name': 'parent', 'contains': [1, 2], 'belongsTo': [4], 'definition': 'def3'}
+    ]
+
+
+@mock.patch('groclient.lib.lookup')
+@mock.patch('requests.get')
 def test_get_descendant(mock_requests_get, lookup_mocked):
     mock_requests_get.return_value.json.return_value = {'data': {'4': [1, 2, 3]}}
     mock_requests_get.return_value.status_code = 200
@@ -472,46 +434,38 @@ def test_get_descendant(mock_requests_get, lookup_mocked):
         {'id': 3, 'name': 'parent', 'contains': [1, 2], 'belongsTo': [4], 'definition': 'def3'}
     ]
 
-    
-
-@mock.patch('groclient.lib.lookup')
-@mock.patch('requests.get')
-def test_descendant_regions(mock_requests_get, lookup_mocked):
     mock_requests_get.return_value.json.return_value = {'data': {'3': [1, 2]}}
-    mock_requests_get.return_value.status_code = 200
-    lookup_mocked.side_effect = lookup_mock
-
-    assert lib.get_descendant_regions(MOCK_TOKEN, MOCK_HOST, 3) == [
+    assert lib.get_descendant(MOCK_TOKEN, MOCK_HOST, 'regions', 3) == [
         {'id': 1, 'name': 'region 1', 'contains': [], 'belongsTo': [3], 'historical': True},
         {'id': 2, 'name': 'region 2', 'contains': [], 'belongsTo': [3], 'historical': False}
     ]
 
-    assert lib.get_descendant_regions(MOCK_TOKEN, MOCK_HOST, 3, include_details=True) == [
+    assert lib.get_descendant(MOCK_TOKEN, MOCK_HOST, 'regions', 3, include_details=True) == [
         {'id': 1, 'name': 'region 1', 'contains': [], 'belongsTo': [3], 'historical': True},
         {'id': 2, 'name': 'region 2', 'contains': [], 'belongsTo': [3], 'historical': False}
     ]
 
-    assert lib.get_descendant_regions(MOCK_TOKEN, MOCK_HOST, 3, include_details=False) == [
+    assert lib.get_descendant(MOCK_TOKEN, MOCK_HOST, 'regions', 3, include_details=False) == [
         {'id': 1}, {'id': 2}
     ]
 
-    assert lib.get_descendant_regions(MOCK_TOKEN, MOCK_HOST, 3, include_historical=True) == [
+    assert lib.get_descendant(MOCK_TOKEN, MOCK_HOST, 'regions', 3, include_historical=True) == [
         {'id': 1, 'name': 'region 1', 'contains': [], 'belongsTo': [3], 'historical': True},
         {'id': 2, 'name': 'region 2', 'contains': [], 'belongsTo': [3], 'historical': False}
     ]
 
-    assert lib.get_descendant_regions(MOCK_TOKEN, MOCK_HOST, 3, include_historical=False) == [
+    assert lib.get_descendant(MOCK_TOKEN, MOCK_HOST, 'regions', 3, include_historical=False) == [
         {'id': 2, 'name': 'region 2', 'contains': [], 'belongsTo': [3], 'historical': False}
     ]
 
-    assert lib.get_descendant_regions(MOCK_TOKEN, MOCK_HOST, 3,
-                                      include_historical=True, include_details=True) == [
+    assert lib.get_descendant(MOCK_TOKEN, MOCK_HOST, 'regions', 3,
+                              include_historical=True, include_details=True) == [
         {'id': 1, 'name': 'region 1', 'contains': [], 'belongsTo': [3], 'historical': True},
         {'id': 2, 'name': 'region 2', 'contains': [], 'belongsTo': [3], 'historical': False}
     ]
 
-    assert lib.get_descendant_regions(MOCK_TOKEN, MOCK_HOST, 3, include_historical=False,
-                                      include_details=False) == [{'id': 2}]
+    assert lib.get_descendant(MOCK_TOKEN, MOCK_HOST, 'regions', 3, include_historical=False,
+                              include_details=False) == [{'id': 2}]
 
 
 @mock.patch('requests.get')

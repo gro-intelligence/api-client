@@ -347,11 +347,12 @@ def get_data_call_params(**selection):
     frequency_id : integer
     start_date : string, optional
     end_date : string, optional
-    show_revisions : boolean, optional
-    show_available_date : boolean, optional
+    reporting_history : boolean, optional
+    complete_history : boolean, optional
     insert_null : boolean, optional
     show_metadata : boolean, optional
-    at_time : string, optional
+    at_time : string, optional,
+    available_since : string, optional
 
     Returns
     -------
@@ -363,7 +364,11 @@ def get_data_call_params(**selection):
     for key, value in list(selection.items()):
         if key == 'show_metadata':
             params[groclient.utils.str_snake_to_camel('show_meta_data')] = value
-        if key in ('start_date', 'end_date', 'show_revisions', 'show_available_date', 'insert_null', 'at_time'):
+        elif key == 'complete_history':
+            params['showHistory'] = value
+        elif key in ('show_revisions', 'reporting_history'):
+            params['showReportingDate'] = value
+        elif key in ('start_date', 'end_date', 'insert_null', 'at_time', 'available_since'):
             params[groclient.utils.str_snake_to_camel(key)] = value
     params['responseType'] = 'list_of_series'
     return params
@@ -464,7 +469,7 @@ def get_available_timefrequency(access_token, api_host, **series):
             for tf in response.json()]
 
 
-def list_of_series_to_single_series(series_list, add_belongs_to=False, include_historical=True, include_available_date=False):
+def list_of_series_to_single_series(series_list, add_belongs_to=False, include_historical=True):
     """Convert list_of_series format from API back into the familiar single_series output format."""
     if not isinstance(series_list, list):
         # If the output is an error or None or something else that's not a list, just propagate
@@ -496,6 +501,8 @@ def list_of_series_to_single_series(series_list, add_belongs_to=False, include_h
                 'input_unit_scale': 1,
                 # If a point does not have reporting_date, use None
                 'reporting_date': point[3] if len(point) > 3 else None,
+                # If a point does not have available_date, use None
+                'available_date': point[6] if len(point) > 6 else None,
                 # Series attributes:
                 'metric_id': series['series'].get('metricId', None),
                 'item_id': series['series'].get('itemId', None),
@@ -504,9 +511,6 @@ def list_of_series_to_single_series(series_list, add_belongs_to=False, include_h
                 'frequency_id': series['series'].get('frequencyId', None)
                 # 'source_id': series['series'].get('sourceId', None), TODO: add source to output
             }
-            if include_available_date:
-                # If a point does not have available_date, use None
-                formatted_point['available_date'] = point[6] if len(point) > 6 else None
 
             if formatted_point['metadata'].get('confInterval') is not None:
                 formatted_point['metadata']['conf_interval'] = formatted_point['metadata'].pop('confInterval')
@@ -526,8 +530,7 @@ def get_data_points(access_token, api_host, **selection):
     params = get_data_call_params(**selection)
     resp = get_data(url, headers, params)
     include_historical = selection.get('include_historical', True)
-    include_available_date = selection.get('show_available_date', False)
-    return list_of_series_to_single_series(resp.json(), False, include_historical, include_available_date)
+    return list_of_series_to_single_series(resp.json(), False, include_historical)
 
 
 @memoize(maxsize=None)
@@ -604,51 +607,66 @@ def get_geojson(access_token, api_host, region_id, zoom_level):
         return json.loads(region['geojson'])
 
 
+def get_ancestor(access_token, api_host, entity_type, entity_id, distance=None,
+                 include_details=True, ancestor_level=None, include_historical=True,):
+    url = '/'.join(['https:', '', api_host, 'v2/{}/belongs-to'.format(entity_type)])
+    headers = {'authorization': 'Bearer ' + access_token}
+    params = {'ids': [entity_id]}
+    if distance:
+        params['distance'] = distance
+    else:
+        if entity_type == 'regions' and ancestor_level:
+            params['level'] = ancestor_level
+        else:
+            params['distance'] = -1
+
+    resp = get_data(url, headers, params)
+    ancestor_entity_ids = resp.json()['data'][str(entity_id)]
+
+    # Filter out regions with the 'historical' flag set to true
+    if not include_historical or include_details:
+        entity_details = lookup(access_token, api_host, entity_type, ancestor_entity_ids)
+
+        if not include_historical:
+            ancestor_entity_ids = [entity['id'] for entity in entity_details.values()
+                                     if not entity['historical']]
+
+        if include_details:
+            return [entity_details[str(child_entity_id)] for child_entity_id in
+                    ancestor_entity_ids]
+
+    return [{'id': ancestor_entity_id} for ancestor_entity_id in ancestor_entity_ids]
+
+
 def get_descendant(access_token, api_host, entity_type, entity_id, distance=None,
-                   include_details=True):
+                   include_details=True, descendant_level=None, include_historical=True):
     url = '/'.join(['https:', '', api_host, 'v2/{}/contains'.format(entity_type)])
     headers = {'authorization': 'Bearer ' + access_token}
     params = {'ids': [entity_id]}
     if distance:
         params['distance'] = distance
     else:
-        params['distance'] = -1
+        if entity_type == 'regions' and descendant_level:
+            params['level'] = descendant_level
+        else:
+            params['distance'] = -1
 
     resp = get_data(url, headers, params)
     descendant_entity_ids = resp.json()['data'][str(entity_id)]
 
-    if include_details:
-        entity_details = lookup(access_token, api_host, entity_type, descendant_entity_ids)
-        return [entity_details[str(child_entity_id)] for child_entity_id in descendant_entity_ids]
-
-    return [{'id': descendant_entity_id} for descendant_entity_id in descendant_entity_ids]
-
-
-def get_descendant_regions(access_token, api_host, region_id,
-                           descendant_level=None, include_historical=True, include_details=True):
-    url = '/'.join(['https:', '', api_host, 'v2/regions/contains'])
-    headers = {'authorization': 'Bearer ' + access_token}
-    params = {'ids': [region_id]}
-    if descendant_level:
-        params['level'] = descendant_level
-    else:
-        params['distance'] = -1
-
-    resp = get_data(url, headers, params)
-    descendant_region_ids = resp.json()['data'][str(region_id)]
-
     # Filter out regions with the 'historical' flag set to true
     if not include_historical or include_details:
-        region_details = lookup(access_token, api_host, 'regions', descendant_region_ids)
+        entity_details = lookup(access_token, api_host, entity_type, descendant_entity_ids)
 
         if not include_historical:
-            descendant_region_ids = [region['id'] for region in region_details.values()
-                                     if not region['historical']]
+            descendant_entity_ids = [entity['id'] for entity in entity_details.values()
+                                     if not entity['historical']]
 
         if include_details:
-            return [region_details[str(region_id)] for region_id in descendant_region_ids]
+            return [entity_details[str(child_entity_id)] for child_entity_id in
+                    descendant_entity_ids]
 
-    return [{'id': descendant_region_id} for descendant_region_id in descendant_region_ids]
+    return [{'id': descendant_entity_id} for descendant_entity_id in descendant_entity_ids]
 
 
 if __name__ == '__main__':
