@@ -110,6 +110,26 @@ def mock_get_descendant(
         return [{"id": child["id"]} for child in childs]
 
 
+def mock_get_ancestor(
+    access_token,
+    api_host,
+    entity_type,
+    entity_id,
+    distance,
+    include_details,
+):
+
+    childs = [
+            child
+            for child in mock_entities[entity_type].values()
+            if 12345 in child["contains"]
+        ]
+    if include_details:
+        return childs
+    else:
+        return [{"id": child["id"]} for child in childs]
+
+
 def mock_get_descendant_regions(
     access_token,
     api_host,
@@ -216,6 +236,7 @@ def mock_get_data_points(access_token, api_host, **selections):
 @patch("groclient.lib.get_geo_centre", MagicMock(side_effect=mock_get_geo_centre))
 @patch("groclient.lib.get_geojsons", MagicMock(side_effect=mock_get_geojsons))
 @patch("groclient.lib.get_geojson", MagicMock(side_effect=mock_get_geojson))
+@patch("groclient.lib.get_ancestor", MagicMock(side_effect=mock_get_ancestor))
 @patch("groclient.lib.get_descendant", MagicMock(side_effect=mock_get_descendant))
 @patch(
     "groclient.lib.get_descendant_regions",
@@ -303,6 +324,13 @@ class GroClientTests(TestCase):
         self.assertTrue("coordinates" in geojson["geometries"][0])
         self.assertTrue(geojson["geometries"][0]['coordinates'][0][0][0] == [-38, -4])
 
+    def test_get_ancestor(self):
+        self.assertTrue("name" in self.client.get_descendant('metrics', 119)[0])
+        self.assertTrue(
+            "name"
+            not in self.client.get_ancestor('regions', 12345, include_details=False)[0]
+        )
+
     def test_get_descendant(self):
         self.assertTrue("name" in self.client.get_descendant('metrics', 119)[0])
         self.assertTrue(
@@ -335,27 +363,23 @@ class GroClientTests(TestCase):
         df = self.client.get_df()
         self.assertEqual(df.iloc[0]["start_date"].date(), date(2017, 1, 1))
         self.client.add_single_data_series(mock_data_series[0])
-        df = self.client.get_df(show_revisions=True)
+        df = self.client.get_df(reporting_history=True)
         self.assertEqual(df.iloc[0]["start_date"].date(), date(2017, 1, 1))
         indexed_df = self.client.get_df(index_by_series=True)
         self.assertEqual(indexed_df.iloc[0]["start_date"].date(), date(2017, 1, 1))
         series = zip_selections(indexed_df.iloc[0].name)
         self.assertEqual(series, mock_data_series[0])
 
-    def test_get_df_show_revisions(self):
+    def test_get_df_complete_history(self):
         self.client.add_single_data_series(mock_data_series[0])
-        df = self.client.get_df(show_revisions=True)
-        self.assertEqual(df.iloc[0]["start_date"].date(), date(2017, 1, 1))
-
-    def test_get_df_show_available_date(self):
-        self.client.add_single_data_series(mock_data_series[0])
-        df = self.client.get_df(show_available_date=True)
-        self.assertEqual(df.iloc[0]["available_date"].date(), date(2017, 12, 31))
+        df = self.client.get_df(complete_history=True)
+        self.assertEqual(df.iloc[0]["reporting_date"].date(), date(2018, 1, 1))
+        self.assertEqual(df.iloc[0]["available_date"].date(), date(2018, 1, 31))
 
     def test_add_points_to_df(self):
         self.client.add_points_to_df(None, mock_data_series[0], [])
         self.assertTrue(self.client.get_df().empty)
-        self.assertTrue(self.client.get_df(show_revisions=True).empty)
+        self.assertTrue(self.client.get_df(reporting_history=True).empty)
         self.assertTrue(self.client.get_df(index_by_series=True).empty)
 
         data_points = self.client.get_data_points(**mock_data_series[0])

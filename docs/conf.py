@@ -18,7 +18,7 @@ sys.path.insert(0, os.path.abspath('..'))
 # -- Project information -----------------------------------------------------
 
 project = 'Gro API Client'
-html_logo = '_images/logo.jpg'
+html_logo = '_images/Gro_Full_Logo_Blue_Xsmall.svg'
 copyright = '2017-2021, Gro Intelligence'
 author = 'Gro Intelligence'
 
