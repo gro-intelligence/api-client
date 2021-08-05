@@ -136,7 +136,7 @@ def test_get_data_series(mock_requests_get):
     selection_dict = {'item_id': 123, 'metric_id': 456, 'region_id': 789,
                       'partner_region_id': 161718, 'frequency_id': 101112, 'source_id': 12}
 
-    assert lib.get_data_series(MOCK_TOKEN, MOCK_HOST, **selection_dict) == mock_data['data']
+    assert lib.get_data_series(MOCK_TOKEN, MOCK_HOST, stream=False, chunkSize=None, **selection_dict) == mock_data['data']
 
 
 @mock.patch('requests.get')
@@ -384,7 +384,7 @@ def test_get_ancestor(mock_requests_get, lookup_mocked):
         {'id': 3, 'name': 'parent', 'contains': [1, 2], 'belongsTo': [4], 'definition': 'def3'},
         {'id': 4, 'name': 'ancestor', 'contains': [3], 'belongsTo': [], 'definition': 'def4'}
     ]
-    
+
     assert lib.get_descendant(MOCK_TOKEN, MOCK_HOST, 'metrics', 1, include_details=True) == [
         {'id': 3, 'name': 'parent', 'contains': [1, 2], 'belongsTo': [4], 'definition': 'def3'},
         {'id': 4, 'name': 'ancestor', 'contains': [3], 'belongsTo': [], 'definition': 'def4'}
@@ -412,7 +412,7 @@ def test_get_descendant(mock_requests_get, lookup_mocked):
         {'id': 2, 'name': 'item 2', 'contains': [], 'belongsTo': [3], 'definition': 'def2'},
         {'id': 3, 'name': 'parent', 'contains': [1, 2], 'belongsTo': [4], 'definition': 'def3'}
     ]
-    
+
     assert lib.get_descendant(MOCK_TOKEN, MOCK_HOST, 'metrics', 4, include_details=True) == [
         {'id': 1, 'name': 'metric 1', 'contains': [], 'belongsTo': [3], 'definition': 'def1'},
         {'id': 2, 'name': 'metric 2', 'contains': [], 'belongsTo': [3], 'definition': 'def2'},
@@ -428,7 +428,7 @@ def test_get_descendant(mock_requests_get, lookup_mocked):
         {'id': 3, 'name': 'parent', 'contains': [1, 2], 'belongsTo': [4], 'definition': 'def3'}
     ]
 
-    
+
 
 @mock.patch('groclient.lib.lookup')
 @mock.patch('requests.get')
