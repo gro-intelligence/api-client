@@ -547,7 +547,7 @@ class GroClient(object):
             self.access_token, self.api_host, metric_id, item_id
         )
 
-    def get_data_series(self, stream=False, chunkSize=None, **selection):
+    def get_data_series(self, **selection):
         """Get available data series for the given selections.
 
         https://developers.gro-intelligence.com/data-series-definition.html
