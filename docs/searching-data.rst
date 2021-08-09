@@ -70,19 +70,19 @@ will return a list of items ids for items that are cereals (item_id = 10009): :c
 Get descendants
 ===============
 
-Using the :code:`lookup()` method, you can get an entity's list of direct children (i.e. country→provinces). However, you may want all of the lower level regions that belong to a higher level region (i.e. country→provinces, districts, coordinates, etc.). To do this, there's a helper function which also gives the option of filtering by region level: :meth:`groclient.GroClient.get_descendant_regions`
+Using the :code:`lookup()` method, you can get an entity's list of direct children (i.e. country→provinces). However, you may want all of the lower level regions that belong to a higher level region (i.e. country→provinces, districts, coordinates, etc.). To do this, you can specify the region level when using the :meth:`groclient.GroClient.get_descendant` method:
 
 To look up all descendants of region 1029 (Brazil) that are of level 4 (provinces):
 ::
 
   from groclient.lib import REGION_LEVELS
-  provinces_of_brazil = client.get_descendant_regions(1029, REGION_LEVELS['province'])
+  provinces_of_brazil = client.get_descendant(1029, descendant_level=REGION_LEVELS['province'])
 
 To look up all descendants of region 1029 (Brazil) that are of level 5 (districts):
 ::
 
   from groclient.lib import REGION_LEVELS
-  provinces_of_brazil = client.get_descendant_regions(1029, REGION_LEVELS['district'])
+  provinces_of_brazil = client.get_descendant(1029, descendant_level=REGION_LEVELS['district'])
 
 For more information on region levels, please refer to the `Special properties of regions <./gro-ontology#special-properties-for-regions>`_ section of `Gro Ontology <./gro-ontology>`_
 
