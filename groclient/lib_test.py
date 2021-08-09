@@ -136,7 +136,7 @@ def test_get_data_series(mock_requests_get):
     selection_dict = {'item_id': 123, 'metric_id': 456, 'region_id': 789,
                       'partner_region_id': 161718, 'frequency_id': 101112, 'source_id': 12}
 
-    assert lib.get_data_series(MOCK_TOKEN, MOCK_HOST, stream=False, chunkSize=None, **selection_dict) == mock_data['data']
+    assert lib.get_data_series(MOCK_TOKEN, MOCK_HOST, **selection_dict) == mock_data['data']
 
 
 @mock.patch('requests.get')
