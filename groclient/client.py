@@ -579,13 +579,14 @@ class GroClient(object):
         """
         return lib.get_data_series(self.access_token, self.api_host, **selection)
 
-    def stream_data_series(self, chunkSize=None, **selection):
-        """Get available data series for the given selections.
-
-        https://developers.gro-intelligence.com/data-series-definition.html
+    def stream_data_series(self, chunk_size=10000, **selection):
+        """Retrieve available data series for the given selections.
+        Similar to :meth:`~.get_data_series`, but API will stream data in chunk of given size
 
         Parameters
         ----------
+        chunk_size : integer, optional
+            Number of data series to be returned in each chunk. Defaults to 10000
         metric_id : integer, optional
         item_id : integer, optional
         region_id : integer, optional
@@ -593,7 +594,7 @@ class GroClient(object):
         source_id : integer, optional
         frequency_id : integer, optional
 
-        Returns
+        Yields
         -------
         list of dicts
 
@@ -609,7 +610,7 @@ class GroClient(object):
                  }, { ... }, ... ]
 
         """
-        return lib.stream_data_series(self.access_token, self.api_host, chunkSize, **selection)
+        return lib.stream_data_series(self.access_token, self.api_host, chunk_size, **selection)
 
     def search(self, entity_type, search_terms):
         """Search for the given search term. Better matches appear first.
