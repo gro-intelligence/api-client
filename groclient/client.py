@@ -577,7 +577,39 @@ class GroClient(object):
                  }, { ... }, ... ]
 
         """
-        return lib.get_data_series(self.access_token, self.api_host, stream, chunkSize, **selection)
+        return lib.get_data_series(self.access_token, self.api_host, **selection)
+
+    def stream_data_series(self, chunkSize=None, **selection):
+        """Get available data series for the given selections.
+
+        https://developers.gro-intelligence.com/data-series-definition.html
+
+        Parameters
+        ----------
+        metric_id : integer, optional
+        item_id : integer, optional
+        region_id : integer, optional
+        partner_region_id : integer, optional
+        source_id : integer, optional
+        frequency_id : integer, optional
+
+        Returns
+        -------
+        list of dicts
+
+            Example::
+
+                [{ 'metric_id': 2020032, 'metric_name': 'Seed Use',
+                   'item_id': 274, 'item_name': 'Corn',
+                   'region_id': 1215, 'region_name': 'United States',
+                   'source_id': 24, 'source_name': 'USDA FEEDGRAINS',
+                   'frequency_id': 7,
+                   'start_date': '1975-03-01T00:00:00.000Z',
+                   'end_date': '2018-05-31T00:00:00.000Z'
+                 }, { ... }, ... ]
+
+        """
+        return lib.stream_data_series(self.access_token, self.api_host, chunkSize, **selection)
 
     def search(self, entity_type, search_terms):
         """Search for the given search term. Better matches appear first.
@@ -1015,7 +1047,7 @@ class GroClient(object):
             reporting_history : boolean, optional
                 False by default. If true, will return all reporting history from the source.
             complete_history : boolean, optional
-                False by default. If true, will return complete history of data points for the selection. This will include 
+                False by default. If true, will return complete history of data points for the selection. This will include
                 the reporting history from the source and revisions Gro has captured that may not have been released with an official reporting_date.
             index_by_series : boolean, optional
                If set, the dataframe is indexed by series. See https://developers.gro-intelligence.com/data-series-definition.html
@@ -1237,7 +1269,7 @@ class GroClient(object):
         reporting_history : boolean, optional
             False by default. If true, will return all reporting history from the source.
         complete_history : boolean, optional
-            False by default. If true, will return complete history of data points for the selection. This will include 
+            False by default. If true, will return complete history of data points for the selection. This will include
             the reporting history from the source and revisions Gro has captured that may not have been released with an official reporting_date.
         insert_null : boolean, optional
             False by default. If True, will include a data point with a None value for each period

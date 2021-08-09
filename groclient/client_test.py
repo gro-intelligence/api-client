@@ -40,7 +40,7 @@ def mock_get_allowed_units(access_token, api_host, metric_id, item_id):
     return [unit["id"] for unit in mock_entities["units"].values()]
 
 
-def mock_get_data_series(access_token, api_host, stream=False, chunkSize=None, **selection):
+def mock_get_data_series(access_token, api_host, **selection):
     return [dict(data_series) for data_series in mock_data_series]
 
 

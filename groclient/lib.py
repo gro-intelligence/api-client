@@ -371,29 +371,37 @@ def get_data_call_params(**selection):
     return params
 
 
-def get_data_series(access_token, api_host, stream=False, chunkSize=None, **selection):
+def get_data_series(access_token, api_host, **selection):
     logger = get_default_logger()
-    url = '/'.join(['https:', '', api_host, ('v2/'+ ('stream/' if stream else '') + 'data_series/list')])
+    url = '/'.join(['https:', '', api_host, 'v2/data_series/list'])
+    headers = {'authorization': 'Bearer ' + access_token}
+    params = get_params_from_selection(**selection)
+    resp = get_data(url, headers, params)
+    try:
+        response = resp.json()['data']
+        if any((series.get('metadata', {}).get('includes_historical_region', False))
+                for series in response):
+            logger.warning('Data series have some historical regions, '
+                           'see https://developers.gro-intelligence.com/faq.html')
+        return response
+    except KeyError:
+        raise Exception(resp.text)
+
+def stream_data_series(access_token, api_host, chunkSize=None, **selection):
+    logger = get_default_logger()
+    url = '/'.join(['https:', '', api_host, 'v2/stream/data_series/list'])
     headers = {'authorization': 'Bearer ' + access_token}
     params = get_params_from_selection(**selection)
     if type(chunkSize) == int and chunkSize>1:
         params['chunkSize'] = chunkSize
-    resp = get_data(url, headers, params, logger, stream)
+    resp = get_data(url, headers, params, logger, True)
     try:
-        if not stream:
-            response = resp.json()['data']
-            if any((series.get('metadata', {}).get('includes_historical_region', False))
-                    for series in response):
-                logger.warning('Data series have some historical regions, '
-                            'see https://developers.gro-intelligence.com/faq.html')
-            return response
-        else:
-            # TODO:
-            # - error catching
-            # - check historical regions
-            for line in resp.iter_lines(decode_unicode=True):
-                if line:
-                    yield json.loads(line)
+        # TODO:
+        # - error catching
+        # - check historical regions
+        for line in resp.iter_lines(decode_unicode=True):
+            if line:
+                yield json.loads(line)
     except KeyError:
         raise Exception(resp.text)
 
