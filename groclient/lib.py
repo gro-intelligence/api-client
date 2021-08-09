@@ -396,12 +396,14 @@ def stream_data_series(access_token, api_host, chunk_size=None, **selection):
         params['chunkSize'] = chunk_size
     resp = get_data(url, headers, params, logger, True)
     try:
-        # TODO:
-        # - error catching
-        # - check historical regions
         for line in resp.iter_lines(decode_unicode=True):
             if line:
-                yield json.loads(line)
+                current_ds_list = json.loads(line)
+                if any((series.get('metadata', {}).get('includes_historical_region', False))
+                        for series in current_ds_list):
+                    logger.warning('Data series have some historical regions, '
+                                'see https://developers.gro-intelligence.com/faq.html')
+                yield current_ds_list
     except KeyError:
         raise Exception(resp.text)
 
