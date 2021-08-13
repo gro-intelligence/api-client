@@ -769,6 +769,39 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">lib</span><span class="o">.</span><span class="n">get_data_series</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_host</span><span class="p">,</span> <span class="o">**</span><span class="n">selection</span><span class="p">)</span></div>
 
+    <span class="k">def</span> <span class="nf">stream_data_series</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">chunk_size</span><span class="o">=</span><span class="mi">10000</span><span class="p">,</span> <span class="o">**</span><span class="n">selection</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Retrieve available data series for the given selections.</span>
+<span class="sd">        Similar to :meth:`~.get_data_series`, but API will stream data in chunk of given size</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        chunk_size : integer, optional</span>
+<span class="sd">            Number of data series to be returned in each chunk. Defaults to 10000</span>
+<span class="sd">        metric_id : integer, optional</span>
+<span class="sd">        item_id : integer, optional</span>
+<span class="sd">        region_id : integer, optional</span>
+<span class="sd">        partner_region_id : integer, optional</span>
+<span class="sd">        source_id : integer, optional</span>
+<span class="sd">        frequency_id : integer, optional</span>
+
+<span class="sd">        Yields</span>
+<span class="sd">        -------</span>
+<span class="sd">        list of dicts</span>
+
+<span class="sd">            Example::</span>
+
+<span class="sd">                [{ &#39;metric_id&#39;: 2020032, &#39;metric_name&#39;: &#39;Seed Use&#39;,</span>
+<span class="sd">                   &#39;item_id&#39;: 274, &#39;item_name&#39;: &#39;Corn&#39;,</span>
+<span class="sd">                   &#39;region_id&#39;: 1215, &#39;region_name&#39;: &#39;United States&#39;,</span>
+<span class="sd">                   &#39;source_id&#39;: 24, &#39;source_name&#39;: &#39;USDA FEEDGRAINS&#39;,</span>
+<span class="sd">                   &#39;frequency_id&#39;: 7,</span>
+<span class="sd">                   &#39;start_date&#39;: &#39;1975-03-01T00:00:00.000Z&#39;,</span>
+<span class="sd">                   &#39;end_date&#39;: &#39;2018-05-31T00:00:00.000Z&#39;</span>
+<span class="sd">                 }, { ... }, ... ]</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">lib</span><span class="o">.</span><span class="n">stream_data_series</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_host</span><span class="p">,</span> <span class="n">chunk_size</span><span class="p">,</span> <span class="o">**</span><span class="n">selection</span><span class="p">)</span>
+
 <div class="viewcode-block" id="GroClient.search"><a class="viewcode-back" href="../../api.html#groclient.GroClient.search">[docs]</a>    <span class="k">def</span> <span class="nf">search</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">,</span> <span class="n">search_terms</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Search for the given search term. Better matches appear first.</span>
 
@@ -1247,7 +1280,7 @@
 <span class="sd">            reporting_history : boolean, optional</span>
 <span class="sd">                False by default. If true, will return all reporting history from the source.</span>
 <span class="sd">            complete_history : boolean, optional</span>
-<span class="sd">                False by default. If true, will return complete history of data points for the selection. This will include </span>
+<span class="sd">                False by default. If true, will return complete history of data points for the selection. This will include</span>
 <span class="sd">                the reporting history from the source and revisions Gro has captured that may not have been released with an official reporting_date.</span>
 <span class="sd">            index_by_series : boolean, optional</span>
 <span class="sd">               If set, the dataframe is indexed by series. See https://developers.gro-intelligence.com/data-series-definition.html</span>
@@ -1469,7 +1502,7 @@
 <span class="sd">        reporting_history : boolean, optional</span>
 <span class="sd">            False by default. If true, will return all reporting history from the source.</span>
 <span class="sd">        complete_history : boolean, optional</span>
-<span class="sd">            False by default. If true, will return complete history of data points for the selection. This will include </span>
+<span class="sd">            False by default. If true, will return complete history of data points for the selection. This will include</span>
 <span class="sd">            the reporting history from the source and revisions Gro has captured that may not have been released with an official reporting_date.</span>
 <span class="sd">        insert_null : boolean, optional</span>
 <span class="sd">            False by default. If True, will include a data point with a None value for each period</span>
