@@ -160,7 +160,7 @@ def convert_value(value, from_convert_factor, to_convert_factor):
     ) / to_convert_factor.get("factor")
 
 
-def get_data(url, headers, params=None, logger=None):
+def get_data(url, headers, params=None, logger=None, stream=False):
     """General 'make api request' function.
 
     Assigns headers and builds in retries and logging.
@@ -179,10 +179,8 @@ def get_data(url, headers, params=None, logger=None):
     """
     base_log_record = dict(route=url, params=params)
     retry_count = 0
-
     # append version info
     headers.update(get_version_info())
-
     if not logger:
         logger = get_default_logger()
         logger.debug(url)
@@ -190,7 +188,7 @@ def get_data(url, headers, params=None, logger=None):
     while retry_count <= cfg.MAX_RETRIES:
         start_time = time.time()
         try:
-            response = requests.get(url, params=params, headers=headers, timeout=None)
+            response = requests.get(url, params=params, headers=headers, timeout=None, stream=stream)
         except Exception as e:
             response = e
         elapsed_time = time.time() - start_time
@@ -224,7 +222,6 @@ def get_data(url, headers, params=None, logger=None):
                 time.sleep(2 ** retry_count)
         retry_count += 1
     raise APIError(response, retry_count, url, params)
-
 
 @memoize(maxsize=None)
 def get_allowed_units(access_token, api_host, metric_id, item_id):
@@ -387,6 +384,26 @@ def get_data_series(access_token, api_host, **selection):
             logger.warning('Data series have some historical regions, '
                            'see https://developers.gro-intelligence.com/faq.html')
         return response
+    except KeyError:
+        raise Exception(resp.text)
+
+def stream_data_series(access_token, api_host, chunk_size=None, **selection):
+    logger = get_default_logger()
+    url = '/'.join(['https:', '', api_host, 'v2/stream/data_series/list'])
+    headers = {'authorization': 'Bearer ' + access_token}
+    params = get_params_from_selection(**selection)
+    if type(chunk_size) == int and chunk_size>1:
+        params['chunkSize'] = chunk_size
+    resp = get_data(url, headers, params, logger, True)
+    try:
+        for line in resp.iter_lines(decode_unicode=True):
+            if line:
+                current_ds_list = json.loads(line)
+                if any((series.get('metadata', {}).get('includes_historical_region', False))
+                        for series in current_ds_list):
+                    logger.warning('Data series have some historical regions, '
+                                'see https://developers.gro-intelligence.com/faq.html')
+                yield current_ds_list
     except KeyError:
         raise Exception(resp.text)
 
