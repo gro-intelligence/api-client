@@ -542,9 +542,16 @@ def list_of_series_to_single_series(series_list, add_belongs_to=False, include_h
 
 
 def get_data_points(access_token, api_host, **selection):
+    logger = get_default_logger()
     headers = {'authorization': 'Bearer ' + access_token}
     url = '/'.join(['https:', '', api_host, 'v2/data'])
     params = get_data_call_params(**selection)
+    required_params = [groclient.utils.str_snake_to_camel(type_id) for type_id in DATA_SERIES_UNIQUE_TYPES_ID if type_id != 'partner_region_id']
+    missing_params = list(required_params - params.keys())
+    if len(missing_params):
+        message = 'API request cannot be processed because {} not specified.'.format(missing_params[0] + ' is' if len(missing_params) == 1 else ', '.join(missing_params[:-1]) + ' and ' + missing_params[-1] + ' are')
+        logger.error(message)
+        raise ValueError(message)
     resp = get_data(url, headers, params)
     include_historical = selection.get('include_historical', True)
     return list_of_series_to_single_series(resp.json(), False, include_historical)
