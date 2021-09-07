@@ -15,7 +15,7 @@ except ImportError:
 
 from groclient import cfg, lib
 from groclient.constants import DATA_SERIES_UNIQUE_TYPES_ID, ENTITY_KEY_TO_TYPE
-from groclient.utils import intersect, zip_selections, dict_unnest
+from groclient.utils import intersect, zip_selections, dict_unnest, str_snake_to_camel
 from groclient.lib import APIError
 
 import pandas
@@ -313,6 +313,13 @@ class GroClient(object):
         headers = {"authorization": "Bearer " + self.access_token}
         url = "/".join(["https:", "", self.api_host, "v2/data"])
         params = lib.get_data_call_params(**selection)
+        required_params = [str_snake_to_camel(type_id) for type_id in DATA_SERIES_UNIQUE_TYPES_ID if type_id != 'partner_region_id']
+        missing_params = list(required_params - params.keys())
+        if len(missing_params):
+            message = 'API request cannot be processed because {} not specified.'.format(missing_params[0] + ' is' if len(missing_params) == 1 else ', '.join(missing_params[:-1]) + ' and ' + missing_params[-1] + ' are')
+            self._logger.error(message)
+            raise ValueError(message)
+
         try:
             list_of_series_points = yield self.async_get_data(url, headers, params)
             include_historical = selection.get("include_historical", True)
