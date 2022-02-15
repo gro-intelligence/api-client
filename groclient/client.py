@@ -885,7 +885,7 @@ class GroClient(object):
         descendant_level : integer, optional
             The region level of interest. See REGION_LEVELS constant. This should only be specified
             if the `entity_type` is 'regions'. If provided along with `distance`, `distance` will
-            take precedence. If not provided, and `distance` not provided, get all ancestors.
+            take precedence. If not provided, and `distance` not provided, get all descendants.
         include_historical : boolean, optional
             True by default. If False is specified, regions that only exist in historical data
             (e.g. the Soviet Union) will be excluded.
