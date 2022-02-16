@@ -675,8 +675,7 @@ def get_descendant(access_token, api_host, entity_type, entity_id, distance=None
         else:
             params['distance'] = -1
 
-    if not include_historical:
-        params['includeHistorical'] = 'false'
+    params['includeHistorical'] = include_historical
 
     resp = get_data(url, headers, params)
     descendant_entity_ids = resp.json()['data'][str(entity_id)]
