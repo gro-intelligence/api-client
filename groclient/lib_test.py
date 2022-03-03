@@ -454,18 +454,20 @@ def test_get_descendant(mock_requests_get, lookup_mocked):
         {'id': 2, 'name': 'region 2', 'contains': [], 'belongsTo': [3], 'historical': False}
     ]
 
-    assert lib.get_descendant(MOCK_TOKEN, MOCK_HOST, 'regions', 3, include_historical=False) == [
-        {'id': 2, 'name': 'region 2', 'contains': [], 'belongsTo': [3], 'historical': False}
-    ]
-
     assert lib.get_descendant(MOCK_TOKEN, MOCK_HOST, 'regions', 3,
                               include_historical=True, include_details=True) == [
         {'id': 1, 'name': 'region 1', 'contains': [], 'belongsTo': [3], 'historical': True},
         {'id': 2, 'name': 'region 2', 'contains': [], 'belongsTo': [3], 'historical': False}
     ]
 
+    mock_requests_get.return_value.json.return_value = {'data': {'3': [2]}}
     assert lib.get_descendant(MOCK_TOKEN, MOCK_HOST, 'regions', 3, include_historical=False,
                               include_details=False) == [{'id': 2}]
+
+    assert lib.get_descendant(MOCK_TOKEN, MOCK_HOST, 'regions', 3, include_historical=False,
+                              include_details=True) == [
+        {'id': 2, 'name': 'region 2', 'contains': [], 'belongsTo': [3], 'historical': False}
+    ]
 
 
 @mock.patch('requests.get')

@@ -675,20 +675,15 @@ def get_descendant(access_token, api_host, entity_type, entity_id, distance=None
         else:
             params['distance'] = -1
 
+    params['includeHistorical'] = include_historical
+
     resp = get_data(url, headers, params)
     descendant_entity_ids = resp.json()['data'][str(entity_id)]
 
     # Filter out regions with the 'historical' flag set to true
-    if not include_historical or include_details:
+    if include_details:
         entity_details = lookup(access_token, api_host, entity_type, descendant_entity_ids)
-
-        if not include_historical:
-            descendant_entity_ids = [entity['id'] for entity in entity_details.values()
-                                     if not entity['historical']]
-
-        if include_details:
-            return [entity_details[str(child_entity_id)] for child_entity_id in
-                    descendant_entity_ids]
+        return [entity_details[str(child_entity_id)] for child_entity_id in descendant_entity_ids]
 
     return [{'id': descendant_entity_id} for descendant_entity_id in descendant_entity_ids]
 
