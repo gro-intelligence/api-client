@@ -8,7 +8,7 @@ Modeling Resources
 Gro Crop Cover
 ==============
 
-Gro's proprietary high-resolution crop covers are currently used in the `Gro yield models <https://gro-intelligence.com/>`_. These have proven very successful i.e. more accurate for yield modeling than the best available alternatives. Gro does not plan on developing a yield model for every crop or region in the world, so our models will always be limited to the regions and crops where we can help push the envelope. Users can access our crop covers in the `Gro web app <https://app.gro-intelligence.com/displays/jdOQrvERw>`_ and the API, or from the download links below. In the web app and API, users can interact with detailed cropland covers that indicate the intensity of crop cover for a particular pixel. Below users can download .tif files of low and high-confidence crop covers which represent, as a binary value, whether a crop is growing in a specific pixel.
+Gro's proprietary high-resolution crop covers are currently used in the `Gro yield models <https://gro-intelligence.com/platform/models-and-applications>`_. These have proven very successful i.e. more accurate for yield modeling than the best available alternatives. Gro does not plan on developing a yield model for every crop or region in the world, so our models will always be limited to the regions and crops where we can help push the envelope. Users can access our crop covers in the `Gro web app <https://app.gro-intelligence.com/displays/jdOQrvERw>`_ and the API, or from the download links below. In the web app and API, users can interact with detailed cropland covers that indicate the intensity of crop cover for a particular pixel. Below users can download .tif files of low and high-confidence crop covers which represent, as a binary value, whether a crop is growing in a specific pixel.
 
 Methodology
 -----------
@@ -148,7 +148,7 @@ A low-confidence cover and a high-confidence cover were made from the yearly cro
 Gro Yield Model Backtest Data
 =============================
 
-`Gro yield models <https://gro-intelligence.com/gro-models>`_ provide live forecasts for crops in different regions around the world. To supplement our in-depth papers on the models, we provide backtesting data for model evaluation and comparisons.
+`Gro yield models <https://gro-intelligence.com/platform/models-and-applications>`_ provide live forecasts for crops in different regions around the world. To supplement our in-depth papers on the models, we provide backtesting data for model evaluation and comparisons.
 
 File Formats
 ------------
