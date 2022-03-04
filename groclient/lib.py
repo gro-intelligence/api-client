@@ -667,7 +667,6 @@ def get_descendant(access_token, api_host, entity_type, entity_id, distance=None
     url = '/'.join(['https:', '', api_host, 'v2/{}/contains'.format(entity_type)])
     headers = {'authorization': 'Bearer ' + access_token}
     params = {'ids': [entity_id]}
-
     if distance:
         params['distance'] = distance
     else:
@@ -675,7 +674,7 @@ def get_descendant(access_token, api_host, entity_type, entity_id, distance=None
             params['level'] = descendant_level
         else:
             params['distance'] = -1
-
+# comment
     params['includeHistorical'] = include_historical
 
     resp = get_data(url, headers, params)
