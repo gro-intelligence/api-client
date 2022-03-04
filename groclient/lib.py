@@ -674,7 +674,7 @@ def get_descendant(access_token, api_host, entity_type, entity_id, distance=None
             params['level'] = descendant_level
         else:
             params['distance'] = -1
-# comment
+# change comment
     params['includeHistorical'] = include_historical
 
     resp = get_data(url, headers, params)
