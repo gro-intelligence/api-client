@@ -1604,6 +1604,43 @@ class GroClient(object):
             )
             return result["id"]
 
+    def weight_area(self, series_name, weights):
+        """Weight the specified series_name (supported list here .
+
+        Given one or more selections, return entities combinations that have
+        data for the given selections.
+
+        Parameters
+        ----------
+        selected_entities : dict
+
+            Example::
+
+                { 'metric_id': 123, 'item_id': 456, 'source_id': 7 }
+
+            Keys may include: metric_id, item_id, region_id, partner_region_id,
+            source_id, frequency_id
+
+        Returns
+        -------
+        list of dicts
+
+            Example::
+
+                [ { 'metric_id': 11078, 'metric_name': 'Export Value (currency)',
+                    'item_id': 274, 'item_name': 'Corn',
+                    'region_id': 1215, 'region_name': 'United States',
+                    'source_id': 15, 'source_name': 'USDA GATS' },
+                  { ... },
+                ... ]
+
+        """
+
+
+        return lib.weight_area(
+            self.access_token, self.api_host, series_name, weights
+            ) 
+
     def get_provinces(self, country_name):
         """Given the name of a country, find its provinces.
 

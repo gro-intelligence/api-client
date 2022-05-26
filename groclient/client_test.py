@@ -62,6 +62,8 @@ def mock_get_geo_centre(access_token, api_host, region_id):
          {"centre": [45.7228, -112.996], "regionId": 1215, "regionName": "United States"}
     ]
 
+def mock_weight_area(access_token, api_host, series_name, weights):
+    return {'2000-02-25': 0.217, '2000-03-04': 0.217, '2000-03-12': 0.221, '2000-03-20': 0.228, '2000-03-28': 0.232, '2000-04-05': 0.238, '2000-04-13': 0.238, '2000-04-21': 0.255, '2000-04-29': 0.273, '2000-05-07': 0.286, '2000-05-15': 0.349}
 
 def mock_get_geojson(access_token, api_host, region_id, zoom_level):
     if zoom_level < 7:
@@ -253,6 +255,7 @@ def mock_get_data_points(access_token, api_host, **selections):
     MagicMock(side_effect=mock_get_available_timefrequency),
 )
 @patch("groclient.lib.get_top", MagicMock(side_effect=mock_get_top))
+@patch("groclient.lib.weight_area", MagicMock(side_effect=mock_weight_area))
 @patch("groclient.lib.get_data_points", MagicMock(side_effect=mock_get_data_points))
 class GroClientTests(TestCase):
     def setUp(self):
@@ -329,6 +332,11 @@ class GroClientTests(TestCase):
         self.assertTrue("type" in geojson["geometries"][0])
         self.assertTrue("coordinates" in geojson["geometries"][0])
         self.assertTrue(geojson["geometries"][0]['coordinates'][0][0][0] == [-38, -4])
+
+    def test_weight_area(self):
+        weighted = self.client.weight_area('NDVI_8day', {137599 : 1})
+        self.assertTrue(type(weighted)==dict)
+        self.assertTrue(weighted == {'2000-02-25': 0.217, '2000-03-04': 0.217, '2000-03-12': 0.221, '2000-03-20': 0.228, '2000-03-28': 0.232, '2000-04-05': 0.238, '2000-04-13': 0.238, '2000-04-21': 0.255, '2000-04-29': 0.273, '2000-05-07': 0.286, '2000-05-15': 0.349})
 
     def test_get_ancestor(self):
         self.assertTrue("name" in self.client.get_descendant('metrics', 119)[0])

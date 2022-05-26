@@ -48,7 +48,7 @@ def initialize_requests_mocker_and_get_mock_data(mock_requests_get, mock_data={
     return mock_data
 
 
-@mock.patch('requests.get')
+@mock.patch('requests.request')
 def test_get_available(mock_requests_get):
     mock_data = initialize_requests_mocker_and_get_mock_data(mock_requests_get)
 
@@ -59,7 +59,7 @@ def test_get_available(mock_requests_get):
         assert lib.get_available(MOCK_TOKEN, MOCK_HOST, ent_type) == mock_data['data']
 
 
-@mock.patch('requests.get')
+@mock.patch('requests.request')
 def test_list_available(mock_requests_get):
     # Tests the base functionality
     mock_data = initialize_requests_mocker_and_get_mock_data(mock_requests_get)
@@ -69,7 +69,7 @@ def test_list_available(mock_requests_get):
     assert lib.list_available(MOCK_TOKEN, MOCK_HOST, entities) == mock_data['data']
 
 
-@mock.patch('requests.get')
+@mock.patch('requests.request')
 def test_list_available_snake_to_camel(mock_requests_get):
     # Tests that the camel-ing fix is working properly.
     mock_data = initialize_requests_mocker_and_get_mock_data(mock_requests_get)
@@ -77,7 +77,7 @@ def test_list_available_snake_to_camel(mock_requests_get):
     assert lib.list_available(MOCK_TOKEN, MOCK_HOST, entities) == mock_data['data']
 
 
-@mock.patch('requests.get')
+@mock.patch('requests.request')
 def test_single_lookup(mock_requests_get):
     api_response = {
         'data': {
@@ -94,7 +94,7 @@ def test_single_lookup(mock_requests_get):
     assert lib.lookup(MOCK_TOKEN, MOCK_HOST, 'items', 12345) == expected_return
 
 
-@mock.patch('requests.get')
+@mock.patch('requests.request')
 def test_multiple_lookups(mock_requests_get):
     api_response = {
         'data': {
@@ -110,7 +110,7 @@ def test_multiple_lookups(mock_requests_get):
     assert lib.lookup(MOCK_TOKEN, MOCK_HOST, 'items', [12345, 67890]) == expected_return
 
 
-@mock.patch('requests.get')
+@mock.patch('requests.request')
 def test_lookup_with_numpy(mock_requests_get):
     api_response = {
         'data': {
@@ -129,7 +129,7 @@ def test_lookup_with_numpy(mock_requests_get):
                       np.array([12345])[0]) == expected_return['12345']
 
 
-@mock.patch('requests.get')
+@mock.patch('requests.request')
 def test_get_data_series(mock_requests_get):
     # Test general case
     mock_data = initialize_requests_mocker_and_get_mock_data(mock_requests_get)
@@ -139,7 +139,7 @@ def test_get_data_series(mock_requests_get):
     assert lib.get_data_series(MOCK_TOKEN, MOCK_HOST, **selection_dict) == mock_data['data']
 
 
-@mock.patch('requests.get')
+@mock.patch('requests.request')
 def test_get_data_points(mock_requests_get):
     list_of_series_format_data = [{
         'series': {},
@@ -278,7 +278,7 @@ def test_list_of_series_to_single_series():
     assert lib.list_of_series_to_single_series('test input') == 'test input'
 
 
-@mock.patch('requests.get')
+@mock.patch('requests.request')
 def test_search(mock_requests_get):
     mock_data = ['obj1', 'obj2', 'obj3']
     mock_data = initialize_requests_mocker_and_get_mock_data(mock_requests_get, mock_data=mock_data)
@@ -303,7 +303,7 @@ def test_search_and_lookup(search_mocked, lookup_mocked):
 
 
 @mock.patch('groclient.lib.lookup')
-@mock.patch('requests.get')
+@mock.patch('requests.request')
 def test_lookup_belongs(mock_requests_get, lookup_mocked):
     mock_requests_get.return_value.json.return_value = {'data': {'1': [3]}}
     mock_requests_get.return_value.status_code = 200
@@ -314,7 +314,7 @@ def test_lookup_belongs(mock_requests_get, lookup_mocked):
     assert lookup_belongs_result == [LOOKUP_MAP['regions']['3']]
 
 
-@mock.patch('requests.get')
+@mock.patch('requests.request')
 def test_get_source_ranking(mock_requests_get):
     mock_return = [60, 14, 2, 1]
     mock_requests_get.return_value.json.return_value = mock_return
@@ -326,7 +326,7 @@ def test_get_source_ranking(mock_requests_get):
     assert len(ranked_sources_list) == 4
 
 
-@mock.patch('requests.get')
+@mock.patch('requests.request')
 def test_rank_series_by_source(mock_requests_get):
     # for each series selection, mock ranking of 3 source ids
     mock_return = [11, 123, 33]
@@ -374,7 +374,7 @@ def lookup_mock(MOCK_TOKEN, MOCK_HOST, entity_type, entity_ids):
 
 
 @mock.patch('groclient.lib.lookup')
-@mock.patch('requests.get')
+@mock.patch('requests.request')
 def test_get_ancestor(mock_requests_get, lookup_mocked):
     mock_requests_get.return_value.json.return_value = {'data': {'1': [3, 4]}}
     mock_requests_get.return_value.status_code = 200
@@ -407,7 +407,7 @@ def test_get_ancestor(mock_requests_get, lookup_mocked):
 
 
 @mock.patch('groclient.lib.lookup')
-@mock.patch('requests.get')
+@mock.patch('requests.request')
 def test_get_descendant(mock_requests_get, lookup_mocked):
     mock_requests_get.return_value.json.return_value = {'data': {'4': [1, 2, 3]}}
     mock_requests_get.return_value.status_code = 200
@@ -470,7 +470,7 @@ def test_get_descendant(mock_requests_get, lookup_mocked):
     ]
 
 
-@mock.patch('requests.get')
+@mock.patch('requests.request')
 def test_get_top(mock_requests_get):
     mock_response = [
         {'itemId': 274, 'value': 13175206696, 'unitId': 14},
@@ -483,7 +483,7 @@ def test_get_top(mock_requests_get):
     assert lib.get_top(MOCK_TOKEN, MOCK_HOST, 'items', num_results=3, metric_id=14) == mock_response
 
 
-@mock.patch('requests.get')
+@mock.patch('requests.request')
 def test_get_geo_centre(mock_requests_get):
     US_data = {
         "regionId": 1215,
@@ -499,8 +499,17 @@ def test_get_geo_centre(mock_requests_get):
     initialize_requests_mocker_and_get_mock_data(mock_requests_get, api_response)
     assert lib.get_geo_centre(MOCK_TOKEN, MOCK_HOST, 1215) == [US_data]
 
+@mock.patch('requests.request')
+def test_weight_area(mock_requests_get):
+    api_response = {'2000-02-25': 0.217, '2000-03-04': 0.217, '2000-03-12': 0.221, '2000-03-20': 0.228, '2000-03-28': 0.232, '2000-04-05': 0.238, '2000-04-13': 0.238, '2000-04-21': 0.255, '2000-04-29': 0.273, '2000-05-07': 0.286, '2000-05-15': 0.349 }
 
-@mock.patch('requests.get')
+    expected_return = {'2000-02-25': 0.217, '2000-03-04': 0.217, '2000-03-12': 0.221, '2000-03-20': 0.228, '2000-03-28': 0.232, '2000-04-05': 0.238, '2000-04-13': 0.238, '2000-04-21': 0.255, '2000-04-29': 0.273, '2000-05-07': 0.286, '2000-05-15': 0.349 }
+ 
+    initialize_requests_mocker_and_get_mock_data(mock_requests_get, api_response)
+    assert lib.weight_area(MOCK_TOKEN, MOCK_HOST, 'NDVI_8day', {137599 : 1}) == expected_return
+
+
+@mock.patch('requests.request')
 def test_get_geo_jsons(mock_requests_get):
     api_response = {
         'data': [{

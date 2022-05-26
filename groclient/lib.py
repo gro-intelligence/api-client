@@ -160,7 +160,7 @@ def convert_value(value, from_convert_factor, to_convert_factor):
     ) / to_convert_factor.get("factor")
 
 
-def get_data(url, headers, params=None, logger=None, stream=False):
+def get_data(url, headers, params=None, logger=None, stream=False, request_method="get", request_data=None):
     """General 'make api request' function.
 
     Assigns headers and builds in retries and logging.
@@ -188,7 +188,7 @@ def get_data(url, headers, params=None, logger=None, stream=False):
     while retry_count <= cfg.MAX_RETRIES:
         start_time = time.time()
         try:
-            response = requests.get(url, params=params, headers=headers, timeout=None, stream=stream)
+            response = requests.request(method = request_method, url = url, params=params, headers=headers, timeout=None, stream=stream, data = request_data)
         except Exception as e:
             response = e
         elapsed_time = time.time() - start_time
@@ -386,6 +386,13 @@ def get_data_series(access_token, api_host, **selection):
         return response
     except KeyError:
         raise Exception(resp.text)
+
+def weight_area(access_token, api_host, series_name, weights):
+    url = '/'.join(['https:', '', api_host, 'area-weighting'])
+    headers = {'authorization': 'Bearer ' + access_token}
+    params = {'seriesName' : series_name}
+    resp = get_data(url, headers, params = params, request_method = "post", request_data = {'weights' : json.dumps(weights)})
+    return resp.json()
 
 def stream_data_series(access_token, api_host, chunk_size=None, **selection):
     logger = get_default_logger()
