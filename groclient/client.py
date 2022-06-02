@@ -1605,35 +1605,35 @@ class GroClient(object):
             return result["id"]
 
     def weight_area(self, series_name, weights):
-        """Weight the specified series_name (supported list here .
+        """Weight the specified series_name by the provided weights.
 
-        Given one or more selections, return entities combinations that have
-        data for the given selections.
+        Returns a dictionary mapping dates to weighted values.
 
         Parameters
         ----------
-        selected_entities : dict
+        series_name : str
+            Should be a tag identifying the desired Gro data series
 
             Example::
 
-                { 'metric_id': 123, 'item_id': 456, 'source_id': 7 }
+                NDVI_8day
 
-            Keys may include: metric_id, item_id, region_id, partner_region_id,
-            source_id, frequency_id
+        weights : dict
+            Should be a dict mapping Gro district IDs to the desired weights for each district. Weights should be non-zero integers or floats.
 
+            Example::
+
+                {137599: 1, 137619: 3, 137547: 0.5}
+
+       
         Returns
         -------
-        list of dicts
+        dict
 
             Example::
 
-                [ { 'metric_id': 11078, 'metric_name': 'Export Value (currency)',
-                    'item_id': 274, 'item_name': 'Corn',
-                    'region_id': 1215, 'region_name': 'United States',
-                    'source_id': 15, 'source_name': 'USDA GATS' },
-                  { ... },
-                ... ]
-
+                {'2000-02-25': 0.217, '2000-03-04': 0.217, '2000-03-12': 0.221, '2000-03-20': 0.228, '2000-03-28': 0.232...}
+        
         """
 
 
