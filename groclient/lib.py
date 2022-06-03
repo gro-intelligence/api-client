@@ -391,7 +391,7 @@ def weight_area(access_token, api_host, series_name, weights):
     url = '/'.join(['https:', '', api_host, 'area-weighting'])
     headers = {'authorization': 'Bearer ' + access_token}
     params = {'seriesName' : series_name}
-    resp = get_data(url, headers, params = params, request_method = "post", request_data = {'weights' : json.dumps(weights)})
+    resp = get_data(url, headers, params=params, request_method = "post", request_data = {'weights' : json.dumps(weights)})
     return resp.json()
 
 def stream_data_series(access_token, api_host, chunk_size=None, **selection):
