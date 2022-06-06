@@ -1800,7 +1800,7 @@
             <span class="p">)</span>
             <span class="k">return</span> <span class="n">result</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]</span></div>
 
-    <span class="k">def</span> <span class="nf">weight_area</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">series_name</span><span class="p">,</span> <span class="n">weights</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">get_area_weighted_series</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">series_name</span><span class="p">,</span> <span class="n">weights</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Weight the specified series_name by the provided weights.</span>
 
 <span class="sd">        Returns a dictionary mapping dates to weighted values.</span>
@@ -1833,7 +1833,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
 
 
-        <span class="k">return</span> <span class="n">lib</span><span class="o">.</span><span class="n">weight_area</span><span class="p">(</span>
+        <span class="k">return</span> <span class="n">lib</span><span class="o">.</span><span class="n">get_area_weighted_series</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_host</span><span class="p">,</span> <span class="n">series_name</span><span class="p">,</span> <span class="n">weights</span>
             <span class="p">)</span> 
 
