@@ -1604,7 +1604,7 @@ class GroClient(object):
             )
             return result["id"]
 
-    def weight_area(self, series_name, weights):
+    def get_area_weighted_series(self, series_name, weights):
         """Weight the specified series_name by the provided weights.
 
         Returns a dictionary mapping dates to weighted values.
@@ -1637,7 +1637,7 @@ class GroClient(object):
         """
 
 
-        return lib.weight_area(
+        return lib.get_area_weighted_series(
             self.access_token, self.api_host, series_name, weights
             ) 
 

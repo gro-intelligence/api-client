@@ -500,13 +500,13 @@ def test_get_geo_centre(mock_requests_get):
     assert lib.get_geo_centre(MOCK_TOKEN, MOCK_HOST, 1215) == [US_data]
 
 @mock.patch('requests.request')
-def test_weight_area(mock_requests_get):
+def test_get_area_weighted_series(mock_requests_get):
     api_response = {'2000-02-25': 0.217, '2000-03-04': 0.217, '2000-03-12': 0.221, '2000-03-20': 0.228, '2000-03-28': 0.232, '2000-04-05': 0.238, '2000-04-13': 0.238, '2000-04-21': 0.255, '2000-04-29': 0.273, '2000-05-07': 0.286, '2000-05-15': 0.349 }
 
     expected_return = {'2000-02-25': 0.217, '2000-03-04': 0.217, '2000-03-12': 0.221, '2000-03-20': 0.228, '2000-03-28': 0.232, '2000-04-05': 0.238, '2000-04-13': 0.238, '2000-04-21': 0.255, '2000-04-29': 0.273, '2000-05-07': 0.286, '2000-05-15': 0.349 }
  
     initialize_requests_mocker_and_get_mock_data(mock_requests_get, api_response)
-    assert lib.weight_area(MOCK_TOKEN, MOCK_HOST, 'NDVI_8day', {137599 : 1}) == expected_return
+    assert lib.get_area_weighted_series(MOCK_TOKEN, MOCK_HOST, 'NDVI_8day', {137599 : 1}) == expected_return
 
 
 @mock.patch('requests.request')

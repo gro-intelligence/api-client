@@ -387,7 +387,7 @@ def get_data_series(access_token, api_host, **selection):
     except KeyError:
         raise Exception(resp.text)
 
-def weight_area(access_token, api_host, series_name, weights):
+def get_area_weighted_series(access_token, api_host, series_name, weights):
     url = '/'.join(['https:', '', api_host, 'area-weighting'])
     headers = {'authorization': 'Bearer ' + access_token}
     params = {'seriesName' : series_name}
