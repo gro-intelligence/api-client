@@ -1,1 +1,1 @@
-Moved to [/groclient](../../groclient/).
+Moved to [/groclient](../groclient/).
