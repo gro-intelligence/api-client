@@ -171,6 +171,9 @@ def get_data(url, headers, params=None, logger=None, stream=False, request_metho
     headers : dict
     params : dict
     logger : logging.Logger
+    stream : bool
+    request_method : str
+    request_data : dict
 
     Returns
     -------
