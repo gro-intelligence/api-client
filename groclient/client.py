@@ -1711,6 +1711,43 @@ class GroClient(object):
         point["unit_id"] = target_unit_id
         return point
 
+
+    def get_area_weighting_series_names(self):
+        """ Returns a list of valid series names that can be used to 
+            form the inputs of :meth:`~.get_area_weighted_series`.
+
+        Returns
+        -------
+        list of strings
+
+            Example::
+                [   "CPC_max_temp_daily",
+                    "CPC_min_temp_daily",
+                    "ET_PET_monthly",
+                    "GDI_daily",
+                    ...
+                ]
+        """
+        return lib.get_area_weighting_series_names(self.access_token, self.api_host)
+
+
+    def get_area_weighting_weight_names(self):
+        """ Returns a list of valid weight names that can be used to 
+            form the inputs of :meth:`~.get_area_weighted_series`.
+
+        Returns
+        -------
+        list of strings
+
+            Example::
+                [   "2008 RMA Corn Area Indemnified (Acres)",
+                    "2008 RMA Corn Drought Indemnity Paid to Producer (USD)",
+                    ...
+                ]
+        """
+        return lib.get_area_weighting_weight_names(self.access_token, self.api_host)
+
+
     def get_area_weighted_series(self, series_name, weight_names, region_id,
                                  method='sum', latest_date_only=False):
         """Compute weighted average on selected series with the given weights.
