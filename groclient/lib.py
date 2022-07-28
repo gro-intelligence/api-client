@@ -688,6 +688,22 @@ def get_descendant(access_token, api_host, entity_type, entity_id, distance=None
     return [{'id': descendant_entity_id} for descendant_entity_id in descendant_entity_ids]
 
 
+def get_area_weighted_series(access_token, api_host, series_name, weight_names, region_id,
+                             method, latest_date_only):
+    url = '/'.join(['https:', '', api_host, 'area-weighting'])
+    headers = {'authorization': 'Bearer ' + access_token}
+    params = {
+        'seriesName': series_name,
+        'weightNames': weight_names,
+        'regionId': region_id,
+        'method': method,
+        'latestDateOnly': latest_date_only
+    }
+    print('===url', url, params);#####
+    resp = get_data(url, headers, params=params)
+    return resp.json()
+
+
 if __name__ == '__main__':
     # To run doctests:
     # $ python lib.py -v
