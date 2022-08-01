@@ -87,6 +87,11 @@ class GroClient(object):
         self._async_http_client = None
         self._ioloop = None
 
+        # I think we'll need to add another if statement here to check for http_proxy and https_proxy env variables
+        # except we can't raise a runtime error if they aren't found because if the user isn't behind a proxy 
+        # then we don't want to raise an exception
+        # uh I think we will need to pass the http_proxy env var to the AsyncHTTPClient() object?
+
         if access_token is None:
             access_token = os.environ.get("GROAPI_TOKEN")
             if access_token is None:

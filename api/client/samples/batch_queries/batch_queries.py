@@ -39,4 +39,6 @@ def main():
             print("county_idx=%i has no data for 1998" % county_id)
 
 if __name__ == "__main__":
+        import pdb 
+        pdb.set_trace()
         main()
