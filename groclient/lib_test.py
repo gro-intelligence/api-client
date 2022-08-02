@@ -572,3 +572,23 @@ def test_get_geo_json(geojsons_mocked):
         'geometries': [{'type': 'MultiPolygon', 'coordinates': [[[[-155.651382446, 20.1647224430001]]]]}]
     }
     assert lib.get_geojson(MOCK_TOKEN, MOCK_HOST, 1215, 7) == expected_return
+
+@mock.patch('requests.get')
+def test_get_area_weighting_series_names(mock_requests_get):
+    api_response = ["CPC_max_temp_daily", "CPC_min_temp_daily", "ET_PET_monthly"]
+    initialize_requests_mocker_and_get_mock_data(mock_requests_get, api_response)
+    assert lib.get_area_weighting_series_names(MOCK_TOKEN, MOCK_HOST) == ["CPC_max_temp_daily", "CPC_min_temp_daily", "ET_PET_monthly"]
+
+@mock.patch('requests.get')
+def test_get_area_weighting_weight_names(mock_requests_get):
+    api_response = ["Almonds (CA only)", "Bananas (ha)", "Canola (ha)"]
+    initialize_requests_mocker_and_get_mock_data(mock_requests_get, api_response)
+    assert lib.get_area_weighting_weight_names(MOCK_TOKEN, MOCK_HOST) == ["Almonds (CA only)", "Bananas (ha)", "Canola (ha)"]
+
+@mock.patch('requests.get')
+def test_get_area_weighted_series(mock_requests_get):
+    api_response = {'2022-07-11': 0.715615, '2022-07-19': 0.733129, '2022-07-27': 0.748822}
+    initialize_requests_mocker_and_get_mock_data(mock_requests_get, api_response)
+
+    expected_return = {'2022-07-11': 0.715615, '2022-07-19': 0.733129, '2022-07-27': 0.748822}
+    assert lib.get_area_weighted_series(MOCK_TOKEN, MOCK_HOST, 'NDVI_8day', ['Barley (ha)', 'Corn (ha)'], 1215, 'sum', False) == expected_return

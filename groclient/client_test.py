@@ -231,6 +231,19 @@ def mock_get_data_points(access_token, api_host, **selections):
         return data_points
 
 
+def mock_get_area_weighting_series_names(access_token, api_host):
+    return ["CPC_max_temp_daily", "CPC_min_temp_daily", "ET_PET_monthly"]
+
+
+def mock_get_area_weighting_weight_names(access_token, api_host):
+    return ["Almonds (CA only)", "Bananas (ha)", "Canola (ha)"]
+
+
+def mock_get_area_weighted_series(access_token, api_host, series_name, weight_names,
+                                  region_id, method, latest_date_only):
+    return {'2022-07-11': 0.715615, '2022-07-19': 0.733129, '2022-07-27': 0.748822}
+
+
 @patch("groclient.lib.get_available", MagicMock(side_effect=mock_get_available))
 @patch("groclient.lib.list_available", MagicMock(side_effect=mock_list_available))
 @patch("groclient.lib.lookup", MagicMock(side_effect=mock_lookup))
@@ -254,6 +267,9 @@ def mock_get_data_points(access_token, api_host, **selections):
 )
 @patch("groclient.lib.get_top", MagicMock(side_effect=mock_get_top))
 @patch("groclient.lib.get_data_points", MagicMock(side_effect=mock_get_data_points))
+@patch("groclient.lib.get_area_weighting_series_names", MagicMock(side_effect=mock_get_area_weighting_series_names))
+@patch("groclient.lib.get_area_weighting_weight_names", MagicMock(side_effect=mock_get_area_weighting_weight_names))
+@patch("groclient.lib.get_area_weighted_series", MagicMock(side_effect=mock_get_area_weighted_series))
 class GroClientTests(TestCase):
     def setUp(self):
         self.client = GroClient(MOCK_HOST, MOCK_TOKEN)
@@ -536,6 +552,24 @@ class GroClientTests(TestCase):
 
         with self.assertRaises(Exception):
             self.client.convert_unit({"value": None, "unit_id": 10}, 43)
+
+    def test_get_area_weighting_series_names(self):
+        self.assertEqual(
+            self.client.get_area_weighting_series_names(),
+            ["CPC_max_temp_daily", "CPC_min_temp_daily", "ET_PET_monthly"]
+        )
+
+    def test_get_area_weighting_weight_names(self):
+        self.assertEqual(
+            self.client.get_area_weighting_weight_names(),
+            ["Almonds (CA only)", "Bananas (ha)", "Canola (ha)"]
+        )
+
+    def test_get_area_weighted_series(self):
+        self.assertEqual(
+            self.client.get_area_weighted_series('NDVI_8day', ['Barley (ha)', 'Corn (ha)'], 1215),
+            {'2022-07-11': 0.715615, '2022-07-19': 0.733129, '2022-07-27': 0.748822}
+        )
 
 class GroClientConstructorTests(TestCase):
     PROD_API_HOST = "api.gro-intelligence.com"
