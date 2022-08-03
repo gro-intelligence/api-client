@@ -97,7 +97,7 @@ class GroClient(object):
             
             # example useage when accessed via a proxy
             >>> client = GroClient(access_token="your_token_here", proxy_host="0.0.0.0", proxy_port=8080, 
-                                   proxy_username="user_name", proxy_pass="secret_password")
+            proxy_username="user_name", proxy_pass="secret_password")
         """
         # Initialize early since they're referenced in the destructor and
         # access_token checking may cause constructor to exit early.
