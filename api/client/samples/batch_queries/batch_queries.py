@@ -9,8 +9,10 @@ def main():
     """ API Config """
     API_HOST = 'api.gro-intelligence.com'
     ACCESS_TOKEN = os.environ['GROAPI_TOKEN']
-    PROXY_HOST = '0.0.0.0'
-    PROXY_PORT = 8080
+    PROXY_HOST = os.getenv('PROXY_HOST')
+    PROXY_PORT = os.getenv('PROXY_PORT')
+    if isinstance(PROXY_PORT, str):
+        PROXY_PORT = int(PROXY_PORT)
     api_client = GroClient(API_HOST, ACCESS_TOKEN, PROXY_HOST, PROXY_PORT)
 
     # specify everything except region_id
