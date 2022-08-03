@@ -57,8 +57,7 @@ class BatchError(APIError):
 
 class GroClient(object):
     """API client with stateful authentication for lib functions and extra convenience methods."""
-
-    def __init__(self, api_host=cfg.API_HOST, access_token=None):
+    def __init__(self, api_host=cfg.API_HOST, access_token=None, proxy_host=None, proxy_port=None):
         """Construct a GroClient instance.
 
         Parameters
@@ -69,6 +68,7 @@ class GroClient(object):
             Your Gro API authentication token. If not specified, the
             :code:`$GROAPI_TOKEN` environment variable is used. See
             :doc:`authentication`.
+        # TODO: add comments for new parameters
 
         Raises
         ------
@@ -87,10 +87,8 @@ class GroClient(object):
         self._async_http_client = None
         self._ioloop = None
 
-        # I think we'll need to add another if statement here to check for http_proxy and https_proxy env variables
-        # except we can't raise a runtime error if they aren't found because if the user isn't behind a proxy 
-        # then we don't want to raise an exception
-        # uh I think we will need to pass the http_proxy env var to the AsyncHTTPClient() object?
+        self.proxy_host = proxy_host
+        self.proxy_port = proxy_port
 
         if access_token is None:
             access_token = os.environ.get("GROAPI_TOKEN")
@@ -108,7 +106,13 @@ class GroClient(object):
             self._ioloop = IOLoop()
             # Note: force_instance is needed to disable Tornado's
             # pseudo-singleton AsyncHTTPClient caching behavior.
-            self._async_http_client = AsyncHTTPClient(force_instance=True)
+            if self.proxy_host and self.proxy_port:
+                defaults_dict = {"proxy_host": self.proxy_host,
+                                "proxy_port": self.proxy_port}
+                AsyncHTTPClient.configure("tornado.curl_httpclient.CurlAsyncHTTPClient")
+                self._async_http_client = AsyncHTTPClient(force_instance=True, defaults=defaults_dict)
+            else:
+                self._async_http_client = AsyncHTTPClient(force_instance=True)
         except Exception as e:
             self._logger.warning(
                 "Unable to initialize event loop, async methods disabled: {}".format(e)

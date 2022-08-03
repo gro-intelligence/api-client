@@ -1,13 +1,17 @@
 import os
-from groclient import GroClient
+# change this import so it doesn't import from groclient but rather from the relative directory
+# from groclient import GroClient
+# you need to add /api-client to the PYTHONPATH envvar
+from groclient.client import GroClient
 
 def main():
     # set up the Batch Client, same as normal Client
     """ API Config """
     API_HOST = 'api.gro-intelligence.com'
     ACCESS_TOKEN = os.environ['GROAPI_TOKEN']
-
-    api_client = GroClient(API_HOST, ACCESS_TOKEN)
+    PROXY_HOST = '0.0.0.0'
+    PROXY_PORT = 8080
+    api_client = GroClient(API_HOST, ACCESS_TOKEN, PROXY_HOST, PROXY_PORT)
 
     # specify everything except region_id
     selection = {
@@ -39,6 +43,4 @@ def main():
             print("county_idx=%i has no data for 1998" % county_id)
 
 if __name__ == "__main__":
-        import pdb 
-        pdb.set_trace()
         main()
