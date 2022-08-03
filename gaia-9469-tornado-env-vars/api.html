@@ -233,7 +233,12 @@
 <li><p><strong>access_token</strong> (<em>string</em><em>, </em><em>optional</em>) – Your Gro API authentication token. If not specified, the
 <code class="code docutils literal notranslate"><span class="pre">$GROAPI_TOKEN</span></code> environment variable is used. See
 <a class="reference internal" href="authentication.html"><span class="doc">Authentication</span></a>.</p></li>
-<li><p><strong>TODO</strong> (<em>#</em>) – </p></li>
+<li><p><strong>proxy_host</strong> (<em>string</em><em>, </em><em>optional</em>) – If you’re instantiating the GroClient behind a proxy, you’ll need to
+provide the proxy_host to properly send requests using the groclient
+library.</p></li>
+<li><p><strong>proxy_port</strong> (<em>int</em><em>, </em><em>optional</em>) – If you’re instantiating the GroClient behind a proxy, you’ll need to
+provide the proxy_port to properly send requests using the groclient
+library.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Raises</dt>
@@ -248,6 +253,8 @@
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">client</span> <span class="o">=</span> <span class="n">GroClient</span><span class="p">(</span><span class="n">access_token</span><span class="o">=</span><span class="s2">&quot;your_token_here&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
+<p># example useage when accessed via a proxy
+&gt;&gt;&gt; client = GroClient(access_token=”your_token_here”, proxy_host=”0.0.0.0”, proxy_port=8080)</p>
 </dd></dl>
 
 </div>

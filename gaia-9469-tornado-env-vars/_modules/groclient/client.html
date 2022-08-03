@@ -264,7 +264,14 @@
 <span class="sd">            Your Gro API authentication token. If not specified, the</span>
 <span class="sd">            :code:`$GROAPI_TOKEN` environment variable is used. See</span>
 <span class="sd">            :doc:`authentication`.</span>
-<span class="sd">        # TODO: add comments for new parameters</span>
+<span class="sd">        proxy_host : string, optional</span>
+<span class="sd">            If you&#39;re instantiating the GroClient behind a proxy, you&#39;ll need to </span>
+<span class="sd">            provide the proxy_host to properly send requests using the groclient </span>
+<span class="sd">            library.</span>
+<span class="sd">        proxy_port : int, optional</span>
+<span class="sd">            If you&#39;re instantiating the GroClient behind a proxy, you&#39;ll need to </span>
+<span class="sd">            provide the proxy_port to properly send requests using the groclient </span>
+<span class="sd">            library.</span>
 
 <span class="sd">        Raises</span>
 <span class="sd">        ------</span>
@@ -277,14 +284,17 @@
 <span class="sd">            &gt;&gt;&gt; client = GroClient()  # token stored in $GROAPI_TOKEN</span>
 
 <span class="sd">            &gt;&gt;&gt; client = GroClient(access_token=&quot;your_token_here&quot;)</span>
+<span class="sd">            </span>
+<span class="sd">            # example useage when accessed via a proxy</span>
+<span class="sd">            &gt;&gt;&gt; client = GroClient(access_token=&quot;your_token_here&quot;, proxy_host=&quot;0.0.0.0&quot;, proxy_port=8080)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Initialize early since they&#39;re referenced in the destructor and</span>
         <span class="c1"># access_token checking may cause constructor to exit early.</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_async_http_client</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_ioloop</span> <span class="o">=</span> <span class="kc">None</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">proxy_host</span> <span class="o">=</span> <span class="n">proxy_host</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">proxy_port</span> <span class="o">=</span> <span class="n">proxy_port</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_proxy_host</span> <span class="o">=</span> <span class="n">proxy_host</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_proxy_port</span> <span class="o">=</span> <span class="n">proxy_port</span>
 
         <span class="k">if</span> <span class="n">access_token</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">access_token</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;GROAPI_TOKEN&quot;</span><span class="p">)</span>
@@ -302,9 +312,9 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_ioloop</span> <span class="o">=</span> <span class="n">IOLoop</span><span class="p">()</span>
             <span class="c1"># Note: force_instance is needed to disable Tornado&#39;s</span>
             <span class="c1"># pseudo-singleton AsyncHTTPClient caching behavior.</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">proxy_host</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">proxy_port</span><span class="p">:</span>
-                <span class="n">defaults_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;proxy_host&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">proxy_host</span><span class="p">,</span>
-                                <span class="s2">&quot;proxy_port&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">proxy_port</span><span class="p">}</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_proxy_host</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_proxy_port</span><span class="p">:</span>
+                <span class="n">defaults_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;proxy_host&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_proxy_host</span><span class="p">,</span>
+                                 <span class="s2">&quot;proxy_port&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_proxy_port</span><span class="p">}</span>
                 <span class="n">AsyncHTTPClient</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="s2">&quot;tornado.curl_httpclient.CurlAsyncHTTPClient&quot;</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_async_http_client</span> <span class="o">=</span> <span class="n">AsyncHTTPClient</span><span class="p">(</span><span class="n">force_instance</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">defaults</span><span class="o">=</span><span class="n">defaults_dict</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
