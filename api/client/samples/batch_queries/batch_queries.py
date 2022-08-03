@@ -1,8 +1,5 @@
 import os
-# change this import so it doesn't import from groclient but rather from the relative directory
-# from groclient import GroClient
-# you need to add /api-client to the PYTHONPATH envvar
-from groclient.client import GroClient
+from groclient import GroClient
 
 def main():
     # set up the Batch Client, same as normal Client
@@ -11,9 +8,11 @@ def main():
     ACCESS_TOKEN = os.environ['GROAPI_TOKEN']
     PROXY_HOST = os.getenv('PROXY_HOST')
     PROXY_PORT = os.getenv('PROXY_PORT')
+    PROXY_USERNAME = os.getenv('PROXY_USERNAME')
+    PROXY_PASS = os.getenv('PROXY_PASS')
     if isinstance(PROXY_PORT, str):
         PROXY_PORT = int(PROXY_PORT)
-    api_client = GroClient(API_HOST, ACCESS_TOKEN, PROXY_HOST, PROXY_PORT)
+    api_client = GroClient(API_HOST, ACCESS_TOKEN, PROXY_HOST, PROXY_PORT, PROXY_USERNAME, PROXY_PASS)
 
     # specify everything except region_id
     selection = {
