@@ -68,7 +68,14 @@ class GroClient(object):
             Your Gro API authentication token. If not specified, the
             :code:`$GROAPI_TOKEN` environment variable is used. See
             :doc:`authentication`.
-        # TODO: add comments for new parameters
+        proxy_host : string, optional
+            If you're instantiating the GroClient behind a proxy, you'll need to 
+            provide the proxy_host to properly send requests using the groclient 
+            library.
+        proxy_port : int, optional
+            If you're instantiating the GroClient behind a proxy, you'll need to 
+            provide the proxy_port to properly send requests using the groclient 
+            library.
 
         Raises
         ------
@@ -81,14 +88,17 @@ class GroClient(object):
             >>> client = GroClient()  # token stored in $GROAPI_TOKEN
 
             >>> client = GroClient(access_token="your_token_here")
+            
+            # example useage when accessed via a proxy
+            >>> client = GroClient(access_token="your_token_here", proxy_host="0.0.0.0", proxy_port=8080)
         """
         # Initialize early since they're referenced in the destructor and
         # access_token checking may cause constructor to exit early.
         self._async_http_client = None
         self._ioloop = None
 
-        self.proxy_host = proxy_host
-        self.proxy_port = proxy_port
+        self._proxy_host = proxy_host
+        self._proxy_port = proxy_port
 
         if access_token is None:
             access_token = os.environ.get("GROAPI_TOKEN")
@@ -106,9 +116,9 @@ class GroClient(object):
             self._ioloop = IOLoop()
             # Note: force_instance is needed to disable Tornado's
             # pseudo-singleton AsyncHTTPClient caching behavior.
-            if self.proxy_host and self.proxy_port:
-                defaults_dict = {"proxy_host": self.proxy_host,
-                                "proxy_port": self.proxy_port}
+            if self._proxy_host and self._proxy_port:
+                defaults_dict = {"proxy_host": self._proxy_host,
+                                 "proxy_port": self._proxy_port}
                 AsyncHTTPClient.configure("tornado.curl_httpclient.CurlAsyncHTTPClient")
                 self._async_http_client = AsyncHTTPClient(force_instance=True, defaults=defaults_dict)
             else:
