@@ -253,8 +253,7 @@
 
 <span class="k">class</span> <span class="nc">GroClient</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;API client with stateful authentication for lib functions and extra convenience methods.&quot;&quot;&quot;</span>
-
-<div class="viewcode-block" id="GroClient.__init__"><a class="viewcode-back" href="../../api.html#groclient.GroClient.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">api_host</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">API_HOST</span><span class="p">,</span> <span class="n">access_token</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="GroClient.__init__"><a class="viewcode-back" href="../../api.html#groclient.GroClient.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">api_host</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">API_HOST</span><span class="p">,</span> <span class="n">access_token</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">proxy_host</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">proxy_port</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Construct a GroClient instance.</span>
 
 <span class="sd">        Parameters</span>
@@ -265,6 +264,7 @@
 <span class="sd">            Your Gro API authentication token. If not specified, the</span>
 <span class="sd">            :code:`$GROAPI_TOKEN` environment variable is used. See</span>
 <span class="sd">            :doc:`authentication`.</span>
+<span class="sd">        # TODO: add comments for new parameters</span>
 
 <span class="sd">        Raises</span>
 <span class="sd">        ------</span>
@@ -283,10 +283,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_async_http_client</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_ioloop</span> <span class="o">=</span> <span class="kc">None</span>
 
-        <span class="c1"># I think we&#39;ll need to add another if statement here to check for http_proxy and https_proxy env variables</span>
-        <span class="c1"># except we can&#39;t raise a runtime error if they aren&#39;t found because if the user isn&#39;t behind a proxy </span>
-        <span class="c1"># then we don&#39;t want to raise an exception</span>
-        <span class="c1"># uh I think we will need to pass the http_proxy env var to the AsyncHTTPClient() object?</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">proxy_host</span> <span class="o">=</span> <span class="n">proxy_host</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">proxy_port</span> <span class="o">=</span> <span class="n">proxy_port</span>
 
         <span class="k">if</span> <span class="n">access_token</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">access_token</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;GROAPI_TOKEN&quot;</span><span class="p">)</span>
@@ -304,7 +302,13 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_ioloop</span> <span class="o">=</span> <span class="n">IOLoop</span><span class="p">()</span>
             <span class="c1"># Note: force_instance is needed to disable Tornado&#39;s</span>
             <span class="c1"># pseudo-singleton AsyncHTTPClient caching behavior.</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_async_http_client</span> <span class="o">=</span> <span class="n">AsyncHTTPClient</span><span class="p">(</span><span class="n">force_instance</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">proxy_host</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">proxy_port</span><span class="p">:</span>
+                <span class="n">defaults_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;proxy_host&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">proxy_host</span><span class="p">,</span>
+                                <span class="s2">&quot;proxy_port&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">proxy_port</span><span class="p">}</span>
+                <span class="n">AsyncHTTPClient</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="s2">&quot;tornado.curl_httpclient.CurlAsyncHTTPClient&quot;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_async_http_client</span> <span class="o">=</span> <span class="n">AsyncHTTPClient</span><span class="p">(</span><span class="n">force_instance</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">defaults</span><span class="o">=</span><span class="n">defaults_dict</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_async_http_client</span> <span class="o">=</span> <span class="n">AsyncHTTPClient</span><span class="p">(</span><span class="n">force_instance</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
                 <span class="s2">&quot;Unable to initialize event loop, async methods disabled: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
