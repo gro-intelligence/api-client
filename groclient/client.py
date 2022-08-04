@@ -1741,3 +1741,73 @@ class GroClient(object):
             point["metadata"]["conf_interval"] = lib.convert_value(point["metadata"]["conf_interval"], from_convert_factor, to_convert_factor)
         point["unit_id"] = target_unit_id
         return point
+
+
+    def get_area_weighting_series_names(self):
+        """ Returns a list of valid series names that can be used to 
+            form the inputs of :meth:`~.get_area_weighted_series`.
+
+        Returns
+        -------
+        list of strings
+
+            Example::
+                [   "CPC_max_temp_daily",
+                    "CPC_min_temp_daily",
+                    "ET_PET_monthly",
+                    "GDI_daily",
+                    ...
+                ]
+        """
+        return lib.get_area_weighting_series_names(self.access_token, self.api_host)
+
+
+    def get_area_weighting_weight_names(self):
+        """ Returns a list of valid weight names that can be used to 
+            form the inputs of :meth:`~.get_area_weighted_series`.
+
+        Returns
+        -------
+        list of strings
+
+            Example::
+                [   "2008 RMA Corn Area Indemnified (Acres)",
+                    "2008 RMA Corn Drought Indemnity Paid to Producer (USD)",
+                    ...
+                ]
+        """
+        return lib.get_area_weighting_weight_names(self.access_token, self.api_host)
+
+
+    def get_area_weighted_series(self, series_name, weight_names, region_id,
+                                 method='sum', latest_date_only=False):
+        """Compute weighted average on selected series with the given weights.
+
+        Returns a dictionary mapping dates to weighted values.
+
+        Parameters
+        ----------
+        series_name: str
+            Should be a tag identifying the desired Gro data series. e.g. 'NDVI_8day'
+            For getting the full list of valid series names, please call :meth:`~.get_area_weighting_series_names`
+        weight_names: list of strs
+            List of weight names that will be used to weight the provided series. e.g. ['Barley (ha)', 'Corn (ha)']
+            For getting the full list of valid weight names, please call :meth:`~.get_area_weighting_weight_names`
+        region_id: integer
+            The region for which the weighted series will be computed
+        method: str, optional
+            'sum' by default. Multi-crop weights can be calculated with either 'sum' or 'normalize' method.
+        latest_date_only: bool, optional
+            False by default. If True, will return a single key-value pair where the key is the latested date.
+            e.g. {'2000-03-12': 0.221}
+
+        Returns
+        -------
+        dict
+
+            Example::
+                {'2000-02-25': 0.217, '2000-03-04': 0.217, '2000-03-12': 0.221, ...}
+        """
+        return lib.get_area_weighted_series(
+            self.access_token, self.api_host, series_name, weight_names, region_id, method, latest_date_only
+        )
