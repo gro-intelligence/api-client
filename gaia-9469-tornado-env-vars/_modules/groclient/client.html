@@ -1937,6 +1937,76 @@
             <span class="n">point</span><span class="p">[</span><span class="s2">&quot;metadata&quot;</span><span class="p">][</span><span class="s2">&quot;conf_interval&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">lib</span><span class="o">.</span><span class="n">convert_value</span><span class="p">(</span><span class="n">point</span><span class="p">[</span><span class="s2">&quot;metadata&quot;</span><span class="p">][</span><span class="s2">&quot;conf_interval&quot;</span><span class="p">],</span> <span class="n">from_convert_factor</span><span class="p">,</span> <span class="n">to_convert_factor</span><span class="p">)</span>
         <span class="n">point</span><span class="p">[</span><span class="s2">&quot;unit_id&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">target_unit_id</span>
         <span class="k">return</span> <span class="n">point</span>
+
+
+    <span class="k">def</span> <span class="nf">get_area_weighting_series_names</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Returns a list of valid series names that can be used to </span>
+<span class="sd">            form the inputs of :meth:`~.get_area_weighted_series`.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        list of strings</span>
+
+<span class="sd">            Example::</span>
+<span class="sd">                [   &quot;CPC_max_temp_daily&quot;,</span>
+<span class="sd">                    &quot;CPC_min_temp_daily&quot;,</span>
+<span class="sd">                    &quot;ET_PET_monthly&quot;,</span>
+<span class="sd">                    &quot;GDI_daily&quot;,</span>
+<span class="sd">                    ...</span>
+<span class="sd">                ]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">lib</span><span class="o">.</span><span class="n">get_area_weighting_series_names</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_host</span><span class="p">)</span>
+
+
+    <span class="k">def</span> <span class="nf">get_area_weighting_weight_names</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Returns a list of valid weight names that can be used to </span>
+<span class="sd">            form the inputs of :meth:`~.get_area_weighted_series`.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        list of strings</span>
+
+<span class="sd">            Example::</span>
+<span class="sd">                [   &quot;2008 RMA Corn Area Indemnified (Acres)&quot;,</span>
+<span class="sd">                    &quot;2008 RMA Corn Drought Indemnity Paid to Producer (USD)&quot;,</span>
+<span class="sd">                    ...</span>
+<span class="sd">                ]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">lib</span><span class="o">.</span><span class="n">get_area_weighting_weight_names</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_host</span><span class="p">)</span>
+
+
+    <span class="k">def</span> <span class="nf">get_area_weighted_series</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">series_name</span><span class="p">,</span> <span class="n">weight_names</span><span class="p">,</span> <span class="n">region_id</span><span class="p">,</span>
+                                 <span class="n">method</span><span class="o">=</span><span class="s1">&#39;sum&#39;</span><span class="p">,</span> <span class="n">latest_date_only</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Compute weighted average on selected series with the given weights.</span>
+
+<span class="sd">        Returns a dictionary mapping dates to weighted values.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        series_name: str</span>
+<span class="sd">            Should be a tag identifying the desired Gro data series. e.g. &#39;NDVI_8day&#39;</span>
+<span class="sd">            For getting the full list of valid series names, please call :meth:`~.get_area_weighting_series_names`</span>
+<span class="sd">        weight_names: list of strs</span>
+<span class="sd">            List of weight names that will be used to weight the provided series. e.g. [&#39;Barley (ha)&#39;, &#39;Corn (ha)&#39;]</span>
+<span class="sd">            For getting the full list of valid weight names, please call :meth:`~.get_area_weighting_weight_names`</span>
+<span class="sd">        region_id: integer</span>
+<span class="sd">            The region for which the weighted series will be computed</span>
+<span class="sd">        method: str, optional</span>
+<span class="sd">            &#39;sum&#39; by default. Multi-crop weights can be calculated with either &#39;sum&#39; or &#39;normalize&#39; method.</span>
+<span class="sd">        latest_date_only: bool, optional</span>
+<span class="sd">            False by default. If True, will return a single key-value pair where the key is the latested date.</span>
+<span class="sd">            e.g. {&#39;2000-03-12&#39;: 0.221}</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        dict</span>
+
+<span class="sd">            Example::</span>
+<span class="sd">                {&#39;2000-02-25&#39;: 0.217, &#39;2000-03-04&#39;: 0.217, &#39;2000-03-12&#39;: 0.221, ...}</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">lib</span><span class="o">.</span><span class="n">get_area_weighted_series</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_host</span><span class="p">,</span> <span class="n">series_name</span><span class="p">,</span> <span class="n">weight_names</span><span class="p">,</span> <span class="n">region_id</span><span class="p">,</span> <span class="n">method</span><span class="p">,</span> <span class="n">latest_date_only</span>
+        <span class="p">)</span>
 </pre></div>
 
 
