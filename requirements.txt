@@ -4,6 +4,7 @@ chardet
 future
 numpy
 pandas
+pycurl
 python-dateutil
 pytz
 requests

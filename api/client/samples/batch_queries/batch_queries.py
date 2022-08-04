@@ -6,8 +6,13 @@ def main():
     """ API Config """
     API_HOST = 'api.gro-intelligence.com'
     ACCESS_TOKEN = os.environ['GROAPI_TOKEN']
-
-    api_client = GroClient(API_HOST, ACCESS_TOKEN)
+    PROXY_HOST = os.getenv('PROXY_HOST')
+    PROXY_PORT = os.getenv('PROXY_PORT')
+    PROXY_USERNAME = os.getenv('PROXY_USERNAME')
+    PROXY_PASS = os.getenv('PROXY_PASS')
+    if isinstance(PROXY_PORT, str):
+        PROXY_PORT = int(PROXY_PORT)
+    api_client = GroClient(API_HOST, ACCESS_TOKEN, PROXY_HOST, PROXY_PORT, PROXY_USERNAME, PROXY_PASS)
 
     # specify everything except region_id
     selection = {
