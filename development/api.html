@@ -218,7 +218,7 @@
 <h2><a class="toc-backref" href="#id1">Creating a client</a><a class="headerlink" href="#creating-a-client" title="Permalink to this headline">¶</a></h2>
 <dl class="py method">
 <dt id="groclient.GroClient.__init__">
-<code class="sig-prename descclassname">GroClient.</code><code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">api_host</span><span class="o">=</span><span class="default_value">'api.gro-intelligence.com'</span></em>, <em class="sig-param"><span class="n">access_token</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/groclient/client.html#GroClient.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#groclient.GroClient.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">GroClient.</code><code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">api_host</span><span class="o">=</span><span class="default_value">'api.gro-intelligence.com'</span></em>, <em class="sig-param"><span class="n">access_token</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">proxy_host</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">proxy_port</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">proxy_username</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">proxy_pass</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/groclient/client.html#GroClient.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#groclient.GroClient.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Construct a GroClient instance.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -227,6 +227,15 @@
 <li><p><strong>access_token</strong> (<em>string</em><em>, </em><em>optional</em>) – Your Gro API authentication token. If not specified, the
 <code class="code docutils literal notranslate"><span class="pre">$GROAPI_TOKEN</span></code> environment variable is used. See
 <a class="reference internal" href="authentication.html"><span class="doc">Authentication</span></a>.</p></li>
+<li><p><strong>proxy_host</strong> (<em>string</em><em>, </em><em>optional</em>) – If you’re instantiating the GroClient behind a proxy, you’ll need to
+provide the proxy_host to properly send requests using the groclient
+library.</p></li>
+<li><p><strong>proxy_port</strong> (<em>int</em><em>, </em><em>optional</em>) – If you’re instantiating the GroClient behind a proxy, you’ll need to
+provide the proxy_port to properly send requests using the groclient
+library.</p></li>
+<li><p><strong>proxy_username</strong> (<em>string</em><em>, </em><em>optional</em>) – If you’re instantiating the GroClient behind a proxy, and your proxy
+requires a username and password, you’ll need to provide the proxy_username.</p></li>
+<li><p><strong>proxy_pass</strong> (<em>string optional</em>) – Password for your proxy username.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Raises</dt>
@@ -241,6 +250,9 @@
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">client</span> <span class="o">=</span> <span class="n">GroClient</span><span class="p">(</span><span class="n">access_token</span><span class="o">=</span><span class="s2">&quot;your_token_here&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
+<p># example useage when accessed via a proxy
+&gt;&gt;&gt; client = GroClient(access_token=”your_token_here”, proxy_host=”0.0.0.0”, proxy_port=8080,
+proxy_username=”user_name”, proxy_pass=”secret_password”)</p>
 </dd></dl>
 
 </div>
