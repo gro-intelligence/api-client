@@ -16,6 +16,7 @@ import requests
 import time
 import platform
 from pkg_resources import get_distribution, DistributionNotFound
+
 try:
     # functools are native in Python 3.2.3+
     from functools import lru_cache as memoize
@@ -31,11 +32,12 @@ except ImportError:
 # GroClient's __del__ method running while the object is still in scope,
 # resulting in `fetch() called on closed AsyncHTTPClient` errors upon
 # subsequent uses of _async_http_client.
-_VERSIONS = { 'python-version': platform.python_version() }
+_VERSIONS = {'python-version': platform.python_version()}
 try:
     _VERSIONS['api-client-version'] = get_distribution('groclient').version
 except DistributionNotFound:
     pass
+
 
 class APIError(Exception):
     def __init__(self, response, retry_count, url, params):
@@ -54,9 +56,9 @@ class APIError(Exception):
                 self.message += ': {}'.format(json_content['message'])
         except Exception:
             # If the error message can't be parsed, fall back to a generic "giving up" message.
-            self.message = 'Giving up on {} after {} {}: {}'.format(self.url, self.retry_count,
-                                                                    'retry' if self.retry_count == 1
-                                                                    else 'retries', response)
+            self.message = 'Giving up on {} after {} {}: {}'.format(
+                self.url, self.retry_count, 'retry' if self.retry_count == 1 else 'retries', response
+            )
 
 
 def get_default_logger():
@@ -101,16 +103,16 @@ def get_access_token(api_host, user_email, user_password, logger=None):
     if not logger:
         logger = get_default_logger()
     while retry_count <= cfg.MAX_RETRIES:
-        get_api_token = requests.post('https://' + api_host + '/api-token',
-                                      data={'email': user_email,
-                                            'password': user_password})
+        get_api_token = requests.post(
+            'https://' + api_host + '/api-token', data={'email': user_email, 'password': user_password}
+        )
         if get_api_token.status_code == 200:
             logger.debug('Authentication succeeded in get_access_token')
             return get_api_token.json()['data']['accessToken']
-        else:
-            logger.warning('Error in get_access_token: {}'.format(get_api_token))
+
+        logger.warning(f'Error in get_access_token: {get_api_token}')
         retry_count += 1
-    raise Exception('Giving up on get_access_token after {0} tries.'.format(retry_count))
+    raise Exception(f'Giving up on get_access_token after {retry_count} tries.')
 
 
 def redirect(old_params, migration):
@@ -151,13 +153,9 @@ def get_version_info():
 
 
 def convert_value(value, from_convert_factor, to_convert_factor):
-    value_in_base_unit = (
-        value * from_convert_factor.get("factor")
-    ) + from_convert_factor.get("offset", 0)
+    value_in_base_unit = (value * from_convert_factor.get("factor")) + from_convert_factor.get("offset", 0)
 
-    return float(
-        value_in_base_unit - to_convert_factor.get("offset", 0)
-    ) / to_convert_factor.get("factor")
+    return float(value_in_base_unit - to_convert_factor.get("offset", 0)) / to_convert_factor.get("factor")
 
 
 def get_data(url, headers, params=None, logger=None, stream=False):
@@ -206,8 +204,7 @@ def get_data(url, headers, params=None, logger=None, stream=False):
             return response
         log_record['tag'] = 'failed_gro_api_request'
         if retry_count < cfg.MAX_RETRIES:
-            logger.warning(response.text if hasattr(response, 'text') else response,
-                           extra=log_record)
+            logger.warning(response.text if hasattr(response, 'text') else response, extra=log_record)
         if status_code in [400, 401, 402, 404]:
             break  # Do not retry
         if status_code == 301:
@@ -219,9 +216,10 @@ def get_data(url, headers, params=None, logger=None, stream=False):
             if retry_count > 0:
                 # Retry immediately on first failure.
                 # Exponential backoff before retrying repeatedly failing requests.
-                time.sleep(2 ** retry_count)
+                time.sleep(2**retry_count)
         retry_count += 1
     raise APIError(response, retry_count, url, params)
+
 
 @memoize(maxsize=None)
 def get_allowed_units(access_token, api_host, metric_id, item_id):
@@ -245,8 +243,9 @@ def get_available(access_token, api_host, entity_type):
 def list_available(access_token, api_host, selected_entities):
     url = '/'.join(['https:', '', api_host, 'v2/entities/list'])
     headers = {'authorization': 'Bearer ' + access_token}
-    params = dict([(groclient.utils.str_snake_to_camel(key), value)
-                   for (key, value) in list(selected_entities.items())])
+    params = dict(
+        [(groclient.utils.str_snake_to_camel(key), value) for (key, value) in list(selected_entities.items())]
+    )
     resp = get_data(url, headers, params)
     try:
         return resp.json()['data']
@@ -318,8 +317,16 @@ def get_params_from_selection(**selection):
     """
     params = {}
     for key, value in list(selection.items()):
-        if key in ('region_id', 'partner_region_id', 'item_id', 'metric_id',
-                   'source_id', 'frequency_id', 'start_date', 'end_date'):
+        if key in (
+            'region_id',
+            'partner_region_id',
+            'item_id',
+            'metric_id',
+            'source_id',
+            'frequency_id',
+            'start_date',
+            'end_date',
+        ):
             params[groclient.utils.str_snake_to_camel(key)] = value
     return params
 
@@ -379,30 +386,34 @@ def get_data_series(access_token, api_host, **selection):
     resp = get_data(url, headers, params)
     try:
         response = resp.json()['data']
-        if any((series.get('metadata', {}).get('includes_historical_region', False))
-                for series in response):
-            logger.warning('Data series have some historical regions, '
-                           'see https://developers.gro-intelligence.com/faq.html')
+        if any((series.get('metadata', {}).get('includes_historical_region', False)) for series in response):
+            logger.warning(
+                'Data series have some historical regions, ' 'see https://developers.gro-intelligence.com/faq.html'
+            )
         return response
     except KeyError:
         raise Exception(resp.text)
+
 
 def stream_data_series(access_token, api_host, chunk_size=None, **selection):
     logger = get_default_logger()
     url = '/'.join(['https:', '', api_host, 'v2/stream/data_series/list'])
     headers = {'authorization': 'Bearer ' + access_token}
     params = get_params_from_selection(**selection)
-    if type(chunk_size) == int and chunk_size>1:
+    if type(chunk_size) == int and chunk_size > 1:
         params['chunkSize'] = chunk_size
     resp = get_data(url, headers, params, logger, True)
     try:
         for line in resp.iter_lines(decode_unicode=True):
             if line:
                 current_ds_list = json.loads(line)
-                if any((series.get('metadata', {}).get('includes_historical_region', False))
-                        for series in current_ds_list):
-                    logger.warning('Data series have some historical regions, '
-                                'see https://developers.gro-intelligence.com/faq.html')
+                if any(
+                    (series.get('metadata', {}).get('includes_historical_region', False)) for series in current_ds_list
+                ):
+                    logger.warning(
+                        'Data series have some historical regions, '
+                        'see https://developers.gro-intelligence.com/faq.html'
+                    )
                 yield current_ds_list
     except KeyError:
         raise Exception(resp.text)
@@ -416,8 +427,8 @@ def get_top(access_token, api_host, entity_type, num_results=5, **selection):
     resp = get_data(url, headers, params)
     try:
         return resp.json()
-    except KeyError:
-        raise Exception(resp.text)
+    except KeyError as e:
+        raise Exception(resp.text) from e
 
 
 def make_key(key):
@@ -434,8 +445,7 @@ def get_source_ranking(access_token, api_host, series):
     :param series: Series to calculate source raking for.
     :return: List of sources that match the series parameters, sorted by rank.
     """
-    params = dict((make_key(k), v) for k, v in iter(list(
-        get_params_from_selection(**series).items())))
+    params = dict((make_key(k), v) for k, v in iter(list(get_params_from_selection(**series).items())))
     url = '/'.join(['https:', '', api_host, 'v2/available/sources'])
     headers = {'authorization': 'Bearer ' + access_token}
     return get_data(url, headers, params).json()
@@ -444,9 +454,9 @@ def get_source_ranking(access_token, api_host, series):
 def rank_series_by_source(access_token, api_host, selections_list):
     series_map = OrderedDict()
     for selection in selections_list:
-        series_key = '.'.join([json.dumps(selection.get(type_id))
-                               for type_id in DATA_SERIES_UNIQUE_TYPES_ID
-                               if type_id != 'source_id'])
+        series_key = '.'.join(
+            [json.dumps(selection.get(type_id)) for type_id in DATA_SERIES_UNIQUE_TYPES_ID if type_id != 'source_id']
+        )
         if series_key not in series_map:
             series_map[series_key] = {}
         elif None in series_map[series_key]:
@@ -460,9 +470,7 @@ def rank_series_by_source(access_token, api_host, selections_list):
             if type_id != 'source_id' and series_key.split('.')[idx] != 'null'
         }
         try:
-            source_ids = get_source_ranking(access_token,
-                                            api_host,
-                                            series_without_source)
+            source_ids = get_source_ranking(access_token, api_host, series_without_source)
         # Catch "no content" response from get_source_ranking()
         except ValueError:
             continue  # empty response
@@ -475,15 +483,13 @@ def rank_series_by_source(access_token, api_host, selections_list):
 
 
 def get_available_timefrequency(access_token, api_host, **series):
-    params = dict((make_key(k), v) for k, v in iter(list(
-        get_params_from_selection(**series).items())))
+    params = dict((make_key(k), v) for k, v in iter(list(get_params_from_selection(**series).items())))
     url = '/'.join(['https:', '', api_host, 'v2/available/time-frequencies'])
     headers = {'authorization': 'Bearer ' + access_token}
     response = get_data(url, headers, params)
     if response.status_code == 204:
         return []
-    return [groclient.utils.dict_reformat_keys(tf, groclient.utils.str_camel_to_snake)
-            for tf in response.json()]
+    return [groclient.utils.dict_reformat_keys(tf, groclient.utils.str_camel_to_snake) for tf in response.json()]
 
 
 def list_of_series_to_single_series(series_list, add_belongs_to=False, include_historical=True):
@@ -496,15 +502,17 @@ def list_of_series_to_single_series(series_list, add_belongs_to=False, include_h
         if not (isinstance(series, dict) and isinstance(series.get('data', []), list)):
             continue
         series_metadata = series.get('series', {}).get('metadata', {})
-        has_historical_regions = (series_metadata.get('includesHistoricalRegion', False) or
-                                  series_metadata.get('includesHistoricalPartnerRegion', False))
+        has_historical_regions = series_metadata.get('includesHistoricalRegion', False) or series_metadata.get(
+            'includesHistoricalPartnerRegion', False
+        )
         if not include_historical and has_historical_regions:
             continue
         # All the belongsTo keys are in camelCase. Convert them to snake_case.
         # Only need to do this once per series, so do this outside of the list
         # comprehension and save to a variable to avoid duplicate work:
-        belongs_to = groclient.utils.dict_reformat_keys(series.get('series', {}).get('belongsTo', {}),
-                                                        groclient.utils.str_camel_to_snake)
+        belongs_to = groclient.utils.dict_reformat_keys(
+            series.get('series', {}).get('belongsTo', {}), groclient.utils.str_camel_to_snake
+        )
         for point in series.get('data', []):
             formatted_point = {
                 'start_date': point[0],
@@ -546,10 +554,18 @@ def get_data_points(access_token, api_host, **selection):
     headers = {'authorization': 'Bearer ' + access_token}
     url = '/'.join(['https:', '', api_host, 'v2/data'])
     params = get_data_call_params(**selection)
-    required_params = [groclient.utils.str_snake_to_camel(type_id) for type_id in DATA_SERIES_UNIQUE_TYPES_ID if type_id != 'partner_region_id']
+    required_params = [
+        groclient.utils.str_snake_to_camel(type_id)
+        for type_id in DATA_SERIES_UNIQUE_TYPES_ID
+        if type_id != 'partner_region_id'
+    ]
     missing_params = list(required_params - params.keys())
     if len(missing_params):
-        message = 'API request cannot be processed because {} not specified.'.format(missing_params[0] + ' is' if len(missing_params) == 1 else ', '.join(missing_params[:-1]) + ' and ' + missing_params[-1] + ' are')
+        message = 'API request cannot be processed because {} not specified.'.format(
+            missing_params[0] + ' is'
+            if len(missing_params) == 1
+            else ', '.join(missing_params[:-1]) + ' and ' + missing_params[-1] + ' are'
+        )
         logger.error(message)
         raise ValueError(message)
     resp = get_data(url, headers, params)
@@ -618,12 +634,11 @@ def get_geojsons(access_token, api_host, region_id, descendant_level, zoom_level
     url = '/'.join(['https:', '', api_host, 'v2/geocentres'])
     params = {'includeGeojson': True, 'regionIds': region_id, 'zoom': zoom_level}
     if descendant_level:
-        params['reqRegionLevelId']= descendant_level
+        params['reqRegionLevelId'] = descendant_level
         params['stringify'] = 'false'
     headers = {'authorization': 'Bearer ' + access_token}
     resp = get_data(url, headers, params)
-    return [groclient.utils.dict_reformat_keys(r, groclient.utils.str_camel_to_snake)
-            for r in resp.json()['data']]
+    return [groclient.utils.dict_reformat_keys(r, groclient.utils.str_camel_to_snake) for r in resp.json()['data']]
 
 
 def get_geojson(access_token, api_host, region_id, zoom_level):
@@ -631,9 +646,17 @@ def get_geojson(access_token, api_host, region_id, zoom_level):
         return json.loads(region['geojson'])
 
 
-def get_ancestor(access_token, api_host, entity_type, entity_id, distance=None,
-                 include_details=True, ancestor_level=None, include_historical=True,):
-    url = '/'.join(['https:', '', api_host, 'v2/{}/belongs-to'.format(entity_type)])
+def get_ancestor(
+    access_token,
+    api_host,
+    entity_type,
+    entity_id,
+    distance=None,
+    include_details=True,
+    ancestor_level=None,
+    include_historical=True,
+):
+    url = f'https://{api_host}/v2/{entity_type}/belongs-to'
     headers = {'authorization': 'Bearer ' + access_token}
     params = {'ids': [entity_id]}
     if distance:
@@ -652,19 +675,25 @@ def get_ancestor(access_token, api_host, entity_type, entity_id, distance=None,
         entity_details = lookup(access_token, api_host, entity_type, ancestor_entity_ids)
 
         if not include_historical:
-            ancestor_entity_ids = [entity['id'] for entity in entity_details.values()
-                                     if not entity['historical']]
+            ancestor_entity_ids = [entity['id'] for entity in entity_details.values() if not entity['historical']]
 
         if include_details:
-            return [entity_details[str(child_entity_id)] for child_entity_id in
-                    ancestor_entity_ids]
+            return [entity_details[str(child_entity_id)] for child_entity_id in ancestor_entity_ids]
 
     return [{'id': ancestor_entity_id} for ancestor_entity_id in ancestor_entity_ids]
 
 
-def get_descendant(access_token, api_host, entity_type, entity_id, distance=None,
-                   include_details=True, descendant_level=None, include_historical=True):
-    url = '/'.join(['https:', '', api_host, 'v2/{}/contains'.format(entity_type)])
+def get_descendant(
+    access_token,
+    api_host,
+    entity_type,
+    entity_id,
+    distance=None,
+    include_details=True,
+    descendant_level=None,
+    include_historical=True,
+):
+    url = f'https://{api_host}/v2/{entity_type}/contains'
     headers = {'authorization': 'Bearer ' + access_token}
     params = {'ids': [entity_id]}
     if distance:
@@ -675,7 +704,7 @@ def get_descendant(access_token, api_host, entity_type, entity_id, distance=None
         else:
             params['distance'] = -1
 
-    if entity_type == 'regions' :
+    if entity_type == 'regions':
         params['includeHistorical'] = include_historical
 
     resp = get_data(url, headers, params)
@@ -690,29 +719,28 @@ def get_descendant(access_token, api_host, entity_type, entity_id, distance=None
 
 
 def get_area_weighting_series_names(access_token, api_host):
-    url = '/'.join(['https:', '', api_host, 'area-weighting-series-names'])
+    url = f'https://{api_host}/area-weighting-series-names'
     headers = {'authorization': 'Bearer ' + access_token}
     resp = get_data(url, headers)
     return resp.json()
 
 
 def get_area_weighting_weight_names(access_token, api_host):
-    url = '/'.join(['https:', '', api_host, 'area-weighting-weight-names'])
+    url = f'https://{api_host}/area-weighting-weight-names'
     headers = {'authorization': 'Bearer ' + access_token}
     resp = get_data(url, headers)
     return resp.json()
 
 
-def get_area_weighted_series(access_token, api_host, series_name, weight_names, region_id,
-                             method, latest_date_only):
-    url = '/'.join(['https:', '', api_host, 'area-weighting'])
+def get_area_weighted_series(access_token, api_host, series_name, weight_names, region_id, method, latest_date_only):
+    url = f'https://{api_host}/area-weighting'
     headers = {'authorization': 'Bearer ' + access_token}
     params = {
         'seriesName': series_name,
         'weightNames': weight_names,
         'regionId': region_id,
         'method': method,
-        'latestDateOnly': latest_date_only
+        'latestDateOnly': latest_date_only,
     }
     resp = get_data(url, headers, params=params)
     return resp.json()
@@ -722,5 +750,8 @@ if __name__ == '__main__':
     # To run doctests:
     # $ python lib.py -v
     import doctest
-    doctest.testmod(raise_on_error=True,  # Set to False for prettier error message
-                    optionflags=doctest.NORMALIZE_WHITESPACE | doctest.ELLIPSIS)
+
+    doctest.testmod(
+        raise_on_error=True,  # Set to False for prettier error message
+        optionflags=doctest.NORMALIZE_WHITESPACE | doctest.ELLIPSIS,
+    )
