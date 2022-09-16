@@ -418,7 +418,8 @@ def test_get_descendant(mock_requests_get, lookup_mocked):
         {'id': 2, 'name': 'item 2', 'contains': [], 'belongsTo': [3], 'definition': 'def2'},
         {'id': 3, 'name': 'parent', 'contains': [1, 2], 'belongsTo': [4], 'definition': 'def3'}
     ]
-
+    mock_requests_get.assert_called_with('params')
+    
     assert lib.get_descendant(MOCK_TOKEN, MOCK_HOST, 'metrics', 4, include_details=True) == [
         {'id': 1, 'name': 'metric 1', 'contains': [], 'belongsTo': [3], 'definition': 'def1'},
         {'id': 2, 'name': 'metric 2', 'contains': [], 'belongsTo': [3], 'definition': 'def2'},
