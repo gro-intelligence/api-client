@@ -14,7 +14,7 @@ except ImportError:
     from urllib import urlencode
 
 from groclient import cfg, lib
-from groclient.constants import DATA_SERIES_UNIQUE_TYPES_ID, ENTITY_KEY_TO_TYPE
+from groclient.constants import REGION_LEVELS, DATA_SERIES_UNIQUE_TYPES_ID, ENTITY_KEY_TO_TYPE
 from groclient.utils import intersect, zip_selections, dict_unnest, str_snake_to_camel
 from groclient.lib import APIError
 
@@ -34,9 +34,7 @@ class BatchError(APIError):
         self.retry_count = retry_count
         self.url = url
         self.params = params
-        self.status_code = (
-            self.response.code if hasattr(self.response, "code") else None
-        )
+        self.status_code = self.response.code if hasattr(self.response, "code") else None
         try:
             json_content = json_decode(self.response.body)
             # 'error' should be something like 'Not Found' or 'Bad Request'
@@ -57,8 +55,16 @@ class BatchError(APIError):
 
 class GroClient(object):
     """API client with stateful authentication for lib functions and extra convenience methods."""
-    def __init__(self, api_host=cfg.API_HOST, access_token=None, proxy_host=None, proxy_port=None,
-                 proxy_username=None, proxy_pass=None):
+
+    def __init__(
+        self,
+        api_host=cfg.API_HOST,
+        access_token=None,
+        proxy_host=None,
+        proxy_port=None,
+        proxy_username=None,
+        proxy_pass=None,
+    ):
         """Construct a GroClient instance.
 
         Parameters
@@ -70,15 +76,15 @@ class GroClient(object):
             :code:`$GROAPI_TOKEN` environment variable is used. See
             :doc:`authentication`.
         proxy_host : string, optional
-            If you're instantiating the GroClient behind a proxy, you'll need to 
-            provide the proxy_host to properly send requests using the groclient 
+            If you're instantiating the GroClient behind a proxy, you'll need to
+            provide the proxy_host to properly send requests using the groclient
             library.
         proxy_port : int, optional
-            If you're instantiating the GroClient behind a proxy, you'll need to 
-            provide the proxy_port to properly send requests using the groclient 
+            If you're instantiating the GroClient behind a proxy, you'll need to
+            provide the proxy_port to properly send requests using the groclient
             library.
-        proxy_username : string, optional 
-            If you're instantiating the GroClient behind a proxy, and your proxy 
+        proxy_username : string, optional
+            If you're instantiating the GroClient behind a proxy, and your proxy
             requires a username and password, you'll need to provide the proxy_username.
         proxy_pass : string optional
             Password for your proxy username.
@@ -94,9 +100,9 @@ class GroClient(object):
             >>> client = GroClient()  # token stored in $GROAPI_TOKEN
 
             >>> client = GroClient(access_token="your_token_here")
-            
+
             # example useage when accessed via a proxy
-            >>> client = GroClient(access_token="your_token_here", proxy_host="0.0.0.0", proxy_port=8080, 
+            >>> client = GroClient(access_token="your_token_here", proxy_host="0.0.0.0", proxy_port=8080,
             proxy_username="user_name", proxy_pass="secret_password")
         """
         # Initialize early since they're referenced in the destructor and
@@ -112,8 +118,10 @@ class GroClient(object):
         if access_token is None:
             access_token = os.environ.get("GROAPI_TOKEN")
             if access_token is None:
-                raise RuntimeError("$GROAPI_TOKEN environment variable must be set when "
-                                   "GroClient is constructed without the access_token argument")
+                raise RuntimeError(
+                    "$GROAPI_TOKEN environment variable must be set when "
+                    "GroClient is constructed without the access_token argument"
+                )
         self.api_host = api_host
         self.access_token = access_token
         self._logger = lib.get_default_logger()
@@ -126,8 +134,7 @@ class GroClient(object):
             # Note: force_instance is needed to disable Tornado's
             # pseudo-singleton AsyncHTTPClient caching behavior.
             if self._proxy_host and self._proxy_port:
-                defaults_dict = {"proxy_host": self._proxy_host,
-                                 "proxy_port": self._proxy_port}
+                defaults_dict = {"proxy_host": self._proxy_host, "proxy_port": self._proxy_port}
                 if self._proxy_username and self._proxy_pass:
                     defaults_dict['proxy_username'] = self._proxy_username
                     defaults_dict['proxy_pass'] = self._proxy_pass
@@ -136,9 +143,7 @@ class GroClient(object):
             else:
                 self._async_http_client = AsyncHTTPClient(force_instance=True)
         except Exception as e:
-            self._logger.warning(
-                "Unable to initialize event loop, async methods disabled: {}".format(e)
-            )
+            self._logger.warning("Unable to initialize event loop, async methods disabled: {}".format(e))
 
     def __del__(self):
         if self._async_http_client is not None:
@@ -194,16 +199,12 @@ class GroClient(object):
                     # Catch non-200 codes that aren't errors
                     status_code = e.code if hasattr(e, "code") else None
                     if status_code in [204, 206]:
-                        log_msg = {204: "No Content", 206: "Partial Content"}[
-                            status_code
-                        ]
+                        log_msg = {204: "No Content", 206: "Partial Content"}[status_code]
                         response = e.response
                         log_request(start_time, retry_count, log_msg, status_code)
                         # Do not retry.
                     elif status_code == 301:
-                        redirected_ids = json.loads(e.response.body.decode("utf-8"))[
-                            "data"
-                        ][0]
+                        redirected_ids = json.loads(e.response.body.decode("utf-8"))["data"][0]
                         new_params = lib.redirect(params, redirected_ids)
                         log_request(
                             start_time,
@@ -220,26 +221,20 @@ class GroClient(object):
                 # socket.gaio error raised when there's a connection error
                 response = e.response if hasattr(e, "response") else e
                 status_code = e.code if hasattr(e, "code") else None
-                error_msg = (
-                    e.response.error
-                    if (hasattr(e, "response") and hasattr(e.response, "error"))
-                    else e
-                )
+                error_msg = e.response.error if (hasattr(e, "response") and hasattr(e.response, "error")) else e
                 log_request(start_time, retry_count, error_msg, status_code)
                 if status_code in [429, 500, 502, 503, 504]:
                     # First retry is immediate.
                     # After that, exponential backoff before retrying.
                     if retry_count > 0:
-                        time.sleep(2 ** retry_count)
+                        time.sleep(2**retry_count)
                     continue
                 elif status_code in [400, 401, 402, 404]:
                     break  # Do not retry. Go right to raising an Exception.
 
             # Request was successful
             log_request(start_time, retry_count, "OK", status_code)
-            raise gen.Return(
-                json_decode(response.body) if hasattr(response, "body") else None
-            )
+            raise gen.Return(json_decode(response.body) if hasattr(response, "body") else None)
 
         # Retries failed. Raise exception
         raise BatchError(response, retry_count, url, params)
@@ -307,9 +302,7 @@ class GroClient(object):
                         result = yield func(*item)
                     else:
                         result = yield func(item)
-                    output_data["result"] = map_result(
-                        idx, item, result, output_data["result"]
-                    )
+                    output_data["result"] = map_result(idx, item, result, output_data["result"])
                     self._logger.debug("Done with {}".format(idx))
                     q.task_done()
                 except Exception:
@@ -344,35 +337,39 @@ class GroClient(object):
         headers = {"authorization": "Bearer " + self.access_token}
         url = "/".join(["https:", "", self.api_host, "v2/data"])
         params = lib.get_data_call_params(**selection)
-        required_params = [str_snake_to_camel(type_id) for type_id in DATA_SERIES_UNIQUE_TYPES_ID if type_id != 'partner_region_id']
+        required_params = [
+            str_snake_to_camel(type_id) for type_id in DATA_SERIES_UNIQUE_TYPES_ID if type_id != 'partner_region_id'
+        ]
         missing_params = list(required_params - params.keys())
         if len(missing_params):
-            message = 'API request cannot be processed because {} not specified.'.format(missing_params[0] + ' is' if len(missing_params) == 1 else ', '.join(missing_params[:-1]) + ' and ' + missing_params[-1] + ' are')
+            message = 'API request cannot be processed because {} not specified.'.format(
+                missing_params[0] + ' is'
+                if len(missing_params) == 1
+                else ', '.join(missing_params[:-1]) + ' and ' + missing_params[-1] + ' are'
+            )
             self._logger.error(message)
             raise ValueError(message)
 
         try:
             list_of_series_points = yield self.async_get_data(url, headers, params)
             include_historical = selection.get("include_historical", True)
-            points = lib.list_of_series_to_single_series(
-                list_of_series_points, False, include_historical
-            )
+            points = lib.list_of_series_to_single_series(list_of_series_points, False, include_historical)
             # Apply unit conversion if a unit is specified
             if "unit_id" in selection:
-                raise gen.Return(list(
-                    map(
-                        partial(self.convert_unit, target_unit_id=selection["unit_id"]),
-                        points,
+                raise gen.Return(
+                    list(
+                        map(
+                            partial(self.convert_unit, target_unit_id=selection["unit_id"]),
+                            points,
+                        )
                     )
-                ))
+                )
 
             raise gen.Return(points)
         except BatchError as b:
             raise gen.Return(b)
 
-    def batch_async_get_data_points(
-        self, batched_args, output_list=None, map_result=None
-    ):
+    def batch_async_get_data_points(self, batched_args, output_list=None, map_result=None):
         """Make many :meth:`~get_data_points` requests asynchronously.
 
         Parameters
@@ -435,9 +432,7 @@ class GroClient(object):
                 ]
 
         """
-        return self.batch_async_queue(
-            self.get_data_points_generator, batched_args, output_list, map_result
-        )
+        return self.batch_async_queue(self.get_data_points_generator, batched_args, output_list, map_result)
 
     @gen.coroutine
     def async_rank_series_by_source(self, *selections_list):
@@ -445,9 +440,7 @@ class GroClient(object):
         response = self.rank_series_by_source(selections_list)
         raise gen.Return(list(response))
 
-    def batch_async_rank_series_by_source(
-        self, batched_args, output_list=None, map_result=None
-    ):
+    def batch_async_rank_series_by_source(self, batched_args, output_list=None, map_result=None):
         """Perform multiple rank_series_by_source requests asynchronously.
 
         Parameters
@@ -456,9 +449,7 @@ class GroClient(object):
             See :meth:`~.rank_series_by_source` `selections_list`. A list of those lists.
 
         """
-        return self.batch_async_queue(
-            self.async_rank_series_by_source, batched_args, output_list, map_result
-        )
+        return self.batch_async_queue(self.async_rank_series_by_source, batched_args, output_list, map_result)
 
     def get_available(self, entity_type):
         """List the first 5000 available entities of the given type.
@@ -581,9 +572,7 @@ class GroClient(object):
         list of unit ids
 
         """
-        return lib.get_allowed_units(
-            self.access_token, self.api_host, metric_id, item_id
-        )
+        return lib.get_allowed_units(self.access_token, self.api_host, metric_id, item_id)
 
     def get_data_series(self, **selection):
         """Get available data series for the given selections.
@@ -697,9 +686,7 @@ class GroClient(object):
             the best match for the given search term(s).
 
         """
-        return lib.search_and_lookup(
-            self.access_token, self.api_host, entity_type, search_terms, num_results
-        )
+        return lib.search_and_lookup(self.access_token, self.api_host, entity_type, search_terms, num_results)
 
     def lookup_belongs(self, entity_type, entity_id):
         """Look up details of entities containing the given entity.
@@ -723,9 +710,7 @@ class GroClient(object):
                   'level': 2 }
 
         """
-        return lib.lookup_belongs(
-            self.access_token, self.api_host, entity_type, entity_id
-        )
+        return lib.lookup_belongs(self.access_token, self.api_host, entity_type, entity_id)
 
     def rank_series_by_source(self, selections_list):
         """Given a list of series selections, for each unique combination excluding source, expand
@@ -743,9 +728,7 @@ class GroClient(object):
             The input selections_list, expanded out to each possible source, ordered by coverage.
 
         """
-        return lib.rank_series_by_source(
-            self.access_token, self.api_host, selections_list
-        )
+        return lib.rank_series_by_source(self.access_token, self.api_host, selections_list)
 
     def get_geo_centre(self, region_id):
         """Given a region ID, return the geographic centre in degrees lat/lon.
@@ -789,8 +772,7 @@ class GroClient(object):
                 }]
 
         """
-        return lib.get_geojsons(
-            self.access_token, self.api_host, region_id, descendant_level, zoom_level)
+        return lib.get_geojsons(self.access_token, self.api_host, region_id, descendant_level, zoom_level)
 
     def get_geojson(self, region_id, zoom_level=7):
         """Given a region ID, return shape information in geojson.
@@ -918,7 +900,7 @@ class GroClient(object):
             if the `entity_type` is 'regions'. If provided along with `distance`, `distance` will
             take precedence. If not provided, and `distance` not provided, get all descendants.
         include_historical : boolean, optional
-            True by default. If False is specified, regions that only exist in historical data
+            Only applicable to regions. True by default. If False is specified, regions that only exist in historical data
             (e.g. the Soviet Union) will be excluded.
 
         Returns
@@ -1002,9 +984,7 @@ class GroClient(object):
                     'end_date': '2020-03-09T00:00:00.000Z',
                     'name': u'daily'}, ... ]
         """
-        return lib.get_available_timefrequency(
-            self.access_token, self.api_host, **selection
-        )
+        return lib.get_available_timefrequency(self.access_token, self.api_host, **selection)
 
     def get_top(self, entity_type, num_results=5, **selection):
         """Find the data series with the highest cumulative value for the given time range.
@@ -1061,9 +1041,7 @@ class GroClient(object):
             value the series are ranked by. You may then use the results to call
             :meth:`~.get_data_points` to get the individual time series points.
         """
-        return lib.get_top(
-            self.access_token, self.api_host, entity_type, num_results, **selection
-        )
+        return lib.get_top(self.access_token, self.api_host, entity_type, num_results, **selection)
 
     def get_df(
         self,
@@ -1072,8 +1050,9 @@ class GroClient(object):
         index_by_series=False,
         include_names=False,
         compress_format=False,
-        async_mode = False,
-        show_revisions=False):
+        async_mode=False,
+        show_revisions=False,
+    ):
         """Call :meth:`~.get_data_points` for each saved data series and return as a combined
         dataframe.
 
@@ -1119,15 +1098,13 @@ class GroClient(object):
         while self._data_series_queue:
             data_series = self._data_series_queue.pop()
             if reporting_history or show_revisions:
-                 data_series["reporting_history"] = True
+                data_series["reporting_history"] = True
             if complete_history:
                 data_series["complete_history"] = True
             if async_mode:
                 data_series_list.append(data_series)
             else:
-                self.add_points_to_df(
-                    None, data_series, self.get_data_points(**data_series)
-                )
+                self.add_points_to_df(None, data_series, self.get_data_points(**data_series))
 
         if async_mode:
             self.batch_async_get_data_points(
@@ -1148,11 +1125,12 @@ class GroClient(object):
                 name_col = entity_type_id.replace('_id', '_name')
                 name_cols.append(name_col)
                 entity_dict = self.lookup(ENTITY_KEY_TO_TYPE[entity_type_id], self._data_frame[entity_type_id].unique())
-                self._data_frame[name_col] = self._data_frame[entity_type_id].apply(lambda entity_id: entity_dict.get(str(entity_id))['name'])
+                self._data_frame[name_col] = self._data_frame[entity_type_id].apply(
+                    lambda entity_id: entity_dict.get(str(entity_id))['name']
+                )
 
             if compress_format:
-                return self._data_frame.pivot_table(index='end_date', values='value',
-                                                    columns=name_cols)
+                return self._data_frame.pivot_table(index='end_date', values='value', columns=name_cols)
 
         if index_by_series:
             idx_columns = intersect(DATA_SERIES_UNIQUE_TYPES_ID, self._data_frame.columns)
@@ -1162,15 +1140,17 @@ class GroClient(object):
 
         return self._data_frame
 
-    def async_get_df(self, reporting_history=False, complete_history=False, index_by_series=False, include_names=False, compress_format=False, show_revisions=False):
+    def async_get_df(
+        self,
+        reporting_history=False,
+        complete_history=False,
+        index_by_series=False,
+        include_names=False,
+        compress_format=False,
+        show_revisions=False,
+    ):
         return self.get_df(
-            reporting_history,
-            complete_history,
-            index_by_series,
-            include_names,
-            compress_format,
-            True,
-            show_revisions
+            reporting_history, complete_history, index_by_series, include_names, compress_format, True, show_revisions
         )
 
     def add_points_to_df(self, index, data_series, data_points, *args):
@@ -1326,9 +1306,7 @@ class GroClient(object):
         list of dicts
 
         """
-        data_points = lib.get_data_points(
-            self.access_token, self.api_host, **selections
-        )
+        data_points = lib.get_data_points(self.access_token, self.api_host, **selections)
         # Apply unit conversion if a unit is specified
         if "unit_id" in selections:
             return list(
@@ -1374,10 +1352,13 @@ class GroClient(object):
         self.add_single_data_series(selection)
         try:
             df = self.get_df(index_by_series=True, include_names=True).loc[[tuple(entity_ids)], :]
-            df.set_index([entity_type_id.replace('_id', '_name')
-                          for entity_type_id in intersect(DATA_SERIES_UNIQUE_TYPES_ID,
-                                                          df.index.names)],
-                         inplace=True)
+            df.set_index(
+                [
+                    entity_type_id.replace('_id', '_name')
+                    for entity_type_id in intersect(DATA_SERIES_UNIQUE_TYPES_ID, df.index.names)
+                ],
+                inplace=True,
+            )
             return df
         except KeyError:
             self._logger.warning("GDH returned no data")
@@ -1491,21 +1472,17 @@ class GroClient(object):
             id_key = "{}_id".format(kw)
             if id_key in ENTITY_KEY_TO_TYPE:
                 type_results = []  # [('item_id',1),('item_id',2),...]
-                for search_result in self.search(
-                    ENTITY_KEY_TO_TYPE[id_key], kwargs[kw]
-                )[: cfg.MAX_RESULT_COMBINATION_DEPTH]:
-                    if result_filter is None or result_filter(
-                        {id_key: search_result["id"]}
-                    ):
+                for search_result in self.search(ENTITY_KEY_TO_TYPE[id_key], kwargs[kw])[
+                    : cfg.MAX_RESULT_COMBINATION_DEPTH
+                ]:
+                    if result_filter is None or result_filter({id_key: search_result["id"]}):
                         type_results.append((id_key, search_result["id"]))
                 results.append(type_results)
         # Rank by frequency and source, while preserving search ranking in
         # permutations of search results.
         ranking_groups = set()
         for comb in itertools.product(*results):
-            for data_series in self.get_data_series(**dict(comb))[
-                : cfg.MAX_SERIES_PER_COMB
-            ]:
+            for data_series in self.get_data_series(**dict(comb))[: cfg.MAX_SERIES_PER_COMB]:
                 self._logger.debug("Data series: {}".format(data_series))
                 # remove time and frequency to rank them
                 data_series.pop("start_date", None)
@@ -1586,11 +1563,7 @@ class GroClient(object):
         """
         results = self.search(entity_type, keywords)
         for result in results:
-            self._logger.debug(
-                "First result, out of {} {}: {}".format(
-                    len(results), entity_type, result["id"]
-                )
-            )
+            self._logger.debug("First result, out of {} {}: {}".format(len(results), entity_type, result["id"]))
             return result["id"]
 
     def get_provinces(self, country_name):
@@ -1627,12 +1600,8 @@ class GroClient(object):
         """
         for region in self.search_and_lookup("regions", country_name):
             if region["level"] == lib.REGION_LEVELS["country"]:
-                provinces = self.get_descendant(
-                    'regions', region["id"], descendant_level=lib.REGION_LEVELS["province"]
-                )
-                self._logger.debug(
-                    "Provinces of {}: {}".format(country_name, provinces)
-                )
+                provinces = self.get_descendant('regions', region["id"], descendant_level=lib.REGION_LEVELS["province"])
+                self._logger.debug("Provinces of {}: {}".format(country_name, provinces))
                 return provinces
         return None
 
@@ -1684,9 +1653,7 @@ class GroClient(object):
         """
         if point.get("unit_id") is None or point.get("unit_id") == target_unit_id:
             return point
-        from_convert_factor = self.lookup("units", point["unit_id"]).get(
-            "baseConvFactor"
-        )
+        from_convert_factor = self.lookup("units", point["unit_id"]).get("baseConvFactor")
         if not from_convert_factor.get("factor"):
             raise Exception("unit_id {} is not convertible".format(point["unit_id"]))
         to_convert_factor = self.lookup("units", target_unit_id).get("baseConvFactor")
@@ -1696,13 +1663,14 @@ class GroClient(object):
         if point.get("value") is not None:
             point["value"] = lib.convert_value(point["value"], from_convert_factor, to_convert_factor)
         if point.get("metadata") is not None and point["metadata"].get("conf_interval") is not None:
-            point["metadata"]["conf_interval"] = lib.convert_value(point["metadata"]["conf_interval"], from_convert_factor, to_convert_factor)
+            point["metadata"]["conf_interval"] = lib.convert_value(
+                point["metadata"]["conf_interval"], from_convert_factor, to_convert_factor
+            )
         point["unit_id"] = target_unit_id
         return point
 
-
     def get_area_weighting_series_names(self):
-        """ Returns a list of valid series names that can be used to 
+        """Returns a list of valid series names that can be used to
             form the inputs of :meth:`~.get_area_weighted_series`.
 
         Returns
@@ -1719,9 +1687,8 @@ class GroClient(object):
         """
         return lib.get_area_weighting_series_names(self.access_token, self.api_host)
 
-
     def get_area_weighting_weight_names(self):
-        """ Returns a list of valid weight names that can be used to 
+        """Returns a list of valid weight names that can be used to
             form the inputs of :meth:`~.get_area_weighted_series`.
 
         Returns
@@ -1736,9 +1703,7 @@ class GroClient(object):
         """
         return lib.get_area_weighting_weight_names(self.access_token, self.api_host)
 
-
-    def get_area_weighted_series(self, series_name, weight_names, region_id,
-                                 method='sum', latest_date_only=False):
+    def get_area_weighted_series(self, series_name, weight_names, region_id, method='sum', latest_date_only=False):
         """Compute weighted average on selected series with the given weights.
 
         Returns a dictionary mapping dates to weighted values.
