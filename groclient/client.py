@@ -961,49 +961,7 @@ class GroClient(object):
     ):
         """Look up details of all regions of the given level contained by a region.
 
-        This method is deprecated, and should be replaced by :meth:`~.get_descendant` which has
-        been updated to include the `descendant_level` and `include_historical` parameters.
-
-        Given any region by id, get all the descendant regions that are of the specified level.
-
-        Parameters
-        ----------
-        region_id : integer
-        descendant_level : integer, optional
-            The region level of interest. See REGION_LEVELS constant. If not provided, get all
-            descendants.
-        include_historical : boolean, optional
-            True by default. If False is specified, regions that only exist in historical data
-            (e.g. the Soviet Union) will be excluded.
-        include_details : boolean, optional
-            True by default. Will perform a lookup() on each descendant region to find name,
-            latitude, longitude, etc. If this option is set to False, only ids of descendant
-            regions will be returned, which makes execution significantly faster.
-        distance: integer, optional
-            Return all entity contained to entity_id at maximum distance.
-            If provided, it will take precedence over `descendant_level`.
-            If not provided, get all descendants.
-
-        Returns
-        -------
-        list of dicts
-
-            Example::
-
-                [{
-                    'id': 13100,
-                    'contains': [139839, 139857, ...],
-                    'name': 'Wisconsin',
-                    'level': 4
-                } , {
-                    'id': 13101,
-                    'contains': [139891, 139890, ...],
-                    'name': 'Wyoming',
-                    'level': 4
-                }, ...]
-
-            See output of :meth:`~.lookup`
-
+        This functionality has been moved to :meth:`~.get_descendant`.
         """
         return lib.get_descendant(
             self.access_token,
