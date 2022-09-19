@@ -76,13 +76,13 @@ To look up all descendants of region 1029 (Brazil) that are of level 4 (province
 ::
 
   from groclient.lib import REGION_LEVELS
-  provinces_of_brazil = client.get_descendant(1029, descendant_level=REGION_LEVELS['province'])
+  provinces_of_brazil = client.get_descendant('regions', 1029, descendant_level=REGION_LEVELS['province'])
 
 To look up all descendants of region 1029 (Brazil) that are of level 5 (districts):
 ::
 
   from groclient.lib import REGION_LEVELS
-  provinces_of_brazil = client.get_descendant(1029, descendant_level=REGION_LEVELS['district'])
+  provinces_of_brazil = client.get_descendant('regions', 1029, descendant_level=REGION_LEVELS['district'])
 
 For more information on region levels, please refer to the `Special properties of regions <./gro-ontology#special-properties-for-regions>`_ section of `Gro Ontology <./gro-ontology>`_
 

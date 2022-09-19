@@ -1151,49 +1151,7 @@
     <span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Look up details of all regions of the given level contained by a region.</span>
 
-<span class="sd">        This method is deprecated, and should be replaced by :meth:`~.get_descendant` which has</span>
-<span class="sd">        been updated to include the `descendant_level` and `include_historical` parameters.</span>
-
-<span class="sd">        Given any region by id, get all the descendant regions that are of the specified level.</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        region_id : integer</span>
-<span class="sd">        descendant_level : integer, optional</span>
-<span class="sd">            The region level of interest. See REGION_LEVELS constant. If not provided, get all</span>
-<span class="sd">            descendants.</span>
-<span class="sd">        include_historical : boolean, optional</span>
-<span class="sd">            True by default. If False is specified, regions that only exist in historical data</span>
-<span class="sd">            (e.g. the Soviet Union) will be excluded.</span>
-<span class="sd">        include_details : boolean, optional</span>
-<span class="sd">            True by default. Will perform a lookup() on each descendant region to find name,</span>
-<span class="sd">            latitude, longitude, etc. If this option is set to False, only ids of descendant</span>
-<span class="sd">            regions will be returned, which makes execution significantly faster.</span>
-<span class="sd">        distance: integer, optional</span>
-<span class="sd">            Return all entity contained to entity_id at maximum distance.</span>
-<span class="sd">            If provided, it will take precedence over `descendant_level`.</span>
-<span class="sd">            If not provided, get all descendants.</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        list of dicts</span>
-
-<span class="sd">            Example::</span>
-
-<span class="sd">                [{</span>
-<span class="sd">                    &#39;id&#39;: 13100,</span>
-<span class="sd">                    &#39;contains&#39;: [139839, 139857, ...],</span>
-<span class="sd">                    &#39;name&#39;: &#39;Wisconsin&#39;,</span>
-<span class="sd">                    &#39;level&#39;: 4</span>
-<span class="sd">                } , {</span>
-<span class="sd">                    &#39;id&#39;: 13101,</span>
-<span class="sd">                    &#39;contains&#39;: [139891, 139890, ...],</span>
-<span class="sd">                    &#39;name&#39;: &#39;Wyoming&#39;,</span>
-<span class="sd">                    &#39;level&#39;: 4</span>
-<span class="sd">                }, ...]</span>
-
-<span class="sd">            See output of :meth:`~.lookup`</span>
-
+<span class="sd">        This functionality has been moved to :meth:`~.get_descendant`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">lib</span><span class="o">.</span><span class="n">get_descendant</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">access_token</span><span class="p">,</span>
