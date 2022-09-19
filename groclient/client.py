@@ -961,8 +961,8 @@ class GroClient(object):
     ):
         """Look up details of all regions of the given level contained by a region.
 
-        This method is deprecated, and should be replaced by :meth:`~.get_descendant` which has
-        been updated to include the `descendant_level` and `include_historical` parameters.
+        This functionality of this method can also be achieved by using :meth:`~.get_descendant` 
+        in combination with the `descendant_level` and `include_historical` parameters.
 
         Given any region by id, get all the descendant regions that are of the specified level.
 
