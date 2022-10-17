@@ -566,7 +566,7 @@ def get_data_points(access_token, api_host, **selection):
             if len(missing_params) == 1
             else ', '.join(missing_params[:-1]) + ' and ' + missing_params[-1] + ' are'
         )
-        logger.error(message)
+        logger.warning(message)
         raise ValueError(message)
     resp = get_data(url, headers, params)
     include_historical = selection.get('include_historical', True)
