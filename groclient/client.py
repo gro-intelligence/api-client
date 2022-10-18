@@ -347,7 +347,7 @@ class GroClient(object):
                 if len(missing_params) == 1
                 else ', '.join(missing_params[:-1]) + ' and ' + missing_params[-1] + ' are'
             )
-            self._logger.error(message)
+            self._logger.warning(message)
             raise ValueError(message)
 
         try:
