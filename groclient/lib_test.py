@@ -705,3 +705,34 @@ def test_get_area_weighted_series(mock_requests_get):
         )
         == expected_return
     )
+
+def test_get_data_call_params():
+    selections = {
+        'item_id': 3457,
+        'metric_id': 2540047,
+        'source_id': 26,
+        'frequency_id': 1,
+        'unit_id': 36,
+        'region_id': 102067,
+        'start_date': '2001-12-25',
+        'end_date': '2001-12-30',
+        'complete_history': True,
+        'at_time': '2018-01-01',
+        'show_metadata': True,
+        'coverage_threshold': 0.1
+    }
+    expected = {
+        'itemId': 3457,
+        'metricId': 2540047,
+        'sourceId': 26,
+        'frequencyId': 1,
+        'regionId': 102067,
+        'startDate': '2001-12-25',
+        'endDate': '2001-12-30',
+        'showHistory': True,
+        'atTime': '2018-01-01',
+        'showMetaData': True,
+        'coverageThreshold': 0.1,
+        'responseType': 'list_of_series'
+    }
+    assert(lib.get_data_call_params(**selections) == expected)
