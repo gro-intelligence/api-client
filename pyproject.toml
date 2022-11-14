@@ -12,7 +12,9 @@ license = "MIT"
 # TODO: remove once we remove the old api directory completely.
 packages = [
   { include = "groclient" },
+  { include = "api" },
 ]
+exclude = ["api/client/samples"]
 
 [tool.poetry.scripts]
 gro_client = 'groclient.__main__:main'
