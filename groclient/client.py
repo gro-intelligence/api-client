@@ -1300,6 +1300,8 @@ class GroClient(object):
             True by default, will include historical regions that are part of your selections
         available_since : string, optional
             Fetch points since last data retrieval where available date is equal to or after this date
+        show_metadata : bool, optional
+            False by default. If True, include metadata for each datapoint within the response.
 
         Returns
         -------
