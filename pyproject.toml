@@ -14,7 +14,8 @@ packages = [
   { include = "groclient" },
   { include = "api" },
 ]
-exclude = ["api/client/samples"]
+exclude = ["api/client/samples/analysis_kits", "api/client/samples/anomaly_detection", "api/client/samples/batch_queries",
+ "api/client/samples/crop_w_series", "api/client/samples/drought", "api/client/samples/prevented_plant"]
 
 [tool.poetry.scripts]
 gro_client = 'groclient.__main__:main'
