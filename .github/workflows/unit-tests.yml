@@ -1,0 +1,75 @@
+---
+
+name: "Unit tests"
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches:
+      - "development"
+
+  push:
+    branches:
+      - "development"
+
+concurrency:
+  group: "${{ github.workflow }} @ ${{ github.event.pull_request.head.label || github.head_ref || github.ref }}"
+  cancel-in-progress: true
+
+jobs:
+  build:
+    if: github.event_name == 'pull_request' 
+    runs-on: ubuntu-latest
+    container:
+      image: python:3.7-buster
+    steps:
+      - name: "Checkout code"
+        uses: "actions/checkout@v3"
+
+      - uses: "./.github/actions/code-build-and-tests"
+        with:
+          GROAPI_TOKEN: "${{ secrets.GROAPI_TOKEN }}"
+          TEMP_DIR: "${RUNNER_TEMP}"
+          #TEST_PYPI_TOKEN: ${{ secrets.TEST_PYPI_TOKEN }}
+          #PYPI_TOKEN: ${{ secrets.PYPI_TOKEN }}
+
+  merge-commit:
+    if: github.event_name == 'dummy' && github.ref_name == 'development'
+    runs-on: ubuntu-latest
+    container:
+      image: python:3.7-buster
+    steps:
+      - name: "Checkout code"
+        uses: "actions/checkout@v3"
+
+      - uses: "./.github/actions/code-build-and-tests"
+        with:
+          GROAPI_TOKEN: "${{ secrets.GROAPI_TOKEN }}"
+          TEMP_DIR: "${RUNNER_TEMP}"
+
+      - name: "Push to testpypi"
+        if: "${{ inputs.TEST_PYPI_TOKEN != '' }}"
+        shell: "bash"
+        run: >-
+          poetry config repositories.testpypi https://test.pypi.org/legacy/ &&
+          poetry publish -u __token__ -p ${{inputs.TEST_PYPI_TOKEN}} -r testpypi
+
+  release:
+    if: github.event_name == 'dummy' && github.ref_name == 'development'
+    runs-on: ubuntu-latest
+    container:
+      image: python:3.7-buster
+    steps:
+      - name: "Checkout code"
+        uses: "actions/checkout@v3"
+
+      - uses: "./.github/actions/code-build-and-tests"
+        with:
+          GROAPI_TOKEN: "${{ secrets.GROAPI_TOKEN }}"
+          TEMP_DIR: "${RUNNER_TEMP}"
+
+      - name: "Push to pypi"
+        if: "${{ inputs.PYPI_TOKEN != '' }}"
+        shell: "bash"
+        run: >-
+          poetry publish -u __token__ -p ${{inputs.PYPI_TOKEN}}

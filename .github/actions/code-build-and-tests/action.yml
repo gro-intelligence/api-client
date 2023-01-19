@@ -1,0 +1,72 @@
+name: "Build & test"
+description: "Build code and run unit tests"
+
+inputs:
+  GROAPI_TOKEN:
+    description: "Gro API token"
+    required: true
+  TEMP_DIR:
+    description: "Temporary directory path"
+    required: true
+  TEST_PYPI_TOKEN:
+    description: "PYPI token for the test site."
+    required: false
+  PYPI_TOKEN:
+    description: "PYPI token."
+    required: false
+
+runs:
+  using: "composite"
+  steps:
+    - name: "Setup environment"
+      shell: "bash"
+      run: |
+        pip install -U pip wheel
+        pip install poetry
+        poetry install
+
+    - name: "Run doctests"
+      shell: "bash"
+      run: |
+        poetry run python groclient/lib.py -v
+
+    - name: "Run tests and code coverage"
+      shell: "bash"
+      env:
+        TEMP_DIR: "${{ inputs.TEMP_DIR }}"
+      run: >-
+        mkdir -p ${TEMP_DIR}/testresults ${TEMP_DIR}/codecoverage &&
+        poetry run pytest
+        --junitxml=${TEMP_DIR}/testresults/junit.xml
+        --cov=groclient
+        --cov-report=html:${TEMP_DIR}/codecoverage/coverage_html
+
+    - name: "Test sample notebook"
+      shell: "bash"
+      run: >-
+        poetry run pip install -r api/client/samples/analogous_years/requirements.txt &&
+        poetry run pytest api/client/samples/analogous_years
+
+    - name: "Ensure latest docs build without warning or errors"
+      shell: "bash"
+      run: >-
+        poetry install -E docs &&
+        poetry run sphinx-build -W --keep-going docs docs/_build/html
+
+    #- name: "Check for broken links in the docs"
+    #  shell: "bash"
+    #  run: |
+    #    poetry run sphinx-build -b linkcheck docs docs/_build/linkcheck
+
+    # Build docs and push to gh-pages
+    # Set up gi
+    - name: "Build docs and push to gh-pages"
+      shell: "bash"
+      run: >-
+        poetry run bin/sphinx_push_ghpages.sh
+
+    - name: "Build package"
+      shell: "bash"
+      run: >-
+        pip install poetry-dynamic-versioning &&
+        poetry build
