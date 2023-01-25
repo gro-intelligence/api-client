@@ -1703,7 +1703,7 @@ class GroClient(object):
         """
         return lib.get_area_weighting_weight_names(self.access_token, self.api_host)
 
-    def get_area_weighted_series(self, series_name, weight_names, region_id, method='sum', latest_date_only=False):
+    def get_area_weighted_series(self, series_name, weight_names, region_id=None, region_ids=[], method='sum', latest_date_only=False):
         """Compute weighted average on selected series with the given weights.
 
         Returns a dictionary mapping dates to weighted values.
@@ -1716,8 +1716,14 @@ class GroClient(object):
         weight_names: list of strs
             List of weight names that will be used to weight the provided series. e.g. ['Barley (ha)', 'Corn (ha)']
             For getting the full list of valid weight names, please call :meth:`~.get_area_weighting_weight_names`
-        region_id: integer
+        region_id: integer, optional*
+            * Either `region_id` or `region_ids` must be specified. `region_ids` takes precedence over `region_id` if 
+            both are specified.
             The region for which the weighted series will be computed
+        region_ids: list of integers, optional*
+            * Either `region_id` or `region_ids` must be specified. `region_ids` takes precedence over `region_id` if 
+            both are specified.
+            The regions for which the weighted series will be computed
         method: str, optional
             'sum' by default. Multi-crop weights can be calculated with either 'sum' or 'normalize' method.
         latest_date_only: bool, optional
@@ -1732,5 +1738,5 @@ class GroClient(object):
                 {'2000-02-25': 0.217, '2000-03-04': 0.217, '2000-03-12': 0.221, ...}
         """
         return lib.get_area_weighted_series(
-            self.access_token, self.api_host, series_name, weight_names, region_id, method, latest_date_only
+            self.access_token, self.api_host, series_name, weight_names, region_id, region_ids, method, latest_date_only
         )
