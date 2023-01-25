@@ -699,12 +699,12 @@ def test_get_area_weighted_series(mock_requests_get):
     initialize_requests_mocker_and_get_mock_data(mock_requests_get, api_response)
 
     expected_return = {'2022-07-11': 0.715615, '2022-07-19': 0.733129, '2022-07-27': 0.748822}
-    assert (
-        lib.get_area_weighted_series(
-            MOCK_TOKEN, MOCK_HOST, 'NDVI_8day', ['Barley (ha)', 'Corn (ha)'], 1215, 'sum', False
-        )
-        == expected_return
-    )
+    result = lib.get_area_weighted_series(MOCK_TOKEN, MOCK_HOST, 'NDVI_8day', ['Barley (ha)', 'Corn (ha)'], 1215, 'sum', False)
+    assert result == expected_return
+
+    result = lib.get_area_weighted_series(MOCK_TOKEN, MOCK_HOST, 'NDVI_8day', ['Barley (ha)', 'Corn (ha)'], [1215], 'sum', False)
+    assert result == expected_return
+
 
 def test_get_data_call_params():
     selections = {
