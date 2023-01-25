@@ -1703,7 +1703,7 @@ class GroClient(object):
         """
         return lib.get_area_weighting_weight_names(self.access_token, self.api_host)
 
-    def get_area_weighted_series(self, series_name, weight_names, region_id=None, region_ids=[], method='sum', latest_date_only=False):
+    def get_area_weighted_series(self, series_name, weight_names, region_id, method='sum', latest_date_only=False):
         """Compute weighted average on selected series with the given weights.
 
         Returns a dictionary mapping dates to weighted values.
