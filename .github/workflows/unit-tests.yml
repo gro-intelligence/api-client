@@ -19,12 +19,18 @@ concurrency:
 jobs:
   build:
     if: github.event_name == 'pull_request' 
-    runs-on: ubuntu-latest
-    container:
-      image: python:3.7-buster
+    runs-on: ubuntu-20.04
+    #container:
+    #  image: python:3.7-bullseye
     steps:
       - name: "Checkout code"
         uses: "actions/checkout@v3"
+
+      - name: "is git installed"
+        shell: "bash"
+        run: |
+          git --version
+          git config --global --add safe.directory /__w/api-client/api-client
 
       - uses: "./.github/actions/code-build-and-tests"
         with:
@@ -34,6 +40,7 @@ jobs:
           #PYPI_TOKEN: ${{ secrets.PYPI_TOKEN }}
 
   merge-commit:
+    # Do not run for now... PYPI tokens not setup yet.
     if: github.event_name == 'dummy' && github.ref_name == 'development'
     runs-on: ubuntu-latest
     container:
@@ -55,6 +62,7 @@ jobs:
           poetry publish -u __token__ -p ${{inputs.TEST_PYPI_TOKEN}} -r testpypi
 
   release:
+    # Do not run for now... PYPI tokens not setup yet.
     if: github.event_name == 'dummy' && github.ref_name == 'development'
     runs-on: ubuntu-latest
     container:
