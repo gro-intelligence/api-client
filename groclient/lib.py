@@ -15,7 +15,10 @@ import logging
 import requests
 import time
 import platform
+
+
 from pkg_resources import get_distribution, DistributionNotFound
+from typing import List, Union
 
 try:
     # functools are native in Python 3.2.3+
@@ -732,7 +735,8 @@ def get_area_weighting_weight_names(access_token, api_host):
     return resp.json()
 
 
-def get_area_weighted_series(access_token, api_host, series_name, weight_names, region_id, method, latest_date_only):
+def get_area_weighted_series(access_token: str, api_host: str, series_name: str, weight_names: List[str], 
+                             region_id: Union[int, List[int]], method: str, latest_date_only: bool):
     url = f'https://{api_host}/area-weighting'
     headers = {'authorization': 'Bearer ' + access_token}
     if isinstance(region_id, int):
