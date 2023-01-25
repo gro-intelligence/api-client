@@ -23,7 +23,7 @@ jobs:
           name: "Environment setup"
           command: |
             pip install -U pip wheel
-            pip install poetry
+            pip install poetry==1.2.2
             poetry install
 
       - run: &run-doctests
