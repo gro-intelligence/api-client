@@ -732,15 +732,15 @@ def get_area_weighting_weight_names(access_token, api_host):
     return resp.json()
 
 
-def get_area_weighted_series(access_token, api_host, series_name, weight_names, region_id, region_ids, method, latest_date_only):
+def get_area_weighted_series(access_token, api_host, series_name, weight_names, region_id, method, latest_date_only):
     url = f'https://{api_host}/area-weighting'
     headers = {'authorization': 'Bearer ' + access_token}
     if isinstance(region_id, int):
-        region_ids = [region_id]
+        region_id = [region_id]
     params = {
         'seriesName': series_name,
         'weightNames': weight_names,
-        'regionIds': region_ids,
+        'regionIds': region_id,
         'method': method,
         'latestDateOnly': latest_date_only,
     }
