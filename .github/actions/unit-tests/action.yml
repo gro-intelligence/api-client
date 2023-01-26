@@ -8,12 +8,6 @@ inputs:
   TEMP_DIR:
     description: "Temporary directory path"
     required: true
-  TEST_PYPI_TOKEN:
-    description: "PYPI token for the test site."
-    required: false
-  PYPI_TOKEN:
-    description: "PYPI token."
-    required: false
 
 runs:
   using: "composite"
@@ -21,8 +15,6 @@ runs:
     - name: "Setup environment"
       shell: "bash"
       run: |
-        #pip install -U pip wheel
-        #pip install poetry
         poetry install
 
     - name: "Run doctests"
@@ -46,24 +38,6 @@ runs:
       run: >-
         poetry run pip install -r api/client/samples/analogous_years/requirements.txt &&
         poetry run pytest api/client/samples/analogous_years
-
-    - name: "Ensure latest docs build without warning or errors"
-      shell: "bash"
-      run: >-
-        poetry install -E docs &&
-        poetry run sphinx-build -W --keep-going docs docs/_build/html
-
-    #- name: "Check for broken links in the docs"
-    #  shell: "bash"
-    #  run: |
-    #    poetry run sphinx-build -b linkcheck docs docs/_build/linkcheck
-
-    # Build docs and push to gh-pages
-    # Set up gi
-    - name: "Build docs and push to gh-pages"
-      shell: "bash"
-      run: >-
-        poetry run bin/sphinx_push_ghpages.sh
 
     - name: "Build package"
       shell: "bash"

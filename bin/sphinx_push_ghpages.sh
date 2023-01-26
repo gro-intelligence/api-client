@@ -20,7 +20,7 @@ KEEP_FILES=(.nojekyll CNAME README.md shippable.yml)
 REPO=$(git remote -v | grep origin | awk 'NR==1 { print $2 }')
 TMPDIR=$(mktemp -d ./tmp-sphinx.XXX)
 
-
+echo 'repository uri..-> ${REPO}'
 ## prepare helper repo
 
 # clone into temp dir
@@ -70,6 +70,8 @@ else
 fi
 
 echo -e "\n-> committing change..."
+git config user.name 'github-actions[bot]'
+git config user.email 'github-actions[bot]@users.noreply.github.com'
 git commit -m "[skip ci] sphinx_push_ghpages.sh: autocommit $(date '+%Y-%m-%d %H:%M:%S')"
 
 echo -e "\n-> pushing update..."

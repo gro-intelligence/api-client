@@ -17,8 +17,31 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  build:
+  unit-tests:
     if: github.event_name == 'pull_request' 
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Checkout code"
+        uses: "actions/checkout@v3"
+
+      - name: "setup python"
+        uses: "actions/setup-python@v4"
+        with:
+          python-version: "3.7"
+
+      - name: "setup poetry"
+        uses: "abatilo/actions-poetry@v2"
+        with:
+          poetry-version: "1.3.1"
+
+      - uses: "./.github/actions/unit-tests"
+        with:
+          GROAPI_TOKEN: "${{ secrets.GROAPI_TOKEN }}"
+          TEMP_DIR: "${RUNNER_TEMP}"
+
+  docs:
+    needs: unit-tests
+    if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     steps:
       - name: "Checkout code"
@@ -36,12 +59,10 @@ jobs:
         with:
           poetry-version: "1.3.1"
 
-      - uses: "./.github/actions/code-build-and-tests"
+      - uses: "./.github/actions/build-docs"
         with:
           GROAPI_TOKEN: "${{ secrets.GROAPI_TOKEN }}"
           TEMP_DIR: "${RUNNER_TEMP}"
-          #TEST_PYPI_TOKEN: ${{ secrets.TEST_PYPI_TOKEN }}
-          #PYPI_TOKEN: ${{ secrets.PYPI_TOKEN }}
 
   merge-commit:
     # Do not run for now... PYPI tokens not setup yet.
@@ -53,7 +74,7 @@ jobs:
       - name: "Checkout code"
         uses: "actions/checkout@v3"
 
-      - uses: "./.github/actions/code-build-and-tests"
+      - uses: "./.github/actions/unit-tests"
         with:
           GROAPI_TOKEN: "${{ secrets.GROAPI_TOKEN }}"
           TEMP_DIR: "${RUNNER_TEMP}"
@@ -75,7 +96,7 @@ jobs:
       - name: "Checkout code"
         uses: "actions/checkout@v3"
 
-      - uses: "./.github/actions/code-build-and-tests"
+      - uses: "./.github/actions/unit-tests"
         with:
           GROAPI_TOKEN: "${{ secrets.GROAPI_TOKEN }}"
           TEMP_DIR: "${RUNNER_TEMP}"
