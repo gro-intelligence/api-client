@@ -19,18 +19,20 @@ concurrency:
 jobs:
   build:
     if: github.event_name == 'pull_request' 
-    runs-on: ubuntu-20.04
-    #container:
-    #  image: python:3.7-bullseye
+    runs-on: ubuntu-latest
     steps:
       - name: "Checkout code"
         uses: "actions/checkout@v3"
 
-      - name: "is git installed"
-        shell: "bash"
-        run: |
-          git --version
-          git config --global --add safe.directory /__w/api-client/api-client
+      - name: "setup python"
+        uses: "actions/setup-python@v4"
+        with:
+          python-version: "3.7"
+
+      - name: "setup poetry"
+        uses: "abatilo/actions-poetry@v2"
+        with:
+          poetry-version: "1.3.1"
 
       - uses: "./.github/actions/code-build-and-tests"
         with:

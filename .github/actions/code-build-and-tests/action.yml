@@ -21,8 +21,8 @@ runs:
     - name: "Setup environment"
       shell: "bash"
       run: |
-        pip install -U pip wheel
-        pip install poetry
+        #pip install -U pip wheel
+        #pip install poetry
         poetry install
 
     - name: "Run doctests"
