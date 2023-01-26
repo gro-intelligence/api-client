@@ -19,7 +19,7 @@ sys.path.insert(0, os.path.abspath('..'))
 
 project = 'Gro API Client'
 html_logo = '_images/Gro_Full_Logo_Blue_Xsmall.svg'
-copyright = '2017-2021, Gro Intelligence'
+copyright = '2017-2022, Gro Intelligence'
 author = 'Gro Intelligence'
 
 
@@ -90,18 +90,4 @@ master_doc = 'index'
 # v1.40.6 (from 2019-12-19) is the first version with finalized docs style.
 # so, we ignore all other releases that preceded that.
 smv_tag_whitelist = r'^v(?!1\.40\.[012345]).+$'
-
-# By default, sphinx-multiversion doesn't build remote branches. We want to
-# build all branches, so we sent the pattern to something that matches
-# everything.
-smv_remote_whitelist = r'.'
-
-# Exclude the 'HEAD' ref from being built. Due to building remote refs with
-# smv_remote_whitelist, SMV will build the remotes/origin/HEAD ref. This is
-# equivalent to the 'development' branch, so no need to build it again.
-smv_branch_whitelist = r'^(?!HEAD).*$'
-
-# Note: see bin/sphinx_push_ghpages.sh for how we push new documentation to
-# GitHub Pages. Some options related to pushing docs changes that used to be
-# set here for sphinxcontrib-versioning are now configured in the script, since
-# sphinx-multiversion doesn't have built-in support for pushing changes.
+smv_branch_whitelist = r'^GAIA-17439-migrate-api-client-ci-cd-workflows-from-circle-ci-to-git-hub-actions$'

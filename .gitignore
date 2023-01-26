@@ -1,33 +1,5 @@
-# standard python stuff
 __pycache__/
-*.py[cod]
-.env/
-.venv/
-env/
-venv/
-
-# VSCode
-.vscode/
-*.code-workspace
-
-# IntelliJ
-*.iml
-.idea/
-
-# Emacs
-*~
-
-# OS X
-.DS_Store
-
-# sphinx output
+dist/
 docs/_build/
 
-# Vagrant
-r-client/.vagrant/
-
-# poetry build output
-dist/
-
-# Jupyter notebooks/Jupyterlab
-.ipynb_checkpoints
+.coverage
