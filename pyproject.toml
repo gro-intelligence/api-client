@@ -14,7 +14,22 @@ packages = [
   { include = "groclient" },
   { include = "api" },
 ]
-exclude = ["api/client/samples"]
+
+exclude = [
+"api/client/samples/analysis_kits", 
+"api/client/samples/anomaly_detection", 
+"api/client/samples/batch_queries",
+"api/client/samples/crop_w_series", 
+"api/client/samples/drought", 
+"api/client/samples/prevented_plant",
+"api/client/samples/analogous_years/get_started_with_analogous_years.ipynb",
+"api/client/samples/crop_models/brazil_soybeans.ipynb",
+"api/client/samples/crop_models/ethiopia_cereals.ipynb",
+"api/client/samples/crop_models/kenya_cereals.ipynb",
+"api/client/samples/crop_models/Sao_Paulo_brazil_sugar_content_modeling.ipynb",
+"api/client/samples/at-time-query-examples.ipynb",
+"api/client/samples/stage_environment_available_date.ipynb"
+ ]
 
 [tool.poetry.scripts]
 gro_client = 'groclient.__main__:main'
