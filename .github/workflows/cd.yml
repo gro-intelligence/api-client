@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - "GAIA-17439-migrate-api-client-ci-cd-workflows-from-circle-ci-to-git-hub-actions"
+      - "development"
 
 concurrency:
   group: "${{ github.workflow }} @ ${{ github.event.pull_request.head.label || github.head_ref || github.ref }}"
@@ -14,6 +14,7 @@ concurrency:
 
 permissions:
   contents: "read"
+  id-token: "write"
   pages: "write"
 
 jobs:
@@ -42,6 +43,15 @@ jobs:
       - name: "Build docs"
         run: "poetry run sphinx-multiversion docs docs/_build/html"
 
+      - name: "Copy the landing page default docs version"
+        run: |
+          # With sphinxcontrib-versioning, we would generate a separate directory of docs
+          # for each version tag and branch, but also have the default branch's i.e. `development`
+          # docs at the top level.`sphinx-multiversion` only generates the separate
+          # directories. To avoid breaking links, we copy the the root ref docs (i.e.,
+          # the `development` branch docs) to the parent directory containing all docs.
+          cp -R "docs/_build/html/${{ github.ref_name }}/." docs/_build/html
+
       - name: "Upload artifact"
         uses: "actions/upload-pages-artifact@v1"
         with:
@@ -61,6 +71,6 @@ jobs:
       # - name: "Deploy to PyPI"
       #   run: "poetry publish"
 
-      # - name: Deploy to GitHub Pages
-      #   id: "deployment"
-      #   uses: "actions/deploy-pages@v1"
+      - name: Deploy to GitHub Pages
+        id: "deployment"
+        uses: "actions/deploy-pages@v1"

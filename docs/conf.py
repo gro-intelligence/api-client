@@ -19,7 +19,7 @@ sys.path.insert(0, os.path.abspath('..'))
 
 project = 'Gro API Client'
 html_logo = '_images/Gro_Full_Logo_Blue_Xsmall.svg'
-copyright = '2017-2022, Gro Intelligence'
+copyright = '2017-2023, Gro Intelligence'
 author = 'Gro Intelligence'
 
 
@@ -90,4 +90,4 @@ master_doc = 'index'
 # v1.40.6 (from 2019-12-19) is the first version with finalized docs style.
 # so, we ignore all other releases that preceded that.
 smv_tag_whitelist = r'^v(?!1\.40\.[012345]).+$'
-smv_branch_whitelist = r'^GAIA-17439-migrate-api-client-ci-cd-workflows-from-circle-ci-to-git-hub-actions$'
+smv_branch_whitelist = r'^development$'
