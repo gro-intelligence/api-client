@@ -1,0 +1,50 @@
+---
+
+name: "Test"
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches:
+      - "development"
+
+concurrency:
+  group: "${{ github.workflow }} @ ${{ github.event.pull_request.head.label || github.head_ref || github.ref }}"
+  cancel-in-progress: true
+
+permissions:
+  contents: "read"
+
+jobs:
+  test:
+    runs-on: "ubuntu-20.04"
+    steps:
+      - name: "Checkout repository"
+        uses: "actions/checkout@v3"
+
+      - name: "Setup Python"
+        uses: "actions/setup-python@v4"
+        with:
+          python-version: "3.6"
+
+      - name: "Install dependencies"
+        run: |
+          pip install poetry==1.2.0a2
+          poetry install --with docs
+
+      - name: "Run unit tests"
+        run: "poetry run pytest --cov=groclient"
+
+      - name: "Run doc tests"
+        run: "poetry run python groclient/lib.py -v"
+
+      - name: "Build docs"
+        run: "poetry run sphinx-build -W --keep-going docs docs/_build/html"
+
+      - name: "Check docs"
+        run: "poetry run sphinx-build -W -b linkcheck docs docs/_build/linkcheck"
+
+      - name: "Test sample notebook"
+        run: |
+          poetry run pip install -r api/client/samples/analogous_years/requirements.txt
+          poetry run pytest api/client/samples/analogous_years
