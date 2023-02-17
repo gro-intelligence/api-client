@@ -752,7 +752,6 @@ def get_area_weighted_series(access_token: str, api_host: str, series_name: str,
     return resp.json()
 
 def reverse_geocode_points(access_token: str, api_host: str, points: list):
-
     # Don't need to send empty request to API
     if len(points)==0:
         return []
