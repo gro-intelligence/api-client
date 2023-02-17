@@ -1738,3 +1738,36 @@ class GroClient(object):
         return lib.get_area_weighted_series(
             self.access_token, self.api_host, series_name, weight_names, region_id, method, latest_date_only
         )
+
+    def reverse_geocode_points(self, points: list):
+    """
+    Takes a list of lat/long pairs and return a list of corresponding Gro regions
+    Parameters
+    ----------
+    points: list[list[float]]
+    The list of points we want to reverse geocode. It is a list of points, where each point is a list with the lat/long pair
+    Example: `[[33.4484, -112.0740], [42.3314, -83.0458], [-8.8742, 125.7275]]`
+    Returns 
+    -------
+    A list of Python dictionaries, where each dictionary contains details for one of the passed points. The order is the same as the order of the passed points:
+    ```
+    [{'latitude': 33.4484, 
+      'longitude': -112.074, 
+      'l5_id': 136859, 
+      'l5_name': 'Maricopa', 
+      'l4_id': 13053, 
+      'l4_name': 'Arizona', 
+      'l3_id': 1215, 
+      'l3_name': 'United States'}, 
+     ...,
+     {'latitude': -8.8742, 
+      'longitude': 125.7275,
+      'l5_id': 134452,
+      'l5_name': 'Turiscai',
+      'l4_id': 12774,
+      'l4_name': 'Manufahi', 
+      'l3_id': 1199, 
+      'l3_name': 'East Timor'}]
+    ```
+    """
+        return lib.reverse_geocode_points(self.access_token, self.api_host, points)
