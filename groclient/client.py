@@ -5,6 +5,8 @@ import json
 import os
 import time
 
+from typing import List, Union
+
 # Python3 support
 try:
     # Python3
@@ -1705,7 +1707,8 @@ class GroClient(object):
         """
         return lib.get_area_weighting_weight_names(self.access_token, self.api_host)
 
-    def get_area_weighted_series(self, series_name, weight_names, region_id, method='sum', latest_date_only=False):
+    def get_area_weighted_series(self, series_name: str, weight_names: List[str], region_id: Union[int, List[int]], 
+        method: str = 'sum', latest_date_only: bool = False):
         """Compute weighted average on selected series with the given weights.
 
         Returns a dictionary mapping dates to weighted values.
@@ -1718,8 +1721,9 @@ class GroClient(object):
         weight_names: list of strs
             List of weight names that will be used to weight the provided series. e.g. ['Barley (ha)', 'Corn (ha)']
             For getting the full list of valid weight names, please call :meth:`~.get_area_weighting_weight_names`
-        region_id: integer
-            The region for which the weighted series will be computed
+        region_id: integer or list of integers
+            The region or regions for which the weighted series will be computed
+            Supported region levels are (1, 2, 3, 4, 5, 8)
         method: str, optional
             'sum' by default. Multi-crop weights can be calculated with either 'sum' or 'normalize' method.
         latest_date_only: bool, optional

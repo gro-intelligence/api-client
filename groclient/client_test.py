@@ -570,6 +570,10 @@ class GroClientTests(TestCase):
             self.client.get_area_weighted_series('NDVI_8day', ['Barley (ha)', 'Corn (ha)'], 1215),
             {'2022-07-11': 0.715615, '2022-07-19': 0.733129, '2022-07-27': 0.748822}
         )
+        self.assertEqual(
+            self.client.get_area_weighted_series('NDVI_8day', ['Barley (ha)', 'Corn (ha)'], [1215]),
+            {'2022-07-11': 0.715615, '2022-07-19': 0.733129, '2022-07-27': 0.748822}
+        )
 
 class GroClientConstructorTests(TestCase):
     PROD_API_HOST = "api.gro-intelligence.com"
