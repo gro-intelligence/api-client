@@ -751,6 +751,16 @@ def get_area_weighted_series(access_token: str, api_host: str, series_name: str,
     resp = get_data(url, headers, params=params)
     return resp.json()
 
+def reverse_geocode_points(access_token: str, api_host: str, points: list):
+    # Don't need to send empty request to API
+    if len(points)==0:
+        return []
+    payload: dict = {'latlng': f"{points}"}
+    r = requests.post(f"https://{api_host}/v2/geocode", data=payload, headers={'Authorization': 'Bearer '+ access_token})
+    assert r.status_code == 200, f"Geocoding request failed with status code {r.status_code}"
+    return r.json()['data']
+
+
 
 if __name__ == '__main__':
     # To run doctests:

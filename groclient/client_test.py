@@ -243,6 +243,8 @@ def mock_get_area_weighted_series(access_token, api_host, series_name, weight_na
                                   region_id, method, latest_date_only):
     return {'2022-07-11': 0.715615, '2022-07-19': 0.733129, '2022-07-27': 0.748822}
 
+def mock_reverse_geocode_points(access_token, api_host, points):
+    return [{"latitude": 33.4484, "longitude": -112.074, "l5_id": 136859, "l5_name": "Maricopa", "l4_id": 13053, "l4_name": "Arizona", "l3_id": 1215, "l3_name": "United States"}, {"latitude": -8.8742, "longitude": 125.7275, "l5_id": 134452, "l5_name": "Turiscai", "l4_id": 12774, "l4_name": "Manufahi", "l3_id": 1199, "l3_name": "East Timor"}]  
 
 @patch("groclient.lib.get_available", MagicMock(side_effect=mock_get_available))
 @patch("groclient.lib.list_available", MagicMock(side_effect=mock_list_available))
@@ -270,6 +272,8 @@ def mock_get_area_weighted_series(access_token, api_host, series_name, weight_na
 @patch("groclient.lib.get_area_weighting_series_names", MagicMock(side_effect=mock_get_area_weighting_series_names))
 @patch("groclient.lib.get_area_weighting_weight_names", MagicMock(side_effect=mock_get_area_weighting_weight_names))
 @patch("groclient.lib.get_area_weighted_series", MagicMock(side_effect=mock_get_area_weighted_series))
+@patch("groclient.lib.reverse_geocode_points", MagicMock(side_effect=mock_reverse_geocode_points))
+
 class GroClientTests(TestCase):
     def setUp(self):
         self.client = GroClient(MOCK_HOST, MOCK_TOKEN)
@@ -574,6 +578,11 @@ class GroClientTests(TestCase):
             self.client.get_area_weighted_series('NDVI_8day', ['Barley (ha)', 'Corn (ha)'], [1215]),
             {'2022-07-11': 0.715615, '2022-07-19': 0.733129, '2022-07-27': 0.748822}
         )
+
+    def test_reverse_geocode_points(self):
+        self.assertEqual(
+            self.client.reverse_geocode_points([[33.4484, -112.0740], [-8.8742, 125.7275]]),
+            [{"latitude": 33.4484, "longitude": -112.074, "l5_id": 136859, "l5_name": "Maricopa", "l4_id": 13053, "l4_name": "Arizona", "l3_id": 1215, "l3_name": "United States"}, {"latitude": -8.8742, "longitude": 125.7275, "l5_id": 134452, "l5_name": "Turiscai", "l4_id": 12774, "l4_name": "Manufahi", "l3_id": 1199, "l3_name": "East Timor"}])
 
 class GroClientConstructorTests(TestCase):
     PROD_API_HOST = "api.gro-intelligence.com"
