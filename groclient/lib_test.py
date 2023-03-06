@@ -705,6 +705,16 @@ def test_get_area_weighted_series(mock_requests_get):
     result = lib.get_area_weighted_series(MOCK_TOKEN, MOCK_HOST, 'NDVI_8day', ['Barley (ha)', 'Corn (ha)'], [1215], 'sum', False)
     assert result == expected_return
 
+@mock.patch('requests.post')
+def test_reverse_geocode_points(mock_requests_post):
+    expected_output = [{"latitude": 33.4484, "longitude": -112.074, "l5_id": 136859, "l5_name": "Maricopa", "l4_id": 13053, "l4_name": "Arizona", "l3_id": 1215, "l3_name": "United States"}, {"latitude": -8.8742, "longitude": 125.7275, "l5_id": 134452, "l5_name": "Turiscai", "l4_id": 12774, "l4_name": "Manufahi", "l3_id": 1199, "l3_name": "East Timor"}]
+    
+    initialize_requests_mocker_and_get_mock_data(mock_requests_post, {'data': expected_output})
+
+    result = lib.reverse_geocode_points(MOCK_TOKEN, MOCK_HOST, [[33.4484, -112.0740], [-8.8742, 125.7275]])
+    assert result == expected_output
+
+
 
 def test_get_data_call_params():
     selections = {
@@ -736,3 +746,4 @@ def test_get_data_call_params():
         'responseType': 'list_of_series'
     }
     assert(lib.get_data_call_params(**selections) == expected)
+
