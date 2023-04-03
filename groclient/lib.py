@@ -576,35 +576,50 @@ def get_data_points(access_token, api_host, **selection):
     return list_of_series_to_single_series(resp.json(), False, include_historical)
 
 
-def parse_params(allowed_selections, **selections):
+def parse_params(**selections):
+    logger = get_default_logger()
+    # Query parameters other than allowed_selections are ignored.
+    allowed_selections = {
+        'item_ids',
+        'region_ids',
+        'metric_id',
+        'partner_region_ids',
+        'frequency_id',
+        'source_id',
+        'start_date',
+        'end_date',
+        'unit_id',
+        'stream',
+        'coverage_threshold',
+                          }
+    required_parameters = {
+        'itemIds',
+        'metricId',
+        'regionIds',
+        'frequencyId',
+        'sourceId'
+                           }
     params = {}
     for key, value in list(selections.items()):
         if key in allowed_selections:
             params[groclient.utils.str_snake_to_camel(key)] = value
-    return params
-
-
-def get_data_points_v2_prime(access_token, api_host, allowed_selections, **selection):
-    logger = get_default_logger()
-    headers = {'authorization': 'Bearer ' + access_token}
-    url = '/'.join(['https:', '', api_host, 'v2prime/data'])
-    params = parse_params(allowed_selections, **selection)
-
-    required_params = [
-        groclient.utils.str_snake_to_camel(type_id)
-        for type_id in DATA_SERIES_UNIQUE_TYPES_ID_V2_PRIME
-        if type_id != 'partnerRegionIds'
-    ]
-
-    missing_params = list(required_params - params.keys())
-    if len(missing_params):
+    missing_required_parameters = required_parameters - params.keys()
+    if missing_required_parameters:
+        missing_required_parameters = list(missing_required_parameters)
         message = 'API request cannot be processed because {} not specified.'.format(
-            missing_params[0] + ' is'
-            if len(missing_params) == 1
-            else ', '.join(missing_params[:-1]) + ' and ' + missing_params[-1] + ' are'
+            missing_required_parameters[0] + ' is'
+            if len(missing_required_parameters) == 1
+            else ', '.join(missing_required_parameters[:-1]) + ' and ' + missing_required_parameters[-1] + ' are'
         )
         logger.warning(message)
         raise ValueError(message)
+    return params
+
+
+def get_data_points_v2_prime(access_token, api_host, **selection):
+    headers = {'authorization': 'Bearer ' + access_token}
+    url = '/'.join(['https:', '', api_host, 'v2prime/data'])
+    params = parse_params(**selection)
     resp = get_data(url, headers, params)
     return resp.json()
 
