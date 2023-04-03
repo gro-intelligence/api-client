@@ -33,7 +33,6 @@ class Experimental(GroClient):
                                     'source_id': 26,
                                     'start_date': '2021-12-20',
                                     'end_date': '2021-12-21',
-                                    'coverage_threshold': 0.9,
                                     'stream': True
                                     })
             Returns:
@@ -79,7 +78,7 @@ class Experimental(GroClient):
                 "meta": {
                     "version": "local",
                     "copyright": "Copyright (c) Gro Intelligence",
-                    "timestamp": "Mon, 03 Apr 2023 18:22:10 GMT"
+                    "timestamp": "Mon, 03 Apr 2023 18:32:53 GMT"
                 }
             }
         Parameters
@@ -103,6 +102,7 @@ class Experimental(GroClient):
         end_date : string, optional
             All points with start dates equal to or before this date
         coverage_threshold: float, optional
+            custom threshold on the coverage of geospatial data
         stream: bool, optional
 
         Returns
