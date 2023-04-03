@@ -8,7 +8,7 @@ than here.
 from builtins import str
 from groclient import cfg
 from collections import OrderedDict
-from groclient.constants import REGION_LEVELS, DATA_SERIES_UNIQUE_TYPES_ID
+from groclient.constants import REGION_LEVELS, DATA_SERIES_UNIQUE_TYPES_ID, DATA_SERIES_UNIQUE_TYPES_ID_V2_PRIME
 import groclient.utils
 import json
 import logging
@@ -574,6 +574,39 @@ def get_data_points(access_token, api_host, **selection):
     resp = get_data(url, headers, params)
     include_historical = selection.get('include_historical', True)
     return list_of_series_to_single_series(resp.json(), False, include_historical)
+
+
+def parse_params(allowed_selections, **selections):
+    params = {}
+    for key, value in list(selections.items()):
+        if key in allowed_selections:
+            params[groclient.utils.str_snake_to_camel(key)] = value
+    return params
+
+
+def get_data_points_v2_prime(access_token, api_host, allowed_selections, **selection):
+    logger = get_default_logger()
+    headers = {'authorization': 'Bearer ' + access_token}
+    url = '/'.join(['http:', '', api_host, 'v2prime/data'])
+    params = parse_params(allowed_selections, **selection)
+
+    required_params = [
+        groclient.utils.str_snake_to_camel(type_id)
+        for type_id in DATA_SERIES_UNIQUE_TYPES_ID_V2_PRIME
+        if type_id != 'partnerRegionIds'
+    ]
+
+    missing_params = list(required_params - params.keys())
+    if len(missing_params):
+        message = 'API request cannot be processed because {} not specified.'.format(
+            missing_params[0] + ' is'
+            if len(missing_params) == 1
+            else ', '.join(missing_params[:-1]) + ' and ' + missing_params[-1] + ' are'
+        )
+        logger.warning(message)
+        raise ValueError(message)
+    resp = get_data(url, headers, params)
+    return resp.json()
 
 
 @memoize(maxsize=None)

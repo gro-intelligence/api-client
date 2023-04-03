@@ -23,6 +23,15 @@ DATA_SERIES_UNIQUE_TYPES_ID = [
     'source_id'
 ]
 
+DATA_SERIES_UNIQUE_TYPES_ID_V2_PRIME = [
+    'itemIds',
+    'metricId',
+    'regionIds',
+    'partnerRegionIds',
+    'frequencyId',
+    'sourceId'
+]
+
 ENTITY_KEY_TO_TYPE = {
     'metric_id': 'metrics',
     'item_id': 'items',
