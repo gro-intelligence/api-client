@@ -587,7 +587,7 @@ def parse_params(allowed_selections, **selections):
 def get_data_points_v2_prime(access_token, api_host, allowed_selections, **selection):
     logger = get_default_logger()
     headers = {'authorization': 'Bearer ' + access_token}
-    url = '/'.join(['http:', '', api_host, 'v2prime/data'])
+    url = '/'.join(['https:', '', api_host, 'v2prime/data'])
     params = parse_params(allowed_selections, **selection)
 
     required_params = [
