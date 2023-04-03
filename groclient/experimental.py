@@ -23,8 +23,8 @@ class Experimental(GroClient):
 
     def get_data_points(self, **selections):
         """
-        Get all the data points for a given selection from v2prime/data.
-        Similar to groclient's get_data_points() for v2/data.
+        Get all the data points for a given selection from /v2prime/data.
+
         Example:
             experimental_client.get_data_points(**{'metric_id': 2540047,
                                     'item_ids': [3457],
@@ -32,7 +32,7 @@ class Experimental(GroClient):
                                     'frequency_id': 1,
                                     'source_id': 26,
                                     'start_date': '2021-12-20',
-                                    'end_date': '2021-12-22',
+                                    'end_date': '2021-12-21',
                                     'coverage_threshold': 0.9,
                                     'stream': True
                                     })
@@ -79,7 +79,7 @@ class Experimental(GroClient):
                 "meta": {
                     "version": "local",
                     "copyright": "Copyright (c) Gro Intelligence",
-                    "timestamp": "Mon, 03 Apr 2023 17:38:54 GMT"
+                    "timestamp": "Mon, 03 Apr 2023 18:22:10 GMT"
                 }
             }
         Parameters
