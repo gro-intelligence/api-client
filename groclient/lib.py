@@ -8,7 +8,7 @@ than here.
 from builtins import str
 from groclient import cfg
 from collections import OrderedDict
-from groclient.constants import REGION_LEVELS, DATA_SERIES_UNIQUE_TYPES_ID, DATA_SERIES_UNIQUE_TYPES_ID_V2_PRIME
+from groclient.constants import REGION_LEVELS, DATA_SERIES_UNIQUE_TYPES_ID
 import groclient.utils
 import json
 import logging
@@ -576,50 +576,12 @@ def get_data_points(access_token, api_host, **selection):
     return list_of_series_to_single_series(resp.json(), False, include_historical)
 
 
-def parse_params(**selections):
-    logger = get_default_logger()
-    # Query parameters other than allowed_selections are ignored.
-    allowed_selections = {
-        'item_ids',
-        'region_ids',
-        'metric_id',
-        'partner_region_ids',
-        'frequency_id',
-        'source_id',
-        'start_date',
-        'end_date',
-        'unit_id',
-        'stream',
-        'coverage_threshold',
-                          }
-    required_parameters = {
-        'itemIds',
-        'metricId',
-        'regionIds',
-        'frequencyId',
-        'sourceId'
-                           }
-    params = {}
-    for key, value in list(selections.items()):
-        if key in allowed_selections:
-            params[groclient.utils.str_snake_to_camel(key)] = value
-    missing_required_parameters = required_parameters - params.keys()
-    if missing_required_parameters:
-        missing_required_parameters = list(missing_required_parameters)
-        message = 'API request cannot be processed because {} not specified.'.format(
-            missing_required_parameters[0] + ' is'
-            if len(missing_required_parameters) == 1
-            else ', '.join(missing_required_parameters[:-1]) + ' and ' + missing_required_parameters[-1] + ' are'
-        )
-        logger.warning(message)
-        raise ValueError(message)
-    return params
-
-
 def get_data_points_v2_prime(access_token, api_host, **selection):
     headers = {'authorization': 'Bearer ' + access_token}
-    url = '/'.join(['https:', '', api_host, 'v2prime/data'])
-    params = parse_params(**selection)
+    url = '/'.join(['http:', '', api_host, 'v2prime/data'])
+    params = {}
+    for key, value in list(selection.items()):
+        params[groclient.utils.str_snake_to_camel(key)] = value
     resp = get_data(url, headers, params)
     return resp.json()
 

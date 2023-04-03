@@ -18,7 +18,7 @@ class Experimental(GroClient):
                                     'source_id': 26,
                                     'start_date': '2021-12-20',
                                     'end_date': '2021-12-21',
-                                    'stream': True
+                                    'stream': False
                                     })
             Returns:
             {
@@ -63,7 +63,7 @@ class Experimental(GroClient):
                 "meta": {
                     "version": "local",
                     "copyright": "Copyright (c) Gro Intelligence",
-                    "timestamp": "Mon, 03 Apr 2023 18:32:53 GMT"
+                    "timestamp": "Mon, 03 Apr 2023 19:34:38 GMT"
                 }
             }
         Parameters
@@ -96,5 +96,4 @@ class Experimental(GroClient):
         dict of data_series containing data points and its description as shown in above example.
 
         """
-        return lib.get_data_points_v2_prime(self.access_token, self.api_host,
-                                            **selections)
+        return lib.get_data_points_v2_prime(self.access_token, self.api_host, **selections)
