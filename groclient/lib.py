@@ -576,6 +576,16 @@ def get_data_points(access_token, api_host, **selection):
     return list_of_series_to_single_series(resp.json(), False, include_historical)
 
 
+def get_data_points_v2_prime(access_token, api_host, **selection):
+    headers = {'authorization': 'Bearer ' + access_token}
+    url = '/'.join(['https:', '', api_host, 'v2prime/data'])
+    params = {}
+    for key, value in list(selection.items()):
+        params[groclient.utils.str_snake_to_camel(key)] = value
+    resp = get_data(url, headers, params)
+    return resp.json()
+
+
 @memoize(maxsize=None)
 def universal_search(access_token, api_host, search_terms):
     """Search across all entity types for the given terms.
