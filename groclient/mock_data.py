@@ -13,16 +13,9 @@ mock_entities = {
             "name": "Production Value",
             "contains": [],
             "belongsTo": [119],
-        }
+        },
     },
-    "items": {
-        274: {
-            "id": 274,
-            "name": "Corn",
-            "contains": [],
-            "belongsTo": []
-        }
-    },
+    "items": {274: {"id": 274, "name": "Corn", "contains": [], "belongsTo": []}},
     "regions": {
         0: {"id": 0, "level": 1, "name": "World", "contains": [1215], "belongsTo": []},
         1215: {

@@ -20,16 +20,24 @@ def pick_random_data_series(client):  # pragma: no cover
 def print_one_data_series(client, data_series):  # pragma: no cover
     """Output the data points of a data series to stdout."""
     # Print the "name" of the series:
-    print('{} {} of {} in {}:'.format(data_series['frequency_name'],
-                                      data_series['metric_name'],
-                                      data_series['item_name'],
-                                      data_series['region_name']))
+    print(
+        "{} {} of {} in {}:".format(
+            data_series["frequency_name"],
+            data_series["metric_name"],
+            data_series["item_name"],
+            data_series["region_name"],
+        )
+    )
     # Print the data points:
     for point in client.get_data_points(**data_series):
-        print('{}-{}: {} {}'.format(point["start_date"],
-                                    point["end_date"],
-                                    point["value"],
-                                    client.lookup_unit_abbreviation(point["unit_id"])))
+        print(
+            "{}-{}: {} {}".format(
+                point["start_date"],
+                point["end_date"],
+                point["value"],
+                client.lookup_unit_abbreviation(point["unit_id"]),
+            )
+        )
 
 
 def write_one_data_series(client, data_series, filename):  # pragma: no cover
@@ -84,7 +92,7 @@ def main():  # pragma: no cover
     args = parser.parse_args()
 
     if args.version:
-        print(groclient.lib.get_version_info().get('api-client-version'))
+        print(groclient.lib.get_version_info().get("api-client-version"))
         return
 
     assert (
@@ -122,7 +130,7 @@ def main():  # pragma: no cover
                 region=args.region,
                 partner_region=args.partner_region,
             ),
-            None
+            None,
         )
 
     if data_series is None:
