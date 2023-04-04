@@ -578,7 +578,7 @@ def get_data_points(access_token, api_host, **selection):
 
 def get_data_points_v2_prime(access_token, api_host, **selection):
     headers = {'authorization': 'Bearer ' + access_token}
-    url = '/'.join(['http:', '', api_host, 'v2prime/data'])
+    url = '/'.join(['https:', '', api_host, 'v2prime/data'])
     params = {}
     for key, value in list(selection.items()):
         params[groclient.utils.str_snake_to_camel(key)] = value

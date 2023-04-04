@@ -87,7 +87,7 @@ class Experimental(GroClient):
         end_date : string, optional
             All points with start dates equal to or before this date
         coverage_threshold: float, optional
-            custom threshold on the coverage of geospatial data
+            Custom threshold on the coverage of geospatial data. Value should be between 0 and 1.
         stream: bool, optional
 
         Returns
