@@ -17,12 +17,13 @@ def ts_feature_extraction(dataframe, num_jobs=0):
     :param num_jobs: integer, number of parallel processes in tsfresh
     :return: A pandas dataframe
     """
-    features = extract_features(dataframe,
-                                column_id='period',
-                                column_sort='date',
-                                column_value='value',
-                                n_jobs=num_jobs
-                                )
+    features = extract_features(
+        dataframe,
+        column_id="period",
+        column_sort="date",
+        column_value="value",
+        n_jobs=num_jobs,
+    )
     features = rm_const_cols(features)
     return pca_transformation(features)
 
@@ -59,7 +60,7 @@ def pca_transformation(dataframe, components=5):
     :return: A pandas dataframe
     """
     if dataframe.isnull().values.any():
-        raise ValueError('Null values in the dataframe, cannot perform PCA')
+        raise ValueError("Null values in the dataframe, cannot perform PCA")
     # PCA components is bounded above by number of samples
     components = min(components, dataframe.shape[0])
     pca = PCA(n_components=components)

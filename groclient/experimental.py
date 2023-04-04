@@ -6,6 +6,7 @@ class Experimental(GroClient):
     """
     Experimental class to consume v2prime data.
     """
+
     def get_data_points(self, **selections):
         """
         Get all the data points for a given selection from /v2prime/data.
@@ -96,4 +97,6 @@ class Experimental(GroClient):
         dict of data_series containing data points and its description as shown in above example.
 
         """
-        return lib.get_data_points_v2_prime(self.access_token, self.api_host, **selections)
+        return lib.get_data_points_v2_prime(
+            self.access_token, self.api_host, **selections
+        )

@@ -31,8 +31,8 @@ import os
 from groclient import GroClient
 
 # GRO GLOBAL VARIABLES
-API_HOST = 'api.gro-intelligence.com'
-ACCESS_TOKEN = os.environ['GROAPI_TOKEN']
+API_HOST = "api.gro-intelligence.com"
+ACCESS_TOKEN = os.environ["GROAPI_TOKEN"]
 
 # METRIC_ID GLOBALS
 YIELD = 170037
@@ -103,87 +103,135 @@ POINT_IN_TIME = 15
 client = GroClient(API_HOST, ACCESS_TOKEN)
 
 # BRAZIL COCOA GRINDINGS FROM ICCO (1)
-client.add_single_data_series({'metric_id': GRINDINGS,
-                               'item_id': COCOA,
-                               'region_id': BRAZIL,
-                               'frequency_id': ANNUAL,
-                               'source_id': ICCO})
+client.add_single_data_series(
+    {
+        "metric_id": GRINDINGS,
+        "item_id": COCOA,
+        "region_id": BRAZIL,
+        "frequency_id": ANNUAL,
+        "source_id": ICCO,
+    }
+)
 
 # BRAZIL ARABICA COMPOSITE PRICES (2)
-client.add_single_data_series({'metric_id': COMPOSITE_PRICES,
-                               'item_id': BRAZ_ARABICA,
-                               'region_id': WORLD,
-                               'frequency_id': DAILY,
-                               'source_id': ICO})
+client.add_single_data_series(
+    {
+        "metric_id": COMPOSITE_PRICES,
+        "item_id": BRAZ_ARABICA,
+        "region_id": WORLD,
+        "frequency_id": DAILY,
+        "source_id": ICO,
+    }
+)
 
 # SAO PAULO SUGAR AREA FROM UNICA (3)
-client.add_single_data_series({'metric_id': HARV_AREA,
-                               'item_id': SUGARCANE,
-                               'region_id': SAO_PAULO,
-                               'frequency_id': ANNUAL,
-                               'source_id': UNICA})
+client.add_single_data_series(
+    {
+        "metric_id": HARV_AREA,
+        "item_id": SUGARCANE,
+        "region_id": SAO_PAULO,
+        "frequency_id": ANNUAL,
+        "source_id": UNICA,
+    }
+)
 
 # SAO PAULO CASSAVA PRICES FROM CEPEA (4)
-client.add_single_data_series({'metric_id': PRODUCER_PRICE,
-                               'item_id': CASSAVA,
-                               'region_id': SAO_PAULO,
-                               'frequency_id': WEEKLY,
-                               'source_id': CEPEA})
+client.add_single_data_series(
+    {
+        "metric_id": PRODUCER_PRICE,
+        "item_id": CASSAVA,
+        "region_id": SAO_PAULO,
+        "frequency_id": WEEKLY,
+        "source_id": CEPEA,
+    }
+)
 
 # NDVI ANOMALY SAO_PAULO (5)
-client.add_single_data_series({'metric_id': VEG_ANOMALIES,
-                               'item_id': NDVI_DIFF_10YR_MEAN,
-                               'region_id': SAO_PAULO,
-                               'frequency_id': SIXTEENDAY,
-                               'source_id': GIMMS_MODIS})
+client.add_single_data_series(
+    {
+        "metric_id": VEG_ANOMALIES,
+        "item_id": NDVI_DIFF_10YR_MEAN,
+        "region_id": SAO_PAULO,
+        "frequency_id": SIXTEENDAY,
+        "source_id": GIMMS_MODIS,
+    }
+)
 
 # LAND SURFACE TEMPERATURE SAO PAULO (6)
-client.add_single_data_series({'metric_id': TEMPERATURE,
-                               'item_id': LST,
-                               'region_id': SAO_PAULO,
-                               'frequency_id': DAILY,
-                               'source_id': LST_SRC})
+client.add_single_data_series(
+    {
+        "metric_id": TEMPERATURE,
+        "item_id": LST,
+        "region_id": SAO_PAULO,
+        "frequency_id": DAILY,
+        "source_id": LST_SRC,
+    }
+)
 
 # DAILY EVAPOTRANSPIRATION SAO PAULO (7)
-client.add_single_data_series({'metric_id': ET_VALUE,
-                               'item_id': POTENT_ETA,
-                               'region_id': SAO_PAULO,
-                               'frequency_id': DAILY,
-                               'source_id': FEWSNET1D})
+client.add_single_data_series(
+    {
+        "metric_id": ET_VALUE,
+        "item_id": POTENT_ETA,
+        "region_id": SAO_PAULO,
+        "frequency_id": DAILY,
+        "source_id": FEWSNET1D,
+    }
+)
 
 # MONTHLY EVAPOTRANSPIRATION ANOMALY SAO_PAULO (8)
-client.add_single_data_series({'metric_id': ETA_PCT,
-                               'item_id': ETA_PCT_MEDIAN,
-                               'region_id': SAO_PAULO,
-                               'frequency_id': MONTHLY,
-                               'source_id': FEWSNET1M})
+client.add_single_data_series(
+    {
+        "metric_id": ETA_PCT,
+        "item_id": ETA_PCT_MEDIAN,
+        "region_id": SAO_PAULO,
+        "frequency_id": MONTHLY,
+        "source_id": FEWSNET1M,
+    }
+)
 
 # GLOBCOVER RAINFED CROPLAND SAO_PAULO (9)
-client.add_single_data_series({'metric_id': LAND_COVER,
-                               'item_id': RAINFED_CROPLAND,
-                               'region_id': SAO_PAULO,
-                               'frequency_id': POINT_IN_TIME,
-                               'source_id': GLOBCOVER})
+client.add_single_data_series(
+    {
+        "metric_id": LAND_COVER,
+        "item_id": RAINFED_CROPLAND,
+        "region_id": SAO_PAULO,
+        "frequency_id": POINT_IN_TIME,
+        "source_id": GLOBCOVER,
+    }
+)
 
 # SOIL MOISTURE SAO_PAULO (10)
-client.add_single_data_series({'metric_id': SOIL_AVAIL,
-                               'item_id': MOISTURE,
-                               'region_id': SAO_PAULO,
-                               'frequency_id': DAILY,
-                               'source_id': SMOS})
+client.add_single_data_series(
+    {
+        "metric_id": SOIL_AVAIL,
+        "item_id": MOISTURE,
+        "region_id": SAO_PAULO,
+        "frequency_id": DAILY,
+        "source_id": SMOS,
+    }
+)
 
 # NAFIS KENYA AVOCADO PRICE (11)
-client.add_single_data_series({'metric_id': WHOLESALE_PX,
-                               'item_id': AVOCADOS,
-                               'region_id': KENYA_NAIROBI,
-                               'frequency_id': DAILY,
-                               'source_id': NAFIS})
+client.add_single_data_series(
+    {
+        "metric_id": WHOLESALE_PX,
+        "item_id": AVOCADOS,
+        "region_id": KENYA_NAIROBI,
+        "frequency_id": DAILY,
+        "source_id": NAFIS,
+    }
+)
 
 # GRO US SOYBEAN YIELD (12)
-client.add_single_data_series({'metric_id': YIELD,
-                               'item_id': SOYBEANS,
-                               'region_id': UNITED_STATES,
-                               'frequency_id': ANNUAL,
-                               'source_id': GROYM})
+client.add_single_data_series(
+    {
+        "metric_id": YIELD,
+        "item_id": SOYBEANS,
+        "region_id": UNITED_STATES,
+        "frequency_id": ANNUAL,
+        "source_id": GROYM,
+    }
+)
 
 print(client.get_df())

@@ -16,7 +16,11 @@ except ImportError:
     from urllib import urlencode
 
 from groclient import cfg, lib
-from groclient.constants import REGION_LEVELS, DATA_SERIES_UNIQUE_TYPES_ID, ENTITY_KEY_TO_TYPE
+from groclient.constants import (
+    REGION_LEVELS,
+    DATA_SERIES_UNIQUE_TYPES_ID,
+    ENTITY_KEY_TO_TYPE,
+)
 from groclient.utils import intersect, zip_selections, dict_unnest, str_snake_to_camel
 from groclient.lib import APIError
 
@@ -36,7 +40,9 @@ class BatchError(APIError):
         self.retry_count = retry_count
         self.url = url
         self.params = params
-        self.status_code = self.response.code if hasattr(self.response, "code") else None
+        self.status_code = (
+            self.response.code if hasattr(self.response, "code") else None
+        )
         try:
             json_content = json_decode(self.response.body)
             # 'error' should be something like 'Not Found' or 'Bad Request'
@@ -136,16 +142,23 @@ class GroClient(object):
             # Note: force_instance is needed to disable Tornado's
             # pseudo-singleton AsyncHTTPClient caching behavior.
             if self._proxy_host and self._proxy_port:
-                defaults_dict = {"proxy_host": self._proxy_host, "proxy_port": self._proxy_port}
+                defaults_dict = {
+                    "proxy_host": self._proxy_host,
+                    "proxy_port": self._proxy_port,
+                }
                 if self._proxy_username and self._proxy_pass:
-                    defaults_dict['proxy_username'] = self._proxy_username
-                    defaults_dict['proxy_pass'] = self._proxy_pass
+                    defaults_dict["proxy_username"] = self._proxy_username
+                    defaults_dict["proxy_pass"] = self._proxy_pass
                 AsyncHTTPClient.configure("tornado.curl_httpclient.CurlAsyncHTTPClient")
-                self._async_http_client = AsyncHTTPClient(force_instance=True, defaults=defaults_dict)
+                self._async_http_client = AsyncHTTPClient(
+                    force_instance=True, defaults=defaults_dict
+                )
             else:
                 self._async_http_client = AsyncHTTPClient(force_instance=True)
         except Exception as e:
-            self._logger.warning("Unable to initialize event loop, async methods disabled: {}".format(e))
+            self._logger.warning(
+                "Unable to initialize event loop, async methods disabled: {}".format(e)
+            )
 
     def __del__(self):
         if self._async_http_client is not None:
@@ -201,12 +214,16 @@ class GroClient(object):
                     # Catch non-200 codes that aren't errors
                     status_code = e.code if hasattr(e, "code") else None
                     if status_code in [204, 206]:
-                        log_msg = {204: "No Content", 206: "Partial Content"}[status_code]
+                        log_msg = {204: "No Content", 206: "Partial Content"}[
+                            status_code
+                        ]
                         response = e.response
                         log_request(start_time, retry_count, log_msg, status_code)
                         # Do not retry.
                     elif status_code == 301:
-                        redirected_ids = json.loads(e.response.body.decode("utf-8"))["data"][0]
+                        redirected_ids = json.loads(e.response.body.decode("utf-8"))[
+                            "data"
+                        ][0]
                         new_params = lib.redirect(params, redirected_ids)
                         log_request(
                             start_time,
@@ -223,7 +240,11 @@ class GroClient(object):
                 # socket.gaio error raised when there's a connection error
                 response = e.response if hasattr(e, "response") else e
                 status_code = e.code if hasattr(e, "code") else None
-                error_msg = e.response.error if (hasattr(e, "response") and hasattr(e.response, "error")) else e
+                error_msg = (
+                    e.response.error
+                    if (hasattr(e, "response") and hasattr(e.response, "error"))
+                    else e
+                )
                 log_request(start_time, retry_count, error_msg, status_code)
                 if status_code in [429, 500, 502, 503, 504]:
                     # First retry is immediate.
@@ -236,7 +257,9 @@ class GroClient(object):
 
             # Request was successful
             log_request(start_time, retry_count, "OK", status_code)
-            raise gen.Return(json_decode(response.body) if hasattr(response, "body") else None)
+            raise gen.Return(
+                json_decode(response.body) if hasattr(response, "body") else None
+            )
 
         # Retries failed. Raise exception
         raise BatchError(response, retry_count, url, params)
@@ -304,7 +327,9 @@ class GroClient(object):
                         result = yield func(*item)
                     else:
                         result = yield func(item)
-                    output_data["result"] = map_result(idx, item, result, output_data["result"])
+                    output_data["result"] = map_result(
+                        idx, item, result, output_data["result"]
+                    )
                     self._logger.debug("Done with {}".format(idx))
                     q.task_done()
                 except Exception:
@@ -340,14 +365,21 @@ class GroClient(object):
         url = "/".join(["https:", "", self.api_host, "v2/data"])
         params = lib.get_data_call_params(**selection)
         required_params = [
-            str_snake_to_camel(type_id) for type_id in DATA_SERIES_UNIQUE_TYPES_ID if type_id != 'partner_region_id'
+            str_snake_to_camel(type_id)
+            for type_id in DATA_SERIES_UNIQUE_TYPES_ID
+            if type_id != "partner_region_id"
         ]
         missing_params = list(required_params - params.keys())
         if len(missing_params):
-            message = 'API request cannot be processed because {} not specified.'.format(
-                missing_params[0] + ' is'
-                if len(missing_params) == 1
-                else ', '.join(missing_params[:-1]) + ' and ' + missing_params[-1] + ' are'
+            message = (
+                "API request cannot be processed because {} not specified.".format(
+                    missing_params[0] + " is"
+                    if len(missing_params) == 1
+                    else ", ".join(missing_params[:-1])
+                    + " and "
+                    + missing_params[-1]
+                    + " are"
+                )
             )
             self._logger.warning(message)
             raise ValueError(message)
@@ -355,13 +387,17 @@ class GroClient(object):
         try:
             list_of_series_points = yield self.async_get_data(url, headers, params)
             include_historical = selection.get("include_historical", True)
-            points = lib.list_of_series_to_single_series(list_of_series_points, False, include_historical)
+            points = lib.list_of_series_to_single_series(
+                list_of_series_points, False, include_historical
+            )
             # Apply unit conversion if a unit is specified
             if "unit_id" in selection:
                 raise gen.Return(
                     list(
                         map(
-                            partial(self.convert_unit, target_unit_id=selection["unit_id"]),
+                            partial(
+                                self.convert_unit, target_unit_id=selection["unit_id"]
+                            ),
                             points,
                         )
                     )
@@ -371,7 +407,9 @@ class GroClient(object):
         except BatchError as b:
             raise gen.Return(b)
 
-    def batch_async_get_data_points(self, batched_args, output_list=None, map_result=None):
+    def batch_async_get_data_points(
+        self, batched_args, output_list=None, map_result=None
+    ):
         """Make many :meth:`~get_data_points` requests asynchronously.
 
         Parameters
@@ -434,7 +472,9 @@ class GroClient(object):
                 ]
 
         """
-        return self.batch_async_queue(self.get_data_points_generator, batched_args, output_list, map_result)
+        return self.batch_async_queue(
+            self.get_data_points_generator, batched_args, output_list, map_result
+        )
 
     @gen.coroutine
     def async_rank_series_by_source(self, *selections_list):
@@ -442,7 +482,9 @@ class GroClient(object):
         response = self.rank_series_by_source(selections_list)
         raise gen.Return(list(response))
 
-    def batch_async_rank_series_by_source(self, batched_args, output_list=None, map_result=None):
+    def batch_async_rank_series_by_source(
+        self, batched_args, output_list=None, map_result=None
+    ):
         """Perform multiple rank_series_by_source requests asynchronously.
 
         Parameters
@@ -451,7 +493,9 @@ class GroClient(object):
             See :meth:`~.rank_series_by_source` `selections_list`. A list of those lists.
 
         """
-        return self.batch_async_queue(self.async_rank_series_by_source, batched_args, output_list, map_result)
+        return self.batch_async_queue(
+            self.async_rank_series_by_source, batched_args, output_list, map_result
+        )
 
     def get_available(self, entity_type):
         """List the first 5000 available entities of the given type.
@@ -574,7 +618,9 @@ class GroClient(object):
         list of unit ids
 
         """
-        return lib.get_allowed_units(self.access_token, self.api_host, metric_id, item_id)
+        return lib.get_allowed_units(
+            self.access_token, self.api_host, metric_id, item_id
+        )
 
     def get_data_series(self, **selection):
         """Get available data series for the given selections.
@@ -639,7 +685,9 @@ class GroClient(object):
                  }, { ... }, ... ]
 
         """
-        return lib.stream_data_series(self.access_token, self.api_host, chunk_size, **selection)
+        return lib.stream_data_series(
+            self.access_token, self.api_host, chunk_size, **selection
+        )
 
     def search(self, entity_type, search_terms):
         """Search for the given search term. Better matches appear first.
@@ -688,7 +736,9 @@ class GroClient(object):
             the best match for the given search term(s).
 
         """
-        return lib.search_and_lookup(self.access_token, self.api_host, entity_type, search_terms, num_results)
+        return lib.search_and_lookup(
+            self.access_token, self.api_host, entity_type, search_terms, num_results
+        )
 
     def lookup_belongs(self, entity_type, entity_id):
         """Look up details of entities containing the given entity.
@@ -712,7 +762,9 @@ class GroClient(object):
                   'level': 2 }
 
         """
-        return lib.lookup_belongs(self.access_token, self.api_host, entity_type, entity_id)
+        return lib.lookup_belongs(
+            self.access_token, self.api_host, entity_type, entity_id
+        )
 
     def rank_series_by_source(self, selections_list):
         """Given a list of series selections, for each unique combination excluding source, expand
@@ -730,7 +782,9 @@ class GroClient(object):
             The input selections_list, expanded out to each possible source, ordered by coverage.
 
         """
-        return lib.rank_series_by_source(self.access_token, self.api_host, selections_list)
+        return lib.rank_series_by_source(
+            self.access_token, self.api_host, selections_list
+        )
 
     def get_geo_centre(self, region_id):
         """Given a region ID, return the geographic centre in degrees lat/lon.
@@ -774,7 +828,9 @@ class GroClient(object):
                 }]
 
         """
-        return lib.get_geojsons(self.access_token, self.api_host, region_id, descendant_level, zoom_level)
+        return lib.get_geojsons(
+            self.access_token, self.api_host, region_id, descendant_level, zoom_level
+        )
 
     def get_geojson(self, region_id, zoom_level=7):
         """Given a region ID, return shape information in geojson.
@@ -950,7 +1006,7 @@ class GroClient(object):
         return lib.get_descendant(
             self.access_token,
             self.api_host,
-            'regions',
+            "regions",
             region_id,
             distance,
             include_details,
@@ -986,7 +1042,9 @@ class GroClient(object):
                     'end_date': '2020-03-09T00:00:00.000Z',
                     'name': u'daily'}, ... ]
         """
-        return lib.get_available_timefrequency(self.access_token, self.api_host, **selection)
+        return lib.get_available_timefrequency(
+            self.access_token, self.api_host, **selection
+        )
 
     def get_top(self, entity_type, num_results=5, **selection):
         """Find the data series with the highest cumulative value for the given time range.
@@ -1043,7 +1101,9 @@ class GroClient(object):
             value the series are ranked by. You may then use the results to call
             :meth:`~.get_data_points` to get the individual time series points.
         """
-        return lib.get_top(self.access_token, self.api_host, entity_type, num_results, **selection)
+        return lib.get_top(
+            self.access_token, self.api_host, entity_type, num_results, **selection
+        )
 
     def get_df(
         self,
@@ -1093,7 +1153,8 @@ class GroClient(object):
         """
 
         assert not (
-            compress_format and (reporting_history or show_revisions or complete_history)
+            compress_format
+            and (reporting_history or show_revisions or complete_history)
         ), "compress_format cannot be used simultaneously with reporting_history or complete_history"
 
         data_series_list = []
@@ -1106,7 +1167,9 @@ class GroClient(object):
             if async_mode:
                 data_series_list.append(data_series)
             else:
-                self.add_points_to_df(None, data_series, self.get_data_points(**data_series))
+                self.add_points_to_df(
+                    None, data_series, self.get_data_points(**data_series)
+                )
 
         if async_mode:
             self.batch_async_get_data_points(
@@ -1123,19 +1186,26 @@ class GroClient(object):
 
         if include_names:
             name_cols = []
-            for entity_type_id in DATA_SERIES_UNIQUE_TYPES_ID + ['unit_id']:
-                name_col = entity_type_id.replace('_id', '_name')
+            for entity_type_id in DATA_SERIES_UNIQUE_TYPES_ID + ["unit_id"]:
+                name_col = entity_type_id.replace("_id", "_name")
                 name_cols.append(name_col)
-                entity_dict = self.lookup(ENTITY_KEY_TO_TYPE[entity_type_id], self._data_frame[entity_type_id].unique())
+                entity_dict = self.lookup(
+                    ENTITY_KEY_TO_TYPE[entity_type_id],
+                    self._data_frame[entity_type_id].unique(),
+                )
                 self._data_frame[name_col] = self._data_frame[entity_type_id].apply(
-                    lambda entity_id: entity_dict.get(str(entity_id))['name']
+                    lambda entity_id: entity_dict.get(str(entity_id))["name"]
                 )
 
             if compress_format:
-                return self._data_frame.pivot_table(index='end_date', values='value', columns=name_cols)
+                return self._data_frame.pivot_table(
+                    index="end_date", values="value", columns=name_cols
+                )
 
         if index_by_series:
-            idx_columns = intersect(DATA_SERIES_UNIQUE_TYPES_ID, self._data_frame.columns)
+            idx_columns = intersect(
+                DATA_SERIES_UNIQUE_TYPES_ID, self._data_frame.columns
+            )
 
             self._data_frame.set_index(idx_columns, inplace=True)
             self._data_frame.sort_index(inplace=True)
@@ -1152,7 +1222,13 @@ class GroClient(object):
         show_revisions=False,
     ):
         return self.get_df(
-            reporting_history, complete_history, index_by_series, include_names, compress_format, True, show_revisions
+            reporting_history,
+            complete_history,
+            index_by_series,
+            include_names,
+            compress_format,
+            True,
+            show_revisions,
         )
 
     def add_points_to_df(self, index, data_series, data_points, *args):
@@ -1310,7 +1386,9 @@ class GroClient(object):
         list of dicts
 
         """
-        data_points = lib.get_data_points(self.access_token, self.api_host, **selections)
+        data_points = lib.get_data_points(
+            self.access_token, self.api_host, **selections
+        )
         # Apply unit conversion if a unit is specified
         if "unit_id" in selections:
             return list(
@@ -1355,11 +1433,15 @@ class GroClient(object):
 
         self.add_single_data_series(selection)
         try:
-            df = self.get_df(index_by_series=True, include_names=True).loc[[tuple(entity_ids)], :]
+            df = self.get_df(index_by_series=True, include_names=True).loc[
+                [tuple(entity_ids)], :
+            ]
             df.set_index(
                 [
-                    entity_type_id.replace('_id', '_name')
-                    for entity_type_id in intersect(DATA_SERIES_UNIQUE_TYPES_ID, df.index.names)
+                    entity_type_id.replace("_id", "_name")
+                    for entity_type_id in intersect(
+                        DATA_SERIES_UNIQUE_TYPES_ID, df.index.names
+                    )
                 ],
                 inplace=True,
             )
@@ -1476,17 +1558,21 @@ class GroClient(object):
             id_key = "{}_id".format(kw)
             if id_key in ENTITY_KEY_TO_TYPE:
                 type_results = []  # [('item_id',1),('item_id',2),...]
-                for search_result in self.search(ENTITY_KEY_TO_TYPE[id_key], kwargs[kw])[
-                    : cfg.MAX_RESULT_COMBINATION_DEPTH
-                ]:
-                    if result_filter is None or result_filter({id_key: search_result["id"]}):
+                for search_result in self.search(
+                    ENTITY_KEY_TO_TYPE[id_key], kwargs[kw]
+                )[: cfg.MAX_RESULT_COMBINATION_DEPTH]:
+                    if result_filter is None or result_filter(
+                        {id_key: search_result["id"]}
+                    ):
                         type_results.append((id_key, search_result["id"]))
                 results.append(type_results)
         # Rank by frequency and source, while preserving search ranking in
         # permutations of search results.
         ranking_groups = set()
         for comb in itertools.product(*results):
-            for data_series in self.get_data_series(**dict(comb))[: cfg.MAX_SERIES_PER_COMB]:
+            for data_series in self.get_data_series(**dict(comb))[
+                : cfg.MAX_SERIES_PER_COMB
+            ]:
                 self._logger.debug("Data series: {}".format(data_series))
                 # remove time and frequency to rank them
                 data_series.pop("start_date", None)
@@ -1567,7 +1653,11 @@ class GroClient(object):
         """
         results = self.search(entity_type, keywords)
         for result in results:
-            self._logger.debug("First result, out of {} {}: {}".format(len(results), entity_type, result["id"]))
+            self._logger.debug(
+                "First result, out of {} {}: {}".format(
+                    len(results), entity_type, result["id"]
+                )
+            )
             return result["id"]
 
     def get_provinces(self, country_name):
@@ -1604,8 +1694,14 @@ class GroClient(object):
         """
         for region in self.search_and_lookup("regions", country_name):
             if region["level"] == lib.REGION_LEVELS["country"]:
-                provinces = self.get_descendant('regions', region["id"], descendant_level=lib.REGION_LEVELS["province"])
-                self._logger.debug("Provinces of {}: {}".format(country_name, provinces))
+                provinces = self.get_descendant(
+                    "regions",
+                    region["id"],
+                    descendant_level=lib.REGION_LEVELS["province"],
+                )
+                self._logger.debug(
+                    "Provinces of {}: {}".format(country_name, provinces)
+                )
                 return provinces
         return None
 
@@ -1657,7 +1753,9 @@ class GroClient(object):
         """
         if point.get("unit_id") is None or point.get("unit_id") == target_unit_id:
             return point
-        from_convert_factor = self.lookup("units", point["unit_id"]).get("baseConvFactor")
+        from_convert_factor = self.lookup("units", point["unit_id"]).get(
+            "baseConvFactor"
+        )
         if not from_convert_factor.get("factor"):
             raise Exception("unit_id {} is not convertible".format(point["unit_id"]))
         to_convert_factor = self.lookup("units", target_unit_id).get("baseConvFactor")
@@ -1665,10 +1763,17 @@ class GroClient(object):
             raise Exception("unit_id {} is not convertible".format(target_unit_id))
 
         if point.get("value") is not None:
-            point["value"] = lib.convert_value(point["value"], from_convert_factor, to_convert_factor)
-        if point.get("metadata") is not None and point["metadata"].get("conf_interval") is not None:
+            point["value"] = lib.convert_value(
+                point["value"], from_convert_factor, to_convert_factor
+            )
+        if (
+            point.get("metadata") is not None
+            and point["metadata"].get("conf_interval") is not None
+        ):
             point["metadata"]["conf_interval"] = lib.convert_value(
-                point["metadata"]["conf_interval"], from_convert_factor, to_convert_factor
+                point["metadata"]["conf_interval"],
+                from_convert_factor,
+                to_convert_factor,
             )
         point["unit_id"] = target_unit_id
         return point
@@ -1707,8 +1812,14 @@ class GroClient(object):
         """
         return lib.get_area_weighting_weight_names(self.access_token, self.api_host)
 
-    def get_area_weighted_series(self, series_name: str, weight_names: List[str], region_id: Union[int, List[int]], 
-        method: str = 'sum', latest_date_only: bool = False):
+    def get_area_weighted_series(
+        self,
+        series_name: str,
+        weight_names: List[str],
+        region_id: Union[int, List[int]],
+        method: str = "sum",
+        latest_date_only: bool = False,
+    ):
         """Compute weighted average on selected series with the given weights.
 
         Returns a dictionary mapping dates to weighted values.
@@ -1738,7 +1849,13 @@ class GroClient(object):
                 {'2000-02-25': 0.217, '2000-03-04': 0.217, '2000-03-12': 0.221, ...}
         """
         return lib.get_area_weighted_series(
-            self.access_token, self.api_host, series_name, weight_names, region_id, method, latest_date_only
+            self.access_token,
+            self.api_host,
+            series_name,
+            weight_names,
+            region_id,
+            method,
+            latest_date_only,
         )
 
     def reverse_geocode_points(self, points: list):
@@ -1751,26 +1868,26 @@ class GroClient(object):
         The list of points we want to reverse geocode. Each point is a list containing the latitude and longitude
         Example: `[[33.4484, -112.0740], [42.3314, -83.0458], [-8.8742, 125.7275]]`
 
-        Returns 
+        Returns
         -------
         A list of Python dictionaries, where each dictionary contains details for one of the passed points. The order is the same as the order of the passed points:
         ```
-        [{'latitude': 33.4484, 
-          'longitude': -112.074, 
-          'l5_id': 136859, 
-          'l5_name': 'Maricopa', 
-          'l4_id': 13053, 
-          'l4_name': 'Arizona', 
-          'l3_id': 1215, 
-          'l3_name': 'United States'}, 
+        [{'latitude': 33.4484,
+          'longitude': -112.074,
+          'l5_id': 136859,
+          'l5_name': 'Maricopa',
+          'l4_id': 13053,
+          'l4_name': 'Arizona',
+          'l3_id': 1215,
+          'l3_name': 'United States'},
          ...,
-         {'latitude': -8.8742, 
+         {'latitude': -8.8742,
           'longitude': 125.7275,
           'l5_id': 134452,
           'l5_name': 'Turiscai',
           'l4_id': 12774,
-          'l4_name': 'Manufahi', 
-          'l3_id': 1199, 
+          'l4_name': 'Manufahi',
+          'l3_id': 1199,
           'l3_name': 'East Timor'}]
         ```
         """
