@@ -8,7 +8,7 @@ than here.
 from builtins import str
 from groclient import cfg
 from collections import OrderedDict
-from groclient.constants import REGION_LEVELS, DATA_SERIES_UNIQUE_TYPES_ID
+from groclient.constants import REGION_LEVELS, DATA_SERIES_UNIQUE_TYPES_ID, ITR_CHUNK_READ_SIZE
 import groclient.utils
 import json
 import logging
@@ -398,16 +398,14 @@ def get_data_series(access_token, api_host, **selection):
         raise Exception(resp.text)
 
 
-def stream_data_series(access_token, api_host, chunk_size=None, **selection):
+def stream_data_series(access_token, api_host, **selection):
     logger = get_default_logger()
-    url = '/'.join(['https:', '', api_host, 'v2/stream/data_series/list'])
-    headers = {'authorization': 'Bearer ' + access_token}
+    url = "/".join(["https:", "", api_host, "v2/stream/data_series/list"])
+    headers = {"authorization": "Bearer " + access_token}
     params = get_params_from_selection(**selection)
-    if type(chunk_size) == int and chunk_size > 1:
-        params['chunkSize'] = chunk_size
     resp = get_data(url, headers, params, logger, True)
     try:
-        for line in resp.iter_lines(decode_unicode=True):
+        for line in resp.iter_lines(chunk_size=ITR_CHUNK_READ_SIZE, decode_unicode=True):
             if line:
                 current_ds_list = json.loads(line)
                 if any(
