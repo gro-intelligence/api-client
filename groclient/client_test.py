@@ -59,7 +59,7 @@ def mock_rank_series_by_source(access_token, api_host, selections_list):
 
 def mock_get_geo_centre(access_token, api_host, region_id):
     return [
-         {"centre": [45.7228, -112.996], "regionId": 1215, "regionName": "United States"}
+        {"centre": [45.7228, -112.996], "regionId": 1215, "regionName": "United States"}
     ]
 
 
@@ -67,9 +67,7 @@ def mock_get_geojson(access_token, api_host, region_id, zoom_level):
     if zoom_level < 7:
         return {
             "type": "GeometryCollection",
-            "geometries": [
-                {"type": "MultiPolygon", "coordinates": [[[[-38, -4]]]]}
-            ],
+            "geometries": [{"type": "MultiPolygon", "coordinates": [[[[-38, -4]]]]}],
         }
     else:
         return {
@@ -81,12 +79,42 @@ def mock_get_geojson(access_token, api_host, region_id, zoom_level):
 
 
 def mock_get_geojsons(access_token, api_host, region_id, descendant_level, zoom_level):
-    return [{'region_id': 13051, 'region_name': 'Alabama', 'centre': [32.7933, -86.8278],
-             'geojson': {'type': 'MultiPolygon',
-                         'coordinates': [[[[-88.201896667, 35.0088806150001], [-88.079490661, 35.006961823], [-87.987052917, 35.0075187690001], [-87.610366821, 35.0048713690001]]]]}},
-            {'region_id': 13052, 'region_name': 'Alaska', 'centre': [64.2386, -152.279],
-             'geojson': {'type': 'MultiPolygon',
-                         'coordinates': [[[[-179.07043457, 51.2564086920001], [-179.094436645, 51.2270851140001], [-179.142776489, 51.2288894660001]]]]}}
+    return [
+        {
+            "region_id": 13051,
+            "region_name": "Alabama",
+            "centre": [32.7933, -86.8278],
+            "geojson": {
+                "type": "MultiPolygon",
+                "coordinates": [
+                    [
+                        [
+                            [-88.201896667, 35.0088806150001],
+                            [-88.079490661, 35.006961823],
+                            [-87.987052917, 35.0075187690001],
+                            [-87.610366821, 35.0048713690001],
+                        ]
+                    ]
+                ],
+            },
+        },
+        {
+            "region_id": 13052,
+            "region_name": "Alaska",
+            "centre": [64.2386, -152.279],
+            "geojson": {
+                "type": "MultiPolygon",
+                "coordinates": [
+                    [
+                        [
+                            [-179.07043457, 51.2564086920001],
+                            [-179.094436645, 51.2270851140001],
+                            [-179.142776489, 51.2288894660001],
+                        ]
+                    ]
+                ],
+            },
+        },
     ]
 
 
@@ -101,12 +129,12 @@ def mock_get_descendant(
     include_historical=True,
 ):
     childs = [
-            child
-            for child in mock_entities[entity_type].values()
-            if 119 in child["belongsTo"]
-        ]
+        child
+        for child in mock_entities[entity_type].values()
+        if 119 in child["belongsTo"]
+    ]
 
-    if entity_type == 'regions':
+    if entity_type == "regions":
         if descendant_level:
             childs = [
                 child
@@ -138,12 +166,12 @@ def mock_get_ancestor(
     include_historical=True,
 ):
     childs = [
-            child
-            for child in mock_entities[entity_type].values()
-            if 12345 in child["contains"]
-        ]
+        child
+        for child in mock_entities[entity_type].values()
+        if 12345 in child["contains"]
+    ]
 
-    if entity_type == 'regions':
+    if entity_type == "regions":
         if ancestor_level:
             childs = [
                 child
@@ -239,19 +267,47 @@ def mock_get_area_weighting_weight_names(access_token, api_host):
     return ["Almonds (CA only)", "Bananas (ha)", "Canola (ha)"]
 
 
-def mock_get_area_weighted_series(access_token, api_host, series_name, weight_names,
-                                  region_id, method, latest_date_only):
-    return {'2022-07-11': 0.715615, '2022-07-19': 0.733129, '2022-07-27': 0.748822}
+def mock_get_area_weighted_series(
+    access_token,
+    api_host,
+    series_name,
+    weight_names,
+    region_id,
+    method,
+    latest_date_only,
+):
+    return {"2022-07-11": 0.715615, "2022-07-19": 0.733129, "2022-07-27": 0.748822}
+
 
 def mock_reverse_geocode_points(access_token, api_host, points):
-    return [{"latitude": 33.4484, "longitude": -112.074, "l5_id": 136859, "l5_name": "Maricopa", "l4_id": 13053, "l4_name": "Arizona", "l3_id": 1215, "l3_name": "United States"}, {"latitude": -8.8742, "longitude": 125.7275, "l5_id": 134452, "l5_name": "Turiscai", "l4_id": 12774, "l4_name": "Manufahi", "l3_id": 1199, "l3_name": "East Timor"}]  
+    return [
+        {
+            "latitude": 33.4484,
+            "longitude": -112.074,
+            "l5_id": 136859,
+            "l5_name": "Maricopa",
+            "l4_id": 13053,
+            "l4_name": "Arizona",
+            "l3_id": 1215,
+            "l3_name": "United States",
+        },
+        {
+            "latitude": -8.8742,
+            "longitude": 125.7275,
+            "l5_id": 134452,
+            "l5_name": "Turiscai",
+            "l4_id": 12774,
+            "l4_name": "Manufahi",
+            "l3_id": 1199,
+            "l3_name": "East Timor",
+        },
+    ]
+
 
 @patch("groclient.lib.get_available", MagicMock(side_effect=mock_get_available))
 @patch("groclient.lib.list_available", MagicMock(side_effect=mock_list_available))
 @patch("groclient.lib.lookup", MagicMock(side_effect=mock_lookup))
-@patch(
-    "groclient.lib.get_allowed_units", MagicMock(side_effect=mock_get_allowed_units)
-)
+@patch("groclient.lib.get_allowed_units", MagicMock(side_effect=mock_get_allowed_units))
 @patch("groclient.lib.get_data_series", MagicMock(side_effect=mock_get_data_series))
 @patch("groclient.lib.search", MagicMock(side_effect=mock_search))
 @patch(
@@ -269,11 +325,22 @@ def mock_reverse_geocode_points(access_token, api_host, points):
 )
 @patch("groclient.lib.get_top", MagicMock(side_effect=mock_get_top))
 @patch("groclient.lib.get_data_points", MagicMock(side_effect=mock_get_data_points))
-@patch("groclient.lib.get_area_weighting_series_names", MagicMock(side_effect=mock_get_area_weighting_series_names))
-@patch("groclient.lib.get_area_weighting_weight_names", MagicMock(side_effect=mock_get_area_weighting_weight_names))
-@patch("groclient.lib.get_area_weighted_series", MagicMock(side_effect=mock_get_area_weighted_series))
-@patch("groclient.lib.reverse_geocode_points", MagicMock(side_effect=mock_reverse_geocode_points))
-
+@patch(
+    "groclient.lib.get_area_weighting_series_names",
+    MagicMock(side_effect=mock_get_area_weighting_series_names),
+)
+@patch(
+    "groclient.lib.get_area_weighting_weight_names",
+    MagicMock(side_effect=mock_get_area_weighting_weight_names),
+)
+@patch(
+    "groclient.lib.get_area_weighted_series",
+    MagicMock(side_effect=mock_get_area_weighted_series),
+)
+@patch(
+    "groclient.lib.reverse_geocode_points",
+    MagicMock(side_effect=mock_reverse_geocode_points),
+)
 class GroClientTests(TestCase):
     def setUp(self):
         self.client = GroClient(MOCK_HOST, MOCK_TOKEN)
@@ -343,25 +410,27 @@ class GroClientTests(TestCase):
         self.assertTrue("type" in geojson)
         self.assertTrue("type" in geojson["geometries"][0])
         self.assertTrue("coordinates" in geojson["geometries"][0])
-        self.assertTrue(geojson["geometries"][0]['coordinates'][0][0][0] == [-38.394, -4.225])
+        self.assertTrue(
+            geojson["geometries"][0]["coordinates"][0][0][0] == [-38.394, -4.225]
+        )
         geojson = self.client.get_geojson(1215, 1)
         self.assertTrue("type" in geojson)
         self.assertTrue("type" in geojson["geometries"][0])
         self.assertTrue("coordinates" in geojson["geometries"][0])
-        self.assertTrue(geojson["geometries"][0]['coordinates'][0][0][0] == [-38, -4])
+        self.assertTrue(geojson["geometries"][0]["coordinates"][0][0][0] == [-38, -4])
 
     def test_get_ancestor(self):
-        self.assertTrue("name" in self.client.get_descendant('metrics', 119)[0])
+        self.assertTrue("name" in self.client.get_descendant("metrics", 119)[0])
         self.assertTrue(
             "name"
-            not in self.client.get_ancestor('regions', 12345, include_details=False)[0]
+            not in self.client.get_ancestor("regions", 12345, include_details=False)[0]
         )
 
     def test_get_descendant(self):
-        self.assertTrue("name" in self.client.get_descendant('metrics', 119)[0])
+        self.assertTrue("name" in self.client.get_descendant("metrics", 119)[0])
         self.assertTrue(
             "name"
-            not in self.client.get_descendant('metrics', 119, include_details=False)[0]
+            not in self.client.get_descendant("metrics", 119, include_details=False)[0]
         )
         self.assertTrue("name" in self.client.get_descendant_regions(1215)[0])
         self.assertTrue(
@@ -411,9 +480,7 @@ class GroClientTests(TestCase):
         self.assertEqual(
             self.client.get_df().iloc[0]["start_date"].date(), date(2017, 1, 1)
         )
-        self.assertEqual(
-            self.client.get_df().iloc[0]["source_id"], 2
-        )
+        self.assertEqual(self.client.get_df().iloc[0]["source_id"], 2)
 
     def test_get_data_points(self):
         # Gives the point's default unit if unit's not specified:
@@ -456,7 +523,7 @@ class GroClientTests(TestCase):
 
     def test_add_single_data_series_allows_metadata(self):
         selections = dict(mock_data_series[0])
-        selections['metadata'] = {'includes_historical_region': True}
+        selections["metadata"] = {"includes_historical_region": True}
         self.client.add_single_data_series(selections)
         self.assertEqual(len(self.client.get_df().item_id), 1)
 
@@ -483,13 +550,16 @@ class GroClientTests(TestCase):
 
         # TODO: when duplicates are removed, this should equal 2:
         def only_accept_production_quantity(search_result):
-            return "metric_id" not in search_result or search_result["metric_id"] == 860032
+            return (
+                "metric_id" not in search_result or search_result["metric_id"] == 860032
+            )
+
         self.assertEqual(
             len(
                 list(
                     self.client.find_data_series(
                         metric="Production",
-                        result_filter=only_accept_production_quantity
+                        result_filter=only_accept_production_quantity,
                     )
                 )
             ),
@@ -536,7 +606,9 @@ class GroClientTests(TestCase):
             {"value": -17.5, "unit_id": 36},
         )
         self.assertEqual(
-            self.client.convert_unit({"value": 20, "unit_id": 10, "metadata": {"conf_interval": 2}}, 14),
+            self.client.convert_unit(
+                {"value": 20, "unit_id": 10, "metadata": {"conf_interval": 2}}, 14
+            ),
             {"value": 0.02, "metadata": {"conf_interval": 0.002}, "unit_id": 14},
         )
         self.assertEqual(
@@ -560,47 +632,80 @@ class GroClientTests(TestCase):
     def test_get_area_weighting_series_names(self):
         self.assertEqual(
             self.client.get_area_weighting_series_names(),
-            ["CPC_max_temp_daily", "CPC_min_temp_daily", "ET_PET_monthly"]
+            ["CPC_max_temp_daily", "CPC_min_temp_daily", "ET_PET_monthly"],
         )
 
     def test_get_area_weighting_weight_names(self):
         self.assertEqual(
             self.client.get_area_weighting_weight_names(),
-            ["Almonds (CA only)", "Bananas (ha)", "Canola (ha)"]
+            ["Almonds (CA only)", "Bananas (ha)", "Canola (ha)"],
         )
 
     def test_get_area_weighted_series(self):
         self.assertEqual(
-            self.client.get_area_weighted_series('NDVI_8day', ['Barley (ha)', 'Corn (ha)'], 1215),
-            {'2022-07-11': 0.715615, '2022-07-19': 0.733129, '2022-07-27': 0.748822}
+            self.client.get_area_weighted_series(
+                "NDVI_8day", ["Barley (ha)", "Corn (ha)"], 1215
+            ),
+            {"2022-07-11": 0.715615, "2022-07-19": 0.733129, "2022-07-27": 0.748822},
         )
         self.assertEqual(
-            self.client.get_area_weighted_series('NDVI_8day', ['Barley (ha)', 'Corn (ha)'], [1215]),
-            {'2022-07-11': 0.715615, '2022-07-19': 0.733129, '2022-07-27': 0.748822}
+            self.client.get_area_weighted_series(
+                "NDVI_8day", ["Barley (ha)", "Corn (ha)"], [1215]
+            ),
+            {"2022-07-11": 0.715615, "2022-07-19": 0.733129, "2022-07-27": 0.748822},
         )
 
     def test_reverse_geocode_points(self):
         self.assertEqual(
-            self.client.reverse_geocode_points([[33.4484, -112.0740], [-8.8742, 125.7275]]),
-            [{"latitude": 33.4484, "longitude": -112.074, "l5_id": 136859, "l5_name": "Maricopa", "l4_id": 13053, "l4_name": "Arizona", "l3_id": 1215, "l3_name": "United States"}, {"latitude": -8.8742, "longitude": 125.7275, "l5_id": 134452, "l5_name": "Turiscai", "l4_id": 12774, "l4_name": "Manufahi", "l3_id": 1199, "l3_name": "East Timor"}])
+            self.client.reverse_geocode_points(
+                [[33.4484, -112.0740], [-8.8742, 125.7275]]
+            ),
+            [
+                {
+                    "latitude": 33.4484,
+                    "longitude": -112.074,
+                    "l5_id": 136859,
+                    "l5_name": "Maricopa",
+                    "l4_id": 13053,
+                    "l4_name": "Arizona",
+                    "l3_id": 1215,
+                    "l3_name": "United States",
+                },
+                {
+                    "latitude": -8.8742,
+                    "longitude": 125.7275,
+                    "l5_id": 134452,
+                    "l5_name": "Turiscai",
+                    "l4_id": 12774,
+                    "l4_name": "Manufahi",
+                    "l3_id": 1199,
+                    "l3_name": "East Timor",
+                },
+            ],
+        )
+
 
 class GroClientConstructorTests(TestCase):
     PROD_API_HOST = "api.gro-intelligence.com"
 
     # The most convenient method.
-    @patch.dict(os.environ, {'GROAPI_TOKEN': MOCK_TOKEN})
+    @patch.dict(os.environ, {"GROAPI_TOKEN": MOCK_TOKEN})
     def test_no_host_and_env_token(self):
         client = GroClient()
         with patch("groclient.lib.get_available") as get_available:
             _ = client.get_available("items")
-            get_available.assert_called_once_with(MOCK_TOKEN, self.PROD_API_HOST, "items")
+            get_available.assert_called_once_with(
+                MOCK_TOKEN, self.PROD_API_HOST, "items"
+            )
 
     # A common use case: user passes an API token but no API host.
     def test_no_host_and_kwarg_token(self):
         client = GroClient(access_token=MOCK_TOKEN)
         with patch("groclient.lib.get_available") as get_available:
             _ = client.get_available("items")
-            get_available.assert_called_once_with(MOCK_TOKEN, self.PROD_API_HOST, "items")
+            get_available.assert_called_once_with(
+                MOCK_TOKEN, self.PROD_API_HOST, "items"
+            )
 
     def test_explicit_host_and_token(_self):
         client = GroClient(MOCK_HOST, MOCK_TOKEN)
@@ -612,7 +717,11 @@ class GroClientConstructorTests(TestCase):
         # Explicitly unset GROAPI_TOKEN if it's set (eg, its set in our Shippable config).
         env_without_token = {k: v for k, v in os.environ.items() if k != "GROAPI_TOKEN"}
         with patch.dict(os.environ, env_without_token, clear=True):
-            with self.assertRaisesRegex(RuntimeError, "environment variable must be set"):
+            with self.assertRaisesRegex(
+                RuntimeError, "environment variable must be set"
+            ):
                 _ = GroClient(MOCK_HOST)
-            with self.assertRaisesRegex(RuntimeError, "environment variable must be set"):
+            with self.assertRaisesRegex(
+                RuntimeError, "environment variable must be set"
+            ):
                 _ = GroClient()
