@@ -8,7 +8,11 @@ than here.
 from builtins import str
 from groclient import cfg
 from collections import OrderedDict
-from groclient.constants import REGION_LEVELS, DATA_SERIES_UNIQUE_TYPES_ID, ITR_CHUNK_READ_SIZE
+from groclient.constants import (
+    REGION_LEVELS,
+    DATA_SERIES_UNIQUE_TYPES_ID,
+    ITR_CHUNK_READ_SIZE,
+)
 import groclient.utils
 import json
 import logging
@@ -436,7 +440,9 @@ def stream_data_series(access_token, api_host, **selection):
     params = get_params_from_selection(**selection)
     resp = get_data(url, headers, params, logger, True)
     try:
-        for line in resp.iter_lines(chunk_size=ITR_CHUNK_READ_SIZE, decode_unicode=True):
+        for line in resp.iter_lines(
+            chunk_size=ITR_CHUNK_READ_SIZE, decode_unicode=True
+        ):
             if line:
                 current_ds_list = json.loads(line)
                 if any(
