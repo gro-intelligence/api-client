@@ -38,3 +38,5 @@ DATA_POINTS_UNIQUE_COLS = DATA_SERIES_UNIQUE_TYPES_ID + [
     "start_date",
     "end_date",
 ]
+
+ITR_CHUNK_READ_SIZE = 4096 * 1024  # 4 MB
