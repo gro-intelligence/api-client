@@ -8,7 +8,7 @@ class Experimental(GroClient):
     def get_data_points(self, **selections):
         """Get all the data points for a given selection from /v2prime/data.
 
-        Note - This function is a part of an experimental class and subject to change.
+        This function is a part of an experimental class and subject to change.
 
         Parameters
         ----------
@@ -36,25 +36,27 @@ class Experimental(GroClient):
 
         Returns
         -------
+            dict
+                dictionary containing list of data_points and series_description
 
-        dict of data_series containing data points and its description as shown in above example.
+        Example::
 
-            Example::
-
-            exp_client = Experimental("api.gro-intelligence.com", GROAPI_TOKEN)
+            exp_client = Experimental(access_token="your_token_here")
             exp_client.get_data_points(
-                **{
-                    'metric_id': 2540047,
-                    'item_ids': [3457],
-                    'region_ids': [100023971, 100023990],
-                    'frequency_id': 1,
-                    'source_id': 26,
-                    'start_date': '2021-12-20',
-                    'end_date': '2021-12-21',
-                    'stream': False
-                    }
-            )
-            Returns:
+                                    **{
+                                        'metric_id': 2540047,
+                                        'item_ids': [3457],
+                                        'region_ids': [100023971, 100023990],
+                                        'frequency_id': 1,
+                                        'source_id': 26,
+                                        'start_date': '2021-12-20',
+                                        'end_date': '2021-12-21',
+                                        'stream': False
+                                    }
+                                )
+
+        Returns::
+
             {
                 "data_series": [
                     {
