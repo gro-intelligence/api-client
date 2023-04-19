@@ -27,6 +27,6 @@ Anaconda Additional Information
 	f. Relaunch Anaconda Navigator
 	g. Launch jupyter notebook
 
-#. See the following link from Anaconda if you have a `proxy <https://docs.anaconda.com/anaconda/user-guide/tasks/proxy/>`_
+#. See the following link from Anaconda if you have a `proxy <https://enterprise-docs.anaconda.com/en/latest/admin/chan-pkg/proxy.html>`_
 #. See the following link from Anaconda if you have a `firewall <https://docs.anaconda.com/anaconda-enterprise-4/ae-and-nav/#configuring-firewall-settings>`_
 
