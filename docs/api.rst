@@ -81,3 +81,9 @@ Crop Modeling
 .. automethod:: groclient.CropModel.compute_gdd
 
 .. automethod:: groclient.CropModel.growing_degree_days
+
+=============
+Experimental
+=============
+
+.. automethod:: groclient.Experimental.get_data_points

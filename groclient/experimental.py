@@ -10,6 +10,7 @@ class Experimental(GroClient):
     def get_data_points(self, **selections):
         """
         Get all the data points for a given selection from /v2prime/data.
+        Note: This function is a part of an experimental class and subject to change.
 
         Example:
             experimental_client.get_data_points(**{'metric_id': 2540047,
@@ -27,7 +28,6 @@ class Experimental(GroClient):
                     {
                         "data_points": [
                             {
-                                "timestamp_sec": "1640044800",
                                 "value": 33.20465087890625,
                                 "start_timestamp": "1639958400",
                                 "end_timestamp": "1640044800"
@@ -45,7 +45,6 @@ class Experimental(GroClient):
                     {
                         "data_points": [
                             {
-                                "timestamp_sec": "1640044800",
                                 "value": 32.73432922363281,
                                 "start_timestamp": "1639958400",
                                 "end_timestamp": "1640044800"
@@ -62,9 +61,9 @@ class Experimental(GroClient):
                     }
                 ],
                 "meta": {
-                    "version": "local",
+                    "version": "v1.266.0",
                     "copyright": "Copyright (c) Gro Intelligence",
-                    "timestamp": "Mon, 03 Apr 2023 19:34:38 GMT"
+                    "timestamp": "Wed, 19 Apr 2023 14:34:05 GMT"
                 }
             }
         Parameters
