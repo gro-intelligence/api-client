@@ -13,15 +13,19 @@ class Experimental(GroClient):
         Note: This function is a part of an experimental class and subject to change.
 
         Example:
-            experimental_client.get_data_points(**{'metric_id': 2540047,
-                                    'item_ids': [3457],
-                                    'region_ids': [100023971, 100023990],
-                                    'frequency_id': 1,
-                                    'source_id': 26,
-                                    'start_date': '2021-12-20',
-                                    'end_date': '2021-12-21',
-                                    'stream': False
-                                    })
+            exp_client = Experimental(api.gro-intelligence.com, GROAPI_TOKEN)
+            exp_client.get_data_points(
+            **{
+                'metric_id': 2540047,
+                'item_ids': [3457],
+                'region_ids': [100023971, 100023990],
+                'frequency_id': 1,
+                'source_id': 26,
+                'start_date': '2021-12-20',
+                'end_date': '2021-12-21',
+                'stream': False
+                }
+            )
             Returns:
             {
                 "data_series": [
