@@ -9,7 +9,7 @@ Anaconda Additional Information
 
 #. If your username includes spaces, as is common on Windows systems, you are not allowed to install Anaconda in the default path (C:\Users\<your-username>\Anaconda3\)
 
-	a. See this `Anaconda link <https://docs.anaconda.com/anaconda/user-guide/faq/>`_ for additional information.
+	a. See this `Anaconda link <https://docs.anaconda.com/free/anaconda/reference/faq/>`_ for additional information.
 
 #. If you install Anaconda outside of the default path, then you will need to update the config for the jupyter notebook default directory as outlined below:
 
@@ -27,6 +27,6 @@ Anaconda Additional Information
 	f. Relaunch Anaconda Navigator
 	g. Launch jupyter notebook
 
-#. See the following link from Anaconda if you have a `proxy <https://docs.anaconda.com/anaconda/user-guide/tasks/proxy/>`_
+#. See the following link from Anaconda if you have a `proxy <https://enterprise-docs.anaconda.com/en/latest/admin/chan-pkg/proxy.html>`_
 #. See the following link from Anaconda if you have a `firewall <https://docs.anaconda.com/anaconda-enterprise-4/ae-and-nav/#configuring-firewall-settings>`_
 
