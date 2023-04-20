@@ -3,12 +3,20 @@ from groclient import lib
 
 
 class Experimental(GroClient):
-    """Experimental class to consume v2prime data."""
+    """The experimental client will introduce a range of experimental functions with better user experience.
+    While you will be able to access better performance and new features at an early stage,
+    you should be aware that things might change (e.g response format)."""
 
     def get_data_points(self, **selections):
-        """Get all the data points for a given selection from /v2prime/data.
+        """This function is a mirror of existing :meth:`~groclient.GroClient.get_data_points`, but with limited scope.
 
-        This function is a part of an experimental class and subject to change.
+        For example:
+
+        - Ontology expansion is under development.
+
+        - "Gro derived on-the-fly" is under development.
+
+        - Many sources are still under migration (please refer to internal confluence page for source migration timeline)
 
         Parameters
         ----------
@@ -27,12 +35,11 @@ class Experimental(GroClient):
         frequency_id : integer
         unit_id : integer, optional
         start_date : string, optional
-            All points with end dates equal to or after this date
+            All data points with end dates after this date.
         end_date : string, optional
-            All points with start dates equal to or before this date
+            All data points with start dates before this date.
         coverage_threshold: float, optional
             Custom threshold on the coverage of geospatial data. Value should be between 0 and 1.
-        stream: bool, optional
 
         Returns
         -------
@@ -51,7 +58,6 @@ class Experimental(GroClient):
                                         'source_id': 26,
                                         'start_date': '2021-12-20',
                                         'end_date': '2021-12-21',
-                                        'stream': False
                                     }
                                 )
 
