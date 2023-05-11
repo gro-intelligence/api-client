@@ -47,6 +47,7 @@ class Experimental(GroClient):
                 dictionary containing list of data_points and series_description
 
         Example::
+            from groclient.experimental import Experimental
 
             exp_client = Experimental(access_token="your_token_here")
             exp_client.get_data_points(
