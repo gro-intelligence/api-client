@@ -13,8 +13,6 @@ class Experimental(GroClient):
 
         For example:
 
-        - Ontology expansion is under development.
-
         - "Gro derived on-the-fly" is under development.
 
         - Many sources are still under migration (please refer to internal confluence page for source migration timeline)
@@ -114,6 +112,57 @@ class Experimental(GroClient):
         )
 
     def get_data_points_df(self, **selections):
+        """Call :meth:`~groclient.Experimental.get_data_points` and return as a combined
+        dataframe.
+
+        Parameters
+        ----------
+        metric_id : integer
+            How something is measured. e.g. "Export Value" or "Area Harvested"
+        item_ids : integer or list of integers
+            What is being measured. e.g. "Corn" or "Rainfall"
+        region_ids : integer or list of integers
+            Where something is being measured e.g. "United States Corn Belt" or "China"
+        partner_region_ids : integer or list of integers, optional
+            partner_region refers to an interaction between two regions, like trade or
+            transportation. For example, for an Export metric, the "region" would be the exporter
+            and the "partner_region" would be the importer. For most series, this can be excluded
+            or set to 0 ("World") by default.
+        source_id : integer
+        frequency_id : integer
+        unit_id : integer, optional
+        start_date : string, optional
+            All data points with end dates after this date.
+        end_date : string, optional
+            All data points with start dates before this date.
+        coverage_threshold: float, optional
+            Custom threshold on the coverage of geospatial data. Value should be between 0 and 1.
+
+        Returns
+        -------
+        pandas.DataFrame
+            The results from :meth:`~groclient.Experimental.get_data_points`, appended together
+            into a single dataframe.
+            Data point attributes in timestamp format (e.g `start_timestamp`, `end_timestamp`)
+            will be converted into human readable format (`YYYY-MM-DD`), and renamed as
+            `start_date`and `end_date`
+
+        Example::
+            from groclient.experimental import Experimental
+
+            exp_client = Experimental(access_token="your_token_here")
+            exp_client.get_data_points_df(
+                                    **{
+                                        'metric_id': 2540047,
+                                        'item_ids': [3457],
+                                        'region_ids': [100023971, 100023990],
+                                        'frequency_id': 1,
+                                        'source_id': 26,
+                                        'start_date': '2021-12-20',
+                                        'end_date': '2021-12-21',
+                                    }
+                                )
+        """
         res = lib.get_data_points_v2_prime(
             self.access_token, self.api_host, **selections
         )
