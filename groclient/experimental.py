@@ -42,10 +42,11 @@ class Experimental(GroClient):
 
         Returns
         -------
-            dict
-                dictionary containing list of data_points and series_description
+        dict
+            dictionary containing list of data_points and series_description
 
         Example::
+
             from groclient.experimental import Experimental
 
             exp_client = Experimental(access_token="your_token_here")
@@ -145,9 +146,10 @@ class Experimental(GroClient):
             into a single dataframe.
             Data point attributes in timestamp format (e.g `start_timestamp`, `end_timestamp`)
             will be converted into human readable format (`YYYY-MM-DD`), and renamed as
-            `start_date`and `end_date`
+            `start_date` and `end_date`
 
         Example::
+
             from groclient.experimental import Experimental
 
             exp_client = Experimental(access_token="your_token_here")
