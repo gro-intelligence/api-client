@@ -1,5 +1,6 @@
 from groclient.client import GroClient
 from groclient import lib
+import pandas as pd
 
 
 class Experimental(GroClient):
@@ -111,3 +112,31 @@ class Experimental(GroClient):
         return lib.get_data_points_v2_prime(
             self.access_token, self.api_host, **selections
         )
+
+    def get_data_points_df(self, **selections):
+        res = lib.get_data_points_v2_prime(
+            self.access_token, self.api_host, **selections
+        )
+
+        if len(res) == 0:
+            return pd.DataFrame()
+
+        dfs = []
+        for data_series in res:
+            data_points = data_series["data_points"]
+            series_description = data_series["series_description"]
+            df = pd.DataFrame(data_points)
+            series_df = pd.json_normalize(series_description)
+            series_df = pd.concat([series_df] * len(df), ignore_index=True)
+            df = pd.concat([df, series_df], axis=1)
+            df["start_timestamp"] = pd.to_datetime(df["start_timestamp"], unit="s")
+            df["end_timestamp"] = pd.to_datetime(df["end_timestamp"], unit="s")
+            dfs.append(df)
+
+        conbined_df = pd.concat(dfs, ignore_index=True)
+        conbined_df.rename(
+            columns={"start_timestamp": "start_date", "end_timestamp": "end_date"},
+            inplace=True,
+        )
+
+        return conbined_df
