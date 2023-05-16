@@ -37,7 +37,7 @@ class Experimental(GroClient):
             All data points with end dates after this date.
         end_date : string, optional
             All data points with start dates before this date.
-        coverage_threshold: float, optional
+        coverage_threshold : float, optional
             Custom threshold on the coverage of geospatial data. Value should be between 0 and 1.
 
         Returns
@@ -45,68 +45,68 @@ class Experimental(GroClient):
         dict
             dictionary containing list of data_points and series_description
 
-        Example::
+            Example::
 
-            from groclient.experimental import Experimental
+                from groclient.experimental import Experimental
 
-            exp_client = Experimental(access_token="your_token_here")
-            exp_client.get_data_points(
-                                    **{
-                                        'metric_id': 2540047,
-                                        'item_ids': [3457],
-                                        'region_ids': [100023971, 100023990],
-                                        'frequency_id': 1,
-                                        'source_id': 26,
-                                        'start_date': '2021-12-20',
-                                        'end_date': '2021-12-21',
-                                    }
-                                )
-
-        Returns::
-
-            {
-                "data_series": [
-                    {
-                        "data_points": [
-                            {
-                                "value": 33.20465087890625,
-                                "start_timestamp": "1639958400",
-                                "end_timestamp": "1640044800"
-                            }
-                        ],
-                        "series_description": {
-                            "source_id": 26,
-                            "item_id": 3457,
-                            "metric_id": 2540047,
-                            "frequency_id": 1,
-                            "region_id": 100023971,
-                            "unit_id": 36
-                        }
-                    },
-                    {
-                        "data_points": [
-                            {
-                                "value": 32.73432922363281,
-                                "start_timestamp": "1639958400",
-                                "end_timestamp": "1640044800"
-                            }
-                        ],
-                        "series_description": {
-                            "source_id": 26,
-                            "item_id": 3457,
-                            "metric_id": 2540047,
-                            "frequency_id": 1,
-                            "region_id": 100023990,
-                            "unit_id": 36
-                        }
+                exp_client = Experimental(access_token="your_token_here")
+                exp_client.get_data_points(
+                    **{
+                        'metric_id': 2540047,
+                        'item_ids': [3457],
+                        'region_ids': [100023971, 100023990],
+                        'frequency_id': 1,
+                        'source_id': 26,
+                        'start_date': '2021-12-20',
+                        'end_date': '2021-12-21',
                     }
-                ],
-                "meta": {
-                    "version": "v1.266.0",
-                    "copyright": "Copyright (c) Gro Intelligence",
-                    "timestamp": "Wed, 19 Apr 2023 14:34:05 GMT"
+                )
+
+            Returns::
+
+                {
+                    "data_series": [
+                        {
+                            "data_points": [
+                                {
+                                    "value": 33.20465087890625,
+                                    "start_timestamp": "1639958400",
+                                    "end_timestamp": "1640044800"
+                                }
+                            ],
+                            "series_description": {
+                                "source_id": 26,
+                                "item_id": 3457,
+                                "metric_id": 2540047,
+                                "frequency_id": 1,
+                                "region_id": 100023971,
+                                "unit_id": 36
+                            }
+                        },
+                        {
+                            "data_points": [
+                                {
+                                    "value": 32.73432922363281,
+                                    "start_timestamp": "1639958400",
+                                    "end_timestamp": "1640044800"
+                                }
+                            ],
+                            "series_description": {
+                                "source_id": 26,
+                                "item_id": 3457,
+                                "metric_id": 2540047,
+                                "frequency_id": 1,
+                                "region_id": 100023990,
+                                "unit_id": 36
+                            }
+                        }
+                    ],
+                    "meta": {
+                        "version": "v1.266.0",
+                        "copyright": "Copyright (c) Gro Intelligence",
+                        "timestamp": "Wed, 19 Apr 2023 14:34:05 GMT"
+                    }
                 }
-            }
         """
         return lib.get_data_points_v2_prime(
             self.access_token, self.api_host, **selections
@@ -136,7 +136,7 @@ class Experimental(GroClient):
             All data points with end dates after this date.
         end_date : string, optional
             All data points with start dates before this date.
-        coverage_threshold: float, optional
+        coverage_threshold : float, optional
             Custom threshold on the coverage of geospatial data. Value should be between 0 and 1.
 
         Returns
@@ -148,22 +148,22 @@ class Experimental(GroClient):
             will be converted into human readable format (`YYYY-MM-DD`), and renamed as
             `start_date` and `end_date`
 
-        Example::
+            Example::
 
-            from groclient.experimental import Experimental
+                from groclient.experimental import Experimental
 
-            exp_client = Experimental(access_token="your_token_here")
-            exp_client.get_data_points_df(
-                                    **{
-                                        'metric_id': 2540047,
-                                        'item_ids': [3457],
-                                        'region_ids': [100023971, 100023990],
-                                        'frequency_id': 1,
-                                        'source_id': 26,
-                                        'start_date': '2021-12-20',
-                                        'end_date': '2021-12-21',
-                                    }
-                                )
+                exp_client = Experimental(access_token="your_token_here")
+                exp_client.get_data_points_df(
+                                        **{
+                                            'metric_id': 2540047,
+                                            'item_ids': [3457],
+                                            'region_ids': [100023971, 100023990],
+                                            'frequency_id': 1,
+                                            'source_id': 26,
+                                            'start_date': '2021-12-20',
+                                            'end_date': '2021-12-21',
+                                        }
+                                    )
         """
         res = lib.get_data_points_v2_prime(
             self.access_token, self.api_host, **selections
