@@ -108,9 +108,19 @@ class Experimental(GroClient):
                     }
                 }
         """
-        return lib.get_data_points_v2_prime(
+        data_stream_list = lib.get_data_points_v2_prime(
             self.access_token, self.api_host, **selections
         )
+
+        # due to the issue in javascript when dealing with 'int64'
+        # here we would manually convert timestamp from str to int
+        for data_stream in data_stream_list:
+            for data_point in data_stream['data_points']:
+                data_point['start_timestamp'] = int(data_point['start_timestamp'])
+                data_point['end_timestamp'] = int(data_point['start_timestamp'])
+
+        return data_stream_list
+
 
     def get_data_points_df(self, **selections):
         """Call :meth:`~groclient.Experimental.get_data_points` and return as a combined
