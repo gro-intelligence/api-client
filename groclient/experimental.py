@@ -66,49 +66,42 @@ class Experimental(GroClient):
 
             Returns::
 
-                {
-                    "data_series": [
-                        {
-                            "data_points": [
-                                {
-                                    "value": 33.20465087890625,
-                                    "start_timestamp": "1639958400",
-                                    "end_timestamp": "1640044800"
-                                }
-                            ],
-                            "series_description": {
-                                "source_id": 26,
-                                "item_id": 3457,
-                                "metric_id": 2540047,
-                                "frequency_id": 1,
-                                "region_id": 100023971,
-                                "unit_id": 36
+                [
+                    {
+                        "data_points": [
+                            {
+                                "value": 33.20465087890625,
+                                "start_timestamp": "1639958400",
+                                "end_timestamp": "1640044800"
                             }
-                        },
-                        {
-                            "data_points": [
-                                {
-                                    "value": 32.73432922363281,
-                                    "start_timestamp": "1639958400",
-                                    "end_timestamp": "1640044800"
-                                }
-                            ],
-                            "series_description": {
-                                "source_id": 26,
-                                "item_id": 3457,
-                                "metric_id": 2540047,
-                                "frequency_id": 1,
-                                "region_id": 100023990,
-                                "unit_id": 36
-                            }
+                        ],
+                        "series_description": {
+                            "source_id": 26,
+                            "item_id": 3457,
+                            "metric_id": 2540047,
+                            "frequency_id": 1,
+                            "region_id": 100023971,
+                            "unit_id": 36
                         }
-                    ],
-                    "meta": {
-                        "version": "v1.266.0",
-                        "copyright": "Copyright (c) Gro Intelligence",
-                        "timestamp": "Wed, 19 Apr 2023 14:34:05 GMT"
+                    },
+                    {
+                        "data_points": [
+                            {
+                                "value": 32.73432922363281,
+                                "start_timestamp": "1639958400",
+                                "end_timestamp": "1640044800"
+                            }
+                        ],
+                        "series_description": {
+                            "source_id": 26,
+                            "item_id": 3457,
+                            "metric_id": 2540047,
+                            "frequency_id": 1,
+                            "region_id": 100023990,
+                            "unit_id": 36
+                        }
                     }
-                }
+                ]
         """
         data_stream_list = lib.get_data_points_v2_prime(
             self.access_token, self.api_host, **selections
