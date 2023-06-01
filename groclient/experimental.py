@@ -112,7 +112,7 @@ class Experimental(GroClient):
         for data_stream in data_stream_list:
             for data_point in data_stream['data_points']:
                 data_point['start_timestamp'] = int(data_point['start_timestamp'])
-                data_point['end_timestamp'] = int(data_point['start_timestamp'])
+                data_point['end_timestamp'] = int(data_point['end_timestamp'])
 
         return data_stream_list
 
