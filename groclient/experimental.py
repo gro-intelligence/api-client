@@ -1,6 +1,8 @@
+import pandas as pd
+
 from groclient.client import GroClient
 from groclient import lib
-import pandas as pd
+from groclient.constants import V2_DATA_DESCRIPTION_COLS
 
 
 class Experimental(GroClient):
@@ -179,25 +181,14 @@ class Experimental(GroClient):
             self.access_token, self.api_host, **selections
         )
 
-        if len(res) == 0:
-            return pd.DataFrame()
-
-        dfs = []
-        for data_series in res:
-            data_points = data_series["data_points"]
-            series_description = data_series["series_description"]
-            df = pd.DataFrame(data_points)
-            series_df = pd.json_normalize(series_description)
-            series_df = pd.concat([series_df] * len(df), ignore_index=True)
-            df = pd.concat([df, series_df], axis=1)
-            df["start_timestamp"] = pd.to_datetime(df["start_timestamp"], unit="s")
-            df["end_timestamp"] = pd.to_datetime(df["end_timestamp"], unit="s")
-            dfs.append(df)
-
-        conbined_df = pd.concat(dfs, ignore_index=True)
-        conbined_df.rename(
-            columns={"start_timestamp": "start_date", "end_timestamp": "end_date"},
-            inplace=True,
+        df = pd.json_normalize(
+            res, record_path=['data_points'], meta=V2_DATA_DESCRIPTION_COLS, errors='ignore'
         )
 
-        return conbined_df
+        if not df.empty:
+            ts_cols = ["start_timestamp", "end_timestamp"]
+            df[ts_cols] = df[ts_cols].apply(pd.to_datetime, unit="s")
+
+            df.columns = df.columns.str.replace('series_description.', '')
+
+        return df
