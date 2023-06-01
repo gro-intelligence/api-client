@@ -8,8 +8,6 @@ except ImportError:
 from datetime import date
 from unittest import TestCase
 
-import pandas as pd
-
 from groclient import Experimental
 from groclient.mock_data import mock_v2_prime_data_request, mock_v2_prime_data_response
 
@@ -47,3 +45,10 @@ class ExperimentalTests(TestCase):
 
         self.assertEqual(df.shape[0], 2)
         self.assertEqual(df.shape[1], 10)
+
+    @patch("groclient.lib.get_data_points_v2_prime")
+    def test_get_data_points_df_no_data(self, mock_get_data_points):
+        mock_get_data_points.return_value = []
+        df = self.client.get_data_points_df(**mock_v2_prime_data_request)
+
+        self.assertTrue(df.empty)
