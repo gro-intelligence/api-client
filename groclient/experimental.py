@@ -2,7 +2,7 @@ import pandas as pd
 
 from groclient.client import GroClient
 from groclient import lib
-from groclient.constants import V2_DATA_DESCRIPTION_COLS
+from groclient.constants import V2_DATA_DESCRIPTION_PREFIX, V2_DATA_DESCRIPTION_ATTRS
 
 
 class Experimental(GroClient):
@@ -169,13 +169,22 @@ class Experimental(GroClient):
                                             'end_date': '2021-12-21',
                                         }
                                     )
+
+            Returns::
+
+                       value start_timestamp end_timestamp metric_id item_id  region_id partner_region_id frequency_id source_id unit_id
+                0  33.204651      2021-12-20    2021-12-21   2540047    3457  100023971               NaN            1        26      36
+                1  32.734329      2021-12-20    2021-12-21   2540047    3457  100023990               NaN            1        26      36
         """
         res = lib.get_data_points_v2_prime(
             self.access_token, self.api_host, **selections
         )
 
+        v2_data_description_meta = [
+            [V2_DATA_DESCRIPTION_PREFIX, x] for x in V2_DATA_DESCRIPTION_ATTRS
+        ]
         df = pd.json_normalize(
-            res, record_path=['data_points'], meta=V2_DATA_DESCRIPTION_COLS, errors='ignore'
+            res, record_path=['data_points'], meta=v2_data_description_meta, errors='ignore'
         )
 
         if not df.empty:
@@ -183,5 +192,6 @@ class Experimental(GroClient):
             df[ts_cols] = df[ts_cols].apply(pd.to_datetime, unit="s")
 
             df.columns = df.columns.str.replace('series_description.', '')
+            df[V2_DATA_DESCRIPTION_ATTRS] = df[V2_DATA_DESCRIPTION_ATTRS].apply(pd.to_numeric)
 
         return df

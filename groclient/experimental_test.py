@@ -5,7 +5,10 @@ except ImportError:
     # Python 2.7
     from mock import patch
 
-from datetime import date
+import numpy as np
+import pandas as pd
+
+from pandas.testing import assert_frame_equal
 from unittest import TestCase
 
 from groclient import Experimental
@@ -37,14 +40,26 @@ class ExperimentalTests(TestCase):
         mock_get_data_points.return_value = mock_v2_prime_data_response.copy()
         df = self.client.get_data_points_df(**mock_v2_prime_data_request)
 
-        self.assertEqual(df.iloc[0]["start_timestamp"], date(2023, 5, 1))
-        self.assertEqual(df.iloc[0]["end_timestamp"], date(2023, 5, 2))
-        self.assertEqual(df.iloc[0]["metric_id"], 2540047)
-        self.assertEqual(df.iloc[0]["region_id"], 12344)
-        self.assertEqual(df.iloc[1]["region_id"], 12345)
+        expected_df = pd.DataFrame({
+            "value": [33.20, 32.73],
+            "start_timestamp":['2023-05-01', '2023-05-01'],
+            "end_timestamp": ['2023-05-02', '2023-05-02'],
+            "metric_id": [2540047, 2540047],
+            "item_id": [3457, 3457],
+            "region_id": [12344, 12345],
+            "partner_region_id": [np.nan, np.nan],
+            "frequency_id": [1,1],
+            "source_id": [26, 26],
+            "unit_id": [36, 36]
+        }).astype({
+            'start_timestamp': 'datetime64',
+            'end_timestamp': 'datetime64'
+        })
 
-        self.assertEqual(df.shape[0], 2)
-        self.assertEqual(df.shape[1], 10)
+        print(df.dtypes)
+
+        assert_frame_equal(df, expected_df)
+
 
     @patch("groclient.lib.get_data_points_v2_prime")
     def test_get_data_points_df_no_data(self, mock_get_data_points):
