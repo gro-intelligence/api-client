@@ -1,44 +1,17 @@
 import pandas as pd
 
-from typing import List, Optional, TypedDict
+from typing import Dict, List
 
 from groclient.client import GroClient
 from groclient import lib
 from groclient.constants import V2_DATA_DESCRIPTION_PREFIX, V2_DATA_DESCRIPTION_ATTRS
-
-class V2DataRequest(TypedDict):
-    metric_id: int
-    item_ids: List[int]
-    region_ids: List[int]
-    source_id: int
-    frequenc_id: int
-    partner_region_ids: Optional[List[int]]
-    start_date: Optional[str]
-    end_date: Optional[str]
-
-class V2DataPoint(TypedDict):
-    value: Optional[float]
-    start_timestamp: Optional[int]
-    end_timestamp: Optional[int]
-
-class V2DataDescription(TypedDict):
-    metric_id: Optional[int]
-    item_id: Optional[int]
-    region_id: Optional[int]
-    partner_region_id: Optional[int]
-    frequency_id: Optional[int]
-    source_id: Optional[int]
-
-class V2DataStream(TypedDict):
-    data_points: List[V2DataPoint]
-    series_description: V2DataDescription
 
 class Experimental(GroClient):
     """The experimental client will introduce a range of experimental functions with better user experience.
     While you will be able to access better performance and new features at an early stage,
     you should be aware that things might change (e.g response format)."""
 
-    def get_data_points(self, **selections: V2DataRequest) -> List[V2DataStream]:
+    def get_data_points(self, **selections: Dict) -> List[Dict]:
         """This function is a mirror of existing :meth:`~groclient.GroClient.get_data_points`, but with limited scope.
 
         For example:
@@ -145,7 +118,7 @@ class Experimental(GroClient):
         return data_stream_list
 
 
-    def get_data_points_df(self, **selections: V2DataRequest) -> pd.DataFrame:
+    def get_data_points_df(self, **selections: Dict) -> pd.DataFrame:
         """Call :meth:`~groclient.Experimental.get_data_points` and return as a combined
         dataframe.
 
