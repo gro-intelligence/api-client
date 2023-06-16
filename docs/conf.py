@@ -93,3 +93,6 @@ master_doc = "index"
 # so, we ignore all other releases that preceded that.
 smv_tag_whitelist = r"^v(?!1\.40\.[012345]).+$"
 smv_branch_whitelist = r"^development$"
+
+# -- Ignore Javascript Rendered page
+linkcheck_ignore = [r'https://www.tandfonline.com/doi/abs/10.1080/2150704X.2016.1252471']

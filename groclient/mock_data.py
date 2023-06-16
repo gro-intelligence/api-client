@@ -190,3 +190,50 @@ mock_error_selection = {
     "frequency_id": 4,
     "source_id": 5,
 }
+
+mock_v2_prime_data_request = {
+    "metric_id": 2540047,
+    "item_ids": [3457],
+    "source_id": 26,
+    "frequency_id": 1,
+    "unit_id": 36,
+    "start_date": "2023-05-01",
+    "region_ids": [1215],
+}
+
+mock_v2_prime_data_response = [
+    {
+        "data_points": [
+            {
+                "value": 33.20,
+                "start_timestamp": "1682899200",
+                "end_timestamp": "1682985600"
+            }
+        ],
+        "series_description": {
+            "source_id": 26,
+            "item_id": 3457,
+            "metric_id": 2540047,
+            "frequency_id": 1,
+            "region_id": 12344,
+            "unit_id": 36
+        }
+    },
+    {
+        "data_points": [
+            {
+                "value": 32.73,
+                "start_timestamp": "1682899200",
+                "end_timestamp": "1682985600"
+            }
+        ],
+        "series_description": {
+            "source_id": 26,
+            "item_id": 3457,
+            "metric_id": 2540047,
+            "frequency_id": 1,
+            "region_id": 12345,
+            "unit_id": 36
+        }
+    }
+]
