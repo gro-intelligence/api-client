@@ -860,6 +860,24 @@ def get_area_weighted_series(
     return resp.json()
 
 
+def get_area_weighting_metadata(
+    access_token: str,
+    api_host: str,
+    metadata_type: str,
+    names: List[str],
+):
+    url = f"http://{api_host}/area-weighting-metadata"
+    headers = {"authorization": "Bearer " + access_token}
+    # if isinstance(region_id, int):
+    #     region_id = [region_id]
+    params = {
+        "metadataType": metadata_type,
+        "names": names,
+    }
+    resp = get_data(url, headers, params=params)
+    return resp.json()
+
+
 def reverse_geocode_points(access_token: str, api_host: str, points: list):
     # Don't need to send empty request to API
     if len(points) == 0:

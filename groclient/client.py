@@ -1854,6 +1854,43 @@ class GroClient(object):
             latest_date_only,
         )
 
+    def get_area_weighting_metadata(
+        self,
+        metadata_type: str,
+        names: List[str],
+    ):
+        """Get metadata of series or weights used in the area-weighting service.
+
+        Returns a list of dictionary mapping series/weight names to its metadata.
+
+        Parameters
+        ----------
+        metadata_type: str
+            Type of entity. i.e. either series or weight. e.g. 'series'
+        names: list of strs
+            List of series or weight names for which to get the metadata. e.g. ['Barley (ha)', 'Corn (ha)']
+            For getting the full list of valid weight names, please call :meth:`~.get_area_weighting_weight_names`
+        Returns
+        -------
+        dict
+
+            Example::
+                    [{
+                    "column_name": "Wheat",
+                    "metric_id": 2120001,
+                    "item_id": 95,
+                    "source_id": 88,
+                    "frequency_id": 15,
+                    "unit_id": 42
+                    }]
+        """
+        return lib.get_area_weighting_metadata(
+            self.access_token,
+            self.api_host,
+            metadata_type,
+            names,
+        )
+
     def reverse_geocode_points(self, points: list):
         """
         Takes a list of lat/long pairs and return a list of corresponding Gro regions
