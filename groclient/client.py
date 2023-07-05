@@ -1868,8 +1868,7 @@ class GroClient(object):
         metadata_type: str
             Type of entity. i.e. either series or weight. e.g. 'series'
         names: list of strs
-            List of series or weight names for which to get the metadata. e.g. ['Barley (ha)', 'Corn (ha)']
-            For getting the full list of valid weight names, please call :meth:`~.get_area_weighting_weight_names`
+            List of series or weight names for which to get the metadata. e.g. ['GDI_daily', 'LST_daily']
         Returns
         -------
         dict
