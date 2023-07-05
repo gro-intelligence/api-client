@@ -868,8 +868,6 @@ def get_area_weighting_metadata(
 ):
     url = f"http://{api_host}/area-weighting-metadata"
     headers = {"authorization": "Bearer " + access_token}
-    # if isinstance(region_id, int):
-    #     region_id = [region_id]
     params = {
         "metadataType": metadata_type,
         "names": names,
