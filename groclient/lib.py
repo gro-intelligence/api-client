@@ -866,10 +866,9 @@ def get_area_weighting_metadata(
     metadata_type: str,
     names: List[str],
 ):
-    url = f"https://{api_host}/area-weighting-metadata"
+    url = f"https://{api_host}/area-weighting/{metadata_type}-metadata"
     headers = {"authorization": "Bearer " + access_token}
     params = {
-        "metadataType": metadata_type,
         "names": names,
     }
     resp = get_data(url, headers, params=params)
