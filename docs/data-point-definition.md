@@ -25,7 +25,7 @@ Below are some explanations of what each of those fields represent:
 * `start_date`: beginning of the period this point represents
 * `end_date`: end of the period this point represents
 * `value`: the value, typically a number. In some cases, the value may be non-numeric. E.g., when the metric is Crop Calendar, a value of "planting," represents the fact that the planting period is from `start_date` to `end_date`.
-* `unit_id`: this is a Gro unit id you can look up the name/abbreviation/etc. of using the `client.lookup('units', unit_id)` function. There's also a helper function of which you can see an example in the [quickstart](https://github.com/gro-intelligence/api-client/blob/9c2c17642980b5415b8a8167a28276b77e34915c/api/client/samples/quick_start.py#L30) for getting just the abbreviation from the unit id, `client.lookup_unit_abbreviation(point['unit_id'])`, which is the common case you probably want
+* `unit_id`: this is a Gro unit id you can look up the name/abbreviation/etc. of using the `client.lookup('units', unit_id)` function. There's also a helper function of which you can see an example in the [quickstart](https://github.com/gro-intelligence/api-client/blob/9c2c17642980b5415b8a8167a28276b77e34915c/api/client/samples/quick_start.py) for getting just the abbreviation from the unit id, `client.lookup_unit_abbreviation(point['unit_id'])`, which is the common case you probably want
 * `metadata`: additional information (i.e. {"conf_interval": 0.7})
 * `reporting_date`: date when the source reported this value (`None` if the source doesn't provide a reporting date)
 * `available_date`: date when this value became stable in Gro's system
