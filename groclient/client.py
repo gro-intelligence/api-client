@@ -1854,6 +1854,74 @@ class GroClient(object):
             latest_date_only,
         )
 
+    def get_area_weighting_weight_metadata(
+        self,
+        names: List[str],
+    ):
+        """Get metadata of weight/s used in the area-weighting service.
+
+        Returns a list of dictionary mapping weight names to its metadata.
+
+        Parameters
+        ----------
+        names: list of strs
+            List of weight for which to get the metadata. e.g. ['Wheat', 'Canola']
+        Returns
+        -------
+        dict
+
+            Example::
+                    [{
+                    "column_name": "Wheat",
+                    "metric_id": 2120001,
+                    "item_id": 95,
+                    "source_id": 88,
+                    "frequency_id": 15,
+                    "unit_id": 42
+                    }]
+        """
+        return lib.get_area_weighting_metadata(
+            self.access_token,
+            self.api_host,
+            "weight",
+            names,
+        )
+
+    def get_area_weighting_series_metadata(
+        self,
+        names: List[str],
+    ):
+        """Get metadata of series used in the area-weighting service.
+
+        Returns a list of dictionary mapping series names to its metadata.
+
+        Parameters
+        ----------
+        names: list of strs
+            List of series for which to get the metadata. e.g. ['GDI_daily', 'LST_daily']
+        Returns
+        -------
+        dict
+
+            Example::
+                    [{
+                    "series_name": "GFS_tmax_daily_yesterday",
+                    "item_id": 2177,
+                    "metric_id": 2540047,
+                    "source_id": 105,
+                    "frequency_id": 1,
+                    "unit_id": "36",
+                    "plain_words_name": "Max Temperature Forecast - Yesterday",
+                    "plain_words_source": "GFS"
+                    }]
+        """
+        return lib.get_area_weighting_metadata(
+            self.access_token,
+            self.api_host,
+            "series",
+            names,
+        )
+
     def reverse_geocode_points(self, points: list):
         """
         Takes a list of lat/long pairs and return a list of corresponding Gro regions
