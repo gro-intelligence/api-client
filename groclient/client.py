@@ -1872,7 +1872,7 @@ class GroClient(object):
 
             Example::
                     [{
-                    "column_name": "Wheat",
+                    "weight_name": "Wheat",
                     "metric_id": 2120001,
                     "item_id": 95,
                     "source_id": 88,
