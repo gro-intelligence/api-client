@@ -1815,6 +1815,7 @@ class GroClient(object):
         region_id: Union[int, List[int]],
         method: str = "sum",
         latest_date_only: bool = False,
+        metadata: bool = False
     ):
         """Compute weighted average on selected series with the given weights.
 
@@ -1836,6 +1837,8 @@ class GroClient(object):
         latest_date_only: bool, optional
             False by default. If True, will return a single key-value pair where the key is the latested date.
             e.g. {'2000-03-12': 0.221}
+        metadata: bool, optional
+            False by default. If True, will return the metadata for the given series and weights.
 
         Returns
         -------
@@ -1852,6 +1855,7 @@ class GroClient(object):
             region_id,
             method,
             latest_date_only,
+            metadata
         )
 
     def get_area_weighting_weight_metadata(
