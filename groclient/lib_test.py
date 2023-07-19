@@ -1108,19 +1108,42 @@ def test_get_area_weighting_weight_names(mock_requests_get):
 
 @mock.patch("requests.get")
 def test_get_area_weighted_series(mock_requests_get):
-    api_response = {
-        "2022-07-11": 0.715615,
-        "2022-07-19": 0.733129,
-        "2022-07-27": 0.748822,
+    api_response_with_metadata = {
+        "data_points": {
+            "2022-07-11": 0.715615,
+            "2022-07-19": 0.733129,
+            "2022-07-27": 0.748822
+        },
+        "series_description": {
+            "series_name": "dummy_series",
+            "item_id": 2,
+            "metric_id": 3,
+            "source_id": 4,
+            "frequency_id": 9,
+            "unit_id": 3,
+            "plain_words_name": "dummy",
+            "plain_words_source": "Gro"
+        },
+        "weight_description": [
+            {
+                "weight_name": "dummy weight",
+                "metric_id": 23,
+                "item_id": 41,
+                "source_id": 21,
+                "frequency_id": 12,
+                "unit_id": 31
+            }
+        ]
     }
-    initialize_requests_mocker_and_get_mock_data(mock_requests_get, api_response)
+    api_response_without_metadata = api_response_with_metadata["data_points"]
+    initialize_requests_mocker_and_get_mock_data(mock_requests_get, api_response_without_metadata)
 
-    expected_return = {
+    expected_return_without_metadata = {
         "2022-07-11": 0.715615,
         "2022-07-19": 0.733129,
         "2022-07-27": 0.748822,
     }
-    result = lib.get_area_weighted_series(
+    result_without_metadata = lib.get_area_weighted_series(
         MOCK_TOKEN,
         MOCK_HOST,
         "NDVI_8day",
@@ -1128,10 +1151,13 @@ def test_get_area_weighted_series(mock_requests_get):
         1215,
         "sum",
         False,
+        False
     )
-    assert result == expected_return
+    assert result_without_metadata == expected_return_without_metadata
 
-    result = lib.get_area_weighted_series(
+    initialize_requests_mocker_and_get_mock_data(mock_requests_get, api_response_with_metadata)
+
+    result_with_metadata = lib.get_area_weighted_series(
         MOCK_TOKEN,
         MOCK_HOST,
         "NDVI_8day",
@@ -1139,8 +1165,10 @@ def test_get_area_weighted_series(mock_requests_get):
         [1215],
         "sum",
         False,
+        True
     )
-    assert result == expected_return
+    expected_return_with_metadata = api_response_with_metadata
+    assert result_with_metadata == expected_return_with_metadata
 
 
 @mock.patch("requests.post")
