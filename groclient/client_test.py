@@ -275,6 +275,7 @@ def mock_get_area_weighted_series(
     region_id,
     method,
     latest_date_only,
+    metadata
 ):
     return {"2022-07-11": 0.715615, "2022-07-19": 0.733129, "2022-07-27": 0.748822}
 

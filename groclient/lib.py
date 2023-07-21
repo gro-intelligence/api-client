@@ -844,6 +844,7 @@ def get_area_weighted_series(
     region_id: Union[int, List[int]],
     method: str,
     latest_date_only: bool,
+    metadata: bool,
 ):
     url = f"https://{api_host}/area-weighting"
     headers = {"authorization": "Bearer " + access_token}
@@ -855,6 +856,7 @@ def get_area_weighted_series(
         "regionIds": region_id,
         "method": method,
         "latestDateOnly": latest_date_only,
+        "metadata": metadata
     }
     resp = get_data(url, headers, params=params)
     return resp.json()
