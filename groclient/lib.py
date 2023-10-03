@@ -111,7 +111,7 @@ def get_access_token(api_host, user_email, user_password, logger=None):
     accessToken : string
 
     """
-    warnings.warn(f'get_access_token() is deprecated and would be removed on November 1, 2023.', DeprecationWarning, 2)
+    warnings.warn(f'get_access_token() is deprecated and will be removed on November 1, 2023.', DeprecationWarning, 2)
     retry_count = 0
     if not logger:
         logger = get_default_logger()
