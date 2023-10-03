@@ -44,7 +44,7 @@ There are two ways you can invalidate your current authorization token and creat
 
 If you have your authentication token saved, performing either of these two actions will cause any applications using the old token to cease being able to contact the Gro API. You will need to follow the instructions in Section 1 to retrieve your new token and update any such applications accordingly.
 
-To regenerate your authentication token, open the API tab in your Account menu as in `Option 1: Using the Web App (Recommended)`_, but instead of copying the authentication token, press the "Regenerate Token" button (see below). A prompt will appear to warn that any applications using the old token will need to be updated and to confirm your intent.
+To regenerate your authentication token, open the API tab in your Account menu as in `Retrieving a token`_, but instead of copying the authentication token, press the "Regenerate Token" button (see below). A prompt will appear to warn that any applications using the old token will need to be updated and to confirm your intent.
 
 .. image:: ./_images/regenerate-token.png
     :align: center
