@@ -19,6 +19,7 @@ import logging
 import requests
 import time
 import platform
+import warnings
 
 from pkg_resources import get_distribution, DistributionNotFound
 from typing import List, Union
@@ -90,6 +91,7 @@ def get_default_logger():
 
 def get_access_token(api_host, user_email, user_password, logger=None):
     """Request an access token.
+    This is a DEPRECATED function and will no longer be supported after November 1, 2023!
 
     Parameters
     ----------
@@ -109,6 +111,7 @@ def get_access_token(api_host, user_email, user_password, logger=None):
     accessToken : string
 
     """
+    warnings.warn(f'get_access_token() is deprecated and will be removed on November 1, 2023.', DeprecationWarning, 2)
     retry_count = 0
     if not logger:
         logger = get_default_logger()
