@@ -11,10 +11,8 @@ Retrieving a token
 ==================
 
 Note that your account needs to be activated for API access before you will be able to retrieve a token. See https://gro-intelligence.com/products/gro-api for more info regarding unlocking API access for your account.
-Once you have API access enabled for your account, you may retrieve your token in any of the following ways:
+Once you have API access enabled for your account, you may retrieve your token by following the steps below:
 
-Option 1: Using the Web App (Recommended)
------------------------------------------
 
   1. Log in to your Gro account at https://app.gro-intelligence.com and open your Account menu using the button on the bottom left of the Gro dashboard (see image below).
   
@@ -35,40 +33,6 @@ Option 1: Using the Web App (Recommended)
     :alt: API tab
 
 
-Option 2: Using the gro_client Command Line Interface
------------------------------------------------------
-
-Limitation: The Gro Command Line Interface cannot retrieve tokens for users using OAuth authentication. If this applies to you, please use the Gro web application instead.
-
-When you install the Gro API Client via pip, the `gro_client` command line interface is automatically added to your PATH. This is a convenience tool for doing basic operations on the command line without needing to write a full Python script. One of its uses is it can retrieve your authentication token and print that token out to the console. To do so, execute the command below on your command line, substituting email@example.com for the email address associated with your Gro web application account:
-
-::
-
-  gro_client --user_email="email@example.com" --print_token
-
-You should then be prompted for a password. Note that this password prompt does not display any user input on the command line, so it may appear as though you are not typing anything. This is intended. Simply type your password and press Enter.
-
-If the password is accepted, your access token is printed to the console.
-
-Option 3: Using the :code:`get_access_token()` Function
--------------------------------------------------------
-
-Limitation: The :code:`get_access_token()` function cannot retrieve tokens for users using OAuth authentication. If this applies to you, please use the Gro web application instead.
-
-If you would like to programmatically retrieve your active token, you may use the :code:`get_access_token()` function in the API Client library. See below:
-
-::
-
-  from groclient.lib import get_access_token
-  API_HOST = 'api.gro-intelligence.com'
-  EMAIL = 'example@example.com'
-  PASSWORD = 'password123'
-  ACCESS_TOKEN = get_access_token(API_HOST, EMAIL, PASSWORD)
-
-
-It is generally bad practice to put login credentials directly in code as in this example, but the :code:`get_access_token()` function may be useful for productionization purposes, making the application more robust to tokens expiring (see the next section).
-
-
 
 Expiring/Regenerating Tokens
 ============================
@@ -80,7 +44,7 @@ There are two ways you can invalidate your current authorization token and creat
 
 If you have your authentication token saved, performing either of these two actions will cause any applications using the old token to cease being able to contact the Gro API. You will need to follow the instructions in Section 1 to retrieve your new token and update any such applications accordingly.
 
-To regenerate your authentication token, open the API tab in your Account menu as in `Option 1: Using the Web App (Recommended)`_, but instead of copying the authentication token, press the "Regenerate Token" button (see below). A prompt will appear to warn that any applications using the old token will need to be updated and to confirm your intent.
+To regenerate your authentication token, open the API tab in your Account menu as in `Retrieving a token`_, but instead of copying the authentication token, press the "Regenerate Token" button (see below). A prompt will appear to warn that any applications using the old token will need to be updated and to confirm your intent.
 
 .. image:: ./_images/regenerate-token.png
     :align: center
@@ -90,7 +54,7 @@ To regenerate your authentication token, open the API tab in your Account menu a
 Saving your token as an environment variable
 ============================================
 
-If you don't want to enter a password or token each time, you can save the token as an environment variable. In some of the sample code, it is assumed that you have the token saved to your environment variables as :code:`GROAPI_TOKEN`.
+If you don't want to enter a token each time, you can save the token as an environment variable. In some of the sample code, it is assumed that you have the token saved to your environment variables as :code:`GROAPI_TOKEN`.
 
 Please consult your OS or IDE documentation for the most accurate and up-to-date information on how to set environment variables. The links below should provide some guidance on how to do this for your preferred environment.
 
