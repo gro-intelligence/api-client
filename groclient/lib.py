@@ -91,6 +91,7 @@ def get_default_logger():
 
 def get_access_token(api_host, user_email, user_password, logger=None):
     """Request an access token.
+    This is a DEPRECATED function and will no longer be supported after November 1, 2023!
 
     Parameters
     ----------
