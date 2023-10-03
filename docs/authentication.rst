@@ -11,7 +11,7 @@ Retrieving a token
 ==================
 
 Note that your account needs to be activated for API access before you will be able to retrieve a token. See https://gro-intelligence.com/products/gro-api for more info regarding unlocking API access for your account.
-Once you have API access enabled for your account, you may retrieve your token in the following way:
+Once you have API access enabled for your account, you may retrieve your token by following the steps below:
 
 
   1. Log in to your Gro account at https://app.gro-intelligence.com and open your Account menu using the button on the bottom left of the Gro dashboard (see image below).
