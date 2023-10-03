@@ -35,40 +35,6 @@ Option 1: Using the Web App (Recommended)
     :alt: API tab
 
 
-Option 2: Using the gro_client Command Line Interface
------------------------------------------------------
-
-Limitation: The Gro Command Line Interface cannot retrieve tokens for users using OAuth authentication. If this applies to you, please use the Gro web application instead.
-
-When you install the Gro API Client via pip, the `gro_client` command line interface is automatically added to your PATH. This is a convenience tool for doing basic operations on the command line without needing to write a full Python script. One of its uses is it can retrieve your authentication token and print that token out to the console. To do so, execute the command below on your command line, substituting email@example.com for the email address associated with your Gro web application account:
-
-::
-
-  gro_client --user_email="email@example.com" --print_token
-
-You should then be prompted for a password. Note that this password prompt does not display any user input on the command line, so it may appear as though you are not typing anything. This is intended. Simply type your password and press Enter.
-
-If the password is accepted, your access token is printed to the console.
-
-Option 3: Using the :code:`get_access_token()` Function
--------------------------------------------------------
-
-Limitation: The :code:`get_access_token()` function cannot retrieve tokens for users using OAuth authentication. If this applies to you, please use the Gro web application instead.
-
-If you would like to programmatically retrieve your active token, you may use the :code:`get_access_token()` function in the API Client library. See below:
-
-::
-
-  from groclient.lib import get_access_token
-  API_HOST = 'api.gro-intelligence.com'
-  EMAIL = 'example@example.com'
-  PASSWORD = 'password123'
-  ACCESS_TOKEN = get_access_token(API_HOST, EMAIL, PASSWORD)
-
-
-It is generally bad practice to put login credentials directly in code as in this example, but the :code:`get_access_token()` function may be useful for productionization purposes, making the application more robust to tokens expiring (see the next section).
-
-
 
 Expiring/Regenerating Tokens
 ============================
