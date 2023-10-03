@@ -54,7 +54,7 @@ To regenerate your authentication token, open the API tab in your Account menu a
 Saving your token as an environment variable
 ============================================
 
-If you don't want to enter a password or token each time, you can save the token as an environment variable. In some of the sample code, it is assumed that you have the token saved to your environment variables as :code:`GROAPI_TOKEN`.
+If you don't want to enter a token each time, you can save the token as an environment variable. In some of the sample code, it is assumed that you have the token saved to your environment variables as :code:`GROAPI_TOKEN`.
 
 Please consult your OS or IDE documentation for the most accurate and up-to-date information on how to set environment variables. The links below should provide some guidance on how to do this for your preferred environment.
 
