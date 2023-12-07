@@ -3,3 +3,5 @@ dist/
 docs/_build/
 
 .coverage
+.DS_Store
+
