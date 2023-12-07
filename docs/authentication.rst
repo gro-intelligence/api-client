@@ -10,7 +10,7 @@ To work with the Gro API, you need an authentication token. This token needs to 
 Retrieving a token
 ==================
 
-Note that your account needs to be activated for API access before you will be able to retrieve a token. See https://gro-intelligence.com/products/gro-api for more info regarding unlocking API access for your account.
+Note that your account needs to be activated for API access before you will be able to retrieve a token. Please contact your sale rep or Customer Success to activate your account for API access. If you have any questions, please email support@gro-intelligence.com.
 Once you have API access enabled for your account, you may retrieve your token by following the steps below:
 
 
