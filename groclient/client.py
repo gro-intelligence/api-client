@@ -5,7 +5,7 @@ import json
 import os
 import time
 
-from typing import List, Union
+from typing import Dict, List, Optional, Union
 
 # Python3 support
 try:
@@ -1813,10 +1813,14 @@ class GroClient(object):
         series_name: str,
         weight_names: List[str],
         region_id: Union[int, List[int]],
+        start_date: Optional[str] = None,
+        end_date: Optional[str] = None,
+        limit: Optional[Union[int, str]] = "all",
+        level: Optional[int] = None,
         method: str = "sum",
         latest_date_only: bool = False,
-        metadata: bool = False
-    ):
+        metadata: bool = False,
+    ) -> Dict[str, float]:
         """Compute weighted average on selected series with the given weights.
 
         Returns a dictionary mapping dates to weighted values.
@@ -1832,13 +1836,25 @@ class GroClient(object):
         region_id: integer or list of integers
             The region or regions for which the weighted series will be computed
             Supported region levels are (1, 2, 3, 4, 5, 8)
-        method: str, optional
-            'sum' by default. Multi-crop weights can be calculated with either 'sum' or 'normalize' method.
-        latest_date_only: bool, optional
-            False by default. If True, will return a single key-value pair where the key is the latested date.
+        start_date: str, optional
+            A timestamp of the format 'YYYY-MM-DD', e.g. '2023-01-01'
+        end_date: str, optional
+            A timestamp of the format 'YYYY-MM-DD', e.g. '2023-01-01'
+        limit: Union[int, str], optional, default="all"
+            Will return the x latest data points within a given range. Example usage: `limit=1` returns
+            the latest data point.
+            A value of 'all' indicates returning all data within the specified range.
+        level: int, optional
+            The region level to which data will be aggregated before being returned.
+            If level not provided, the endpoint will aggregate to the level of each specified
+            region id.
+        method: str, optional, default="sum"
+            Multi-crop weights can be calculated with either 'sum' or 'normalize' method.
+        latest_date_only: bool, optional, default=False
+            If True, will return a single key-value pair where the key is the latested date.
             e.g. {'2000-03-12': 0.221}
-        metadata: bool, optional
-            False by default. If True, will return the metadata for the given series and weights.
+        metadata: bool, optional, default=False
+            If True, will return the metadata for the given series and weights.
 
         Returns
         -------
@@ -1853,9 +1869,13 @@ class GroClient(object):
             series_name,
             weight_names,
             region_id,
+            start_date,
+            end_date,
+            limit,
+            level,
             method,
             latest_date_only,
-            metadata
+            metadata,
         )
 
     def get_area_weighting_weight_metadata(
