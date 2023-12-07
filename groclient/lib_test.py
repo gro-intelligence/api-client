@@ -1149,6 +1149,10 @@ def test_get_area_weighted_series(mock_requests_get):
         "NDVI_8day",
         ["Barley (ha)", "Corn (ha)"],
         1215,
+        None,
+        None,
+        "all",
+        None,
         "sum",
         False,
         False
@@ -1163,6 +1167,10 @@ def test_get_area_weighted_series(mock_requests_get):
         "NDVI_8day",
         ["Barley (ha)", "Corn (ha)"],
         [1215],
+        None,
+        None,
+        "all",
+        None,
         "sum",
         False,
         True

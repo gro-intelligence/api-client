@@ -273,6 +273,10 @@ def mock_get_area_weighted_series(
     series_name,
     weight_names,
     region_id,
+    start_date,
+    end_date,
+    limit,
+    level,
     method,
     latest_date_only,
     metadata
