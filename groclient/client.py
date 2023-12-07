@@ -1813,6 +1813,7 @@ class GroClient(object):
         series_name: str,
         weight_names: List[str],
         region_id: Union[int, List[int]],
+        aggregation: Optional[str] = None,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
         limit: Optional[Union[int, str]] = "all",
@@ -1836,6 +1837,14 @@ class GroClient(object):
         region_id: integer or list of integers
             The region or regions for which the weighted series will be computed
             Supported region levels are (1, 2, 3, 4, 5, 8)
+        aggregation: str, optional
+            A string that can be parsed into components used to do the aggregation.
+            Format: {type}-{data_points/start_doy}
+            e.g. "total-7" returns 7 data point trailing totals
+            e.g. "ytd" returns year to date rolling cumulative totals for each year
+            in the series.
+            e.g. "ytd-5" returns the rolling cumulative totals for each year starting from
+            the 5th day of the year to the 4th day of the following year.
         start_date: str, optional
             A timestamp of the format 'YYYY-MM-DD', e.g. '2023-01-01'
         end_date: str, optional
@@ -1869,6 +1878,7 @@ class GroClient(object):
             series_name,
             weight_names,
             region_id,
+            aggregation,
             start_date,
             end_date,
             limit,
