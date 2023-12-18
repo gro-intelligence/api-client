@@ -22,7 +22,7 @@ import platform
 import warnings
 
 from pkg_resources import get_distribution, DistributionNotFound
-from typing import List, Union
+from typing import Dict, List, Optional, Union
 
 try:
     # functools are native in Python 3.2.3+
@@ -111,7 +111,11 @@ def get_access_token(api_host, user_email, user_password, logger=None):
     accessToken : string
 
     """
-    warnings.warn(f'get_access_token() is deprecated and will be removed on November 1, 2023.', DeprecationWarning, 2)
+    warnings.warn(
+        f"get_access_token() is deprecated and will be removed on November 1, 2023.",
+        DeprecationWarning,
+        2,
+    )
     retry_count = 0
     if not logger:
         logger = get_default_logger()
@@ -312,7 +316,9 @@ def lookup(access_token, api_host, entity_type, entity_ids):
     try:  # Convert iterable types like numpy arrays or tuples into plain lists
         entity_ids = list(entity_ids)
         return lookup_batch(access_token, api_host, entity_type, entity_ids)
-    except TypeError:  # Convert anything else, like strings or numpy integers, into plain integers
+    except (
+        TypeError
+    ):  # Convert anything else, like strings or numpy integers, into plain integers
         entity_id = int(entity_ids)
         # If an integer is given, return only the dict with that id
         return lookup_single(access_token, api_host, entity_type, entity_id)
@@ -845,10 +851,15 @@ def get_area_weighted_series(
     series_name: str,
     weight_names: List[str],
     region_id: Union[int, List[int]],
+    aggregation: Optional[str],
+    start_date: Optional[str],
+    end_date: Optional[str],
+    limit: Optional[Union[int, str]],
+    level: Optional[int],
     method: str,
     latest_date_only: bool,
     metadata: bool,
-):
+) -> Dict[str, float]:
     url = f"https://{api_host}/area-weighting"
     headers = {"authorization": "Bearer " + access_token}
     if isinstance(region_id, int):
@@ -857,9 +868,14 @@ def get_area_weighted_series(
         "seriesName": series_name,
         "weightNames": weight_names,
         "regionIds": region_id,
+        "aggregation": aggregation,
+        "startDate": start_date,
+        "endDate": end_date,
+        "limit": limit,
+        "level": level,
         "method": method,
         "latestDateOnly": latest_date_only,
-        "metadata": metadata
+        "metadata": metadata,
     }
     resp = get_data(url, headers, params=params)
     return resp.json()

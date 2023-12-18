@@ -145,7 +145,6 @@ def mock_get_descendant(
             childs = list(mock_entities["regions"].values())
 
     if not include_historical or include_details:
-
         if not include_historical:
             childs = [child for child in childs if not child["historical"]]
 
@@ -182,7 +181,6 @@ def mock_get_ancestor(
             childs = list(mock_entities["regions"].values())
 
     if not include_historical or include_details:
-
         if not include_historical:
             childs = [child for child in childs if not child["historical"]]
 
@@ -273,9 +271,14 @@ def mock_get_area_weighted_series(
     series_name,
     weight_names,
     region_id,
+    aggregation,
+    start_date,
+    end_date,
+    limit,
+    level,
     method,
     latest_date_only,
-    metadata
+    metadata,
 ):
     return {"2022-07-11": 0.715615, "2022-07-19": 0.733129, "2022-07-27": 0.748822}
 
