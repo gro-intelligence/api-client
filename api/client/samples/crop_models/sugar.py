@@ -5,25 +5,18 @@ from __future__ import print_function
 # Usage example:
 #
 #   export PYTHONPATH=/your/path/to/gro
-#   python sugar.py --user_email ...
-#
-# If you don't want to enter the password each time, print a token,
-# save it and use as follows:
-#
-#   export GROAPI_TOKEN=`python sugar.py --user_email ... --print_token`
-#   python sugar.py
-#
-# Or if you don't save the token, you can pass it via cmd line
-#
 #   python sugar.py --token ...
+#
+# You can either save the gro api token in environment variable GROAPI_TOKEN and run
+#   python sugar.py
+#   OR use the token directly via command line argument:
+#   python sugar.py --token YOUR_API_TOKEN_HERE
+#
 #
 # Ref: https://app.gro-intelligence.com/#/displays/23713
 
 import argparse
-import getpass
-import sys
 import unicodecsv
-import groclient.lib
 import os
 from api.client.crop_model import CropModel
 
@@ -32,26 +25,11 @@ API_HOST = "api.gro-intelligence.com"
 
 def main():
     parser = argparse.ArgumentParser(description="Gro api client")
-    parser.add_argument("--user_email")
-    parser.add_argument("--user_password")
-    parser.add_argument("--print_token", action="store_true")
     parser.add_argument("--token", default=os.environ.get("GROAPI_TOKEN", None))
     args = parser.parse_args()
-    assert args.user_email or args.token, "Need --token or --user_email"
-    access_token = None
-    if args.token:
-        access_token = args.token
-    else:
-        if not args.user_password:
-            args.user_password = getpass.getpass()
-        access_token = groclient.lib.get_access_token(
-            API_HOST, args.user_email, args.user_password
-        )
-    if args.print_token:
-        print(access_token)
-        sys.exit(0)
+    assert args.token, "Need --token or the token set in GROAPI_TOKEN environment variable"
 
-    model = CropModel(API_HOST, access_token)
+    model = CropModel(API_HOST, args.token)
     model.add_data_series(
         item="sugarcane", metric="production quantity", region="Brazil"
     )
