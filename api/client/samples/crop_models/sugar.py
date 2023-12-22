@@ -7,9 +7,9 @@ from __future__ import print_function
 #   export PYTHONPATH=/your/path/to/gro
 #   python sugar.py --token ...
 #
-# You can either save the gro api token in environment variable GROAPI_TOKEN and run
+# You can either save the gro api token in environment variable GROAPI_TOKEN and run:
 #   python sugar.py
-#   OR use the token directly via command line argument:
+# OR use the token directly via command line argument:
 #   python sugar.py --token YOUR_API_TOKEN_HERE
 #
 #
