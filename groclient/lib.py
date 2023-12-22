@@ -89,50 +89,6 @@ def get_default_logger():
     return logger
 
 
-def get_access_token(api_host, user_email, user_password, logger=None):
-    """Request an access token.
-    This is a DEPRECATED function and will no longer be supported after November 1, 2023!
-
-    Parameters
-    ----------
-    api_host : string
-        The API host's url, excluding 'https://'
-        ex. 'api.gro-intelligence.com'
-    user_email : string
-        Email address associated with user's Gro account
-    user_password : string
-        Password for user's Gro account
-    logger : logging.Logger
-        Alternative logger object if wanting to use a non-default one.
-        Otherwise get_default_logger() will be used.
-
-    Returns
-    -------
-    accessToken : string
-
-    """
-    warnings.warn(
-        f"get_access_token() is deprecated and will be removed on November 1, 2023.",
-        DeprecationWarning,
-        2,
-    )
-    retry_count = 0
-    if not logger:
-        logger = get_default_logger()
-    while retry_count <= cfg.MAX_RETRIES:
-        get_api_token = requests.post(
-            "https://" + api_host + "/api-token",
-            data={"email": user_email, "password": user_password},
-        )
-        if get_api_token.status_code == 200:
-            logger.debug("Authentication succeeded in get_access_token")
-            return get_api_token.json()["data"]["accessToken"]
-
-        logger.warning(f"Error in get_access_token: {get_api_token}")
-        retry_count += 1
-    raise Exception(f"Giving up on get_access_token after {retry_count} tries.")
-
-
 def redirect(old_params, migration):
     """Update query parameters to follow a redirection response from the API.
 
