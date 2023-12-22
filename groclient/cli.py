@@ -69,8 +69,6 @@ def main():  # pragma: no cover
     For more information use --help
     """
     parser = argparse.ArgumentParser(description="Gro API command line interface")
-    parser.add_argument("--user_email")
-    parser.add_argument("--user_password")
     parser.add_argument("--item")
     parser.add_argument("--metric")
     parser.add_argument("--region")
@@ -88,9 +86,7 @@ def main():  # pragma: no cover
         print(groclient.lib.get_version_info().get("api-client-version"))
         return
 
-    assert (
-        args.user_email or args.token
-    ), "Need --token, or --user_email, or $GROAPI_TOKEN"
+    assert args.token, "Need --token, or the access token to be set in environment variable: $GROAPI_TOKEN"
 
     client = GroClient(groclient.cfg.API_HOST, args.token)
 
