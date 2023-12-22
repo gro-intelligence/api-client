@@ -27,7 +27,7 @@ def main():
     parser = argparse.ArgumentParser(description="Gro api client")
     parser.add_argument("--token", default=os.environ.get("GROAPI_TOKEN", None))
     args = parser.parse_args()
-    assert args.token, "Need --token or the token is saved in GROAPI_TOKEN environment variable"
+    assert args.token, "Need --token or the token to be saved in GROAPI_TOKEN environment variable"
 
     model = CropModel(API_HOST, args.token)
     model.add_data_series(
