@@ -20,9 +20,10 @@ import requests
 import time
 import platform
 import warnings
+import pandas as pd
 
 from pkg_resources import get_distribution, DistributionNotFound
-from typing import Dict, List, Optional, Union
+from typing import Dict, List, Optional, Union, Any
 
 try:
     # functools are native in Python 3.2.3+
@@ -925,7 +926,7 @@ def validate_series_object(series_object):
 
 
 def generate_payload_for_v2_area_weighting(
-    series_dict: Dict[str, int],
+    series: Dict[str, int],
     region_id: int,
     weights: Optional[List[Dict[str, int]]] = None,
     weight_names: Optional[List[str]] = None,
@@ -940,17 +941,17 @@ def generate_payload_for_v2_area_weighting(
 
     # validate series and weights selection
     try:
-        validate_series_object(series_dict)
+        validate_series_object(series)
     except ValueError as error:
         raise ValueError(f"Failed to parse series selection: {error}")
-    payload["series"] = series_dict
+    payload["series"] = series
 
     if weights and len(weights):
         if weight_names:
             raise ValueError(f"weights and weight_names are mutually exclusive. Please specify only one.")
         try:
-            for weight_dict in weights:
-                validate_series_object(weight_dict)
+            for weight in weights:
+                validate_series_object(weight)
         except ValueError as error:
             raise ValueError(f"Failed to parse weight selections: {error}")
         payload["weights"] = weights
@@ -973,6 +974,16 @@ def format_v2_area_weighting_response(response_content: Dict[str, Any]) -> pd.Da
         data_points = response_content["data_points"]
         weighted_series_df = pd.DataFrame(data_points)
 
+        # convert unix timestamps and rename date cols
+        datetime_col_mappings = {
+            "start_date": "timestamp", # add start_date col which is equivalent to end_date
+            "end_date": "timestamp",
+            "available_date": "available_timestamp",
+        }
+        for new_col, col in datetime_col_mappings.items():
+            weighted_series_df[new_col] = pd.to_datetime(weighted_series_df[col], unit='s').dt.strftime('%Y-%m-%d')
+        weighted_series_df = weighted_series_df.drop(columns=datetime_col_mappings.values())
+
         # append selected fields of series metadata
         for key in ['item_id', 'metric_id', 'frequency_id', 'unit_id', 'source_id']:
             weighted_series_df[key] = response_content["series_description"][key]
@@ -988,7 +999,7 @@ def format_v2_area_weighting_response(response_content: Dict[str, Any]) -> pd.Da
 def get_area_weighted_series_df(
     access_token: str,
     api_host: str,
-    series_dict: Dict[str, int],
+    series: Dict[str, int],
     region_id: int,
     weights: Optional[List[Dict[str, int]]] = None,
     weight_names: Optional[List[str]] = None,
@@ -997,7 +1008,7 @@ def get_area_weighted_series_df(
     method: Optional[str] = "sum",
 ) -> pd.DataFrame:
     payload = generate_payload_for_v2_area_weighting(
-        series_dict,
+        series,
         region_id,
         weights,
         weight_names,

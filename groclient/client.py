@@ -4,6 +4,7 @@ import itertools
 import json
 import os
 import time
+import pandas as pd
 
 from typing import Dict, List, Optional, Union
 
@@ -1993,13 +1994,13 @@ class GroClient(object):
 
     def get_area_weighted_series_df(
         self,
-        series_dict: Dict[str, int],
+        series: Dict[str, int],
         region_id: int,
-        weights: Optional[List[Dict[str, int]]],
-        weight_names: Optional[List[str]],
-        start_date: Optional[str],
-        end_date: Optional[str],
-        method: Optional[str],
+        weights: Optional[List[Dict[str, int]]] = None,
+        weight_names: Optional[List[str]] = None,
+        start_date: Optional[str] = None,
+        end_date: Optional[str] = None,
+        method: Optional[str] = "sum",
     ) -> pd.DataFrame:
         """Compute weighted average on selected series with the given weights.
 
@@ -2007,7 +2008,7 @@ class GroClient(object):
 
         Parameters
         ----------
-        series_dict: dict
+        series: dict
             A dictionary that maps required entity types to its value.
             e.g. {"item_id": 321, "metric_id": 70029, "frequency_id": 3, "source_id": 3}
         region_id: integer
@@ -2039,7 +2040,7 @@ class GroClient(object):
         return lib.get_area_weighted_series_df(
             self.access_token,
             self.api_host,
-            series_dict,
+            series,
             region_id,
             weights,
             weight_names,
