@@ -1990,3 +1990,60 @@ class GroClient(object):
         ```
         """
         return lib.reverse_geocode_points(self.access_token, self.api_host, points)
+
+    def get_area_weighted_series_df(
+        self,
+        series_dict: Dict[str, int],
+        region_id: int,
+        weights: Optional[List[Dict[str, int]]],
+        weight_names: Optional[List[str]],
+        start_date: Optional[str],
+        end_date: Optional[str],
+        method: Optional[str],
+    ) -> pd.DataFrame:
+        """Compute weighted average on selected series with the given weights.
+
+        Returns a dataframe that contains weighted values and metadata.
+
+        Parameters
+        ----------
+        series_dict: dict
+            A dictionary that maps required entity types to its value.
+            e.g. {"item_id": 321, "metric_id": 70029, "frequency_id": 3, "source_id": 3}
+        region_id: integer
+            The region for which the weighted series will be computed
+            Supported region levels are (1, 2, 3, 4, 5, 8)
+        weights: list of dict
+            A list of dictionaries with each representing a weight object. Mutually exclusive with "weight_names".
+            e.g. [{"item_id": 274, "metric_id": 2120001, "frequency_id": 15, "source_id": 88}, ...]
+        weight_names: list of strs
+            List of weight names that will be used to weight the provided series. Mutually exclusive with "weights".
+            e.g. ['Barley (ha)', 'Corn (ha)']
+            For getting the full list of valid weight names, please call :meth:`~.get_area_weighting_weight_names`
+        start_date: str, optional
+            A timestamp of the format 'YYYY-MM-DD', e.g. '2023-01-01'
+        end_date: str, optional
+            A timestamp of the format 'YYYY-MM-DD', e.g. '2023-01-01'
+        method: str, optional, default="sum"
+            Multi-crop weights can be calculated with either 'sum' or 'normalize' method.
+
+        Returns
+        -------
+        DataFrame
+
+            Example::
+                start_date  value       end_date    available_date  region_id   item_id     metric_id   frequency_id    unit_id     source_id   weights
+            0   2016-04-26  0.502835    2016-04-26  2016-04-28      1215        321         70029       1               189         112         [{"weight_name": "Corn", "item_id": 274, "metric_id": 2120001, ...}, ...]
+            1   2016-04-27  0.509729    2016-04-27  2016-04-29      1215        321         70029       1               189         112         [{"weight_name": "Corn", "item_id": 274, "metric_id": 2120001, ...}, ...]
+        """
+        return lib.get_area_weighted_series_df(
+            self.access_token,
+            self.api_host,
+            series_dict,
+            region_id,
+            weights,
+            weight_names,
+            start_date,
+            end_date,
+            method,
+        )
