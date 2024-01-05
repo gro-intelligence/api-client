@@ -974,6 +974,9 @@ def format_v2_area_weighting_response(response_content: Dict[str, Any]) -> pd.Da
         data_points = response_content["data_points"]
         weighted_series_df = pd.DataFrame(data_points)
 
+        if not len(weighted_series_df):
+            return weighted_series_df
+
         # convert unix timestamps and rename date cols
         datetime_col_mappings = {
             "start_date": "timestamp", # add start_date col which is equivalent to end_date
