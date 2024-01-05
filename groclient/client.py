@@ -2019,7 +2019,7 @@ class GroClient(object):
             e.g. [{"item_id": 274, "metric_id": 2120001, "frequency_id": 15, "source_id": 88}, ...]
         weight_names: list of strs
             List of weight names that will be used to weight the provided series. Mutually exclusive with "weights".
-            e.g. ['Barley (ha)', 'Corn (ha)']
+            e.g. ['Barley', 'Corn']
             For getting the full list of valid weight names, please call :meth:`~.get_area_weighting_weight_names`
         start_date: str, optional
             A timestamp of the format 'YYYY-MM-DD', e.g. '2023-01-01'
