@@ -43,7 +43,7 @@ Navigate to [api/client/samples/](api/client/samples/) and try executing the pro
 4. You can also use the included `gro_client` tool as a quick way to request a single data series right on the command line. Try the following:
 
     ```sh
-    gro_client --metric="Production Quantity mass" --item="Corn" --region="United States" --user_email="email@example.com"
+    gro_client --metric="Production Quantity mass" --item="Corn" --region="United States" --token YOUR_GRO_API_TOKEN
     ```
 
     The `gro_client` command line interface does a keyword search for the inputs and finds a random matching data series. It displays the data series it picked and the data points to the console. This tool is useful for simple queries, but anything more complex should be done using the provided Python packages.
