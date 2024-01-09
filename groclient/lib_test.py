@@ -1,5 +1,8 @@
 import unittest.mock as mock
+import json
 import numpy as np
+import pandas as pd
+from pandas.testing import assert_frame_equal
 
 from groclient import lib
 from groclient.utils import dict_assign
@@ -1214,6 +1217,107 @@ def test_reverse_geocode_points(mock_requests_post):
         MOCK_TOKEN, MOCK_HOST, [[33.4484, -112.0740], [-8.8742, 125.7275]]
     )
     assert result == expected_output
+
+
+@mock.patch("requests.post")
+def test_get_area_weighted_series_df(mock_requests_post):
+    selection = {
+        "series": {
+            "metric_id": 70029,
+            "item_id": 321,
+            "frequency_id": 3,
+            "source_id": 3
+        },
+        "region_id": 1215,
+        "weight_names": ["Corn", "Wheat"],
+        "start_date": "2023-10-01"
+    }
+    series_metadata = {
+        "item_id": 321,
+        "metric_id": 70029,
+        "frequency_id": 3,
+        "unit_id": 189,
+        "source_id": 3,
+        "plain_words_name": "NDVI, 8-day ",
+        "plain_words_source": "NASA GIMMS MODIS",
+        "series_name": "NDVI_8day"
+    }
+    weights_metadata = [
+        {
+            "item_id": 274,
+            "metric_id": 2120001,
+            "frequency_id": 15,
+            "unit_id": 42,
+            "source_id": 88,
+            "weight_name": "Corn"
+        },
+        {
+            "item_id": 95,
+            "metric_id": 2120001,
+            "frequency_id": 15,
+            "unit_id": 42,
+            "source_id": 88,
+            "weight_name": "Wheat"
+        },
+    ]
+    data_points = [
+        {
+            "value": 0.46,
+            "timestamp": 1696636800,
+            "available_timestamp": 1696723200
+        },
+        {
+            "value": 0.44,
+            "timestamp": 1697328000,
+            "available_timestamp": 1697414400
+        },
+    ]
+
+    # validate output with data
+    initialize_requests_mocker_and_get_mock_data(
+        mock_requests_post,
+        {
+            "data_points": data_points,
+            "series_description": series_metadata,
+            "weights_description": weights_metadata,
+        }
+    )
+
+    result = lib.get_area_weighted_series_df(
+        MOCK_TOKEN,
+        MOCK_HOST,
+        **selection,
+    )
+
+    expected = pd.DataFrame(
+        data=[
+            [0.46, "2023-10-07", "2023-10-07", "2023-10-08", 321, 70029, 3, 189, 3, json.dumps(weights_metadata)],
+            [0.44, "2023-10-15", "2023-10-15", "2023-10-16", 321, 70029, 3, 189, 3, json.dumps(weights_metadata)],
+        ],
+        columns=[
+            'value', 'start_date', 'end_date', 'available_date', 'item_id',
+            'metric_id', 'frequency_id', 'unit_id', 'source_id', 'weights_metadata'
+        ]
+    )
+    assert_frame_equal(result, expected)
+
+    # validate empty data response
+    initialize_requests_mocker_and_get_mock_data(
+        mock_requests_post,
+        {
+            "data_points": [],
+            "series_description": series_metadata,
+            "weights_description": weights_metadata,
+        }
+    )
+
+    result = lib.get_area_weighted_series_df(
+        MOCK_TOKEN,
+        MOCK_HOST,
+        **selection,
+    )
+
+    assert_frame_equal(result, pd.DataFrame())
 
 
 def test_get_data_call_params():

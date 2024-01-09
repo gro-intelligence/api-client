@@ -6,6 +6,8 @@ except ImportError:
     from mock import patch, MagicMock
 from datetime import date
 import os
+import pandas as pd
+from pandas.testing import assert_frame_equal
 from unittest import TestCase
 
 from groclient import GroClient
@@ -308,6 +310,29 @@ def mock_reverse_geocode_points(access_token, api_host, points):
     ]
 
 
+def mock_get_area_weighted_series_df(
+    access_token,
+    api_host,
+    series,
+    region_id,
+    weights,
+    weight_names,
+    start_date,
+    end_date,
+    method,
+):
+    return pd.DataFrame(
+        data=[
+            [0.42, "2023-10-07", "2023-10-07", "2023-10-08", 321, 70029, 3, 189, 3, '[{"item_id": 95, "metric_id": 2120001, "frequency_id": 15, "unit_id": 42, "source_id": 88, "weight_name": "Wheat"}]'],
+            [0.12, "2023-10-08", "2023-10-08", "2023-10-09", 321, 70029, 3, 189, 3, '[{"item_id": 95, "metric_id": 2120001, "frequency_id": 15, "unit_id": 42, "source_id": 88, "weight_name": "Wheat"}]'],
+        ],
+        columns=[
+            'value', 'start_date', 'end_date', 'available_date', 'item_id',
+            'metric_id', 'frequency_id', 'unit_id', 'source_id', 'weights_metadata'
+        ]
+    )
+
+
 @patch("groclient.lib.get_available", MagicMock(side_effect=mock_get_available))
 @patch("groclient.lib.list_available", MagicMock(side_effect=mock_list_available))
 @patch("groclient.lib.lookup", MagicMock(side_effect=mock_lookup))
@@ -344,6 +369,10 @@ def mock_reverse_geocode_points(access_token, api_host, points):
 @patch(
     "groclient.lib.reverse_geocode_points",
     MagicMock(side_effect=mock_reverse_geocode_points),
+)
+@patch(
+    "groclient.lib.get_area_weighted_series_df",
+    MagicMock(side_effect=mock_get_area_weighted_series_df),
 )
 class GroClientTests(TestCase):
     def setUp(self):
@@ -686,6 +715,33 @@ class GroClientTests(TestCase):
                     "l3_name": "East Timor",
                 },
             ],
+        )
+
+    def test_get_area_weighted_series_df(self):
+        selection = {
+            "series": {
+                "metric_id": 70029,
+                "item_id": 321,
+                "frequency_id": 3,
+                "source_id": 3
+            },
+            "region_id": 1215,
+            "weight_names": ["Wheat"],
+            "start_date": "2023-10-01"
+        }
+        expected = pd.DataFrame(
+            data=[
+                [0.42, "2023-10-07", "2023-10-07", "2023-10-08", 321, 70029, 3, 189, 3, '[{"item_id": 95, "metric_id": 2120001, "frequency_id": 15, "unit_id": 42, "source_id": 88, "weight_name": "Wheat"}]'],
+                [0.12, "2023-10-08", "2023-10-08", "2023-10-09", 321, 70029, 3, 189, 3, '[{"item_id": 95, "metric_id": 2120001, "frequency_id": 15, "unit_id": 42, "source_id": 88, "weight_name": "Wheat"}]'],
+            ],
+            columns=[
+                'value', 'start_date', 'end_date', 'available_date', 'item_id',
+                'metric_id', 'frequency_id', 'unit_id', 'source_id', 'weights_metadata'
+            ]
+        )
+        assert_frame_equal(
+            self.client.get_area_weighted_series_df(**selection),
+            expected
         )
 
 
