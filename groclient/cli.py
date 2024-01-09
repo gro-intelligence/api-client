@@ -66,23 +66,14 @@ def main():  # pragma: no cover
     Usage examples:
         gro_client --item=soybeans  --region=brazil --partner_region china --metric export
         gro_client --item=sesame --region=ethiopia
-        gro_client --user_email=john.doe@example.com  --print_token
     For more information use --help
     """
     parser = argparse.ArgumentParser(description="Gro API command line interface")
-    parser.add_argument("--user_email")
-    parser.add_argument("--user_password")
     parser.add_argument("--item")
     parser.add_argument("--metric")
     parser.add_argument("--region")
     parser.add_argument("--partner_region")
     parser.add_argument("--file")
-    parser.add_argument(
-        "--print_token",
-        action="store_true",
-        help="Output API access token for the given user email and password. "
-        "Save it in GROAPI_TOKEN environment variable.",
-    )
     parser.add_argument(
         "--token",
         default=os.environ.get("GROAPI_TOKEN"),
@@ -95,25 +86,9 @@ def main():  # pragma: no cover
         print(groclient.lib.get_version_info().get("api-client-version"))
         return
 
-    assert (
-        args.user_email or args.token
-    ), "Need --token, or --user_email, or $GROAPI_TOKEN"
-    access_token = None
+    assert args.token, "Need --token, or the access token to be set in environment variable: $GROAPI_TOKEN"
 
-    if args.token:
-        access_token = args.token
-    else:
-        if not args.user_password:
-            args.user_password = getpass.getpass()
-        access_token = groclient.lib.get_access_token(
-            groclient.cfg.API_HOST, args.user_email, args.user_password
-        )
-
-    if args.print_token:
-        print(access_token)
-        return
-
-    client = GroClient(groclient.cfg.API_HOST, access_token)
+    client = GroClient(groclient.cfg.API_HOST, args.token)
 
     if (
         not args.metric
