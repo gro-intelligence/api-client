@@ -1228,7 +1228,7 @@ def test_get_area_weighted_series_df(mock_requests_post):
             "frequency_id": 3,
             "source_id": 3
         },
-        "region_id": 1215,
+        "region_ids": [1215],
         "weight_names": ["Corn", "Wheat"],
         "start_date": "2023-10-01"
     }

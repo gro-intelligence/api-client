@@ -725,7 +725,7 @@ class GroClientTests(TestCase):
                 "frequency_id": 3,
                 "source_id": 3
             },
-            "region_id": 1215,
+            "region_ids": [1215],
             "weight_names": ["Wheat"],
             "start_date": "2023-10-01"
         }

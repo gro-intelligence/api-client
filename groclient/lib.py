@@ -883,7 +883,7 @@ def validate_series_object(series_object):
 
 def generate_payload_for_v2_area_weighting(
     series: Dict[str, int],
-    region_id: int,
+    region_ids: List[int],
     weights: Optional[List[Dict[str, int]]] = None,
     weight_names: Optional[List[str]] = None,
     start_date: Optional[str] = None,
@@ -891,7 +891,7 @@ def generate_payload_for_v2_area_weighting(
     method: Optional[str] = "sum",
 ):
     payload = {
-        "region_id": region_id,
+        "region_ids": region_ids,
         "method": method,
     }
 
@@ -959,7 +959,7 @@ def get_area_weighted_series_df(
     access_token: str,
     api_host: str,
     series: Dict[str, int],
-    region_id: int,
+    region_ids: List[int],
     weights: Optional[List[Dict[str, int]]] = None,
     weight_names: Optional[List[str]] = None,
     start_date: Optional[str] = None,
@@ -968,7 +968,7 @@ def get_area_weighted_series_df(
 ) -> pd.DataFrame:
     payload = generate_payload_for_v2_area_weighting(
         series,
-        region_id,
+        region_ids,
         weights,
         weight_names,
         start_date,
