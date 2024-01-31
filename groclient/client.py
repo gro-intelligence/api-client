@@ -2033,9 +2033,9 @@ class GroClient(object):
         DataFrame
 
             Example::
-                start_date  value       end_date    available_date  region_id   item_id     metric_id   frequency_id    unit_id     source_id   weights
-            0   2016-04-26  0.502835    2016-04-26  2016-04-28      1215        321         70029       1               189         112         [{"weight_name": "Corn", "item_id": 274, "metric_id": 2120001, ...}, ...]
-            1   2016-04-27  0.509729    2016-04-27  2016-04-29      1215        321         70029       1               189         112         [{"weight_name": "Corn", "item_id": 274, "metric_id": 2120001, ...}, ...]
+                start_date  value       end_date    available_date(optional)  region_id   item_id     metric_id   frequency_id    unit_id     source_id     weights
+            0   2016-04-26  0.502835    2016-04-26  2016-04-28                  1215        321         70029           1           189         112         [{"weight_name": "Corn", "item_id": 274, "metric_id": 2120001, ...}, ...]
+            1   2016-04-27  0.509729    2016-04-27  2016-04-29                  1215        321         70029           1           189         112         [{"weight_name": "Corn", "item_id": 274, "metric_id": 2120001, ...}, ...]
         """
         return lib.get_area_weighted_series_df(
             self.access_token,
