@@ -883,7 +883,7 @@ def validate_series_object(series_object):
 
 def generate_payload_for_v2_area_weighting(
     series: Dict[str, int],
-    region_id: int,
+    region_ids: List[int],
     weights: Optional[List[Dict[str, int]]] = None,
     weight_names: Optional[List[str]] = None,
     start_date: Optional[str] = None,
@@ -891,7 +891,7 @@ def generate_payload_for_v2_area_weighting(
     method: Optional[str] = "sum",
 ):
     payload = {
-        "region_id": region_id,
+        "region_ids": region_ids,
         "method": method,
     }
 
@@ -926,6 +926,12 @@ def generate_payload_for_v2_area_weighting(
 
 
 def format_v2_area_weighting_response(response_content: Dict[str, Any]) -> pd.DataFrame:
+    DATETIME_COL_MAPPINGS = {
+        "start_date": "timestamp", # add start_date col which is equivalent to end_date
+        "end_date": "timestamp",
+        "available_date": "available_timestamp",
+    }
+
     try:
         data_points = response_content["data_points"]
         weighted_series_df = pd.DataFrame(data_points)
@@ -934,14 +940,10 @@ def format_v2_area_weighting_response(response_content: Dict[str, Any]) -> pd.Da
             return weighted_series_df
 
         # convert unix timestamps and rename date cols
-        datetime_col_mappings = {
-            "start_date": "timestamp", # add start_date col which is equivalent to end_date
-            "end_date": "timestamp",
-            "available_date": "available_timestamp",
-        }
-        for new_col, col in datetime_col_mappings.items():
-            weighted_series_df[new_col] = pd.to_datetime(weighted_series_df[col], unit='s').dt.strftime('%Y-%m-%d')
-        weighted_series_df = weighted_series_df.drop(columns=datetime_col_mappings.values())
+        for new_col, col in DATETIME_COL_MAPPINGS.items():
+            if col in weighted_series_df.columns:
+                weighted_series_df[new_col] = pd.to_datetime(weighted_series_df[col], unit='s').dt.strftime('%Y-%m-%d')
+        weighted_series_df = weighted_series_df.drop(columns=DATETIME_COL_MAPPINGS.values(), errors="ignore")
 
         # append selected fields of series metadata
         for key in ['item_id', 'metric_id', 'frequency_id', 'unit_id', 'source_id']:
@@ -959,7 +961,7 @@ def get_area_weighted_series_df(
     access_token: str,
     api_host: str,
     series: Dict[str, int],
-    region_id: int,
+    region_ids: List[int],
     weights: Optional[List[Dict[str, int]]] = None,
     weight_names: Optional[List[str]] = None,
     start_date: Optional[str] = None,
@@ -968,7 +970,7 @@ def get_area_weighted_series_df(
 ) -> pd.DataFrame:
     payload = generate_payload_for_v2_area_weighting(
         series,
-        region_id,
+        region_ids,
         weights,
         weight_names,
         start_date,

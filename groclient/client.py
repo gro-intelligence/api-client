@@ -1995,7 +1995,7 @@ class GroClient(object):
     def get_area_weighted_series_df(
         self,
         series: Dict[str, int],
-        region_id: int,
+        region_ids: List[int],
         weights: Optional[List[Dict[str, int]]] = None,
         weight_names: Optional[List[str]] = None,
         start_date: Optional[str] = None,
@@ -2011,8 +2011,8 @@ class GroClient(object):
         series: dict
             A dictionary that maps required entity types to its value.
             e.g. {"item_id": 321, "metric_id": 70029, "frequency_id": 3, "source_id": 3}
-        region_id: integer
-            The region for which the weighted series will be computed
+        region_ids: list of integer
+            The selected regions for which the weighted series will be computed
             Supported region levels are (1, 2, 3, 4, 5, 8)
         weights: list of dict
             A list of dictionaries with each representing a weight object. Mutually exclusive with "weight_names".
@@ -2033,15 +2033,15 @@ class GroClient(object):
         DataFrame
 
             Example::
-                start_date  value       end_date    available_date  region_id   item_id     metric_id   frequency_id    unit_id     source_id   weights
-            0   2016-04-26  0.502835    2016-04-26  2016-04-28      1215        321         70029       1               189         112         [{"weight_name": "Corn", "item_id": 274, "metric_id": 2120001, ...}, ...]
-            1   2016-04-27  0.509729    2016-04-27  2016-04-29      1215        321         70029       1               189         112         [{"weight_name": "Corn", "item_id": 274, "metric_id": 2120001, ...}, ...]
+                start_date  value       end_date    available_date(optional)  region_id   item_id     metric_id   frequency_id    unit_id     source_id     weights
+            0   2016-04-26  0.502835    2016-04-26  2016-04-28                  1215        321         70029           1           189         112         [{"weight_name": "Corn", "item_id": 274, "metric_id": 2120001, ...}, ...]
+            1   2016-04-27  0.509729    2016-04-27  2016-04-29                  1215        321         70029           1           189         112         [{"weight_name": "Corn", "item_id": 274, "metric_id": 2120001, ...}, ...]
         """
         return lib.get_area_weighted_series_df(
             self.access_token,
             self.api_host,
             series,
-            region_id,
+            region_ids,
             weights,
             weight_names,
             start_date,
