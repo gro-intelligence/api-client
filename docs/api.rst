@@ -87,3 +87,4 @@ Experimental
 =============
 
 .. automethod:: groclient.Experimental.get_data_points
+.. automethod:: groclient.Experimental.get_df
